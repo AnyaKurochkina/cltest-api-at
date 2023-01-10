@@ -17,14 +17,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import steps.authorizer.AuthorizerSteps;
 import ui.cloud.pages.LoginPage;
-import ui.cloud.pages.ProductStatus;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
 
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.portalBack.VdcOrganizationSteps.createVMwareOrganization;
 
 @ExtendWith(ConfigExtension.class)
@@ -57,11 +55,12 @@ public class DataCentreTest extends Tests {
     public void createDataCentre() {
         String name = UUID.randomUUID().toString().substring(25);
         VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
+        String dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase();
         new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
-                .addDataCentre(RandomStringUtils.randomAlphabetic(10).toLowerCase())
+                .addDataCentre(dataCentreName)
                 .waitChangeStatus();
-        assertEquals(ProductStatus.SUCCESS, new VMwareOrganizationPage().getDataCentreStatus());
+        new VMwareOrganizationPage().selectDataCentre(dataCentreName).checkCreate();
 
     }
 }
