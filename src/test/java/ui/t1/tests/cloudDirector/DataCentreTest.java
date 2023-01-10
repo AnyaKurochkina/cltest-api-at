@@ -4,6 +4,7 @@ import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
 import models.t1.portalBack.VmWareOrganization;
@@ -52,6 +53,7 @@ public class DataCentreTest extends Tests {
     }
 
     @Test
+    @TmsLink("147532")
     public void createDataCentre() {
         String name = UUID.randomUUID().toString().substring(25);
         VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
@@ -60,5 +62,6 @@ public class DataCentreTest extends Tests {
                 .addDataCentre(RandomStringUtils.randomAlphabetic(10).toLowerCase())
                 .waitChangeStatus();
         assertEquals(ProductStatus.SUCCESS, new VMwareOrganizationPage().getDataCentreStatus());
+
     }
 }
