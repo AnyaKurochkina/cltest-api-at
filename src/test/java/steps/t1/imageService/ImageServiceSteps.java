@@ -269,7 +269,16 @@ public class ImageServiceSteps extends Steps {
                 .body(object)
                 .post(apiUrl+ "/marketing")
                 .assertStatus(200)
+                .compareWithJsonSchema("jsonSchema/createMarketingInfoSchema.json")
                 .extractAs(Marketing.class);
+    }
+
+    @Step("Создание marketing")
+    public static Marketing createMarketing(String name) {
+        return Marketing.builder()
+                .name(name)
+                .build()
+                .createObject();
     }
 
     @Step("Создание Logo")

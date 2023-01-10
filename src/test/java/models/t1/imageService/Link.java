@@ -11,8 +11,6 @@ import lombok.extern.log4j.Log4j2;
 @EqualsAndHashCode(callSuper = false)
 @ToString
 public class Link {
-    private String id;
     private String title;
     private String link;
-    private String value;
 }
