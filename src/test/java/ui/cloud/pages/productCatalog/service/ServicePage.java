@@ -240,7 +240,7 @@ public class ServicePage extends BasePage {
     public ServicePage deleteTag(String tagName) {
         goToTagsTab();
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
-        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+        table.getRowByColumnValue(tagTitleColumn, tagName).get()
                 .$x(".//button[@id='actions-menu-button']")
                 .click();
         deleteTagMenuAction.click();
@@ -252,7 +252,7 @@ public class ServicePage extends BasePage {
     public ServicePage deleteExcludeTag(String tagName) {
         goToTagsTab();
         Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
-        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+        table.getRowByColumnValue(tagTitleColumn, tagName).get()
                 .$x(".//button[@id='actions-menu-button']")
                 .scrollIntoView(true)
                 .click();
@@ -266,7 +266,8 @@ public class ServicePage extends BasePage {
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
         table.isColumnValueEquals(tagTitleColumn, tagName);
         for (String value : values) {
-            table.getRowElementByColumnValue(tagTitleColumn, tagName).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
+            table.getRowByColumnValue(tagTitleColumn, tagName).get()
+                    .$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
         }
         return this;
     }
@@ -290,7 +291,8 @@ public class ServicePage extends BasePage {
         Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
         table.isColumnValueEquals(tagTitleColumn, tagName);
         for (String value : values) {
-            table.getRowElementByColumnValue(tagTitleColumn, tagName).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
+            table.getRowByColumnValue(tagTitleColumn, tagName).get()
+                    .$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
         }
         return this;
     }

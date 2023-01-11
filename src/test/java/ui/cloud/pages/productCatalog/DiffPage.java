@@ -26,7 +26,7 @@ public class DiffPage extends BasePage {
 
     @Step("Выбор версии для просмотра '{version}'")
     public DiffPage selectVersion(String version) {
-        versionDropDown.selectByTitle(version);
+        versionDropDown.set(version);
         return this;
     }
 }

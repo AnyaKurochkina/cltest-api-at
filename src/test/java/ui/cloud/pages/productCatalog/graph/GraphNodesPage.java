@@ -110,7 +110,7 @@ public class GraphNodesPage extends GraphPage {
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showSubgraphVersions.click();
-        $x("//div[@title='" + version + "']").shouldBe(Condition.enabled).click();
+        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setSubgraphVersion(version);
@@ -128,7 +128,7 @@ public class GraphNodesPage extends GraphPage {
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showTemplateVersions.click();
-        $x("//div[@title='" + version + "']").shouldBe(Condition.enabled).click();
+        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setTemplateVersion(version);
