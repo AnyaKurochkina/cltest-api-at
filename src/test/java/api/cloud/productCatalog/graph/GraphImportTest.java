@@ -14,11 +14,11 @@ import org.junit.jupiter.api.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductSteps.importProduct;
+@Tag("product_catalog")
 @Tag("Graphs")
 @Epic("Продуктовый каталог")
 @Feature("Графы")
 @DisabledIfEnv("prod")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class GraphImportTest extends Tests {
 
     private static final String PATHNAME = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json";
@@ -61,7 +61,7 @@ public class GraphImportTest extends Tests {
     @DisplayName("Негативный тест импорт графа в другой раздел")
     @TmsLink("1320923")
     public void importGraphToAnotherSection() {
-        String expectedMsg = "['Импортируемый объект \"Graph\" не соответствует разделу \"Product\"']";
+        String expectedMsg = "Импортируемый объект \"Graph\" не соответствует разделу \"Product\"";
         String message = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(expectedMsg, message);
     }

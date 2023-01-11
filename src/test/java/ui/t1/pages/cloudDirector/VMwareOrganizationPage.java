@@ -58,9 +58,16 @@ public class VMwareOrganizationPage {
                 .orderDataCentre();
     }
 
+    @Step("Выбор виртуального дата центра с именем {name}")
+    public DataCentrePage selectDataCentre(String name) {
+      new DataCentreTable().getRowByColumnValue("Название", name).get().click();
+      return new DataCentrePage();
+    }
+
     @Step("Ожидание смены статуса")
-    public void waitChangeStatus() {
+    public VMwareOrganizationPage waitChangeStatus() {
         EntitiesUtils.waitChangeStatus(new DataCentreTable(), Duration.ofMinutes(8));
+        return this;
     }
 
     @Step("Получение статуса дата-центра")
