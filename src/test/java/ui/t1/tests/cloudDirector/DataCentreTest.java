@@ -23,6 +23,7 @@ import ui.t1.pages.cloudDirector.DataCentrePage;
 import java.util.UUID;
 
 import static steps.portalBack.VdcOrganizationSteps.createVMwareOrganization;
+import static steps.portalBack.VdcOrganizationSteps.deleteVMwareOrganization;
 
 @ExtendWith(ConfigExtension.class)
 @Epic("Cloud Director")
@@ -63,5 +64,6 @@ public class DataCentreTest extends Tests {
                 .selectDataCentre(dataCentreName)
                 .checkCreate();
         dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
+        deleteVMwareOrganization(project.getId(), vmWareOrganization.getName());
     }
 }
