@@ -24,6 +24,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.GraphSteps.createGraph;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -359,9 +360,11 @@ public class ActionsTest extends Tests {
     @TmsLink("642530")
     public void deleteAction() {
         String actionName = "action_delete_test_api";
+        String graphId = createGraph(RandomStringUtils.randomAlphabetic(10).toLowerCase()).getGraphId();
         JSONObject action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
+                .graphId(graphId)
                 .build()
                 .toJson();
         String id = createAction(action).extractAs(Action.class).getActionId();
