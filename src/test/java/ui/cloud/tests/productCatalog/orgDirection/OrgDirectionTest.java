@@ -118,6 +118,7 @@ public class OrgDirectionTest extends BaseTest {
     @TmsLink("1240245")
     public void deleteDirectionUsedInServiceTest() {
         String name = "at_ui_delete_direction_used_in_service";
+        String alertText = "Нельзя удалить направление, которое используется";
         OrgDirection org = OrgDirection.builder()
                 .name(name)
                 .title(name)
@@ -133,12 +134,12 @@ public class OrgDirectionTest extends BaseTest {
                 .goToOrgDirectionsPage()
                 .openOrgDirectionPage(name)
                 .deleteDirection()
-                .inputValidIdAndDeleteNotAvailable("Ошибка удаления");
+                .inputValidIdAndDeleteNotAvailable(alertText);
         new OrgDirectionPage()
                 .exitFromOrgDirectionPage()
                 .findDirectionByName(name)
                 .deleteActionMenu(name)
-                .inputValidIdAndDeleteNotAvailable("Ошибка удаления");
+                .inputValidIdAndDeleteNotAvailable(alertText);
         assertTrue(new OrgDirectionsListPage().isOrgDirectionExist(name));
     }
 

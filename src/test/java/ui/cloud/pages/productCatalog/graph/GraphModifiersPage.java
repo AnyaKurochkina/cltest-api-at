@@ -9,6 +9,7 @@ import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.Input;
+import ui.elements.Select;
 import ui.models.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -21,8 +22,8 @@ public class GraphModifiersPage extends GraphPage {
     private final SelenideElement testEnvCheckbox = $x("//form//input[@name='test']");
     private final SelenideElement prodEnvCheckbox = $x("//form//input[@name='prod']");
     private final Input numberInput = Input.byLabelV2("Порядок применения");
-    private final SelenideElement showSchemas = $x("//form//label[text()='Схема']/following::*[name()='svg'][1]");
-    private final SelenideElement showTypes = $x("//form//label[text()='Способ изменения']/..//*[name()='svg']");
+    private final Select schemaSelect = Select.byLabel("Схема");
+    private final Select typeSelect = Select.byLabel("Способ изменения");
     private final SelenideElement pathInput = $x("//form//input[@name='path']");
     private final SelenideElement modifierData = $x("//form//span[text()='ModifierData']/ancestor::div[2]//textarea");
     private final SelenideElement formSaveButton = $x("//form//div[text()='Сохранить']/parent::button");
@@ -44,10 +45,8 @@ public class GraphModifiersPage extends GraphPage {
         TestUtils.wait(500);
         nameInput.setValue(modifier.getName());
         setEnvs(modifier.getEnvs());
-        showSchemas.click();
-        $x("//div[@title='" + modifier.getSchema() + "']").shouldBe(Condition.enabled).click();
-        showTypes.click();
-        $x("//div[@title='" + modifier.getType() + "']").shouldBe(Condition.enabled).click();
+        schemaSelect.set(modifier.getSchema());
+        typeSelect.set(modifier.getType());
         pathInput.setValue(modifier.getPath());
         modifierData.setValue(modifier.getModifierData());
         formSaveButton.click();
@@ -77,10 +76,8 @@ public class GraphModifiersPage extends GraphPage {
         nameInput.setValue(modifier.getName());
         clearSelectedEnvs();
         setEnvs(modifier.getEnvs());
-        showSchemas.click();
-        $x("//div[@title='" + modifier.getSchema() + "']").shouldBe(Condition.enabled).click();
-        showTypes.click();
-        $x("//div[@title='" + modifier.getType() + "']").shouldBe(Condition.enabled).click();
+        schemaSelect.set(modifier.getSchema());
+        typeSelect.set(modifier.getType());
         pathInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         pathInput.setValue(modifier.getPath());
         modifierData.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
