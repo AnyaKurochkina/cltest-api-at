@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.actions;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
@@ -12,8 +13,8 @@ import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.Select;
 import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
@@ -31,7 +32,7 @@ public class ActionPage extends BasePage {
     private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
     private final SelenideElement paramsTab = $x("//button[span[text()='Параметры']]");
     private final SelenideElement graphInputField = $x("//*[@id = 'selectValueWrapper']/input");
-    private final DropDown graphVersionDropDown = DropDown.byLabel("Значение");
+    private final Select graphVersionDropDown = Select.byLabel("Значение");
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
@@ -73,7 +74,7 @@ public class ActionPage extends BasePage {
     public ActionPage changeGraphVersion(String value) {
         graphTab.click();
         TestUtils.wait(2000);
-        graphVersionDropDown.selectByTitle(value);
+        graphVersionDropDown.set(value);
         return this;
     }
 
@@ -184,28 +185,29 @@ public class ActionPage extends BasePage {
     @Step("Запонение полей для создания действия и сохранение")
     public ActionsListPage fillAndSave(String name, String title, String description, ItemStatus status, OrderStatus orderStatus, ActionType actionType,
                                        String configPath, String configKey, String valueOfData, String graphTitle, EventType eventType, EventProvider eventProvider) {
+        WebDriverRunner.getWebDriver().manage().window().maximize();
         inputNameField.setValue(name);
         inputTitleField.setValue(title);
         inputDescriptionField.setValue(description);
-        DropDown.byLabel("Обязательные статусы item").select(status.getValue());
+        Select.byLabel("Обязательные статусы item").set(status.getValue());
         TestUtils.scrollToTheBottom();
-        DropDown.byLabel("Обязательные статусы заказа").select(orderStatus.getValue());
-        DropDown.byLabel("Тип").select(actionType.getValue());
+        Select.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
+        Select.byLabel("Тип").set(actionType.getValue());
         TestUtils.scrollToTheTop();
         paramsTab.click();
         addTypeAndProviderButton.click();
         Table table = new Table("Тип");
-        DropDown eventTypeDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[1]"));
-        DropDown eventProviderDropDown = new DropDown(table.getRowByIndex(0).$x("(.//div[select])[2]"));
+        Select eventTypeDropDown = new Select(table.getRow(0).get().$x("(.//div[select])[1]"));
+        Select eventProviderDropDown = new Select(table.getRow(0).get().$x("(.//div[select])[2]"));
         //TODO DropDown не сразу раскрывается
         for (int i = 0; i < 10; i++) {
             eventTypeDropDown.getElement().$x(".//*[name()='svg']").click();
             TestUtils.wait(1500);
-            if ($x("//div[@title = '" + eventType.getValue() + "']").isDisplayed()) break;
+            if ($x("//div[text() = '" + eventType.getValue() + "']").isDisplayed()) break;
         }
-        $x("//div[@title = '" + eventType.getValue() + "']").click();
-        eventProviderDropDown.selectByTitle(eventProvider.getValue());
-        table.getRowByIndex(0).$x(".//button[.//*[text() = 'Сохранить']]").click();
+        $x("//div[text() = '" + eventType.getValue() + "']").click();
+        eventProviderDropDown.set(eventProvider.getValue());
+        table.getRow(0).get().$x(".//button[.//*[text() = 'Сохранить']]").click();
         locationInOrderTab.click();
         dataConfigPath.setValue(configPath);
         dataConfigKey.setValue(configKey);
@@ -214,7 +216,7 @@ public class ActionPage extends BasePage {
         graphInput.click();
         graphInputField.setValue(graphTitle);
         TestUtils.wait(1000);
-        $x("//div[contains(@title, '" + graphTitle + "')]").click();
+        $x("//div[contains(text(), '" + graphTitle + "')]").click();
         TestUtils.scrollToTheBottom();
         saveButton.click();
         cancelButton.click();

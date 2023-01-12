@@ -6,7 +6,8 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.DropDown;
+import ui.elements.Input;
+import ui.elements.Select;
 import ui.elements.TextArea;
 import ui.elements.TypifiedElement;
 import ui.models.Node;
@@ -25,13 +26,11 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement deleteNodesButton = $x("//button[@aria-label = 'delete items']");
     private final SelenideElement nodeName = $x("//form//input[@name = 'name']");
     private final SelenideElement nodeDescription = $x("//form//input[@name = 'description']");
-    private final SelenideElement subgraphInput = $x("//label[text() = 'Подграф']/following::input[1]");
-    private final SelenideElement templateInput = $x("//label[text() = 'Шаблон']/following::input[1]");
+    private final Input subgraphInput = Input.byLabelV2("Подграф");
+    private final Input templateInput = Input.byLabelV2("Шаблон");
     private final SelenideElement formAddNodeButton = $x("//form//div[text() = 'Добавить']//parent::button");
     private final SelenideElement formSaveNodeButton = $x("//form//div[text() = 'Сохранить']//parent::button");
     private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
-    private final SelenideElement showSubgraphsButton = $x("//label[text() = 'Подграф']/following::*[name()='svg'][2]");
-    private final SelenideElement showTemplatesButton = $x("//label[text() = 'Шаблон']/following::*[name()='svg'][2]");
     private final TextArea inputTextArea = TextArea.byLabel("Input");
     private final TextArea outputTextArea = TextArea.byLabel("Output");
     private final SelenideElement numberInput = $x("//input[@name='number']");
@@ -71,9 +70,10 @@ public class GraphNodesPage extends GraphPage {
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
         if (node instanceof SubgraphNode) {
-            showSubgraphsButton.click();
+            subgraphInput.click();
             subgraphInput.setValue(((SubgraphNode) node).getSubgraphName());
-            $x("//div[contains(@title,'" + ((SubgraphNode) node).getSubgraphName() + "')]").shouldBe(Condition.enabled).click();
+            $x("//div[contains(text(),'" + ((SubgraphNode) node).getSubgraphName() + "')]")
+                    .shouldBe(Condition.enabled).click();
             paramsTab.click();
             inputTextArea.setValue(node.getInput());
             outputTextArea.setValue(node.getOutput());
@@ -84,9 +84,10 @@ public class GraphNodesPage extends GraphPage {
             countInput.setValue(String.valueOf(node.getCount()));
         }
         if (node instanceof TemplateNode) {
-            showTemplatesButton.click();
+            templateInput.click();
             templateInput.setValue(((TemplateNode) node).getTemplateName());
-            $x("//div[contains(@title,'" + ((TemplateNode) node).getTemplateName() + "')]").shouldBe(Condition.enabled).click();
+            $x("//div[contains(text(),'" + ((TemplateNode) node).getTemplateName() + "')]")
+                    .shouldBe(Condition.enabled).click();
         }
         additionalTab.click();
         onPrebillingToggle.click();
@@ -109,7 +110,7 @@ public class GraphNodesPage extends GraphPage {
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showSubgraphVersions.click();
-        $x("//div[@title='" + version + "']").shouldBe(Condition.enabled).click();
+        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setSubgraphVersion(version);
@@ -127,7 +128,7 @@ public class GraphNodesPage extends GraphPage {
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showTemplateVersions.click();
-        $x("//div[@title='" + version + "']").shouldBe(Condition.enabled).click();
+        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setTemplateVersion(version);
@@ -166,7 +167,7 @@ public class GraphNodesPage extends GraphPage {
         addNodeButton.click();
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
-        showSubgraphsButton.click();
+        subgraphInput.click();
         subgraphInput.setValue(node.getSubgraphName());
         if (node.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
@@ -213,7 +214,7 @@ public class GraphNodesPage extends GraphPage {
         nodeName.shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.shouldHave(Condition.exactValue(node.getDescription()));
         if (node instanceof SubgraphNode) {
-            DropDown subgraphDropDown = DropDown.byLabel("Подграф");
+            Select subgraphDropDown = Select.byLabel("Подграф");
             Assertions.assertTrue(subgraphDropDown.getElement().getText().contains(((SubgraphNode) node).getSubgraphName()));
             subgraphVersion.shouldHave(Condition.exactText(((SubgraphNode) node).getSubgraphVersion()));
         }

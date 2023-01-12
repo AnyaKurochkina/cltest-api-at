@@ -10,8 +10,8 @@ import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.Select;
 import ui.elements.Table;
 import ui.elements.TextArea;
 
@@ -25,14 +25,14 @@ public class ServicePage extends BasePage {
     private final TextArea descriptionInput = TextArea.byName("description");
     private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final String saveServiceAlertText = "Сервис успешно изменен";
-    private final DropDown graphDropDown = DropDown.byLabel("Граф");
-    private final DropDown graphVersionDropDown = DropDown.byLabel("Значение");
+    private final Select graphDropDown = Select.byLabel("Граф");
+    private final Select graphVersionDropDown = Select.byLabel("Значение");
     private final TextArea extraData = TextArea.byLabel("Extra data");
     private final String tagsTableTitle = "Теги";
     private final String excludeTagsTableTitle = "Исключающие теги";
     private final SelenideElement addTagButton = $x("//div[text()='" + tagsTableTitle + "']/following::button[@label='Добавить'][1]");
     private final SelenideElement addExcludeTagButton = $x("//div[text()='" + excludeTagsTableTitle + "']/following::button[@label='Добавить'][1]");
-    private final DropDown tagDropDown = DropDown.byLabel("Тег");
+    private final Select tagDropDown = Select.byLabel("Тег");
     private final Input tagValueInput = Input.byPlaceholder("Введите значение");
     private final SelenideElement addTagValueButton = $x("//div[@role='dialog']//input/..//button");
     private final SelenideElement addTagDialogSaveButton = $x("//div[@role='dialog']//button[div[text()='Сохранить']]");
@@ -72,7 +72,7 @@ public class ServicePage extends BasePage {
         descriptionInput.setValue(service.getDescription());
         goToGraphTab();
         TestUtils.wait(2000);
-        graphVersionDropDown.selectByTitle(service.getGraphVersion());
+        graphVersionDropDown.set(service.getGraphVersion());
         return this;
     }
 
@@ -80,7 +80,7 @@ public class ServicePage extends BasePage {
     public ServicePage setGraphVersion(String version) {
         goToGraphTab();
         TestUtils.wait(2000);
-        graphVersionDropDown.selectByTitle(version);
+        graphVersionDropDown.set(version);
         return this;
     }
 
@@ -175,7 +175,7 @@ public class ServicePage extends BasePage {
     public ServicePage addTag(String tagName, String[] values) {
         goToTagsTab();
         addTagButton.click();
-        tagDropDown.selectByTitle(tagName);
+        tagDropDown.set(tagName);
         for (String value : values) {
             tagValueInput.setValue(value);
             addTagValueButton.click();
@@ -188,8 +188,8 @@ public class ServicePage extends BasePage {
     @Step("Добавление исключающего тега {tagName} со значениями {values}")
     public ServicePage addExcludeTag(String tagName, String[] values) {
         goToTagsTab();
-        addExcludeTagButton.click();
-        tagDropDown.selectByTitle(tagName);
+        addExcludeTagButton.scrollIntoView(true).click();
+        tagDropDown.set(tagName);
         for (String value : values) {
             tagValueInput.setValue(value);
             addTagValueButton.click();
@@ -203,7 +203,7 @@ public class ServicePage extends BasePage {
     public ServicePage editExcludeTag(String tagName, String[] values) {
         goToTagsTab();
         Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
-        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+        table.getRowByColumnValue(tagTitleColumn, tagName).get()
                 .$x(".//button[@id='actions-menu-button']")
                 .scrollIntoView(true)
                 .click();
@@ -222,7 +222,7 @@ public class ServicePage extends BasePage {
     public ServicePage editTag(String tagName, String[] values) {
         goToTagsTab();
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
-        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+        table.getRowByColumnValue(tagTitleColumn, tagName).get()
                 .$x(".//button[@id='actions-menu-button']")
                 .click();
         editTagMenuAction.click();
@@ -240,7 +240,7 @@ public class ServicePage extends BasePage {
     public ServicePage deleteTag(String tagName) {
         goToTagsTab();
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
-        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+        table.getRowByColumnValue(tagTitleColumn, tagName).get()
                 .$x(".//button[@id='actions-menu-button']")
                 .click();
         deleteTagMenuAction.click();
@@ -252,7 +252,7 @@ public class ServicePage extends BasePage {
     public ServicePage deleteExcludeTag(String tagName) {
         goToTagsTab();
         Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
-        table.getRowElementByColumnValue(tagTitleColumn, tagName)
+        table.getRowByColumnValue(tagTitleColumn, tagName).get()
                 .$x(".//button[@id='actions-menu-button']")
                 .scrollIntoView(true)
                 .click();
@@ -266,7 +266,8 @@ public class ServicePage extends BasePage {
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
         table.isColumnValueEquals(tagTitleColumn, tagName);
         for (String value : values) {
-            table.getRowElementByColumnValue(tagTitleColumn, tagName).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
+            table.getRowByColumnValue(tagTitleColumn, tagName).get()
+                    .$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
         }
         return this;
     }
@@ -290,7 +291,8 @@ public class ServicePage extends BasePage {
         Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
         table.isColumnValueEquals(tagTitleColumn, tagName);
         for (String value : values) {
-            table.getRowElementByColumnValue(tagTitleColumn, tagName).$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
+            table.getRowByColumnValue(tagTitleColumn, tagName).get()
+                    .$x(".//td[3]/div[text()='" + value + "']").shouldBe(Condition.visible);
         }
         return this;
     }
