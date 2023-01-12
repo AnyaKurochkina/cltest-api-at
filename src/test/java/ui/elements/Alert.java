@@ -1,17 +1,17 @@
 package ui.elements;
 
 import com.codeborne.selenide.*;
+import com.codeborne.selenide.ex.ElementShouldNot;
 import core.helper.StringUtils;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.NotFoundException;
-import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebElement;
 
 import java.util.Collections;
 import java.util.Objects;
 
+import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$$x;
 import static org.openqa.selenium.support.Color.fromString;
 
@@ -42,7 +42,17 @@ public class Alert implements TypifiedElement {
     public void waitClose() {
         try {
             element.shouldNot(Condition.visible);
-        } catch (StaleElementReferenceException ignored) {}
+        } catch (ElementShouldNot ignored) {
+        }
+    }
+
+    public void close() {
+        try {
+            SelenideElement button = element.$x("button").shouldBe(clickableCnd);
+            button.click();
+            button.shouldNotBe(Condition.visible);
+        } catch (ElementShouldNot ignored) {
+        }
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
@@ -53,14 +63,14 @@ public class Alert implements TypifiedElement {
                 .filter(Condition.visible).stream()
                 .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
                 .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
-        waitClose();
+        close();
         return this;
     }
 
     public static void closeAll() {
         SelenideElement e = new Alert().getElements().first();
         while (e.exists() && e.isDisplayed()) {
-            Waiting.sleep(2000);
+            new Alert().close();
         }
     }
 
