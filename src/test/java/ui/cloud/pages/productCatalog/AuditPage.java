@@ -96,7 +96,7 @@ public class AuditPage extends GraphPage {
     @Step("Проверка копирования в буфер обмена")
     public AuditPage checkCopyToClipboard() {
         Table table = new Table("Учетная запись");
-        table.getRowByIndex(0).click();
+        table.getRow(0).get().click();
         copyContextIdButton.scrollTo().click();
         Assertions.assertTrue(Selenide.clipboard().getText().contains(contextId.getText()));
         copyAddressButton.click();
@@ -108,7 +108,7 @@ public class AuditPage extends GraphPage {
     @Step("Проверка отображения '{value}' в полноэкранном режиме ответа")
     public AuditPage checkResponseFullViewContains(String value) {
         Table table = new Table("Учетная запись");
-        table.getRowByIndex(0).click();
+        table.getRow(0).get().click();
         TestUtils.scrollToTheBottom();
         showFullView.click();
         TestUtils.wait(500);
@@ -129,8 +129,8 @@ public class AuditPage extends GraphPage {
     @Step("Задание фильтра по типу операции")
     public AuditPage setOperationTypeFilterAndApply(String value) {
         showAdditionalFilters();
-        DropDown operationTypeDropDown = DropDown.byLabel("Тип операции");
-        operationTypeDropDown.selectByTitle(value);
+        Select operationTypeDropDown = Select.byLabel("Тип операции");
+        operationTypeDropDown.set(value);
         return this;
     }
 
@@ -155,7 +155,7 @@ public class AuditPage extends GraphPage {
     @Step("Раскрытие дополнительных фильтров")
     private void showAdditionalFilters() {
         TestUtils.scrollToTheTop();
-        DropDown operationTypeDropDown = DropDown.byLabel("Тип операции");
+        Select operationTypeDropDown = Select.byLabel("Тип операции");
         if (!operationTypeDropDown.getElement().isDisplayed()) {
             additionalFilters.click();
         }
@@ -163,7 +163,9 @@ public class AuditPage extends GraphPage {
 
     @Step("Очистка дополнительных фильтров")
     public AuditPage clearAdditionalFilters() {
-        clearOperationTypeFilter.click();
+        if (clearOperationTypeFilter.exists()) {
+            clearOperationTypeFilter.click();
+        }
         Input.byLabelV2("Учетная запись").clear();
         Input.byLabelV2("Код статуса").clear();
         return this;
@@ -172,8 +174,8 @@ public class AuditPage extends GraphPage {
     @Step("Задание фильтра по датам")
     public AuditPage setFilterByDate(String beginDate, String endDate) {
         TestUtils.scrollToTheTop();
-        DropDown periodDropDown = DropDown.byLabel("Период");
-        periodDropDown.selectByTitle("задать период");
+        Select periodDropDown = Select.byLabel("Период");
+        periodDropDown.set("задать период");
         Input beginDateInput = Input.byLabelV2("Начало");
         beginDateInput.setValue(beginDate);
         Input endDateInput = Input.byLabelV2("Окончание");
@@ -185,8 +187,8 @@ public class AuditPage extends GraphPage {
     @Step("Выбор периода времени")
     public AuditPage selectPeriod(String periodName) {
         TestUtils.scrollToTheTop();
-        DropDown periodDropDown = DropDown.byLabel("Период");
-        periodDropDown.selectByTitle(periodName);
+        Select periodDropDown = Select.byLabel("Период");
+        periodDropDown.set(periodName);
         return this;
     }
 }

@@ -5,13 +5,13 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import ui.elements.Alert;
-import ui.elements.DropDown;
+import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
 
 public class BasePage {
 
-    protected final DropDown versionDropDown = DropDown.byLabel("Выберите версию");
+    protected final Select versionDropDown = Select.byLabel("Выберите версию");
     protected final WebElement versionComparisonTab = $x("//button[span[text()='Сравнение версий']]");
     protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     protected final SelenideElement saveButton = $x("//button[div[text()='Сохранить']]");

@@ -24,7 +24,7 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement inputNameField = $x("//*[@name ='name']");
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
-    private final DropDown typeDropDown = DropDown.byLabel("Тип");
+    private final Select typeDropDown = Select.byLabel("Тип");
     private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
     private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
@@ -46,7 +46,7 @@ public class GraphsListPage extends BaseListPage {
         createNewGraphButton.click();
         inputTitleField.setValue(graph.getTitle());
         inputNameField.setValue(graph.getName());
-        typeDropDown.selectByTitle(graph.getType());
+        typeDropDown.set(graph.getType());
         inputDescriptionField.setValue(graph.getDescription());
         inputAuthorField.setValue(graph.getAuthor());
         createGraphButton.click();
@@ -103,7 +103,7 @@ public class GraphsListPage extends BaseListPage {
         createNewGraphButton.shouldBe(Condition.visible).click();
         inputTitleField.setValue(title);
         inputNameField.setValue(name);
-        typeDropDown.selectByTitle(type);
+        typeDropDown.set(type);
         inputDescriptionField.setValue(description);
         inputAuthorField.setValue(author);
         if (title.isEmpty()) {
@@ -127,20 +127,14 @@ public class GraphsListPage extends BaseListPage {
         }
         searchInput.setValue(name);
         TestUtils.wait(500);
-        new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name).click();
+        new Table(graphNameColumn).getRowByColumnValue(graphNameColumn, name).get().click();
         TestUtils.wait(500);
         return new GraphPage();
     }
 
     @Step("Открытие страницы графа '{name}'")
     public GraphPage openGraphPage(String name) {
-        new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name).click();
-        return new GraphPage();
-    }
-
-    @Step("Открытие страницы графа '{name}'")
-    public GraphPage openGraphPageWithMouse(String name) {
-        new Table(graphNameColumn).getRowElementByColumnValue(graphNameColumn, name);
+        new Table(graphNameColumn).getRowByColumnValue(graphNameColumn, name).get().click();
         return new GraphPage();
     }
 
@@ -206,7 +200,7 @@ public class GraphsListPage extends BaseListPage {
 
     public void checkGraphIsHighlighted(String name) {
         Table graphsList = new Table(graphNameColumn);
-        Assertions.assertTrue(graphsList.getRowElementByColumnValue(graphNameColumn, name)
+        Assertions.assertTrue(graphsList.getRowByColumnValue(graphNameColumn, name).get()
                 .getCssValue("color").contains("196, 202, 212"));
     }
 }

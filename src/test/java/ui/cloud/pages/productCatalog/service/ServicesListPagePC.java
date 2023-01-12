@@ -9,7 +9,6 @@ import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import steps.productCatalog.GraphSteps;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -241,7 +240,7 @@ public class ServicesListPagePC extends BaseListPage {
         graphInput.click();
         graphInput.setValue(graphName);
         TestUtils.wait(1000);
-        $x("//div[contains(@title, '" + graphName + "')]").click();
+        $x("//div[contains(text(), '" + graphName + "')]").click();
     }
 
     @Step("Сортировка по дате создания")

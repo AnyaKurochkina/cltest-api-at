@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.action;
 
+import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -19,7 +20,7 @@ import static steps.productCatalog.ActionSteps.*;
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionByNameTest {
+public class ActionByNameTest extends Tests {
 
     @DisplayName("Получение действия по имени")
     @TmsLink("1358558")
@@ -85,7 +86,7 @@ public class ActionByNameTest {
 
     @Test
     @DisplayName("Загрузка action в GitLab по имени")
-    @TmsLink("")
+    @TmsLink("1358565")
     public void dumpToGitlabActionByNameTest() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Action action = Action.builder()

@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.service;
 
+import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -19,7 +20,7 @@ import static steps.productCatalog.ServiceSteps.*;
 @Epic("Продуктовый каталог")
 @Feature("Сервисы")
 @DisabledIfEnv("prod")
-public class ServiceByNameTest {
+public class ServiceByNameTest extends Tests {
 
     @DisplayName("Получение сервиса по имени")
     @TmsLink("1361347")

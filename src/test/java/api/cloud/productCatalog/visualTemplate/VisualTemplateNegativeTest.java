@@ -2,10 +2,10 @@ package api.cloud.productCatalog.visualTemplate;
 
 import api.Tests;
 import core.helper.JsonHelper;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -54,10 +54,10 @@ public class VisualTemplateNegativeTest extends Tests {
                 .set("event_provider", Collections.singletonList("docker"))
                 .set("event_type", Collections.singletonList("app"))
                 .set("is_active", true).build();
-        Response response = steps.createProductObject(jsonObject).assertStatus(400);
-        String expectedMsg = "['Объект не может быть создан так как event_type или event_provider имеют пересечение с другими объектами']";
+        String errorMessage = steps.createProductObject(jsonObject).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        String expectedMsg = "Объект не может быть создан так как event_type или event_provider имеют пересечение с другими объектами";
         steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
-        assertEquals(expectedMsg, response.jsonPath().getList("", String.class).get(0));
+        assertEquals(expectedMsg, errorMessage);
     }
 
     @DisplayName("Негативный тест на получение шаблона визуализации по Id без токена")

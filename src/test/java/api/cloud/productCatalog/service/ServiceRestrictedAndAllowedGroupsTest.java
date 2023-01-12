@@ -6,6 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,6 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static steps.productCatalog.ActionSteps.getActionViewerById;
 import static steps.productCatalog.ServiceSteps.getServiceById;
 import static steps.productCatalog.ServiceSteps.getServiceViewerById;
 
@@ -38,8 +38,8 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 
     @DisplayName("Создание сервиса с ограничением allowed_group на уровне realm")
@@ -54,8 +54,8 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 
     @DisplayName("Создание сервиса с ограничением restricted_group на уровне realm и ограничением allowed_group на уровне account")
@@ -71,8 +71,8 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 
     @DisplayName("Создание сервиса с ограничением restricted_group на уровне account и ограничением allowed_group на уровне realm")
@@ -88,8 +88,8 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 
     @DisplayName("Создание сервиса с ограничением allowed_group на уровне account")
@@ -104,8 +104,8 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 
     @DisplayName("Создание сервиса с ограничением restricted_group на уровне account")
@@ -120,8 +120,8 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getServiceViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 
     @DisplayName("Создание сервиса с ограничением по имени пользователя в restricted_group")
@@ -139,8 +139,8 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getActionViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 
     @DisplayName("Создание сервиса с ограничением по имени в allowed_group")
@@ -158,7 +158,7 @@ public class ServiceRestrictedAndAllowedGroupsTest extends Tests {
                 .createObject();
         Service serviceById = getServiceById(service.getId());
         assertNotNull(serviceById);
-        String msg = getActionViewerById(service.getId()).assertStatus(404).jsonPath().getString("detail");
-        assertEquals("Страница не найдена.", msg);
+        String msg = getServiceViewerById(service.getId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("No Service matches the given query.", msg);
     }
 }

@@ -1,10 +1,10 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.product.OnRequest;
 import models.cloud.productCatalog.product.Product;
 import org.json.JSONObject;
@@ -12,14 +12,9 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
-
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static steps.productCatalog.ProductSteps.getCreateProductResponse;
-import static steps.productCatalog.ProductSteps.partialUpdateProduct;
+import static steps.productCatalog.ProductSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -27,84 +22,53 @@ import static steps.productCatalog.ProductSteps.partialUpdateProduct;
 @DisabledIfEnv("prod")
 public class ProductNegativeTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/products/",
-            "productCatalog/products/createProduct.json");
-
-    Map<String, String> info = new LinkedHashMap<String, String>() {{
-        put("information", "testData");
-    }};
-
     @DisplayName("Негативный тест на получение продукта по Id без токена")
     @TmsLink("643397")
     @Test
-    public void getProductByIdWithOutToken() {
-        Product product = Product.builder()
-                .name("get_by_id_product_without_token_test_api")
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        steps.getByIdWithOutToken(product.getProductId());
+    public void getProductByIdWithOutTokenTest() {
+        Product product = createProductByName("get_by_id_product_without_token_test_api");
+        String errorMessage = getProductByIdWithOutToken(product.getProductId()).jsonPath().get("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 
     @DisplayName("Негативный тест на обновление продукта по Id без токена")
     @TmsLink("643407")
     @Test
     public void updateProductByIdWithOutToken() {
-        Product product = Product.builder()
-                .name("update_product_without_token_test_api")
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        steps.partialUpdateObjectWithOutToken(product.getProductId(),
-                new JSONObject().put("description", "UpdateDescription"));
+        Product product = createProductByName("update_product_without_token_test_api");
+        String errorMessage = partialUpdateProductWithOutToken(product.getProductId(), new JSONObject()
+                .put("description", "UpdateDescription")).jsonPath().get("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 
     @DisplayName("Негативный тест на попытку обновления продукта до текущей версии")
     @TmsLink("643409")
     @Test
     public void partialUpdateProductForCurrentVersion() {
-        Product product = Product.builder()
-                .name("update_to_current_version_product_test_api")
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
+        Product product = createProductByName("update_to_current_version_product_test_api");
         String currentVersion = product.getVersion();
-        steps.partialUpdateObject(product.getProductId(), new JSONObject().put("description", "update")
-                .put("version", currentVersion)).assertStatus(500);
+        String errorMessage = partialUpdateProduct(product.getProductId(), new JSONObject().put("description", "update")
+                .put("version", currentVersion)).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(String.format("Версия %s для update_to_current_version_product_test_api уже существует", currentVersion),
+                errorMessage);
     }
 
     @DisplayName("Негативный тест на копирование продукта по Id без токена")
     @TmsLink("643416")
     @Test
-    public void copyProductByIdWithOutToken() {
-        Product product = Product.builder()
-                .name("clone_product_negative_test_api")
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        steps.copyByIdWithOutToken(product.getProductId());
+    public void copyProductByIdWithOutTokenTest() {
+        Product product = createProductByName("clone_product_negative_test_api");
+        String errorMessage = copyProductByIdWithOutToken(product.getProductId()).jsonPath().get("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание продукта с существующим именем")
     @TmsLink("643420")
     @Test
     public void createProductWithSameName() {
-        Product product = Product.builder()
-                .name("create_product_with_same_name_test_api")
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        steps.createProductObject(steps.createJsonObject(product.getName())).assertStatus(400);
+        Product product = createProductByName("create_product_with_same_name_test_api");
+        String errorMessage = getCreateProductResponse(product.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("product с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание продукта с недопустимыми символами в имени")
@@ -124,47 +88,30 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643433")
     @Test
     public void deleteProductWithOutToken() {
-        Product product = Product.builder()
-                .name("delete_product_without_token_test_api")
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        steps.deleteObjectByIdWithOutToken(product.getProductId());
+        Product product = createProductByName("delete_product_without_token_test_api");
+        String errorMessage = deleteProductByIdWithOutToken(product.getProductId()).jsonPath().get("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 
     @Test
     @DisplayName("Негативный тест на передачу невалидного значения current_version в продуктах")
     @TmsLink("821980")
     public void setInvalidCurrentVersionProduct() {
-        String name = "invalid_current_version_product_test_api";
-        Product product = Product.builder()
-                .name(name)
-                .title(name)
-                .version("1.0.0")
-                .build().createObject();
+        Product product = createProductByName("invalid_current_version_product_test_api");
         String productId = product.getProductId();
-        String error = partialUpdateProduct(productId, new JSONObject().put("current_version", "2")).assertStatus(400).jsonPath()
-                .getList("", String.class).get(0);
-        assertEquals(error, "['You must specify version in pattern like \"{num}. | {num}.{num}.\"']");
+        String error = partialUpdateProduct(productId, new JSONObject().put("current_version", "2")).assertStatus(400)
+                .extractAs(ErrorMessage.class).getMessage();
+        assertEquals("You must specify version in pattern like \"{num}. | {num}.{num}.\"", error);
     }
 
     @Test
     @DisplayName("Негативный тест на передачу значения поля category_v2 не из справочника")
     @TmsLink("978310")
     public void getInvalidValueCategoryV2() {
-        String productName = "get_invalid_value_category_v2_product_test_api";
-        Product product = Product.builder()
-                .name(productName)
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        Response response = steps.partialUpdateObject(product.getProductId(), new JSONObject().put("category_v2", "test"));
-        assertEquals("['Значения (test) нет среди допустимых вариантов в ProductCategoriesV2']", response.jsonPath()
-                .getList("", String.class).get(0));
+        Product product = createProductByName("get_invalid_value_category_v2_product_test_api");
+        String error = partialUpdateProduct(product.getProductId(), new JSONObject().put("category_v2", "test"))
+                .extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Значения (test) нет среди допустимых вариантов в ProductCategoriesV2", error);
     }
 
     @Test
@@ -172,7 +119,6 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("979091")
     public void deleteProductIsOpenTrue() {
         String name = "delete_is_open_true_product_test_api";
-        String errorText = "Deletion not allowed (is_open=True)";
         Product product = Product.builder()
                 .name(name)
                 .title(name)
@@ -180,27 +126,19 @@ public class ProductNegativeTest extends Tests {
                 .version("1.0.0")
                 .build().createObject();
         String productId = product.getProductId();
-        Response response = steps.getDeleteObjectResponse(productId).assertStatus(403);
-        steps.partialUpdateObject(productId, new JSONObject().put("is_open", false));
-        assertEquals(errorText, response.jsonPath().get("error"));
+        String message = getDeleteProductResponse(productId).assertStatus(403).extractAs(ErrorMessage.class).getMessage();
+        partialUpdateProduct(productId, new JSONObject().put("is_open", false));
+        assertEquals("Deletion not allowed (is_open=True)", message);
     }
 
     @Test
     @DisplayName("Негативный тест на передачу значения поля payment не из справочника")
     @TmsLink("979225")
     public void setInvalidValuePayment() {
-        String productName = "set_invalid_value_payment_product_test_api";
-        Product product = Product.builder()
-                .name(productName)
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        Response response = steps.partialUpdateObject(product.getProductId(), new JSONObject().put("payment", "test"))
-                .assertStatus(400);
-        assertEquals("Значения test нет среди допустимых вариантов.", response.jsonPath()
-                .getList("payment").get(0));
+        Product product = createProductByName("set_invalid_value_payment_product_test_api");
+        String message = partialUpdateProduct(product.getProductId(), new JSONObject().put("payment", "test"))
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Значения test нет среди допустимых вариантов.", message);
     }
 
     @DisplayName("Негативный тест на создание продукта cо значением number меньше min значения")
@@ -213,13 +151,11 @@ public class ProductNegativeTest extends Tests {
                 .title("AtTestApiProduct")
                 .version("1.0.0")
                 .number(-1)
-                .info(info)
                 .build()
                 .init()
                 .toJson();
-        Response response = steps.createProductObject(product).assertStatus(400);
-        Object msg = response.jsonPath().getList("number").get(0);
-        assertEquals("Убедитесь, что это значение больше либо равно 0.", msg);
+        String message = getCreateProductResponse(product).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Убедитесь, что это значение больше либо равно 0.", message);
     }
 
     @DisplayName("Негативный тест создание продукта с недопустимым значением поля on_request")
@@ -230,13 +166,11 @@ public class ProductNegativeTest extends Tests {
                 .name("create_product_with_on_request_invalid_test_api")
                 .title("AtTestApiProduct")
                 .version("1.0.0")
-                .info(info)
                 .onRequest(OnRequest.TEST)
                 .build()
                 .init()
                 .toJson();
-        String actualProduct = getCreateProductResponse(product)
-                .assertStatus(400).jsonPath().getList("on_request", String.class).get(0);
-        assertEquals(String.format("Значения %s нет среди допустимых вариантов.", OnRequest.TEST.getValue()), actualProduct);
+        String errMessage = getCreateProductResponse(product).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(String.format("Значения %s нет среди допустимых вариантов.", OnRequest.TEST.getValue()), errMessage);
     }
 }

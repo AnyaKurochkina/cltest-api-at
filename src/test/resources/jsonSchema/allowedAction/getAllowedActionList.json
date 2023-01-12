@@ -60,7 +60,7 @@
               "items": {}
             },
             "item_restriction": {
-              "type": "string"
+              "type": ["string", "null"]
             },
             "environment_type_restriction": {
               "type": "array",
