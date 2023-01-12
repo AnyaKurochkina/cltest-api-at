@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -78,10 +79,10 @@ public class VisualTemplateTest extends Tests {
                 .isActive(true)
                 .build()
                 .createObject();
-        Response deleteResponse = deleteVisualTemplateById(visualTemplates.getId())
-                .assertStatus(403);
+        String errorMessage = deleteVisualTemplateById(visualTemplates.getId())
+                .assertStatus(403).extractAs(ErrorMessage.class).getMessage();
         steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
-        assertEquals(errorText, deleteResponse.jsonPath().get("error"));
+        assertEquals(errorText, errorMessage);
     }
 
     @DisplayName("Проверка существования шаблона визуализации по имени")

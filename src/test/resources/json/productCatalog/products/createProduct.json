@@ -1,34 +1,29 @@
 {
-  "id": "",
-  "name": "TestAtProduct",
-  "title": "TestAtProduct",
-  "icon_store_id": "",
-  "category_v2": "",
-  "current_version": "",
-  "info": {
-    "inform": "data"
-  },
-  "description": "",
-  "category": "vm",
-  "graph_id": "9f52e51a-5972-4f60-bfcc-c8c7f0fef376",
+  "name": "",
+  "title": "api_test",
+  "description": "api_test",
+  "category": "bm",
+  "category_v2": "db",
+  "graph_id": "",
   "graph_version": "",
-  "number": null,
-  "on_request": null,
-  "in_general_list": true,
   "graph_version_pattern": "",
+  "context_restrictions": [],
   "author": "Airat Muzafarov",
-  "envs": [
-    "dev"
-  ],
-  "information_systems": [
-    "c9fd31c7-25a5-45ca-863c-18425d1ae927"
-  ],
+  "envs": [],
+  "information_systems": [],
   "is_open": false,
   "max_count": 1,
-  "version": "",
   "allowed_groups": [],
-  "allowed_paths": [],
+  "icon_store_id": "",
   "restricted_groups": [],
+  "version": "",
+  "current_version": "",
+  "number": null,
+  "version_list": [],
+  "last_version": "",
+  "info": {},
   "extra_data": {},
-  "restricted_paths": []
+  "in_general_list": true,
+  "payment": "paid",
+  "on_request": null
 }

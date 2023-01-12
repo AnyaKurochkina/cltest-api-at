@@ -14,25 +14,19 @@ import ru.testit.annotations.Title;
 import api.Tests;
 import ui.cloud.pages.*;
 import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
+import ui.extesions.UiProductTest;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
+@ExtendWith(ProductInjector.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("ui_redis_astra")})
 class UiRedisAstraCheckUntilOrderTest extends Tests {
 
     Redis product;
+    // =Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
-    //TODO: пока так :)
-    public UiRedisAstraCheckUntilOrderTest() {
-        if (Configure.ENV.equals("prod"))
-            product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = Redis.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = Redis.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -64,7 +58,7 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new RedisAstraOrderPage().checkOrderDetails();

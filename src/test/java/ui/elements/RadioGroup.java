@@ -19,7 +19,7 @@ public class RadioGroup implements TypifiedElement{
 
     @Step("Получение RadioGroup по label {label} с индексом {index}")
     public static RadioGroup byLabel(String label, int index){
-        return new RadioGroup($x("(//*[.='{}']/..//*[@role='radiogroup'])" + postfix, label, TypifiedElement.getIndex(index)).shouldBe(Condition.visible));
+        return new RadioGroup($x("(//*[starts-with(.,'{}')]/..//*[@role='radiogroup'])" + postfix, label, TypifiedElement.getIndex(index)).shouldBe(Condition.visible));
     }
 
     public static RadioGroup bId(String id){

@@ -11,6 +11,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
@@ -284,7 +285,7 @@ public class OrgDirectionTest extends Tests {
                 .build()
                 .createObject();
         String errorMessage = steps.getDeleteObjectResponse(service.getDirectionId())
-                .assertStatus(400).jsonPath().getString("error");
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(String.format("Ошибка удаления. Нельзя удалить направление %s, которое используется Сервисом: %s. Отвяжите направление от сервиса и повторите попытку",
                 service.getDirectionName(), service.getName()), errorMessage);
     }

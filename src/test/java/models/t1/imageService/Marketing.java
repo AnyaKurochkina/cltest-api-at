@@ -8,6 +8,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 
+import java.util.List;
 import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,7 +28,13 @@ public class Marketing extends Entity {
     @JsonProperty("logo_id")
     private String logoId;
     private String logo;
+    private List<Link> links;
     private Boolean support;
+    private List<String> use_examples;
+    private String tech_support;
+    private List<String> type_paid;
+    private String licence_agreement;
+    private List<String> publisher;
 
     @Override
     public Entity init() {
@@ -46,6 +53,12 @@ public class Marketing extends Entity {
                 .set("$.logo", logo)
                 .set("$.logo_id", logoId)
                 .set("$.support", support)
+                .set("$.links", links)
+                .set("$.use_examples", use_examples)
+                .set("$.tech_support", tech_support)
+                .set("$.type_paid", type_paid)
+                .set("$.publisher", publisher)
+                .set("$.licence_agreement", licence_agreement)
                 .build();
     }
 

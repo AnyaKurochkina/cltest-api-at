@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.action.Action;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -50,8 +51,9 @@ public class ActionImportTest extends Tests {
         }
         importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(200);
         String expectedMsg = "Версия \"1.0.0\" Action:import_action_test_api:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.";
-        Response response = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400);
-        assertEquals(expectedMsg, response.jsonPath().getList("errors").get(0));
+        String actualMsg = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400)
+                .extractAs(ErrorMessage.class).getMessage();
+        assertEquals(expectedMsg, actualMsg);
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName), "Действие существует");
@@ -80,9 +82,9 @@ public class ActionImportTest extends Tests {
     @DisplayName("Негативный тест импорт действия в другой раздел")
     @TmsLink("1319697")
     public void importActionToAnotherSection() {
-        String expectedMsg = "['Импортируемый объект \"Action\" не соответствует разделу \"Product\"']";
+        String expectedMsg = "Импортируемый объект \"Action\" не соответствует разделу \"Product\"";
         Response response = importProduct(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400);
-        String error = response.jsonPath().getList("errors", String.class).get(0);
+        String error = response.extractAs(ErrorMessage.class).getMessage();
         assertEquals(expectedMsg, error);
     }
 }

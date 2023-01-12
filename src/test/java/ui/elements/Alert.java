@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.*;
 import com.codeborne.selenide.ex.ElementShouldNot;
+import com.codeborne.selenide.ex.ElementShouldNot;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -11,6 +12,7 @@ import org.openqa.selenium.WebElement;
 import java.util.Collections;
 import java.util.Objects;
 
+import static api.Tests.clickableCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$$x;
 import static org.openqa.selenium.support.Color.fromString;
@@ -42,8 +44,7 @@ public class Alert implements TypifiedElement {
     public void waitClose() {
         try {
             element.shouldNot(Condition.visible);
-        } catch (ElementShouldNot ignored) {
-        }
+        } catch (ElementShouldNot ignored) {}
     }
 
     public void close() {
@@ -54,7 +55,6 @@ public class Alert implements TypifiedElement {
         } catch (ElementShouldNot ignored) {
         }
     }
-
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);

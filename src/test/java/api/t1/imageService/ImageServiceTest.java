@@ -7,7 +7,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.t1.imageService.Image;
-import models.t1.imageService.ImageGroups;
+import models.t1.imageService.ImageGroup;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -29,7 +29,7 @@ public class ImageServiceTest extends Tests {
     @TmsLink("1151854")
     @DisplayName("Получение списка ImageGroups c флагом need_all=false")
     public void getImageGroupsListTest() {
-        ImageGroups imageGroup = ImageGroups.builder()
+        ImageGroup imageGroup = ImageGroup.builder()
                 .name("get_image_groups_test_api")
                 .tags(Collections.singletonList("type:os"))
                 .distro("altsisyphus")
@@ -43,7 +43,7 @@ public class ImageServiceTest extends Tests {
     @TmsLink("1175215")
     @DisplayName("Получение списка ImageGroups c флагом need_all=true")
     public void getImageGroupsListNeedAllTrueTest() {
-        ImageGroups imageGroup = ImageGroups.builder()
+        ImageGroup imageGroup = ImageGroup.builder()
                 .name("get_image_groups_need_all_true_test_api")
                 .tags(Collections.singletonList("os:need_all_true"))
                 .distro("fedora")
@@ -57,8 +57,8 @@ public class ImageServiceTest extends Tests {
     @DisplayName("Получение списка ImageGroups по региону")
     public void getImageGroupsListByRegionTest() {
         String region = "portal-dcb";
-        List<ImageGroups> imageGroupsList = getImageGroupsListByRegion(region);
-        for (ImageGroups groups : imageGroupsList) {
+        List<ImageGroup> imageGroupsList = getImageGroupsListByRegion(region);
+        for (ImageGroup groups : imageGroupsList) {
             List<Image> imageList = groups.getImages();
             for (Image image : imageList) {
                 assertEquals(region, image.getAvailabilityZone(), "Регионы не совпадают");
@@ -71,7 +71,7 @@ public class ImageServiceTest extends Tests {
     @DisplayName("Получение списка ImageGroups по несуществующему региону")
     public void getImageGroupsListByNotExistRegionTest() {
         String region = "no-exist";
-        List<ImageGroups> imageGroupsList = getImageGroupsListByRegion(region);
+        List<ImageGroup> imageGroupsList = getImageGroupsListByRegion(region);
         assertTrue(imageGroupsList.isEmpty(), "Список не пустой");
     }
 
@@ -79,13 +79,13 @@ public class ImageServiceTest extends Tests {
     @TmsLink("1152127")
     @DisplayName("Создание ImageGroups")
     public void createImageGroupTest() {
-        ImageGroups imageGroup = ImageGroups.builder()
+        ImageGroup imageGroup = ImageGroup.builder()
                 .name("create_image_groups_test_api")
                 .tags(Collections.singletonList("os:linux"))
                 .distro("fedora")
                 .build()
                 .createObject();
-        ImageGroups actualImageGroup = getImageGroup(imageGroup.getId());
+        ImageGroup actualImageGroup = getImageGroup(imageGroup.getId());
         assertEquals(imageGroup, actualImageGroup);
     }
 
@@ -93,14 +93,14 @@ public class ImageServiceTest extends Tests {
     @TmsLink("1152154")
     @DisplayName("Удаление ImageGroups")
     public void deleteImageGroupTest() {
-        JSONObject jsonObject = ImageGroups.builder()
+        JSONObject jsonObject = ImageGroup.builder()
                 .name("delete_image_groups_test_api")
                 .tags(Collections.singletonList("os:delete_test"))
                 .distro("fedora")
                 .build()
                 .init()
                 .toJson();
-        ImageGroups imageGroup = createImageGroup(jsonObject);
+        ImageGroup imageGroup = createImageGroup(jsonObject);
         deleteImageGroupById(imageGroup.getId());
         assertFalse(isImageGroupExist(imageGroup.getName(), true), "ImageGroup не удалился.");
     }
@@ -109,20 +109,20 @@ public class ImageServiceTest extends Tests {
     @TmsLink("1175218")
     @DisplayName("Обновление ImageGroups")
     public void patchImageGroupTest() {
-        ImageGroups imageGroups = ImageGroups.builder()
+        ImageGroup imageGroup = ImageGroup.builder()
                 .name("partial_update_image_groups_test_api")
                 .tags(Arrays.asList("test", "test2"))
                 .distro("distro_test")
                 .build()
                 .createObject();
-        ImageGroups updatedImageGroups = ImageGroups.builder()
+        ImageGroup updatedImageGroup = ImageGroup.builder()
                 .name("partial_update_image_groups_test_api")
                 .tags(Collections.singletonList("tag_update"))
                 .distro("distro_update")
                 .build();
-        JSONObject jsonObject = updatedImageGroups.init().toJson();
-        partialUpdateImageGroupById(imageGroups.getId(), jsonObject);
-        assertEquals(getImageGroup(imageGroups.getId()).getTags(), updatedImageGroups.getTags());
+        JSONObject jsonObject = updatedImageGroup.init().toJson();
+        partialUpdateImageGroupById(imageGroup.getId(), jsonObject);
+        assertEquals(getImageGroup(imageGroup.getId()).getTags(), updatedImageGroup.getTags());
     }
 
     @DisplayName("Получение версии сервиса образов")

@@ -5,6 +5,7 @@ import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.action.Action;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -101,18 +102,12 @@ public class ActionsNegativeTest extends Tests {
     @Test
     public void createActionWithSameName() {
         String actionName = "create_action_with_same_name_example_test_api";
-        Action.builder()
+        Action action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        JSONObject json = Action.builder()
-                .actionName(actionName)
-                .title("title")
-                .build()
-                .init()
-                .toJson();
-        String errorMessage = createAction(json).assertStatus(400).jsonPath().getList("name", String.class).get(0);
+        String errorMessage = createAction(action.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("action с таким name уже существует.", errorMessage);
     }
 
@@ -144,8 +139,8 @@ public class ActionsNegativeTest extends Tests {
                 .set("$.graph_version_pattern", "1.")
                 .build())
                 .assertStatus(400);
-        assertEquals(response.jsonPath().getList("non_field_errors").get(0),
-                "You can't use both 'version' and 'version pattern' at same time in the ActionVersionSerializer");
+        assertEquals("You can't use both 'version' and 'version pattern' at same time in the ActionVersionSerializer",
+                response.extractAs(ErrorMessage.class).getMessage());
     }
 
     @DisplayName("Негативный тест на обновление действия до той же версии/текущей")
@@ -159,9 +154,9 @@ public class ActionsNegativeTest extends Tests {
                 .version("1.0.1")
                 .build()
                 .createObject();
-        partialUpdateAction(action.getActionId(), Action.builder().actionName(actionName).build().init().getTemplate()
-                .set("$.version", "1.0.1")
-                .build()).assertStatus(500);
+        String message = partialUpdateAction(action.getActionId(), action.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(String.format("Версия %s для %s:%s уже существует", action.getVersion(), action.getActionName(), action.getTitle()),
+                message);
     }
 
     @Test
@@ -177,7 +172,7 @@ public class ActionsNegativeTest extends Tests {
                 .createObject();
         String actionId = action.getActionId();
         String message = partialUpdateAction(actionId, new JSONObject().put("current_version", "2")).assertStatus(400)
-                .jsonPath().getList("", String.class).get(0);
-        assertEquals("['You must specify version in pattern like \"{num}. | {num}.{num}.\"']", message);
+                .extractAs(ErrorMessage.class).getMessage();
+        assertEquals("You must specify version in pattern like \"{num}. | {num}.{num}.\"", message);
     }
 }

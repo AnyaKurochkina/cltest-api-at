@@ -4,7 +4,7 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.t1.imageService.Image;
-import models.t1.imageService.ImageGroups;
+import models.t1.imageService.ImageGroup;
 import models.t1.imageService.Logo;
 import models.t1.imageService.Marketing;
 import org.json.JSONObject;
@@ -22,13 +22,13 @@ public class ImageServiceSteps extends Steps {
     private static final String apiUrl = "/api/v1";
 
     @Step("Полуение списка image groups")
-    public static List<ImageGroups> getImageGroupsList(boolean isNeedAll) {
+    public static List<ImageGroup> getImageGroupsList(boolean isNeedAll) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/image_groups?need_all={}", isNeedAll)
                 .assertStatus(200)
                 .jsonPath()
-                .getList("", ImageGroups.class);
+                .getList("", ImageGroup.class);
     }
 
     @Step("Полуение версии сервиса")
@@ -80,22 +80,22 @@ public class ImageServiceSteps extends Steps {
     }
 
     @Step("Полуение списка image groups по region {region}")
-    public static List<ImageGroups> getImageGroupsListByRegion(String region) {
+    public static List<ImageGroup> getImageGroupsListByRegion(String region) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/image_groups?availability_zone={}", region)
                 .assertStatus(200)
                 .jsonPath()
-                .getList("", ImageGroups.class);
+                .getList("", ImageGroup.class);
     }
 
     @Step("Получение image groups по id {id}")
-    public static ImageGroups getImageGroup(String id) {
+    public static ImageGroup getImageGroup(String id) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/image_groups/{}", id)
                 .assertStatus(200)
-                .extractAs(ImageGroups.class);
+                .extractAs(ImageGroup.class);
     }
 
     @Step("Получение logo по id {id}")
@@ -107,10 +107,21 @@ public class ImageServiceSteps extends Steps {
                 .extractAs(Logo.class);
     }
 
+    @Step("Получение logo по name '{name}'")
+    public static Logo getLogoByName(String name) {
+        List<Logo> logoList = getLogoList();
+        for (Logo logo : logoList) {
+            if (logo.getName().equals(name)) {
+                return logo;
+            }
+        }
+        return null;
+    }
+
     @Step("Получение image groups по name {name}")
-    public static ImageGroups getImageGroupByName(String name) {
-        List<ImageGroups> imageGroupList = getImageGroupsList(true);
-        for (ImageGroups imageGroup : imageGroupList) {
+    public static ImageGroup getImageGroupByName(String name) {
+        List<ImageGroup> imageGroupList = getImageGroupsList(true);
+        for (ImageGroup imageGroup : imageGroupList) {
             if (imageGroup.getName().equals(name)) {
                 return imageGroup;
             }
@@ -231,24 +242,24 @@ public class ImageServiceSteps extends Steps {
     @Step("Частичное обновление Image по id {id}")
     /*
       Метод patch для Image должен работать только на обновление информации о marketing
-      в body метода передается json в формате : {"marketing_id" : "id"}
+      в body метода передается json в формате : {"marketing_info_id" : "id"}
      */
     public static void partialUpdateImageById(String id, JSONObject body) {
         new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
-                .patch(apiUrl + "/marketing/{}", id)
+                .patch(apiUrl + "/images/{}", id)
                 .assertStatus(200);
     }
 
     @Step("Создание image groups")
-    public static ImageGroups createImageGroup(JSONObject object) {
+    public static ImageGroup createImageGroup(JSONObject object) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(apiUrl + "/image_groups")
                 .assertStatus(200)
-                .extractAs(ImageGroups.class);
+                .extractAs(ImageGroup.class);
     }
 
     @Step("Создание marketing")
@@ -258,7 +269,16 @@ public class ImageServiceSteps extends Steps {
                 .body(object)
                 .post(apiUrl+ "/marketing")
                 .assertStatus(200)
+                .compareWithJsonSchema("jsonSchema/createMarketingInfoSchema.json")
                 .extractAs(Marketing.class);
+    }
+
+    @Step("Создание marketing")
+    public static Marketing createMarketing(String name) {
+        return Marketing.builder()
+                .name(name)
+                .build()
+                .createObject();
     }
 
     @Step("Создание Logo")
@@ -273,8 +293,8 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Проверка существования image group c именем {name}")
     public static boolean isImageGroupExist(String name, boolean isNeedAll) {
-        List<ImageGroups> imageGroupList = getImageGroupsList(isNeedAll);
-        for (ImageGroups imageGroup : imageGroupList) {
+        List<ImageGroup> imageGroupList = getImageGroupsList(isNeedAll);
+        for (ImageGroup imageGroup : imageGroupList) {
             if (imageGroup.getName().equals(name)) {
                 return true;
             }

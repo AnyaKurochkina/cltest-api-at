@@ -6,6 +6,7 @@ import core.helper.StringUtils;
 import lombok.Getter;
 import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.Select;
 
 import java.util.UUID;
 
@@ -19,11 +20,11 @@ public class RedisAstraOrderPage extends Product {
 
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");
+    DropDown redisVersion = DropDown.byLabel("Версия Redis");
     DropDown group = DropDown.byLabel("Группы");
-    DropDown roleServer = DropDown.byLabel("Роль сервера. (данное поле влияет на именование)");
     DropDown dataCentre = DropDown.byLabel("Дата-центр");
     DropDown segment = DropDown.byLabel("Сетевой сегмент");
-    DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
+    Select configure = Select.byLabel("Конфигурация Core/RAM");
     Input countVm = Input.byLabel("Количество");
     Input label = Input.byLabel("Метка");
     SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
