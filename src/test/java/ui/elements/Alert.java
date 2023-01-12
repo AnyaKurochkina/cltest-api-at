@@ -9,6 +9,7 @@ import lombok.Getter;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Objects;
 
@@ -44,7 +45,8 @@ public class Alert implements TypifiedElement {
     public void waitClose() {
         try {
             element.shouldNot(Condition.visible);
-        } catch (ElementShouldNot ignored) {}
+        } catch (ElementShouldNot ignored) {
+        }
     }
 
     public void close() {
@@ -55,6 +57,7 @@ public class Alert implements TypifiedElement {
         } catch (ElementShouldNot ignored) {
         }
     }
+
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
@@ -68,10 +71,12 @@ public class Alert implements TypifiedElement {
     }
 
     public static void closeAll() {
-        SelenideElement e = new Alert().getElements().first();
-        while (e.exists() && e.isDisplayed()) {
-            new Alert().close();
-        }
+        try {
+            SelenideElement e = new Alert().getElements().first().shouldBe(Condition.visible, Duration.ofSeconds(5));
+            while (e.exists() && e.isDisplayed()) {
+                new Alert(e).close();
+            }
+        } catch (ElementShouldNot ignored) {}
     }
 
     public enum Color {
