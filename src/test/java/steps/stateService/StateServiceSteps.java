@@ -171,6 +171,16 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Получение последней ошибки в проекте по контексту")
+    public static String getLastErrorByProjectId(String projectId) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/actions/?status=error", projectId)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list.find{it.data.error.contains('"+projectId+"')}.data.traceback");
+    }
+
     public static List<ShortItem> getItems(String id){
         List<Item> list = new Http(StateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)

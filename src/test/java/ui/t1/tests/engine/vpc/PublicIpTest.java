@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.vpc;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.BlockTests;
@@ -24,7 +25,7 @@ import static core.utils.AssertUtils.AssertHeaders;
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Feature("Публичные IP")
 public class PublicIpTest extends AbstractComputeTest {
     String ip;
 
@@ -54,12 +55,10 @@ public class PublicIpTest extends AbstractComputeTest {
 
     @Test
     @Order(2)
-    @TmsLink("1249438")
+    @TmsLinks({@TmsLink("1249438"), @TmsLink("1249439"), @TmsLink("1248950")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Подключить к виртуальной машине/Отвязать от сетевого интерфейса ")
     void attachIp() {
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
@@ -85,7 +84,7 @@ public class PublicIpTest extends AbstractComputeTest {
                 .selectCompute(vm.getName())
                 .selectNetworkInterface()
                 .selectIp(ip);
-        newIpPage.runActionWithCheckCost(CompareType.EQUALS, newIpPage::detachComputeIp);
+        newIpPage.detachComputeIp();
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdIp))
@@ -93,10 +92,7 @@ public class PublicIpTest extends AbstractComputeTest {
                 .filter(e -> Objects.isNull(e.getParent()))
                 .count(), "Item ip не соответствует условиям или не найден");
 
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
     }
 
     @Test

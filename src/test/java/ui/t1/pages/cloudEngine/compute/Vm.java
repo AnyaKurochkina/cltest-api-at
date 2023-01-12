@@ -35,6 +35,11 @@ public class Vm extends IProductT1Page<Vm> {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
+    public void resize(String flavorName) {
+        runActionWithParameters(BLOCK_PARAMETERS, "Изменить конфигурацию", "Подтвердить",
+                () -> new VmCreate().setFlavorName(flavorName));
+    }
+
     public NetworkInterface selectNetworkInterface() {
         new NetworkInfo().getRow(0).get().shouldBe(Condition.visible).click();
         return new NetworkInterface();

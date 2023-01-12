@@ -60,7 +60,13 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
             if (allTests.stream().noneMatch(test -> test.getClassName().equals(before.getDeclaringClass().getName()) && test.getTestName().equals(before.getName())) && !isOnlyIgnoredTests) {
                 before.setAccessible(true);
                 try {
-                    invoke(before, extensionContext.getRequiredTestInstance(), getDisplayName(before));
+                    try {
+                        invoke(before, extensionContext.getRequiredTestInstance(), getDisplayName(before));
+                    } catch (Throwable e) {
+                        if (extensionContext.getRequiredTestClass().isAnnotationPresent(BlockTests.class))
+                            failClass.put(extensionContext.getRequiredTestClass().getName(), e);
+                        throw e;
+                    }
                     runEachMethod(extensionContext, AfterEach.class);
                     runEachMethod(extensionContext, BeforeEach.class);
                 } catch (Throwable e) {

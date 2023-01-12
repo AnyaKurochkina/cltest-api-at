@@ -1,15 +1,18 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.tests.engine.AbstractComputeTest;
 
+@BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Feature("Публичные SSH ключи")
 public class PublicSshKeysTest extends AbstractComputeTest {
     String name = getRandomName();
 
@@ -22,7 +25,7 @@ public class PublicSshKeysTest extends AbstractComputeTest {
     }
 
     @Test
-//    @TmsLink("")
+    @TmsLink("1398315")
     @Order(2)
     @DisplayName("Cloud Compute. Копирование SSH-ключа (публичный)")
     void copyKey() {
@@ -30,7 +33,7 @@ public class PublicSshKeysTest extends AbstractComputeTest {
     }
 
     @Test
-//    @TmsLink("")
+    @TmsLink("1398316")
     @Order(3)
     @DisplayName("Cloud Compute. Редактирование SSH-ключа (публичный)")
     void editKey() {
@@ -40,7 +43,7 @@ public class PublicSshKeysTest extends AbstractComputeTest {
     }
 
     @Test
-//    @TmsLink("")
+    @TmsLink("1398321")
     @Order(4)
     @DisplayName("Cloud Compute. Удаление SSH-ключа (публичный)")
     void deleteKey() {

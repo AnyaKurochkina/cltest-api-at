@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.vpc;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
@@ -15,7 +16,7 @@ import static core.utils.AssertUtils.AssertHeaders;
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Feature("Сети")
 public class NetworkTest extends AbstractComputeTest {
     String name = getRandomName();
 

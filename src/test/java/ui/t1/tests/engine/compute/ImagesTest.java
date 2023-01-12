@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 import static core.utils.AssertUtils.AssertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
+@Feature("Образы")
 public class ImagesTest extends AbstractComputeTest {
 
     @Test
@@ -31,15 +33,8 @@ public class ImagesTest extends AbstractComputeTest {
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(disk.getName()));
         Image imagePage = new IndexPage().goToImages().selectImage(disk.getName()).checkCreate();
-
-        new IndexPage()
-                .goToDisks()
-                .selectDisk(disk.getName())
-                .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
-
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
+        new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setUserImage(disk.getName())
                 .setDeleteOnTermination(true)
@@ -48,15 +43,7 @@ public class ImagesTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
-
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(disk.getName())
-                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
-
-        new IndexPage()
-                .goToImages()
-                .selectImage(disk.getName())
-                .runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
+        new IndexPage().goToVirtualMachine().selectCompute(disk.getName()).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+        new IndexPage().goToImages().selectImage(disk.getName()).runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
     }
 }

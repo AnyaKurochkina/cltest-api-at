@@ -15,7 +15,7 @@ public class ImageList {
         return new Image();
     }
 
-    public List<String> geImageList(){
+    public List<String> getImageList(){
         return new ImageTable().getColumnValuesList(COLUMN_NAME);
     }
 

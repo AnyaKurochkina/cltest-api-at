@@ -3,7 +3,9 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.Condition;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
-import ui.elements.*;
+import ui.elements.Input;
+import ui.elements.Select;
+import ui.elements.Switch;
 
 import java.time.Duration;
 
@@ -18,7 +20,7 @@ public class DiskCreate {
     private String userImage;
 
     public DiskCreate setAvailabilityZone(String availabilityZone) {
-        DropDown.byLabel("Зона доступности").select(availabilityZone);
+        Select.byLabel("Зона доступности").set(availabilityZone);
         this.availabilityZone = availabilityZone;
         return this;
     }
@@ -36,7 +38,7 @@ public class DiskCreate {
     }
 
     public DiskCreate setType(String type) {
-        DropDown.byLabel("Тип").selectByTextContains(type);
+        Select.byLabel("Тип").set(type);
         this.type = type;
         return this;
     }
@@ -57,10 +59,10 @@ public class DiskCreate {
 
     public DiskCreate clickOrder(){
         EntitiesUtils.clickOrder();
-        new DiskList.DiskTable()
+        EntitiesUtils.waitCreate(() -> new DiskList.DiskTable()
                 .getRowByColumnValue(DiskList.DiskTable.COLUMN_NAME, name)
                 .getElementByColumn(DiskList.DiskTable.COLUMN_DATE)
-                .shouldNot(Condition.exactText(""), Duration.ofMinutes(1));
+                .shouldNot(Condition.exactText(""), Duration.ofMinutes(1)));
         return this;
     }
 }

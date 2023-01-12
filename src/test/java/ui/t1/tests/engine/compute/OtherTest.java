@@ -1,5 +1,8 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -16,21 +19,20 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Random;
 
 import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_NAME;
 import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_SYSTEM;
 
+@Feature("Дополнительные")
 @ExtendWith(BeforeAllExtension.class)
 public class OtherTest extends AbstractComputeTest {
 
     @Test
-    @DisplayName("Создание ВМ c двумя доп дисками (auto_delete = on и off) boot_disk_auto_delete = on")
+    @TmsLink("1398371")
+    @DisplayName("Cloud Compute. Создание ВМ c двумя доп дисками (auto_delete = on и off) boot_disk_auto_delete = on")
     void createVm2() {
         String name = getRandomName();
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
@@ -53,10 +55,7 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 4 item's (nic & volume)");
 
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
 
         final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(project.getId());
         Assertions.assertTrue(items2.stream().noneMatch(e -> e.getOrderId().equals(orderId)), "Существуют item's с orderId=" + orderId);
@@ -73,17 +72,13 @@ public class OtherTest extends AbstractComputeTest {
     }
 
     @Test
-    @DisplayName("Создание/Удаление ВМ c публичным IP")
+    @TmsLink("1398375")
+    @DisplayName("Cloud Compute. Создание/Удаление ВМ c публичным IP")
     void createVmWidthPublicIp() {
-        String ip = new IndexPage()
-                .goToPublicIps()
-                .addIp(availabilityZone);
+        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         String orderIdIp = ipPage.getOrderId();
-
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
@@ -115,27 +110,21 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(i -> i.getParent().equals(nicId))
                 .count(), "Item publicIp не соответствует условиям или не найден");
 
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.LESS, vmPage::delete);
-
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdIp))
                 .filter(e -> Objects.isNull(e.getParent()))
                 .count(), "Item publicIp должен вернуть свой OrderId + Parent=null");
 
         new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
-        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream()
-                .noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
+        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
     }
 
     @Test
-    @DisplayName("Подключить/Отключить диск со снимком к вм")
+    @TmsLink("1398380")
+    @DisplayName("Cloud Compute. Подключить/Отключить диск со снимком к вм")
     void createSnapshotFromDetachDisk() {
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
@@ -145,14 +134,7 @@ public class OtherTest extends AbstractComputeTest {
                 .clickOrder();
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderIdVm = vmPage.getOrderId();
-
-        DiskCreate disk = new IndexPage()
-                .goToDisks()
-                .addDisk()
-                .setAvailabilityZone(availabilityZone)
-                .setName("DISK-" + Math.abs(new Random().nextInt()))
-                .setSize(4L)
-                .clickOrder();
+        DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(vm.getName()).setSize(4L).clickOrder();
 
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
         String orderIdDisk = diskPage.getOrderId();
@@ -170,8 +152,8 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(e -> e.getType().equals("snapshot"))
                 .count(), "Item snapshot не соответствует условиям или не найден");
 
-        Disk updateDisk = new IndexPage().goToDisks().selectDisk(disk.getName());
-        updateDisk.runActionWithCheckCost(CompareType.EQUALS, () -> updateDisk.attachComputeVolume(vm.getName(), false));
+        new IndexPage().goToDisks().selectDisk(disk.getName());
+        diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), false));
 
         String instanceId = StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
@@ -206,25 +188,18 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(e -> Objects.equals(e.getParent(), volumeId))
                 .count(), "Item snapshot не соответствует условиям или не найден");
 
-        new IndexPage()
-                .goToDisks()
-                .selectDisk(disk.getName())
-                .runActionWithCheckCost(CompareType.LESS, diskPage::delete);
+        new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.LESS, diskPage::delete);
         Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .count());
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+//        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
     }
 
     @Test
-    @DisplayName("Создание снимка системного диска и удаление вместе с вм")
+    @TmsLink("1398386")
+    @DisplayName("Cloud Compute. Создание снимка системного диска и удаление вместе с вм")
     void createSystemSnapshot() {
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
@@ -252,11 +227,7 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(e -> e.getParent().equals(volumeId))
                 .count(), "Item snapshot не соответствует условиям или не найден");
 
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
-
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
         Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .count());
@@ -266,16 +237,14 @@ public class OtherTest extends AbstractComputeTest {
     }
 
     @Test
-    @DisplayName("Подключение диска из снимка на базе подключенного диска")
+    @TmsLinks({@TmsLink("1248945"), @TmsLink("1398401")})
+    @DisplayName("Cloud Compute. Подключение диска из снимка на базе подключенного диска")
     void createSnapshotFromAttachDisk() {
-        String name = "AT-UI-" + Math.abs(new Random().nextInt());
-        VmCreate vm = new IndexPage()
-                .goToVirtualMachine()
-                .addVm()
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setName(name)
+                .setName(getRandomName())
                 .setBootSize(8)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
@@ -283,10 +252,10 @@ public class OtherTest extends AbstractComputeTest {
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
-        diskPage.createSnapshot(name);
-        Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(name).checkCreate();
-        snapshot.runActionWithCheckCost(CompareType.MORE, () -> snapshot.createDisk(name));
-        Disk createdDisk = new IndexPage().goToDisks().selectDisk(name).checkCreate();
+        diskPage.createSnapshot(vm.getName());
+        Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).checkCreate();
+        snapshot.runActionWithCheckCost(CompareType.MORE, () -> snapshot.createDisk(vm.getName()));
+        Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).checkCreate();
         String orderIdDisk = createdDisk.getOrderId();
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
@@ -296,19 +265,14 @@ public class OtherTest extends AbstractComputeTest {
                 .count(), "Item volume не соответствует условиям или не найден");
 
         createdDisk.runActionWithCheckCost(CompareType.EQUALS, () -> createdDisk.attachComputeVolume(vm.getName(), true));
-
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
     }
 
     @Test
-    @DisplayName("Создание диска из образа MarketPlace")
+    @TmsLink("1398404")
+    @DisplayName("Cloud Compute. Создание диска из образа MarketPlace")
     void creatDiskFromImage() {
-        DiskCreate disk = new IndexPage()
-                .goToDisks()
-                .addDisk()
+        DiskCreate disk = new IndexPage().goToDisks().addDisk()
                 .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
                 .setMarketPlaceImage(image)
@@ -323,44 +287,35 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(i -> i.getSrcOrderId().equals(orderId))
                 .count(), "Поиск item, где orderId = srcOrderId & size == " + disk.getSize());
 
-        new IndexPage()
-                .goToDisks()
-                .selectDisk(disk.getName())
-                .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
-
+        new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
         Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .count(), "Item disk не соответствует условиям или не найден");
     }
 
     @Test
-    @DisplayName("Создание диска из пользовательского образа")
+    @TmsLink("1398406")
+    @DisplayName("Cloud Compute. Создание диска из пользовательского образа")
     void creatDiskFromUserImage() {
-        String name = getRandomName();
         DiskCreate disk = new IndexPage()
                 .goToDisks()
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
-                .setName(name)
+                .setName(getRandomName())
                 .setSize(2L)
                 .clickOrder();
 
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
-        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(name));
-        Image imagePage = new IndexPage().goToImages().selectImage(name).checkCreate();
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(disk.getName()));
+        Image imagePage = new IndexPage().goToImages().selectImage(disk.getName()).checkCreate();
 
-        new IndexPage()
-                .goToDisks()
-                .selectDisk(name)
-                .runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
-
-        String newName = getRandomName();
+        new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
         DiskCreate newDisk = new IndexPage()
                 .goToDisks()
                 .addDisk()
                 .setAvailabilityZone(availabilityZone)
-                .setName(newName)
-                .setUserImage(name)
+                .setName(getRandomName())
+                .setUserImage(disk.getName())
                 .setSize(5L)
                 .clickOrder();
 
@@ -375,16 +330,13 @@ public class OtherTest extends AbstractComputeTest {
 
         new IndexPage()
                 .goToDisks()
-                .selectDisk(newName)
+                .selectDisk(newDisk.getName())
                 .runActionWithCheckCost(CompareType.ZERO, newDiskPage::delete);
 
         Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .count(), "Item disk не соответствует условиям или не найден");
 
-        new IndexPage()
-                .goToImages()
-                .selectImage(name)
-                .runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
+//        new IndexPage().goToImages().selectImage(disk.getName()).runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
     }
 }

@@ -5,20 +5,22 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
+import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.pages.IProductPage;
+import ui.cloud.pages.ProductStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
-import javax.annotation.CheckReturnValue;
-import javax.annotation.Nonnull;
 import java.time.Duration;
 import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
 
-public class IProductT1Page<C extends IProductT1Page> extends IProductPage {
+@Log4j2
+public class IProductT1Page<C extends IProductPage> extends IProductPage {
     private static final String COLUMN_POWER = "Статус";
     public static final String BLOCK_PARAMETERS = "Основные параметры";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
@@ -32,9 +34,7 @@ public class IProductT1Page<C extends IProductT1Page> extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        //Todo: пока слип
-        Waiting.sleep(15000);
-        checkPowerStatus(Disk.TopInfo.POWER_STATUS_DELETED);
+        Waiting.find(() -> new TopInfo().getPowerStatus().equals(Disk.TopInfo.POWER_STATUS_DELETED), Duration.ofSeconds(30));
     }
 
     public C checkCreate(){
@@ -54,8 +54,6 @@ public class IProductT1Page<C extends IProductT1Page> extends IProductPage {
     public void waitChangeStatus(Duration duration) {
         if(waitStatus.exists())
             waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
-//        else
-//            EntitiesUtils.waitStatus(new TopInfo(), Disk.TopInfo.POWER_STATUS_DELETED, duration);
     }
 
     @Override
@@ -70,6 +68,15 @@ public class IProductT1Page<C extends IProductT1Page> extends IProductPage {
         }
     }
 
+    @Override
+    @Step("Проверка статуса заказа")
+    public void checkErrorByStatus(ProductStatus status) {
+        if (status.equals(ProductStatus.ERROR)) {
+            Assertions.fail(String.format("Ошибка выполнения action продукта: \nИтоговый статус: %s . \nОшибка: %s", status,
+                    StateServiceSteps.getLastErrorByProjectId(EntitiesUtils.getCurrentProjectId())));
+        } else log.info("Статус действия {}", status);
+    }
+
     public String getOrderId() {
         Menu.byElement(getBtnAction("Действия")).select("Скопировать ID");
         Alert.green("ID скопирован");
@@ -79,6 +86,7 @@ public class IProductT1Page<C extends IProductT1Page> extends IProductPage {
     @Override
     public void switchProtectOrder(boolean checked) {
         ActionParameters params = ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build();
+        new TopInfo();
         runActionWithParameters("Действия", "Защита от удаления", "Подтвердить",
                 () -> {
                     CheckBox checkBox = CheckBox.byLabel("Включить защиту от удаления");

@@ -128,10 +128,10 @@ public class VmCreate {
 
     public VmCreate clickOrder() {
         EntitiesUtils.clickOrder();
-        new VmList.VmTable()
+        EntitiesUtils.waitCreate(() -> new VmList.VmTable()
                 .getRowByColumnValue(VmList.VmTable.COLUMN_NAME, name)
                 .getElementByColumn(VmList.VmTable.COLUMN_STATUS)
-                .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(1));
+                .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(1)));
         return this;
     }
 }

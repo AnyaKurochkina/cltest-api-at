@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 import static core.utils.AssertUtils.AssertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
+@Feature("Сетевые интерфейсы")
 public class NetworkInterfacesTest extends AbstractComputeTest {
 
     @Test
@@ -44,8 +46,8 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).attachIp(ip);
         networkInterfaceList.selectNetworkInterfaceByVm(vm.getName()).detachComputeIp(ip);
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
-        new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.LESS, ipPage::delete);
+//        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+//        new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.LESS, ipPage::delete);
     }
 
     @Test

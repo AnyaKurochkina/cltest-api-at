@@ -3,7 +3,6 @@ package ui.elements;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Driver;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.WebElement;
 
@@ -44,7 +43,7 @@ public class Menu implements TypifiedElement {
 
         @Override
         public boolean apply(@NotNull Driver driver, @NotNull WebElement webElement) {
-            if (!isClicked && webElement.isDisplayed()) {
+            if (!isClicked && webElement.isDisplayed() && webElement.isEnabled()) {
                 webElement.click();
                 isClicked = true;
             }

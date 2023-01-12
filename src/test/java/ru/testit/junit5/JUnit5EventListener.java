@@ -72,9 +72,9 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 //            if (isIntegrationTestIt())
 //                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
 //            throw new Exception(throwable.getMessage());
-            if(Objects.nonNull(throwable.getCause()))
-                throw throwable.getCause();
-            else
+//            if(Objects.nonNull(throwable.getCause()))
+//                throw throwable.getCause();
+//            else
                 throw throwable;
         } finally {
             Http.removeFixedRole();

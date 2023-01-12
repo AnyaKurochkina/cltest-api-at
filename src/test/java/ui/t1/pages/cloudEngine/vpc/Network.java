@@ -3,6 +3,7 @@ package ui.t1.pages.cloudEngine.vpc;
 import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import lombok.Getter;
+import ui.cloud.pages.EntitiesUtils;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -73,7 +74,8 @@ public class Network {
             Dialog dialog = Dialog.byTitle("Добавить подсеть");
             dialog.clickButton("Добавить");
             dialog.getDialog().shouldNotBe(Condition.visible);
-            Waiting.findWidthRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(COLUMN_STATUS).equals("Доступно"), Duration.ofMinutes(1));
+            EntitiesUtils.waitCreate(() ->
+                    Waiting.findWidthRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(COLUMN_STATUS).equals("Доступно"), Duration.ofMinutes(1)));
             return this;
         }
     }

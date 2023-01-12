@@ -3,11 +3,15 @@ package ui.cloud.pages;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.WebElement;
+import steps.stateService.StateServiceSteps;
 import ui.elements.Alert;
 import ui.elements.Button;
 import ui.elements.Table;
@@ -38,6 +42,21 @@ public class EntitiesUtils {
             preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
         }
         else preBillingPrice.set(null);
+    }
+
+    public static String getCurrentProjectId(){
+        return StringUtils.findByRegex("context=([^&]*)", WebDriverRunner.getWebDriver().getCurrentUrl());
+    }
+
+    @SneakyThrows
+    public static void waitCreate(Executable executable){
+        try {
+            executable.execute();
+        } catch (Throwable e) {
+            Exception exception = new Exception("Последняя ошибка:\n" + StateServiceSteps.getLastErrorByProjectId(EntitiesUtils.getCurrentProjectId()));
+            e.addSuppressed(exception);
+            throw e;
+        }
     }
 
     public static double getPreBillingCostAction(SelenideElement element) {

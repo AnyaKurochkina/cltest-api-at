@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.Assertions;
@@ -25,6 +26,7 @@ import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_SYSTEM;
 import static ui.t1.pages.cloudEngine.compute.IProductT1Page.BLOCK_PARAMETERS;
 
 @ExtendWith(BeforeAllExtension.class)
+@Feature("Снимки")
 public class SnapshotTest extends AbstractComputeTest {
 
     @Test
@@ -57,11 +59,7 @@ public class SnapshotTest extends AbstractComputeTest {
                 .count(), "Item volume не соответствует условиям или не найден");
 
         createdDisk.runActionWithCheckCost(CompareType.EQUALS, () -> createdDisk.attachComputeVolume(vm.getName(), true));
-
-        new IndexPage()
-                .goToVirtualMachine()
-                .selectCompute(vm.getName())
-                .runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+//        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
     }
 
     @Test
@@ -73,16 +71,14 @@ public class SnapshotTest extends AbstractComputeTest {
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(disk.getName()));
         Snapshot snapshotPage = new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).checkCreate();
         snapshotPage.switchProtectOrder(true);
-
         try {
-            snapshotPage.runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Удалить", () ->
-            {
+            snapshotPage.runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Удалить", () -> {
                 Dialog dlgActions = Dialog.byTitle("Удаление");
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
             Alert.red("Заказ защищен от удаления");
-            TypifiedElement.refresh();
         } finally {
+            TypifiedElement.refresh();
             snapshotPage.switchProtectOrder(false);
         }
         snapshotPage.delete();
@@ -91,9 +87,6 @@ public class SnapshotTest extends AbstractComputeTest {
                 .filter(e -> Objects.equals(e.getSize(), disk.getSize()))
                 .count(), "Item disk не соответствует условиям или не найден");
 
-        new IndexPage()
-                .goToDisks()
-                .selectDisk(disk.getName())
-                .runActionWithCheckCost(CompareType.LESS, diskPage::delete);
+        new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.LESS, diskPage::delete);
     }
 }
