@@ -2,6 +2,7 @@ package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
+import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Dialog;
 import ui.elements.Select;

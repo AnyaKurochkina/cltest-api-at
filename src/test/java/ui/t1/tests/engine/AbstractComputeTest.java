@@ -15,7 +15,7 @@ import ui.cloud.pages.LoginPage;
 import ui.elements.TypifiedElement;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.compute.IProductT1Page;
+import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 
 @Log4j2

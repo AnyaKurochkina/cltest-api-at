@@ -79,7 +79,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     @DisplayName("UI UbuntuLinux. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
-        ubuntuLinuxPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        ubuntuLinuxPage.getBtnGeneralInfo().click();
         ubuntuLinuxPage.checkHeadersHistory();
         ubuntuLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

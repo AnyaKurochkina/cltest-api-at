@@ -62,7 +62,7 @@ public class PodmanPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -96,7 +96,7 @@ public class PodmanPage extends IProductPage {
             DropDown.byLabel("Роль").selectByTextContains(role);
             groups.forEach(group -> DropDown.byLabel("Группы").select(group));
         },ActionParameters.builder().node(node).build());
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new PodmanPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -109,7 +109,7 @@ public class PodmanPage extends IProductPage {
             DropDown groupsElement = DropDown.byLabel("Группы").clear();
             groups.forEach(groupsElement::select);
         },ActionParameters.builder().node(node).build());
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new PodmanPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -146,7 +146,7 @@ public class PodmanPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));
@@ -173,7 +173,7 @@ public class PodmanPage extends IProductPage {
     public class RoleTable extends Table {
         @Override
         protected void open() {
-            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            btnGeneralInfo.click();
         }
 
         public RoleTable() {

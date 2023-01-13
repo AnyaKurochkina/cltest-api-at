@@ -19,7 +19,7 @@ import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-import static ui.t1.pages.cloudEngine.compute.IProductT1Page.BLOCK_PARAMETERS;
+import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @BlockTests
 @ExtendWith(BeforeAllExtension.class)

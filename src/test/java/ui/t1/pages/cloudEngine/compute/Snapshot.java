@@ -2,6 +2,7 @@ package ui.t1.pages.cloudEngine.compute;
 
 import io.qameta.allure.Step;
 import ui.elements.Dialog;
+import ui.t1.pages.IProductT1Page;
 
 public class Snapshot extends IProductT1Page<Snapshot> {
 

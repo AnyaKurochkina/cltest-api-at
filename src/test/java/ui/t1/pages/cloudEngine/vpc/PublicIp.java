@@ -3,7 +3,7 @@ package ui.t1.pages.cloudEngine.vpc;
 import io.qameta.allure.Step;
 import ui.elements.Dialog;
 import ui.t1.pages.cloudEngine.compute.Disk;
-import ui.t1.pages.cloudEngine.compute.IProductT1Page;
+import ui.t1.pages.IProductT1Page;
 
 public class PublicIp extends IProductT1Page<PublicIp> {
 

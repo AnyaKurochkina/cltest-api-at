@@ -4,6 +4,7 @@ import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
+import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
 import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;

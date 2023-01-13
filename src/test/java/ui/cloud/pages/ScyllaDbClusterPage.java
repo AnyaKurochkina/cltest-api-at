@@ -118,7 +118,7 @@ public class ScyllaDbClusterPage extends IProductPage {
                 DropDown.byLabel("Имя базы данных").select(nameDb);
                 DropDown.byLabel("Имя пользователя").select(nameUserDb);
             });
-            btnGeneralInfo.shouldBe(Condition.enabled).click();
+            btnGeneralInfo.click();
             Assertions.assertTrue(
                     new Table(HEADER_NAME_USER_DB,2).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Ошибка добавления прав доступа");
         }}

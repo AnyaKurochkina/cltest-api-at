@@ -1,8 +1,9 @@
-package ui.t1.pages.cloudEngine.compute;
+package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
@@ -13,6 +14,7 @@ import ui.cloud.pages.ProductStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
+import ui.t1.pages.cloudEngine.compute.Disk;
 
 import java.time.Duration;
 import java.util.Objects;

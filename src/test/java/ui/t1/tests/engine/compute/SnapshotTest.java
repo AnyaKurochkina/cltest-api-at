@@ -22,7 +22,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 import java.util.Objects;
 
 import static core.utils.AssertUtils.AssertHeaders;
-import static ui.t1.pages.cloudEngine.compute.IProductT1Page.BLOCK_PARAMETERS;
+import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Снимки")

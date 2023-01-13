@@ -5,6 +5,7 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
+import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
 
 public class Disk extends IProductT1Page<Disk> {
