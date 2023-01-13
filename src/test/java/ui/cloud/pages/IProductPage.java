@@ -33,26 +33,26 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Getter
 public abstract class IProductPage {
     IProduct product;
-    Double preBillingCostAction;
+    protected Double preBillingCostAction;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
     SelenideElement currentProduct = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
     protected abstract void checkPowerStatus(String expectedStatus);
 
     protected SelenideElement btnHistory = $x("//button[.='История действий']");
-    protected SelenideElement btnGeneralInfo = $x("//button[.='Общая информация']");
+    protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
     SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
-    private final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
+    protected final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
             throw new CreateEntityException(String.format("Продукт необходимый для выполнения теста был создан с ошибкой:\n%s", product.getError()));
         if (Objects.nonNull(product.getLink()))
             TypifiedElement.open(product.getLink());
-        btnGeneralInfo.shouldBe(Condition.enabled);
+        btnGeneralInfo.getButton().shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         product.addLinkProduct();
         this.product = product.buildFromLink();
@@ -80,16 +80,16 @@ public abstract class IProductPage {
         new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$x("descendant::*[name()='svg']")
                 .shouldBe(Condition.match(expectValue, e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
     }
-    public SelenideElement getBtnAction(String header){return getBtnAction(header,1);}
+    public static SelenideElement getBtnAction(String header){return getBtnAction(header,1);}
 
-    public SelenideElement getBtnAction(String header,int index) {
+    public static SelenideElement getBtnAction(String header,int index) {
         return $x("(//*[.='{}']/parent::*//button[@id='actions-menu-button'])"+ postfix, header,TypifiedElement.getIndex(index));
     }
 
 
 
     @Step("Получение таблицы по заголовку")
-    public Table getTableByHeader(String header) {
+    public static Table getTableByHeader(String header) {
         return new Table($$x("(//*[text() = '{}']/ancestor-or-self::*[count(.//table) = 1])[last()]//table", header).filter(Condition.visible).first());
     }
 
@@ -139,7 +139,6 @@ public abstract class IProductPage {
             waitChangeStatus();
         if (params.isCheckLastAction())
             checkLastAction(action);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
     }
 
     @SneakyThrows
@@ -201,7 +200,6 @@ public abstract class IProductPage {
         runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
     }
 
-    //new Table("Роли узла").getRowByIndex(0)
     @Step("Расширить диск {name} на {size}ГБ")
     public void expandDisk(String name, String size, SelenideElement node) {
         runActionWithParameters($x("//td[.='{}']/../descendant::button", name),
@@ -291,7 +289,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            btnGeneralInfo.click();
         }
 
         public VirtualMachine(String columnName) {
@@ -321,9 +319,7 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getCostOrder() {
-        currentPriceOrder.shouldBe(Condition.visible, Duration.ofMinutes(3));
-        double cost = Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", currentPriceOrder.getText()))
-                .replace(',', '.'));
+        double cost = EntitiesUtils.getPreBillingCostAction(currentPriceOrder.shouldBe(Condition.visible, Duration.ofMinutes(3)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }

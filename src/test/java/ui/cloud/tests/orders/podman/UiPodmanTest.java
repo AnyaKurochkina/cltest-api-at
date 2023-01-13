@@ -79,7 +79,7 @@ public class UiPodmanTest extends UiProductTest {
     @DisplayName("UI Podman. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        podmanPage.getBtnGeneralInfo().click();
         podmanPage.checkHeadersHistory();
         podmanPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

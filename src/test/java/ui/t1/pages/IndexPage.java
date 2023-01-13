@@ -1,13 +1,24 @@
 package ui.t1.pages;
 
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import ui.t1.pages.cloudCompute.*;
+import org.openqa.selenium.WebElement;
+import ui.elements.Button;
+import ui.elements.Menu;
+import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
+import ui.t1.pages.cloudEngine.vpc.NetworkList;
+import ui.t1.pages.cloudEngine.vpc.PublicIpList;
+import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 
-import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.$$x;
+import static core.helper.StringUtils.$x;
+import static ui.cloud.pages.IProductPage.getBtnAction;
+
 
 @Getter
 public class IndexPage {
@@ -16,12 +27,23 @@ public class IndexPage {
     final SelenideElement linkDisks = $x("//a[.='Диски']");
     final SelenideElement linkSshKeys = $x("//a[.='SSH-ключи']");
     final SelenideElement linkSnapshots = $x("//a[.='Снимки']");
-    final SelenideElement linkVirtualMachines = $x("//a[.='Виртуальные машины']");
+    final SelenideElement linkVirtualMachines = $x("//a[.='Серверы']");
     final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
     final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
+    final SelenideElement linkImages = $x("//a[.='Образы']");
+    final SelenideElement linkNetworkInterfaces = $x("//a[.='Сетевые интерфейсы']");
+    final SelenideElement linkHistory = $x("//a[.='История действий']");
+    final SelenideElement linkNetworks = $x("//a[.='Сети']");
+
+    final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
     public static void go() {
         $x("//img[contains(@alt,'logo')]").shouldBe(Condition.visible).click();
+    }
+
+    public Profile goToProfile(){
+        Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
+        return new Profile();
     }
 
     @Step("Переход на страницу T1 Cloud Engine")
@@ -34,6 +56,13 @@ public class IndexPage {
     public CloudDirectorPage goToCloudDirector() {
         linkCloudDirector.click();
         return new CloudDirectorPage();
+    }
+
+    @Step("Переход на страницу История действий")
+    public ComputeHistory goToHistory() {
+        linkCloudEngine.click();
+        linkHistory.click();
+        return new ComputeHistory();
     }
 
     @Step("Переход на страницу SSH-ключи")
@@ -64,6 +93,20 @@ public class IndexPage {
         return new DiskList();
     }
 
+    @Step("Переход на страницу Сетевые интерфейсы")
+    public NetworkList goToNetworks() {
+        linkCloudEngine.click();
+        linkNetworks.click();
+        return new NetworkList();
+    }
+
+    @Step("Переход на страницу Сетевые интерфейсы")
+    public NetworkInterfaceList goToNetworkInterfaces() {
+        linkCloudEngine.click();
+        linkNetworkInterfaces.click();
+        return new NetworkInterfaceList();
+    }
+
     @Step("Переход на страницу Снимки")
     public SnapshotList goToSnapshots() {
         linkCloudEngine.click();
@@ -71,10 +114,24 @@ public class IndexPage {
         return new SnapshotList();
     }
 
+    @Step("Переход на страницу Образы")
+    public ImageList goToImages() {
+        linkCloudEngine.click();
+        linkImages.click();
+        return new ImageList();
+    }
+
     @Step("Переход на страницу Публичные IP-адреса")
     public PublicIpList goToPublicIps() {
         linkCloudEngine.click();
         linkPublicIps.click();
         return new PublicIpList();
+    }
+
+    @Step("Отключить Cloud Engine")
+    public void disconnectCloudEngine() {
+        Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
+        Button.byText("Отключить").click();
+        //Todo: дальнейшие действия пока не известны
     }
 }
