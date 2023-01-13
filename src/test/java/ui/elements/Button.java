@@ -11,6 +11,7 @@ import static core.helper.StringUtils.$x;
 
 @Getter
 public class Button implements TypifiedElement {
+    @Getter
     private final SelenideElement button;
 
     public Button(SelenideElement button) {

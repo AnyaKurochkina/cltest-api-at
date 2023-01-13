@@ -47,9 +47,9 @@ public class ImageTest {
                 .description("test_api")
                 .build()
                 .createObject();
-        Image altsisyphus = getImageByName("altsisyphus");
-        partialUpdateImageById(Objects.requireNonNull(altsisyphus).getId(), new JSONObject().put("marketing_id", expectedMarketing.getId()));
-        Image imageById = getImageById(altsisyphus.getId());
+        Image ubuntu = getImageByName("ubuntu");
+        partialUpdateImageById(Objects.requireNonNull(ubuntu).getInternalId(), new JSONObject().put("marketing_info_id", expectedMarketing.getId()));
+        Image imageById = getImageById(ubuntu.getInternalId());
         Marketing actualMarketing = imageById.getMarketing();
         assertEquals(expectedMarketing, actualMarketing);
     }

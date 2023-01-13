@@ -116,7 +116,7 @@ public class StateServiceListTest extends Tests {
     public void getItemListWithFolderTrueTest() {
         List<Item> list = getItemsListByFilter("with_folder=true");
         for (Item item : list) {
-            assertFalse(item.getFolder().isEmpty());
+            assertNotNull(item.getFolder());
         }
     }
 

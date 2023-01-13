@@ -8,7 +8,6 @@ import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
 import models.cloud.productCatalog.product.Product;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import steps.Steps;
 
 import java.io.File;
@@ -62,7 +61,7 @@ public class ProductSteps extends Steps {
     public static Product getProductByName(String name) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productUrlV2  + name + "/")
+                .get(productUrlV2 + name + "/")
                 .extractAs(Product.class);
     }
 
@@ -74,6 +73,16 @@ public class ProductSteps extends Steps {
                 .post("/api/v1/products/")
                 .assertStatus(201)
                 .extractAs(Product.class);
+    }
+
+    @Step("Создание продукта")
+    public static Product createProductByName(String name) {
+        return Product.builder()
+                .name(name)
+                .title("AtTestApiProduct")
+                .version("1.0.0")
+                .build()
+                .createObject();
     }
 
     @Step("Создание продукта")
@@ -109,6 +118,14 @@ public class ProductSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(productUrl + objectId + "/")
                 .extractAs(Product.class);
+    }
+
+    @Step("Получение продукта по Id без токена")
+    public static Response getProductByIdWithOutToken(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrl + objectId + "/").assertStatus(401);
     }
 
     @Step("Получение продукта по Id")
@@ -191,11 +208,19 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Частичное обновление продукта по имени {name}")
-    public static Response partialUpdateProductByName(String name, JSONObject object) {
-        return new Http(ProductCatalogURL)
+    public static void partialUpdateProductByName(String name, JSONObject object) {
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(productUrlV2 + name + "/");
+    }
+
+    public static Response partialUpdateProductWithOutToken(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .body(object)
+                .patch(productUrl + id + "/")
+                .assertStatus(401);
     }
 
     @Step("Обновление продукта")
@@ -256,29 +281,12 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Выгрузка продукта из Gitlab")
-    public static Response loadProductFromBitbucket(JSONObject body) {
-        return new Http(ProductCatalogURL)
+    public static void loadProductFromBitbucket(JSONObject body) {
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(productUrl + "load_from_bitbucket/")
                 .assertStatus(200);
-    }
-
-    @Step("Поиск ID продукта по имени {name} с использованием multiSearch")
-    public static String getProductObjectIdByNameWithMultiSearch(String name) {
-        String objectId = null;
-        List<Product> list = new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productUrl + "?include=total_count&page=1&per_page=50&multisearch=" + name)
-                .assertStatus(200).extractAs(GetProductList.class).getList();
-        for (Product product : list) {
-            if (product.getName().equals(name)) {
-                objectId = product.getProductId();
-                break;
-            }
-        }
-        Assertions.assertNotNull(objectId, String.format("Продукт с именем: %s, с помощью multiSearch не найден", name));
-        return objectId;
     }
 
     @Step("Копирование продукта по Id")
@@ -298,12 +306,21 @@ public class ProductSteps extends Steps {
                 .extractAs(Product.class);
     }
 
+    @Step("Копирование продукта по Id без ключа")
+    public static Response copyProductByIdWithOutToken(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setWithoutToken()
+                .post(productUrl + objectId + "/copy/")
+                .assertStatus(401);
+    }
+
     @Step("Удаление продукта по имени {name}")
     public static void deleteProductByName(String name) {
-            new Http(ProductCatalogURL)
-                    .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                    .delete(productUrlV2 + name + "/")
-                    .assertStatus(204);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(productUrlV2 + name + "/")
+                .assertStatus(204);
     }
 
     @Step("Получение info продукта")
@@ -368,5 +385,12 @@ public class ProductSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .delete(productUrl + id + "/");
+    }
+
+    @Step("Удаление продукта по Id без токена")
+    public static Response deleteProductByIdWithOutToken(String id) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .delete(productUrl + id + "/").assertStatus(401);
     }
 }

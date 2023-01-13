@@ -2,6 +2,7 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Astra;
 import models.cloud.subModels.Flavor;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
+import ui.elements.Select;
 import ui.elements.Table;
 
 import java.util.List;
@@ -89,8 +91,8 @@ public class AstraLinuxPage extends IProductPage {
     public void addGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
-            DropDown.byLabel("Роль").selectByValue(role);
-            groups.forEach(group -> DropDown.byLabel("Группы").select(group));
+            Select.byLabel("Роль").set(role);
+            groups.forEach(group -> Select.byLabel("Группы").set(group));
         });
         groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }

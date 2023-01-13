@@ -4,7 +4,6 @@ import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import httpModels.productCatalog.graphs.getUsedList.GetUsedListResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;

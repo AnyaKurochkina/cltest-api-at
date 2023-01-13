@@ -9,7 +9,6 @@ import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import steps.productCatalog.GraphSteps;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -22,7 +21,7 @@ public class ServicesListPagePC extends BaseListPage {
 
     private static final String columnName = "Код сервиса";
     private final Input searchInput = Input.byPlaceholder("Поиск");
-    private final DropDown directionDropDown = DropDown.byLabel("Направление");
+    private final Select directionDropDown = Select.byLabel("Направление");
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
     private final TextArea descriptionInput = TextArea.byName("description");
@@ -37,7 +36,7 @@ public class ServicesListPagePC extends BaseListPage {
     private final SelenideElement createButton = $x("//div[text()='Создать']/parent::button");
     private final SelenideElement cancelButton = $x("//div[text()='Отменить']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
-    private final DropDown statusDropDown = DropDown.byLabel("Статус");
+    private final Select statusDropDown = Select.byLabel("Статус");
     private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
     private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
     private final Input graphInput = Input.byLabelV2("Граф");
@@ -93,7 +92,7 @@ public class ServicesListPagePC extends BaseListPage {
     @Step("Создание сервиса '{service.name}'")
     public ServicePage createService(Service service) {
         addNewObjectButton.click();
-        directionDropDown.selectByTitle(service.getDirectionName());
+        directionDropDown.set(service.getDirectionName());
         titleInput.setValue(service.getTitle());
         nameInput.setValue(service.getName());
         if (service.getGraphId() != null) {
@@ -177,7 +176,7 @@ public class ServicesListPagePC extends BaseListPage {
     @Step("Поиск и открытие страницы сервиса '{name}'")
     public ServicePage findAndOpenServicePage(String name) {
         search(name);
-        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
+        new Table(columnName).getRowByColumnValue(columnName, name).get().click();
         TestUtils.wait(600);
         return new ServicePage();
     }
@@ -191,7 +190,7 @@ public class ServicesListPagePC extends BaseListPage {
 
     @Step("Выбор в фильтре по состоянию значения '{value}'")
     public ServicesListPagePC setStatusFilter(String value) {
-        statusDropDown.selectByDivText(value);
+        statusDropDown.set(value);
         return this;
     }
 
@@ -241,7 +240,7 @@ public class ServicesListPagePC extends BaseListPage {
         graphInput.click();
         graphInput.setValue(graphName);
         TestUtils.wait(1000);
-        $x("//div[contains(@title, '" + graphName + "')]").click();
+        $x("//div[contains(text(), '" + graphName + "')]").click();
     }
 
     @Step("Сортировка по дате создания")
@@ -258,7 +257,7 @@ public class ServicesListPagePC extends BaseListPage {
 
     @Step("Открытие страницы сервиса {name}")
     public ServicePage openServicePage(String name) {
-        new Table(columnName).getRowElementByColumnValue(columnName, name).click();
+        new Table(columnName).getRowByColumnValue(columnName, name).get().click();
         return new ServicePage();
     }
 

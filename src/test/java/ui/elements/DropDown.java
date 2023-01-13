@@ -71,14 +71,6 @@ public class DropDown implements TypifiedElement {
                 .click();
     }
 
-    @Step("Выбрать в select элемент с текстом '{value}'")
-    public void selectByDivText(String value) {
-        element.shouldBe(clickableCnd).click();
-        SelenideElement item = $x("//li/div[text()='{}']", value).exists() ? $x("//li/div[text()='{}']", value)
-                : $x("//div[@role='listbox']//div[text()='{}']", value);
-            item.shouldBe(Condition.enabled).click();
-    }
-
     @Step("Выбрать в select элемент со значением '{value}'")
     public void selectByValue(String value) {
         hover();

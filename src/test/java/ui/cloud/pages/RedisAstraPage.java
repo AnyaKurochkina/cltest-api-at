@@ -64,14 +64,14 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void checkConfiguration() {
-        checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         new Table("Роли узла").getRowByIndex(0).scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
     public void resetPassword() {
-        checkPowerStatus(ScyllaPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters("default", "Сбросить пароль","Подтвердить",  () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");

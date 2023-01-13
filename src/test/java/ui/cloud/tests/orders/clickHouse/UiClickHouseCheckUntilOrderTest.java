@@ -1,38 +1,32 @@
 package ui.cloud.tests.orders.clickHouse;
 
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.ClickHouse;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
 import ui.extesions.ConfigExtension;
+import ui.extesions.ProductInjector;
+import ui.extesions.UiProductTest;
 
-@Log4j2
+@Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Tags({@Tag("ui_clickhouse")})
+@ExtendWith(ProductInjector.class)
+@Feature("ClickHouse")
+@Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 class UiClickHouseCheckUntilOrderTest extends Tests {
 
     ClickHouse product;
+    //= ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
-    //TODO: пока так :)
-    public UiClickHouseCheckUntilOrderTest() {
-        if (Configure.ENV.equals("prod"))
-            product = ClickHouse.builder().productName("ClickHouse").env("DEV").platform("OpenStack").segment("dev-srv-app").build();
-            //product = ClickHouse.builder().env("DEV").platform("OpenStack").segment("dev-srv-app").link("https://prod-portal-front.cloud.vtb.ru/db/orders/41ccc48d-5dd0-4892-ae5e-3f1f360885ac/main?context=proj-ln4zg69jek&type=project&org=vtb").build();
-        else
-            product = ClickHouse.builder().env("DEV").platform("vSphere").segment("dev-srv-app").build();
-        product.init();
-
-    }
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -60,9 +54,13 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
         orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getConfigure().set(Product.getFlavor(product.getMaxFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getGroup2().select(accessGroup.getPrefixName());
+        orderPage.getGroup3().select(accessGroup.getPrefixName());
+        orderPage.getGroup4().select(accessGroup.getPrefixName());
+
         new ClickHouseOrderPage().checkOrderDetails();
     }
 

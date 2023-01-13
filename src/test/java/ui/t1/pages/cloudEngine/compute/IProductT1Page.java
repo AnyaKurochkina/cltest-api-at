@@ -3,7 +3,6 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
@@ -23,6 +22,7 @@ import static core.helper.StringUtils.$x;
 @Log4j2
 public class IProductT1Page<C extends IProductPage> extends IProductPage {
     public static final String BLOCK_PARAMETERS = "Основные параметры";
+    public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
 
     public IProductT1Page() {}

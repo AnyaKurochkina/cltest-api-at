@@ -26,4 +26,5 @@ public class CompactTemplate {
     @JsonProperty("system")
     private Object system;
     private Object bootable;
+    private Object size;
 }

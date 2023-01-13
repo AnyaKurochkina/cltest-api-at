@@ -28,7 +28,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
     Windows product;
-//    Windows product = Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    //= Windows.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/35089d73-1dc4-40df-9323-8264309d056a/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -52,7 +52,7 @@ public class UiWindowsTest extends UiProductTest {
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
             orderPage.getRoleServer().selectByValue(product.getRole());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);

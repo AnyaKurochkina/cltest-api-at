@@ -5,6 +5,7 @@ import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.VersionDiff;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.icon.Icon;
@@ -23,6 +24,7 @@ import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.GraphSteps.createGraph;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -318,8 +320,9 @@ public class ActionsTest extends Tests {
         Assertions.assertEquals("2.0.0", currentVersion);
         partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
-        partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 5))
-                .assertStatus(500);
+        String errorMessage = partialUpdateAction(actionTest.getActionId(), new JSONObject().put("priority", 5))
+                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Version counter full [999, 999, 999]", errorMessage);
     }
 
     @DisplayName("Обновление действия без указания версии, версия должна инкрементироваться")
@@ -357,12 +360,15 @@ public class ActionsTest extends Tests {
     @TmsLink("642530")
     public void deleteAction() {
         String actionName = "action_delete_test_api";
-        Action action = Action.builder()
+        String graphId = createGraph(RandomStringUtils.randomAlphabetic(10).toLowerCase()).getGraphId();
+        JSONObject action = Action.builder()
                 .actionName(actionName)
                 .title(actionName)
+                .graphId(graphId)
                 .build()
-                .createObject();
-        deleteActionById(action.getActionId());
+                .toJson();
+        String id = createAction(action).extractAs(Action.class).getActionId();
+        deleteActionById(id);
         assertFalse(isActionExists(actionName));
     }
 
