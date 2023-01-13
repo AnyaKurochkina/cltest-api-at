@@ -17,6 +17,9 @@ import java.util.function.Supplier;
  */
 @Log4j2
 public class Waiting {
+
+    private Waiting() {}
+
     /**
      * Заснуть на таймаут
      *
