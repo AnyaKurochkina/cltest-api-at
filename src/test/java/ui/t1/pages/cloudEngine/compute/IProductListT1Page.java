@@ -4,13 +4,11 @@ import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
+import ui.t1.pages.cloudEngine.Column;
 import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
 
 import java.time.Duration;
-
-import static ui.t1.pages.cloudEngine.compute.ComputeHistory.COLUMN_OPERATION;
-import static ui.t1.pages.cloudEngine.compute.ComputeHistory.COLUMN_STATUS;
 
 public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     private String productLink;
@@ -26,8 +24,8 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
 
     @Override
     public void checkLastAction(String action) {
-        Assertions.assertEquals(action, new ComputeHistory().getFirstValueByColumn(COLUMN_OPERATION));
-        Assertions.assertEquals("Завершено", new ComputeHistory().getFirstValueByColumn(COLUMN_STATUS));
+        Assertions.assertEquals(action, new ComputeHistory().getFirstValueByColumn(Column.OPERATION));
+        Assertions.assertEquals("Завершено", new ComputeHistory().getFirstValueByColumn(Column.STATUS));
         TypifiedElement.open(productLink);
     }
 }

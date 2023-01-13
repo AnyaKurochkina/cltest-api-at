@@ -7,6 +7,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.WebElement;
+import ui.elements.Button;
 import ui.elements.Menu;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
@@ -16,6 +17,7 @@ import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
+import static ui.cloud.pages.IProductPage.getBtnAction;
 
 
 @Getter
@@ -124,5 +126,12 @@ public class IndexPage {
         linkCloudEngine.click();
         linkPublicIps.click();
         return new PublicIpList();
+    }
+
+    @Step("Отключить Cloud Engine")
+    public void disconnectCloudEngine() {
+        Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
+        Button.byText("Отключить").click();
+        //Todo: дальнейшие действия пока не известны
     }
 }

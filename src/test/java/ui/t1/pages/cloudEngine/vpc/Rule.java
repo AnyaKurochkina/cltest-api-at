@@ -5,11 +5,10 @@ import core.utils.Waiting;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import ui.elements.*;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 import java.util.Objects;
-
-import static ui.t1.pages.cloudEngine.vpc.SecurityGroup.RulesTable.COLUMN_STATUS;
 
 @Getter
 public class Rule {
@@ -60,7 +59,7 @@ public class Rule {
         Dialog dialog = Dialog.byTitle("Добавить правило");
         dialog.clickButton("Добавить");
         dialog.getDialog().shouldNotBe(Condition.visible);
-        Waiting.findWidthRefresh(() -> SecurityGroup.RulesTable.getRule(description).getValueByColumn(COLUMN_STATUS).equals("Доступно"), Duration.ofMinutes(1));
+        Waiting.findWidthRefresh(() -> SecurityGroup.RulesTable.getRule(description).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1));
         return this;
     }
 

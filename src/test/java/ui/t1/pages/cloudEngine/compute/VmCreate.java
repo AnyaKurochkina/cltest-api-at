@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
 import ui.elements.*;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -129,8 +130,8 @@ public class VmCreate {
     public VmCreate clickOrder() {
         EntitiesUtils.clickOrder();
         EntitiesUtils.waitCreate(() -> new VmList.VmTable()
-                .getRowByColumnValue(VmList.VmTable.COLUMN_NAME, name)
-                .getElementByColumn(VmList.VmTable.COLUMN_STATUS)
+                .getRowByColumnValue(Column.NAME, name)
+                .getElementByColumn(Column.STATUS)
                 .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(1)));
         return this;
     }

@@ -3,11 +3,11 @@ package ui.t1.pages.cloudEngine.vpc;
 import core.utils.Waiting;
 import lombok.Getter;
 import ui.elements.*;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-import static ui.t1.pages.cloudEngine.vpc.SecurityGroup.RulesTable.COLUMN_DESC;
 
 @Getter
 public class SecurityGroup {
@@ -20,20 +20,18 @@ public class SecurityGroup {
 
     public void deleteRule(String rule) {
         RulesTable.removeRule(rule).click();
-        Waiting.findWidthRefresh(() -> !new RulesTable().isColumnValueEquals(COLUMN_DESC, rule), Duration.ofMinutes(1));
+        Waiting.findWidthRefresh(() -> !new RulesTable().isColumnValueEquals(Column.DESC, rule), Duration.ofMinutes(1));
     }
 
 
     public static class RulesTable extends Table {
-        static final String COLUMN_DESC = "Описание";
-        static final String COLUMN_STATUS = "Статус";
 
         public RulesTable() {
-            super(COLUMN_DESC);
+            super(Column.DESC);
         }
 
         public static Row getRule(String rule) {
-            return new RulesTable().getRowByColumnValue(COLUMN_DESC, rule);
+            return new RulesTable().getRowByColumnValue(Column.DESC, rule);
         }
 
         public static Button removeRule(String rule) {

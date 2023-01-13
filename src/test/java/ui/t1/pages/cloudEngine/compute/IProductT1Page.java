@@ -13,6 +13,7 @@ import ui.cloud.pages.IProductPage;
 import ui.cloud.pages.ProductStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 import java.util.Objects;
@@ -21,7 +22,6 @@ import static core.helper.StringUtils.$x;
 
 @Log4j2
 public class IProductT1Page<C extends IProductPage> extends IProductPage {
-    private static final String COLUMN_POWER = "Статус";
     public static final String BLOCK_PARAMETERS = "Основные параметры";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
 
@@ -37,6 +37,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
         Waiting.find(() -> new TopInfo().getPowerStatus().equals(Disk.TopInfo.POWER_STATUS_DELETED), Duration.ofSeconds(30));
     }
 
+    @SuppressWarnings("unchecked")
     public C checkCreate(){
         checkLastAction("Развертывание");
         btnGeneralInfo.click();
@@ -77,6 +78,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
         } else log.info("Статус действия {}", status);
     }
 
+    @Step("Получить ID продукта")
     public String getOrderId() {
         Menu.byElement(getBtnAction("Действия")).select("Скопировать ID");
         Alert.green("ID скопирован");
@@ -105,12 +107,12 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     public class TopInfo extends VirtualMachine {
         public TopInfo() {
-            super(COLUMN_POWER);
+            super(Column.STATUS);
         }
 
         @Override
         public String getPowerStatus() {
-            return getPowerStatus(COLUMN_POWER);
+            return getPowerStatus(Column.STATUS);
         }
 
     }

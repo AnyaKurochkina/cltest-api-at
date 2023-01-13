@@ -1,11 +1,10 @@
 package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
+import ui.t1.pages.cloudEngine.Column;
 import ui.elements.DataTable;
 
 import java.util.List;
-
-import static ui.t1.pages.cloudEngine.compute.VmList.VmTable.COLUMN_NAME;
 
 public class VmList {
 
@@ -15,20 +14,17 @@ public class VmList {
     }
 
     public Vm selectCompute(String name){
-        new VmTable().getRowElementByColumnValue(COLUMN_NAME, name).shouldBe(Condition.visible).click();
+        new VmTable().getRowByColumnValue(Column.NAME, name).get().shouldBe(Condition.visible).click();
         return new Vm();
     }
 
     public List<String> getVmList(){
-        return new VmTable().getColumnValuesList(COLUMN_NAME);
+        return new VmTable().getColumnValuesList(Column.NAME);
     }
 
     public static class VmTable extends DataTable {
-        public static final String COLUMN_NAME = "Имя";
-        public static final String COLUMN_STATUS = "Статус";
-
         public VmTable() {
-            super(COLUMN_NAME);
+            super(Column.NAME);
         }
     }
 

@@ -2,16 +2,12 @@ package ui.t1.pages.cloudEngine.vpc;
 
 import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
-import org.junit.jupiter.api.Assertions;
-import ui.elements.DataTable;
-import ui.elements.Dialog;
-import ui.elements.Input;
-import ui.elements.TextArea;
+import ui.elements.*;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-import static ui.t1.pages.cloudEngine.vpc.SecurityGroup.RulesTable.COLUMN_STATUS;
 import static ui.t1.pages.cloudEngine.vpc.SecurityGroupList.SecurityGroupsTable.getSecurityGroup;
 
 public class SecurityGroupList {
@@ -21,12 +17,12 @@ public class SecurityGroupList {
         Input.byLabel("Имя").setValue(name);
         TextArea.byLabel("Описание").setValue(desc);
         Dialog.byTitle("Добавить группу безопасности").clickButton("Добавить");
-        Waiting.findWidthRefresh(() -> getSecurityGroup(name).getValueByColumn(COLUMN_STATUS).equals("Доступно"), Duration.ofMinutes(1));
+        Waiting.findWidthRefresh(() -> getSecurityGroup(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1));
     }
 
     public void deleteGroup(String name) {
         getSecurityGroup(name).get().$("button").click();
-        Waiting.findWidthRefresh(() -> !new SecurityGroupsTable().isColumnValueEquals(SecurityGroupsTable.COLUMN_NAME, name), Duration.ofMinutes(1));
+        Waiting.findWidthRefresh(() -> !new SecurityGroupsTable().isColumnValueEquals(Column.NOMINATION, name), Duration.ofMinutes(1));
     }
 
     public SecurityGroup selectGroup(String name) {
@@ -36,14 +32,13 @@ public class SecurityGroupList {
     }
 
     public static class SecurityGroupsTable extends DataTable {
-        public static final String COLUMN_NAME = "Наименование";
 
         public SecurityGroupsTable() {
-            super(COLUMN_NAME);
+            super(Column.NOMINATION);
         }
 
         public static Row getSecurityGroup(String name) {
-            return new SecurityGroupsTable().getRowByColumnValue(SecurityGroupsTable.COLUMN_NAME, name);
+            return new SecurityGroupsTable().getRowByColumnValue(Column.NOMINATION, name);
         }
     }
 }

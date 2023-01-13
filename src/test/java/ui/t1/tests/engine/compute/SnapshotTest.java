@@ -11,6 +11,7 @@ import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
+import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
@@ -21,8 +22,6 @@ import ui.t1.tests.engine.AbstractComputeTest;
 import java.util.Objects;
 
 import static core.utils.AssertUtils.AssertHeaders;
-import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_NAME;
-import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_SYSTEM;
 import static ui.t1.pages.cloudEngine.compute.IProductT1Page.BLOCK_PARAMETERS;
 
 @ExtendWith(BeforeAllExtension.class)
@@ -45,7 +44,7 @@ public class SnapshotTest extends AbstractComputeTest {
                 .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setSshKey(sshKey).clickOrder();
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
-        Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
+        Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).checkCreate();
         snapshot.runActionWithCheckCost(CompareType.MORE, () -> snapshot.createDisk(vm.getName()));

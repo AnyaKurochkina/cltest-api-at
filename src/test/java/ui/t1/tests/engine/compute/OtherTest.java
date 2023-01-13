@@ -10,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.NotFoundException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
+import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
@@ -19,9 +20,6 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.List;
 import java.util.Objects;
-
-import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_NAME;
-import static ui.t1.pages.cloudEngine.compute.Disk.DiskInfo.COLUMN_SYSTEM;
 
 @Feature("Дополнительные")
 @ExtendWith(BeforeAllExtension.class)
@@ -211,7 +209,7 @@ public class OtherTest extends AbstractComputeTest {
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderIdVm = vmPage.getOrderId();
-        Disk disk = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
+        Disk disk = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         String orderIdDisk = disk.getOrderId();
         disk.createSnapshot(vm.getName());
         new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).checkCreate();
@@ -251,7 +249,7 @@ public class OtherTest extends AbstractComputeTest {
                 .clickOrder();
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
-        Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(COLUMN_SYSTEM, "Да").getValueByColumn(COLUMN_NAME));
+        Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         diskPage.createSnapshot(vm.getName());
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).checkCreate();
         snapshot.runActionWithCheckCost(CompareType.MORE, () -> snapshot.createDisk(vm.getName()));

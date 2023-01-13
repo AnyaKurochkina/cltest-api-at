@@ -80,7 +80,7 @@ public abstract class IProductPage {
                 .shouldBe(Condition.match(expectValue, e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
     }
 
-    public SelenideElement getBtnAction(String header) {
+    public static SelenideElement getBtnAction(String header) {
         return $x("//*[.='{}']/parent::*//button[@id='actions-menu-button']", header);
     }
 
@@ -196,7 +196,6 @@ public abstract class IProductPage {
         runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
     }
 
-    //new Table("Роли узла").getRowByIndex(0)
     @Step("Расширить диск {name} на {size}ГБ")
     public void expandDisk(String name, String size, SelenideElement node) {
         runActionWithParameters($x("//td[.='{}']/../descendant::button", name),

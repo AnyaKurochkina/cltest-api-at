@@ -35,11 +35,7 @@ public abstract class AbstractComputeTest extends Tests {
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
 
     public AbstractComputeTest() {
-//        Project project = Project.builder().isForOrders(true).build().createObject();
-//        String parentFolder = AuthorizerSteps.getParentProject(project.getId());
-//        this.project = Project.builder().projectName("Проект для тестов Cloud Compute").folderName(parentFolder).build().createObjectPrivateAccess();
-        this.project = Project.builder().id("proj-votmndlfyh").build();
-//        this.project = Project.builder().id("proj-2cdvptgjx7").build();
+        project = Project.builder().isForOrders(true).build().createObject();
     }
 
     @BeforeEach
@@ -59,7 +55,7 @@ public abstract class AbstractComputeTest extends Tests {
         return new Generex(entitiesPrefix + "-[a-z]{6}").random();
     }
 
-    private void deleteProduct(IProductT1Page<?> product){
+    private void deleteProduct(IProductT1Page<?> product) {
         try {
             product.delete();
         } catch (Throwable e) {

@@ -2,15 +2,15 @@ package ui.t1.pages.cloudEngine.vpc;
 
 import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
 import ui.elements.*;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-import static ui.t1.pages.cloudEngine.vpc.Network.SubnetListInfo.COLUMN_NAME;
-import static ui.t1.pages.cloudEngine.vpc.Network.SubnetListInfo.COLUMN_STATUS;
 
 public class Network {
     Button btnAddSubnet = Button.byElement($x("//button[.='Добавить']"));
@@ -20,9 +20,10 @@ public class Network {
         return new CreateSubnet();
     }
 
+    @Step("Удалить подсеть {subnet}")
     public void deleteSubnet(String subnet) {
         SubnetListInfo.getMenuSubnet(subnet).select("Удалить");
-        Waiting.findWidthRefresh(() -> !new SubnetListInfo().isColumnValueEquals(COLUMN_NAME, subnet), Duration.ofMinutes(1));
+        Waiting.findWidthRefresh(() -> !new SubnetListInfo().isColumnValueEquals(Column.NOMINATION, subnet), Duration.ofMinutes(1));
     }
 
     @Getter
@@ -75,21 +76,19 @@ public class Network {
             dialog.clickButton("Добавить");
             dialog.getDialog().shouldNotBe(Condition.visible);
             EntitiesUtils.waitCreate(() ->
-                    Waiting.findWidthRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(COLUMN_STATUS).equals("Доступно"), Duration.ofMinutes(1)));
+                    Waiting.findWidthRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(Column.NOMINATION).equals("Доступно"), Duration.ofMinutes(1)));
             return this;
         }
     }
 
     public static class SubnetListInfo extends Table {
-        static final String COLUMN_NAME = "Наименование";
-        static final String COLUMN_STATUS = "Статус";
 
         public SubnetListInfo() {
-            super(COLUMN_NAME);
+            super(Column.NOMINATION);
         }
 
         public static Row getSubnet(String subnet) {
-            return new SubnetListInfo().getRowByColumnValue(COLUMN_NAME, subnet);
+            return new SubnetListInfo().getRowByColumnValue(Column.NOMINATION, subnet);
         }
 
         public static Menu getMenuSubnet(String subnet) {

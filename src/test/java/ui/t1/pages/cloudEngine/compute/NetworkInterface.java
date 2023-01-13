@@ -2,6 +2,7 @@ package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
 import ui.cloud.tests.ActionParameters;
+import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Menu;
 import ui.elements.Table;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
@@ -18,7 +19,7 @@ public class NetworkInterface extends IProductT1Page<NetworkInterface> {
     }
 
     public Table.Row getIpRow(String ip){
-        return getTableByHeader("Публичные IP").getRowByColumnValue("Имя", ip);
+        return getTableByHeader("Публичные IP").getRowByColumnValue(Column.NAME, ip);
     }
 
 }

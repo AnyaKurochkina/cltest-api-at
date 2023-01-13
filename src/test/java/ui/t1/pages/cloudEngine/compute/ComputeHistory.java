@@ -1,16 +1,15 @@
 package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.SelenideElement;
+import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Table;
 
 public class ComputeHistory extends Table {
-    public static final String COLUMN_OPERATION = "Операция";
-    public static final String COLUMN_STATUS = "Статус";
     public ComputeHistory() {
-        super(COLUMN_OPERATION);
+        super(Column.OPERATION);
     }
 
     public static SelenideElement getLastActionStatus(){
-        return new ComputeHistory().getValueByColumnInFirstRow(COLUMN_STATUS);
+        return new ComputeHistory().getValueByColumnInFirstRow(Column.STATUS);
     }
 }
