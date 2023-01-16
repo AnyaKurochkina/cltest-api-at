@@ -10,10 +10,7 @@ import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.StringJoiner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,8 +30,8 @@ public final class StringUtils {
         return str;
     }
 
-    public static String DoubleToString(double d) {
-        return String.format("%,.2f", d).replace(',', ' ').replace('.', ',');
+    public static String doubleToString(double d) {
+        return String.format(Locale.US, "%,.2f", d).replace(',', ' ').replace('.', ',');
     }
 
     public static SelenideElement $x(@Language("XPath") String xpath, Object... args) {
