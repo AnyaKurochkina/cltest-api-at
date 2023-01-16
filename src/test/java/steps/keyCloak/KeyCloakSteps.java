@@ -31,7 +31,7 @@ public class KeyCloakSteps {
                 .setWithoutToken()
                 .disableAttachmentLog()
                 .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
-                                Objects.requireNonNull(globalUser.getUsername()), Objects.requireNonNull(globalUser.getPassword())))
+                        Objects.requireNonNull(globalUser.getUsername()), Objects.requireNonNull(globalUser.getPassword())))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
@@ -55,9 +55,9 @@ public class KeyCloakSteps {
         return userToken.getToken();
     }
 
-    //    @Step("Получение ServiceAccountToken")
-    public static synchronized String getServiceAccountToken(String projectId) {
-        ServiceAccount serviceAccount = ServiceAccount.builder().projectId(projectId).build().createObject();
+    //@Step("Получение ServiceAccountToken")
+    public static synchronized String getServiceAccountToken(String projectId, Role role) {
+        ServiceAccount serviceAccount = ServiceAccount.builder().projectId(projectId).role(role).build().createObject();
         log.debug("Получен SA {} для проекта {}", serviceAccount.getId(), projectId);
         ServiceAccountToken saToken = ServiceAccountToken.builder().serviceAccountName(serviceAccount.getId()).build().createObject();
         long currentTime = System.currentTimeMillis() / 1000L;
@@ -75,7 +75,7 @@ public class KeyCloakSteps {
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
                 .body(String.format("client_id=%s&client_secret=%s&grant_type=client_credentials",
-                                Objects.requireNonNull(client.getId()), Objects.requireNonNull(client.getSecret())))
+                        Objects.requireNonNull(client.getId()), Objects.requireNonNull(client.getSecret())))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
