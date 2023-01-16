@@ -6,8 +6,6 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-
 import models.cloud.orderService.products.ScyllaDbCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -79,7 +77,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @DisplayName("UI Scylla_db_cluster_astra. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-        scyllaPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        scyllaPage.getBtnGeneralInfo().click();
         scyllaPage.checkHeadersHistory();
         scyllaPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

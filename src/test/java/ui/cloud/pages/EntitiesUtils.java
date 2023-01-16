@@ -3,11 +3,15 @@ package ui.cloud.pages;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.WebElement;
+import steps.stateService.StateServiceSteps;
 import ui.elements.Alert;
 import ui.elements.Button;
 import ui.elements.Table;
@@ -29,19 +33,34 @@ public class EntitiesUtils {
         return preBillingPrice.get();
     }
 
+    public static void setPreBillingPrice(Double price) {
+        preBillingPrice.set(price);
+    }
+
     public static void updatePreBillingPrice() {
         if (Product.getCalculationDetails().exists()) {
             preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
         } else preBillingPrice.set(null);
     }
 
-    @Step("Получение стоимости предбиллинга")
+    public static String getCurrentProjectId(){
+        return StringUtils.findByRegex("context=([^&]*)", WebDriverRunner.getWebDriver().getCurrentUrl());
+    }
+
+    @SneakyThrows
+    public static void waitCreate(Executable executable){
+        try {
+            executable.execute();
+        } catch (Throwable e) {
+            Exception exception = new Exception("Последняя ошибка:\n" + StateServiceSteps.getLastErrorByProjectId(EntitiesUtils.getCurrentProjectId()));
+            e.addSuppressed(exception);
+            throw e;
+        }
+    }
+
     public static double getPreBillingCostAction(SelenideElement element) {
-        element.shouldBe(Condition.visible);
-        double cost = Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?\\d{1,5},\\d{2})", element.getText()))
-                .replace(',', '.'));
-        log.debug("Стоимость предбиллинга {}", cost);
-        return cost;
+        return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?[\\d\\s]{1,},\\d{2})", element.getText()))
+                .replace(',', '.').replaceAll(" ", ""));
     }
 
     @Step("Ожидание выполнение действия с продуктом")

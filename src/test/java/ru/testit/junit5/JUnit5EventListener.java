@@ -17,6 +17,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static core.helper.Configure.isIntegrationTestIt;
@@ -71,7 +72,10 @@ public class JUnit5EventListener implements Extension, BeforeAllCallback, AfterA
 //            if (isIntegrationTestIt())
 //                RunningHandler.finishTest(extensionContext.getRequiredTestMethod(), throwable, /*getSubId(extensionContext)*/ TestITClient.getConfigurationId());
 //            throw new Exception(throwable.getMessage());
-            throw throwable;
+//            if(Objects.nonNull(throwable.getCause()))
+//                throw throwable.getCause();
+//            else
+                throw throwable;
         } finally {
             Http.removeFixedRole();
         }

@@ -72,7 +72,7 @@ public class ClickHousePage extends IProductPage {
         new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithoutParameters(name, "Удалить БД");
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
     }
@@ -84,7 +84,7 @@ public class ClickHousePage extends IProductPage {
         expandDisk(name, size, node);
         int value = Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Assertions.assertEquals(String.valueOf(value), getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
@@ -94,7 +94,7 @@ public class ClickHousePage extends IProductPage {
 
     public void resetPasswordDb() {
         new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         runActionWithParameters(HEADER_DB_OWNER, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -103,7 +103,7 @@ public class ClickHousePage extends IProductPage {
     }
 
     public void resetPasswordUserDb() {
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         runActionWithParameters(HEADER_DB_USERS, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
