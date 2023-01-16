@@ -1,10 +1,13 @@
 package ui.extesions;
 
+import core.exception.CreateEntityException;
 import core.helper.Configure;
 import io.qameta.allure.AllureLifecycle;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.junit.BlockTests;
+import org.junit.IgnoreInterceptTestExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -22,6 +25,7 @@ import ru.testit.junit5.StepsAspects;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static io.qameta.allure.Allure.getLifecycle;
@@ -30,21 +34,39 @@ import static io.qameta.allure.Allure.getLifecycle;
 public class InterceptTestExtension implements InvocationInterceptor, TestExecutionListener {
     private static final List<String> runBeforeAll = Collections.synchronizedList(new ArrayList<>());
     private static final List<Test> allTests = Collections.synchronizedList(new ArrayList<>());
+    private static final Map<String, Throwable> failClass = new ConcurrentHashMap<>();
 
+    @SneakyThrows
+    private boolean isIgnoreIntercept(ExtensionContext extensionContext, String method) {
+        return Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods())
+                .filter(m -> m.getName().equals(method))
+                .findFirst()
+                .orElseThrow(() -> new Exception("Не найден тест " + method)).isAnnotationPresent(IgnoreInterceptTestExtension.class);
+    }
 
     @SneakyThrows
     public void interceptTestMethod(final Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
+        boolean isOnlyIgnoredTests = allTests.stream().filter(test -> test.getClassName().equals(extensionContext.getRequiredTestClass().getName()))
+                .allMatch(test -> isIgnoreIntercept(extensionContext, test.getTestName()));
+
+        Method before = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods())
+                .filter(method -> method.isAnnotationPresent(Order.class))
+                .min(Comparator.comparingInt(o -> o.getAnnotation(Order.class).value()))
+                .orElseThrow(() -> new Exception("В классе нет методов с Order"));
+
         //если бефор в классе уже запускался
         if (!runBeforeAll.contains(extensionContext.getParent().orElseThrow(Exception::new).getUniqueId())) {
-            Method before = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods())
-                    .filter(method -> method.isAnnotationPresent(Order.class))
-                    .min(Comparator.comparingInt(o -> o.getAnnotation(Order.class).value()))
-                    .orElseThrow(() -> new Exception("В классе нет методов с Order"));
             //если первый тест не будет запущен
-            if (allTests.stream().noneMatch(test -> test.getClassName().equals(before.getDeclaringClass().getName()) && test.getTestName().equals(before.getName()))) {
+            if (allTests.stream().noneMatch(test -> test.getClassName().equals(before.getDeclaringClass().getName()) && test.getTestName().equals(before.getName())) && !isOnlyIgnoredTests) {
                 before.setAccessible(true);
                 try {
-                    invoke(before, extensionContext.getRequiredTestInstance(), getDisplayName(before));
+                    try {
+                        invoke(before, extensionContext.getRequiredTestInstance(), getDisplayName(before));
+                    } catch (Throwable e) {
+                        if (extensionContext.getRequiredTestClass().isAnnotationPresent(BlockTests.class))
+                            failClass.put(extensionContext.getRequiredTestClass().getName(), e);
+                        throw e;
+                    }
                     runEachMethod(extensionContext, AfterEach.class);
                     runEachMethod(extensionContext, BeforeEach.class);
                 } catch (Throwable e) {
@@ -64,8 +86,14 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
 
         Throwable testThrow = null;
         try {
+            if (failClass.containsKey(extensionContext.getRequiredTestClass().getName()))
+                throw new CreateEntityException(failClass.get(extensionContext.getRequiredTestClass().getName()));
             invocation.proceed();
         } catch (Throwable e) {
+            if (extensionContext.getRequiredTestClass().getName().equals(before.getDeclaringClass().getName())
+                    && extensionContext.getRequiredTestMethod().getName().equals(before.getName())
+                    && extensionContext.getRequiredTestClass().isAnnotationPresent(BlockTests.class))
+                failClass.put(extensionContext.getRequiredTestClass().getName(), e);
             testThrow = e;
         }
 
@@ -75,7 +103,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
                     .filter(method -> method.isAnnotationPresent(Order.class))
                     .max(Comparator.comparingInt(o -> o.getAnnotation(Order.class).value()))
                     .orElseThrow(() -> new Exception("В классе нет методов с Order"));
-            if (allTests.stream().noneMatch(test -> test.getClassName().equals(after.getDeclaringClass().getName()) && test.getTestName().equals(after.getName()))) {
+            if (allTests.stream().noneMatch(test -> test.getClassName().equals(after.getDeclaringClass().getName()) && test.getTestName().equals(after.getName())) && !isOnlyIgnoredTests) {
                 after.setAccessible(true);
                 try {
                     runEachMethod(extensionContext, AfterEach.class);
@@ -110,7 +138,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
         method.invoke(obj);
     }
 
-    public static void modifyStep(String name){
+    public static void modifyStep(String name) {
         AllureLifecycle allureLifecycle = getLifecycle();
         String id = allureLifecycle.getCurrentTestCaseOrStep().orElse(null);
         if (Objects.nonNull(id)) {
@@ -129,7 +157,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
             new ConfigExtension().afterEach(extensionContext);
         if (clazz.equals(BeforeEach.class))
             new ConfigExtension().beforeEach(extensionContext);
-        List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getDeclaredMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
+        List<Method> list = Arrays.stream(extensionContext.getRequiredTestClass().getMethods()).filter(method -> method.isAnnotationPresent(clazz)).collect(Collectors.toList());
         for (Method m : list) {
             try {
                 m.setAccessible(true);
@@ -169,9 +197,11 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
     @EqualsAndHashCode(onlyExplicitlyIncluded = true)
     @ToString(onlyExplicitlyIncluded = true)
     private static class Test {
-        @ToString.Include @EqualsAndHashCode.Include
+        @ToString.Include
+        @EqualsAndHashCode.Include
         String className;
-        @ToString.Include @EqualsAndHashCode.Include
+        @ToString.Include
+        @EqualsAndHashCode.Include
         String testName;
         Integer order;
         @Setter

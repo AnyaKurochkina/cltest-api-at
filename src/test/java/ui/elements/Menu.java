@@ -24,7 +24,7 @@ public class Menu implements TypifiedElement {
     }
 
     public void select(String item) {
-        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).shouldBe(new ClickAndRunMenu(item), Duration.ofSeconds(3));
+        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).shouldBe(new ClickAndRunMenu(item), Duration.ofSeconds(10));
         getItem(item).hover().shouldBe(clickableCnd).click();
     }
 
@@ -34,6 +34,7 @@ public class Menu implements TypifiedElement {
 
     private class ClickAndRunMenu extends Condition {
         private final String item;
+        private boolean isClicked;
 
         public ClickAndRunMenu(String item) {
             super("Ожидание отображения меню");
@@ -42,10 +43,10 @@ public class Menu implements TypifiedElement {
 
         @Override
         public boolean apply(@NotNull Driver driver, @NotNull WebElement webElement) {
-            if (getItem(item).isDisplayed())
-                return true;
-            if (webElement.isDisplayed())
+            if (!isClicked && webElement.isDisplayed() && webElement.isEnabled()) {
                 webElement.click();
+                isClicked = true;
+            }
             return getItem(item).isDisplayed();
         }
     }

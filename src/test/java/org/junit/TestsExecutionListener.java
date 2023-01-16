@@ -74,7 +74,9 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
-        Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        synchronized (TestsExecutionListener.class) {
+            Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
+        }
 
         if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
             RemoteWebDriver driver = new RemoteWebDriver(new java.net.URL(Configuration.remote), Configuration.browserCapabilities);

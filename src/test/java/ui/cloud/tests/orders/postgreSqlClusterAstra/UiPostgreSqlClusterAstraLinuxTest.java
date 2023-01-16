@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
@@ -80,7 +81,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        pSqlPage.getBtnGeneralInfo().click();
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

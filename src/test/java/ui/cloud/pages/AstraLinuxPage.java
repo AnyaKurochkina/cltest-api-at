@@ -61,7 +61,7 @@ public class AstraLinuxPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -136,7 +136,7 @@ public class AstraLinuxPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));
@@ -163,7 +163,7 @@ public class AstraLinuxPage extends IProductPage {
     public class RoleTable extends Table {
         @Override
         protected void open() {
-            btnGeneralInfo.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            btnGeneralInfo.click();
         }
 
         public RoleTable() {

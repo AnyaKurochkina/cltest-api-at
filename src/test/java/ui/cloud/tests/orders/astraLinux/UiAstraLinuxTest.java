@@ -77,7 +77,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @DisplayName("UI AstraLinux. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        astraLinuxPage.getBtnGeneralInfo().click();
         astraLinuxPage.checkHeadersHistory();
         astraLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

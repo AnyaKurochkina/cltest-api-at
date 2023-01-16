@@ -102,7 +102,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
             CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
             DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)); //,ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build()
         });
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
@@ -115,7 +115,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
             dlg.setInputValue("Новое имя кластера", name);
             CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю, что понимаю что делаю.").setChecked(true);
         });
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         Assertions.assertEquals(name, new Table(HEADER_NAME_CLUSTER).getRowByColumnValue(HEADER_NAME_CLUSTER, name).getValueByColumn(HEADER_NAME_CLUSTER), "БД не принадлежит пользователю");
     }
 
@@ -178,7 +178,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
          runActionWithParameters(BLOCK_CLUSTER, "Увеличить дисковое пространство", "Подтвердить",
                         () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
          //expandDisk(name, size, node);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
@@ -242,8 +242,8 @@ public class ApacheKafkaClusterPage extends IProductPage {
         }
         runActionWithParameters("Список топиков", "Пакетное удаление Topic-ов Kafka", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Пакетное удаление Topic-ов Kafka");
-            for (int i = 0; i < names.size(); i++) {
-                dlg.setDropDownValue("Имена Topic-ов", names.get(i));
+            for (String name : names) {
+                dlg.setSelectValue("Имена Topic-ов", name);
             }
         });
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();

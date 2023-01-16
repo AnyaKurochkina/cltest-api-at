@@ -91,7 +91,7 @@ public class ScyllaDbClusterPage extends IProductPage {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя хранилища ключей", name);
             });
-            btnGeneralInfo.shouldBe(Condition.enabled).click();
+            btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains(HEADER_NAME_DB, name), "БД не существует");
         }
     }
@@ -105,7 +105,7 @@ public class ScyllaDbClusterPage extends IProductPage {
                 generatePassButton.shouldBe(Condition.enabled).click();
                 Alert.green("Значение скопировано");
             });
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Пользователь не существует");
         }
     }
@@ -118,7 +118,7 @@ public class ScyllaDbClusterPage extends IProductPage {
                 DropDown.byLabel("Имя базы данных").select(nameDb);
                 DropDown.byLabel("Имя пользователя").select(nameUserDb);
             });
-            btnGeneralInfo.shouldBe(Condition.enabled).click();
+            btnGeneralInfo.click();
             Assertions.assertTrue(
                     new Table(HEADER_NAME_USER_DB,2).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Ошибка добавления прав доступа");
         }}
@@ -145,7 +145,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         String secondSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", "/app/scylla/logs").getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));

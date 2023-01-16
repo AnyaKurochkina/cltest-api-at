@@ -24,30 +24,12 @@ public class Tests {
     @BeforeEach
     @SneakyThrows
     @Title("Инициализация логирования")
-    public void beforeScenarios(TestInfo testInfo) {
-//        String className = testInfo.getTestClass().orElseThrow(Exception::new).getSimpleName();
-//        String methodName = testInfo.getTestMethod().orElseThrow(Exception::new).getName();
-//        Allure.tms(className + "#" + methodName, "");
+    public void beforeScenarios() {
         UniqueTest.clearStepLog();
     }
 
     public static void putAttachLog(String text) {
         UniqueTest.writeStepLog(text);
-//        String stepId = getLifecycle().getCurrentTestCase().orElse(null);
-//        if (stepId == null)
-//            return;
-//        String source = stepId + "-attachment.txt";
-//        DataFileHelper.appendToFile(Configure.getAppProp("allure.results") + source, text + "\n");
-//        Attachment attachment = new Attachment().setSource(source).setName("log-test.log");
-//        getLifecycle().updateTestCase(stepId, s -> s.setAttachments(Collections.singletonList(attachment)));
     }
-
-//    public static String getAttachLog() {
-//        return UniqueTest.getStepLog();
-//    }
-
-//    public static boolean isAttachLog() {
-//        return UniqueTest.getStepLog() != null;
-//    }
 
 }
