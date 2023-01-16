@@ -33,6 +33,10 @@ public final class StringUtils {
         return str;
     }
 
+    public static String DoubleToString(double d) {
+        return String.format("%,.2f", d).replace(',', ' ').replace('.', ',');
+    }
+
     public static SelenideElement $x(@Language("XPath") String xpath, Object... args) {
         return Selenide.$x(format(xpath, args));
     }
