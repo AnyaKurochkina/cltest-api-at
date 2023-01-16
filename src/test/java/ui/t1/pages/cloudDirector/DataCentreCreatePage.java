@@ -24,4 +24,8 @@ public class DataCentreCreatePage {
         clickOrder();
         return new VMwareOrganizationPage();
     }
+
+    public void orderDataCentreWithSameName() {
+        clickOrder("Имя виртуального дата-центра не уникально в организации");
+    }
 }

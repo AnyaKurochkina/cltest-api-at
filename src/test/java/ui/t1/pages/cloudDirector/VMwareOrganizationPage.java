@@ -58,10 +58,18 @@ public class VMwareOrganizationPage {
                 .orderDataCentre();
     }
 
+    @Step("Создание виртуального дата центра c существующим именем")
+    public void addDataCentreWithExistName(String name) {
+        new DataCentreTable().clickAdd();
+        new DataCentreCreatePage()
+                .setDataCentreName(name)
+                .orderDataCentreWithSameName();
+    }
+
     @Step("Выбор виртуального дата центра с именем {name}")
     public DataCentrePage selectDataCentre(String name) {
-      new DataCentreTable().getRowByColumnValue("Название", name).get().click();
-      return new DataCentrePage();
+        new DataCentreTable().getRowByColumnValue("Название", name).get().click();
+        return new DataCentrePage();
     }
 
     @Step("Ожидание смены статуса")

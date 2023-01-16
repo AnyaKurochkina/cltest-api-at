@@ -30,10 +30,9 @@ public class EntitiesUtils {
     }
 
     public static void updatePreBillingPrice() {
-        if(Product.getCalculationDetails().exists()) {
+        if (Product.getCalculationDetails().exists()) {
             preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
-        }
-        else preBillingPrice.set(null);
+        } else preBillingPrice.set(null);
     }
 
     @Step("Получение стоимости предбиллинга")
@@ -64,10 +63,16 @@ public class EntitiesUtils {
                         new ProductStatus(e).getStatus().equals(status)), duration);
     }
 
-    public static void clickOrder(){
+    public static void clickOrder() {
         updatePreBillingPrice();
         Button.byText("Заказать").click();
         Alert.green("Заказ успешно создан");
+    }
+
+    public static void clickOrder(String errorMessage) {
+        updatePreBillingPrice();
+        Button.byText("Заказать").click();
+        Alert.red(errorMessage);
     }
 
 }
