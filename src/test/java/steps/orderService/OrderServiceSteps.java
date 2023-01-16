@@ -11,6 +11,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
+import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.ResourcePool;
@@ -346,17 +347,18 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение домена для проекта {project}")
     public static String getDomainByProject(String project) {
+        Organization organization = Organization.builder().build().createObject();
         if (Configure.ENV.equals("ift")) {
             return new Http(OrderServiceURL)
                     .setRole(Role.ORDER_SERVICE_ADMIN)
-                    .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
+                    .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25&organzation={}", project, organization.getName())
                     .assertStatus(200)
                     .jsonPath()
                     .get("list.find{it.code=='corp.dev.vtb'}.code");
         } else {
             return new Http(OrderServiceURL)
                     .setRole(Role.ORDER_SERVICE_ADMIN)
-                    .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25", project)
+                    .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25&organzation={}", project, organization.getName())
                     .assertStatus(200)
                     .jsonPath()
                     .get("list.collect{e -> e}.shuffled()[0].code");
