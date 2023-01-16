@@ -96,7 +96,7 @@ public class Redis extends IProduct {
     public void checkConnect() {
         String url = "";
         try {
-            url = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL);
+            url = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[0]");
             Jedis jedis = new Jedis(url);
             jedis.auth(appUser, appUserPassword);
             jedis.close();
