@@ -1,7 +1,7 @@
 package ui.elements;
 
 import com.codeborne.selenide.*;
-import com.codeborne.selenide.ex.ElementShouldNot;
+import com.codeborne.selenide.ex.ElementNotFound;
 import com.codeborne.selenide.ex.ElementShouldNot;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
@@ -13,7 +13,6 @@ import java.time.Duration;
 import java.util.Collections;
 import java.util.Objects;
 
-import static api.Tests.clickableCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$$x;
 import static org.openqa.selenium.support.Color.fromString;
@@ -45,17 +44,16 @@ public class Alert implements TypifiedElement {
     public void waitClose() {
         try {
             element.shouldNot(Condition.visible);
-        } catch (ElementShouldNot ignored) {
+        } catch (ElementNotFound ignored) {
         }
     }
 
     public void close() {
         try {
-            SelenideElement button = element.$x("button").shouldBe(clickableCnd);
+            SelenideElement button = element.$("button").shouldBe(clickableCnd);
             button.click();
             button.shouldNotBe(Condition.visible);
-        } catch (ElementShouldNot ignored) {
-        }
+        } catch (ElementNotFound ignored) {}
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
@@ -76,7 +74,7 @@ public class Alert implements TypifiedElement {
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }
-        } catch (ElementShouldNot ignored) {}
+        } catch (ElementNotFound ignored) {}
     }
 
     public enum Color {

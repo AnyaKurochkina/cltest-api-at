@@ -24,8 +24,7 @@ import java.util.Objects;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
-import static core.helper.StringUtils.$$x;
-import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.*;
 import static ui.elements.TypifiedElement.postfix;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -264,7 +263,7 @@ public abstract class IProductPage {
         if (preBillingCostAction == null)
             return;
         TypifiedElement.refresh();
-        currentPriceOrder.shouldBe(Condition.matchText(String.valueOf(preBillingCostAction).replace('.', ',')), Duration.ofMinutes(3));
+        currentPriceOrder.shouldBe(Condition.matchText(doubleToString(preBillingCostAction)), Duration.ofMinutes(3));
         Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if(currentCost == preBillingCostAction && preBillingCostAction == 0)
             return;

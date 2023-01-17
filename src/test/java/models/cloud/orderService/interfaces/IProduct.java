@@ -365,7 +365,7 @@ public abstract class IProduct extends Entity {
 //        Waiting.sleep((int) ((Math.random() * 20000) + 10000));
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(projectId)
+                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                 .body(deleteObjectIfNotFoundInUiSchema(toJson(), getProductId()))
                 .post("/v1/projects/" + projectId + "/orders")
                 .assertStatus(201)
