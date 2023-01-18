@@ -230,5 +230,18 @@
     "objectClassName": "models.cloud.authorizer.InformationSystem",
     "id": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
     "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Project",
+    "informationSystem": "8e33baf8-e181-457b-9d60-e5dc470fe8fa",
+    "id": "proj-ahjjqmlgnm",
+    "projectName": "PROD",
+    "projectEnvironmentPrefix": {
+      "env": "PROD",
+      "id": "745947e5-dd3a-4f90-bbef-9391eb757b0c",
+      "projectEnvironmentId": "4f908a53-b0dc-47cc-8c18-9cd3e912a985",
+      "envType": "PROD"
+    },
+    "isForOrders": true
   }
 ]

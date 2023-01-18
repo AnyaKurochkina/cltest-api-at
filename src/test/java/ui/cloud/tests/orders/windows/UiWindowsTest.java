@@ -9,7 +9,6 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
 import models.cloud.portalBack.AccessGroup;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
@@ -81,7 +80,7 @@ public class UiWindowsTest extends UiProductTest {
     @DisplayName("UI Windows. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         WindowsPage winPage = new WindowsPage(product);
-        winPage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        winPage.getBtnGeneralInfo().click();
         winPage.checkHeadersHistory();
         winPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

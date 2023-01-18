@@ -59,16 +59,16 @@ public class ScyllaDbCluster extends IProduct {
         if (productName == null)
             productName = "ScyllaDB Cluster Astra";
         initProduct();
-//        if (domain == null)
-//            domain = OrderServiceSteps.getDomainBySegment(this, segment);
+        if (segment == null)
+            segment = OrderServiceSteps.getNetSegment(this);
+        if (domain == null)
+            domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if (flavor == null)
             flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (version == null)
             version = getRandomProductVersionByPathEnum("scylladb_version.enum");
-        if (segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
         if (dataCentre == null)
             dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (dc1 == null)

@@ -35,7 +35,7 @@ public class CalcCostSteps extends Steps {
     @Step("Получение расхода для заказа")
     public static Float getCostByUid(IProduct product) {
         Float cost = new Http(CalculatorURL)
-                    .setProjectId(product.getProjectId())
+                    .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                     .get("/orders/cost/?uuid__in={}", product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()

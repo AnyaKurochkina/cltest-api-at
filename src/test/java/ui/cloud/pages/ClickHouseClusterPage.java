@@ -81,7 +81,7 @@ public class ClickHouseClusterPage extends IProductPage {
         new ClickHouseClusterPage.VirtualMachineTable("Статус").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithoutParameters(name, "Удалить БД");
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
     }
@@ -91,7 +91,7 @@ public class ClickHouseClusterPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.shouldBe(Condition.enabled).click();
+        btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));
@@ -167,7 +167,7 @@ public class ClickHouseClusterPage extends IProductPage {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_GROUP_AD, "Добавить пользовательскую группу", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Добавить пользовательскую группу");
-            dlg.setDropDownValue("Группы", nameGroup);
+            dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
         Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
@@ -176,7 +176,7 @@ public class ClickHouseClusterPage extends IProductPage {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithParameters(HEADER_GROUP_ADMIN, "Добавить группу администраторов", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Добавить группу администраторов");
-            dlg.setDropDownValue("Группы", nameGroup);
+            dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
         Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");

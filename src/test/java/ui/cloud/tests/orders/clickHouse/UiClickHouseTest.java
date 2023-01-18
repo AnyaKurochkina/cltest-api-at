@@ -79,7 +79,7 @@ public class UiClickHouseTest extends UiProductTest {
     void
     checkHeaderHistoryTable() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.getBtnGeneralInfo().shouldBe(Condition.enabled).click();
+        clickHousePage.getBtnGeneralInfo().click();
         clickHousePage.checkHeadersHistory();
         clickHousePage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();

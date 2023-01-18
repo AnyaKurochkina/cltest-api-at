@@ -35,7 +35,7 @@ public class ReferencesStep extends Steps {
     public static List<Flavor> getProductFlavorsLinkedList(IProduct product) {
         String jsonArray = new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .setProjectId(Objects.requireNonNull(product.getProjectId()))
+                .setProjectId(Objects.requireNonNull(product.getProjectId()), Role.ORDER_SERVICE_ADMIN)
                 .get("/api/v1/pages/?directory__name=flavors&tags={}", product.getProductCatalogName())
                 .assertStatus(200)
                 .toString();
@@ -55,7 +55,7 @@ public class ReferencesStep extends Steps {
         Project project = Project.builder().id(product.getProjectId()).build().createObject();
         String jsonArray = new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .setProjectId(Objects.requireNonNull(product.getProjectId()))
+                .setProjectId(Objects.requireNonNull(product.getProjectId()), Role.ORDER_SERVICE_ADMIN)
                 .get("/api/v1/pages/?page_filter_chain=flavor:{}:{}:{}", filter,
                         project.getProjectEnvironmentPrefix().getEnvType().toLowerCase(),
                         project.getProjectEnvironmentPrefix().getEnv().toLowerCase())
@@ -73,7 +73,7 @@ public class ReferencesStep extends Steps {
     public static List<Flavor> getFlavorsByPageFilterLinkedList(IProduct product, String pageFilter) {
         String jsonArray = new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .setProjectId(Objects.requireNonNull(product).getProjectId())
+                .setProjectId(Objects.requireNonNull(product).getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/api/v1/pages/?page_filter_chain={}", pageFilter)
                 .assertStatus(200)
                 .toString();
