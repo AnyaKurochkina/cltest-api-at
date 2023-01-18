@@ -67,7 +67,7 @@ public class CostSteps extends Steps {
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
             consumption = new Http(CalculatorURL)
-                    .setProjectId(product.getProjectId())
+                    .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                     .get("/orders/cost/?uuid__in={}", product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
@@ -124,7 +124,7 @@ public class CostSteps extends Steps {
                 template.append("items", costItem);
             }
             return new Http(TarifficatorURL)
-                    .setProjectId(project.id)
+                    .setProjectId(project.id, Role.ORDER_SERVICE_ADMIN)
                     .body(template)
                     .post("/v1/cost_items")
                     .assertStatus(200)
@@ -133,7 +133,7 @@ public class CostSteps extends Steps {
         }
 
         JsonPath response = new Http(TarifficatorURL)
-                .setProjectId(project.id)
+                .setProjectId(project.id, Role.ORDER_SERVICE_ADMIN)
                 .body(template)
                 .post("/v1/cost")
                 .assertStatus(200)
@@ -162,7 +162,7 @@ public class CostSteps extends Steps {
         template.getJSONObject("order").put("product_id", productId);
 
         return new Http(TarifficatorURL)
-                .setProjectId(project.id)
+                .setProjectId(project.id, Role.ORDER_SERVICE_ADMIN)
                 .body(template)
                 .post("/v1/cost")
                 .assertStatus(200)
@@ -183,7 +183,7 @@ public class CostSteps extends Steps {
                 .set("$.id", product.getOrderId())
                 .set("$.order.attrs", data)
                 .send(TarifficatorURL)
-                .setProjectId(product.getProjectId())
+                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .post("/v1/cost")
                 .assertStatus(200)
                 .jsonPath()

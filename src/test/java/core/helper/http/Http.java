@@ -166,9 +166,9 @@ public class Http {
         return request();
     }
 
-    public Http setProjectId(String projectId) {
+    public Http setProjectId(String projectId, Role role) {
         if (!isFixedRole())
-            this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId);
+            this.token = "bearer " + KeyCloakSteps.getServiceAccountToken(projectId, role);
         return this;
     }
 
