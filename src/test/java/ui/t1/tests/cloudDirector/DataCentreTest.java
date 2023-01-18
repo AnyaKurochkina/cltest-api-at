@@ -1,61 +1,24 @@
 package ui.t1.tests.cloudDirector;
 
-import api.Tests;
-import core.enums.Role;
-import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import lombok.extern.log4j.Log4j2;
-import models.cloud.authorizer.Project;
-import models.t1.portalBack.VmWareOrganization;
-import org.apache.commons.lang3.RandomStringUtils;
+import io.qameta.allure.TmsLinks;
+import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ru.testit.annotations.Title;
-import steps.authorizer.AuthorizerSteps;
 import ui.cloud.pages.CompareType;
-import ui.cloud.pages.LoginPage;
-import ui.extesions.ConfigExtension;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 
-import java.util.UUID;
-
-import static steps.portalBack.VdcOrganizationSteps.createVMwareOrganization;
 import static steps.portalBack.VdcOrganizationSteps.deleteVMwareOrganization;
 
+@BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@ExtendWith(ConfigExtension.class)
-@Epic("Cloud Director")
-@Feature("VMWare организация. Виртуальны дата-центр.")
-@Tags({@Tag("ui_cloud_director")})
-@Log4j2
-public class DataCentreTest extends Tests {
-    Project project;
-    VmWareOrganization vmWareOrganization;
-    String dataCentreName;
+@Feature("VMWare организация. Виртуальный дата-центр.")
 
-    public DataCentreTest() {
-        Project project = Project.builder().isForOrders(true).build().createObject();
-        String parentFolder = AuthorizerSteps.getParentProject(project.getId());
-        this.project = Project.builder()
-                .projectName("Проект для теста Виртуального дата центра")
-                .folderName(parentFolder)
-                .build()
-                .createObjectPrivateAccess();
-        String name = UUID.randomUUID().toString().substring(25);
-        vmWareOrganization = createVMwareOrganization(name, this.project.getId());
-        dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase();
-    }
-
-    @BeforeEach
-    @Title("Авторизация на портале")
-    void beforeEach() {
-        new LoginPage(project.getId())
-                .signIn(Role.CLOUD_ADMIN);
-    }
+public class DataCentreTest extends AbstractCloudDirectorTest {
 
     @Test
     @Order(1)
@@ -82,17 +45,18 @@ public class DataCentreTest extends Tests {
 
     @Test
     @Order(3)
-    @TmsLink("158901")
-    @DisplayName("VMware. Зарезервировать внешние IP адреса")
+    @TmsLinks({@TmsLink("158901"), @TmsLink("767870")})
+    @DisplayName("VMware. Зарезервировать/отозвать внешние IP адреса")
     public void reserveExternalIPAddressesTest() {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addIpAddresses(2));
+        dataCentrePage.runActionWithCheckCost(CompareType.LESS, dataCentrePage::removeIpAddresses);
     }
 
     @Test
-    @Order(4)
+    @Order(5)
     @TmsLink("559036")
     @DisplayName("VMware. Изменение конфигурации VDC Allocation Pool")
     public void changeConfigVDCAllocationPoolTest() {

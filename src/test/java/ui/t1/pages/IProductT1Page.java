@@ -61,6 +61,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Override
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
+        getBtnGeneralInfo().getButton().shouldBe(Condition.visible);
         if(btnHistory.exists()) {
             TypifiedElement.refresh();
             btnHistory.shouldBe(Condition.enabled).click();

@@ -93,5 +93,4 @@ public class EntitiesUtils {
         Button.byText("Заказать").click();
         Alert.red(errorMessage);
     }
-
 }

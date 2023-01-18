@@ -2,6 +2,7 @@ package ui.t1.pages.cloudDirector;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.EntitiesUtils;
@@ -68,6 +69,7 @@ public class VMwareOrganizationPage {
 
     @Step("Выбор виртуального дата центра с именем {name}")
     public DataCentrePage selectDataCentre(String name) {
+        Waiting.sleep(500);
         new DataCentreTable().getRowByColumnValue("Название", name).get().click();
         return new DataCentrePage();
     }
@@ -76,11 +78,6 @@ public class VMwareOrganizationPage {
     public VMwareOrganizationPage waitChangeStatus() {
         EntitiesUtils.waitChangeStatus(new DataCentreTable(), Duration.ofMinutes(8));
         return this;
-    }
-
-    @Step("Получение статуса дата-центра")
-    public ProductStatus getDataCentreStatus() {
-        return new DataCentreTable().getStatus();
     }
 
     @Step("Редактирование пользователя")

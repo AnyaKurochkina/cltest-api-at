@@ -64,7 +64,7 @@ public class Alert implements TypifiedElement {
                 .filter(Condition.visible).stream()
                 .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
                 .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
-        close();
+ //       close();
         return this;
     }
 
