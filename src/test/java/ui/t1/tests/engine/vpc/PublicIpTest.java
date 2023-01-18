@@ -11,6 +11,7 @@ import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
@@ -23,6 +24,7 @@ import java.util.Objects;
 import static core.utils.AssertUtils.AssertHeaders;
 
 @BlockTests
+@ExtendWith(BeforeAllExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Публичные IP")

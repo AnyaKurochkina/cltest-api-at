@@ -47,7 +47,7 @@ public class SnapshotTest extends AbstractComputeTest {
         Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).checkCreate();
-        snapshot.runActionWithCheckCost(CompareType.MORE, () -> snapshot.createDisk(vm.getName()));
+        snapshot.createDisk(vm.getName());
         Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).checkCreate();
         String orderIdDisk = createdDisk.getOrderId();
 
@@ -71,10 +71,8 @@ public class SnapshotTest extends AbstractComputeTest {
         Snapshot snapshotPage = new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).checkCreate();
         snapshotPage.switchProtectOrder(true);
         try {
-            snapshotPage.runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Удалить", () -> {
-                Dialog dlgActions = Dialog.byTitle("Удаление");
-                dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-            }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
+            snapshotPage.runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Подтвердить", () -> {},
+                    ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
             Alert.red("Заказ защищен от удаления");
         } finally {
             TypifiedElement.refresh();

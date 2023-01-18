@@ -7,13 +7,10 @@ import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import steps.authorizer.AuthorizerSteps;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-@ExtendWith(BeforeAllExtension.class)
 @Feature("Cloud Engine")
 public class EngineTest extends AbstractComputeTest {
 

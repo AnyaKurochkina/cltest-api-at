@@ -53,13 +53,12 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setBootSize(2)
                 .setBootType(hddTypeFirst)
                 .setSubnet(Select.RANDOM_VALUE)
-                .setSshKey(sshKey);
+                .setSwitchPublicIp(true);
         SelenideElement button = Button.byText("Заказать").getButton();
-        button.should(activeCnd);
-        vmPage.setSwitchPublicIp(true);
         button.shouldNot(activeCnd);
-        vmPage.setSwitchPublicIp(false)
-                .setDescription(new Generex("[a-zA-Z0-9-_]{3,10}").random())
+        vmPage.setSshKey(sshKey);
+        button.should(activeCnd);
+        vmPage.setDescription(new Generex("[a-zA-Z0-9-_]{3,10}").random())
                 .setDeleteOnTermination(false)
                 .setFlavor(Select.RANDOM_VALUE)
                 .setFlavorName(flavorName)

@@ -37,7 +37,7 @@ public class VmCreate {
     }
 
     public VmCreate setFlavorName(String flavorName) {
-        this.flavorName = Select.byLabel("Серия").set(flavorName);
+        this.flavorName = Select.byLabel("Серия").setContains(flavorName);
         return this;
     }
 
