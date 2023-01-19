@@ -23,9 +23,6 @@ import java.util.Random;
 public class Moon extends IProduct {
     @ToString.Include
     public String resourcePoolLabel;
-    @ToString.Include
-    String segment;
-    String dataCentre;
 
     @Override
     public Entity init() {
@@ -33,9 +30,9 @@ public class Moon extends IProduct {
         productName = "Moon";
         initProduct();
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
+            setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
         return this;
     }
 
@@ -58,8 +55,8 @@ public class Moon extends IProduct {
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.product_id", productId)
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.net_segment", segment)
+                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.attrs.user_mark", "moon" + new Random().nextInt())
                 .set("$.order.label", getLabel())
                 .build();

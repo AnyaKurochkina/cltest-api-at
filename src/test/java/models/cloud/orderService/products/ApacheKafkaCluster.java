@@ -17,7 +17,7 @@ import models.cloud.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.references.ReferencesStep;
+import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -31,11 +31,7 @@ import static core.utils.Waiting.sleep;
 @NoArgsConstructor
 @SuperBuilder
 public class ApacheKafkaCluster extends IProduct {
-    @ToString.Include
-    String segment;
-    String dataCentre;
     String kafkaVersion;
-    String domain;
     @Builder.Default
     public List<KafkaTopic> topics = new ArrayList<>();
     Flavor flavor;
@@ -49,7 +45,6 @@ public class ApacheKafkaCluster extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -68,26 +63,30 @@ public class ApacheKafkaCluster extends IProduct {
 //            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
             kafkaVersion = "2.13-2.4.1";
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.domain", getDomain())
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka-3:zookeeper-1"))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .remove("$.order.attrs.ad_logon_grants", isTest())
                 //Fix

@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import redis.clients.jedis.Jedis;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -24,10 +25,6 @@ import steps.orderService.OrderServiceSteps;
 @SuperBuilder
 public class Redis extends IProduct {
     @ToString.Include
-    String segment;
-    String dataCentre;
-    String domain;
-    @ToString.Include
     String osVersion;
     String appUserPassword;
     String appUser;
@@ -36,7 +33,6 @@ public class Redis extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -48,32 +44,35 @@ public class Redis extends IProduct {
         if (appUser == null)
             appUser = "app_user";
         initProduct();
-        if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
         if (osVersion == null) {
             osVersion = getRandomOsVersion();
         }
         if (appUserPassword == null) {
             appUserPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
         }
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (redisVersion == null)
             redisVersion = getRandomProductVersionByPathEnum("redis_version.enum");
+        if(segment == null)
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
     public JSONObject toJson() {
-        Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.domain", getDomain())
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.redis_version", redisVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.attrs.os_version", osVersion)

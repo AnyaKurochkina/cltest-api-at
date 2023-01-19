@@ -13,6 +13,7 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -26,12 +27,8 @@ import java.util.stream.Stream;
 @SuperBuilder
 public class Windows extends IProduct {
     @ToString.Include
-    String segment;
-    String dataCentre;
-    @ToString.Include
     String osVersion;
     String role;
-    public String domain;
     Flavor flavor;
     private static String ADD_DISK_PATH = "data.find{it.type=='vm'}.data.config.extra_disks.any{it.path=='%s'}";
     private static String DISK_SIZE = "data.find{it.type=='vm'}.data.config.extra_disks.find{it.path=='%s'}.size";
@@ -54,7 +51,6 @@ public class Windows extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
         String host = (String) OrderServiceSteps.getProductsField(this, "product_data[0].hostname");
         Assertions.assertTrue(host.contains("-" + roles.get(role)));
@@ -73,26 +69,30 @@ public class Windows extends IProduct {
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
+            setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.domain", getDomain())
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.role", role)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())

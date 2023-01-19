@@ -51,11 +51,6 @@ Astra:
   - options:
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
-PostgresPro:
-  - options:
-      - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
 ApacheKafka:
   - options:
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "7.9" }
@@ -79,10 +74,6 @@ LoadBalancer:
 PostgresSQLCluster:
   - options:
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-Elasticsearch:
-  - options:
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
 
 ApacheKafkaCluster:

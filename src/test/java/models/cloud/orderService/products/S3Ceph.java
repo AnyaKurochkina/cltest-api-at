@@ -20,9 +20,6 @@ import steps.resourceManager.ResourceManagerSteps;
 @NoArgsConstructor
 @SuperBuilder
 public class S3Ceph extends IProduct {
-    private String segment;
-    //    private String platform;
-    private String dataCentre;
 
     @Override
     public Entity init() {
@@ -30,9 +27,9 @@ public class S3Ceph extends IProduct {
         productName = "S3 CEPH Tenant";
         initProduct();
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
         return this;
     }
 
@@ -41,8 +38,8 @@ public class S3Ceph extends IProduct {
         Project project = Project.builder().id(projectId).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.net_segment", segment)
+                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.product_id", productId)
 //                .set("$.order.attrs.platform", platform)
                 .set("$.order.label", getLabel())
