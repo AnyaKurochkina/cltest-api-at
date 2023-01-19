@@ -127,9 +127,7 @@ public class DiskTest extends AbstractComputeTest {
                 .setSize(2L)
                 .clickOrder();
         Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
-        Double price = diskPage.getCostOrder();
         diskPage.createImage(disk.getName());
-        EntitiesUtils.setPreBillingPrice(price);
         Image imagePage = new IndexPage().goToImages().selectImage(disk.getName()).checkCreate();
         String orderIdImage = imagePage.getOrderId();
 

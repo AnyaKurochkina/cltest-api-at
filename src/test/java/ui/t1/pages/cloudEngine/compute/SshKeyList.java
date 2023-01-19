@@ -6,12 +6,14 @@ import org.junit.jupiter.api.Assertions;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
 
+import java.util.List;
+
 public class SshKeyList {
     public static final String SSH_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCSI82vsEXJoV4Co1HPjUd8ldwjTRbJsE27yzpc3rcxfqIrB9vte7J0YkCCXuZZsYEufIMYWXcXHOLJEqLnoJsp0EjJ5wOVBc6I10WozLm458P0mwPEbc6N5Z0MQ8gZk3i3yOap+G9owWMirlfArz2afKL4E+6rXfY+XpfPceGPJ8dGDWvuMnvwIYWenz8HwBRvQwR8FtJyUOP7sOdsuTz6T+E+qQiuvBY0ciUwAaFbGWhKtgk7dJd73ZxZIZFg3jFxySScePcEsf4nC+61siqqaSBzLk+jyNbrURTeQ0ZYoYR3jMexgUAY/8cNki89U/OfWNBG6jqCWn/K2BcgX1cl";
 
     @Step("Добавить ключ {nameKey}")
     public void addKey(String nameKey, String login) {
-        if(new KeysTable().isColumnValueEquals(Column.TITLE, nameKey))
+        if (new KeysTable().isColumnValueEquals(Column.TITLE, nameKey))
             return;
         new KeysTable().clickAdd();
         Dialog.byTitle("Добавление SSH-ключа")
@@ -47,13 +49,17 @@ public class SshKeyList {
         Assertions.assertTrue(new KeysTable().isColumnValueEquals(Column.TITLE, newNameKey));
     }
 
+    public List<String> getSshKeysList() {
+        return new KeysTable().getColumnValuesList(Column.TITLE);
+    }
+
     private static class KeysTable extends DataTable {
 
         public KeysTable() {
             super(Column.TITLE);
         }
 
-        public static Menu getMenuKey(String nameKey){
+        public static Menu getMenuKey(String nameKey) {
             return Menu.byElement(new KeysTable().getRowByColumnValue(Column.TITLE, nameKey).getElementByColumnIndex(5));
         }
     }

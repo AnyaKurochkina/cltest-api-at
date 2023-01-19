@@ -37,10 +37,6 @@ ApacheKafkaCluster:
   - options:
       - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
 
-ScyllaDb:
-  - options:
-      - { platform: "OpenStack", env: "EDU", version: "4.4.8", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-
 PostgresSQLCluster:
   - options:
       - { platform: "Nutanix", env: "MIGR", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }

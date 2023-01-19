@@ -28,11 +28,7 @@ import java.util.Random;
 public class KafkaService extends IProduct {
     public static final String KAFKA_CLUSTER_ACL_ROLE = "data[0].data.config.acls.any{it.client_cn=='%s' & it.client_role=='%s'}";
     public static final String KAFKA_CLUSTER_ACL_GROUP = "data[0].data.config.group_acls.any{it.group_name=='%s'}";
-    @ToString.Include
-    String segment;
-    String dataCentre;
     String topicName;
-    String domain;
 
     @Override
     public Entity init() {
@@ -40,16 +36,19 @@ public class KafkaService extends IProduct {
         productName = "Kafka Topic как услуга";
         initProduct();
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -58,10 +57,10 @@ public class KafkaService extends IProduct {
         Project project = Project.builder().id(projectId).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.topic_name", "1418_" + new Random().nextInt())
-                .set("$.order.attrs.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .build();

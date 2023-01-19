@@ -27,12 +27,12 @@ public abstract class AbstractComputeTest extends Tests {
     protected Project project;
     protected String availabilityZone = "ru-central1-a";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
-    protected String hddTypeFirst = "SSD";
+    protected String hddTypeFirst = "HDD";
     protected String hddTypeSecond = "HDD";
     protected String securityGroup = "default";
-    protected String sshKey = "default";
-    protected String flavorName = "Intel Broadwell";
+    protected String flavorName = "Intel";
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
+    protected String sshKey = getRandomName();
 
     public AbstractComputeTest() {
         project = Project.builder().isForOrders(true).build().createObject();
@@ -74,6 +74,8 @@ public abstract class AbstractComputeTest extends Tests {
                 .filter(e -> e.startsWith(entitiesPrefix)).forEach(e -> deleteProduct(new IndexPage().goToSnapshots().selectSnapshot(e)));
         new IndexPage().goToImages().getImageList().stream()
                 .filter(e -> e.startsWith(entitiesPrefix)).forEach(e -> deleteProduct(new IndexPage().goToImages().selectImage(e)));
+        new IndexPage().goToSshKeys().getSshKeysList().stream()
+                .filter(e -> e.startsWith(entitiesPrefix)).forEach(e -> new IndexPage().goToSshKeys().deleteKey(e));
         Selenide.closeWebDriver();
     }
 }

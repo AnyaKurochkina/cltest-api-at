@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.portalBack.AccessGroup;
 import steps.Steps;
 
 import java.util.List;
@@ -28,7 +29,8 @@ public class PortalBackSteps extends Steps {
             {"migr", "TEST"},
             {"hotfix", "TEST"},
             {"preprod", "TEST"},
-            {"lt", "TEST"}
+            {"lt", "TEST"},
+            {"prod", "PROD"}
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     @SneakyThrows
@@ -84,5 +86,18 @@ public class PortalBackSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .get("[0].unique_name");
+    }
+
+    @Step("Получение случайной группы доступа")
+    public static String getRandomAccessGroup(String projectId, String domain) {
+        String accessGroup = new Http(PortalBackURL)
+                .setRole(Role.ACCESS_GROUP_ADMIN)
+                .get("/v1/projects/{}/access_groups?f[purpose]=compute&page=1&per_page=25", projectId)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list.findAll{it.domain == '" + domain + "'}.collect{e -> e}.shuffled()[0].name");
+        if(Objects.isNull(accessGroup))
+            accessGroup = ((AccessGroup) AccessGroup.builder().projectName(projectId).domain(domain).build().createObject()).getPrefixName();
+        return accessGroup;
     }
 }

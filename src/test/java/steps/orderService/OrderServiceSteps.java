@@ -335,11 +335,15 @@ public class OrderServiceSteps extends Steps {
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
     }
 
-    @Step("Получение домена для сегмента сети {netSegment}")
-    public static String getDomainBySegment(IProduct product, String netSegment) {
+    @Step("Получение домена для сегмента сети")
+    public static String getDomain(IProduct product) {
+        Organization organization = Organization.builder().build().createObject();
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/domains?net_segment_code={}&page=1&per_page=25", netSegment)
+                .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                        product.getSegment(),
+                        organization.getName(),
+                        product.getProductName())
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -365,11 +369,30 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public static String getDataCentreBySegment(IProduct product, String netSegment) {
-        log.info("Получение ДЦ для сегмента сети " + netSegment);
+    public static String getDataCentre(IProduct product) {
+        log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
+        Organization org = Organization.builder().build().createObject();
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/data_centers?net_segment_code={}&page=1&per_page=25", netSegment)
+                .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                        product.getSegment(),
+                        org.getName(),
+                        product.getProductName())
+                .assertStatus(200)
+                .jsonPath()
+                .get("list.collect{e -> e}.shuffled()[0].code");
+    }
+
+    public static String getPlatform(IProduct product) {
+        log.info("Получение Платформы для ДЦ {} и сегмента {}", product.getDataCentre(), product.getSegment());
+        Organization org = Organization.builder().build().createObject();
+        return new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .get("/v1/platforms?net_segment_code={}&data_center_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                        product.getSegment(),
+                        product.getDataCentre(),
+                        org.getName(),
+                        product.getProductName())
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -396,7 +419,7 @@ public class OrderServiceSteps extends Steps {
 
         List<Object> pathList = jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter));
         String actions = "-";
-        if(Objects.nonNull(pathList))
+        if (Objects.nonNull(pathList))
             actions = Arrays.toString(pathList.toArray());
         Assertions.assertNotEquals("", id, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
 
@@ -446,7 +469,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static Object getProductsField(IProduct product, String path, Class<?> clazz) {
-        return getProductsField(product,path,clazz, true);
+        return getProductsField(product, path, clazz, true);
     }
 
     @Step("Получение значения по пути {path}")
@@ -462,7 +485,7 @@ public class OrderServiceSteps extends Steps {
             s = jsonPath.getObject(path, clazz);
         else
             s = jsonPath.get(path);
-        if(assertion) {
+        if (assertion) {
             log.info(String.format("getFiledProduct return: %s", s));
             Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
         }

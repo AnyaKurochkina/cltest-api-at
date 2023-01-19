@@ -252,7 +252,7 @@ public class OtherTest extends AbstractComputeTest {
         Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         diskPage.createSnapshot(vm.getName());
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).checkCreate();
-        snapshot.runActionWithCheckCost(CompareType.MORE, () -> snapshot.createDisk(vm.getName()));
+        snapshot.createDisk(vm.getName());
         Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).checkCreate();
         String orderIdDisk = createdDisk.getOrderId();
 

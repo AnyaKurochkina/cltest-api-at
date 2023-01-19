@@ -76,7 +76,7 @@ public class Network {
             dialog.clickButton("Добавить");
             dialog.getDialog().shouldNotBe(Condition.visible);
             EntitiesUtils.waitCreate(() ->
-                    Waiting.findWidthRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(Column.NOMINATION).equals("Доступно"), Duration.ofMinutes(1)));
+                    Waiting.findWidthRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1)));
             return this;
         }
     }

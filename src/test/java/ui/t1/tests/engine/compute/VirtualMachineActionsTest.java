@@ -94,7 +94,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     void resize() {
         Vm vmPage = new IndexPage().goToVirtualMachine().selectCompute(vm.getName());
         vmPage.runActionWithCheckCost(CompareType.LESS, vmPage::stop);
-        vmPage.runActionWithCheckCost(CompareType.EQUALS, () -> vmPage.resize("AMD Ryzen 7"));
+        vmPage.runActionWithCheckCost(CompareType.EQUALS, () -> vmPage.resize("Intel"));
     }
 
     @Test
