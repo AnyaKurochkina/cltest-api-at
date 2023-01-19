@@ -374,7 +374,7 @@ public class OrderServiceSteps extends Steps {
         Organization org = Organization.builder().build().createObject();
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
                         org.getName(),
                         product.getProductName())
