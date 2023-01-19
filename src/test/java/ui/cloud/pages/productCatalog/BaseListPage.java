@@ -20,7 +20,7 @@ import static core.helper.StringUtils.$x;
 
 public class BaseListPage {
 
-    protected static final SelenideElement addNewObjectButton = $x("//div[@data-testid = 'add-button']//button");
+    protected static final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
     protected static final SelenideElement importButton = $x("//input[@placeholder='Поиск']/following::button[1]");
     protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
@@ -29,6 +29,11 @@ public class BaseListPage {
     protected final Button nextPageButtonV2 = Button.byAriaLabel("Следующая страница, выбрать");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
     private final Select recordsPerPageDropDown = Select.byXpath("//div[text()='Записей на странице:']");
+    protected final Button saveButton = Button.byText("Сохранить");
+    protected final Button cancelButton = Button.byText("Отмена");
+    protected final Button backButton = Button.byText("Назад");
+    protected final Select graphSelect = Select.byLabel("Граф");
+    protected final Select graphVersionSelect = Select.byLabel("Значение");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -127,5 +132,13 @@ public class BaseListPage {
         recordsPerPageDropDown.set(Integer.toString(number));
         Assertions.assertEquals(Integer.toString(number), recordsPerPageDropDown.getElement().$x(".//span").getText());
         return this;
+    }
+
+    @Step("Переход на вкладку '{title}'")
+    public void goToTab(String title) {
+        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
+        if (tab.getAttribute("aria-selected").equals("false")) {
+            tab.scrollIntoView(false).click();
+        }
     }
 }

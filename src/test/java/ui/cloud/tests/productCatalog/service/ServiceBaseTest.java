@@ -3,6 +3,8 @@ package ui.cloud.tests.productCatalog.service;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.icon.Icon;
+import models.cloud.productCatalog.icon.IconStorage;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
@@ -47,6 +49,12 @@ public class ServiceBaseTest extends BaseTest {
                 .build()
                 .createObject();
 
+        Icon icon = Icon.builder()
+                .name(name)
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+
         service = Service.builder()
                 .directionId(orgDirection.getId())
                 .name(name)
@@ -55,6 +63,7 @@ public class ServiceBaseTest extends BaseTest {
                 .version("1.0.0")
                 .graphId(graph.getGraphId())
                 .graphVersion("1.0.0")
+                .iconStoreId(icon.getId())
                 .build()
                 .createObject();
     }

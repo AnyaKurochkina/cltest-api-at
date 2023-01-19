@@ -14,6 +14,8 @@ import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
+import java.util.Arrays;
+
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -39,16 +41,12 @@ public class ServicesListPagePC extends BaseListPage {
     private final Select statusDropDown = Select.byLabel("Статус");
     private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
     private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
-    private final Input graphInput = Input.byLabelV2("Граф");
 
-    @Step("Проверка заголовков списка графов")
+    @Step("Проверка заголовков списка сервисов")
     public ServicesListPagePC checkHeaders() {
         Table servicesList = new Table(columnName);
-        assertEquals(0, servicesList.getHeaderIndex("Наименование"));
-        assertEquals(1, servicesList.getHeaderIndex(columnName));
-        assertEquals(2, servicesList.getHeaderIndex("Дата создания"));
-        assertEquals(3, servicesList.getHeaderIndex("Описание"));
-        assertEquals(4, servicesList.getHeaderIndex("Статус"));
+        assertEquals(Arrays.asList("Наименование", columnName, "Дата создания", "Описание", "Статус", "", ""),
+                servicesList.getHeaders());
         return this;
     }
 
@@ -97,7 +95,7 @@ public class ServicesListPagePC extends BaseListPage {
         nameInput.setValue(service.getName());
         if (service.getGraphId() != null) {
             Graph graph = GraphSteps.getGraphById(service.getGraphId());
-            selectGraphByName(graph.getName());
+            graphSelect.setContains(graph.getName());
         }
         descriptionInput.setValue(service.getDescription());
         createButton.click();
@@ -137,7 +135,7 @@ public class ServicesListPagePC extends BaseListPage {
 
     @Step("Проверка валидации недопустимых значений в коде сервиса")
     public ServicesListPagePC checkNameValidation(String[] names) {
-        addNewObjectButton.shouldBe(Condition.visible).click();
+        addNewObjectButton.click();
         for (String name : names) {
             nameInput.setValue(name);
             TestUtils.wait(500);
@@ -233,14 +231,6 @@ public class ServicesListPagePC extends BaseListPage {
         new BaseListPage().copy(columnName, service.getName());
         Alert.green("Копирование выполнено успешно");
         return this;
-    }
-
-    @Step("Выбор графа {graphName}")
-    private void selectGraphByName(String graphName) {
-        graphInput.click();
-        graphInput.setValue(graphName);
-        TestUtils.wait(1000);
-        $x("//div[contains(text(), '" + graphName + "')]").click();
     }
 
     @Step("Сортировка по дате создания")

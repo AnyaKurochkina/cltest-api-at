@@ -3,16 +3,16 @@ package models.cloud.productCatalog.product;
 import com.fasterxml.jackson.annotation.JsonValue;
 import lombok.Getter;
 
-public enum OnRequest {
-    ONLY_REQUEST("only_request", "Готовый продукт"),
-    PREVIEW("preview", "Продукт в разработке"),
-    TEST("test", "Тест");
+public enum Payment {
+    PAID("paid", "Платный"),
+    PARTLY_PAID("partly_paid", "Частично платный"),
+    FREE("free", "Бесплатный");
 
     private final String value;
     @Getter
     private final String title;
 
-    OnRequest(String value, String title) {
+    Payment(String value, String title) {
         this.value = value;
         this.title = title;
     }
