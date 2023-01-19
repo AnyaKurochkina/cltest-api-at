@@ -12,49 +12,49 @@
     "secret": "5f842673cc3bb9a36e7fc04b7bec25e6",
     "id": "sa_proj-bhbyhmik3a-vn",
     "projectId": "proj-bhbyhmik3a",
-    "role": "order-service.admin"
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "ff8eb0eb2e52028a2d33b9eaf7e28691",
     "id": "sa_proj-rddf0uwi0q-vl",
     "projectId": "proj-rddf0uwi0q",
-    "role": "order-service.admin"
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "dea19ebbb05306392f63bcc0d0915f9a",
     "id": "sa_proj-iv550odo9a-29",
     "projectId": "proj-iv550odo9a",
-    "role": "order-service.admin"
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "d5a36cccb751467863c49e7a41440950",
     "id": "sa_proj-zoz17np8rb-vo",
     "projectId": "proj-zoz17np8rb",
-    "role": "order-service.admin"
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "4e7b97a47c34d90c39c7ca8404ce250f",
     "id": "sa_proj-114wetem0c-vp",
     "projectId": "proj-114wetem0c",
-    "role": "order-service.admin"
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "8560d7979af0859280c4318be68e078c",
     "id": "sa_proj-6wpfrbes0g-vq",
     "projectId": "proj-6wpfrbes0g",
-    "role": "order-service.admin"
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "872806dfbc0a878b94040f79c41b3cf0",
     "id": "sa_proj-aei4kz2yu4-vr",
     "projectId": "proj-aei4kz2yu4",
-    "role": "order-service.admin"
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",

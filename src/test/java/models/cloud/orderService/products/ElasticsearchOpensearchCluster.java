@@ -14,6 +14,7 @@ import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -24,13 +25,9 @@ import steps.references.ReferencesStep;
 @SuperBuilder
 public class ElasticsearchOpensearchCluster extends IProduct {
     @ToString.Include
-    String segment;
-    String dataCentre;
-    @ToString.Include
     String osVersion;
     @ToString.Include
     String elasticsearchVersion;
-    String domain;
     String kibanaPassword;
     Flavor flavorData;
     Flavor flavorMaster;
@@ -48,33 +45,37 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         if(kibanaPassword == null)
             kibanaPassword = "RnXLM4Ms3XQi";
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
+            setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:data:" + envType() + ":" + getEnv().toLowerCase()).get(0);
         flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:master:" + envType() + ":" + getEnv().toLowerCase()).get(0);
 //        flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor_data", new JSONObject(flavorData.toString()))
                 .set("$.order.attrs.flavor_master", new JSONObject(flavorMaster.toString()))
                 .set("$.order.attrs.kibana_password", kibanaPassword)
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.system_adm_groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.user_app_groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.adm_app_groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.system_adm_groups[0]", accessGroup)
+                .set("$.order.attrs.user_app_groups[0]", accessGroup)
+                .set("$.order.attrs.adm_app_groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
@@ -83,7 +84,6 @@ public class ElasticsearchOpensearchCluster extends IProduct {
 
     @Override
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 

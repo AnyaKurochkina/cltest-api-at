@@ -14,6 +14,7 @@ import models.cloud.subModels.Role;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,9 +33,6 @@ public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
     @Singular
     public List<Role> roles;
-    @ToString.Include
-    String segment;
-    String dataCentre;
 
     @Override
     public Entity init() {
@@ -42,13 +40,13 @@ public class OpenShiftProject extends IProduct {
         productName = "OpenShift project";
         initProduct();
         if(roles == null) {
-            AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
-            roles = Collections.singletonList(new Role("edit", accessGroup.getPrefixName()));
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+            roles = Collections.singletonList(new Role("edit", accessGroup));
         }
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
+            setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
         return this;
     }
 
@@ -61,7 +59,7 @@ public class OpenShiftProject extends IProduct {
     @SneakyThrows
     @Override
     public JSONObject toJson() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
+        String accessGroup = roles.get(0).getGroupId();
         List<ResourcePool> resourcePoolList = OrderServiceSteps.getResourcesPoolList("container", projectId, "openshift_project");
         ResourcePool resourcePool = resourcePoolList.stream()
 //                .filter(r -> r.getLabel().equals(resourcePoolLabel))
@@ -70,10 +68,10 @@ public class OpenShiftProject extends IProduct {
         resourcePoolLabel = resourcePool.getLabel();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
-                .set("$.order.attrs.roles[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.roles[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.data_center", dataCentre)
-                .set("$.order.attrs.net_segment", segment)
+                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .set("$.order.label", getLabel())
                 .build();

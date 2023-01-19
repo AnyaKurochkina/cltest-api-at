@@ -9,11 +9,11 @@ import models.Entity;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Db;
-import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +29,8 @@ public class ScyllaDbCluster extends IProduct {
     private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     private final static String DB_USERNAME_PERMISSIONS_PATH = "data.find{it.data.config.containsKey('permissions')}.data.config.permissions.any{it.db_name=='%s' && it.user_name=='%s'}";
     @ToString.Include
-    String segment;
-    String dataCentre;
-    @ToString.Include
     String osVersion;
     String version;
-    String domain;
     Flavor flavor;
     @Builder.Default
     public List<Db> database = new ArrayList<>();
@@ -59,40 +55,42 @@ public class ScyllaDbCluster extends IProduct {
         if (productName == null)
             productName = "ScyllaDB Cluster Astra";
         initProduct();
-        if (segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (domain == null)
-            domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if (flavor == null)
             flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (version == null)
             version = getRandomProductVersionByPathEnum("scylladb_version.enum");
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (dc1 == null)
             dc1 = 3;
         if (dc2 == null)
             dc2 = 0;
         if (dc3 == null)
             dc3 = 0;
+        if(segment == null)
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
 
     public JSONObject toJson() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.scylladb_version", version)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.scylla_cluster_configuration.dc1", dc1)
                 .set("$.order.attrs.scylla_cluster_configuration.dc2", dc2)
                 .set("$.order.attrs.scylla_cluster_configuration.dc3", dc3)
