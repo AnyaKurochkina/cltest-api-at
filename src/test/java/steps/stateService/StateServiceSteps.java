@@ -40,7 +40,7 @@ public class StateServiceSteps extends Steps {
         }
         if (StepsAspects.getCurrentStep().get() != null) {
             StepsAspects.getCurrentStep().get().addLinkItem(
-                    new LinkItem("State service log", String.format("%s/actions/?order_id=%s", Configure.getAppProp("url.stateService"), orderId), "", LinkType.REPOSITORY));
+                    new LinkItem("State service log", String.format("%s/api/v1/actions/?order_id=%s", Configure.getAppProp("url.stateService"), orderId), "", LinkType.REPOSITORY));
         }
         return traceback;
     }
