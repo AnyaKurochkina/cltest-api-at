@@ -70,9 +70,8 @@ public class ProductPage extends BasePage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.sleep(1500);
+        Waiting.sleep(3000);
         graphVersionSelect.set(product.getGraphVersion());
-        Waiting.sleep(1000);
         goToAdditionalParamsTab();
         authorInput.setValue(product.getAuthor());
         categorySelect.set(Categories.VM.getValue());
