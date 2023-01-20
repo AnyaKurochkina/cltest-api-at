@@ -10,11 +10,11 @@ public enum OnRequest {
 
     private final String value;
     @Getter
-    private final String title;
+    private final String displayName;
 
-    OnRequest(String value, String title) {
+    OnRequest(String value, String displayName) {
         this.value = value;
-        this.title = title;
+        this.displayName = displayName;
     }
 
     @JsonValue

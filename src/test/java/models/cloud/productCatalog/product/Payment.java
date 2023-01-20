@@ -10,11 +10,11 @@ public enum Payment {
 
     private final String value;
     @Getter
-    private final String title;
+    private final String displayName;
 
-    Payment(String value, String title) {
+    Payment(String value, String displayName) {
         this.value = value;
-        this.title = title;
+        this.displayName = displayName;
     }
 
     @JsonValue

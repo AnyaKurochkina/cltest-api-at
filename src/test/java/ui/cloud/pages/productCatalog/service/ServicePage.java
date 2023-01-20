@@ -55,8 +55,7 @@ public class ServicePage extends BasePage {
             Graph graph = GraphSteps.getGraphById(service.getGraphId());
             goToGraphTab();
             TestUtils.wait(2000);
-            graphSelect.getElement().$x(".//div[@id='selectValueWrapper']")
-                    .shouldHave(Condition.matchText(graph.getName()));
+            Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
             Assertions.assertEquals(service.getGraphVersion(), graphVersionSelect.getValue());
         }
         return this;

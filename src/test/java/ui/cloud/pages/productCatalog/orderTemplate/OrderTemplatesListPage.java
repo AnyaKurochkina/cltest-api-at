@@ -10,7 +10,10 @@ import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.*;
+import ui.elements.Alert;
+import ui.elements.Input;
+import ui.elements.Select;
+import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;

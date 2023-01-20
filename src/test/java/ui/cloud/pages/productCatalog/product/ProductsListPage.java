@@ -5,8 +5,6 @@ import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.service.ServicePage;
-import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Table;
 

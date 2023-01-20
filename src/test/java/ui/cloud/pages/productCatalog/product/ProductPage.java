@@ -78,8 +78,8 @@ public class ProductPage extends BasePage {
         Waiting.sleep(500);
         categoryV2Select.set(Categories.COMPUTE.getValue());
         maxCountInput.setValue(product.getMaxCount());
-        if (product.getOnRequest() != null) onRequestSelect.set(product.getOnRequest().getTitle());
-        paymentSelect.set(product.getPayment().getTitle());
+        if (product.getOnRequest() != null) onRequestSelect.set(product.getOnRequest().getDisplayName());
+        paymentSelect.set(product.getPayment().getDisplayName());
         inGeneralListSwitch.setEnabled(product.getInGeneralList());
         numberInput.setValue(product.getNumber());
         extraData.setValue(new JSONObject(product.getExtraData()).toString());
@@ -98,17 +98,16 @@ public class ProductPage extends BasePage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         goToGraphTab();
-        graphSelect.getElement().$x(".//div[@id='selectValueWrapper']")
-                .shouldHave(Condition.matchText(graph.getName()));
+        Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
         Assertions.assertEquals(product.getGraphVersion(), graphVersionSelect.getValue());
         goToAdditionalParamsTab();
         Assertions.assertEquals(product.getCategory(), categorySelect.getValue());
         Assertions.assertEquals(product.getCategoryV2().getValue(), categoryV2Select.getValue());
         authorInput.getInput().shouldHave(Condition.exactValue(product.getAuthor()));
-        maxCountInput.getInput().shouldHave(Condition.exactValue(Integer.toString(product.getMaxCount())));
-        Assertions.assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getTitle(),
+        maxCountInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getMaxCount())));
+        Assertions.assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getDisplayName(),
                 onRequestSelect.getValue());
-        Assertions.assertEquals(product.getPayment().getTitle(), paymentSelect.getValue());
+        Assertions.assertEquals(product.getPayment().getDisplayName(), paymentSelect.getValue());
         Assertions.assertEquals(product.getInGeneralList(), inGeneralListSwitch.isEnabled());
         numberInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getNumber())));
         Assertions.assertEquals(new JSONObject(product.getExtraData()).toString(),
@@ -181,8 +180,7 @@ public class ProductPage extends BasePage {
 
     @Step("Проверка, что отображаемая версия равна '{version}'")
     public ProductPage checkVersion(String version) {
-        TestUtils.scrollToTheTop();
-        this.selectedVersion.shouldHave(Condition.exactText(version));
+        this.selectedVersion.scrollIntoView(false).shouldHave(Condition.exactText(version));
         return this;
     }
 

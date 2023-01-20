@@ -1,14 +1,15 @@
 package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.*;
+import ui.elements.Button;
+import ui.elements.Input;
+import ui.elements.Select;
+import ui.elements.Table;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -26,13 +27,13 @@ public class BaseListPage {
     private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     protected final Button nextPageButtonV2 = Button.byAriaLabel("Следующая страница, выбрать");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
-    private final Select recordsPerPageDropDown = Select.byXpath("//div[text()='Записей на странице:']");
     protected final Button saveButton = Button.byText("Сохранить");
     protected final Button cancelButton = Button.byText("Отмена");
     protected final Button backButton = Button.byText("Назад");
     protected final Select graphSelect = Select.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
     protected final Input searchInput = Input.byPlaceholder("Поиск");
+    private final Select recordsPerPageDropDown = Select.byXpath("//div[text()='Записей на странице:']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
