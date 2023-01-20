@@ -12,7 +12,6 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -162,7 +161,7 @@ public class Artemis extends IProduct {
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
-                .get("api/v1//actions/?order_id={}", orderId)
+                .get("/api/v1/actions/?order_id={}", orderId)
                 .assertStatus(200)
                 .getResponse().then().assertThat()
                 .rootPath("list.find{it.status.contains('send_mail:completed')}.data")
