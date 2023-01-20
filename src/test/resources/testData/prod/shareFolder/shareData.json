@@ -9,6 +9,13 @@
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
+    "secret": "5d6853f1356a1c475c8193d8d9ed92b0",
+    "id": "sa_proj-ahjjqmlgnm-18i",
+    "projectId": "proj-ahjjqmlgnm",
+    "role": "roles/order-service.admin"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "5f842673cc3bb9a36e7fc04b7bec25e6",
     "id": "sa_proj-bhbyhmik3a-vn",
     "projectId": "proj-bhbyhmik3a",
