@@ -62,13 +62,13 @@ public class ApacheKafkaCluster extends IProduct {
         if (kafkaVersion == null)
 //            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
             kafkaVersion = "2.13-2.4.1";
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
@@ -133,10 +133,10 @@ public class ApacheKafkaCluster extends IProduct {
                 "      \"operation\": \"change_cleanup_policy\",\n" +
                 "      \"parameters\": {\n" +
                 "        \"cleanup^policy\": \"delete\",\n" +
-                "        \"retention^ms\": 1800001\n" +
-                "      },\n" +
-                "      \"topic_name\": \"" + topic + "\",\n" +
+                "        \"retention^ms\": 1800001,\n" +
                 "      \"_cleanup^limit_by\": \"time\"\n" +
+                "      },\n" +
+                "      \"topic_name\": \"" + topic + "\"\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}"
