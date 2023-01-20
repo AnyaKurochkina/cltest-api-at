@@ -1,14 +1,13 @@
 package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Button;
-import ui.elements.DropDown;
+import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.Table;
 
@@ -20,7 +19,7 @@ import static core.helper.StringUtils.$x;
 
 public class BaseListPage {
 
-    protected static final SelenideElement addNewObjectButton = $x("//div[@data-testid = 'add-button']//button");
+    protected static final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
     protected static final SelenideElement importButton = $x("//input[@placeholder='Поиск']/following::button[1]");
     protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
@@ -28,6 +27,12 @@ public class BaseListPage {
     private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     protected final Button nextPageButtonV2 = Button.byAriaLabel("Следующая страница, выбрать");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
+    protected final Button saveButton = Button.byText("Сохранить");
+    protected final Button cancelButton = Button.byText("Отмена");
+    protected final Button backButton = Button.byText("Назад");
+    protected final Select graphSelect = Select.byLabel("Граф");
+    protected final Select graphVersionSelect = Select.byLabel("Значение");
+    protected final Input searchInput = Input.byPlaceholder("Поиск");
     private final Select recordsPerPageDropDown = Select.byXpath("//div[text()='Записей на странице:']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
@@ -127,5 +132,13 @@ public class BaseListPage {
         recordsPerPageDropDown.set(Integer.toString(number));
         Assertions.assertEquals(Integer.toString(number), recordsPerPageDropDown.getElement().$x(".//span").getText());
         return this;
+    }
+
+    @Step("Переход на вкладку '{title}'")
+    public void goToTab(String title) {
+        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
+        if (tab.getAttribute("aria-selected").equals("false")) {
+            tab.scrollIntoView(false).click();
+        }
     }
 }

@@ -23,7 +23,9 @@ public enum Categories {
     QA_TEST("qa_test"),
     OMNI_SERVICES("omni_services"),
     PRODUCT_TEMPLATE("product_template"),
-    COMPLEX_REQUEST("complex_request");
+    COMPLEX_REQUEST("complex_request"),
+    VM("vm");
+
     private final String value;
 
     Categories(final String value) {

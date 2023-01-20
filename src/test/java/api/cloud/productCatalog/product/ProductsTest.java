@@ -13,6 +13,7 @@ import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.OnRequest;
+import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -616,21 +617,20 @@ public class ProductsTest extends Tests {
     @DisplayName("Получение значения поля payment в продуктах")
     @TmsLink("979091")
     public void getPaymentProduct() {
-        String paymentValue = "paid";
         Product product = Product.builder()
                 .name("get_payment_product_test_api")
                 .title("AtTestApiProduct")
                 .version("1.0.0")
-                .payment(paymentValue)
+                .payment(Payment.PAID)
                 .info(info)
                 .build()
                 .createObject();
         String id = product.getProductId();
-        assertEquals(paymentValue, getProductById(id).getPayment());
+        assertEquals(Payment.PAID, getProductById(id).getPayment());
         steps.partialUpdateObject(id, new JSONObject().put("payment", "free"));
-        assertEquals("free", getProductById(id).getPayment());
+        assertEquals(Payment.FREE, getProductById(id).getPayment());
         steps.partialUpdateObject(id, new JSONObject().put("payment", "partly_paid"));
-        assertEquals("partly_paid", getProductById(id).getPayment());
+        assertEquals(Payment.PARTLY_PAID, getProductById(id).getPayment());
     }
 
     @DisplayName("Создание продукта c дефолтным значением number")

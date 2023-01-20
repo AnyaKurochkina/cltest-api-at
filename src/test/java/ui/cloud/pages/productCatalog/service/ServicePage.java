@@ -25,8 +25,6 @@ public class ServicePage extends BasePage {
     private final TextArea descriptionInput = TextArea.byName("description");
     private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final String saveServiceAlertText = "Сервис успешно изменен";
-    private final Select graphDropDown = Select.byLabel("Граф");
-    private final Select graphVersionDropDown = Select.byLabel("Значение");
     private final TextArea extraData = TextArea.byLabel("Extra data");
     private final String tagsTableTitle = "Теги";
     private final String excludeTagsTableTitle = "Исключающие теги";
@@ -57,10 +55,8 @@ public class ServicePage extends BasePage {
             Graph graph = GraphSteps.getGraphById(service.getGraphId());
             goToGraphTab();
             TestUtils.wait(2000);
-            graphDropDown.getElement().$x(".//div[@id='selectValueWrapper']")
-                    .shouldHave(Condition.matchText(graph.getName()));
-            graphVersionDropDown.getElement().$x(".//div[@id='selectValueWrapper']")
-                    .shouldHave(Condition.exactText(service.getGraphVersion()));
+            Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
+            Assertions.assertEquals(service.getGraphVersion(), graphVersionSelect.getValue());
         }
         return this;
     }
@@ -72,7 +68,15 @@ public class ServicePage extends BasePage {
         descriptionInput.setValue(service.getDescription());
         goToGraphTab();
         TestUtils.wait(2000);
-        graphVersionDropDown.set(service.getGraphVersion());
+        graphVersionSelect.set(service.getGraphVersion());
+        return this;
+    }
+
+    @Step("Удаление иконки")
+    public ServicePage deleteIcon() {
+        deleteIconButton.click();
+        saveWithoutPatchVersion(saveServiceAlertText);
+        addIconLabel.shouldBe(Condition.visible);
         return this;
     }
 
@@ -80,7 +84,7 @@ public class ServicePage extends BasePage {
     public ServicePage setGraphVersion(String version) {
         goToGraphTab();
         TestUtils.wait(2000);
-        graphVersionDropDown.set(version);
+        graphVersionSelect.set(version);
         return this;
     }
 
