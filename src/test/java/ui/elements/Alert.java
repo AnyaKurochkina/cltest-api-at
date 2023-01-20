@@ -2,7 +2,6 @@ package ui.elements;
 
 import com.codeborne.selenide.*;
 import com.codeborne.selenide.ex.ElementNotFound;
-import com.codeborne.selenide.ex.ElementShouldNot;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.Getter;

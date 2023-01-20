@@ -2,7 +2,6 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.*;
 import core.exception.CreateEntityException;
-import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
