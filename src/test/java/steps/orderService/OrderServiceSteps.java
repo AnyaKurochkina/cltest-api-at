@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
@@ -384,9 +385,10 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static String getPlatform(IProduct product) {
+        String platform = "OpenStack";
         log.info("Получение Платформы для ДЦ {} и сегмента {}", product.getDataCentre(), product.getSegment());
         Organization org = Organization.builder().build().createObject();
-        return new Http(OrderServiceURL)
+        List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/platforms?net_segment_code={}&data_center_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
@@ -395,7 +397,10 @@ public class OrderServiceSteps extends Steps {
                         product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
-                .get("list.collect{e -> e}.shuffled()[0].code");
+                .getList("list.code");
+        if(list.contains(platform))
+            return platform;
+        return list.get(new Random().nextInt(list.size()));
     }
 
     /**
