@@ -162,7 +162,7 @@ public class Artemis extends IProduct {
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
-                .get("/api/v1//actions/?order_id={}", orderId)
+                .get("api/v1//actions/?order_id={}", orderId)
                 .assertStatus(200)
                 .getResponse().then().assertThat()
                 .rootPath("list.find{it.status.contains('send_mail:completed')}.data")

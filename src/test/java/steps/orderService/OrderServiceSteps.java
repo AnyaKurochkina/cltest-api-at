@@ -343,7 +343,7 @@ public class OrderServiceSteps extends Steps {
                 .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
                         organization.getName(),
-                        product.getProductName())
+                        product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -377,7 +377,7 @@ public class OrderServiceSteps extends Steps {
                 .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
                         org.getName(),
-                        product.getProductName())
+                        product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -392,7 +392,7 @@ public class OrderServiceSteps extends Steps {
                         product.getSegment(),
                         product.getDataCentre(),
                         org.getName(),
-                        product.getProductName())
+                        product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
