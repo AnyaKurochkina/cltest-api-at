@@ -63,10 +63,9 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     }
 
     private static class IpTable extends Table {
-        public static SelenideElement tableIp = $x("(//table[thead/tr/th[.='IP-адрес']])[2]");
 
         public IpTable() {
-            super(tableIp);
+            super("//table[thead/tr/th[.='IP-адрес']]", 2);
         }
     }
 }

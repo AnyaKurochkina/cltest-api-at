@@ -2,7 +2,6 @@ package ui.elements;
 
 import com.codeborne.selenide.*;
 import com.codeborne.selenide.ex.ElementNotFound;
-import com.codeborne.selenide.ex.ElementShouldNot;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -64,7 +63,7 @@ public class Alert implements TypifiedElement {
                 .filter(Condition.visible).stream()
                 .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
                 .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
- //       close();
+        close();
         return this;
     }
 
