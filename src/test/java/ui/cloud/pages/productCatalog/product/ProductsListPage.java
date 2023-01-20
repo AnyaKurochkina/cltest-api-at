@@ -2,7 +2,12 @@ package ui.cloud.pages.productCatalog.product;
 
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.product.Product;
+import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.service.ServicePage;
+import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Table;
 
 import java.util.Arrays;
@@ -27,7 +32,7 @@ public class ProductsListPage extends BaseListPage {
         return new ProductPage().setAttributes(product).saveWithoutPatchVersion("Продукт успешно создан");
     }
 
-    @Step("Проверка обязательных параметров при создании продукта")
+    @Step("Проверка обязательных полей при создании продукта")
     public ProductsListPage checkRequiredFields(Product product) {
         addNewObjectButton.getButton().scrollIntoView(false).click();
         return new ProductPage().checkRequiredFields(product);
@@ -43,5 +48,29 @@ public class ProductsListPage extends BaseListPage {
     public ProductsListPage checkNameValidation(String[] names) {
         addNewObjectButton.click();
         return new ProductPage().checkNameValidation(names);
+    }
+
+    @Step("Задание в строке поиска значения 'value'")
+    private ProductsListPage search(String value) {
+        searchInput.setValue(value);
+        TestUtils.wait(1000);
+        return this;
+    }
+
+    @Step("Поиск и открытие страницы продукта '{name}'")
+    public ProductPage findAndOpenProductPage(String name) {
+        search(name);
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
+        TestUtils.wait(500);
+        return new ProductPage();
+    }
+
+    @Step("Удаление продукта '{name}'")
+    public ProductsListPage delete(String name) {
+        search(name);
+        delete(nameColumn, name);
+        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        Assertions.assertTrue(new Table(nameColumn).isEmpty());
+        return this;
     }
 }

@@ -6,11 +6,9 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Button;
-import ui.elements.DropDown;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -34,6 +32,7 @@ public class BaseListPage {
     protected final Button backButton = Button.byText("Назад");
     protected final Select graphSelect = Select.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
+    protected final Input searchInput = Input.byPlaceholder("Поиск");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {

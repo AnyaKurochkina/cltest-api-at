@@ -161,6 +161,7 @@ public class ServicesListPagePC extends BaseListPage {
         search(name);
         BaseListPage.delete(columnName, name);
         new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        Assertions.assertTrue(new Table(columnName).isEmpty());
         return this;
     }
 

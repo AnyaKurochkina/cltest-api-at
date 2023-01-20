@@ -12,6 +12,7 @@ import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
+import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.Select;
@@ -44,7 +45,7 @@ public class ActionPage extends BasePage {
     private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[3]");
     private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
     private final SelenideElement addTypeAndProviderButton = $x("//button[div[text()='Добавить']]");
-
+    private final Input priorityInput = Input.byName("priority");
 
     public ActionPage() {
         actionsListLink.shouldBe(Condition.visible);
@@ -113,9 +114,10 @@ public class ActionPage extends BasePage {
     }
 
     @Step("Проверка текущей версии")
-    public void checkVersion(String version) {
+    public ActionPage checkVersion(String version) {
         String currentVersion = currentVersionInput.getText();
         assertEquals(version, currentVersion);
+        return this;
     }
 
     @Step("Ввод значения в поле {label}")
@@ -193,8 +195,7 @@ public class ActionPage extends BasePage {
         TestUtils.scrollToTheBottom();
         Select.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
         Select.byLabel("Тип").set(actionType.getValue());
-        TestUtils.scrollToTheTop();
-        paramsTab.click();
+        paramsTab.scrollIntoView(false).click();
         addTypeAndProviderButton.click();
         Table table = new Table("Тип");
         Select eventTypeDropDown = new Select(table.getRow(0).get().$x("(.//div[select])[1]"));
@@ -221,5 +222,35 @@ public class ActionPage extends BasePage {
         saveButton.click();
         cancelButton.click();
         return new ActionsListPage();
+    }
+
+    @Step("Задание атрибута Приоритет сообщения = {priority}")
+    public ActionPage setPriority(int priority) {
+        priorityInput.setValue(priority);
+        return this;
+    }
+
+    @Step("Сохранение действия со следующей патч-версией")
+    public ActionPage saveWithPatchVersion() {
+        saveWithPatchVersion(saveActionAlertText);
+        return this;
+    }
+
+    @Step("Сохранение действия с версией '{newVersion}'")
+    public ActionPage saveWithManualVersion(String newVersion) {
+        saveWithManualVersion(newVersion, saveActionAlertText);
+        return this;
+    }
+
+    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{nextVersion}' и сохранение")
+    public ActionPage checkNextVersionAndSave(String nextVersion) {
+        checkNextVersionAndSave(nextVersion, saveActionAlertText);
+        return this;
+    }
+
+    @Step("Переход на вкладку 'Сравнение версий'")
+    public ActionPage goToVersionComparisonTab() {
+        goToTab("Сравнение версий");
+        return this;
     }
 }

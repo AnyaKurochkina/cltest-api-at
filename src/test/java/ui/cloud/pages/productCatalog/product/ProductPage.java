@@ -116,7 +116,7 @@ public class ProductPage extends BasePage {
         return this;
     }
 
-    @Step("Проверка обязательных параметров при создании продукта")
+    @Step("Проверка обязательных полей при создании продукта")
     public ProductsListPage checkRequiredFields(Product product) {
         descriptionInput.setValue("test");
         saveButton.getButton().shouldBe(Condition.disabled);
@@ -236,5 +236,11 @@ public class ProductPage extends BasePage {
         saveButton.getButton().shouldBe(Condition.disabled);
         backButton.click();
         return new ProductsListPage();
+    }
+
+    @Step("Удаление продукта")
+    public void delete() {
+        deleteButton.click();
+        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
     }
 }
