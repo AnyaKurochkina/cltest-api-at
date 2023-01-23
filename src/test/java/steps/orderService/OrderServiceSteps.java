@@ -381,9 +381,10 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static String getDataCentre(IProduct product) {
+        String dc = "5";
         log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
         Organization org = Organization.builder().build().createObject();
-        return new Http(OrderServiceURL)
+        List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
@@ -391,7 +392,10 @@ public class OrderServiceSteps extends Steps {
                         product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
-                .get("list.collect{e -> e}.shuffled()[0].code");
+                .getList("list.code");
+        if(list.contains(dc))
+            return dc;
+        return list.get(new Random().nextInt(list.size()));
     }
 
     public static String getPlatform(IProduct product) {
