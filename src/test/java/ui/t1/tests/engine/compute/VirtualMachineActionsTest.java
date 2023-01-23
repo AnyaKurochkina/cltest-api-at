@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -85,9 +86,11 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины. Консоль")
     void getConsoleLink() {
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName());
-        Button.byText("Консоль").click();
+        Button console = Button.byText("Консоль");
+        console.click();
         Button.byText("Развернуть на полный экран").click();
         Button.byText("Выйти из полноэкранного режима").click();
+        console.getButton().should(Condition.visible);
     }
 
     @Test
