@@ -61,7 +61,7 @@ public class ImageGroupTest extends BaseTest {
         ImageGroup imageGroup = ImageGroup.builder()
                 .name(name).title(title).distro(distro).tags(Arrays.asList("tag 1", "tag 2"))
                 .build().createObject();
-        imageGroup.setName(UUID.randomUUID().toString());
+        imageGroup.setDistro(UUID.randomUUID().toString());
         imageGroup.setTitle("New title");
         imageGroup.setTags(Arrays.asList("New tag"));
         new ControlPanelIndexPage().goToImageGroupsListPage()
