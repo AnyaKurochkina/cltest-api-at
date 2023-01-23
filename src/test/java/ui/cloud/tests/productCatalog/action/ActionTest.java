@@ -75,7 +75,7 @@ public class ActionTest extends BaseTest {
                 .createObject();
         assertTrue(new IndexPage().goToActionsPage()
                 .copyAction(name)
-                .reTurnToActionsListPageByCancelButton()
+                .backToActionsList()
                 .isActionExist(cloneName));
         deleteActionByName(cloneName);
     }
@@ -144,7 +144,7 @@ public class ActionTest extends BaseTest {
         String version = getActionById(action.getActionId()).getVersion();
         new IndexPage().goToActionsPage()
                 .openActionForm(name)
-                .inputByLabel("Приоритет", "2")
+                .setPriority(2)
                 .checkSaveWithInvalidVersion("1.0.1", version)
                 .checkSaveWithInvalidVersion("1.0.0", version)
                 .checkSaveWithInvalidVersionFormat("1/0/2")
@@ -199,7 +199,7 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .deleteIcon()
                 .saveWithoutPatchVersion()
-                .reTurnToActionsListPageByCancelButton()
+                .backToActionsList()
                 .openActionForm(name)
                 .isIconExist());
     }
@@ -245,19 +245,13 @@ public class ActionTest extends BaseTest {
     @DisplayName("Баннер при закрытии формы с несохраненными данными, Отмена")
     public void bannerWhenCloseFormAndNotSaveCancel() {
         String name = "action_for_banner_test_ui";
-        Action.builder()
-                .actionName(name)
-                .title(name)
-                .number(0)
-                .build()
-                .createObject();
+        createActionByApi(name);
         new IndexPage()
                 .goToActionsPage()
                 .openActionForm(name)
-                .inputByLabel("Приоритет сообщения", "1")
+                .setPriority(1)
                 .backOnBrowserAndAlertCancel()
-                .backByActionsLinkAndAlertCancel()
-                .closeTabAndAlertCancel();
+                .backByActionsLinkAndAlertCancel();
     }
 
     @Test
