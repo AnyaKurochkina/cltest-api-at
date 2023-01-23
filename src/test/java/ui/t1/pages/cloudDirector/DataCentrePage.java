@@ -65,7 +65,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     private static class IpTable extends Table {
 
         public IpTable() {
-            super("//table[thead/tr/th[.='IP-адрес']]", 2);
+            super("IP-адрес", 2);
         }
     }
 }
