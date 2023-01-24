@@ -3,12 +3,15 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.ClickHouse;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 public class ClickHousePage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
@@ -16,18 +19,23 @@ public class ClickHousePage extends IProductPage {
     private static final String HEADER_DB_OWNER = "at_user";
     private static final String HEADER_DB_USERS = "ch_customer";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
-    private static final String HEADER_DISK_SIZE = "Размер, Гб";
-
-
+    private static final String HEADER_DISK_SIZE = "Размер, ГБ";
+    private static final String HEADER_USER_LOCAL = "ТУЗ Локальные";
+    private static final String HEADER_USER_AD = "ТУЗ AD";
+    private static final String HEADER_GROUP_AD = "Группы пользователей AD";
+    private static final String HEADER_GROUP_COLUMN = "Роль";
+    private static final String HEADER_GROUP_ADMIN = "Группы прикладных администраторов AD";
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
-
+    SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    SelenideElement btnGroups = $x("//button[.='Группы']");
+    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
     public ClickHousePage(ClickHouse product) {
         super(product);
     }
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(expectedStatus);
+        new ClickHousePage.VirtualMachineTable("Статус").checkPowerStatus(expectedStatus);
     }
 
         public void start() {
@@ -42,9 +50,10 @@ public class ClickHousePage extends IProductPage {
         checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
-    public void checkConfiguration() {
+    public void checkConfiguration(SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию",ActionParameters.builder().node(node).build());
     }
 
     public void delete() {
@@ -78,13 +87,14 @@ public class ClickHousePage extends IProductPage {
     }
 
     public void enlargeDisk(String name, String size,SelenideElement node) {
-        checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
+        node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
         int value = Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size);
         btnGeneralInfo.click();
+        node.scrollIntoView(scrollCenter).click();
         Assertions.assertEquals(String.valueOf(value), getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
@@ -93,17 +103,106 @@ public class ClickHousePage extends IProductPage {
     }
 
     public void resetPasswordDb() {
-        new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
-        btnGeneralInfo.click();
+        new ClickHousePage.VirtualMachineTable("Статус").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_ON);
+        btnUsers.click();
         runActionWithParameters(HEADER_DB_OWNER, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");
         });
     }
+    public void createLocalAccount(String name) {
+        btnUsers.shouldBe(Condition.enabled).click();
+        runActionWithParameters(HEADER_USER_LOCAL, "Создать локальную УЗ", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Создать локальную УЗ");
+            dlg.setInputValue("Имя пользователя", name);
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
+        });
+        btnUsers.shouldBe(Condition.enabled).click();
+        Assertions.assertTrue(getBtnAction("at_local_user").exists(), "Ошибка создания УЗ");
+    }
 
+    public void resetPasswordLA(String name) {
+        btnUsers.shouldBe(Condition.enabled).click();
+        runActionWithParameters(name, "Сбросить пароль", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
+        });
+    }
+
+
+    public void deleteLocalAccount(String name) {
+        btnUsers.shouldBe(Condition.enabled).click();
+        runActionWithoutParameters(name, "Удалить локальную УЗ");
+        btnUsers.shouldBe(Condition.enabled).click();
+        Assertions.assertFalse(getBtnAction(name).exists(), "Ошибка удаления УЗ");
+    }
+
+    public void addAccountAD(String name) {
+        btnUsers.shouldBe(Condition.enabled).click();
+        runActionWithParameters(HEADER_USER_AD, "Добавить ТУЗ AD", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Добавить ТУЗ AD");
+            dlg.setInputValue("Имя пользователя", name);
+        });
+        btnUsers.shouldBe(Condition.enabled).click();
+        Assertions.assertTrue(getBtnAction("at_ad_user").exists(), "Ошибка создания УЗ АД");
+    }
+
+    public void resetPasswordAD(String name) {
+        btnUsers.shouldBe(Condition.enabled).click();
+        runActionWithParameters(name, "Сбросить пароль", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
+        });
+    }
+
+    public void deleteAccountAD(String name) {
+        btnUsers.shouldBe(Condition.enabled).click();
+        runActionWithParameters(name, "Удалить ТУЗ AD", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Удалить ТУЗ AD");
+            dlg.setInputValue("Пользователь БД", name);
+        });
+        btnUsers.shouldBe(Condition.enabled).click();
+        Assertions.assertFalse(getBtnAction(name).exists(), "Ошибка удаления УЗ АД");
+    }
+
+    public void addGroupAD(String nameGroup) {
+        btnGroups.shouldBe(Condition.enabled).click();
+        runActionWithParameters(HEADER_GROUP_AD, "Добавить пользовательскую группу", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Добавить пользовательскую группу");
+            dlg.setSelectValue("Группы", nameGroup);
+        });
+        btnGroups.shouldBe(Condition.enabled).click();
+        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
+    }
+    public void addGroupAdmin(String nameGroup) {
+        btnGroups.shouldBe(Condition.enabled).click();
+        runActionWithParameters(HEADER_GROUP_ADMIN, "Добавить группу администраторов", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Добавить группу администраторов");
+            dlg.setSelectValue("Группы", nameGroup);
+        });
+        btnGroups.shouldBe(Condition.enabled).click();
+        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
+    }
+
+    public void deleteGroupAD() {
+        btnGroups.shouldBe(Condition.enabled).click();
+        runActionWithoutParameters(accessGroup.getPrefixName(),"Удалить пользовательскую группу");
+        btnGroups.shouldBe(Condition.enabled).click();
+        Assertions.assertTrue(new Table(HEADER_GROUP_COLUMN).isEmpty(), "Ошибка удаления AD");
+    }
+
+    public void deleteGroupAdmin() {
+        btnGroups.shouldBe(Condition.enabled).click();
+        runActionWithoutParameters(accessGroup.getPrefixName(), "Удалить админ группу");
+        btnGroups.shouldBe(Condition.enabled).click();
+        Assertions.assertTrue(new Table(HEADER_GROUP_COLUMN,2).isEmpty(), "Ошибка удаления админ группы");
+    }
     public void resetPasswordUserDb() {
-        btnGeneralInfo.click();
+        btnUsers.click();
         runActionWithParameters(HEADER_DB_USERS, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -118,7 +217,7 @@ public class ClickHousePage extends IProductPage {
 
         @Override
         public String getPowerStatus() {
-            return getPowerStatus("Питание");
+            return getPowerStatus("Статус");
         }
 
     }

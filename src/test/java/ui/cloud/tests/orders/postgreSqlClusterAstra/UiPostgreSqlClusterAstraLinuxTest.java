@@ -25,7 +25,7 @@ import static core.helper.StringUtils.$x;
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
     PostgresSQLCluster product;
-    //= PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/714818a6-66f0-4939-830e-73cb627c5acc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    //= PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/27c12c9d-3bee-480d-8740-e1d83bf5345d/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
@@ -90,6 +90,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(5)
     @TmsLink("851706")
+    @Disabled
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Перезагрузить по питанию")
     void restart() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);

@@ -23,8 +23,7 @@ import static core.helper.StringUtils.$x;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product;
-    //= ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/92d7ddfa-73ff-4b99-b38c-e1d4e412bbc7/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ClickHouseCluster product;//= ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/194e3485-9981-4aa7-90d3-edf6c6d2ebce/group?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
@@ -167,7 +166,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(12)
+    @Order(13)
     @TmsLink("1152788")
     @DisplayName("UI ClickHouse Cluster. Добавить группу пользователей AD")
     void addGroupAD() {
@@ -176,7 +175,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(13)
+    @Order(12)
     @TmsLink("1152789")
     @DisplayName("UI ClickHouse Cluster. Удалить группу пользователей AD")
     void deleteGroupAD() {
