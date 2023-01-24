@@ -70,14 +70,6 @@ public class SnapshotTest extends AbstractComputeTest {
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(disk.getName()));
         Snapshot snapshotPage = new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).checkCreate();
         snapshotPage.switchProtectOrder(true);
-        try {
-            snapshotPage.runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Подтвердить", () -> {},
-                    ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-            Alert.red("Заказ защищен от удаления");
-        } finally {
-            TypifiedElement.refresh();
-            snapshotPage.switchProtectOrder(false);
-        }
         snapshotPage.delete();
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()

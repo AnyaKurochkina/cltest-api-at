@@ -28,6 +28,7 @@ import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.helper.Configure.OrderServiceURL;
@@ -200,6 +201,16 @@ public class OrderServiceSteps extends Steps {
         executeAction(action, product, jsonData, status, projectId, "");
     }
 
+    public static void switchProtect(IProduct product, boolean value) {
+        Assertions.assertEquals(!value, new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .body(new JSONObject().put("order", new JSONObject().put("deletable", !value)))
+                .patch("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
+                .assertStatus(200)
+                .jsonPath()
+                .getBoolean("deletable"));
+    }
+
     /**
      * Метод выполняет экшен по его имени
      *
@@ -343,7 +354,7 @@ public class OrderServiceSteps extends Steps {
                 .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
                         organization.getName(),
-                        product.getProductName())
+                        product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
                 .get("list.collect{e -> e}.shuffled()[0].code");
@@ -370,32 +381,40 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static String getDataCentre(IProduct product) {
+        String dc = "5";
         log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
         Organization org = Organization.builder().build().createObject();
-        return new Http(OrderServiceURL)
+        List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
                         org.getName(),
-                        product.getProductName())
+                        product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
-                .get("list.collect{e -> e}.shuffled()[0].code");
+                .getList("list.code");
+        if(list.contains(dc))
+            return dc;
+        return list.get(new Random().nextInt(list.size()));
     }
 
     public static String getPlatform(IProduct product) {
+        String platform = "OpenStack";
         log.info("Получение Платформы для ДЦ {} и сегмента {}", product.getDataCentre(), product.getSegment());
         Organization org = Organization.builder().build().createObject();
-        return new Http(OrderServiceURL)
+        List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/platforms?net_segment_code={}&data_center_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
                         product.getDataCentre(),
                         org.getName(),
-                        product.getProductName())
+                        product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
-                .get("list.collect{e -> e}.shuffled()[0].code");
+                .getList("list.code");
+        if(list.contains(platform))
+            return platform;
+        return list.get(new Random().nextInt(list.size()));
     }
 
     /**

@@ -23,10 +23,6 @@ public class Vm extends IProductT1Page<Vm> {
                         .setSelectValue("Публичный IP", ip));
     }
 
-    public void getLink() {
-        runActionWithoutParameters(BLOCK_PARAMETERS, "Получить ссылку на консоль");
-    }
-
     @Step("Остановить ВМ")
     public void stop() {
         runActionWithoutParameters(BLOCK_PARAMETERS, "Остановить");
