@@ -68,7 +68,7 @@ public class ActionsListPage extends BaseListPage {
 
     @Step("Открытие формы действия {name}")
     public ActionPage openActionForm(String name) {
-        new Table(NAME_COLUMN).getRowElementByColumnValue(NAME_COLUMN, name).click();
+        new Table(NAME_COLUMN).getRowByColumnValue(NAME_COLUMN, name).get().click();
         TestUtils.wait(2000);
         return new ActionPage();
     }

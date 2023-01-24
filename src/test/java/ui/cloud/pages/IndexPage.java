@@ -10,6 +10,7 @@ import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
+import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.pages.services.ServicesListPage;
@@ -29,6 +30,7 @@ public class IndexPage {
     private final SelenideElement templates = $x("//a[@href='/meccano/templates']");
     private final SelenideElement orderTemplates = $x("//a[@href='/meccano/order-templates']");
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
+    private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
 
     public ProductsPage clickOrderMore() {
         orderMoreBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
@@ -77,5 +79,11 @@ public class IndexPage {
     public ServicesListPagePC goToServicesListPagePC() {
         servicesLink.click();
         return new ServicesListPagePC();
+    }
+
+    @Step("Переход на страницу Конструктор.Продукты")
+    public ProductsListPage goToProductsListPage() {
+        productsLink.click();
+        return new ProductsListPage();
     }
 }

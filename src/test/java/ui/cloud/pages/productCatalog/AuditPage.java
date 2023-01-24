@@ -7,7 +7,10 @@ import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.*;
+import ui.elements.Input;
+import ui.elements.Select;
+import ui.elements.Table;
+import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 

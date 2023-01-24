@@ -24,7 +24,6 @@ import static core.helper.StringUtils.$x;
 @Log4j2
 public class IProductT1Page<C extends IProductPage> extends IProductPage {
     public static final String BLOCK_PARAMETERS = "Основные параметры";
-    public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
 
     public IProductT1Page() {}
@@ -62,6 +61,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Override
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
+        getBtnGeneralInfo().getButton().shouldBe(Condition.visible);
         if(btnHistory.exists()) {
             TypifiedElement.refresh();
             btnHistory.shouldBe(Condition.enabled).click();

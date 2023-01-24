@@ -88,4 +88,13 @@ public class EditServiceTest extends ServiceBaseTest {
                 .saveWithManualVersion("999.999.999")
                 .checkVersionLimit();
     }
+
+    @Test
+    @TmsLink("631151")
+    @DisplayName("Удаление иконки")
+    public void deleteIconTest() {
+        new IndexPage().goToServicesListPagePC()
+                .findAndOpenServicePage(service.getName())
+                .deleteIcon();
+    }
 }

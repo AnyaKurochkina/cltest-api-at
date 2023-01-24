@@ -19,6 +19,7 @@ import static steps.productCatalog.ProductSteps.*;
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -85,7 +86,8 @@ public class Product extends Entity {
     private List<String> allowedDevelopers;
     @JsonProperty("restricted_developers")
     private List<String> restrictedDevelopers;
-    private String payment;
+    @JsonProperty("payment")
+    private Payment payment;
     @JsonProperty("context_restrictions")
     private List<Object> contextRestrictions;
     @JsonProperty("version_fields")
@@ -106,16 +108,19 @@ public class Product extends Entity {
     public JSONObject toJson() {
         String categoryV2 = null;
         String onRequest = null;
+        String payment = null;
         if (this.categoryV2 != null) {
             categoryV2 = this.categoryV2.getValue();
         }
         if (this.onRequest != null) {
             onRequest = this.onRequest.getValue();
         }
+        if (this.payment != null) payment = this.payment.getValue();
         return JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.graph_id", graphId)
+                .set("$.graph_version", graphVersion)
                 .set("$.version", version)
                 .set("$.category", category)
                 .set("$.info", info)
@@ -132,6 +137,9 @@ public class Product extends Entity {
                 .setIfNullRemove("$.number", number)
                 .set("$.allowed_groups", allowedGroups)
                 .set("$.restricted_groups", restrictedGroups)
+                .set("$.description", description)
+                .set("$.author", author)
+                .set("$.max_count", maxCount)
                 .build();
     }
 

@@ -37,7 +37,7 @@ public class OrgDirectionsListPage extends BaseListPage {
     }
 
     public OrgDirectionPage createDirection() {
-        addNewObjectButton.scrollIntoView(TypifiedElement.scrollCenter).click();
+        addNewObjectButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
         return new OrgDirectionPage();
     }
 
