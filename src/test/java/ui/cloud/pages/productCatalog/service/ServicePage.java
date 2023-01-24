@@ -23,7 +23,6 @@ public class ServicePage extends BasePage {
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
     private final TextArea descriptionInput = TextArea.byName("description");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final String saveServiceAlertText = "Сервис успешно изменен";
     private final TextArea extraData = TextArea.byLabel("Extra data");
     private final String tagsTableTitle = "Теги";

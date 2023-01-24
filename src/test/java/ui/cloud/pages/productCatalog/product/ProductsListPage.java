@@ -1,11 +1,13 @@
 package ui.cloud.pages.productCatalog.product;
 
+import core.utils.AssertUtils;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Alert;
 import ui.elements.Table;
 
 import java.util.Arrays;
@@ -18,9 +20,8 @@ public class ProductsListPage extends BaseListPage {
 
     @Step("Проверка заголовков списка продуктов")
     public ProductsListPage checkHeaders() {
-        Table table = new Table(nameColumn);
-        assertEquals(Arrays.asList("Наименование", nameColumn, "Дата создания", "Категория", "Статус", "", ""),
-                table.getHeaders());
+        AssertUtils.assertHeaders(new Table(nameColumn),
+                "Наименование", nameColumn, "Дата создания", "Категория", "Статус", "", "");
         return this;
     }
 
@@ -69,6 +70,20 @@ public class ProductsListPage extends BaseListPage {
         delete(nameColumn, name);
         new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
         Assertions.assertTrue(new Table(nameColumn).isEmpty());
+        return this;
+    }
+
+    @Step("Проверка, что продукт '{product.name}' найден при поиске по значению '{value}'")
+    public ProductsListPage findProductByValue(String value, Product product) {
+        search(value);
+        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, product.getName()));
+        return this;
+    }
+
+    @Step("Копирование продукта '{product.name}'")
+    public ProductsListPage copy(Product product) {
+        new BaseListPage().copy(nameColumn, product.getName());
+        Alert.green("Копирование выполнено успешно");
         return this;
     }
 }

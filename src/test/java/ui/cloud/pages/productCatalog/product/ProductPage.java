@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.graph.GraphPage;
+import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.Select;
@@ -148,15 +150,15 @@ public class ProductPage extends BasePage {
     @Step("Задание версии графа '{version}'")
     public ProductPage setGraphVersion(String version) {
         goToGraphTab();
-        TestUtils.wait(2000);
+        Waiting.sleep(2000);
         graphVersionSelect.set(version);
         return this;
     }
 
-    @Step("Задание значения Extra data")
-    public ProductPage setExtraData(String value) {
+    @Step("Задание в поле Автор '{value}'")
+    public ProductPage setAuthor(String value) {
         goToAdditionalParamsTab();
-        extraData.setValue(value);
+        authorInput.setValue(value);
         return this;
     }
 
@@ -211,6 +213,12 @@ public class ProductPage extends BasePage {
         return this;
     }
 
+    @Step("Переход на вкладку 'Сравнение версий'")
+    public ProductPage goToVersionComparisonTab() {
+        goToTab("Сравнение версий");
+        return this;
+    }
+
     @Step("Проверка валидации недопустимых значений в коде продукта")
     public ProductsListPage checkNameValidation(String[] names) {
         for (String name : names) {
@@ -240,5 +248,31 @@ public class ProductPage extends BasePage {
     public void delete() {
         deleteButton.click();
         new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+    }
+
+    @Step("Сохранение продукта со следующей патч-версией")
+    public ProductPage saveWithPatchVersion() {
+        super.saveWithPatchVersion(saveProductAlertText);
+        return this;
+    }
+
+    @Step("Сохранение продукта с версией '{newVersion}'")
+    public ProductPage saveWithManualVersion(String newVersion) {
+        super.saveWithManualVersion(newVersion, saveProductAlertText);
+        return this;
+    }
+
+    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{nextVersion}' и сохранение")
+    public ProductPage checkNextVersionAndSave(String nextVersion) {
+        super.checkNextVersionAndSave(nextVersion, saveProductAlertText);
+        return this;
+    }
+
+    @Step("Удаление иконки")
+    public ProductPage deleteIcon() {
+        deleteIconButton.click();
+        saveWithoutPatchVersion(saveProductAlertText);
+        addIconLabel.shouldBe(Condition.visible);
+        return this;
     }
 }

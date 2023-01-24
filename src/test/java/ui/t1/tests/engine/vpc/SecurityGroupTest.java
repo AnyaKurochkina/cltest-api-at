@@ -12,7 +12,7 @@ import ui.t1.pages.cloudEngine.vpc.SecurityGroup;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
@@ -35,9 +35,9 @@ public class SecurityGroupTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Группы безопасности")
     void securityGroupList() {
         new IndexPage().goToSecurityGroups();
-        AssertHeaders(new SecurityGroupList.SecurityGroupsTable(), "", "Наименование", "Описание", "Статус", "");
+        assertHeaders(new SecurityGroupList.SecurityGroupsTable(), "", "Наименование", "Описание", "Статус", "");
         new SecurityGroupList().selectGroup(name);
-        AssertHeaders(new SecurityGroup.RulesTable(), "Направление", "Тип", "Протокол", "Порт", "Тип назначения", "Назначение", "Статус", "Описание", "");
+        assertHeaders(new SecurityGroup.RulesTable(), "Направление", "Тип", "Протокол", "Порт", "Тип назначения", "Назначение", "Статус", "Описание", "");
     }
 
     @Test

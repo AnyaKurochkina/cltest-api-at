@@ -327,8 +327,8 @@ public class ActionTest extends BaseTest {
     }
 
     @Step("Создание действия '{name}'")
-    private void createActionByApi(String name) {
-        Action.builder()
+    private Action createActionByApi(String name) {
+        return Action.builder()
                 .actionName(name)
                 .title(TITLE)
                 .number(0)
@@ -338,5 +338,16 @@ public class ActionTest extends BaseTest {
                         .build()))
                 .build()
                 .createObject();
+    }
+
+    @Test
+    @TmsLink("852947")
+    @DisplayName("Просмотр JSON действия")
+    public void viewJSONTest() {
+        String name = UUID.randomUUID().toString();
+        Action action = createActionByApi(name);
+        new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .checkJSONcontains(action.getActionId());
     }
 }
