@@ -2,8 +2,9 @@ package org.junit;
 
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.utils.Encrypt;
@@ -13,7 +14,6 @@ import models.ObjectPoolService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
@@ -25,6 +25,7 @@ import java.io.FileWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.Map;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
@@ -59,9 +60,11 @@ public class TestsExecutionListener implements TestExecutionListener {
         isRemote();
 //        Configuration.browserSize = "1530x870";
         Configuration.browserPosition = "2x2";
-        Configuration.timeout = 40000;
+        Configuration.timeout = 45000;
         Configuration.driverManagerEnabled = false;
         Configuration.browser = "chrome";
+        Map<String, Object> prefs=new HashMap<>();
+        prefs.put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap());
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");
@@ -74,6 +77,8 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
+        options.setExperimentalOption("prefs",prefs);
+
         synchronized (TestsExecutionListener.class) {
             Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
         }
@@ -83,6 +88,17 @@ public class TestsExecutionListener implements TestExecutionListener {
             driver.setFileDetector(new LocalFileDetector());
             WebDriverRunner.setWebDriver(driver);
         }
+    }
+
+    private static Map<String,Object> getClipBoardSettingsMap() throws JsonProcessingException {
+        Map<String,Object> map = new HashMap<>();
+        map.put("last_modified",String.valueOf(System.currentTimeMillis()));
+        map.put("setting", 1);
+        Map<String,Object> cbPreference = new HashMap<>();
+        cbPreference.put("[*.],*",map);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.writeValueAsString(cbPreference);
+        return cbPreference;
     }
 
     public void loadSecretJson() {

@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
+import ui.elements.Button;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
@@ -81,10 +83,14 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @Test
     @Order(4)
     @TmsLink("1248862")
-    @DisplayName("Cloud Compute. Виртуальные машины. Получить ссылку на консоль")
+    @DisplayName("Cloud Compute. Виртуальные машины. Консоль")
     void getConsoleLink() {
-        Vm vmPage = new IndexPage().goToVirtualMachine().selectCompute(vm.getName());
-        vmPage.runActionWithCheckCost(CompareType.EQUALS, vmPage::getLink);
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName());
+        Button console = Button.byText("Консоль");
+        console.click();
+        Button.byText("Развернуть на полный экран").click();
+        Button.byText("Выйти из полноэкранного режима").click();
+        console.getButton().should(Condition.visible);
     }
 
     @Test
