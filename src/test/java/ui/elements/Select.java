@@ -71,7 +71,8 @@ public class Select implements TypifiedElement {
         if (value.equals(RANDOM_VALUE))
             value = getRandomItem();
         getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (options.first().isDisplayed()) element.click();
+        Waiting.sleep(200);
+        if (options.first().isDisplayed()) element.$x("./preceding::label[1]").click();
         return value;
     }
 

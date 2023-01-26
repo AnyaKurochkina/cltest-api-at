@@ -132,7 +132,7 @@ public class TemplatePage extends BasePage {
     }
 
     @Step("Назад в браузере и отмена в баннере о несохранённых изменениях")
-    public TemplatePage backAndDismissAlert() {
+    public TemplatePage backInBrowserAndDismissAlert() {
         back();
         dismissBrowserAlert();
         return this;
@@ -140,15 +140,14 @@ public class TemplatePage extends BasePage {
 
     @Step("Возврат в список шаблонов и отмена в баннере о несохранённых изменениях")
     public TemplatePage goToTemplatesListAndDismissAlert() {
-        TestUtils.scrollToTheTop();
-        templatesListLink.click();
+        templatesListLink.scrollIntoView(false).click();
         dismissBrowserAlert();
         return this;
     }
 
-    @Step("Нажатие кнопки Отмена и отмена в баннере о несохранённых изменениях")
-    public TemplatePage cancelAndDismissAlert() {
-        cancelButton.click();
+    @Step("Нажатие кнопки Назад и отмена в баннере о несохранённых изменениях")
+    public TemplatePage backAndDismissAlert() {
+        backButton.click();
         dismissBrowserAlert();
         return this;
     }

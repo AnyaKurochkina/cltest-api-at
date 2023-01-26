@@ -16,7 +16,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
@@ -38,8 +37,6 @@ import static steps.productCatalog.ActionSteps.*;
 public class ActionTest extends BaseTest {
 
     private final String TITLE = "AT UI Action";
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json");
 
     @Test
     @TmsLink("505750")

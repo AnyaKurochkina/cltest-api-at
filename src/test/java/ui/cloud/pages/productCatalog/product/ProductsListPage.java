@@ -10,10 +10,6 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.Table;
 
-import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
 public class ProductsListPage extends BaseListPage {
 
     private static final String nameColumn = "Код продукта";
@@ -84,6 +80,14 @@ public class ProductsListPage extends BaseListPage {
     public ProductsListPage copy(Product product) {
         new BaseListPage().copy(nameColumn, product.getName());
         Alert.green("Копирование выполнено успешно");
+        return this;
+    }
+
+    @Step("Проверка сортировки списка продуктов")
+    public ProductsListPage checkSorting() {
+        checkSortingByStringField("Наименование");
+        checkSortingByStringField(nameColumn);
+        checkSortingByDateField("Дата создания");
         return this;
     }
 }

@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
-import ui.cloud.pages.productCatalog.product.ProductPage;
 import ui.elements.Alert;
 import ui.elements.Button;
 import ui.elements.Select;
@@ -16,6 +15,7 @@ public class BasePage {
     protected final Select versionDropDown = Select.byLabel("Выберите версию");
     protected final WebElement versionComparisonTab = $x("//button[span[text()='Сравнение версий']]");
     protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
+    protected final Button createButton = Button.byText("Создать");
     protected final Button saveButton = Button.byText("Сохранить");
     protected final Button cancelButton = Button.byText("Отмена");
     protected final Button deleteButton = Button.byText("Удалить");

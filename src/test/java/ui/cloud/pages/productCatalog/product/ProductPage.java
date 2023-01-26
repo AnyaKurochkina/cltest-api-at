@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.graph.GraphPage;
-import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.Select;

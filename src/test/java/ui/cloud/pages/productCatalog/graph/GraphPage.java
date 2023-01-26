@@ -8,7 +8,6 @@ import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Button;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.models.Graph;

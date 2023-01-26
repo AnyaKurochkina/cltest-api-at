@@ -104,8 +104,8 @@ public class EditTemplateTest extends TemplateBaseTest {
         new IndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .setRunQueue("test1")
-                .backAndDismissAlert()
+                .backInBrowserAndDismissAlert()
                 .goToTemplatesListAndDismissAlert()
-                .cancelAndDismissAlert();
+                .backAndDismissAlert();
     }
 }

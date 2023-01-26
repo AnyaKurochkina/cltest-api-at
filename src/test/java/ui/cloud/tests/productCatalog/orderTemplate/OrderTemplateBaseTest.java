@@ -4,7 +4,6 @@ import io.qameta.allure.Epic;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
 
 import java.util.Arrays;
@@ -18,8 +17,6 @@ import static steps.productCatalog.VisualTemplateSteps.deleteVisualTemplateByNam
 public class OrderTemplateBaseTest extends BaseTest {
     final static String TITLE = "AT UI Template";
     final static String DESCRIPTION = "Description";
-    private static final ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/item_visual_templates/",
-            "productCatalog/itemVisualTemplate/createItemVisual.json");
     private static final CompactTemplate compactTemplate = CompactTemplate.builder()
             .name(new Name("name"))
             .type(new Type("type"))
