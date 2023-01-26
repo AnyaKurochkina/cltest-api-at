@@ -74,7 +74,7 @@ public class OrderTemplatePage extends BasePage {
         TestUtils.wait(500);
     }
 
-    @Step("Создание шаблона узлов '{template.name}'")
+    @Step("Создание шаблона отображения '{template.name}'")
     public OrderTemplatePage createOrderTemplate(ItemVisualTemplate template) {
         titleInput.setValue(template.getTitle());
         nameInput.setValue(template.getName());

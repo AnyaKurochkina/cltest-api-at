@@ -277,4 +277,16 @@ public class ProductPage extends BasePage {
         Assertions.assertFalse(Tooltip.isVisible());
         deleteButton.shouldBe(Condition.enabled);
     }
+
+    @Step("Возврат в список продуктов по хлебным крошкам")
+    public ProductsListPage goToProductsList() {
+        productsListLink.scrollIntoView(false).click();
+        return new ProductsListPage();
+    }
+
+    @Step("Возврат в список продуктов по кнопке Назад")
+    public ProductsListPage backToProductsList() {
+        backButton.click();
+        return new ProductsListPage();
+    }
 }

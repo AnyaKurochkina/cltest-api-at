@@ -172,4 +172,10 @@ public class TemplatePage extends BasePage {
         versionComparisonTab.click();
         return this;
     }
+
+    @Step("Возврат в список шаблонов по кнопке Назад")
+    public TemplatesListPage backToTemplatesList() {
+        backButton.click();
+        return new TemplatesListPage();
+    }
 }

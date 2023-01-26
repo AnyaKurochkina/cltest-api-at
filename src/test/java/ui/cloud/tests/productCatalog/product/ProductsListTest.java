@@ -1,10 +1,12 @@
 package ui.cloud.tests.productCatalog.product;
 
+import com.codeborne.selenide.Selenide;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.product.Categories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.product.ProductsListPage;
 
 public class ProductsListTest extends ProductBaseTest {
 
@@ -49,5 +51,23 @@ public class ProductsListTest extends ProductBaseTest {
                 .checkProductIsNotDisplayed(product)
                 .clearFilters()
                 .checkProductIsDisplayed(product);
+    }
+
+    @Test
+    @TmsLink("807411")
+    @DisplayName("Возврат в список со страницы продукта")
+    public void returnToListFromProductPageTest() {
+        new IndexPage().goToProductsListPage()
+                .sortByCreateDate()
+                .lastPage()
+                .openProductPage(NAME)
+                .goToProductsList()
+                .checkProductIsHighlighted(NAME);
+        new ProductsListPage().openProductPage(NAME);
+        Selenide.back();
+        new ProductsListPage().checkProductIsHighlighted(NAME);
+        new ProductsListPage().openProductPage(NAME)
+                .backToProductsList()
+                .checkProductIsHighlighted(NAME);
     }
 }

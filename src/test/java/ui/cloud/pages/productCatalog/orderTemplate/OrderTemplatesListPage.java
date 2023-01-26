@@ -36,7 +36,7 @@ public class OrderTemplatesListPage extends BaseListPage {
     private final Button applyFiltersButton = Button.byText("Применить");
     private final Button clearFiltersButton = Button.byText("Сбросить фильтры");
 
-    @Step("Проверка заголовков списка графов")
+    @Step("Проверка заголовков списка шаблонов отображения")
     public OrderTemplatesListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
                 "Наименование", nameColumn, "Дата создания", "Описание", "Тип", "Провайдер", "Состояние", "", "");

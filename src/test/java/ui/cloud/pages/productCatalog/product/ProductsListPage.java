@@ -68,6 +68,13 @@ public class ProductsListPage extends BaseListPage {
         return new ProductPage();
     }
 
+    @Step("Открытие страницы продукта '{name}'")
+    public ProductPage openProductPage(String name) {
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
+        TestUtils.wait(500);
+        return new ProductPage();
+    }
+
     @Step("Удаление продукта '{name}'")
     public ProductsListPage delete(String name) {
         search(name);
@@ -151,5 +158,22 @@ public class ProductsListPage extends BaseListPage {
         new InputFile(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         return this;
+    }
+
+    @Step("Сортировка по дате создания")
+    public ProductsListPage sortByCreateDate() {
+        sortByCreateDate.click();
+        return this;
+    }
+
+    @Step("Переход на последнюю страницу списка")
+    public ProductsListPage lastPage() {
+        lastPageV2();
+        return this;
+    }
+
+    @Step("Проверка, что подсвечен продукт '{name}'")
+    public void checkProductIsHighlighted(String name) {
+        checkRowIsHighlighted(nameColumn, name);
     }
 }

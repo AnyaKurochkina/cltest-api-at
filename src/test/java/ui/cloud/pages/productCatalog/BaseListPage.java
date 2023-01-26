@@ -82,7 +82,7 @@ public class BaseListPage {
         Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate));
     }
 
-    @Step("Раскрытие меню действий для строки, содержащей в столбце 'columnName' значение 'value'")
+    @Step("Раскрытие меню действий для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void openActionMenu(String columnName, String value) {
         new Table(columnName).getRowByColumnValue(columnName, value).get().$x(".//button[@id = 'actions-menu-button']")
                 .click();
@@ -92,8 +92,8 @@ public class BaseListPage {
     @Step("Проверка, что строка, содержащая в столбце '{columnName}' значение '{value}', подсвечена как ранее выбранная")
     public static void checkRowIsHighlighted(String columnName, String value) {
         Table table = new Table(columnName);
-        Assertions.assertTrue(table.getRowByColumnValue(columnName, value).get()
-                .getCssValue("color").contains("196, 202, 212"));
+        Assertions.assertTrue(table.getRowByColumnValue(columnName, value).get().$x("./td").getCssValue("color")
+                .contains("196, 202, 212"));
     }
 
     @Step("Выполнение действия копирования для строки, содержащей в столбце '{columnName}' значение '{value}'")
@@ -119,8 +119,17 @@ public class BaseListPage {
 
     @Step("Переход на последнюю страницу списка")
     public BaseListPage lastPage() {
-        TestUtils.scrollToTheBottom();
-        lastPageButton.click();
+        lastPageButton.scrollIntoView(true).click();
+        return this;
+    }
+
+    @Step("Переход на последнюю страницу списка для нового компонента таблицы")
+    public BaseListPage lastPageV2() {
+        Select pageSelect = Select.byXpath("//button[contains(@aria-label,'Страница 1 из')]");
+        pageSelect.getElement().click();
+        String lastPage = pageSelect.getOptions().last().getText();
+        pageSelect.getElement().click();
+        pageSelect.set(lastPage);
         return this;
     }
 
@@ -136,13 +145,5 @@ public class BaseListPage {
         recordsPerPageDropDown.set(Integer.toString(number));
         Assertions.assertEquals(Integer.toString(number), recordsPerPageDropDown.getElement().$x(".//span").getText());
         return this;
-    }
-
-    @Step("Переход на вкладку '{title}'")
-    public void goToTab(String title) {
-        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
-        if (tab.getAttribute("aria-selected").equals("false")) {
-            tab.scrollIntoView(false).click();
-        }
     }
 }
