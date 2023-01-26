@@ -14,9 +14,10 @@ import java.util.List;
 import static core.helper.Configure.ProductCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class TemplateSteps extends Steps  {
+public class TemplateSteps extends Steps {
 
     private static final String templateUrl = "/api/v1/templates/";
+    private static final String templateUrlV2 = "/api/v2/templates/";
 
     @Step("Создание шаблона")
     public static Response createTemplate(JSONObject body) {
@@ -24,6 +25,14 @@ public class TemplateSteps extends Steps  {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(templateUrl);
+    }
+
+    @Step("Создание шаблона по имени {name}")
+    public static Template createTemplateByName(String name) {
+        return Template.builder()
+                .name(name)
+                .build()
+                .createObject();
     }
 
     @Step("Полуение списка узлов использующих шаблон")
@@ -77,5 +86,13 @@ public class TemplateSteps extends Steps  {
                 .setRole(Role.CLOUD_ADMIN)
                 .get(templateUrl + objectId + "/")
                 .extractAs(Template.class);
+    }
+
+    @Step("Удаление действия по имени {name}")
+    public static void deleteTemplateByName(String name) {
+        new Http(ProductCatalogURL)
+                .withServiceToken()
+                .delete(templateUrlV2 + name + "/")
+                .assertStatus(204);
     }
 }

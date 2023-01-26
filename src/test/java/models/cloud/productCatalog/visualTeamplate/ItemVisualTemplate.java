@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.productCatalog.VisualTemplateSteps.*;
 
 @Log4j2
@@ -91,6 +92,6 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
     @Step("Удаление шаблона визуализации")
     protected void delete() {
         deleteVisualTemplateById(id).assertStatus(204);
-        isVisualTemplateExists(name);
+        assertFalse(isVisualTemplateExists(name));
     }
 }

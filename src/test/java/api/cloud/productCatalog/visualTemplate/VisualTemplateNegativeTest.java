@@ -2,6 +2,7 @@ package api.cloud.productCatalog.visualTemplate;
 
 import api.Tests;
 import core.helper.JsonHelper;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -19,6 +20,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.VisualTemplateSteps.partialUpdateVisualTemplate;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны отображения")
@@ -54,10 +56,15 @@ public class VisualTemplateNegativeTest extends Tests {
                 .set("event_provider", Collections.singletonList("docker"))
                 .set("event_type", Collections.singletonList("app"))
                 .set("is_active", true).build();
-        String errorMessage = steps.createProductObject(jsonObject).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        Response response = steps.createProductObject(jsonObject).assertStatus(400);
+        String errorMessage = response.extractAs(ErrorMessage.class).getMessage();
+        String itemName = response.jsonPath().getString("err_details.objects[0].name");
+        String itemId = response.jsonPath().getString("err_details.objects[0].id");
         String expectedMsg = "Объект не может быть создан так как event_type или event_provider имеют пересечение с другими объектами";
-        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
+        partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertEquals(expectedMsg, errorMessage);
+        assertEquals(name, itemName);
+        assertEquals(visualTemplates.getId(), itemId);
     }
 
     @DisplayName("Негативный тест на получение шаблона визуализации по Id без токена")
@@ -91,7 +98,9 @@ public class VisualTemplateNegativeTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        steps.createProductObject(steps.createJsonObject(name)).assertStatus(400);
+        String errorMessage = steps.createProductObject(steps.createJsonObject(name)).assertStatus(400)
+                .extractAs(ErrorMessage.class).getMessage();
+        assertEquals("item visualisation template с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание шаблона визуализации с недопустимыми символами в имени")
