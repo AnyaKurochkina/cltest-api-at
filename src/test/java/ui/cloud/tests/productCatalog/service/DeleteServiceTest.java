@@ -29,4 +29,13 @@ public class DeleteServiceTest extends ServiceBaseTest {
         new ServicesListPagePC()
                 .checkServiceNotFound(NAME);
     }
+
+    @Test
+    @TmsLink("766478")
+    @DisplayName("Недоступность удаления опубликованного сервиса")
+    public void deletePublishedServiceTest() {
+        new IndexPage().goToServicesListPagePC()
+                .findAndOpenServicePage(NAME)
+                .checkDeleteOpenProduct();
+    }
 }

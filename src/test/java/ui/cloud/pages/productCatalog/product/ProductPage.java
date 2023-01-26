@@ -27,7 +27,6 @@ public class ProductPage extends BasePage {
     private final Input descriptionInput = Input.byName("description");
     private final Input maxCountInput = Input.byName("max_count");
     private final Input numberInput = Input.byName("number");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final String saveProductAlertText = "Продукт успешно изменен";
     private final TextArea info = TextArea.byLabel("Информация");
     private final TextArea extraData = TextArea.byLabel("Extra data");
@@ -270,12 +269,12 @@ public class ProductPage extends BasePage {
     public void checkDeleteOpenProduct() {
         isOpen.getLabel().scrollIntoView(true);
         isOpen.setEnabled(true);
-        deleteButton.hover();
+        deleteButton.getButton().hover();
         Assertions.assertEquals("Недоступно для открытого продукта", new Tooltip().toString());
-        deleteButton.shouldBe(Condition.disabled);
+        deleteButton.getButton().shouldBe(Condition.disabled);
         isOpen.setEnabled(false);
         Assertions.assertFalse(Tooltip.isVisible());
-        deleteButton.shouldBe(Condition.enabled);
+        deleteButton.getButton().shouldBe(Condition.enabled);
     }
 
     @Step("Возврат в список продуктов по хлебным крошкам")

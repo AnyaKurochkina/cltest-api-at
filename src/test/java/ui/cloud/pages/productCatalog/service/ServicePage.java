@@ -10,10 +10,7 @@ import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Table;
-import ui.elements.TextArea;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -38,6 +35,7 @@ public class ServicePage extends BasePage {
     private final SelenideElement deleteTagSubmitButton = $x("//form//button[@type='submit']");
     private final String tagTitleColumn = "Наименование";
     private final String noDataFound = "Нет данных для отображения";
+    private final Switch isPublished = Switch.byLabel("Опубликован");
 
     public ServicePage() {
         serviceListLink.shouldBe(Condition.visible);
@@ -349,5 +347,17 @@ public class ServicePage extends BasePage {
     public ServicesListPagePC cancel() {
         cancelButton.click();
         return new ServicesListPagePC();
+    }
+
+    @Step("Проверка недоступности удаления опубликованного сервиса")
+    public void checkDeleteOpenProduct() {
+        isPublished.getLabel().scrollIntoView(true);
+        isPublished.setEnabled(true);
+        deleteButton.getButton().hover();
+        Assertions.assertEquals("Недоступно для опубликованного сервиса", new Tooltip().toString());
+        deleteButton.getButton().shouldBe(Condition.disabled);
+        isPublished.setEnabled(false);
+        Assertions.assertFalse(Tooltip.isVisible());
+        deleteButton.getButton().shouldBe(Condition.enabled);
     }
 }
