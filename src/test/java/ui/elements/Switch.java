@@ -3,12 +3,14 @@ package ui.elements;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
 public class Switch implements TypifiedElement{
+    @Getter
     private final SelenideElement label;
 
     public Switch(SelenideElement element) {
@@ -26,7 +28,7 @@ public class Switch implements TypifiedElement{
 
     public void setEnabled(boolean enabled){
         if(isEnabled() != enabled)
-            label.shouldBe(clickableCnd).click();
+            label.hover().shouldBe(clickableCnd).click();
         Assertions.assertEquals(enabled, isEnabled());
     }
 

@@ -15,8 +15,6 @@ import ui.elements.InputFile;
 import ui.elements.Select;
 import ui.elements.Table;
 
-import static com.codeborne.selenide.Selenide.$x;
-
 public class ProductsListPage extends BaseListPage {
 
     private static final String nameColumn = "Код продукта";

@@ -25,4 +25,13 @@ public class DeleteProductTest extends ProductBaseTest {
                 .findAndOpenProductPage(NAME)
                 .delete();
     }
+
+    @Test
+    @TmsLink("766473")
+    @DisplayName("Недоступность удаления открытого продукта")
+    public void deleteOpenProductTest() {
+        new IndexPage().goToProductsListPage()
+                .findAndOpenProductPage(NAME)
+                .checkDeleteOpenProduct();
+    }
 }

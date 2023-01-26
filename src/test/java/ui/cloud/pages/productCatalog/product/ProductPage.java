@@ -14,10 +14,7 @@ import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Switch;
-import ui.elements.TextArea;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -39,6 +36,7 @@ public class ProductPage extends BasePage {
     private final Select onRequestSelect = Select.byLabel("Продукт по запросу");
     private final Select paymentSelect = Select.byLabel("Выбор оплаты");
     private final Switch inGeneralListSwitch = Switch.byLabel("В общем списке маркетплейса");
+    private final Switch isOpen = Switch.byLabel("Открытый");
     private final SelenideElement nameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement nonUniqueNameValidationHint =
@@ -266,5 +264,17 @@ public class ProductPage extends BasePage {
         saveWithoutPatchVersion(saveProductAlertText);
         addIconLabel.shouldBe(Condition.visible);
         return this;
+    }
+
+    @Step("Проверка недоступности удаления открытого продукта")
+    public void checkDeleteOpenProduct() {
+        isOpen.getLabel().scrollIntoView(true);
+        isOpen.setEnabled(true);
+        deleteButton.hover();
+        Assertions.assertEquals("Недоступно для открытого продукта", new Tooltip().toString());
+        deleteButton.shouldBe(Condition.disabled);
+        isOpen.setEnabled(false);
+        Assertions.assertFalse(Tooltip.isVisible());
+        deleteButton.shouldBe(Condition.enabled);
     }
 }
