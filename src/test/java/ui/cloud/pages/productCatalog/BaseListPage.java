@@ -32,6 +32,8 @@ public class BaseListPage {
     protected final Button saveButton = Button.byText("Сохранить");
     protected final Button cancelButton = Button.byText("Отмена");
     protected final Button backButton = Button.byText("Назад");
+    protected final Button applyFiltersButton = Button.byText("Применить");
+    protected final Button clearFiltersButton = Button.byText("Сбросить фильтры");
     protected final Select graphSelect = Select.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
     protected final Input searchInput = Input.byPlaceholder("Поиск");

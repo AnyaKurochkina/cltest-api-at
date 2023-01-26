@@ -7,7 +7,6 @@ import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.WebElement;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -38,8 +37,6 @@ public class ServicesListPagePC extends BaseListPage {
     private final SelenideElement cancelButton = $x("//div[text()='Отменить']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final Select statusDropDown = Select.byLabel("Статус");
-    private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
-    private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
 
     @Step("Проверка заголовков списка сервисов")
     public ServicesListPagePC checkHeaders() {

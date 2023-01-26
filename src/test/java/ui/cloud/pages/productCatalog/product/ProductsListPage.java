@@ -1,6 +1,9 @@
 package ui.cloud.pages.productCatalog.product;
 
+import com.codeborne.selenide.SelenideElement;
+import core.helper.StringUtils;
 import core.utils.AssertUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.Assertions;
@@ -8,11 +11,18 @@ import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
+import ui.elements.InputFile;
+import ui.elements.Select;
 import ui.elements.Table;
+
+import static com.codeborne.selenide.Selenide.$x;
 
 public class ProductsListPage extends BaseListPage {
 
     private static final String nameColumn = "Код продукта";
+    private final Select categorySelect = Select.byLabel("Категория");
+    private final Select statusSelect = Select.byLabel("Статус");
+    private final SelenideElement importButton = searchInput.getInput().$x("./following::button[2]");
 
     @Step("Проверка заголовков списка продуктов")
     public ProductsListPage checkHeaders() {
@@ -88,6 +98,60 @@ public class ProductsListPage extends BaseListPage {
         checkSortingByStringField("Наименование");
         checkSortingByStringField(nameColumn);
         checkSortingByDateField("Дата создания");
+        return this;
+    }
+
+    @Step("Выбор в фильтре по категории значения '{value}'")
+    public ProductsListPage setCategoryFilter(String value) {
+        categorySelect.set(value);
+        return this;
+    }
+
+    @Step("Выбор в фильтре по статусу значения '{value}'")
+    public ProductsListPage setStatusFilter(String value) {
+        statusSelect.set(value);
+        return this;
+    }
+
+    @Step("Применение фильтров")
+    public ProductsListPage applyFilters() {
+        applyFiltersButton.click();
+        Waiting.sleep(500);
+        return this;
+    }
+
+    @Step("Проверка, что продукт '{product.name}' отображается в списке")
+    public ProductsListPage checkProductIsDisplayed(Product product) {
+        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, product.getName()));
+        return this;
+    }
+
+    @Step("Проверка, что продукт '{product.name}' не отображается в списке")
+    public ProductsListPage checkProductIsNotDisplayed(Product product) {
+        Assertions.assertFalse(new Table(nameColumn).isColumnValueEquals(nameColumn, product.getName()));
+        return this;
+    }
+
+    @Step("Удаление заданного значения фильтра '{value}'")
+    public ProductsListPage removeFilterTag(String value) {
+        TestUtils.scrollToTheTop();
+        StringUtils.$x("//span[text()='{}']/following-sibling::*[name()='svg']", value).click();
+        TestUtils.wait(500);
+        return this;
+    }
+
+    @Step("Сброс фильтров")
+    public ProductsListPage clearFilters() {
+        clearFiltersButton.click();
+        TestUtils.wait(500);
+        return this;
+    }
+
+    @Step("Импорт продукта из файла '{path}'")
+    public ProductsListPage importProduct(String path) {
+        importButton.click();
+        new InputFile(path).importFileAndSubmit();
+        Alert.green("Импорт выполнен успешно");
         return this;
     }
 }

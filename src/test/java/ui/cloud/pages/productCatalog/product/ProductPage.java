@@ -166,12 +166,6 @@ public class ProductPage extends BasePage {
         return new ProductPage();
     }
 
-    @Step("Удаление продукта")
-    public void deleteProduct() {
-        deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
-    }
-
     @Step("Задание значения в поле 'Описание'")
     public ProductPage setDescription(String value) {
         descriptionInput.setValue(value);
