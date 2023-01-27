@@ -20,8 +20,8 @@ import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
 public class Select implements TypifiedElement {
-    private final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='Не найдено']");
     public static final String RANDOM_VALUE = "RANDOM_VALUE";
+    protected final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='Не найдено']");
     @Getter
     protected SelenideElement element;
 
@@ -71,8 +71,6 @@ public class Select implements TypifiedElement {
         if (value.equals(RANDOM_VALUE))
             value = getRandomItem();
         getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Waiting.sleep(200);
-        if (options.first().isDisplayed()) element.$x("./preceding::label[1]").click();
         return value;
     }
 
@@ -121,7 +119,7 @@ public class Select implements TypifiedElement {
         return element.scrollIntoView(scrollCenter).hover().$x("descendant::button[@aria-label='Clear']");
     }
 
-    private String getRandomItem() {
+    protected String getRandomItem() {
         return random(getOptions().texts());
     }
 

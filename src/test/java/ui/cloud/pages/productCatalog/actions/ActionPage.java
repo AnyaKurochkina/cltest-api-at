@@ -13,10 +13,7 @@ import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Table;
-import ui.elements.TypifiedElement;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -192,9 +189,8 @@ public class ActionPage extends BasePage {
         inputNameField.setValue(name);
         inputTitleField.setValue(title);
         inputDescriptionField.setValue(description);
-        Select.byLabel("Обязательные статусы item").set(status.getValue());
-        TestUtils.scrollToTheBottom();
-        Select.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
+        MultiSelect.byLabel("Обязательные статусы item").set(status.getValue());
+        MultiSelect.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
         Select.byLabel("Тип").set(actionType.getValue());
         paramsTab.scrollIntoView(false).click();
         addTypeAndProviderButton.click();

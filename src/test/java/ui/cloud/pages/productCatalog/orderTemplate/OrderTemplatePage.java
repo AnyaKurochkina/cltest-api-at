@@ -19,8 +19,8 @@ public class OrderTemplatePage extends BasePage {
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
     private final Input descriptionInput = Input.byName("description");
-    private final Select typeSelect = Select.byLabel("Тип");
-    private final Select providerSelect = Select.byLabel("Провайдер");
+    private final MultiSelect typeSelect = MultiSelect.byLabel("Тип");
+    private final MultiSelect providerSelect = MultiSelect.byLabel("Провайдер");
     private final SelenideElement orderTemplatesLink = $x("//a[text()='Шаблоны отображения' and not(@href)]");
     private final Switch isEnabled = Switch.byInputName("is_active");
 
