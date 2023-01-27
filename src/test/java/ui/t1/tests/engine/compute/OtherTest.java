@@ -78,11 +78,11 @@ public class OtherTest extends AbstractComputeTest {
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         String orderIdIp = ipPage.getOrderId();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setName(getRandomName())
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setBootSize(2)
-                .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .setPublicIp(ip)
@@ -124,10 +124,10 @@ public class OtherTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Подключить/Отключить диск со снимком к вм")
     void createSnapshotFromDetachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setName(getRandomName())
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();

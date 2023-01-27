@@ -14,7 +14,7 @@ public class DiskList {
     }
 
     public Disk selectDisk(String name){
-        new DiskTable().getRowByColumnValueContains(Column.NAME, name).get().shouldBe(Condition.visible).click();
+        new DiskTable().getRowByColumnValueContains(Column.NAME, name).getElementByColumnIndex(0).shouldBe(Condition.visible).click();
         return new Disk();
     }
 
