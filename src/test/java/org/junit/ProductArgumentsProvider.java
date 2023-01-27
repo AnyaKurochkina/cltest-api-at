@@ -21,10 +21,7 @@ import steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -58,9 +55,10 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     @SneakyThrows
     private List<Arguments> getProducts(ExtensionContext context) {
         List<Arguments> list = new ArrayList<>();
+        final Class<?>[] parameterTypes = context.getRequiredTestMethod().getParameterTypes();
         if (Configure.isIntegrationTestIt()) {
             List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
-            Class<?> argument = Arrays.stream(context.getRequiredTestMethod().getParameterTypes())
+            Class<?> argument = Arrays.stream(parameterTypes)
                     .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
 
             for (Configuration configuration : confMap) {
@@ -70,20 +68,19 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         if (argument.isInstance(entity)) {
                             Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
                             e.setConfigurationId(configuration.getId());
-                            list.add(Arguments.of(e));
+                            list.add(addParameters(e, parameterTypes.length));
                             break;
                         }
                     }
                 } else {
                     Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
                     entity.setConfigurationId(configuration.getId());
-                    list.add(Arguments.of(entity));
+                    list.add(addParameters(entity, parameterTypes.length));
                 }
             }
         } else {
-            Class<?>[] params = context.getRequiredTestMethod().getParameterTypes();
             Class<?> clazz = null;
-            for (Class<?> m : params) {
+            for (Class<?> m : parameterTypes) {
                 if (Entity.class.isAssignableFrom(m)) {
                     clazz = m;
                     break;
@@ -93,13 +90,19 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             for (Entity entity : orders) {
                 Class<?> c = entity.getClass();
                 if (finalClazz.isInstance(entity)) {
-                    list.add(Arguments.of(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c)));
+                    list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length));
                     if (variableName == ONE_PRODUCT)
                         break;
                 }
             }
         }
         return list;
+    }
+
+    private static Arguments addParameters(Object arg, int size) {
+        if (size == 1)
+            return Arguments.of(arg);
+        return Arguments.of(arg, null);
     }
 
     @Override

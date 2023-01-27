@@ -1,5 +1,6 @@
 package models.cloud.orderService.products;
 
+import com.mifmif.common.regex.Generex;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.*;
@@ -9,10 +10,13 @@ import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.portalBack.AccessGroup;
+import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
+
+import static api.cloud.orderService.PostgreSQLAstraTest.adminPassword;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -27,6 +31,8 @@ public class ApacheAirflow extends IProduct {
     Flavor flavor;
     String osVersion;
     String airflowVersion;
+    String dbServer;
+    DbUser dbUser;
 
     @Override
     @Step("Заказ продукта")
@@ -37,7 +43,7 @@ public class ApacheAirflow extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/apache_airflow.json";
-        productName = "Apache Airflow";
+        productName = "Apache Airflow Astra";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -63,14 +69,20 @@ public class ApacheAirflow extends IProduct {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
-                .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
-                .set("$.order.attrs.platform", getPlatform())
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
+                .set("$.order.attrs.platform", getPlatform())
+                .set("$.order.attrs.os_version", osVersion)
+                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.cluster_name", new Generex("at-[a-z]{6}").random())
+                .set("$.order.attrs.airflow_version", airflowVersion)
+                .set("$.order.attrs.additional_config.postgresql_config.db_host", dbServer)
+                .set("$.order.attrs.additional_config.postgresql_config.db_user", dbUser.getUsername())
+                .set("$.order.attrs.additional_config.postgresql_config.db_database", dbUser.getNameDB())
+                .set("$.order.attrs.additional_config.postgresql_config.db_password", adminPassword)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())
                 .build();

@@ -19,7 +19,7 @@ import api.Tests;
 @Feature("PostgreSQL Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql_astra"), @Tag("prod")})
 public class PostgreSQLAstraTest extends Tests {
-    static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+    public static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
     static final String dbName = "cached_bd";
 
     @TmsLink("1057046")
