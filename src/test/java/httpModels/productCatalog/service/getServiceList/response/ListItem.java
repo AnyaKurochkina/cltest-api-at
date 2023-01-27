@@ -2,8 +2,6 @@ package httpModels.productCatalog.service.getServiceList.response;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.service.createService.response.DataSource;
-import httpModels.productCatalog.service.createService.response.ExtraData;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
