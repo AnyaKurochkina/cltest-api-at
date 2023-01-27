@@ -36,6 +36,14 @@ public class ServiceSteps extends Steps {
                 .post(serviceUrl);
     }
 
+    @Step("Создание сервиса")
+    public static Service createService(String name) {
+        return Service.builder()
+                .name(name)
+                .build()
+                .createObject();
+    }
+
     @Step("Получение сервиса по Id")
     public static Service getServiceById(String objectId) {
         return new Http(ProductCatalogURL)

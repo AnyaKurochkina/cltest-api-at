@@ -69,4 +69,12 @@ public class OrgDirectionSteps extends Steps {
                 .body(body)
                 .post(orgDirUrl);
     }
+
+    @Step("Создание направления")
+    public static OrgDirection createOrgDirectionByName(String name) {
+        return OrgDirection.builder()
+                .name(name)
+                .build()
+                .createObject();
+    }
 }

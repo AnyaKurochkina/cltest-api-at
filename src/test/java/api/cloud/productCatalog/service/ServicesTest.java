@@ -1,11 +1,11 @@
 package api.cloud.productCatalog.service;
 
+import api.Tests;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.service.createService.response.CreateServiceResponse;
 import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import httpModels.productCatalog.service.getServiceList.response.ListItem;
@@ -14,10 +14,10 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ErrorMessage;
-import models.cloud.productCatalog.orgDirection.OrgDirection;
-import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -26,14 +26,14 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
+import steps.productCatalog.ServiceSteps;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ServiceSteps.deleteServiceById;
-import static steps.productCatalog.ServiceSteps.getServiceByIdAndFilter;
+import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.ServiceSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -47,16 +47,10 @@ public class ServicesTest extends Tests {
     @DisplayName("Создание сервиса в продуктовом каталоге")
     @TmsLink("643448")
     @Test
-    public void createService() {
-        String name = "create_service_test_api";
-        Service service = Service.builder()
-                .name(name)
-                .title("title_service_test_api")
-                .description("ServiceForAT")
-                .build()
-                .createObject();
-        GetImpl getService = steps.getById(service.getId(), GetServiceResponse.class);
-        assertEquals(name, getService.getName());
+    public void createServiceTest() {
+        Service service = createService("create_service_test_api");
+        Service actualService = getServiceById(service.getId());
+        assertEquals(service, actualService);
     }
 
     @DisplayName("Создание сервиса в продуктовом каталоге с иконкой")
@@ -161,7 +155,7 @@ public class ServicesTest extends Tests {
     @DisplayName("Получение сервиса по Id")
     @TmsLink("643459")
     @Test
-    public void getServiceById() {
+    public void getServiceByIdTest() {
         String name = "get_service_by_id_test_api";
         Service service = Service.builder()
                 .name(name)
@@ -311,27 +305,20 @@ public class ServicesTest extends Tests {
         Service service = Service.builder()
                 .name("get_graph_version_calculated_service_test_api")
                 .title("title_service_test_api")
+                .graphId(createGraph(RandomStringUtils.randomAlphabetic(6).toLowerCase()).getGraphId())
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        GetImpl getServiceResponse = steps.getById(service.getId(), GetServiceResponse.class);
-        Assertions.assertNotNull(getServiceResponse.getGraphVersionCalculated());
+        Service getService = ServiceSteps.getServiceById(service.getId());
+        assertEquals("1.0.0", getService.getGraphVersionCalculated());
     }
 
     @DisplayName("Создание сервиса со значением ключа graph_id равным null")
     @TmsLink("643519")
     @Test
     public void createServiceWithGraphIdNull() {
-        String name = "create_service_with_graph_id_null_test_api";
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetServiceListResponse.class);
-        }
-        CreateServiceResponse createServiceResponse = steps
-                .createProductObject(JsonHelper.getJsonTemplate("productCatalog/services/createServiceWithGraphIdNull.json")
-                        .set("name", name)
-                        .build()).extractAs(CreateServiceResponse.class);
-        Assertions.assertNull(createServiceResponse.getGraphId(), "GraphId не равен null");
-        steps.deleteById(createServiceResponse.getId());
+        Service service = createService("create_service_with_graph_id_null_test_api");
+        assertNull(service.getGraphId(), "GraphId не равен null");
     }
 
     @DisplayName("Обновление сервиса с указанием версии в граничных значениях")

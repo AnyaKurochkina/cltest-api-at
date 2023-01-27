@@ -24,6 +24,7 @@ public class ActionSteps extends Steps {
     private static final String actionUrl = "/api/v1/actions/";
     private static final String actionUrlV2 = "/api/v2/actions/";
 
+
     @Step("Получение списка действий продуктового каталога")
     public static List<Action> getActionList() {
         return new Http(ProductCatalogURL)
@@ -50,6 +51,14 @@ public class ActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(actionUrl);
+    }
+
+    @Step("Создание действия")
+    public static Action createAction(String name) {
+        return Action.builder()
+                .actionName(name)
+                .build()
+                .createObject();
     }
 
     @Step("Проверка сортировки списка действий")

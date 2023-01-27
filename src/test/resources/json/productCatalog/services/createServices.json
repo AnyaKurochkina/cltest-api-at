@@ -1,5 +1,4 @@
 {
-  "id": "",
   "version": "1.0.3",
   "direction_id": "",
   "current_version": "",
@@ -28,7 +27,7 @@
   "version_list": [
   ],
   "graph_version_calculated": "1.0.60",
-  "graph_id": "f23e9a26-1342-4130-b678-305886cf2fd8",
+  "graph_id": null,
   "version_create_dt": "2022-01-24T07:55:01.288798Z",
   "version_changed_by_user": ""
 }

@@ -39,7 +39,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины")
     void vmList() {
         new IndexPage().goToVirtualMachine();
-        AssertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Операционная система", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
+        AssertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
     }
 
     @Test
@@ -52,8 +52,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setImage(image)
                 .setBootSize(2)
                 .setBootType(hddTypeFirst)
-                .setSubnet(Select.RANDOM_VALUE)
-                .setSwitchPublicIp(true);
+                .setSubnet(Select.RANDOM_VALUE);
         SelenideElement button = Button.byText("Заказать").getButton();
         button.shouldNot(activeCnd);
         vmPage.setSshKey(sshKey);
