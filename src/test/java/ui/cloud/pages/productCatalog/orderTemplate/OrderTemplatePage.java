@@ -8,9 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
-import ui.elements.Input;
-import ui.elements.Select;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,8 +21,8 @@ public class OrderTemplatePage extends BasePage {
     private final Input descriptionInput = Input.byName("description");
     private final Select typeSelect = Select.byLabel("Тип");
     private final Select providerSelect = Select.byLabel("Провайдер");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final SelenideElement orderTemplatesLink = $x("//a[text()='Шаблоны отображения' and not(@href)]");
+    private final Switch isEnabled = Switch.byInputName("is_active");
 
     public OrderTemplatePage() {
         previewButton.shouldBe(Condition.visible);
@@ -84,5 +82,18 @@ public class OrderTemplatePage extends BasePage {
         createButton.click();
         Alert.green("Шаблон успешно создан");
         return new OrderTemplatePage();
+    }
+
+    @Step("Проверка недоступности удаления включенного шаблона отображения")
+    public void checkDeleteEnabledTemplate() {
+        isEnabled.getLabel().scrollIntoView(true);
+        isEnabled.setEnabled(true);
+        deleteButton.getButton().hover();
+        Assertions.assertEquals("Недоступно для включённого шаблона отображения", new Tooltip().toString());
+        deleteButton.getButton().shouldBe(Condition.disabled);
+        isEnabled.setEnabled(false);
+        deleteButton.getButton().hover();
+        Assertions.assertFalse(Tooltip.isVisible());
+        deleteButton.getButton().shouldBe(Condition.enabled);
     }
 }

@@ -36,6 +36,6 @@ public class DeleteServiceTest extends ServiceBaseTest {
     public void deletePublishedServiceTest() {
         new IndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
-                .checkDeleteOpenProduct();
+                .checkDeletePublishedService();
     }
 }

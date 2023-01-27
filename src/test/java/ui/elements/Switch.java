@@ -22,6 +22,11 @@ public class Switch implements TypifiedElement{
         return new Switch($x("//*[.='{}']/label[@role='switch']", label));
     }
 
+    @Step("Получение Switch по input name {name}")
+    public static Switch byInputName(String name){
+        return new Switch($x("//label[@role='switch'][input[@name='{}']]", name));
+    }
+
     public boolean isEnabled(){
         return label.is(Condition.attribute("aria-checked","true"));
     }

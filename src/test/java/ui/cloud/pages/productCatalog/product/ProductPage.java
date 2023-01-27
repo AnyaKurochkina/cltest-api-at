@@ -273,6 +273,7 @@ public class ProductPage extends BasePage {
         Assertions.assertEquals("Недоступно для открытого продукта", new Tooltip().toString());
         deleteButton.getButton().shouldBe(Condition.disabled);
         isOpen.setEnabled(false);
+        deleteButton.getButton().hover();
         Assertions.assertFalse(Tooltip.isVisible());
         deleteButton.getButton().shouldBe(Condition.enabled);
     }

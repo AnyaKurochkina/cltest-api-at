@@ -350,13 +350,14 @@ public class ServicePage extends BasePage {
     }
 
     @Step("Проверка недоступности удаления опубликованного сервиса")
-    public void checkDeleteOpenProduct() {
+    public void checkDeletePublishedService() {
         isPublished.getLabel().scrollIntoView(true);
         isPublished.setEnabled(true);
         deleteButton.getButton().hover();
         Assertions.assertEquals("Недоступно для опубликованного сервиса", new Tooltip().toString());
         deleteButton.getButton().shouldBe(Condition.disabled);
         isPublished.setEnabled(false);
+        deleteButton.getButton().hover();
         Assertions.assertFalse(Tooltip.isVisible());
         deleteButton.getButton().shouldBe(Condition.enabled);
     }
