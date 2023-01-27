@@ -120,7 +120,7 @@ public class ClickHousePage extends IProductPage {
             Alert.green("Значение скопировано");
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction("at_local_user").exists(), "Ошибка создания УЗ");
+        Assertions.assertTrue(getBtnAction(name).exists(), "Ошибка создания УЗ");
     }
 
     public void resetPasswordLA(String name) {
@@ -147,7 +147,7 @@ public class ClickHousePage extends IProductPage {
             dlg.setInputValue("Имя пользователя", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction("at_ad_user").exists(), "Ошибка создания УЗ АД");
+        Assertions.assertTrue(getBtnAction(name).exists(), "Ошибка создания УЗ АД");
     }
 
     public void resetPasswordAD(String name) {

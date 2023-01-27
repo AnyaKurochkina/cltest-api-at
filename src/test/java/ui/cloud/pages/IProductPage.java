@@ -321,5 +321,4 @@ public abstract class IProductPage {
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }
-
 }
