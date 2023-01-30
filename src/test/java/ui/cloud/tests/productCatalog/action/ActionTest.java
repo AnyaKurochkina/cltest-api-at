@@ -11,6 +11,7 @@ import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -37,6 +38,30 @@ import static steps.productCatalog.ActionSteps.*;
 public class ActionTest extends BaseTest {
 
     private final String TITLE = "AT UI Action";
+
+    @Test
+    @DisplayName("Просмотр списка действий, сортировка")
+    @TmsLink("505701")
+    public void viewActionsListTest() {
+        new IndexPage()
+                .goToActionsPage()
+                .checkHeaders()
+                .checkSorting();
+    }
+
+    @Test
+    @DisplayName("Поиск действия")
+    @TmsLink("1425598")
+    public void searchActionTest() {
+        String name = UUID.randomUUID().toString();
+        Action action = createActionByApi(name);
+        new IndexPage()
+                .goToActionsPage()
+                .findActionByValue(name, action)
+                .findActionByValue(TITLE, action)
+                .findActionByValue(name.substring(1).toUpperCase(), action)
+                .findActionByValue(TITLE.substring(1).toLowerCase(), action);
+    }
 
     @Test
     @TmsLink("505750")

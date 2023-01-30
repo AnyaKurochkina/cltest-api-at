@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$x;
 
 public class BaseListPage {
@@ -44,7 +45,7 @@ public class BaseListPage {
         Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
-        columnHeader.click();
+        columnHeader.scrollIntoView(false).click();
         Waiting.sleep(1000);
         arrowIcon.shouldBe(Condition.visible);
         String firstValue = table.getValueByColumnInFirstRow(header).getText();
@@ -98,22 +99,19 @@ public class BaseListPage {
 
     @Step("Выполнение действия копирования для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void copy(String columnName, String value) {
-        new Table(columnName).getRowByColumnValue(columnName, value).get().$x(".//button[@id = 'actions-menu-button']")
-                .click();
+        openActionMenu(columnName, value);
         copyAction.click();
     }
 
     @Step("Выполнение действия удаления для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void delete(String columnName, String value) {
-        new Table(columnName).getRowByColumnValue(columnName, value).get().$x(".//button[@id = 'actions-menu-button']")
-                .click();
+        openActionMenu(columnName, value);
         deleteAction.click();
     }
 
     @Step("Переход на следующую страницу списка")
     public BaseListPage nextPage() {
-        TestUtils.scrollToTheBottom();
-        nextPageButton.click();
+        nextPageButton.scrollIntoView(true).click();
         return this;
     }
 

@@ -137,7 +137,7 @@ public class OrgDirectionTest extends BaseTest {
                 .deleteDirection()
                 .inputValidIdAndDeleteNotAvailable(alertText);
         new OrgDirectionPage()
-                .exitFromOrgDirectionPage()
+                .backToOrgDirectionsList()
                 .findDirectionByName(name)
                 .deleteActionMenu(name)
                 .inputValidIdAndDeleteNotAvailable(alertText);
