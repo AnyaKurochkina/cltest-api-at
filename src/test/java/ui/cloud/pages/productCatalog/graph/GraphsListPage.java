@@ -2,21 +2,21 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.AssertUtils;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
-import ui.models.Graph;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GraphsListPage extends BaseListPage {
 
-    private static final String graphNameColumn = "Код графа";
+    private static final String nameColumn = "Код графа";
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
     private final SelenideElement createNewGraphButton = $x("//div[@data-testid = 'graph-list-add-button']//button");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
@@ -24,8 +24,6 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
     private final Select typeDropDown = Select.byLabel("Тип");
-    private final SelenideElement createGraphButton = $x("//*[text()='Создать']/..");
-    private final Input searchInput = Input.byPlaceholder("Поиск");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
@@ -41,20 +39,20 @@ public class GraphsListPage extends BaseListPage {
     }
 
     @Step("Создание графа '{graph.name}'")
-    public GraphPage createGraph(Graph graph) {
+    public GraphPage createGraph(models.cloud.productCatalog.graph.Graph graph) {
         createNewGraphButton.click();
         inputTitleField.setValue(graph.getTitle());
         inputNameField.setValue(graph.getName());
         typeDropDown.set(graph.getType());
         inputDescriptionField.setValue(graph.getDescription());
         inputAuthorField.setValue(graph.getAuthor());
-        createGraphButton.click();
+        createButton.click();
         return new GraphPage();
     }
 
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
-        new BaseListPage().copy(graphNameColumn, name);
+        new BaseListPage().copy(nameColumn, name);
         Alert.green("Граф успешно скопирован");
         cancelButton.shouldBe(Condition.enabled).click();
         return this;
@@ -64,7 +62,7 @@ public class GraphsListPage extends BaseListPage {
     public GraphsListPage findGraphByValue(String value, Graph graph) {
         searchInput.setValue(value);
         TestUtils.wait(1000);
-        new Table(graphNameColumn).isColumnValueEquals(graphNameColumn, graph.getName());
+        new Table(nameColumn).isColumnValueEquals(nameColumn, graph.getName());
         return this;
     }
 
@@ -81,19 +79,25 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Удаление графа '{name}'")
     public GraphsListPage deleteGraph(String name) {
-        BaseListPage.openActionMenu(graphNameColumn, name);
+        openActionMenu(nameColumn, name);
         deleteAction.click();
         new DeleteDialog().inputValidIdAndDelete();
         return this;
     }
 
+    @Step("Проверка недоступности удаления используемого графа")
+    public GraphsListPage checkDeleteUsedGraphUnavailable(Graph graph) {
+        openActionMenu(nameColumn, graph.getName());
+        deleteAction.click();
+        new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
+                " объектами. Отвяжите граф от объектов и повторите попытку");
+        return this;
+    }
+
     @Step("Проверка заголовков списка графов")
     public GraphsListPage checkGraphsListHeaders() {
-        Table graphsList = new Table(graphNameColumn);
-        assertEquals(0, graphsList.getHeaderIndex("Наименование"));
-        assertEquals(1, graphsList.getHeaderIndex("Код графа"));
-        assertEquals(2, graphsList.getHeaderIndex("Дата создания"));
-        assertEquals(3, graphsList.getHeaderIndex("Описание"));
+        AssertUtils.assertHeaders(new Table(nameColumn),
+                "Наименование", nameColumn, "Дата создания", "Описание", "", "");
         return this;
     }
 
@@ -114,7 +118,7 @@ public class GraphsListPage extends BaseListPage {
         if (author.isEmpty()) {
             authorRequiredFieldHint.shouldBe(Condition.visible);
         }
-        createGraphButton.shouldBe(Condition.disabled);
+        createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();
         return new GraphsListPage();
     }
@@ -126,14 +130,14 @@ public class GraphsListPage extends BaseListPage {
         }
         searchInput.setValue(name);
         TestUtils.wait(500);
-        new Table(graphNameColumn).getRowByColumnValue(graphNameColumn, name).get().click();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
         TestUtils.wait(500);
         return new GraphPage();
     }
 
     @Step("Открытие страницы графа '{name}'")
     public GraphPage openGraphPage(String name) {
-        new Table(graphNameColumn).getRowByColumnValue(graphNameColumn, name).get().click();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
         return new GraphPage();
     }
 
@@ -198,8 +202,8 @@ public class GraphsListPage extends BaseListPage {
     }
 
     public void checkGraphIsHighlighted(String name) {
-        Table graphsList = new Table(graphNameColumn);
-        Assertions.assertTrue(graphsList.getRowByColumnValue(graphNameColumn, name).get()
+        Table graphsList = new Table(nameColumn);
+        Assertions.assertTrue(graphsList.getRowByColumnValue(nameColumn, name).get()
                 .getCssValue("color").contains("196, 202, 212"));
     }
 }

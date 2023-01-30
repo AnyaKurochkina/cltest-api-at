@@ -26,6 +26,7 @@ import static steps.productCatalog.ProductSteps.*;
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)

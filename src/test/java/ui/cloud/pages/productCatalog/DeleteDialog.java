@@ -42,12 +42,11 @@ public class DeleteDialog extends Dialog {
         Alert.green(alertText);
     }
 
-    @Step("Вводим верный id")
+    @Step("Проверка недоступности удаления и текста уведомления")
     public void inputValidIdAndDeleteNotAvailable(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
         Alert.red(alertText);
-        TestUtils.wait(6000);
     }
 
     @Step("Подтверждение удаления объекта")

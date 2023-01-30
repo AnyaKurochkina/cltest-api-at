@@ -5,12 +5,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
+import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
-import ui.models.Graph;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -40,7 +40,7 @@ public class GraphAuditTest extends GraphBaseTest {
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", graphsObject, "201", "создан")
                 .checkFirstRecordDetails(graph.getGraphId(), graphsObject, noValue, noValue)
-                .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "", "QA-1"))
+                .setAuthor("QA-1")
                 .saveGraphWithPatchVersion()
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "modify", graphsObject, "200", "ок")
