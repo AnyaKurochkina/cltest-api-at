@@ -10,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.NotFoundException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
-import ui.cloud.pages.EntitiesUtils;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
@@ -22,7 +21,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.Objects;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @ExtendWith(BeforeAllExtension.class)
@@ -34,7 +33,7 @@ public class DiskTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Диски")
     void diskList() {
         new IndexPage().goToDisks();
-        AssertHeaders(new DiskList.DiskTable(), "", "Имя", "Зона доступности", "Размер, ГБ", "Виртуальная машина", "Дата создания", "Тип", "Системный", "");
+        assertHeaders(new DiskList.DiskTable(), "", "Имя", "Зона доступности", "Размер, ГБ", "Виртуальная машина", "Дата создания", "Тип", "Системный", "");
     }
 
     @Test

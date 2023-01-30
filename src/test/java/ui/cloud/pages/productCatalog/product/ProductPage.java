@@ -14,10 +14,7 @@ import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Switch;
-import ui.elements.TextArea;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -30,7 +27,6 @@ public class ProductPage extends BasePage {
     private final Input descriptionInput = Input.byName("description");
     private final Input maxCountInput = Input.byName("max_count");
     private final Input numberInput = Input.byName("number");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final String saveProductAlertText = "Продукт успешно изменен";
     private final TextArea info = TextArea.byLabel("Информация");
     private final TextArea extraData = TextArea.byLabel("Extra data");
@@ -39,6 +35,7 @@ public class ProductPage extends BasePage {
     private final Select onRequestSelect = Select.byLabel("Продукт по запросу");
     private final Select paymentSelect = Select.byLabel("Выбор оплаты");
     private final Switch inGeneralListSwitch = Switch.byLabel("В общем списке маркетплейса");
+    private final Switch isOpen = Switch.byLabel("Открытый");
     private final SelenideElement nameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement nonUniqueNameValidationHint =
@@ -148,15 +145,15 @@ public class ProductPage extends BasePage {
     @Step("Задание версии графа '{version}'")
     public ProductPage setGraphVersion(String version) {
         goToGraphTab();
-        TestUtils.wait(2000);
+        Waiting.sleep(2000);
         graphVersionSelect.set(version);
         return this;
     }
 
-    @Step("Задание значения Extra data")
-    public ProductPage setExtraData(String value) {
+    @Step("Задание в поле Автор '{value}'")
+    public ProductPage setAuthor(String value) {
         goToAdditionalParamsTab();
-        extraData.setValue(value);
+        authorInput.setValue(value);
         return this;
     }
 
@@ -164,12 +161,6 @@ public class ProductPage extends BasePage {
     public ProductPage saveWithoutPatchVersion(String alertText) {
         super.saveWithoutPatchVersion(alertText);
         return new ProductPage();
-    }
-
-    @Step("Удаление продукта")
-    public void deleteProduct() {
-        deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
     }
 
     @Step("Задание значения в поле 'Описание'")
@@ -211,6 +202,12 @@ public class ProductPage extends BasePage {
         return this;
     }
 
+    @Step("Переход на вкладку 'Сравнение версий'")
+    public ProductPage goToVersionComparisonTab() {
+        goToTab("Сравнение версий");
+        return this;
+    }
+
     @Step("Проверка валидации недопустимых значений в коде продукта")
     public ProductsListPage checkNameValidation(String[] names) {
         for (String name : names) {
@@ -240,5 +237,56 @@ public class ProductPage extends BasePage {
     public void delete() {
         deleteButton.click();
         new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+    }
+
+    @Step("Сохранение продукта со следующей патч-версией")
+    public ProductPage saveWithPatchVersion() {
+        super.saveWithPatchVersion(saveProductAlertText);
+        return this;
+    }
+
+    @Step("Сохранение продукта с версией '{newVersion}'")
+    public ProductPage saveWithManualVersion(String newVersion) {
+        super.saveWithManualVersion(newVersion, saveProductAlertText);
+        return this;
+    }
+
+    @Step("Проверка, что следующая предлагаемая версия для сохранения равна '{nextVersion}' и сохранение")
+    public ProductPage checkNextVersionAndSave(String nextVersion) {
+        super.checkNextVersionAndSave(nextVersion, saveProductAlertText);
+        return this;
+    }
+
+    @Step("Удаление иконки")
+    public ProductPage deleteIcon() {
+        deleteIconButton.click();
+        saveWithoutPatchVersion(saveProductAlertText);
+        addIconLabel.shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Проверка недоступности удаления открытого продукта")
+    public void checkDeleteOpenProduct() {
+        isOpen.getLabel().scrollIntoView(true);
+        isOpen.setEnabled(true);
+        deleteButton.getButton().hover();
+        Assertions.assertEquals("Недоступно для открытого продукта", new Tooltip().toString());
+        deleteButton.getButton().shouldBe(Condition.disabled);
+        isOpen.setEnabled(false);
+        deleteButton.getButton().hover();
+        Assertions.assertFalse(Tooltip.isVisible());
+        deleteButton.getButton().shouldBe(Condition.enabled);
+    }
+
+    @Step("Возврат в список продуктов по хлебным крошкам")
+    public ProductsListPage goToProductsList() {
+        productsListLink.scrollIntoView(false).click();
+        return new ProductsListPage();
+    }
+
+    @Step("Возврат в список продуктов по кнопке Назад")
+    public ProductsListPage backToProductsList() {
+        backButton.click();
+        return new ProductsListPage();
     }
 }

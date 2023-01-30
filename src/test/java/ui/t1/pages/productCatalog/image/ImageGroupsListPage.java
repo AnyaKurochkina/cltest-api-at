@@ -81,7 +81,8 @@ public class ImageGroupsListPage extends BaseListPage {
         setTags(imageGroup);
         distroInput.setValue(imageGroup.getDistro());
         addButton.click();
-        Alert.green("Группа образов успешно добавлена");
+        // TODO убрать коммент после реализации PO-655 п.4
+        // Alert.green("Группа образов успешно добавлена");
         return this;
     }
 

@@ -13,10 +13,7 @@ import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Table;
-import ui.elements.TypifiedElement;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -36,13 +33,9 @@ public class ActionPage extends BasePage {
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
-    private final SelenideElement saveButton = $x("//button/div[text() = 'Сохранить']");
-    private final SelenideElement cancelButton = $x("//button/div[text() = 'Отмена']");
     private final Input graphInput = Input.byLabelV2("Граф");
     private final SelenideElement deleteButton = $x("//div[text() ='Удалить']");
     private final SelenideElement currentVersionInput = $x("//label[text()='Выберите версию']/following::div[@id='selectValueWrapper']/div");
-    private final SelenideElement deleteIconSvG = $x("(//div/*[local-name()='svg']/*[local-name()='svg']/*[local-name()='path'])[3]");
-    private final SelenideElement addIcon = $x("//label[@for = 'attachment-input']");
     private final SelenideElement addTypeAndProviderButton = $x("//button[div[text()='Добавить']]");
     private final Input priorityInput = Input.byName("priority");
 
@@ -54,6 +47,12 @@ public class ActionPage extends BasePage {
     @Step("Возврат на страницу списка Действий через кнопку Отмена")
     public ActionsListPage reTurnToActionsListPageByCancelButton() {
         cancelButton.click();
+        return new ActionsListPage();
+    }
+
+    @Step("Возврат в список действий по кнопке Назад")
+    public ActionsListPage backToActionsList() {
+        backButton.click();
         return new ActionsListPage();
     }
 
@@ -86,28 +85,28 @@ public class ActionPage extends BasePage {
 
     @Step("Сохранение действия со следующей патч версией")
     public ActionPage saveWithNextPatchVersion() {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().saveWithNextPatchVersion(saveActionAlertText);
         return new ActionPage();
     }
 
     @Step("Сохранение действия с указанием версии")
     public ActionPage saveWithVersion(String newVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().saveWithVersion(newVersion, saveActionAlertText);
         return new ActionPage();
     }
 
     @Step("Проверка сохранения действия с некорректно указанной версией '{newVersion}'")
     public ActionPage checkSaveWithInvalidVersion(String newVersion, String currentVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().checkSaveWithInvalidVersion(newVersion, currentVersion);
         return new ActionPage();
     }
 
     @Step("Проверка сохранения действия с указанной версией некорректного формата '{newVersion}'")
     public ActionPage checkSaveWithInvalidVersionFormat(String newVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().checkSaveWithInvalidVersionFormat(newVersion);
         return new ActionPage();
     }
@@ -140,7 +139,7 @@ public class ActionPage extends BasePage {
         return new ActionsListPage();
     }
 
-    @Step("Назад с помощью кнопки броузера и отмена оповещения о несохранненных данных")
+    @Step("Назад с помощью кнопки браузера и отмена оповещения о несохранненных данных")
     public ActionPage backOnBrowserAndAlertCancel() {
         back();
         String alertMsg = switchTo().alert().getText();
@@ -173,14 +172,14 @@ public class ActionPage extends BasePage {
 
     @Step("Удаление иконки")
     public ActionPage deleteIcon() {
-        deleteIconSvG.click();
-        addIcon.shouldBe(Condition.visible);
+        deleteIconButton.click();
+        addIconLabel.shouldBe(Condition.visible);
         return this;
     }
 
     @Step("Проверка отсутствия иконки")
     public boolean isIconExist() {
-        return deleteIconSvG.is(Condition.visible);
+        return deleteIconButton.is(Condition.visible);
     }
 
     @Step("Запонение полей для создания действия и сохранение")
@@ -190,9 +189,8 @@ public class ActionPage extends BasePage {
         inputNameField.setValue(name);
         inputTitleField.setValue(title);
         inputDescriptionField.setValue(description);
-        Select.byLabel("Обязательные статусы item").set(status.getValue());
-        TestUtils.scrollToTheBottom();
-        Select.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
+        MultiSelect.byLabel("Обязательные статусы item").set(status.getValue());
+        MultiSelect.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
         Select.byLabel("Тип").set(actionType.getValue());
         paramsTab.scrollIntoView(false).click();
         addTypeAndProviderButton.click();
@@ -219,7 +217,7 @@ public class ActionPage extends BasePage {
         $x("//div[contains(text(), '" + graphTitle + "')]").click();
         TestUtils.scrollToTheBottom();
         saveButton.click();
-        cancelButton.click();
+        backButton.click();
         return new ActionsListPage();
     }
 

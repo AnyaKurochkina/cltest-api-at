@@ -1,5 +1,6 @@
 package ui.cloud.tests.productCatalog.product;
 
+import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
@@ -17,6 +18,7 @@ import java.util.UUID;
 
 import static steps.productCatalog.ProductSteps.deleteProductByName;
 
+@Epic("Конструктор.Продукты")
 public class ProductBaseTest extends BaseTest {
 
     final static String TITLE = "AT UI Product";

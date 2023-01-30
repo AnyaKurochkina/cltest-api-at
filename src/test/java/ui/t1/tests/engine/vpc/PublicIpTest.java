@@ -21,7 +21,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.Objects;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 
 @BlockTests
 @ExtendWith(BeforeAllExtension.class)
@@ -37,7 +37,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Публичные IP-адреса")
     void publicIpList() {
         new IndexPage().goToPublicIps();
-        AssertHeaders(new PublicIpList.IpTable(), "", "IP-адрес", "Зона доступности", "Сетевой интерфейс", "");
+        assertHeaders(new PublicIpList.IpTable(), "", "IP-адрес", "Зона доступности", "Сетевой интерфейс", "");
     }
 
     @Test

@@ -18,12 +18,7 @@ public class GraphPage extends BasePage {
     protected static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
-    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
     private final SelenideElement descriptionField = $x("//textarea[@name='description']");
-    private final SelenideElement viewJSONButton = $x("//div[text()='JSON']/parent::button");
-    private final SelenideElement expandJSONView = $x("//button[@aria-label='fullscreen']");
-    private final SelenideElement closeJSONView = $x("//button[@aria-label='close']");
     private final SelenideElement nodesTab = $x("//span[text()='Узлы']//parent::button");
     private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//parent::button");
     private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//parent::button");
@@ -60,28 +55,28 @@ public class GraphPage extends BasePage {
 
     @Step("Сохранение графа со следующей патч-версией")
     public GraphPage saveGraphWithPatchVersion() {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().saveWithNextPatchVersion(saveGraphAlertText);
         return new GraphPage();
     }
 
     @Step("Проверка, что следующая предлагаемая версия равна '{nextVersion}', и сохранение")
     public GraphPage checkNextVersionAndSave(String nextVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().checkNextVersionAndSave(nextVersion, saveGraphAlertText);
         return new GraphPage();
     }
 
     @Step("Сохранение графа с указанием новой версии '{newVersion}'")
     public GraphPage saveGraphWithManualVersion(String newVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().saveWithVersion(newVersion, saveGraphAlertText);
         return new GraphPage();
     }
 
     @Step("Проверка сохранения графа с некорректно указанной версией '{newVersion}'")
     public GraphPage trySaveGraphWithIncorrectVersion(String newVersion, String currentVersion) {
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         new SaveDialog().checkSaveWithInvalidVersion(newVersion, currentVersion);
         return new GraphPage();
     }
@@ -89,7 +84,7 @@ public class GraphPage extends BasePage {
     @Step("Проверка недоступности сохранения графа при достижении лимита версий")
     public GraphPage checkVersionLimit() {
         $x("//div[text()='Достигнут предел допустимого значения версии. Нельзя сохранить следующую версию']").shouldBe(Condition.visible);
-        saveButton.shouldBe(Condition.disabled);
+        saveButton.getButton().shouldBe(Condition.disabled);
         return new GraphPage();
     }
 

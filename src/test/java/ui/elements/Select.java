@@ -20,8 +20,8 @@ import static com.codeborne.selenide.Selenide.$$x;
 import static core.helper.StringUtils.$x;
 
 public class Select implements TypifiedElement {
-    private final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='Не найдено']");
     public static final String RANDOM_VALUE = "RANDOM_VALUE";
+    protected final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='Не найдено']");
     @Getter
     protected SelenideElement element;
 
@@ -35,7 +35,7 @@ public class Select implements TypifiedElement {
 
     @Step("Получение Select по label {label} с индексом {index}")
     public static Select byLabel(String label, int index) {
-        return new Select($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
+        return new Select($x("(//label[.='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
     }
 
     public static Select byXpath(@Language("XPath") String xpath) {
@@ -119,7 +119,7 @@ public class Select implements TypifiedElement {
         return element.scrollIntoView(scrollCenter).hover().$x("descendant::button[@aria-label='Clear']");
     }
 
-    private String getRandomItem() {
+    protected String getRandomItem() {
         return random(getOptions().texts());
     }
 

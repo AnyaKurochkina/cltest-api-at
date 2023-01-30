@@ -11,7 +11,7 @@ import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Образы")
@@ -22,7 +22,7 @@ public class ImagesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Образы")
     void snapshotList() {
         new IndexPage().goToImages();
-        AssertHeaders(new ImageList.ImageTable(),"", "Имя", "Зона доступности", "Формат диска", "Размер, МБ", "Дата обновления", "");
+        assertHeaders(new ImageList.ImageTable(),"", "Имя", "Зона доступности", "Формат диска", "Размер, МБ", "Дата обновления", "");
     }
 
     @Test

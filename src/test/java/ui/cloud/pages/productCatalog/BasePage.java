@@ -15,13 +15,18 @@ public class BasePage {
     protected final Select versionDropDown = Select.byLabel("Выберите версию");
     protected final WebElement versionComparisonTab = $x("//button[span[text()='Сравнение версий']]");
     protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
+    protected final Button createButton = Button.byText("Создать");
     protected final Button saveButton = Button.byText("Сохранить");
     protected final Button cancelButton = Button.byText("Отмена");
+    protected final Button deleteButton = Button.byText("Удалить");
     protected final Button backButton = Button.byText("Назад");
     protected final SelenideElement deleteIconButton = $x("//img/following::*[name()='svg'][1]");
     protected final SelenideElement addIconLabel = $x("//label[text()='Добавить иконку']");
     protected final Select graphSelect = Select.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
+    protected final Button viewJSONButton = Button.byText("JSON");
+    protected final Button expandJSONView = Button.byAriaLabel("fullscreen");
+    protected final Button closeJSONView = Button.byAriaLabel("close");
 
     @Step("Сохранение объекта без изменения версии")
     public BasePage saveWithoutPatchVersion(String alertText) {
@@ -79,5 +84,15 @@ public class BasePage {
         if (tab.getAttribute("aria-selected").equals("false")) {
             tab.scrollIntoView(false).click();
         }
+    }
+
+    @Step("Просмотр JSON и проверка отображения '{value}'")
+    public BasePage checkJSONcontains(String value) {
+        viewJSONButton.click();
+        $x("//div[@role='dialog']//span[text()='\"" + value + "\"']").shouldBe(Condition.visible);
+        expandJSONView.click();
+        expandJSONView.click();
+        closeJSONView.click();
+        return this;
     }
 }

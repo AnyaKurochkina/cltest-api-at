@@ -14,7 +14,7 @@ import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Сетевые интерфейсы")
@@ -25,7 +25,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Сетевые интерфейсы")
     void networkInterfacesList() {
         new IndexPage().goToNetworkInterfaces();
-        AssertHeaders(new NetworkInterfaceList.NetworkInterfaceTable(), "", "IP адрес", "MAC адрес", "Сеть", "Подсеть", "Зона доступности", "Группы безопасности", "Виртуальная машина", "");
+        assertHeaders(new NetworkInterfaceList.NetworkInterfaceTable(), "", "IP адрес", "MAC адрес", "Сеть", "Подсеть", "Зона доступности", "Группы безопасности", "Виртуальная машина", "");
     }
 
     @Test
