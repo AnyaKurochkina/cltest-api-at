@@ -28,7 +28,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 import java.util.List;
 import java.util.Objects;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Виртуальные машины")
@@ -39,7 +39,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины")
     void vmList() {
         new IndexPage().goToVirtualMachine();
-        AssertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
+        assertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
     }
 
     @Test

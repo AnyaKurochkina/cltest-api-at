@@ -48,5 +48,8 @@ public class TemplatesListTest extends TemplateBaseTest {
         new TemplatesListPage().openTemplatePage(NAME);
         Selenide.back();
         new TemplatesListPage().checkTemplateIsHighlighted(NAME);
+        new TemplatesListPage().openTemplatePage(NAME)
+                .backToTemplatesList()
+                .checkTemplateIsHighlighted(NAME);
     }
 }

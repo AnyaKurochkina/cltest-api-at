@@ -16,7 +16,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
@@ -38,8 +37,6 @@ import static steps.productCatalog.ActionSteps.*;
 public class ActionTest extends BaseTest {
 
     private final String TITLE = "AT UI Action";
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json");
 
     @Test
     @TmsLink("505750")
@@ -75,7 +72,7 @@ public class ActionTest extends BaseTest {
                 .createObject();
         assertTrue(new IndexPage().goToActionsPage()
                 .copyAction(name)
-                .reTurnToActionsListPageByCancelButton()
+                .backToActionsList()
                 .isActionExist(cloneName));
         deleteActionByName(cloneName);
     }
@@ -144,7 +141,7 @@ public class ActionTest extends BaseTest {
         String version = getActionById(action.getActionId()).getVersion();
         new IndexPage().goToActionsPage()
                 .openActionForm(name)
-                .inputByLabel("Приоритет", "2")
+                .setPriority(2)
                 .checkSaveWithInvalidVersion("1.0.1", version)
                 .checkSaveWithInvalidVersion("1.0.0", version)
                 .checkSaveWithInvalidVersionFormat("1/0/2")
@@ -199,7 +196,7 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .deleteIcon()
                 .saveWithoutPatchVersion()
-                .reTurnToActionsListPageByCancelButton()
+                .backToActionsList()
                 .openActionForm(name)
                 .isIconExist());
     }
@@ -245,19 +242,13 @@ public class ActionTest extends BaseTest {
     @DisplayName("Баннер при закрытии формы с несохраненными данными, Отмена")
     public void bannerWhenCloseFormAndNotSaveCancel() {
         String name = "action_for_banner_test_ui";
-        Action.builder()
-                .actionName(name)
-                .title(name)
-                .number(0)
-                .build()
-                .createObject();
+        createActionByApi(name);
         new IndexPage()
                 .goToActionsPage()
                 .openActionForm(name)
-                .inputByLabel("Приоритет сообщения", "1")
+                .setPriority(1)
                 .backOnBrowserAndAlertCancel()
-                .backByActionsLinkAndAlertCancel()
-                .closeTabAndAlertCancel();
+                .backByActionsLinkAndAlertCancel();
     }
 
     @Test
@@ -333,8 +324,8 @@ public class ActionTest extends BaseTest {
     }
 
     @Step("Создание действия '{name}'")
-    private void createActionByApi(String name) {
-        Action.builder()
+    private Action createActionByApi(String name) {
+        return Action.builder()
                 .actionName(name)
                 .title(TITLE)
                 .number(0)
@@ -344,5 +335,16 @@ public class ActionTest extends BaseTest {
                         .build()))
                 .build()
                 .createObject();
+    }
+
+    @Test
+    @TmsLink("852947")
+    @DisplayName("Просмотр JSON действия")
+    public void viewJSONTest() {
+        String name = UUID.randomUUID().toString();
+        Action action = createActionByApi(name);
+        new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .checkJSONcontains(action.getActionId());
     }
 }

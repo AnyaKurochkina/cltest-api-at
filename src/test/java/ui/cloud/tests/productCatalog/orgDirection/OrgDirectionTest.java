@@ -5,6 +5,8 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.icon.Icon;
+import models.cloud.productCatalog.icon.IconStorage;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
@@ -12,11 +14,12 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 import ui.cloud.tests.productCatalog.BaseTest;
+
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -30,8 +33,6 @@ public class OrgDirectionTest extends BaseTest {
     public static final String DIRECTION_TITLE = "at_ui_create_direction_title";
     public static final String DIRECTION_NAME = "at_ui_create_direction_name";
     public static final String DIRECTION_DESCRIPTION = "at_ui_create_direction_description";
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/org_direction/",
-            "productCatalog/orgDirection/orgDirection.json");
 
     @Test
     @DisplayName("Создание направления")
@@ -184,14 +185,52 @@ public class OrgDirectionTest extends BaseTest {
     }
 
     @Test
-    @DisplayName("Просмотр списка направлений и поиск")
-    @Disabled
-    public void viewDirectionsListAndSearch() {
+    @DisplayName("Просмотр списка направлений, сортировка")
+    @TmsLink("486331")
+    public void viewDirectionsListTest() {
         new IndexPage()
                 .goToOrgDirectionsPage()
-                .createDirection()
-                .fillAndSave("", "", "")
-                .checkFields()
-                .findDirectionByName(DIRECTION_NAME);
+                .checkHeaders()
+                .checkSorting();
+    }
+
+    @Test
+    @DisplayName("Поиск направления")
+    @TmsLink("1416697")
+    public void searchDirectionsTest() {
+        String name = UUID.randomUUID().toString();
+        OrgDirection orgDirection = createOrgDirectionByApi(name);
+        new IndexPage()
+                .goToOrgDirectionsPage()
+                .findDirectionByValue(name, orgDirection)
+                .findDirectionByValue(DIRECTION_TITLE, orgDirection)
+                .findDirectionByValue(name.substring(1).toUpperCase(), orgDirection)
+                .findDirectionByValue(DIRECTION_TITLE.substring(1).toUpperCase(), orgDirection);
+    }
+
+    @Test
+    @TmsLink("631121")
+    @DisplayName("Удаление иконки")
+    public void deleteIconTest() {
+        String name = UUID.randomUUID().toString();
+        createOrgDirectionByApi(name);
+        new IndexPage().goToOrgDirectionsPage()
+                .openOrgDirectionPage(name)
+                .deleteIcon();
+    }
+
+    private OrgDirection createOrgDirectionByApi(String name) {
+        Icon icon = Icon.builder()
+                .name(name)
+                .image(IconStorage.ICON_FOR_AT_TEST)
+                .build()
+                .createObject();
+        return OrgDirection.builder()
+                .name(name)
+                .title(DIRECTION_TITLE)
+                .description(name)
+                .iconStoreId(icon.getId())
+                .build()
+                .createObject();
     }
 }

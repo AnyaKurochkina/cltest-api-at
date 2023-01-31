@@ -7,7 +7,6 @@ import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.WebElement;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -35,12 +34,9 @@ public class ServicesListPagePC extends BaseListPage {
             $x("//input[@name='name']/following::div[text()='Сервис с таким именем уже существует']");
     private final SelenideElement nameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
-    private final SelenideElement createButton = $x("//div[text()='Создать']/parent::button");
     private final SelenideElement cancelButton = $x("//div[text()='Отменить']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final Select statusDropDown = Select.byLabel("Статус");
-    private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
-    private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
 
     @Step("Проверка заголовков списка сервисов")
     public ServicesListPagePC checkHeaders() {
@@ -116,7 +112,7 @@ public class ServicesListPagePC extends BaseListPage {
         if (service.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
         }
-        createButton.shouldBe(Condition.disabled);
+        createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();
         return this;
     }
@@ -128,7 +124,7 @@ public class ServicesListPagePC extends BaseListPage {
         nameInput.setValue(service.getName());
         titleInput.setValue(service.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
-        createButton.shouldBe(Condition.disabled);
+        createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();
         return this;
     }

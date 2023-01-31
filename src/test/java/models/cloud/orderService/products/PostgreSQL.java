@@ -156,6 +156,10 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
+    public String getIp(){
+        return ((String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='vm'}.data.config.default_v4_address"));
+    }
+
     //Сбросить пароль пользователя
     public void resetPassword(String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";

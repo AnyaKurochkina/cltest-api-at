@@ -1,5 +1,6 @@
 package ui.cloud.tests.productCatalog.product;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.product.Categories;
@@ -10,6 +11,7 @@ import ui.cloud.pages.IndexPage;
 
 import java.util.UUID;
 
+@Feature("Создание продукта")
 public class CreateProductTest extends ProductBaseTest {
 
     @Test

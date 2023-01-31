@@ -86,6 +86,7 @@ public class LogoTest extends BaseTest {
                 .osDistro("new distro").build();
         new ControlPanelIndexPage().goToLogoListPage().openEditDialog(logo).setAttributes(editedLogo)
                 .openEditDialog(editedLogo).checkAttributes(editedLogo);
+        deleteByApi(editedLogo);
     }
 
     @Test

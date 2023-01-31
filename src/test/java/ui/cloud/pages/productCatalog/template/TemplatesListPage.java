@@ -209,7 +209,7 @@ public class TemplatesListPage extends BaseListPage {
         return this;
     }
 
-    @Step("Импорт шаблона из файла 'path'")
+    @Step("Импорт шаблона из файла '{path}'")
     public TemplatesListPage importTemplate(String path) {
         importButton.click();
         new InputFile(path).importFileAndSubmit();
