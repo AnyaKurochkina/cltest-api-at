@@ -99,6 +99,16 @@ public class Windows extends IProduct {
                 .build();
     }
 
+    public void astromAdd() {
+        OrderServiceSteps.executeAction("windows_astrom_add", this, new JSONObject().put("check_agree", true));
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "X")));
+    }
+
+    public void astromDelete() {
+        OrderServiceSteps.executeAction("windows_astrom_delete", this, null);
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "X")));
+    }
+
     //Добавить диск
     public void addDisk(String disk) {
         OrderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"), this.getProjectId());

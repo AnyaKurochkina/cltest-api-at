@@ -5,6 +5,8 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouse;
+import models.cloud.orderService.products.ClickHouseCluster;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -37,20 +39,20 @@ public class ClickHouseTest extends Tests {
         }
     }
 
-    @TmsLink("377689")
+    @TmsLink("1427551")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль владельца{0}")
+    @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetPasswordOwner(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.resetPasswordOwner();
         }
     }
 
-//    @TmsLink("377689")
+    @TmsLink("391689")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль customer{0}")
+    @ParameterizedTest(name = "Сбросить пароль customer {0}")
     void resetPasswordCustomer(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.resetPasswordCustomer();
@@ -99,6 +101,52 @@ public class ClickHouseTest extends Tests {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.stopHard();
             clickHouse.start();
+        }
+    }
+
+    @Tag("actions")
+    @TmsLinks({@TmsLink("377800"),@TmsLink("1427552")})
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "ТУЗ локальные, создание/удаление локальной УЗ {0}")
+    void createUserAccount(ClickHouse product) {
+        try (ClickHouse cluster = product.createObjectExclusiveAccess()) {
+            cluster.createUserAccount("test", "qBZ7hUOija_gSSyOEt7rA-.nk-x.R4UzdJvrv8y1JJk.lpp");
+            cluster.deleteUserAccount("test");
+        }
+    }
+
+    @Tag("actions")
+    @TmsLinks({@TmsLink("377802"),@TmsLink("1427553")})
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "ТУЗ AD, добавление/удаление {0}")
+    void addUserAd(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            clickHouse.addUserAd("user1");
+            clickHouse.deleteUserAd("user1");
+        }
+    }
+
+    @Tag("actions")
+    @TmsLinks({@TmsLink("391688"),@TmsLink("1427554")})
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Группы пользователей AD, добавление/удаление {0}")
+    void addGroupAd(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(clickHouse.getProjectId()).build().createObject();
+            clickHouse.deleteGroupAd(accessGroup.getPrefixName());
+            clickHouse.addGroupAd(accessGroup.getPrefixName());
+        }
+    }
+
+    @Tag("actions")
+    @TmsLinks({@TmsLink("1427555"),@TmsLink("1427556")})
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Группы прикладных администраторов AD, добавление/удаление {0}")
+    void addGroupAdmin(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(clickHouse.getProjectId()).build().createObject();
+            clickHouse.deleteGroupAdmin(accessGroup.getPrefixName());
+            clickHouse.addGroupAdmin(accessGroup.getPrefixName());
         }
     }
 

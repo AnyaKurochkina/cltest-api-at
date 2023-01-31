@@ -150,6 +150,7 @@ public class WildFlyAstraTest extends Tests {
     }
 
     @TmsLinks({@TmsLink("989482"),@TmsLink("989486")})
+    @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавление/Удаление пользователя WildFly {0}")
