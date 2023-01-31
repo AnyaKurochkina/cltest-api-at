@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -17,12 +18,15 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+
 @Epic("UI Продукты")
 @Feature("PostgreSQL (Astra Linux)")
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/2ba0f89b-3a66-4c86-a5bb-888ce345959b/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/e49ce769-69db-45bc-97b2-b00db1ecb013/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
@@ -243,25 +247,27 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::start);
     }
 
-
-
     @Test
-    @Order(24)
-    @TmsLink("1091014")
-    @DisplayName("UI PostgreSQLAstra. Добавление группы доступа")
-    void addGroupAccess() {
+    @TmsLinks({@TmsLink("1091089"), @TmsLink("1091067")})
+    @Order(25)
+    @DisplayName("UI PostgreSQLAstra. Добавление/удаление группы доступа")
+    void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.addGroupAccess(pSqlPage.getRoleNode());
+        pSqlPage.deleteGroup("superuser");
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
 
     @Test
-    @Order(25)
-    @TmsLink("1091010")
-    @DisplayName("UI PostgreSQLAstra. Удаление группы доступа")
-    void deleteGroupAccess() {
+    @TmsLink("1091118")
+    @Order(26)
+    @DisplayName("UI PostgreSQLAstra. Изменение группы доступа")
+    void updateGroup() {
+        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.addGroupAccess(pSqlPage.getRoleNode());
-        pSqlPage.deleteGroupAccess(pSqlPage.getRoleNode());
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateGroup("superuser",
+                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
 
