@@ -3,10 +3,13 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.PostgreSQL;
+import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
+
+import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
@@ -23,8 +26,8 @@ public class PostgreSqlAstraPage extends IProductPage {
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
-    private static final String HEADER_PATH = "Файловая система";
-    private static final String HEADER_SORT = "Сортировка";
+    private static final String HEADER_ROLE = "Роли";
+    private static final String HEADER_GROUPS = "Группы";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
 
@@ -35,7 +38,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-
+    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
     public PostgreSqlAstraPage(PostgreSQL product) {
         super(product);
     }
@@ -226,6 +229,35 @@ public class PostgreSqlAstraPage extends IProductPage {
             Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
         }
     }
+    public void addGroupAccess(SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
+        if (!(new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()))) {
+               runActionWithParameters(HEADER_ROLE, "Добавить группу доступа", "Подтвердить", () -> {
+               Select.byLabel("Группы").set(accessGroup.getPrefixName());
+            },ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        node.scrollIntoView(scrollCenter).click();
+            Assertions.assertTrue(
+                    new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()),"Ошибка добавления группы доступа");
+        }}
+    public void deleteGroupAccess(SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
+        runActionWithParameters(getBtnAction(HEADER_GROUPS), "Удалить группу доступа", "Подтвердить", () -> {
+            },ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        node.scrollIntoView(scrollCenter).click();
+        Assertions.assertTrue(
+                new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()),"Ошибка добавления группы доступа");
+    }
+   public SelenideElement getNode(String name,int index){
+       return new Table(name).getRow(index).get();
+   }
+   public SelenideElement getRoleNode(){
+       return new Table("Роли узла").getRow(0).get();
+   }
+
 
 
     public class VirtualMachineTable extends VirtualMachine {
