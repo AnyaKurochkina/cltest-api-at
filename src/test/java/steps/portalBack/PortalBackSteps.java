@@ -91,7 +91,7 @@ public class PortalBackSteps extends Steps {
     @Step("Получение случайной группы доступа")
     public static String getRandomAccessGroup(String projectId, String domain) {
         String accessGroup = new Http(PortalBackURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .setRole(Role.ACCESS_GROUP_ADMIN)
                 .get("/v1/projects/{}/access_groups?f[purpose]=compute&page=1&per_page=25", projectId)
                 .assertStatus(200)
                 .jsonPath()
