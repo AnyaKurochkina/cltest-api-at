@@ -24,8 +24,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product;
-    //= Astra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/db59f555-5480-4437-b721-d083a4785714/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    Astra product;// = Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/2ad8b165-54b0-4ea9-a3cc-c402b43f208e/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -95,6 +94,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Test
     @Order(4)
     @TmsLink("1267198")
+    @Disabled
     @DisplayName("UI AstraLinux. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);

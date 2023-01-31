@@ -35,7 +35,7 @@ public class ScyllaDbCluster extends IProduct {
     @Builder.Default
     public List<Db> database = new ArrayList<>();
     //    @Builder.Default
-//    public List<DbUser> usersWidthPermission = new ArrayList<>();
+    //    public List<DbUser> usersWidthPermission = new ArrayList<>();
     @Builder.Default
     public List<String> users = new ArrayList<>();
 
