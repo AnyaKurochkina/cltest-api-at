@@ -198,10 +198,6 @@ public class ClickHouseClusterPage extends IProductPage {
         btnGroups.shouldBe(Condition.enabled).click();
         Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
     }
-//    public SelenideElement getRowCh (){
-//        new Table("Имя").getRowByColumnValue("Роли узла","clickhouse");
-//        return ;
-//    }
 
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable(String columnName) {

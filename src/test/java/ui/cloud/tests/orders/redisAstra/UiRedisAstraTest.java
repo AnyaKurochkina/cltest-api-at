@@ -22,7 +22,7 @@ import java.time.Duration;
 public class UiRedisAstraTest extends UiProductTest {
 
     Redis product;
-    //= Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    //= Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/e22c213b-8358-4b59-82de-e34a76cfd527/main?context=proj-ln4zg69jek&type=project&org=vtb");
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {

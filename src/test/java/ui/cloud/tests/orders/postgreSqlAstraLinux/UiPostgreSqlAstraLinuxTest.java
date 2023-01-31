@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -21,12 +22,12 @@ import java.time.Duration;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;
-    //= PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/e28773e9-9701-4ba9-9aca-dc72febf292d/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/2ba0f89b-3a66-4c86-a5bb-888ce345959b/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
+
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -242,15 +243,27 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::start);
     }
 
+
+
     @Test
-    @Order(23)
-    @TmsLink("993390")
-    @Disabled
-    @DisplayName("UI PostgreSQLAstra. Выключить")
-    void stopSoft() {
+    @Order(24)
+    @TmsLink("1091014")
+    @DisplayName("UI PostgreSQLAstra. Добавление группы доступа")
+    void addGroupAccess() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.LESS, pSqlPage::stopSoft);
+        pSqlPage.addGroupAccess(pSqlPage.getRoleNode());
     }
+
+    @Test
+    @Order(25)
+    @TmsLink("1091010")
+    @DisplayName("UI PostgreSQLAstra. Удаление группы доступа")
+    void deleteGroupAccess() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.addGroupAccess(pSqlPage.getRoleNode());
+        pSqlPage.deleteGroupAccess(pSqlPage.getRoleNode());
+    }
+
 
     @Test
     @Order(100)
