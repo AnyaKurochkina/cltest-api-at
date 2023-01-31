@@ -1,6 +1,6 @@
 package ui.t1.pages.cloudEngine.compute;
 
-import com.codeborne.selenide.Selenide;
+import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.*;
@@ -29,7 +29,7 @@ public class SshKeyList {
     public void copyKey(String nameKey) {
         KeysTable.getMenuKey(nameKey).select("Скопировать");
         Alert.green("SSH-ключ {} скопирован", nameKey);
-        Assertions.assertEquals(SSH_KEY, Selenide.clipboard().getText());
+        Assertions.assertEquals(SSH_KEY, StringUtils.getClipBoardText());
     }
 
     @Step("Удалить ключ {nameKey}")

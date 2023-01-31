@@ -4,6 +4,7 @@ import api.Tests;
 import com.codeborne.selenide.Selenide;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
@@ -36,6 +37,8 @@ public abstract class AbstractComputeTest extends Tests {
 
     public AbstractComputeTest() {
         project = Project.builder().isForOrders(true).build().createObject();
+        if(Configure.ENV.equals("t1ift"))
+            availabilityZone = "ru-central1-c";
     }
 
     @BeforeEach

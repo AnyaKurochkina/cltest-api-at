@@ -9,8 +9,6 @@ import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
-import httpModels.productCatalog.productOrgInfoSystem.createInfoSystem.CreateInfoSystemResponse;
-import httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.GetInfoSystemListResponse;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.AllArgsConstructor;
@@ -38,31 +36,12 @@ public class ProductCatalogSteps {
         this.productName = productName;
     }
 
-    @Step("Получение списка объекта продуктового каталога")
-    public List<ItemImpl> getProductObjectList(Class<?> clazz) {
-        return ((GetListImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName)
-                .assertStatus(200)
-                .extractAs(clazz)).getItemsList();
-    }
-
     @Step("Получение версии продуктового каталога")
     public static Response getProductCatalogVersion() {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/version/")
                 .assertStatus(200);
-    }
-
-    @Step("Получение статуса health check")
-    public static String getHealthCheckStatusProductCatalog() {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/healthcheck/")
-                .assertStatus(200)
-                .jsonPath()
-                .getString("status");
     }
 
     @Step("Получение статуса health")
@@ -110,15 +89,6 @@ public class ProductCatalogSteps {
                 .post(productName);
     }
 
-    @Step("Получение списка объекта продуктового каталога используя multisearch")
-    public List<ItemImpl> getProductObjectListWithMultiSearch(Class<?> clazz, String str) {
-        return ((GetListImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + "?multisearch=" + str)
-                .assertStatus(200)
-                .extractAs(clazz)).getItemsList();
-    }
-
     @Step("Проверка существования объекта продуктового каталога по имени")
     public boolean isExists(String name) {
         return new Http(ProductCatalogURL)
@@ -143,29 +113,11 @@ public class ProductCatalogSteps {
                 .extractAs(clazz);
     }
 
-    @Step("Получение объекта продуктового каталога по Id и по версии объекта")
-    public GetImpl getByIdAndVersion(String objectId, String version, Class<?> clazz) {
-        return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_VIEWER)
-                .get(productName + objectId + "/?version=" + version)
-                .extractAs(clazz);
-    }
-
     @Step("Получение объекта продуктового каталога по Id без токена")
     public void getByIdWithOutToken(String objectId) {
         new Http(ProductCatalogURL).setWithoutToken()
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(productName + objectId + "/").assertStatus(401);
-    }
-
-    @Step("Обновление объекта продуктового каталога")
-    public GetImpl patchObject(Class<?> clazz, String name, String graphId, String objectId) {
-        return (GetImpl) new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson("productCatalog/actions/createAction.json", name, graphId))
-                .patch(productName + objectId + "/")
-                .assertStatus(200)
-                .extractAs(clazz);
     }
 
     @Step("Копирование объекта продуктового каталога по Id")
@@ -297,13 +249,6 @@ public class ProductCatalogSteps {
                 .assertStatus(200).jsonPath();
     }
 
-    public JsonPath getVersionJsonPath(String id) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productName + id + "/version_list/")
-                .assertStatus(200).jsonPath();
-    }
-
     @Step("Получение объекта продуктового каталога по title")
     public GetListImpl getObjectByTitle(String title, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
@@ -395,32 +340,6 @@ public class ProductCatalogSteps {
         return true;
     }
 
-    @Step("Получение productOrgInfo по id product и организации")
-    public CreateInfoSystemResponse getProductOrgInfoSystem(String productId, String orgName) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/product_org_info_system/" + productId + "/organizations/" + orgName + "/")
-                .assertStatus(200)
-                .extractAs(CreateInfoSystemResponse.class);
-    }
-
-    @Step("Удаление productOrgInfo по id product и организации")
-    public void deleteProductOrgInfoSystem(String productId, String orgName) {
-        new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + productId + "/organizations/" + orgName + "/")
-                .assertStatus(204);
-    }
-
-    @Step("Получение productOrgInfo по id product")
-    public GetInfoSystemListResponse getProductOrgInfoSystemById(String productId) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/product_org_info_system/" + productId + "/organizations/")
-                .assertStatus(200)
-                .extractAs(GetInfoSystemListResponse.class);
-    }
-
     public static String delNoDigOrLet(String s) {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
@@ -429,17 +348,6 @@ public class ProductCatalogSteps {
         }
         return sb.toString();
     }
-
-    public boolean isContains(List<ItemImpl> itemList, String name) {
-        for (ItemImpl item : itemList) {
-            if (item.getName().equals(name)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-
 
     public Response getProductByContextProject(String projectId, String productId) {
         return new Http(ProductCatalogURL)
@@ -464,28 +372,5 @@ public class ProductCatalogSteps {
                 .get("/api/v1/products/categories/")
                 .assertStatus(200)
                 .jsonPath().getList("");
-    }
-
-    public boolean isOrgContains(List<httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem> itemList, String orgName) {
-        if (itemList.isEmpty()) {
-            return true;
-        }
-        for (httpModels.productCatalog.productOrgInfoSystem.getInfoSystemList.ListItem item : itemList) {
-            if (item.getOrganization().equals(orgName)) {
-                return true;
-            }
-        }
-        return false;
-
-    }
-
-    private JSONObject toJson(String pathToJsonBody, String actionName, String graphId) {
-        return JsonHelper.getJsonTemplate(pathToJsonBody)
-                .set("$.name", actionName)
-                .set("$.title", actionName)
-                .set("$.description", actionName)
-                .set("$.graph_id", graphId)
-                .set("$.graph_version_pattern", "1.")
-                .build();
     }
 }

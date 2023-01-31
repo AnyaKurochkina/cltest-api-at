@@ -1,6 +1,7 @@
 package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
+import core.utils.Waiting;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
 import ui.elements.*;
@@ -73,6 +74,7 @@ public class VmCreate {
 
     public VmCreate setAvailabilityZone(String availabilityZone) {
         this.availabilityZone = Select.byLabel("Зона доступности").set(availabilityZone);
+        Waiting.sleep(1000);
         return this;
     }
 
@@ -132,7 +134,7 @@ public class VmCreate {
         EntitiesUtils.waitCreate(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getElementByColumn(Column.STATUS)
-                .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(1)));
+                .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(2)));
         return this;
     }
 }

@@ -49,9 +49,9 @@ public class Alert implements TypifiedElement {
 
     public void close() {
         try {
-            SelenideElement button = element.$("button").shouldBe(clickableCnd);
+            Button button = Button.byElement(element.$("button"));
             button.click();
-            button.shouldNotBe(Condition.visible);
+            waitClose();
         } catch (ElementNotFound ignored) {}
     }
 

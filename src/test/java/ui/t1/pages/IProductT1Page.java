@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.getClipBoardText;
 
 @Log4j2
 public class IProductT1Page<C extends IProductPage> extends IProductPage {
@@ -35,11 +36,13 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        Waiting.find(() -> new TopInfo().getPowerStatus().equals(Disk.TopInfo.POWER_STATUS_DELETED), Duration.ofSeconds(30));
+        Waiting.find(() -> new TopInfo().getPowerStatus().equals(Disk.TopInfo.POWER_STATUS_DELETED), Duration.ofSeconds(60));
     }
 
     @SuppressWarnings("unchecked")
     public C checkCreate(){
+        if(Objects.isNull(EntitiesUtils.getPreBillingPrice()))
+            Waiting.sleep(30000);
         checkLastAction("Развертывание");
         btnGeneralInfo.click();
         if(Objects.nonNull(EntitiesUtils.getPreBillingPrice()))
@@ -82,9 +85,10 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     @Step("Получить ID продукта")
     public String getOrderId() {
+        btnGeneralInfo.getButton().shouldBe(Condition.visible);
         Menu.byElement(getBtnAction("Действия")).select("Скопировать ID");
         Alert.green("ID скопирован");
-        return Selenide.clipboard().getText();
+        return getClipBoardText();
     }
 
     @Override

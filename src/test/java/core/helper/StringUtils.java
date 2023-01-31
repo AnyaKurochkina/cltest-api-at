@@ -54,6 +54,11 @@ public final class StringUtils {
         }
     }
 
+    public static String getClipBoardText(){
+        Selenide.executeJavaScript("async function getCBContents() { try { window.cb = await navigator.clipboard.readText(); console.log(\"Pasted content: \", window.cb); } catch (err) { console.error(\"Failed to read clipboard contents: \", err); window.cb = \"Error : \" + err; } } getCBContents();");
+        return Objects.requireNonNull(Selenide.executeJavaScript("return window.cb;"));
+    }
+
     public static String getStackTraceThrowable(Throwable e) {
         List<String> regexList = Collections.singletonList(".at (api|ui)\\..*\\n([\\w\\W]*)");
         String stackTrace = ExceptionUtils.getStackTrace(e);

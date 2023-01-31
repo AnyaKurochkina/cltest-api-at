@@ -263,7 +263,8 @@ public abstract class IProductPage {
             return;
         TypifiedElement.refresh();
         currentPriceOrder.shouldBe(Condition.matchText(doubleToString(preBillingCostAction)), Duration.ofMinutes(3));
-        Assertions.assertEquals(preBillingCostAction, getCostOrder(), "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
+        Waiting.find(() -> preBillingCostAction.equals(getCostOrder()), Duration.ofMinutes(3),
+                "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if(currentCost == preBillingCostAction && preBillingCostAction == 0)
             return;
         if (type == CompareType.MORE)

@@ -4,17 +4,12 @@ import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import httpModels.productCatalog.service.createService.response.DataSource;
-import httpModels.productCatalog.service.createService.response.ExtraData;
-import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 
@@ -25,14 +20,10 @@ import static steps.productCatalog.ServiceSteps.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Setter
 public class Service extends Entity implements IProductCatalog {
 
-    private final String productName = "/api/v1/services/";
-    @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/services/",
-            "productCatalog/services/createServices.json");
     @JsonProperty("turn_off_inventory")
     private Boolean turnOffInventory;
     @JsonProperty("current_version")
@@ -74,7 +65,7 @@ public class Service extends Entity implements IProductCatalog {
     @JsonProperty("version")
     private String version;
     @JsonProperty("data_source")
-    private DataSource dataSource;
+    private Object dataSource;
     @JsonProperty("check_rules")
     private List<Object> checkRules;
     @JsonProperty("auto_open_form")
@@ -82,7 +73,7 @@ public class Service extends Entity implements IProductCatalog {
     @JsonProperty("last_version")
     private String lastVersion;
     @JsonProperty("extra_data")
-    private ExtraData extraData;
+    private Object extraData;
     @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;
     @JsonProperty("name")
@@ -110,10 +101,6 @@ public class Service extends Entity implements IProductCatalog {
 
     @Override
     public Entity init() {
-        if (graphId == null) {
-            Graph graph = Graph.builder().name("graph_for_services_api_test").build().createObject();
-            graphId = graph.getGraphId();
-        }
         if (directionId == null) {
             OrgDirection orgDirection = OrgDirection.builder()
                     .name("direction_for_services_api_test")
@@ -151,7 +138,7 @@ public class Service extends Entity implements IProductCatalog {
     @Override
     protected void create() {
         if (isServiceExists(name)) {
-            productCatalogSteps.deleteByName(name, GetServiceListResponse.class);
+            deleteServiceByName(name);
         }
         Service service = createService(toJson()).assertStatus(201)
                 .extractAs(Service.class);
