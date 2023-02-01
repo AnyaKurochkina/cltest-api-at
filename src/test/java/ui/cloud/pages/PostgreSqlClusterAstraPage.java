@@ -3,6 +3,7 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.PostgresSQLCluster;
+import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
@@ -24,8 +25,8 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
-    private static final String HEADER_PATH = "Файловая система";
-    private static final String HEADER_SORT = "Сортировка";
+    private static final String HEADER_ROLE = "Роли";
+    private static final String HEADER_GROUPS = "Группы";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
 
@@ -37,7 +38,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
     SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-
+    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public PostgreSqlClusterAstraPage(PostgresSQLCluster product) {
         super(product);
@@ -249,6 +250,18 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
         }
+    }
+
+    public void addGroupAccess(SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
+        runActionWithParameters(HEADER_ROLE, "Добавить группу доступа", "Подтвердить", () -> {
+           Select.byLabel("Группы").set(accessGroup.getPrefixName());
+        },ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        node.scrollIntoView(scrollCenter).click();
+        Assertions.assertTrue(
+                new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()),"Ошибка добавления группы доступа");
     }
 
 

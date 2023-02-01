@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -11,7 +12,7 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class OrgDirectionPage {
+public class OrgDirectionPage extends BasePage {
     private static final String TITLE = "title";
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";
@@ -20,12 +21,7 @@ public class OrgDirectionPage {
     private final SelenideElement inputNameField = $x("//*[@name ='name']");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
     private final SelenideElement inputDescriptionField = $x("//textarea[@name ='description']");
-    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
-    private final Button cancelButton = Button.byText("Отмена");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
-    private final SelenideElement id = $x("//form//p//b");
-    private final SelenideElement inputId = $x("//input[@name = 'id']");
-    private final SelenideElement frameDeleteButton = $x("//button[@type ='submit']");
+    private final String saveOrgDirectionAlertText = "Направление успешно изменено";
 
     public OrgDirectionPage() {
         orgDirListLink.shouldBe(Condition.visible);
@@ -33,9 +29,9 @@ public class OrgDirectionPage {
 
     public OrgDirectionPage editNameField(String name) {
         Input.byName(NAME).setValue(name);
-        saveButton.scrollIntoView(TypifiedElement.scrollCenter);
+        saveButton.getButton().scrollIntoView(TypifiedElement.scrollCenter);
         saveButton.click();
-        Alert.green("Направление успешно изменено");
+        Alert.green(saveOrgDirectionAlertText);
         return this;
     }
 
@@ -48,7 +44,6 @@ public class OrgDirectionPage {
         TestUtils.wait(2000);
         TestUtils.scrollToTheBottom();
         saveButton.click();
- //       new Alert().checkText("Направление успешно создано").checkColor(Alert.Color.GREEN).close();
         TestUtils.scrollToTheBottom();
         cancelButton.click();
         return new OrgDirectionsListPage();
@@ -84,5 +79,11 @@ public class OrgDirectionPage {
         return name.equals(inputNameField.getValue());
     }
 
-
+    @Step("Удаление иконки")
+    public OrgDirectionPage deleteIcon() {
+        deleteIconButton.click();
+        saveWithoutPatchVersion(saveOrgDirectionAlertText);
+        addIconLabel.shouldBe(Condition.visible);
+        return this;
+    }
 }

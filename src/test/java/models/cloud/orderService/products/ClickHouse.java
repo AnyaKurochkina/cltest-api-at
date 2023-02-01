@@ -15,10 +15,13 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static models.cloud.orderService.products.ClickHouseCluster.*;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -29,11 +32,7 @@ import java.util.List;
 @SuperBuilder
 public class ClickHouse extends IProduct {
     Flavor flavor;
-    @ToString.Include
-    String segment;
-    String dataCentre;
     String osVersion;
-    String domain;
     @Builder.Default
     public List<Db> database = new ArrayList<>();
     @Builder.Default
@@ -61,7 +60,6 @@ public class ClickHouse extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -74,10 +72,6 @@ public class ClickHouse extends IProduct {
             flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (clickhouseUser == null)
             clickhouseUser = "username_created";
         if (clickhousePassword == null)
@@ -88,6 +82,14 @@ public class ClickHouse extends IProduct {
             clickhouseBb = "dbname";
         if (chVersion == null)
             chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
+        if(segment == null)
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
@@ -153,6 +155,66 @@ public class ClickHouse extends IProduct {
         save();
     }
 
+    public void createUserAccount(String user, String password) {
+        OrderServiceSteps.executeAction("clickhouse_create_local_tuz", this, new JSONObject().put("user_name", user).put("user_password", password), getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s не найден", user));
+    }
+
+    public void deleteUserAccount(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_local_tuz", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s найден", user));
+    }
+
+    public void addUserAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_create_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s не найден", user));
+    }
+
+    public void deleteUserAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s найден", user));
+    }
+
+    public void addGroupAd(String user) {
+        JSONObject object = new JSONObject("{\n" +
+                "  \"ad_integration\": true,\n" +
+                "  \"clickhouse_user_ad_groups\": [\n" +
+                "    {\n" +
+                "      \"groups\": [\n" +
+                "        \"" + user + "\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+        OrderServiceSteps.executeAction("clickhouse_create_new_app_user_group_ad", this, object, getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s не найдена", user));
+    }
+
+    public void deleteGroupAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_new_app_user_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
+    public void addGroupAdmin(String user) {
+        JSONObject object = new JSONObject("{\n" +
+                "  \"ad_integration\": true,\n" +
+                "  \"clickhouse_app_admin_ad_groups\": [\n" +
+                "    {\n" +
+                "      \"groups\": [\n" +
+                "        \"" + user + "\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+        OrderServiceSteps.executeAction("clickhouse_create_new_app_admin_group_ad", this, object, getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s не найдена", user));
+    }
+
+    public void deleteGroupAdmin(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_new_app_admin_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app/clickhouse", 10);
     }
@@ -181,21 +243,22 @@ public class ClickHouse extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.clickhouse_db", clickhouseBb)
                 .set("$.order.attrs.ch_customer_password", chCustomerPassword)
                 .set("$.order.attrs.ch_version", chVersion)
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup)
+                .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup)
+                .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.clickhouse_users", clickhouseUser)
                 .set("$.order.attrs.clickhouse_password", clickhousePassword)

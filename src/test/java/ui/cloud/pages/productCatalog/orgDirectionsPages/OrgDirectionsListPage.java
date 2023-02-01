@@ -2,12 +2,13 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Input;
 import ui.elements.InputFile;
 import ui.elements.Table;
 import ui.elements.TypifiedElement;
@@ -17,19 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrgDirectionsListPage extends BaseListPage {
 
-    private final SelenideElement inputSearch = $x("//input[@placeholder = 'Поиск']");
-    private final SelenideElement titleColumn = $x("//th[text()='Наименование']");
-    private final SelenideElement nameColumn = $x("//th[text()='Код направления']");
-    private final SelenideElement descriptionColumn = $x("//th[text()='Описание']");
-    private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
-    private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
-    private final SelenideElement exportAction = $x("//li[text() = 'Экспортировать']");
-    private final SelenideElement id = $x("//form//p//b");
-    private final SelenideElement inputId = $x("//input[@name = 'id']");
-    private final SelenideElement deleteButton = $x("//button[@type ='submit']");
-    private final SelenideElement noData = $x("//*[text() = 'Нет данных для отображения']");
-    private final SelenideElement actionMenu = $x(".//button[@id = 'actions-menu-button'])");
-
+    private final String nameColumn = "Код направления";
 
     public OrgDirectionsListPage() {
         SelenideElement directionPageTitle = $x("//div[text() = 'Направления']");
@@ -37,30 +26,37 @@ public class OrgDirectionsListPage extends BaseListPage {
     }
 
     public OrgDirectionPage createDirection() {
-        addNewObjectButton.scrollIntoView(TypifiedElement.scrollCenter).click();
+        addNewObjectButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
         return new OrgDirectionPage();
     }
 
     @Step("Поиск направления по имени")
     public OrgDirectionsListPage findDirectionByName(String dirName) {
-        Input.byPlaceholder("Поиск").setValue(dirName);
+        searchInput.setValue(dirName);
         TestUtils.wait(1000);
-        assertTrue(new Table("Код направления").isColumnValueEquals("Код направления", dirName));
+        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, dirName));
         return new OrgDirectionsListPage();
     }
 
-    public OrgDirectionsListPage checkFields() {
-        titleColumn.shouldBe(Condition.visible);
-        nameColumn.shouldBe(Condition.visible);
-        descriptionColumn.shouldBe(Condition.visible);
+    @Step("Поиск направления по значению '{value}'")
+    public OrgDirectionsListPage findDirectionByValue(String value, OrgDirection orgDirection) {
+        searchInput.setValue(value);
+        TestUtils.wait(1000);
+        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, orgDirection.getName()));
+        return new OrgDirectionsListPage();
+    }
+
+    public OrgDirectionsListPage checkHeaders() {
+        AssertUtils.assertHeaders(new Table(nameColumn),
+                "Наименование", nameColumn, "Дата создания", "Описание", "", "");
         return new OrgDirectionsListPage();
     }
 
     @Step("Переход на страницу редактирования направления с именем {name}")
     public OrgDirectionPage openOrgDirectionPage(String name) {
-        Input.byPlaceholder("Поиск").setValue(name);
+        searchInput.setValue(name);
         Waiting.sleep(1000);
-        new Table("Код направления").getRowElementByColumnValue("Код направления", name).click();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
         Waiting.sleep(1000);
         return new OrgDirectionPage();
     }
@@ -77,21 +73,6 @@ public class OrgDirectionsListPage extends BaseListPage {
         return new OrgDirectionPage();
     }
 
-    @Step("Ввод валидного id и удаление")
-    public OrgDirectionsListPage fillIdAndDelete() {
-        new Input(inputId).setValue(id.getText());
-        deleteButton.scrollIntoView(true).shouldBe(Condition.enabled).click();
-        return this;
-    }
-
-    @Step("Ввод невалидного id")
-    public OrgDirectionsListPage inputInvalidId(String dirId) {
-        new Input(inputId).setValue(dirId);
-        deleteButton.shouldBe(Condition.disabled);
-        inputId.clear();
-        return this;
-    }
-
     @Step("Выбор и импорт файла")
     public OrgDirectionsListPage uploadFile(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
@@ -101,8 +82,16 @@ public class OrgDirectionsListPage extends BaseListPage {
 
     @Step("Проверка существования направления")
     public boolean isOrgDirectionExist(String dirName) {
-        Input.byPlaceholder("Поиск").setValue(dirName);
+        searchInput.setValue(dirName);
         TestUtils.wait(1000);
         return new Table("Код направления").isColumnValueEquals("Код направления", dirName);
+    }
+
+    @Step("Проверка сортировки списка направлений")
+    public OrgDirectionsListPage checkSorting() {
+        checkSortingByStringField("Наименование");
+        checkSortingByStringField(nameColumn);
+        checkSortingByDateField("Дата создания");
+        return this;
     }
 }

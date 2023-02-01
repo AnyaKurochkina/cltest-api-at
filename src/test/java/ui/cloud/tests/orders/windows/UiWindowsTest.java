@@ -27,8 +27,7 @@ import java.util.Collections;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product;
-    //= Windows.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/35089d73-1dc4-40df-9323-8264309d056a/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Windows product= Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/2dff3539-3992-48be-9924-847f831d4f4d/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -48,7 +47,7 @@ public class UiWindowsTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             WindowsOrderPage orderPage = new WindowsOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
+          //  orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
             orderPage.getRoleServer().selectByValue(product.getRole());

@@ -1,6 +1,5 @@
 package ui.elements;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
 import java.io.File;
@@ -8,8 +7,8 @@ import java.io.File;
 import static com.codeborne.selenide.Selenide.$x;
 
 public class InputFile {
-    private final SelenideElement importFile = $x("//*[@id = 'attachment-input']");
-    private final SelenideElement submit = $x("//*[text() = 'Импорт']");
+    private final SelenideElement fileInput = $x("//input[@type='file']");
+    private final Button importButton = Button.byText("Импорт");
     private final String path;
 
     public InputFile(String path) {
@@ -17,11 +16,11 @@ public class InputFile {
     }
 
     public void importFileAndSubmit() {
-        importFile.uploadFile(new File(path));
-        submit.shouldBe(Condition.enabled).click();
+        fileInput.uploadFile(new File(path));
+        importButton.click();
     }
 
     public void importFile() {
-        importFile.uploadFile(new File(path));
+        fileInput.uploadFile(new File(path));
     }
 }

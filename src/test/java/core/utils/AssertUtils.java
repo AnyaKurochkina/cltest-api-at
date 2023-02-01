@@ -14,7 +14,7 @@ public class AssertUtils {
         Assertions.assertTrue(diff <= deltaSec, message);
     }
 
-    public static void AssertHeaders(Table table, String... headers) {
+    public static void assertHeaders(Table table, String... headers) {
         Assertions.assertEquals(Arrays.asList(headers), table.getHeaders(), "Названия столбцов в таблице не совпадают");
     }
 }

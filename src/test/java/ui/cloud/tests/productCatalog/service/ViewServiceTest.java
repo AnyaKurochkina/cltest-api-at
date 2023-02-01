@@ -25,4 +25,13 @@ public class ViewServiceTest extends ServiceBaseTest {
                 .compareWithVersion("1.0.0")
                 .compareWithVersion("1.0.1");
     }
+
+    @Test
+    @TmsLink("854612")
+    @DisplayName("Просмотр JSON сервиса")
+    public void viewJSONTest() {
+        new IndexPage().goToServicesListPagePC()
+                .findAndOpenServicePage(NAME)
+                .checkJSONcontains(service.getId());
+    }
 }

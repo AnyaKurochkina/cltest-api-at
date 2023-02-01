@@ -16,13 +16,19 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+import java.util.Collections;
+
 @Epic("UI Продукты")
 @Feature("ClickHouse")
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 public class UiClickHouseTest extends UiProductTest {
 
     ClickHouse product;
-    //= ClickHouse.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/9c52fb20-f8cf-41ce-bc38-6bbbc0b54f96/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    //= ClickHouse.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/18a7a4de-878c-4f70-a518-0763cd7f3795/main?context=proj-iv550odo9a&type=project&org=vtb");
+
+    String nameAD = "at_ad_user";
+    String nameLocalAD = "at_local_user";
+
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -86,8 +92,9 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(5)
+    @Order(3)
     @TmsLink("330327")
+    @Disabled
     @DisplayName("UI ClickHouse. Перезагрузить по питанию")
     void restart() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -96,25 +103,25 @@ public class UiClickHouseTest extends UiProductTest {
 
 
     @Test
-    @Order(9)
+    @Order(4)
     @TmsLink("330329")
     @DisplayName("UI ClickHouse. Расширить диск")
     void expandDisk() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.runActionWithCheckCost(CompareType.MORE, () -> clickHousePage.enlargeDisk("/app/clickhouse", "20", new Table("Размер, Гб").getRowByIndex(0)));
+        clickHousePage.runActionWithCheckCost(CompareType.MORE, () -> clickHousePage.enlargeDisk("/app/clickhouse", "20", new Table("Тип").getRow(0).get()));
     }
 
     @Test
-    @Order(11)
+    @Order(5)
     @TmsLink("1177396")
     @DisplayName("UI ClickHouse. Проверить конфигурацию")
     void vmActCheckConfig() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::checkConfiguration);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.checkConfiguration(new Table("Тип").getRow(0).get()));
     }
 
     @Test
-    @Order(15)
+    @Order(6)
     @TmsLink("1162627")
     @DisplayName("UI ClickHouse. Сбросить пароль владельца БД")
     void resetPasswordDb() {
@@ -123,7 +130,7 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(17)
+    @Order(7)
     @TmsLink("358259")
     @DisplayName("UI ClickHouse. Сбросить пароль пользователя БД")
     void resetPasswordUserDb() {
@@ -132,7 +139,91 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(20)
+    @Order(8)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse. Cоздание локальной УЗ")
+    void createLocalAccount() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.createLocalAccount(nameLocalAD));
+    }
+
+    @Test
+    @Order(9)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Cбросить пароль локальной УЗ")
+    void resetPasswordLA() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.resetPasswordLA(nameLocalAD));
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Добавление УЗ AD")
+    void addAccountAD() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addAccountAD(nameAD));
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Удаление локальной УЗ")
+    void deleteLocalAccount() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteLocalAccount(nameLocalAD));
+    }
+
+    @Test
+    @Order(12)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Удаление УЗ АD")
+    void deleteAccountAD() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteAccountAD(nameAD));
+    }
+
+    @Test
+    @Order(13)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Удалить  пользовательскую группу")
+    void deleteGroupAD() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAD());
+    }
+
+    @Test
+    @Order(15)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Удалить группу администраторов")
+    void deleteGroupAdmin() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAdmin());
+    }
+
+    @Test
+    @Order(16)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Добавить пользовательскую группу")
+    void addGroupAD() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAD(accessGroup.getPrefixName()));
+    }
+
+    @Test
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse . Добавить группу администраторов")
+    void addGroupAdmin() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAdmin(accessGroup.getPrefixName()));
+    }
+
+
+    @Test
+    @Order(18)
     @TmsLinks({@TmsLink("330325"), @TmsLink("330330")})
     @Disabled
     @DisplayName("UI ClickHouse. Выключить принудительно / Включить")
@@ -143,7 +234,7 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(21)
+    @Order(19)
     @TmsLink("330324")
     @Disabled
     @DisplayName("UI ClickHouse. Выключить")

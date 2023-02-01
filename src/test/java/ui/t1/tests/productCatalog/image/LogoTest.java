@@ -44,6 +44,7 @@ public class LogoTest extends BaseTest {
                 .name(name).logo(logoUrl).osDistro(distro).build();
         new ControlPanelIndexPage().goToLogoListPage()
                 .createLogo(logo)
+                .openEditDialog(logo)
                 .checkAttributes(logo);
         deleteByApi(logo);
     }
@@ -71,5 +72,30 @@ public class LogoTest extends BaseTest {
                 .name(name).logo(logoUrl).osDistro(distro).build();
         new ControlPanelIndexPage().goToLogoListPage()
                 .checkUrlValidation(logo);
+    }
+
+    @Test
+    @TmsLink("1364748")
+    @DisplayName("Редактирование логотипа")
+    public void editLogoTest() {
+        String name = UUID.randomUUID().toString();
+        Logo logo = Logo.builder()
+                .name(name).logo(logoUrl).osDistro(distro).build().createObject();
+        Logo editedLogo = Logo.builder().name(UUID.randomUUID().toString())
+                .logo("https://api.s3.dev.t1.cloud/obzg62rng44tgnlpn5wdiztc:product-catalog/product_catalog_icons/ubuntu.png")
+                .osDistro("new distro").build();
+        new ControlPanelIndexPage().goToLogoListPage().openEditDialog(logo).setAttributes(editedLogo)
+                .openEditDialog(editedLogo).checkAttributes(editedLogo);
+        deleteByApi(editedLogo);
+    }
+
+    @Test
+    @TmsLink("1364759")
+    @DisplayName("Удаление логотипа")
+    public void deleteLogoTest() {
+        String name = UUID.randomUUID().toString();
+        Logo logo = Logo.builder()
+                .name(name).logo(logoUrl).osDistro(distro).build().createObject();
+        new ControlPanelIndexPage().goToLogoListPage().delete(logo);
     }
 }

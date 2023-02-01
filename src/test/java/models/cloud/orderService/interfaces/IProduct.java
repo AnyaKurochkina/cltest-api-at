@@ -76,7 +76,12 @@ public abstract class IProduct extends Entity {
     @ToString.Include
     @Getter
     @Setter
-    String platform;
+    protected String platform;
+
+    @ToString.Include @Setter
+    protected String segment;
+    @Setter
+    protected String dataCentre, domain;
 
     protected String jsonTemplate;
 
@@ -105,6 +110,18 @@ public abstract class IProduct extends Entity {
     protected String productId;
     @Getter
     protected String productCatalogName;
+
+    public String getDataCentre(){
+        return Objects.requireNonNull(dataCentre, "Поле dataCentre пустое");
+    }
+
+    public String getDomain(){
+        return Objects.requireNonNull(domain, "Поле domain пустое");
+    }
+
+    public String getSegment(){
+        return Objects.requireNonNull(segment, "Поле segment пустое");
+    }
 
     public void setStatus(ProductStatus status) {
         this.status = status;
@@ -213,6 +230,9 @@ public abstract class IProduct extends Entity {
     //Удалить рекурсивно
     @Step("Удаление продукта")
     protected void delete(String action) {
+        if(envType().contains("prod")){
+            OrderServiceSteps.switchProtect(this, false);
+        }
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
         if(Objects.isNull(platform))
@@ -366,6 +386,7 @@ public abstract class IProduct extends Entity {
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+//                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .body(deleteObjectIfNotFoundInUiSchema(toJson(), getProductId()))
                 .post("/v1/projects/" + projectId + "/orders")
                 .assertStatus(201)

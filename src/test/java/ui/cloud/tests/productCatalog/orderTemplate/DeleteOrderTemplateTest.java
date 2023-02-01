@@ -29,4 +29,13 @@ public class DeleteOrderTemplateTest extends OrderTemplateBaseTest {
         new OrderTemplatesListPage()
                 .checkTemplateNotFound(NAME);
     }
+
+    @Test
+    @TmsLink("766513")
+    @DisplayName("Недоступность удаления включенного шаблона")
+    public void deleteEnabledTemplateTest() {
+        new IndexPage().goToOrderTemplatesPage()
+                .findAndOpenTemplatePage(NAME)
+                .checkDeleteEnabledTemplate();
+    }
 }

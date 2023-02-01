@@ -1,10 +1,13 @@
 package ui.cloud.tests.productCatalog.action;
 
 import core.helper.JsonHelper;
+import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.enums.EventProvider;
+import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
@@ -13,10 +16,8 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
-import models.cloud.productCatalog.enums.EventProvider;
-import models.cloud.productCatalog.enums.EventType;
+import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
@@ -25,6 +26,7 @@ import ui.cloud.tests.productCatalog.BaseTest;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -33,8 +35,8 @@ import static steps.productCatalog.ActionSteps.*;
 
 @DisabledIfEnv("prod")
 public class ActionTest extends BaseTest {
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/actions/",
-            "productCatalog/actions/createAction.json");
+
+    private final String TITLE = "AT UI Action";
 
     @Test
     @TmsLink("505750")
@@ -70,7 +72,7 @@ public class ActionTest extends BaseTest {
                 .createObject();
         assertTrue(new IndexPage().goToActionsPage()
                 .copyAction(name)
-                .reTurnToActionsListPageByCancelButton()
+                .backToActionsList()
                 .isActionExist(cloneName));
         deleteActionByName(cloneName);
     }
@@ -139,7 +141,7 @@ public class ActionTest extends BaseTest {
         String version = getActionById(action.getActionId()).getVersion();
         new IndexPage().goToActionsPage()
                 .openActionForm(name)
-                .inputByLabel("Приоритет", "2")
+                .setPriority(2)
                 .checkSaveWithInvalidVersion("1.0.1", version)
                 .checkSaveWithInvalidVersion("1.0.0", version)
                 .checkSaveWithInvalidVersionFormat("1/0/2")
@@ -194,7 +196,7 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .deleteIcon()
                 .saveWithoutPatchVersion()
-                .reTurnToActionsListPageByCancelButton()
+                .backToActionsList()
                 .openActionForm(name)
                 .isIconExist());
     }
@@ -240,18 +242,109 @@ public class ActionTest extends BaseTest {
     @DisplayName("Баннер при закрытии формы с несохраненными данными, Отмена")
     public void bannerWhenCloseFormAndNotSaveCancel() {
         String name = "action_for_banner_test_ui";
-        Action.builder()
-                .actionName(name)
-                .title(name)
-                .number(0)
-                .build()
-                .createObject();
+        createActionByApi(name);
         new IndexPage()
                 .goToActionsPage()
                 .openActionForm(name)
-                .inputByLabel("Приоритет сообщения", "1")
+                .setPriority(1)
                 .backOnBrowserAndAlertCancel()
-                .backByActionsLinkAndAlertCancel()
-                .closeTabAndAlertCancel();
+                .backByActionsLinkAndAlertCancel();
+    }
+
+    @Test
+    @TmsLink("602488")
+    @DisplayName("Проверка изменений и лимита патч-версий")
+    public void checkPatchVersionLimit() {
+        String name = UUID.randomUUID().toString();
+        createActionByApi(name);
+        new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .checkVersion("1.0.0")
+                .setPriority(1)
+                .saveWithManualVersion("1.0.999")
+                .checkVersion("1.0.999")
+                .setPriority(2)
+                .saveWithPatchVersion()
+                .checkVersion("1.1.0")
+                .setPriority(3)
+                .saveWithManualVersion("1.999.999")
+                .checkVersion("1.999.999")
+                .setPriority(4)
+                .saveWithPatchVersion()
+                .checkVersion("2.0.0")
+                .setPriority(5)
+                .saveWithManualVersion("999.999.999")
+                .checkVersionLimit();
+    }
+
+    @Test
+    @TmsLink("602518")
+    @DisplayName("Проверка изменений и лимита версий, указанных вручную")
+    public void checkManualVersionLimit() {
+        String name = UUID.randomUUID().toString();
+        createActionByApi(name);
+        new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .checkVersion("1.0.0")
+                .setPriority(1)
+                .saveWithManualVersion("1.0.999")
+                .checkVersion("1.0.999")
+                .setPriority(2)
+                .checkNextVersionAndSave("1.1.0")
+                .checkVersion("1.1.0")
+                .setPriority(3)
+                .saveWithManualVersion("1.999.999")
+                .checkVersion("1.999.999")
+                .setPriority(4)
+                .checkNextVersionAndSave("2.0.0")
+                .checkVersion("2.0.0")
+                .setPriority(5)
+                .saveWithManualVersion("999.999.999")
+                .checkVersionLimit();
+    }
+
+    @Test
+    @TmsLink("1205977")
+    @DisplayName("Сравнение версий действия")
+    public void compareVersionsTest() {
+        String name = UUID.randomUUID().toString();
+        createActionByApi(name);
+        new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .setPriority(1)
+                .saveWithPatchVersion()
+                .goToVersionComparisonTab();
+        new DiffPage()
+                .checkCurrentVersionInDiff("1.0.1")
+                .compareWithVersion("1.0.0")
+                .selectVersion("1.0.0")
+                .checkCurrentVersionInDiff("1.0.0")
+                .compareWithVersion("1.0.0")
+                .compareWithVersion("1.0.1");
+    }
+
+    @Step("Создание действия '{name}'")
+    private Action createActionByApi(String name) {
+        return Action.builder()
+                .actionName(name)
+                .title(TITLE)
+                .number(0)
+                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
+                .build()
+                .createObject();
+    }
+
+    @Test
+    @TmsLink("852947")
+    @DisplayName("Просмотр JSON действия")
+    public void viewJSONTest() {
+        String name = UUID.randomUUID().toString();
+        Action action = createActionByApi(name);
+        new IndexPage().goToActionsPage()
+                .openActionForm(name)
+                .checkJSONcontains(action.getActionId());
     }
 }

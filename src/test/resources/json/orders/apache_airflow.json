@@ -1,7 +1,7 @@
 {
   "order": {
-    "project_name": "proj-rddf0uwi0q",
-    "product_id": "c462d915-61af-402f-ac51-63afaa46eee5",
+    "project_name": "proj-pkvckn08w9",
+    "product_id": "ac07b427-4e3e-4ba4-be3c-fa0fbf526e7e",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
@@ -10,54 +10,59 @@
         "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
         "memory": 8
       },
-      "platform": "OpenStack",
+      "executor": "localexecutor",
+      "platform": "vSphere",
+      "boot_disk": {
+        "size": 30
+      },
       "extra_nics": [],
       "on_support": false,
-      "os_version": "8.4",
+      "os_version": "1.7",
       "data_center": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
+      "cluster_name": "airflow-rel-0001",
       "extra_mounts": [
         {
           "path": "/app",
           "size": 30,
           "file_system": "xfs"
+        },
+        {
+          "path": "/dag_log",
+          "size": 50,
+          "file_system": "xfs"
         }
       ],
       "ad_integration": true,
-      "local_executor": false,
-      "airflow_version": "1.10.12",
+      "airflow_version": "1.10.15",
+      "additional_config": {
+        "postgresql_config": {
+          "db_host": "10.226.63.240",
+          "db_user": "bdUser",
+          "db_database": "bdname",
+          "db_password": "-Ua4ThUMMcqpwbudYKKjOyUu4Ocm4Qgt0wk4"
+        }
+      },
       "ad_logon_grants": [
         {
-          "role": "superuser",
+          "role": "user",
           "groups": [
-            "cloud-zorg-st-group"
+            "cloud-plux-windbkbmjsez"
           ]
         }
       ],
       "web_console_grants": [
         {
+          "role": "operator",
           "groups": [
-            "cloud-zorg-st-group"
+            "cloud-plux-windbkbmjsez"
           ]
         }
-      ],
-      "additional_config": {
-        "rabbitmq_config": {
-          "broker_host": "rabbit",
-          "broker_vhost": "rabbitVhost",
-          "rabbitmq_cert_CN": "rabbitCn"
-        },
-        "postgresql_config": {
-          "db_host": "postgresBd",
-          "db_user": "bdUser",
-          "db_database": "bdname",
-          "db_password": "bdPassword"
-        }
-      }
+      ]
     },
     "count": 1,
-    "label": "Apache Airflow"
+    "label": "Apache Airflow Astra"
   }
 }

@@ -3,55 +3,43 @@ package ui.cloud.pages.productCatalog.orderTemplate;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
+import core.utils.AssertUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OrderTemplatesListPage {
+public class OrderTemplatesListPage extends BaseListPage {
 
-    private static final String columnName = "Код шаблона";
-    private final Input searchInput = Input.byPlaceholder("Поиск");
-    private final SelenideElement createTemplateButton = $x("//div[@data-testid = 'add-button']//button");
+    private final String nameColumn = "Код шаблона";
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
     private final Input descriptionInput = Input.byName("description");
-    private final Select typeInput = Select.byInputName("event_type");
-    private final Select providerInput = Select.byInputName("event_provider");
     private final SelenideElement titleRequiredFieldHint =
-            $x("//input[@name='title']/parent::div/following-sibling::p[text()='Необходимо ввести наименование шаблона']");
+            titleInput.getInput().$x("./following::div[text()='Необходимо ввести наименование шаблона']");
     private final SelenideElement nameRequiredFieldHint =
-            $x("//input[@name='name']/parent::div/following-sibling::p[text()='Необходимо ввести код шаблона']");
+            nameInput.getInput().$x("./following::div[text()='Необходимо ввести код шаблона']");
     private final SelenideElement nonUniqueNameValidationHint =
-            $x("//input[@name='name']/parent::div/following-sibling::p[text()='Шаблон с таким кодом уже существует']");
+            nameInput.getInput().$x("./following::div[text()='Шаблон с таким кодом уже существует']");
     private final SelenideElement nameValidationHint =
-            $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
-    private final SelenideElement createButton = $x("//div[text()='Создать']/parent::button");
-    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
+            nameInput.getInput().$x("./following::div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final Select typeDropDown = Select.byLabel("Тип");
     private final Select providerDropDown = Select.byLabel("Провайдер");
     private final Select stateDropDown = Select.byLabel("Состояние");
-    private final WebElement applyFiltersButton = $x("//button[div[text()='Применить']]");
-    private final WebElement clearFiltersButton = $x("//button[text()='Сбросить фильтры']");
+    private final Button applyFiltersButton = Button.byText("Применить");
+    private final Button clearFiltersButton = Button.byText("Сбросить фильтры");
 
-    @Step("Проверка заголовков списка графов")
+    @Step("Проверка заголовков списка шаблонов отображения")
     public OrderTemplatesListPage checkHeaders() {
-        Table templatesList = new Table(columnName);
-        assertEquals(0, templatesList.getHeaderIndex("Наименование"));
-        assertEquals(1, templatesList.getHeaderIndex(columnName));
-        assertEquals(2, templatesList.getHeaderIndex("Дата создания"));
-        assertEquals(3, templatesList.getHeaderIndex("Описание"));
-        assertEquals(4, templatesList.getHeaderIndex("Тип"));
-        assertEquals(5, templatesList.getHeaderIndex("Провайдер"));
-        assertEquals(6, templatesList.getHeaderIndex("Состояние"));
+        AssertUtils.assertHeaders(new Table(nameColumn),
+                "Наименование", nameColumn, "Дата создания", "Описание", "Тип", "Провайдер", "Состояние", "", "");
         return this;
     }
 
@@ -63,7 +51,7 @@ public class OrderTemplatesListPage {
 
     @Step("Проверка сортировки по коду шаблона")
     public OrderTemplatesListPage checkSortingByName() {
-        BaseListPage.checkSortingByStringField(columnName);
+        BaseListPage.checkSortingByStringField(nameColumn);
         return this;
     }
 
@@ -78,7 +66,7 @@ public class OrderTemplatesListPage {
         String onStateColor = "#4caf50";
         String offStateColor = "#e0e0e0";
         String header = "Состояние";
-        Table table = new Table(columnName);
+        Table table = new Table(nameColumn);
         SelenideElement columnHeader = StringUtils.$x("//div[text()='{}']/parent::div", header);
         SelenideElement arrowIcon = StringUtils.$x("//div[text()='{}']/following-sibling::*[name()='svg']", header);
         columnHeader.click();
@@ -98,21 +86,14 @@ public class OrderTemplatesListPage {
 
     @Step("Создание шаблона узлов '{template.name}'")
     public OrderTemplatePage createOrderTemplate(ItemVisualTemplate template) {
-        createTemplateButton.click();
-        titleInput.setValue(template.getTitle());
-        nameInput.setValue(template.getName());
-        descriptionInput.setValue(template.getDescription());
-        typeInput.set(template.getEventType().get(0));
-        providerInput.set(template.getEventProvider().get(0));
-        createButton.click();
-        Alert.green("Шаблон успешно создан");
+        addNewObjectButton.click();
+        new OrderTemplatePage().createOrderTemplate(template);
         return new OrderTemplatePage();
     }
 
     @Step("Проверка валидации обязательных параметров при создании шаблона")
     public OrderTemplatesListPage checkCreateTemplateDisabled(ItemVisualTemplate template) {
-        TestUtils.scrollToTheTop();
-        createTemplateButton.click();
+        addNewObjectButton.getButton().scrollIntoView(false).click();
         titleInput.setValue(template.getTitle());
         nameInput.setValue(template.getName());
         descriptionInput.setValue(template.getDescription());
@@ -122,7 +103,7 @@ public class OrderTemplatesListPage {
         if (template.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
         }
-        createButton.shouldBe(Condition.disabled);
+        createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();
         return this;
     }
@@ -130,18 +111,18 @@ public class OrderTemplatesListPage {
     @Step("Проверка валидации неуникального имени шаблона узла '{template.name}'")
     public OrderTemplatesListPage checkNonUniqueNameValidation(ItemVisualTemplate template) {
         TestUtils.scrollToTheTop();
-        createTemplateButton.click();
+        addNewObjectButton.click();
         nameInput.setValue(template.getName());
         titleInput.setValue(template.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
-        createButton.shouldBe(Condition.disabled);
+        createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();
         return this;
     }
 
     @Step("Проверка валидации недопустимых значений в коде шаблона")
     public OrderTemplatesListPage checkNameValidation(String[] names) {
-        createTemplateButton.shouldBe(Condition.visible).click();
+        addNewObjectButton.click();
         for (String name : names) {
             nameInput.setValue(name);
             TestUtils.wait(500);
@@ -165,7 +146,7 @@ public class OrderTemplatesListPage {
     @Step("Удаление шаблона '{name}'")
     public OrderTemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseListPage.delete(columnName, name);
+        BaseListPage.delete(nameColumn, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
@@ -180,14 +161,14 @@ public class OrderTemplatesListPage {
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public OrderTemplatePage findAndOpenTemplatePage(String name) {
         search(name);
-        new Table(columnName).getRowByColumnValue(columnName, name).get().click();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
         TestUtils.wait(600);
         return new OrderTemplatePage();
     }
 
     @Step("Копирование шаблона '{name}'")
     public OrderTemplatePage copyTemplate(String name) {
-        new BaseListPage().copy(columnName, name);
+        new BaseListPage().copy(nameColumn, name);
         Alert.green("Шаблон скопирован");
         TestUtils.wait(500);
         return new OrderTemplatePage();
@@ -196,7 +177,7 @@ public class OrderTemplatesListPage {
     @Step("Проверка, что шаблон '{template.name}' найден при поиске по значению '{value}'")
     public OrderTemplatesListPage findTemplateByValue(String value, ItemVisualTemplate template) {
         search(value);
-        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
+        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
         return this;
     }
 
@@ -221,7 +202,7 @@ public class OrderTemplatesListPage {
     @Step("Применение фильтров")
     public OrderTemplatesListPage applyFilters() {
         applyFiltersButton.click();
-        TestUtils.wait(500);
+        Waiting.sleep(500);
         return this;
     }
 
@@ -241,13 +222,13 @@ public class OrderTemplatesListPage {
 
     @Step("Проверка, что шаблон '{template.name}' отображается в списке")
     public OrderTemplatesListPage checkTemplateIsDisplayed(ItemVisualTemplate template) {
-        Assertions.assertTrue(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
+        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
         return this;
     }
 
     @Step("Проверка, что шаблон '{template.name}' не отображается в списке")
     public OrderTemplatesListPage checkTemplateIsNotDisplayed(ItemVisualTemplate template) {
-        Assertions.assertFalse(new Table(columnName).isColumnValueEquals(columnName, template.getName()));
+        Assertions.assertFalse(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
         return this;
     }
 }

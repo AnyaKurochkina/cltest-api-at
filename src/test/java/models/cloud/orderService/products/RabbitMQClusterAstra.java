@@ -14,6 +14,7 @@ import models.cloud.subModels.Vhost;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,10 +33,6 @@ public class RabbitMQClusterAstra extends IProduct {
     private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.any{it.name=='%s'}";
     private final static String RABBIT_CLUSTER_VHOST = "data.find{it.data.config.containsKey('vhosts')}.data.config.vhosts.any{it.name=='%s'}";
     private final static String RABBIT_CLUSTER_VHOST_ACCESS = "data.find{it.data.config.containsKey('vhost_access')}.data.config.vhost_access.any{it.vhost_name=='%s'}";
-    @ToString.Include
-    String segment;
-    String dataCentre;
-    String domain;
     String role;
     Flavor flavor;
     String osVersion;
@@ -43,7 +40,6 @@ public class RabbitMQClusterAstra extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -58,29 +54,33 @@ public class RabbitMQClusterAstra extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         if (isTest())
             role = "manager";
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.web_console_grants[0].role", role)
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", /*isTest()*/getSupport())

@@ -18,6 +18,7 @@ import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 @Deprecated
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -28,11 +29,7 @@ import steps.orderService.OrderServiceSteps;
 @SuperBuilder
 public class Rhel extends IProduct {
     @ToString.Include
-    String segment;
-    String dataCentre;
-    @ToString.Include
     String osVersion;
-    String domain;
     Flavor flavor;
 
     @Override
@@ -49,14 +46,18 @@ public class Rhel extends IProduct {
                 productName = "Rhel";
         }
         initProduct();
-        if (domain == null)
-            domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if(flavor == null)
             flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
+        if(segment == null)
+            setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
@@ -67,17 +68,16 @@ public class Rhel extends IProduct {
     }
 
     public JSONObject toJson() {
-        Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", getProjectId())
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.label", getLabel())

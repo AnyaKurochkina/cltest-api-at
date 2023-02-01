@@ -32,10 +32,7 @@ public class SelectBox implements TypifiedElement {
 
     private void select(String text) {
         select.parent().parent().parent().click();
-        select.click();
-        $x("//*[@title = '{}']", text).shouldBe(activeCnd)
-                .hover().shouldBe(clickableCnd)
-                .click();
+        new Select(select.parent().parent()).set(text);
     }
 
     @AllArgsConstructor

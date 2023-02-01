@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.models.Graph;

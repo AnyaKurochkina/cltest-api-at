@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -77,11 +78,11 @@ public class OtherTest extends AbstractComputeTest {
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         String orderIdIp = ipPage.getOrderId();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setName(getRandomName())
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setBootSize(2)
-                .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .setPublicIp(ip)
@@ -123,10 +124,10 @@ public class OtherTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Подключить/Отключить диск со снимком к вм")
     void createSnapshotFromDetachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setName(getRandomName())
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
-                .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
@@ -224,13 +225,13 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(e -> e.getType().equals("snapshot"))
                 .filter(e -> e.getParent().equals(volumeId))
                 .count(), "Item snapshot не соответствует условиям или не найден");
-
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+        Waiting.sleep(10000);
         Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .count());
         Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
-                .filter(e -> !Objects.equals(e.getSize(), vm.getBootSize()))
+                .filter(e -> Objects.equals(e.getSize(), vm.getBootSize()))
                 .count());
     }
 

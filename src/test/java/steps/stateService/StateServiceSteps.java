@@ -33,14 +33,14 @@ public class StateServiceSteps extends Steps {
         try {
             traceback = new Http(StateServiceURL)
                     .setRole(Role.CLOUD_ADMIN)
-                    .get("/actions/?order_id={}", orderId)
+                    .get("/api/v1/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
             log.error(e.toString());
         }
         if (StepsAspects.getCurrentStep().get() != null) {
             StepsAspects.getCurrentStep().get().addLinkItem(
-                    new LinkItem("State service log", String.format("%s/actions/?order_id=%s", Configure.getAppProp("url.stateService"), orderId), "", LinkType.REPOSITORY));
+                    new LinkItem("State service log", String.format("%s/api/v1/actions/?order_id=%s", Configure.getAppProp("url.stateService"), orderId), "", LinkType.REPOSITORY));
         }
         return traceback;
     }

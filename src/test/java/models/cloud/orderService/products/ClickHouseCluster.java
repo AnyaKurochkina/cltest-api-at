@@ -13,6 +13,7 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
 
 import java.net.ConnectException;
@@ -25,11 +26,7 @@ import java.net.ConnectException;
 @NoArgsConstructor
 @SuperBuilder
 public class ClickHouseCluster extends IProduct {
-    @ToString.Include
-    String segment;
-    String dataCentre;
     String osVersion;
-    String domain;
     String chVersion;
     String clickhouseBb;
 
@@ -37,15 +34,14 @@ public class ClickHouseCluster extends IProduct {
     String chCustomerPassword;
     String chCustomerAdminPassword;
 
-    public static final String DB_USERS_AD = "data.find{it.type=='cluster'}.data.config.db_users_ad.any{it.user_name=='%s'}";
-    public static final String DB_USERS = "data.find{it.type=='cluster'}.data.config.db_users.any{it.user_name=='%s'}";
-    public static final String DB_USER_GROUP = "data.find{it.type=='cluster'}.data.config.db_user_group.any{it.dbms_role=='user' && it.user_name.contains('%s')}";
-    public static final String DB_ADMIN_GROUP = "data.find{it.type=='cluster'}.data.config.db_app_admin_group.any{it.dbms_role=='admin' && it.user_name.contains('%s')}";
+    public static final String DB_USERS_AD = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_users_ad.any{it.user_name=='%s'}";
+    public static final String DB_USERS = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_users.any{it.user_name=='%s'}";
+    public static final String DB_USER_GROUP = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_user_group.any{it.dbms_role=='user' && it.user_name.contains('%s')}";
+    public static final String DB_ADMIN_GROUP = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_app_admin_group.any{it.dbms_role=='admin' && it.user_name.contains('%s')}";
 
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        domain = OrderServiceSteps.getDomainBySegment(this, segment);
         createProduct();
     }
 
@@ -56,10 +52,6 @@ public class ClickHouseCluster extends IProduct {
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (chCustomerAdmin == null)
             chCustomerAdmin = "portal_admin";
         if (chCustomerAdminPassword == null)
@@ -70,6 +62,14 @@ public class ClickHouseCluster extends IProduct {
             clickhouseBb = "dbname";
         if (chVersion == null)
             chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
+        if(segment == null)
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
@@ -106,25 +106,25 @@ public class ClickHouseCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        AccessGroup accessGroup = AccessGroup.builder().projectName(project.id).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         Flavor flavorCh = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:clickhouse:dev:dev").get(0);
         Flavor flavorZk = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:zookeeper:dev:dev").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.ch_customer_password", chCustomerPassword)
                 .set("$.order.attrs.ch_version", chVersion)
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.ch_db_name", clickhouseBb)
                 .set("$.order.attrs.flavor_ch", new JSONObject(flavorCh.toString()))
                 .set("$.order.attrs.flavor_zk", new JSONObject(flavorZk.toString()))
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup.getPrefixName())
-                .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup)
+                .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup)
+                .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.ch_customer_admin", chCustomerAdmin)
                 .set("$.order.attrs.ch_customer_admin_password", chCustomerAdminPassword)

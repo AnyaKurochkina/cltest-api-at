@@ -10,7 +10,7 @@ import java.util.stream.Stream;
 public enum Categories {
     APPLICATION_INTEGRATION("application_integration"),
     COMPUTE("compute"),
-    CONTAINERS("containers"),
+    CONTAINER("container"),
     DB("db"),
     DEVOPS_TOOLS("devops_tools"),
     LOGGING("logging"),
@@ -23,7 +23,9 @@ public enum Categories {
     QA_TEST("qa_test"),
     OMNI_SERVICES("omni_services"),
     PRODUCT_TEMPLATE("product_template"),
-    COMPLEX_REQUEST("complex_request");
+    COMPLEX_REQUEST("complex_request"),
+    VM("vm");
+
     private final String value;
 
     Categories(final String value) {

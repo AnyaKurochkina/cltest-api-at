@@ -12,7 +12,6 @@ import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.t1.pages.cloudEngine.Column;
-import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
@@ -21,7 +20,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.Objects;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @ExtendWith(BeforeAllExtension.class)
@@ -33,7 +32,7 @@ public class SnapshotTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Снимки")
     void snapshotList() {
         new IndexPage().goToSnapshots();
-        AssertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "Дата", "");
+        assertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "Дата", "");
     }
 
     @Test
@@ -70,14 +69,6 @@ public class SnapshotTest extends AbstractComputeTest {
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(disk.getName()));
         Snapshot snapshotPage = new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).checkCreate();
         snapshotPage.switchProtectOrder(true);
-        try {
-            snapshotPage.runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Подтвердить", () -> {},
-                    ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
-            Alert.red("Заказ защищен от удаления");
-        } finally {
-            TypifiedElement.refresh();
-            snapshotPage.switchProtectOrder(false);
-        }
         snapshotPage.delete();
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()

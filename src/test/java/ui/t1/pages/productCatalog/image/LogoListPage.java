@@ -7,6 +7,7 @@ import models.t1.imageService.ImageGroup;
 import models.t1.imageService.Logo;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
 import ui.elements.Button;
 import ui.elements.Input;
@@ -26,6 +27,7 @@ public class LogoListPage extends BaseListPage {
     private final Input urlInput = Input.byName("logo");
     private final Input distroInput = Input.byName("os_distro");
     private final Button addButton = Button.byText("Добавить");
+    private final Button saveButton = Button.byText("Сохранить");
     private final Button cancelButton = Button.byText("Отменить");
     private final SelenideElement nameRequiredFieldText
             = nameInput.getInput().$x("following::div[text()='Поле обязательно для заполнения']");
@@ -108,12 +110,31 @@ public class LogoListPage extends BaseListPage {
 
     @Step("Проверка аттрибутов логотипа '{logo.name}'")
     public LogoListPage checkAttributes(Logo logo) {
-        openEditDialog(logo);
         Assertions.assertEquals(logo.getName(), nameInput.getValue());
         Assertions.assertEquals(logo.getLogo(), urlInput.getValue());
         $x("//div[@role='dialog']//img[@src='{}']", logo.getLogo()).shouldBe(Condition.visible);
         Assertions.assertEquals(logo.getOsDistro(), distroInput.getValue());
         cancelButton.click();
+        return this;
+    }
+
+    @Step("Задание атрибутов логотипа")
+    public LogoListPage setAttributes(Logo logo) {
+        nameInput.setValue(logo.getName());
+        urlInput.setValue(logo.getLogo());
+        distroInput.setValue(logo.getOsDistro());
+        saveButton.click();
+        Alert.green("Логотип успешно обновлен");
+        return this;
+    }
+
+    @Step("Удаление логотипа '{logo.name}'")
+    public LogoListPage delete(Logo logo) {
+        Table table = new Table(nameColumn);
+        table.getRowByColumnValue(nameColumn, logo.getName()).get()
+                .$x(".//td[last()-1]//*[@class and name()='svg']").click();
+        new DeleteDialog().inputValidIdAndDelete("Логотип успешно удален");
+        Assertions.assertFalse(table.isColumnValueEquals(nameColumn, logo.getName()));
         return this;
     }
 }

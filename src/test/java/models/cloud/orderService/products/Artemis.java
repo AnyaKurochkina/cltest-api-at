@@ -12,11 +12,11 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -34,12 +34,8 @@ import static org.hamcrest.Matchers.is;
 @SuperBuilder
 public class Artemis extends IProduct {
     @ToString.Include
-    String segment;
-    String dataCentre;
-    @ToString.Include
     String osVersion;
     String artemisVersion;
-    String domain;
     Flavor flavor;
     private final static String CLIENT_NAME_PATH = "data.find{it.data.config.containsKey('clients')}.data.config.clients.list_user_type_name.any{it.name=='%s'}";
     private final static String RELATIONSHIP_PATH = "data.find{it.data.config.clients.containsKey('list_user_type_relationship')}.data.config.clients.list_user_type_relationship.find{it.name==('%s')}.relationship.any{it.name=='%s'}";
@@ -56,18 +52,20 @@ public class Artemis extends IProduct {
         if (productName == null)
             productName = "VTB Apache ActiveMQ Artemis Astra";
         initProduct();
-        if (domain == null)
-            domain = OrderServiceSteps.getDomainBySegment(this, segment);
         if (flavor == null)
             flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
-            segment = OrderServiceSteps.getNetSegment(this);
-        if (dataCentre == null)
-            dataCentre = OrderServiceSteps.getDataCentreBySegment(this, segment);
         if (artemisVersion == null)
             artemisVersion = getRandomProductVersionByPathEnum("artemis_version.enum");
+        if(segment == null)
+            setSegment(OrderServiceSteps.getNetSegment(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if(platform == null)
+            setPlatform(OrderServiceSteps.getPlatform(this));
+        if(domain == null)
+            setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
@@ -78,18 +76,18 @@ public class Artemis extends IProduct {
     }
 
     public JSONObject toJson() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(getProjectId()).build().createObject();
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", domain)
+                .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.default_nic.net_segment", segment)
-                .set("$.order.attrs.data_center", dataCentre)
+                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.artemis_version", artemisVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", getProjectId())
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.layout", getIdGeoDistribution("artemis", "artemis-1:artemis-1"))
@@ -163,7 +161,7 @@ public class Artemis extends IProduct {
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
-                .get("/actions/?order_id={}", orderId)
+                .get("/api/v1/actions/?order_id={}", orderId)
                 .assertStatus(200)
                 .getResponse().then().assertThat()
                 .rootPath("list.find{it.status.contains('send_mail:completed')}.data")

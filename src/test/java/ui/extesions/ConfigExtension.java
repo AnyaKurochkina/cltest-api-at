@@ -1,17 +1,21 @@
 package ui.extesions;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.WebDriverRunner;
+import core.helper.AttachUtils;
+import core.helper.http.Http;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
-import core.helper.AttachUtils;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static core.helper.Configure.getAppProp;
 import static org.junit.TestsExecutionListener.initDriver;
 
 public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, BeforeAllCallback, InvocationInterceptor {
@@ -40,12 +44,22 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
             invocation.proceed();
         } catch (Throwable e) {
             try {
+                AttachUtils.attachLinkVideo();
                 AttachUtils.attachRequests();
                 AttachUtils.attachFiles();
             } catch (Throwable ex) {
                 e.addSuppressed(ex);
             }
             throw e;
+        }
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
+            if(Boolean.parseBoolean(getAppProp("webdriver.capabilities.enableVideo", "false"))) {
+                String sessionId = ((RemoteWebDriver) WebDriverRunner.getWebDriver()).getSessionId().toString();
+                String host = getAppProp("webdriver.remote.url");
+                new Http(host.substring(0, host.length()-7))
+                        .setWithoutToken()
+                        .delete("/video/{}.mp4", sessionId);
+            }
         }
     }
 

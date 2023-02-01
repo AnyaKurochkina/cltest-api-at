@@ -33,14 +33,18 @@ public class Waiting {
         }
     }
 
-    @SneakyThrows
     public static void find(Supplier<Boolean> b, Duration duration) {
+        find(b, duration, "Return false");
+    }
+
+    @SneakyThrows
+    public static void find(Supplier<Boolean> b, Duration duration, String message) {
         Instant start = Instant.now();
         while(duration.compareTo(Duration.between(start, Instant.now())) > 0){
             if(b.get()) return;
             Waiting.sleep(300);
         }
-        throw new TimeoutException("Return false, duration: "+ duration);
+        throw new TimeoutException(message + ", duration: "+ duration);
     }
 
     @SneakyThrows

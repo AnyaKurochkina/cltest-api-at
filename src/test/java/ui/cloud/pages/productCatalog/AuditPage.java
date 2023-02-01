@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
@@ -19,15 +20,16 @@ public class AuditPage extends GraphPage {
     private final SelenideElement response = $x("//span[text()='Ответ']/ancestor::div[2]");
     private final SelenideElement showRequest = $x("//input[@name='returnLogBody']");
     private final SelenideElement showResponse = $x("//input[@name='returnLogReplyBody']");
-    private final SelenideElement paramsFullView = $x("//div[@role='dialog']//p");
-    private final SelenideElement copyContextIdButton = $x("//tbody//button[@title='Скопировать данные']");
-    private final SelenideElement showFullView = $x("//span[text()='Ответ']//following::button[1]");
-    private final SelenideElement copyAddressButton = $x("//span[text()='Адрес']/following::button[@title='Скопировать'][1]");
+    private final Button copyDataButton = Button.byXpath("//span[text()='Адрес']/preceding::button[1]");
+    private final Button showFullView = Button.byXpath("//span[text()='Ответ']//following::button[1]");
+    private final Button copyAddressButton = Button.byXpath("//span[text()='Адрес']/following::button[1]");
+    private final Button copyRequestButton = Button.byXpath("//span[text()='Запрос']/following::button[2]");
+    private final Button copyResponseButton = Button.byXpath("//span[text()='Ответ']/following::button[2]");
     private final SelenideElement additionalFilters = $x("//div[text()='Дополнительные фильтры']");
     private final SelenideElement clearOperationTypeFilter = $x("//*[@id='searchSelectClearIcon']");
     private final SelenideElement applyAdditionalFiltersButton = $x("//label[text()='Учетная запись']//following::div[text()='Применить']/parent::button");
     private final SelenideElement applyFiltersByDateButton = $x("//label[text()='Учетная запись']//preceding::div[text()='Применить']/parent::button");
-    private final SelenideElement closeFullViewButton = $x("//button[@aria-label='close']");
+    private final Button closeFullViewButton = Button.byAriaLabel("close");
 
     @Step("Проверка первой записи в таблице аудита")
     public AuditPage checkFirstRecord(String dateTime, String user, String operationType, String object, String statusCode, String status) {
@@ -53,7 +55,7 @@ public class AuditPage extends GraphPage {
     public AuditPage checkRecordWithOperationTypeFound(String operationType) {
         TestUtils.wait(600);
         Table table = new Table("Учетная запись");
-        table.getRowElementByColumnValue("Тип операции", operationType);
+        table.getRowByColumnValue("Тип операции", operationType);
         return this;
     }
 
@@ -61,7 +63,7 @@ public class AuditPage extends GraphPage {
     public AuditPage checkFirstRecordDetails(String contextId, String address, String request, String response) {
         Table table = new Table("Учетная запись");
         TestUtils.scrollToTheBottom();
-        table.getRowByIndex(0).click();
+        table.getRow(0).get().click();
         this.contextId.shouldHave(Condition.exactText(contextId));
         this.address.shouldHave(Condition.text(address));
         if (showRequest.isSelected()) {
@@ -74,7 +76,7 @@ public class AuditPage extends GraphPage {
         } else {
             this.response.$x(".//i").shouldHave(Condition.exactText(response));
         }
-        table.getRowByIndex(0).click();
+        table.getRow(0).get().click();
         return this;
     }
 
@@ -94,14 +96,18 @@ public class AuditPage extends GraphPage {
     }
 
     @Step("Проверка копирования в буфер обмена")
-    public AuditPage checkCopyToClipboard() {
+    public AuditPage checkCopyToClipboard(String value) {
         Table table = new Table("Учетная запись");
         table.getRow(0).get().click();
-        copyContextIdButton.scrollTo().click();
-        Assertions.assertTrue(Selenide.clipboard().getText().contains(contextId.getText()));
+        copyDataButton.getButton().scrollTo().click();
+        Assertions.assertTrue(StringUtils.getClipBoardText().contains(contextId.getText()));
         copyAddressButton.click();
-        Assertions.assertTrue(Selenide.clipboard().getText().equals(address.getText()));
-        table.getRowByIndex(0).click();
+        Assertions.assertTrue(StringUtils.getClipBoardText().equals(address.getText()));
+        copyRequestButton.click();
+        Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
+        copyResponseButton.click();
+        Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
+        table.getRow(0).get().scrollIntoView(TypifiedElement.scrollCenter).click();
         return this;
     }
 

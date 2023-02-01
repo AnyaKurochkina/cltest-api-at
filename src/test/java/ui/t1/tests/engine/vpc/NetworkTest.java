@@ -11,7 +11,7 @@ import ui.t1.pages.cloudEngine.vpc.Network;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-import static core.utils.AssertUtils.AssertHeaders;
+import static core.utils.AssertUtils.assertHeaders;
 
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
@@ -34,9 +34,9 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети")
     void networkList() {
         new IndexPage().goToNetworks();
-        AssertHeaders(new NetworkList.NetworksTable(), "", "Имя", "Описание", "Статус", "Дата создания", "");
+        assertHeaders(new NetworkList.NetworksTable(), "", "Имя", "Описание", "Статус", "Дата создания", "");
         new NetworkList().selectNetwork(name);
-        AssertHeaders(new Network.SubnetListInfo(), "Наименование", "IPv4 CIDR", "Gateway", "Зона доступности", "Статус", "Описание", "");
+        assertHeaders(new Network.SubnetListInfo(), "Наименование", "IPv4 CIDR", "Gateway", "Зона доступности", "Статус", "Описание", "");
     }
 
     @Test
