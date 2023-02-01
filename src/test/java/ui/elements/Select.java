@@ -35,7 +35,7 @@ public class Select implements TypifiedElement {
 
     @Step("Получение Select по label {label} с индексом {index}")
     public static Select byLabel(String label, int index) {
-        return new Select($x("(//label[.='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
+        return new Select($x("(//label[text()='{}']/following::div[1])" + postfix, label, TypifiedElement.getIndex(index)));
     }
 
     public static Select byXpath(@Language("XPath") String xpath) {
