@@ -122,7 +122,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateCertificate() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить кластерный сертификат", "Подтвердить", () -> {
-            CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
+            //CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -181,8 +181,8 @@ public class ApacheKafkaClusterPage extends IProductPage {
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
-        String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
-                Integer.parseInt(size));
+        String value = String.valueOf( Double.parseDouble(firstSizeDisk) +
+                Double.parseDouble(size));
         Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");

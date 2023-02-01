@@ -34,10 +34,10 @@ public class ClickHouseCluster extends IProduct {
     String chCustomerPassword;
     String chCustomerAdminPassword;
 
-    public static final String DB_USERS_AD = "data.find{it.type=='cluster'}.data.config.db_users_ad.any{it.user_name=='%s'}";
-    public static final String DB_USERS = "data.find{it.type=='cluster'}.data.config.db_users.any{it.user_name=='%s'}";
-    public static final String DB_USER_GROUP = "data.find{it.type=='cluster'}.data.config.db_user_group.any{it.dbms_role=='user' && it.user_name.contains('%s')}";
-    public static final String DB_ADMIN_GROUP = "data.find{it.type=='cluster'}.data.config.db_app_admin_group.any{it.dbms_role=='admin' && it.user_name.contains('%s')}";
+    public static final String DB_USERS_AD = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_users_ad.any{it.user_name=='%s'}";
+    public static final String DB_USERS = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_users.any{it.user_name=='%s'}";
+    public static final String DB_USER_GROUP = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_user_group.any{it.dbms_role=='user' && it.user_name.contains('%s')}";
+    public static final String DB_ADMIN_GROUP = "data.find{it.type=='cluster' || it.type=='app'}.data.config.db_app_admin_group.any{it.dbms_role=='admin' && it.user_name.contains('%s')}";
 
     @Override
     @Step("Заказ продукта")

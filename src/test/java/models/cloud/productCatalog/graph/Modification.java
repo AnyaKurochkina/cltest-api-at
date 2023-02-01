@@ -19,6 +19,8 @@ public class Modification {
     String name;
     Object data;
     List<Env> envs;
+    @JsonProperty("env_names")
+    List<String> envNames;
     Integer order;
     String path;
     @JsonProperty("root_path")

@@ -55,6 +55,40 @@ public class StateServiceSteps extends Steps {
                 .getList("list.order_id");
     }
 
+    @Step("Получение списка items по контексту projects")
+    public static Response getProjectItemsList(String projectId) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/items/", projectId)
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка item_id и order_id")
+    public static Response getItemIdOrderIdList() {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/order_id/")
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка item_id и order_id по фильтру item_id")
+    public static Response getItemIdOrderIdListByItemsIds(String... itemIds) {
+        String ids = String.join(",", itemIds);
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/order_id/?item_id__in=" + ids);
+    }
+
+    @Step("Получение списка items c actions(active=true) по контексту projects")
+    public static Item getProjectItemsWithIsActiveActions(String projectId, String itemId) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/items/?item_id={}&active=true&with_actions=true", projectId, itemId)
+                .assertStatus(200)
+                .jsonPath()
+                .getObject("list[0]", Item.class);
+    }
+
     @Step("Получение списка items у которых parent {isExist}")
     public static List<Item> getItemsWithParentExist(boolean isExist) {
         return new Http(StateServiceURL)

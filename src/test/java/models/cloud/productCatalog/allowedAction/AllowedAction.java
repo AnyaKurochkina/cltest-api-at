@@ -32,8 +32,6 @@ public class AllowedAction extends Entity {
     private String title;
     @JsonProperty("event_type_provider")
     private List<EventTypeProvider> eventTypeProvider;
-    @JsonProperty("environment_type_restriction")
-    private List<String> environmentTypeRestriction;
     @JsonProperty("update_dt")
     private String updateDt;
     private String name;
@@ -69,7 +67,6 @@ public class AllowedAction extends Entity {
                 .set("$.action", actionId)
                 .set("$.item_restriction", itemRestriction)
                 .set("$.event_type_provider", eventTypeProvider)
-                .set("$.environment_type_restriction", environmentTypeRestriction)
                 .set("$.context_restrictions", contextRestriction)
                 .build();
     }
