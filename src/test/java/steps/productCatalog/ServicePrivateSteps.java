@@ -71,7 +71,7 @@ public class ServicePrivateSteps extends Steps {
                 .withServiceToken()
                 .body(object)
                 .patch(adminUrl + id + "/")
-                .assertStatus(201);
+                .assertStatus(200);
     }
 
     @Step("Частичное обновление сервиса по имени {name}")
@@ -80,6 +80,6 @@ public class ServicePrivateSteps extends Steps {
                 .withServiceToken()
                 .body(object)
                 .patch(adminUrlV2 + name + "/")
-                .assertStatus(201);
+                .assertStatus(200);
     }
 }

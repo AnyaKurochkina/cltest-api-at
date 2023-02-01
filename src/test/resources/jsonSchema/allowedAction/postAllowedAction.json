@@ -30,14 +30,6 @@
     "item_restriction": {
       "type": "string"
     },
-    "environment_type_restriction": {
-      "type": "array",
-      "items": [
-        {
-          "type": "string"
-        }
-      ]
-    },
     "action": {
       "type": "string"
     }
@@ -53,7 +45,6 @@
     "description",
     "event_type_provider",
     "item_restriction",
-    "environment_type_restriction",
     "action"
   ]
 }

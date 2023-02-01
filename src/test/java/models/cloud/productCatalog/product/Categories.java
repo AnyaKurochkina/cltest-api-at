@@ -11,6 +11,7 @@ public enum Categories {
     APPLICATION_INTEGRATION("application_integration"),
     COMPUTE("compute"),
     CONTAINER("container"),
+    CONTAINERS("containers"),
     DB("db"),
     DEVOPS_TOOLS("devops_tools"),
     LOGGING("logging"),
