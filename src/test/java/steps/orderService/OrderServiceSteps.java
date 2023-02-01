@@ -484,15 +484,15 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
-        return (Comparable<T>) getProductsField(product, path, null);
+        return getProductsField(product, path, null);
     }
 
-    public static Object getProductsField(IProduct product, String path, Class<?> clazz) {
+    public static <T> T getProductsField(IProduct product, String path, Class<T> clazz) {
         return getProductsField(product, path, clazz, true);
     }
 
     @Step("Получение значения по пути {path}")
-    public static Object getProductsField(IProduct product, String path, Class<?> clazz, boolean assertion) {
+    public static <T> T getProductsField(IProduct product, String path, Class<T> clazz, boolean assertion) {
         Object s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -508,7 +508,7 @@ public class OrderServiceSteps extends Steps {
             log.info(String.format("getFiledProduct return: %s", s));
             Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
         }
-        return s;
+        return (T) s;
     }
 
     @Step("Получение объекта класса по пути {path}")
