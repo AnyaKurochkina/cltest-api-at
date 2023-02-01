@@ -30,6 +30,8 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
+import static core.enums.Role.CLOUD_ADMIN;
+import static core.enums.Role.ORDER_SERVICE_ADMIN;
 import static core.helper.Configure.OrderServiceURL;
 
 @Log4j2
@@ -43,7 +45,7 @@ public class OrderServiceSteps extends Steps {
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(20000);
             Response res = new Http(OrderServiceURL)
-                    .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                    .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                     .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                     .assertStatus(200);
             orderStatus = res.jsonPath().get("status");
@@ -69,7 +71,7 @@ public class OrderServiceSteps extends Steps {
 
     public static String getStatus(IProduct product) {
         return new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                 .assertStatus(200)
                 .jsonPath()
@@ -108,7 +110,7 @@ public class OrderServiceSteps extends Steps {
                 endPoint = endPoint.substring(0, endPoint.length() - 2);
             }
             idOfAllSuccessProductsOnOnePage = new Http(OrderServiceURL)
-                    .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                    .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                     .get(endPoint)
                     .assertStatus(200)
                     .jsonPath()
@@ -131,7 +133,7 @@ public class OrderServiceSteps extends Steps {
                             i + "&per_page=20",
                     Objects.requireNonNull(projectId));
             idOfAllSuccessProductsOnOnePage = new Http(OrderServiceURL)
-                    .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                    .setRole(CLOUD_ADMIN)
                     .get(endPoint)
                     .assertStatus(200)
                     .jsonPath()
@@ -150,7 +152,7 @@ public class OrderServiceSteps extends Steps {
                 .set("$.item_id", item)
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
-                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), action);
     }
 
@@ -162,7 +164,7 @@ public class OrderServiceSteps extends Steps {
                 .set("$.item_id", item)
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .setRole(ORDER_SERVICE_ADMIN)
                 .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), action);
     }
 
@@ -305,7 +307,7 @@ public class OrderServiceSteps extends Steps {
         while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
             Waiting.sleep(20000);
             actionStatus = new Http(OrderServiceURL)
-                    .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                    .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                     .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), action_id)
                     .assertStatus(200)
                     .jsonPath()
@@ -338,7 +340,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение домена для сегмента сети {netSegment}")
     public static String getDomainBySegment(IProduct product, String netSegment) {
         return new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/domains?net_segment_code={}&page=1&per_page=25", netSegment)
                 .assertStatus(200)
                 .jsonPath()
@@ -350,14 +352,14 @@ public class OrderServiceSteps extends Steps {
         Organization organization = Organization.builder().build().createObject();
         if (Configure.ENV.equals("ift")) {
             return new Http(OrderServiceURL)
-                    .setRole(Role.ORDER_SERVICE_ADMIN)
+                    .setRole(ORDER_SERVICE_ADMIN)
                     .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25&organzation={}", project, organization.getName())
                     .assertStatus(200)
                     .jsonPath()
                     .get("list.find{it.code=='corp.dev.vtb'}.code");
         } else {
             return new Http(OrderServiceURL)
-                    .setRole(Role.ORDER_SERVICE_ADMIN)
+                    .setRole(ORDER_SERVICE_ADMIN)
                     .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25&organzation={}", project, organization.getName())
                     .assertStatus(200)
                     .jsonPath()
@@ -368,7 +370,7 @@ public class OrderServiceSteps extends Steps {
     public static String getDataCentreBySegment(IProduct product, String netSegment) {
         log.info("Получение ДЦ для сегмента сети " + netSegment);
         return new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/data_centers?net_segment_code={}&page=1&per_page=25", netSegment)
                 .assertStatus(200)
                 .jsonPath()
@@ -385,7 +387,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Получение item_id для " + Objects.requireNonNull(action));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(Objects.requireNonNull(product).getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(Objects.requireNonNull(product).getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
@@ -413,7 +415,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Получение статуса для для продукта " + Objects.requireNonNull(product));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(Objects.requireNonNull(product).getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(Objects.requireNonNull(product).getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
@@ -429,7 +431,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение списка ресурсных пулов для категории {category} и проекта {projectId}")
     public static List<ResourcePool> getResourcesPoolList(String category, String projectId, String productName) {
         String jsonArray = new Http(OrderServiceURL)
-                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/products/resource_pools?category={}&project_name={}&resource_type=cluster:openshift&quota[cpu]=1&quota[memory]=1&product_name={}",
                         category, projectId, productName)
                 .assertStatus(200)
@@ -454,7 +456,7 @@ public class OrderServiceSteps extends Steps {
         Object s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
@@ -478,7 +480,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение сетевого сегмента для продукта {product}")
     public static String getNetSegment(IProduct product) {
         return Objects.requireNonNull(new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/net_segments?project_name={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         Objects.requireNonNull(product).getProjectId(), product.getProductCatalogName())
                 .assertStatus(200)
