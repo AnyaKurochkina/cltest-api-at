@@ -21,6 +21,8 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static models.cloud.orderService.products.ClickHouseCluster.*;
+
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -153,6 +155,66 @@ public class ClickHouse extends IProduct {
         save();
     }
 
+    public void createUserAccount(String user, String password) {
+        OrderServiceSteps.executeAction("clickhouse_create_local_tuz", this, new JSONObject().put("user_name", user).put("user_password", password), getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s не найден", user));
+    }
+
+    public void deleteUserAccount(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_local_tuz", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s найден", user));
+    }
+
+    public void addUserAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_create_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s не найден", user));
+    }
+
+    public void deleteUserAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s найден", user));
+    }
+
+    public void addGroupAd(String user) {
+        JSONObject object = new JSONObject("{\n" +
+                "  \"ad_integration\": true,\n" +
+                "  \"clickhouse_user_ad_groups\": [\n" +
+                "    {\n" +
+                "      \"groups\": [\n" +
+                "        \"" + user + "\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+        OrderServiceSteps.executeAction("clickhouse_create_new_app_user_group_ad", this, object, getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s не найдена", user));
+    }
+
+    public void deleteGroupAd(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_new_app_user_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
+    public void addGroupAdmin(String user) {
+        JSONObject object = new JSONObject("{\n" +
+                "  \"ad_integration\": true,\n" +
+                "  \"clickhouse_app_admin_ad_groups\": [\n" +
+                "    {\n" +
+                "      \"groups\": [\n" +
+                "        \"" + user + "\"\n" +
+                "      ]\n" +
+                "    }\n" +
+                "  ]\n" +
+                "}");
+        OrderServiceSteps.executeAction("clickhouse_create_new_app_admin_group_ad", this, object, getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s не найдена", user));
+    }
+
+    public void deleteGroupAdmin(String user) {
+        OrderServiceSteps.executeAction("clickhouse_remove_new_app_admin_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app/clickhouse", 10);
     }
@@ -196,6 +258,7 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup)
+                .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.clickhouse_users", clickhouseUser)
                 .set("$.order.attrs.clickhouse_password", clickhousePassword)
