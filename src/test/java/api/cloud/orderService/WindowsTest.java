@@ -143,6 +143,18 @@ public class WindowsTest extends Tests {
         }
     }
 
+    @Disabled
+    @TmsLinks({@TmsLink("1427063"),@TmsLink("1427065")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Ключ astrom добавить/удалить {0}")
+    void astrom(Windows product) {
+        try (Windows windows = product.createObjectExclusiveAccess()) {
+            windows.astromAdd();
+            windows.astromDelete();
+        }
+    }
+
     @TmsLink("377716")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")

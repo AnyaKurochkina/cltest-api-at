@@ -22,7 +22,7 @@ import java.time.Duration;
 public class UiScyllaDbClusterAstraTest extends UiProductTest{
 
     ScyllaDbCluster product;
-    //=ScyllaDbCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/05fd34cd-6884-4001-b642-18fa95235120/main?context=proj-iv550odo9a&type=project&org=vtb");
+    //=ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b076f027-b244-4e2b-be71-99a65439d5fc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 

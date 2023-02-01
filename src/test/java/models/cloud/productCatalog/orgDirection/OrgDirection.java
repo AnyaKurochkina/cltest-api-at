@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.ExtraData;
-import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -59,7 +58,6 @@ public class OrgDirection extends Entity implements IProductCatalog {
     }
 
     @Override
-    @Step("Создание направления")
     protected void create() {
         if (isOrgDirectionExists(name)) {
             List<String> serviceIdList = getServiceUsedOrgDirection(getOrgDirectionByName(name).getId()).jsonPath().getList("id");

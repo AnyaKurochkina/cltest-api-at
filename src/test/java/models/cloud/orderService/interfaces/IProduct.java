@@ -386,6 +386,7 @@ public abstract class IProduct extends Entity {
         log.info("Отправка запроса на создание заказа " + productName);
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+//                .setRole(Role.ORDER_SERVICE_ADMIN)
                 .body(deleteObjectIfNotFoundInUiSchema(toJson(), getProductId()))
                 .post("/v1/projects/" + projectId + "/orders")
                 .assertStatus(201)
