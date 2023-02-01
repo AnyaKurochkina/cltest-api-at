@@ -35,8 +35,6 @@ public class ForbiddenAction extends Entity {
     @JsonProperty("item_restriction")
     private Object itemRestriction;
     private String title;
-    @JsonProperty("environment_type_restriction")
-    private List<String> environmentTypeRestriction;
     @JsonProperty("context_restrictions")
     private Object contextRestrictions;
     @JsonProperty("update_dt")

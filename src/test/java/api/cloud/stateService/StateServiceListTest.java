@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.productCatalog.action.Action;
 import models.cloud.stateService.Item;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -40,6 +41,39 @@ public class StateServiceListTest extends Tests {
         List<String> ordersIdItems = StateServiceSteps.getOrdersIdList(project.getId());
         List<String> ids = ordersIdItems.stream().distinct().collect(Collectors.toList());
         assertTrue(ordersId.containsAll(ids));
+    }
+
+    @Test
+    @DisplayName("Получение списка items по фильтру action.active = true")
+    @TmsLink("1428834")
+    public void getItemWithActiveActions() {
+        Project project = Project.builder().isForOrders(true)
+                .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
+                .build()
+                .createObject();
+        List<Item> itemList = getProjectItemsList(project.getId()).jsonPath().getList("list", Item.class);
+        for (Item a : itemList) {
+            Item item = getProjectItemsWithIsActiveActions(project.getId(), a.getItemId());
+            List<Action> actions = item.getActions();
+            if (!actions.isEmpty()) {
+                actions.forEach(x -> assertTrue(x.getActive()));
+                break;
+            }
+        }
+    }
+
+    @Test
+    @DisplayName("Получение списка связок order_id и item_id отфильтрованного по item_id")
+    @TmsLink("1429722")
+    public void getItemsIdOrderIdListFilteredByItemId() {
+        List<String> itemIdList = getItemIdOrderIdList().jsonPath().getList("list.item_id");
+        List<Item> itemsIdOrderIdList = getItemIdOrderIdListByItemsIds(itemIdList.get(0), itemIdList.get(1))
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", Item.class);
+        assertEquals(2, itemsIdOrderIdList.size());
+        assertTrue(itemIdList.contains(itemIdList.get(0)));
+        assertTrue(itemIdList.contains(itemIdList.get(1)));
     }
 
     @Test

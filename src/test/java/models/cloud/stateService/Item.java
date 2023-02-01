@@ -43,5 +43,7 @@ public class Item {
     private String status;
     private String jsonTemplate;
     private String folder;
+    @JsonProperty("maintance_mode")
+    private Boolean maintanceMode;
 
 }
