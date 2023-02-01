@@ -13,6 +13,9 @@ OpenShiftProject:
 #      - { env: "HOTFIX", resourcePoolLabel: "rs5-genr02.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
 #      - { env: "HOTFIX", resourcePoolLabel: "rs5-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
 #      - { env: "PREPROD", resourcePoolLabel: "rs1-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
+Vault:
+  - options:
+      - { env: "DEV" }
 
 ApacheAirflow:
   - options:

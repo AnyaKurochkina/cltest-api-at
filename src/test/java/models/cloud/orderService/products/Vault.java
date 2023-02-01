@@ -1,33 +1,23 @@
 package models.cloud.orderService.products;
 
-import com.google.gson.reflect.TypeToken;
 import core.enums.Role;
-import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
-import models.cloud.orderService.ResourcePool;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.orderService.interfaces.ProductStatus;
-import models.cloud.subModels.Flavor;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.platform.commons.util.CollectionUtils;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
