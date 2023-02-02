@@ -230,7 +230,7 @@ public class GraphTest extends Tests {
         String deleteResponse = getDeleteResponse(mainGraphId).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
         assertEquals("1.0.0", version);
-        assertEquals(String.format("Нельзя удалить граф: %s. Он используется:\nProduct: (name: %s, version: 1.0.0)\nAction: (name: %s, version: 1.0.0)\nService: (name: %s, version: 1.0.3)",
+        assertEquals(String.format("Нельзя удалить граф: %s. Он используется:\nProduct: (name: %s, version: 1.0.0)\nAction: (name: %s, version: 1.0.0)\nService: (name: %s, version: 1.0.0)",
                 mainGraph.getName(), product.getName(), action.getActionName(), service.getName()), deleteResponse);
     }
 

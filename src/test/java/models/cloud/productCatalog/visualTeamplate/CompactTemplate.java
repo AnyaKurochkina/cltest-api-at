@@ -27,4 +27,7 @@ public class CompactTemplate {
     private Object system;
     private Object bootable;
     private Object size;
+    private Object domain;
+    private Object description;
+    private Object networks;
 }
