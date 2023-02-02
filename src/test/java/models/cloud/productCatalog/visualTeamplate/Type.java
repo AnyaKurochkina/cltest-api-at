@@ -8,4 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Type {
     private String value;
+    private String label;
+
+    public Type(String value) {
+        this.value = value;
+    }
 }

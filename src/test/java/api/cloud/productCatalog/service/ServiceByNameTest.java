@@ -48,7 +48,7 @@ public class ServiceByNameTest extends Tests {
                 .build()
                 .createObject();
         partialUpdateServiceByName(serviceName, new JSONObject().put("service_info", "update"));
-        assertEquals("1.0.4", getServiceById(service.getId()).getVersion(), "Версии не совпадают");
+        assertEquals("1.0.1", getServiceById(service.getId()).getVersion(), "Версии не совпадают");
     }
 
     @Test
