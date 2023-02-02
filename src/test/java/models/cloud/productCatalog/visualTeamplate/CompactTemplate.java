@@ -29,4 +29,5 @@ public class CompactTemplate {
     private Object size;
     private Object domain;
     private Object description;
+    private Object networks;
 }

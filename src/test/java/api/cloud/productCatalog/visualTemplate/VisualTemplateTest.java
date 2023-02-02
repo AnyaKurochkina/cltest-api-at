@@ -38,7 +38,7 @@ public class VisualTemplateTest extends Tests {
             "productCatalog/itemVisualTemplate/createItemVisual.json");
     CompactTemplate compactTemplate = CompactTemplate.builder()
             .name(new Name("name"))
-            .type(new Type("type"))
+            .type(new Type("type", "label"))
             .status(new Status("status"))
             .build();
     FullTemplate fullTemplate = FullTemplate.builder()
