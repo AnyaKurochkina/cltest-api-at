@@ -25,8 +25,6 @@ public class TemplatesListPage extends BaseListPage {
     private final Input runQueueInput = Input.byLabel("Название очереди для старта задачи");
     private final Input rollbackQueueInput = Input.byLabel("Название очереди для отката");
     private final DropDown typeDropDown = DropDown.byLabel("Тип");
-    private final Input searchInput = Input.byPlaceholder("Поиск");
-    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
     private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final SelenideElement templateNameValidationHint = $x("//p[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::p[text()='Поле обязательно для заполнения']");
@@ -34,7 +32,6 @@ public class TemplatesListPage extends BaseListPage {
     private final SelenideElement runQueueRequiredFieldHint =
             $x("//input[@name='run']/parent::div/following-sibling::p[text()='Поле обязательно для заполнения']");
     private final SelenideElement nonuniqueNameValidationHint = $x("//input[@name='name']/parent::div/following-sibling::p[text()='Шаблон с таким именем уже существует']");
-    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
     private final TextArea input = TextArea.byLabel("Input");
     private final TextArea output = TextArea.byLabel("Output");
     private final TextArea printedOutput = TextArea.byLabel("Printed output");
@@ -56,7 +53,7 @@ public class TemplatesListPage extends BaseListPage {
         input.setValue(template.getInput());
         output.setValue(template.getOutput());
         printedOutput.setValue(template.getPrintedOutput());
-        saveButton.shouldBe(Condition.enabled).click();
+        saveButton.click();
         Alert.green("Шаблон успешно создан");
         TestUtils.wait(2000);
         return new TemplatePage();
@@ -120,19 +117,19 @@ public class TemplatesListPage extends BaseListPage {
         if (template.getRunQueue().isEmpty()) {
             runQueueRequiredFieldHint.shouldBe(Condition.visible);
         }
-        saveButton.shouldBe(Condition.disabled);
-        cancelButton.click();
+        saveButton.getButton().shouldBe(Condition.disabled);
+        backButton.click();
         return this;
     }
 
     @Step("Проверка валидации неуникального имени шаблона узла '{template.name}'")
     public TemplatesListPage checkNonUniqueNameValidation(Template template) {
-        createTemplateButton.click();
+        createTemplateButton.scrollIntoView(false).click();
         nameInput.setValue(template.getName());
         titleInput.setValue(template.getTitle());
         nonuniqueNameValidationHint.shouldBe(Condition.visible);
-        saveButton.shouldBe(Condition.disabled);
-        cancelButton.click();
+        saveButton.getButton().shouldBe(Condition.disabled);
+        backButton.click();
         return this;
     }
 
@@ -154,7 +151,7 @@ public class TemplatesListPage extends BaseListPage {
             }
             templateNameValidationHint.shouldBe(Condition.visible);
         }
-        cancelButton.click();
+        backButton.click();
         return this;
     }
 
@@ -205,7 +202,7 @@ public class TemplatesListPage extends BaseListPage {
     public TemplatesListPage copyTemplate(String name) {
         new BaseListPage().copy(columnName, name);
         Alert.green("Копирование выполнено успешно");
-        cancelButton.shouldBe(Condition.enabled).click();
+        backButton.click();
         return this;
     }
 

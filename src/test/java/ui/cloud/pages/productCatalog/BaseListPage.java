@@ -124,7 +124,7 @@ public class BaseListPage {
     @Step("Переход на последнюю страницу списка для нового компонента таблицы")
     public BaseListPage lastPageV2() {
         Select pageSelect = Select.byXpath("//button[contains(@aria-label,'Страница 1 из')]");
-        pageSelect.getElement().click();
+        pageSelect.getElement().scrollIntoView(true).click();
         String lastPage = pageSelect.getOptions().last().getText();
         pageSelect.getElement().click();
         pageSelect.set(lastPage);

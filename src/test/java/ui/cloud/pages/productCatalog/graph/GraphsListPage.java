@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.graph;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
@@ -26,8 +27,6 @@ public class GraphsListPage extends BaseListPage {
     private final Select typeDropDown = Select.byLabel("Тип");
     private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
-    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
-    private final SelenideElement nothingFoundMessage = $x("//td[text()='Нет данных для отображения']");
     private final SelenideElement graphNameValidationHint = $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::div");
     private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::div");
@@ -54,7 +53,7 @@ public class GraphsListPage extends BaseListPage {
     public GraphsListPage copyGraph(String name) {
         new BaseListPage().copy(nameColumn, name);
         Alert.green("Граф успешно скопирован");
-        cancelButton.shouldBe(Condition.enabled).click();
+        backButton.click();
         return this;
     }
 
@@ -72,8 +71,8 @@ public class GraphsListPage extends BaseListPage {
             clearSearchButton.click();
         }
         searchInput.setValue(graphName);
-        TestUtils.wait(1000);
-        nothingFoundMessage.shouldBe(Condition.visible);
+        Waiting.sleep(1000);
+        new Table(nameColumn).isEmpty();
         return this;
     }
 

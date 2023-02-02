@@ -16,11 +16,9 @@ public class CopyTemplateTest extends TemplateBaseTest {
     public void copyTemplateTest() {
         Template template = new Template(NAME);
         String copyName = NAME + "-clone";
-        Template templateCopy = new Template(copyName);
         new IndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template)
                 .copyTemplate(NAME)
-                .findTemplateByValue(copyName, templateCopy)
                 .findAndOpenTemplatePage(copyName)
                 .checkTemplateAttributes(new Template(copyName));
         deleteTemplate(copyName);
