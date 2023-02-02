@@ -42,7 +42,7 @@ public class Redis extends IProduct {
         if (productName == null)
             productName = "Redis (Astra)";
         if (appUser == null)
-            appUser = "app_user";
+            appUser = "appuser";
         initProduct();
         if (osVersion == null) {
             osVersion = getRandomOsVersion();
@@ -76,8 +76,8 @@ public class Redis extends IProduct {
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.app_user_password", appUserPassword)
-                .set("$.order.attrs.app_user", appUser)
+                .set("$.order.attrs.appuser_password", appUserPassword)
+                .set("$.order.attrs.appuser", appUser)
                 .set("$.order.label", getLabel())
                 .build();
     }
