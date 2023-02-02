@@ -89,15 +89,16 @@ public class PortalBackSteps extends Steps {
     }
 
     @Step("Получение случайной группы доступа")
-    public static String getRandomAccessGroup(String projectId, String domain) {
+    public static String getRandomAccessGroup(String projectId, String domain, String type) {
         String accessGroup = new Http(PortalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
-                .get("/v1/projects/{}/access_groups?f[purpose]=compute&page=1&per_page=25", projectId)
+                .get("/v1/projects/{}/access_groups?f[purpose]={}&page=1&per_page=25", projectId, type)
                 .assertStatus(200)
                 .jsonPath()
-                .getString("list.findAll{it.domain == '" + domain + "'}.collect{e -> e}.shuffled()[0].name");
+                .getString("list.findAll{it.domain.contains('" + domain + "')}.collect{e -> e}.shuffled()[0].name");
         if(Objects.isNull(accessGroup))
-            accessGroup = ((AccessGroup) AccessGroup.builder().projectName(projectId).domain(domain).build().createObject()).getPrefixName();
+            accessGroup = ((AccessGroup) AccessGroup.builder()
+                    .projectName(projectId).domain(domain).codePurpose(type).build().createObject()).getPrefixName();
         return accessGroup;
     }
 }

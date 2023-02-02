@@ -75,7 +75,7 @@ public class PostgreSQL extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())

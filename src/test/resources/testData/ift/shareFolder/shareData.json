@@ -19,7 +19,7 @@
     "secret": "33f96f852ea5a483378970798639c336",
     "isDeleted": false,
     "projectId": "proj-z4sozqtzjr",
-    "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e64",
+    "role": "roles/order-service.admin",
     "isForOrders": true
   },
   {
@@ -60,7 +60,7 @@
     "secret": "f1f0533ce9761f0a2cabf35ec59c386a",
     "isDeleted": false,
     "projectId": "proj-pkvckn08w9",
-    "objectUid": "d56500a9-e2d1-4a39-8fa6-04bf73716e63",
+    "role": "roles/order-service.admin",
     "isForOrders": true
   },
   {
