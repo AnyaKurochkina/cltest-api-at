@@ -14,6 +14,7 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraphsListPage extends BaseListPage {
 
@@ -72,7 +73,7 @@ public class GraphsListPage extends BaseListPage {
         }
         searchInput.setValue(graphName);
         Waiting.sleep(1000);
-        new Table(nameColumn).isEmpty();
+        assertTrue(new Table(nameColumn).isEmpty());
         return this;
     }
 

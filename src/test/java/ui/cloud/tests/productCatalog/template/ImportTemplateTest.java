@@ -4,16 +4,17 @@ import core.helper.JsonHelper;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.tests.productCatalog.BaseTest;
-import ui.models.Template;
+
+import static steps.productCatalog.TemplateSteps.isTemplateExists;
 
 @Feature("Импорт из файла")
 @DisabledIfEnv("prod")
-public class ImportTemplateTest extends BaseTest {
+public class ImportTemplateTest extends TemplateBaseTest {
 
     @Test
     @DisplayName("Импорт шаблона до первого существующего объекта")
@@ -22,12 +23,21 @@ public class ImportTemplateTest extends BaseTest {
         String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplate.json");
         JsonPath json = new JsonPath(data);
         String name = json.get("Template.name");
+        if (isTemplateExists(name)) deleteTemplate(name);
         new IndexPage()
                 .goToTemplatesPage()
                 .importTemplate("src/test/resources/json/productCatalog/templates/importTemplate.json")
                 .findAndOpenTemplatePage(name)
-                .checkTemplateAttributes(new Template(name, json.get("Template.title"),
-                        json.get("Template.run"), json.get("Template.rollback"), json.get("Template.type")))
+                .checkAttributes(Template.builder()
+                        .name(name)
+                        .title(json.getString("Template.title"))
+                        .run(json.getString("Template.run"))
+                        .rollback(json.get("Template.rollback"))
+                        .type(json.getString("Template.type"))
+                        .description(json.getString("Template.description"))
+                        .timeout(json.getInt("Template.timeout"))
+                        .version("1.0.0")
+                        .build())
                 .deleteTemplate();
     }
 }

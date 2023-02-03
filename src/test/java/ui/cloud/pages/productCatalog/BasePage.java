@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 import ui.elements.Alert;
 import ui.elements.Button;
+import ui.elements.Input;
 import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -27,6 +28,8 @@ public class BasePage {
     protected final Button viewJSONButton = Button.byText("JSON");
     protected final Button expandJSONView = Button.byAriaLabel("fullscreen");
     protected final Button closeJSONView = Button.byAriaLabel("close");
+    protected final Input nameInput = Input.byName("name");
+    protected final Input titleInput = Input.byName("title");
 
     @Step("Сохранение объекта без изменения версии")
     public BasePage saveWithoutPatchVersion(String alertText) {
