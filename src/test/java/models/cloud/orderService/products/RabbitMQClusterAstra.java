@@ -67,7 +67,7 @@ public class RabbitMQClusterAstra extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         if (isTest())
             role = "manager";
         return JsonHelper.getJsonTemplate(jsonTemplate)

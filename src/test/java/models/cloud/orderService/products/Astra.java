@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
@@ -57,7 +56,7 @@ public class Astra extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
