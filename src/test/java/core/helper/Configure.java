@@ -29,6 +29,7 @@ public class Configure {
     public static String FeedServiceURL;
     public static String Day2ServiceURL;
     public static String ImageService;
+    public static String DNSService;
 
     static {
         try {
@@ -63,6 +64,7 @@ public class Configure {
             FeedServiceURL = kongURL + "feed-service";
             Day2ServiceURL = kongURL + "day2-core";
             ImageService = kongURL + "cloud-images";
+            DNSService = kongURL + "cloud-dns";
         } catch (Exception e) {
             e.printStackTrace();
         }

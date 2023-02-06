@@ -1,0 +1,9 @@
+{
+  "type": "string",
+  "description": "string",
+  "name": "string",
+  "domain_name": "string",
+  "networks": [
+  ],
+  "order_id": null
+}
