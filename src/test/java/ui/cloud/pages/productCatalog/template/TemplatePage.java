@@ -15,6 +15,8 @@ import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.TextArea;
 
+import java.util.Arrays;
+
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -58,7 +60,8 @@ public class TemplatePage extends BasePage {
         goToParamsTab();
         input.setValue(new JSONObject(template.getInput()).toString());
         output.setValue(new JSONObject(template.getOutput()).toString());
-        printedOutput.setValue(new JSONObject(template.getPrintedOutput()).toString());
+        String printedOutputJSON = new JSONObject(template.getPrintedOutput().get(0)).toString();
+        printedOutput.setValue(Arrays.asList(printedOutputJSON).toString());
         saveButton.click();
         Alert.green("Шаблон успешно создан");
         Waiting.sleep(2000);
@@ -81,6 +84,10 @@ public class TemplatePage extends BasePage {
         Assertions.assertTrue(typeSelect.getValue().equals(template.getType()));
         timeoutInput.getInput().shouldHave(Condition.exactValue(String.valueOf(template.getTimeout())));
         checkTemplateVersion(template.getVersion());
+        goToParamsTab();
+        String printedOutputJSON = new JSONObject(template.getPrintedOutput().get(0)).toString();
+        Assertions.assertEquals(Arrays.asList(printedOutputJSON).toString(),
+                printedOutput.getTextArea().getValue().replaceAll("\\s", ""));
         return this;
     }
 
@@ -219,7 +226,7 @@ public class TemplatePage extends BasePage {
             }
             templateNameValidationHint.shouldBe(Condition.visible);
         }
-        backButton.click();
+        cancelButton.click();
         return new TemplatesListPage();
     }
 
@@ -241,7 +248,7 @@ public class TemplatePage extends BasePage {
             runQueueRequiredFieldHint.shouldBe(Condition.visible);
         }
         saveButton.getButton().shouldBe(Condition.disabled);
-        backButton.click();
+        cancelButton.click();
         return new TemplatesListPage();
     }
 
@@ -250,7 +257,7 @@ public class TemplatePage extends BasePage {
         titleInput.setValue(template.getTitle());
         nonuniqueNameValidationHint.shouldBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.disabled);
-        backButton.click();
+        cancelButton.click();
         return new TemplatesListPage();
     }
 }
