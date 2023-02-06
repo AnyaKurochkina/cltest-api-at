@@ -4,12 +4,14 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.product.Product;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.Table;
 import ui.elements.TextArea;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -22,6 +24,7 @@ public class GraphPage extends BasePage {
     private final Input nameInput = Input.byName("name");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
     private final Input authorInput = Input.byName("author");
+    private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -147,6 +150,8 @@ public class GraphPage extends BasePage {
         deleteButton.click();
         new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
+        usageLink.click();
+        checkTabIsSelected("Использование");
         return this;
     }
 
@@ -160,6 +165,32 @@ public class GraphPage extends BasePage {
     public GraphPage setAuthor(String value) {
         goToMainTab();
         authorInput.setValue(value);
+        return this;
+    }
+
+    @Step("Проверка, что отображается объект использования '{product.name}'")
+    public GraphPage checkUsageInProduct(Product product) {
+        checkTabIsSelected("Использование");
+        String nameColumn = "Имя";
+        Table table = new Table(nameColumn);
+        table.getRowByColumnValue(nameColumn, product.getName());
+        table.getRowByColumnValue("Тип", "Продукт");
+        table.getRowByColumnValue("Версия объекта", product.getVersion());
+        table.getRowByColumnValue("Версия графа", product.getGraphVersion());
+        table.getRowByColumnValue("Расчетная версия графа", product.getGraphVersion());
+        return this;
+    }
+
+    @Step("Проверка, что отображается объект использования '{graph.name}'")
+    public GraphPage checkUsageInGraph(Graph graph) {
+        checkTabIsSelected("Использование");
+        String nameColumn = "Имя";
+        Table table = new Table(nameColumn);
+        table.getRowByColumnValue(nameColumn, graph.getName());
+        table.getRowByColumnValue("Тип", "Граф");
+        table.getRowByColumnValue("Версия объекта", "");
+        table.getRowByColumnValue("Версия графа", "");
+        table.getRowByColumnValue("Расчетная версия графа", "");
         return this;
     }
 }

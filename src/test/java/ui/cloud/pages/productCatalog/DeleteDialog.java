@@ -46,7 +46,7 @@ public class DeleteDialog extends Dialog {
     public void inputValidIdAndDeleteNotAvailable(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
-        Alert.red(alertText);
+        new Alert().check(Alert.Color.RED, alertText);
     }
 
     @Step("Подтверждение удаления объекта")

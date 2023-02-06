@@ -2,6 +2,8 @@ package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
@@ -10,8 +12,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 
+import java.util.Arrays;
 import java.util.UUID;
 
 @Feature("Удаление графа")
@@ -46,12 +50,11 @@ public class DeleteGraphTest extends GraphBaseTest {
     }
 
     @Test
-    @Disabled
-    @TmsLink("")
+    @TmsLink("579885")
     @DisplayName("Удаление графа, используемого в продукте")
     public void deleteGraphUsedInProduct() {
         String name = UUID.randomUUID().toString();
-        Product.builder()
+        Product product = Product.builder()
                 .name(name)
                 .title("AT UI Product")
                 .version("1.0.0")
@@ -69,7 +72,30 @@ public class DeleteGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
-                .openGraphPage(NAME)
+                .checkUsageInProduct(product)
+                .checkDeleteUsedGraphUnavailable(graph);
+    }
+
+    @Test
+    @TmsLink("")
+    @Disabled
+    @DisplayName("Удаление графа, используемого в графе")
+    public void deleteGraphUsedInGraph() {
+        String name = UUID.randomUUID().toString();
+        Graph graph2 = Graph.builder()
+                .name(name)
+                .title(TITLE)
+                .version("1.0.0")
+                .type(GraphType.CREATING.getValue())
+                .description(DESCRIPTION)
+                .author(AUTHOR)
+                .graph(Arrays.asList(GraphItem.builder().name("1").description("1").subgraphId(graph.getGraphId()).build()))
+                .build()
+                .createObject();
+        new IndexPage().goToGraphsPage()
+                .findGraphByValue(NAME, graph)
+                .checkDeleteUsedGraphUnavailable(graph)
+                .checkUsageInGraph(graph2)
                 .checkDeleteUsedGraphUnavailable(graph);
     }
 }

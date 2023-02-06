@@ -33,6 +33,7 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::div");
     private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::div");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
+    private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
 
     public GraphsListPage() {
         graphsPageTitle.shouldBe(Condition.visible);
@@ -86,12 +87,12 @@ public class GraphsListPage extends BaseListPage {
     }
 
     @Step("Проверка недоступности удаления используемого графа")
-    public GraphsListPage checkDeleteUsedGraphUnavailable(Graph graph) {
-        openActionMenu(nameColumn, graph.getName());
-        deleteAction.click();
+    public GraphPage checkDeleteUsedGraphUnavailable(Graph graph) {
+        delete(nameColumn, graph.getName());
         new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
-        return this;
+        usageLink.click();
+        return new GraphPage();
     }
 
     @Step("Проверка заголовков списка графов")
@@ -201,9 +202,8 @@ public class GraphsListPage extends BaseListPage {
         return this;
     }
 
+    @Step("Проверка, что подсвечен граф '{name}'")
     public void checkGraphIsHighlighted(String name) {
-        Table graphsList = new Table(nameColumn);
-        Assertions.assertTrue(graphsList.getRowByColumnValue(nameColumn, name).get()
-                .getCssValue("color").contains("196, 202, 212"));
+        checkRowIsHighlighted(nameColumn, name);
     }
 }

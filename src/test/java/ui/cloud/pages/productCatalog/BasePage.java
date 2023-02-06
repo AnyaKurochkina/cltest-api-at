@@ -89,6 +89,12 @@ public class BasePage {
         }
     }
 
+    @Step("Проверка, что открыта вкладка '{title}'")
+    public boolean checkTabIsSelected(String title) {
+        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
+        return Boolean.valueOf(tab.getAttribute("aria-selected"));
+    }
+
     @Step("Просмотр JSON и проверка отображения '{value}'")
     public BasePage checkJSONcontains(String value) {
         viewJSONButton.click();
