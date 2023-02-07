@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.AssertUtils;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
@@ -170,27 +171,34 @@ public class GraphPage extends BasePage {
 
     @Step("Проверка, что отображается объект использования '{product.name}'")
     public GraphPage checkUsageInProduct(Product product) {
-        checkTabIsSelected("Использование");
-        String nameColumn = "Имя";
-        Table table = new Table(nameColumn);
-        table.getRowByColumnValue(nameColumn, product.getName());
-        table.getRowByColumnValue("Тип", "Продукт");
-        table.getRowByColumnValue("Версия объекта", product.getVersion());
-        table.getRowByColumnValue("Версия графа", product.getGraphVersion());
-        table.getRowByColumnValue("Расчетная версия графа", product.getGraphVersion());
+        checkUsageTable(product.getName(), "Продукт", product.getVersion(), product.getGraphVersion()
+                , product.getGraphVersion());
         return this;
     }
 
     @Step("Проверка, что отображается объект использования '{graph.name}'")
     public GraphPage checkUsageInGraph(Graph graph) {
-        checkTabIsSelected("Использование");
+        checkUsageTable(graph.getName(), "Граф", graph.getVersion(), "", "");
+        return this;
+    }
+
+    @Step("Проверка данных в таблице 'Объекты использования'")
+    private void checkUsageTable(String name, String type, String objectVersion, String graphVersion,
+                                 String calculatedGraphVersion) {
         String nameColumn = "Имя";
         Table table = new Table(nameColumn);
-        table.getRowByColumnValue(nameColumn, graph.getName());
-        table.getRowByColumnValue("Тип", "Граф");
-        table.getRowByColumnValue("Версия объекта", "");
-        table.getRowByColumnValue("Версия графа", "");
-        table.getRowByColumnValue("Расчетная версия графа", "");
+        table.getRowByColumnValue(nameColumn, name);
+        table.getRowByColumnValue("Тип", type);
+        table.getRowByColumnValue("Версия объекта", objectVersion);
+        table.getRowByColumnValue("Версия графа", graphVersion);
+        table.getRowByColumnValue("Расчетная версия графа", calculatedGraphVersion);
+    }
+
+    @Step("Проверка заголовков списка зависимых объектов")
+    public GraphPage checkUsageTableHeaders() {
+        String nameColumn = "Имя";
+        AssertUtils.assertHeaders(new Table(nameColumn),
+                nameColumn, "Тип", "Версия объекта", "Версия графа", "Расчетная версия графа", "", "");
         return this;
     }
 }

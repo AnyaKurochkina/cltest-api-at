@@ -6,12 +6,14 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
-import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.*;
+import ui.elements.Alert;
+import ui.elements.InputFile;
+import ui.elements.Select;
+import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -92,6 +94,7 @@ public class GraphsListPage extends BaseListPage {
         new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
         usageLink.click();
+        new GraphPage().checkTabIsSelected("Использование");
         return new GraphPage();
     }
 

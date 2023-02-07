@@ -7,8 +7,8 @@ import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
@@ -17,6 +17,8 @@ import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 
 import java.util.Arrays;
 import java.util.UUID;
+
+import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 
 @Feature("Удаление графа")
 public class DeleteGraphTest extends GraphBaseTest {
@@ -50,7 +52,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     }
 
     @Test
-    @TmsLink("579885")
+    @TmsLink("540777")
     @DisplayName("Удаление графа, используемого в продукте")
     public void deleteGraphUsedInProduct() {
         String name = UUID.randomUUID().toString();
@@ -73,29 +75,37 @@ public class DeleteGraphTest extends GraphBaseTest {
                 .findGraphByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
                 .checkUsageInProduct(product)
-                .checkDeleteUsedGraphUnavailable(graph);
+                .checkDeleteUsedGraphUnavailable(graph)
+                .checkUsageTableHeaders();
     }
 
     @Test
-    @TmsLink("")
-    @Disabled
-    @DisplayName("Удаление графа, используемого в графе")
+    @TmsLink("1095969")
+    @DisplayName("Удаление графа, используемого в другом графе")
     public void deleteGraphUsedInGraph() {
         String name = UUID.randomUUID().toString();
-        Graph graph2 = Graph.builder()
+        Graph superGraph = Graph.builder()
                 .name(name)
                 .title(TITLE)
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description(DESCRIPTION)
                 .author(AUTHOR)
-                .graph(Arrays.asList(GraphItem.builder().name("1").description("1").subgraphId(graph.getGraphId()).build()))
                 .build()
                 .createObject();
+        JSONObject graphItem = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .subgraphId(graph.getGraphId())
+                .build()
+                .toJson();
+        JSONObject graphJSON = new JSONObject().put("graph", Arrays.asList(graphItem));
+        partialUpdateGraph(superGraph.getGraphId(), graphJSON);
+        superGraph.setVersion("1.0.1");
         new IndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
-                .checkUsageInGraph(graph2)
+                .checkUsageInGraph(superGraph)
                 .checkDeleteUsedGraphUnavailable(graph);
     }
 }

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$x;
 
 public class MultiSelect extends Select {
 
@@ -16,8 +17,9 @@ public class MultiSelect extends Select {
         super(element);
     }
 
+    @Step("Получение MultiSelect по label '{label}'")
     public static MultiSelect byLabel(String label) {
-        return new MultiSelect(Select.byLabel(label).getElement());
+        return new MultiSelect($x("(//label[.='{}']/following::div[1])", label));
     }
 
     @Step("MultiSelect. Выбор элемента '{value}'")

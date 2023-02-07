@@ -52,7 +52,9 @@ public class TemplateBaseTest extends BaseTest {
                 .rollback("")
                 .input(input)
                 .output(output)
-                .printedOutput(Arrays.asList(new HashMap<String, String>() {{put ("type", "text");}}))
+                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
+                    put("type", "text");
+                }}))
                 .timeout(100)
                 .build()
                 .createObject();

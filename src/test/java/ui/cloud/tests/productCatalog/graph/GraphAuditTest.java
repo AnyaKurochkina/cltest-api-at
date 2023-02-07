@@ -5,12 +5,10 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
-import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
-import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

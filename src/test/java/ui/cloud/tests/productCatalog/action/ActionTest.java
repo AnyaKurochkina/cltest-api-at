@@ -11,7 +11,6 @@ import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
-import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
