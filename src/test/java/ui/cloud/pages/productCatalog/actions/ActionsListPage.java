@@ -110,13 +110,14 @@ public class ActionsListPage extends BaseListPage {
         return this;
     }
 
+    @Step("Проверка заголовков списка действий")
     public ActionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(NAME_COLUMN),
                 "Наименование", NAME_COLUMN, "Дата создания", "", "");
         return this;
     }
 
-    @Step("Проверка сортировки списка направлений")
+    @Step("Проверка сортировки списка действий")
     public ActionsListPage checkSorting() {
         checkSortingByStringField("Наименование");
         checkSortingByStringField(NAME_COLUMN);

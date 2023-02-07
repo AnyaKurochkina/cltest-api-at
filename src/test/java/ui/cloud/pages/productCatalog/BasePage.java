@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.elements.Alert;
 import ui.elements.Button;
@@ -90,9 +91,9 @@ public class BasePage {
     }
 
     @Step("Проверка, что открыта вкладка '{title}'")
-    public boolean checkTabIsSelected(String title) {
+    public void checkTabIsSelected(String title) {
         SelenideElement tab = $x("//button[span[text()='" + title + "']]");
-        return Boolean.valueOf(tab.getAttribute("aria-selected"));
+        Assertions.assertTrue(Boolean.valueOf(tab.getAttribute("aria-selected")), "Вкладка " + title + " не выбрана");
     }
 
     @Step("Просмотр JSON и проверка отображения '{value}'")
