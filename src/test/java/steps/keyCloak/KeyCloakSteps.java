@@ -4,12 +4,14 @@ import core.enums.Role;
 import core.helper.Configure;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.ServiceAccount;
 import models.cloud.keyCloak.*;
 import org.junit.jupiter.api.Assertions;
 
+import java.net.URLEncoder;
 import java.util.Objects;
 
 @Log4j2
@@ -20,6 +22,7 @@ public class KeyCloakSteps {
     /**
      * @return - возвращаем токен
      */
+    @SneakyThrows
     @Step("Получение нового UserToken")
     public static synchronized String getNewUserToken(Role role) {
         //Получение пользователя из памяти
@@ -31,7 +34,8 @@ public class KeyCloakSteps {
                 .setWithoutToken()
                 .disableAttachmentLog()
                 .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
-                        Objects.requireNonNull(globalUser.getUsername()), Objects.requireNonNull(globalUser.getPassword())))
+                        Objects.requireNonNull(globalUser.getUsername()),
+                        URLEncoder.encode(Objects.requireNonNull(globalUser.getPassword()), "UTF-8")))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
                 .assertStatus(200)
                 .jsonPath()
