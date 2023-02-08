@@ -209,10 +209,10 @@ public class StateServiceSteps extends Steps {
     public static String getLastErrorByProjectId(String projectId) {
         return new Http(StateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
-                .get("/api/v1/actions/?status=error", projectId)
+                .get("/api/v1/projects/{}/actions/?status=error", projectId)
                 .assertStatus(200)
                 .jsonPath()
-                .getString("list.find{it.data.error.contains('"+projectId+"')}.data.traceback");
+                .getString("list[0].data.traceback");
     }
 
     public static List<ShortItem> getItems(String id){
@@ -223,7 +223,7 @@ public class StateServiceSteps extends Steps {
                 .extractAs(GetItemList.class)
                 .getList();
 //        JSONObject jsonObject = new JSONObject();
-       List<ShortItem> listOrders = new ArrayList<>();
+        List<ShortItem> listOrders = new ArrayList<>();
         list.forEach(item -> {
             ShortItem itemData = new ShortItem();
 

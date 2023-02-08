@@ -32,6 +32,14 @@ public class MultiSelect extends Select {
         return value;
     }
 
+    @Override
+    @Step("MultiSelect. Выбор элемента по вхождению '{value}'")
+    public String setContains(String value) {
+        super.setContains(value);
+        hideOptions();
+        return value;
+    }
+
     @Step("MultiSelect. Выбор элементов '{values}'")
     public String[] set(String... values) {
         hover();

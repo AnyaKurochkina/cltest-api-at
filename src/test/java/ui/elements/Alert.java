@@ -43,7 +43,7 @@ public class Alert implements TypifiedElement {
     public void waitClose() {
         try {
             element.shouldNot(Condition.visible);
-        } catch (ElementNotFound ignored) {
+        } catch (Throwable ignored) {
         }
     }
 
