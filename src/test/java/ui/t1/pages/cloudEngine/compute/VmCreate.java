@@ -1,6 +1,5 @@
 package ui.t1.pages.cloudEngine.compute;
 
-import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import lombok.Getter;
 import ui.cloud.pages.EntitiesUtils;
@@ -114,7 +113,7 @@ public class VmCreate {
     }
 
     public VmCreate setSshKey(String sshKey) {
-        this.sshKey = Select.byLabel("Публичный SSH ключ").setContains(sshKey);
+        this.sshKey = MultiSelect.byLabel("SSH-ключи").setContains(sshKey);
         return this;
     }
 
@@ -131,10 +130,10 @@ public class VmCreate {
 
     public VmCreate clickOrder() {
         EntitiesUtils.clickOrder();
-        EntitiesUtils.waitCreate(() -> new VmList.VmTable()
+        EntitiesUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
-                .getElementByColumn(Column.STATUS)
-                .shouldBe(Condition.matchText("Включено"), Duration.ofMinutes(2)));
+                .getValueByColumn(Column.STATUS)
+                .contains("Включено"), Duration.ofMinutes(2)));
         return this;
     }
 }

@@ -51,9 +51,9 @@ public class Waiting {
     public static void findWidthRefresh(Supplier<Boolean> b, Duration duration) {
         Instant start = Instant.now();
         while(duration.compareTo(Duration.between(start, Instant.now())) > 0){
-            TypifiedElement.refresh();
             if(b.get()) return;
-            Waiting.sleep(300);
+            Waiting.sleep(500);
+            TypifiedElement.refresh();
         }
         throw new TimeoutException("Return false, duration: "+ duration);
     }

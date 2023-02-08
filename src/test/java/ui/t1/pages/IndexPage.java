@@ -22,18 +22,18 @@ import static ui.cloud.pages.IProductPage.getBtnAction;
 
 @Getter
 public class IndexPage {
-    final SelenideElement linkCloudEngine = $x("//a[.='T1 Cloud Engine']");
-    final SelenideElement linkCloudDirector = $x("//a[.='Cloud Director']");
-    final SelenideElement linkDisks = $x("//a[.='Диски']");
-    final SelenideElement linkSshKeys = $x("//a[.='SSH-ключи']");
-    final SelenideElement linkSnapshots = $x("//a[.='Снимки']");
-    final SelenideElement linkVirtualMachines = $x("//a[.='Серверы']");
-    final SelenideElement linkSecurityGroups = $x("//a[.='Группы безопасности']");
-    final SelenideElement linkPublicIps = $x("//a[.='Публичные IP-адреса']");
-    final SelenideElement linkImages = $x("//a[.='Образы']");
-    final SelenideElement linkNetworkInterfaces = $x("//a[.='Сетевые интерфейсы']");
-    final SelenideElement linkHistory = $x("//a[.='История действий']");
-    final SelenideElement linkNetworks = $x("//a[.='Сети']");
+    Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
+    Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
+    Button linkDisks = Button.byXpath("//a[.='Диски']");
+    Button linkSshKeys = Button.byXpath("//a[.='SSH-ключи']");
+    Button linkSnapshots = Button.byXpath("//a[.='Снимки']");
+    Button linkVirtualMachines = Button.byXpath("//a[.='Серверы']");
+    Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
+    Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
+    Button linkImages = Button.byXpath("//a[.='Образы']");
+    Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
+    Button linkHistory = Button.byXpath("//a[.='История действий']");
+    Button linkNetworks = Button.byXpath("//a[.='Сети']");
 
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
@@ -132,6 +132,5 @@ public class IndexPage {
     public void disconnectCloudEngine() {
         Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
         Button.byText("Отключить").click();
-        //Todo: дальнейшие действия пока не известны
     }
 }

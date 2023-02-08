@@ -53,7 +53,7 @@ public class UiTest extends Tests {
         new LoginPage()
                 .signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://d2-portal-front.apps.cloud.k8s.dev.01.vmw.t1.loc/cloudcompute/ssh-keys?context=proj-6opt7sq1fg&type=project&org=t1-cloud");
+        Selenide.open("https://ift1-portal-front.apps.cloud.k8s.test.01.vmw.t1.loc/new-order/9695e599-5481-4d88-97e9-16cd4c56ff91/?isHideChip=true&context=proj-votmndlfyh&type=project&org=ift");
 //        Table.getTableByColumnName("Дата запуска");
         System.out.println(1);
 

@@ -10,17 +10,20 @@ import java.util.List;
 
 public class SshKeyList {
     public static final String SSH_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCSI82vsEXJoV4Co1HPjUd8ldwjTRbJsE27yzpc3rcxfqIrB9vte7J0YkCCXuZZsYEufIMYWXcXHOLJEqLnoJsp0EjJ5wOVBc6I10WozLm458P0mwPEbc6N5Z0MQ8gZk3i3yOap+G9owWMirlfArz2afKL4E+6rXfY+XpfPceGPJ8dGDWvuMnvwIYWenz8HwBRvQwR8FtJyUOP7sOdsuTz6T+E+qQiuvBY0ciUwAaFbGWhKtgk7dJd73ZxZIZFg3jFxySScePcEsf4nC+61siqqaSBzLk+jyNbrURTeQ0ZYoYR3jMexgUAY/8cNki89U/OfWNBG6jqCWn/K2BcgX1cl";
+    private final Input inputName = Input.byPlaceholder("введите название");
+    private final Input inputLogin = Input.byPlaceholder("введите логин");
+    private final Input inputKey = Input.byPlaceholder("введите или вставьте свой ключ");
 
     @Step("Добавить ключ {nameKey}")
     public void addKey(String nameKey, String login) {
         if (new KeysTable().isColumnValueEquals(Column.TITLE, nameKey))
             return;
         new KeysTable().clickAdd();
-        Dialog.byTitle("Добавление SSH-ключа")
-                .setInputValue("Название ключа", nameKey)
-                .setInputValue("Логин пользователя", login)
-                .setTextarea(TextArea.byName("sshKeyData"), SSH_KEY)
-                .clickButton("Добавить");
+        Dialog.byTitle("Добавить SSH-ключ");
+        inputName.setValue(nameKey);
+        inputLogin.setValue(login);
+        inputKey.setValue(SSH_KEY);
+        Button.byText("Добавить", -1).click();
         Alert.green("SSH-ключ {} создан успешно", nameKey);
         Assertions.assertTrue(new KeysTable().isColumnValueEquals(Column.TITLE, nameKey));
     }
@@ -43,9 +46,9 @@ public class SshKeyList {
     @Step("Редактировать ключ {nameKey}")
     public void editKey(String nameKey, String newNameKey) {
         KeysTable.getMenuKey(nameKey).select("Редактировать");
-        Dialog.byTitle("Редактирование SSH-ключа")
-                .setInputValue("Название ключа", newNameKey)
-                .clickButton("Сохранить");
+        Dialog.byTitle("Изменить SSH-ключ");
+        inputName.setValue(newNameKey);
+        Button.byText("Изменить").click();
         Assertions.assertTrue(new KeysTable().isColumnValueEquals(Column.TITLE, newNameKey));
     }
 
