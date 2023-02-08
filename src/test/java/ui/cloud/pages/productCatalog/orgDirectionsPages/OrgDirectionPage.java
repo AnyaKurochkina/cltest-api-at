@@ -45,7 +45,7 @@ public class OrgDirectionPage extends BasePage {
         TestUtils.scrollToTheBottom();
         saveButton.click();
         TestUtils.scrollToTheBottom();
-        cancelButton.click();
+        backButton.click();
         return new OrgDirectionsListPage();
     }
 
@@ -66,9 +66,9 @@ public class OrgDirectionPage extends BasePage {
                 && Objects.requireNonNull(inputDescriptionField.getValue()).equals(description);
     }
 
-    @Step("Выход со страницы редактирования")
-    public OrgDirectionsListPage exitFromOrgDirectionPage() {
-        cancelButton.click();
+    @Step("Возврат в список направлений")
+    public OrgDirectionsListPage backToOrgDirectionsList() {
+        backButton.click();
         return new OrgDirectionsListPage();
     }
 

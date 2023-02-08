@@ -191,7 +191,7 @@ public class ActionPage extends BasePage {
         inputDescriptionField.setValue(description);
         MultiSelect.byLabel("Обязательные статусы item").set(status.getValue());
         MultiSelect.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
-        Select.byLabel("Тип").set(actionType.getValue());
+        Select.byName("type").set(actionType.getValue());
         paramsTab.scrollIntoView(false).click();
         addTypeAndProviderButton.click();
         Table table = new Table("Тип");

@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$x;
 
 public class MultiSelect extends Select {
 
@@ -16,8 +17,9 @@ public class MultiSelect extends Select {
         super(element);
     }
 
+    @Step("Получение MultiSelect по label '{label}'")
     public static MultiSelect byLabel(String label) {
-        return new MultiSelect(Select.byLabel(label).getElement());
+        return new MultiSelect($x("(//label[.='{}']/following::div[1])", label));
     }
 
     @Step("MultiSelect. Выбор элемента '{value}'")
@@ -28,6 +30,14 @@ public class MultiSelect extends Select {
         if (value.equals(RANDOM_VALUE)) value = getRandomItem();
         getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
                 .click();
+        hideOptions();
+        return value;
+    }
+
+    @Override
+    @Step("MultiSelect. Выбор элемента по вхождению '{value}'")
+    public String setContains(String value) {
+        super.setContains(value);
         hideOptions();
         return value;
     }

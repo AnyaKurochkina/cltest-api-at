@@ -23,7 +23,7 @@ public class Alert implements TypifiedElement {
         this.element = element;
     }
 
-    private Alert() {
+    public Alert() {
     }
 
     private ElementsCollection getElements() {
@@ -33,26 +33,27 @@ public class Alert implements TypifiedElement {
     }
 
     public static Alert green(String text, Object... args) {
-        return new Alert().check(Color.GREEN, text, args);
+        return new Alert().check(Color.GREEN, text, args).close();
     }
 
     public static Alert red(String text, Object... args) {
-        return new Alert().check(Color.RED, text, args);
+        return new Alert().check(Color.RED, text, args).close();
     }
 
     public void waitClose() {
         try {
             element.shouldNot(Condition.visible);
-        } catch (ElementNotFound ignored) {
+        } catch (Throwable ignored) {
         }
     }
 
-    public void close() {
+    public Alert close() {
         try {
             Button button = Button.byElement(element.$("button"));
             button.click();
             waitClose();
         } catch (ElementNotFound ignored) {}
+        return this;
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
@@ -63,7 +64,6 @@ public class Alert implements TypifiedElement {
                 .filter(Condition.visible).stream()
                 .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
                 .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
-        close();
         return this;
     }
 

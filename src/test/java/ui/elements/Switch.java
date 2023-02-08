@@ -2,6 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
@@ -34,6 +35,7 @@ public class Switch implements TypifiedElement{
     public void setEnabled(boolean enabled){
         if(isEnabled() != enabled)
             label.hover().shouldBe(clickableCnd).click();
+        Waiting.sleep(200);
         Assertions.assertEquals(enabled, isEnabled());
     }
 

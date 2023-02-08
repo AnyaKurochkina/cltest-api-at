@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
@@ -210,7 +211,7 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         TestUtils.scrollToTheTop();
         editNodeButton.click();
-        TestUtils.wait(500);
+        Waiting.sleep(1000);
         nodeName.shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.shouldHave(Condition.exactValue(node.getDescription()));
         if (node instanceof SubgraphNode) {

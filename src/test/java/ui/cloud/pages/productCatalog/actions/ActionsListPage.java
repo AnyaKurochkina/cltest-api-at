@@ -2,7 +2,10 @@ package ui.cloud.pages.productCatalog.actions;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.AssertUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.action.Action;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -14,6 +17,7 @@ import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ActionsListPage extends BaseListPage {
     private static final String NAME_COLUMN = "Код действия";
@@ -53,7 +57,7 @@ public class ActionsListPage extends BaseListPage {
 
     @Step("Копирование действия {name}")
     public ActionPage copyAction(String name) {
-        openActionMenu(name);
+        openActionMenu(NAME_COLUMN, name);
         copyAction.click();
         Alert.green("Копирование выполнено успешно");
         return new ActionPage();
@@ -61,7 +65,7 @@ public class ActionsListPage extends BaseListPage {
 
     @Step("Удаление действия {name}")
     public DeleteDialog deleteAction(String name) {
-        openActionMenu(name);
+        openActionMenu(NAME_COLUMN, name);
         deleteAction.click();
         return new DeleteDialog();
     }
@@ -106,8 +110,26 @@ public class ActionsListPage extends BaseListPage {
         return this;
     }
 
+    @Step("Проверка заголовков списка действий")
+    public ActionsListPage checkHeaders() {
+        AssertUtils.assertHeaders(new Table(NAME_COLUMN),
+                "Наименование", NAME_COLUMN, "Дата создания", "", "");
+        return this;
+    }
 
-    private void openActionMenu(String name) {
-        $x("//td[text() = '" + name + "']//parent::tr//button[@id = 'actions-menu-button']").click();
+    @Step("Проверка сортировки списка действий")
+    public ActionsListPage checkSorting() {
+        checkSortingByStringField("Наименование");
+        checkSortingByStringField(NAME_COLUMN);
+        checkSortingByDateField("Дата создания");
+        return this;
+    }
+
+    @Step("Поиск действия по значению '{value}'")
+    public ActionsListPage findActionByValue(String value, Action action) {
+        searchInput.setValue(value);
+        Waiting.sleep(1000);
+        assertTrue(new Table(NAME_COLUMN).isColumnValueEquals(NAME_COLUMN, action.getActionName()));
+        return this;
     }
 }

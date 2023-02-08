@@ -1,27 +1,5 @@
 [
   {
-    "objectClassName": "models.cloud.authorizer.Folder",
-    "kind": "department",
-    "informationSystemIds": ["3c9e2600-36b9-453b-83d5-f836b5e241be"],
-    "name": "fold-yfy2k4t4nz",
-    "title": "VTB-VTB.Cloud-QA-AT-DEV",
-    "parentId": "fold-ofh97pgj5u"
-  },
-  {
-    "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "secret": "5f842673cc3bb9a36e7fc04b7bec25e6",
-    "id": "sa_proj-bhbyhmik3a-vn",
-    "projectId": "proj-bhbyhmik3a",
-    "role": "roles/order-service.admin"
-  },
-  {
-    "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "secret": "ff8eb0eb2e52028a2d33b9eaf7e28691",
-    "id": "sa_proj-rddf0uwi0q-vl",
-    "projectId": "proj-rddf0uwi0q",
-    "role": "roles/order-service.admin"
-  },
-  {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "secret": "dea19ebbb05306392f63bcc0d0915f9a",
     "id": "sa_proj-iv550odo9a-29",
@@ -30,37 +8,52 @@
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "secret": "d5a36cccb751467863c49e7a41440950",
-    "id": "sa_proj-zoz17np8rb-vo",
-    "projectId": "proj-zoz17np8rb",
+    "secret": "902db7365ce0fc41f24cb9f8fb981971",
+    "id": "sa_proj-anw4ujlh5u-44",
+    "projectId": "proj-anw4ujlh5u",
     "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "secret": "4e7b97a47c34d90c39c7ca8404ce250f",
-    "id": "sa_proj-114wetem0c-vp",
-    "projectId": "proj-114wetem0c",
+    "secret": "e3edce4f5241a5f034e3d5f70be1db83",
+    "id": "sa_proj-bw5aabeuw1-45",
+    "projectId": "proj-bw5aabeuw1",
     "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "secret": "8560d7979af0859280c4318be68e078c",
-    "id": "sa_proj-6wpfrbes0g-vq",
-    "projectId": "proj-6wpfrbes0g",
+    "secret": "e1075acf04d42c1d7a4d60bdb783d9d0",
+    "id": "sa_proj-7w4eov3old-46",
+    "projectId": "proj-7w4eov3old",
     "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "secret": "872806dfbc0a878b94040f79c41b3cf0",
-    "id": "sa_proj-aei4kz2yu4-vr",
-    "projectId": "proj-aei4kz2yu4",
+    "secret": "a16ba9b97c4dfa3bef6ccd062f03453c",
+    "id": "sa_proj-99p4fdfs5c-47",
+    "projectId": "proj-99p4fdfs5c",
     "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "secret": "4c92b1ad2e60f763376e13607ace3bbb",
-    "id": "sa_proj-1oob0zjo5h-vs",
-    "projectId": "proj-1oob0zjo5h"
+    "secret": "0c9bd909e562875a1793f76a34a4de75",
+    "id": "sa_proj-3wgrmny2yu-48",
+    "projectId": "proj-3wgrmny2yu",
+    "role": "roles/order-service.admin"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
+    "secret": "05e744b84a688033d035dd1d4ed22dcb",
+    "id": "sa_proj-lww1vo6okh-49",
+    "projectId": "proj-lww1vo6okh",
+    "role": "roles/order-service.admin"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
+    "secret": "3e54840d46b84a40b0a5d4c93d1702f8",
+    "id": "sa_proj-2xdbtyzqs3-4a",
+    "projectId": "proj-2xdbtyzqs3",
+    "role": "roles/order-service.admin"
   },
   {
     "objectClassName": "models.cloud.authorizer.Project",
@@ -78,11 +71,11 @@
   {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
-    "id": "proj-bhbyhmik3a",
+    "id": "proj-anw4ujlh5u",
     "projectName": "EDU",
     "projectEnvironmentPrefix": {
       "env": "EDU",
-      "id": "4eee3a36-5d68-4aae-8665-e42c59a67ad5",
+      "id": "f996c562-afdf-4baa-9a7f-def71355b770",
       "projectEnvironmentId": "feff8762-5f69-41a2-9054-3d03530945f8",
       "envType": "TEST"
     },
@@ -91,11 +84,11 @@
   {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
-    "id": "proj-zoz17np8rb",
+    "id": "proj-bw5aabeuw1",
     "projectName": "HOTFIX",
     "projectEnvironmentPrefix": {
       "env": "HOTFIX",
-      "id": "024e96e5-3b83-4b88-8018-14ac680b85aa",
+      "id": "3c9e2600-36b9-453b-83d5-f836b5e241be",
       "projectEnvironmentId": "3aee543c-8867-4c0f-a1be-7681bd249d56",
       "envType": "TEST"
     },
@@ -104,11 +97,11 @@
   {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
-    "id": "proj-6wpfrbes0g",
+    "id": "proj-7w4eov3old",
     "projectName": "MIGR",
     "projectEnvironmentPrefix": {
       "env": "MIGR",
-      "id": "2b7939ac-4e77-4607-8a87-835ab6838e2c",
+      "id": "2cd5ae67-0d8d-4a3e-9410-79ddd368faf6",
       "projectEnvironmentId": "77a53624-787d-42ac-b478-cd3119560ed0",
       "envType": "TEST"
     },
@@ -117,11 +110,11 @@
   {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
-    "id": "proj-aei4kz2yu4",
+    "id": "proj-99p4fdfs5c",
     "projectName": "PREPROD",
     "projectEnvironmentPrefix": {
       "env": "PREPROD",
-      "id": "73a7ce4b-27a2-4e1f-91a2-d0c78667aba2",
+      "id": "f85a0e83-ddee-48ae-b160-2d60b39fc762",
       "projectEnvironmentId": "df4d904e-f0b1-4c74-877e-fec4576666f3",
       "envType": "TEST"
     },
@@ -130,11 +123,11 @@
   {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
-    "id": "proj-rddf0uwi0q",
+    "id": "proj-3wgrmny2yu",
     "projectName": "ST",
     "projectEnvironmentPrefix": {
       "env": "ST",
-      "id": "185d7749-f43c-403e-88ac-2812cc8a372c",
+      "id": "84798624-ae2a-4ec6-bf2f-d1485fe405a1",
       "projectEnvironmentId": "057a6be5-9677-4433-b0fd-3fe2f8b38aca",
       "envType": "DEV"
     },
@@ -143,11 +136,11 @@
   {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
-    "id": "proj-1oob0zjo5h",
+    "id": "proj-lww1vo6okh",
     "projectName": "LT",
     "projectEnvironmentPrefix": {
       "env": "LT",
-      "id": "4488b474-356a-43df-80da-4e43c6620253",
+      "id": "0ed4d870-9669-4fda-b06e-473a789ac7d7",
       "projectEnvironmentId": "eeb890b0-e769-48a1-ba49-904821dbc2a2",
       "envType": "TEST"
     },
@@ -156,75 +149,15 @@
   {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
-    "id": "proj-114wetem0c",
+    "id": "proj-2xdbtyzqs3",
     "projectName": "IFT",
     "projectEnvironmentPrefix": {
       "env": "IFT",
-      "id": "39b1400a-2b2b-4c5c-bc7a-6e1c17d751bb",
+      "id": "0bdf5681-320a-4304-accf-33530cc661c5",
       "projectEnvironmentId": "3fd0e51e-bf33-45c1-afa6-8dcb2a4ee7bc",
       "envType": "TEST"
     },
     "isForOrders": true
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-edu-group",
-    "users": [],
-    "isDeleted": false,
-    "projectName": "proj-bhbyhmik3a"
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-hotfix-group",
-    "users": [],
-    "isDeleted": false,
-    "projectName": "proj-zoz17np8rb"
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-migr-group",
-    "users": [],
-    "isDeleted": false,
-    "projectName": "proj-6wpfrbes0g"
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-preprod-group",
-    "users": [],
-    "isDeleted": false,
-    "projectName": "proj-aei4kz2yu4"
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-st-group",
-    "users": [],
-    "isDeleted": false,
-    "projectName": "proj-rddf0uwi0q"
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-ift-group",
-    "users": [
-      "check_admin"
-    ],
-    "isDeleted": false,
-    "projectName": "proj-114wetem0c"
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-soub-blue",
-    "users": [
-      "vtb4043675"
-    ],
-    "isDeleted": false,
-    "projectName": "proj-iv550odo9a"
-  },
-  {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-zorg-lt-group",
-    "users": [],
-    "isDeleted": false,
-    "projectName": "proj-1oob0zjo5h"
   },
   {
     "objectClassName": "models.cloud.authorizer.InformationSystem",

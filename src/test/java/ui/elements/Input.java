@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.Keys;
 
 import static core.helper.StringUtils.$x;
@@ -24,7 +25,7 @@ public class Input implements TypifiedElement {
     public static Input byLabel(String label, int index) {
         return new Input($x("(//label[starts-with(.,'{}')]/parent::*//input)" + postfix, label, TypifiedElement.getIndex(index)));
     }
-    public static Input byXpath(String xPath) {
+    public static Input byXpath(@Language("XPath") String xPath) {
         return new Input($x(xPath));
     }
 

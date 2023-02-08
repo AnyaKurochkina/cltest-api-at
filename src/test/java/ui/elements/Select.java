@@ -42,6 +42,11 @@ public class Select implements TypifiedElement {
         return new Select($x(xpath));
     }
 
+    @Step("Получение Select по name '{name}'")
+    public static Select byName(String name) {
+        return new Select($x("//div[select[@name='{}']]", name));
+    }
+
     public static Select byInputName(String name) {
         return new Select($x("//div[input[@name='{}']]", name));
     }
