@@ -21,8 +21,6 @@ import static com.codeborne.selenide.Selenide.$x;
 public class ProductPage extends BasePage {
 
     private final SelenideElement productsListLink = $x("//a[text()='Список продуктов']");
-    private final Input titleInput = Input.byName("title");
-    private final Input nameInput = Input.byName("name");
     private final Input authorInput = Input.byName("author");
     private final Input descriptionInput = Input.byName("description");
     private final Input maxCountInput = Input.byName("max_count");

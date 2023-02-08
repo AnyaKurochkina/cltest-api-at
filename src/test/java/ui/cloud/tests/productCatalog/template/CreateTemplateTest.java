@@ -3,10 +3,12 @@ package ui.cloud.tests.productCatalog.template;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.template.Template;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
-import ui.models.Template;
+
+import java.util.UUID;
 
 @Feature("Создание шаблона")
 public class CreateTemplateTest extends TemplateBaseTest {
@@ -17,32 +19,35 @@ public class CreateTemplateTest extends TemplateBaseTest {
     @DisplayName("Создание шаблона узлов")
     public void createTemplateTest() {
         checkTemplateNameValidation();
-        createTemplate();
         createTemplateWithoutRequiredParameters();
         createTemplateWithNonUniqueName();
+        createTemplate();
     }
 
     @Step("Создание шаблона узлов")
     public void createTemplate() {
-        Template template = new Template(name);
+        template.setName(UUID.randomUUID().toString());
         new IndexPage().goToTemplatesPage()
                 .createTemplate(template)
-                .checkTemplateAttributes(template)
+                .checkAttributes(template)
                 .deleteTemplate();
     }
 
     @Step("Создание шаблона без заполнения обязательных полей")
     public void createTemplateWithoutRequiredParameters() {
         new IndexPage().goToTemplatesPage()
-                .checkCreateTemplateDisabled(new Template("", TITLE, QUEUE_NAME, QUEUE_NAME, TYPE))
-                .checkCreateTemplateDisabled(new Template(name, "", QUEUE_NAME, QUEUE_NAME, TYPE))
-                .checkCreateTemplateDisabled(new Template(name, TITLE, "", QUEUE_NAME, TYPE));
+                .checkCreateTemplateDisabled(Template.builder().name("").title(TITLE).run(QUEUE_NAME).rollback(QUEUE_NAME)
+                        .type(TYPE).build())
+                .checkCreateTemplateDisabled(Template.builder().name(name).title("").run(QUEUE_NAME).rollback(QUEUE_NAME)
+                        .type(TYPE).build())
+                .checkCreateTemplateDisabled(Template.builder().name(name).title(TITLE).run("").rollback(QUEUE_NAME)
+                        .type(TYPE).build());
     }
 
     @Step("Создание шаблона с неуникальным кодом графа")
     public void createTemplateWithNonUniqueName() {
         new IndexPage().goToTemplatesPage()
-                .checkNonUniqueNameValidation(new Template(NAME));
+                .checkNonUniqueNameValidation(template);
     }
 
     @Step("Создание шаблона с недопустимым кодом")

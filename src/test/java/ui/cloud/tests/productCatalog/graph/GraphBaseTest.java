@@ -8,6 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.BaseTest;
 import ui.models.Node;
 
@@ -45,7 +46,7 @@ public class GraphBaseTest extends BaseTest {
     @AfterEach
     @DisplayName("Удаление графов, созданных в сетапе")
     public void tearDownForGraphTests() {
-        deleteGraph(NAME);
+        deleteGraphByApi(NAME);
     }
 
     public void createGraph(String name, String title) {
@@ -53,7 +54,7 @@ public class GraphBaseTest extends BaseTest {
                 .name(name)
                 .title(title)
                 .version("1.0.0")
-                .type("creating")
+                .type(GraphType.CREATING.getValue())
                 .description(DESCRIPTION)
                 .author(AUTHOR)
                 .build()
@@ -80,7 +81,7 @@ public class GraphBaseTest extends BaseTest {
                 .createObject();
     }
 
-    public void deleteGraph(String name) {
+    public void deleteGraphByApi(String name) {
         deleteGraphById(getGraphByName(name).getGraphId());
     }
 

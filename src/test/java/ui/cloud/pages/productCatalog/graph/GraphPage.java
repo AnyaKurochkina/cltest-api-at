@@ -2,15 +2,18 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.AssertUtils;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.product.Product;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.DropDown;
 import ui.elements.Input;
-import ui.models.Graph;
+import ui.elements.Table;
+import ui.elements.TextArea;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -18,18 +21,24 @@ public class GraphPage extends BasePage {
     protected static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
-    private final SelenideElement descriptionField = $x("//textarea[@name='description']");
-    private final SelenideElement nodesTab = $x("//span[text()='Узлы']//parent::button");
-    private final SelenideElement modifiersTab = $x("//span[text()='Модификаторы']//parent::button");
-    private final SelenideElement orderParamsTab = $x("//span[text()='Параметры заказа']//parent::button");
-    private final SelenideElement auditTab = $x("//span[text()='История изменений']//parent::button");
-    private final SelenideElement graphNameInput = $x("//input[@name='name']");
+    private final TextArea descriptionTextArea = TextArea.byName("description");
+    private final Input nameInput = Input.byName("name");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
     private final Input authorInput = Input.byName("author");
-    private final SelenideElement graphsList = $x("//a[text()='Список графов']");
+    private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
+    }
+
+    @Step("Проверка атрибутов графа '{graph.name}'")
+    public GraphPage checkAttributes(Graph graph) {
+        nameInput.getInput().shouldHave(Condition.exactValue(graph.getName()));
+        graphTitleInput.shouldHave(Condition.exactValue(graph.getTitle()));
+        checkGraphVersion(graph.getVersion());
+        descriptionTextArea.getTextArea().shouldHave(Condition.exactText(graph.getDescription()));
+        authorInput.getInput().shouldHave(Condition.exactValue(graph.getAuthor()));
+        return new GraphPage();
     }
 
     @Step("Проверка, что отображаемая версия графа равна '{version}'")
@@ -46,9 +55,9 @@ public class GraphPage extends BasePage {
     }
 
     @Step("Редактирование графа '{graph.name}'")
-    public GraphPage editGraph(Graph graph) {
+    public GraphPage setAttributes(Graph graph) {
         goToMainTab();
-        descriptionField.setValue(graph.getDescription());
+        descriptionTextArea.setValue(graph.getDescription());
         authorInput.setValue(graph.getAuthor());
         return new GraphPage();
     }
@@ -83,18 +92,9 @@ public class GraphPage extends BasePage {
 
     @Step("Проверка недоступности сохранения графа при достижении лимита версий")
     public GraphPage checkVersionLimit() {
-        $x("//div[text()='Достигнут предел допустимого значения версии. Нельзя сохранить следующую версию']").shouldBe(Condition.visible);
+        $x("//div[text()='Достигнут предел допустимого значения версии. Нельзя сохранить следующую версию']")
+                .shouldBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.disabled);
-        return new GraphPage();
-    }
-
-    @Step("Просмотр JSON графа")
-    public GraphPage viewJSON() {
-        viewJSONButton.click();
-        $x("//span[text()='\"id\"']").shouldBe(Condition.visible);
-        expandJSONView.click();
-        expandJSONView.click();
-        closeJSONView.click();
         return new GraphPage();
     }
 
@@ -106,45 +106,32 @@ public class GraphPage extends BasePage {
 
     @Step("Переход на вкладку 'Узлы'")
     public GraphNodesPage goToNodesTab() {
-        nodesTab.click();
-        TestUtils.wait(600);
+        goToTab("Узлы");
         return new GraphNodesPage();
     }
 
     @Step("Переход на вкладку 'Модификаторы'")
     public GraphModifiersPage goToModifiersTab() {
-        TestUtils.scrollToTheTop();
-        modifiersTab.click();
+        goToTab("Модификаторы");
         return new GraphModifiersPage();
     }
 
     @Step("Переход на вкладку 'Параметры заказа'")
     public GraphOrderParamsPage goToOrderParamsTab() {
-        TestUtils.scrollToTheTop();
-        orderParamsTab.click();
+        goToTab("Параметры заказа");
         return new GraphOrderParamsPage();
     }
 
     @Step("Переход на вкладку 'Сравнение версий'")
     public GraphPage goToVersionComparisonTab() {
-        TestUtils.scrollToTheTop();
-        versionComparisonTab.click();
+        goToTab("Сравнение версий");
         return this;
     }
 
     @Step("Переход на вкладку 'История изменений'")
     public AuditPage goToAuditTab() {
-        TestUtils.scrollToTheTop();
-        auditTab.click();
+        goToTab("История изменений");
         return new AuditPage();
-    }
-
-    @Step("Проверка атрибутов графа '{graph.name}'")
-    public GraphPage checkGraphAttributes(Graph graph) {
-        graphNameInput.shouldHave(Condition.exactValue(graph.getName()));
-        graphTitleInput.shouldHave(Condition.exactValue(graph.getTitle()));
-        checkGraphVersion(graph.getVersion());
-        return new GraphPage();
     }
 
     @Step("Открытие диалога удаления графа")
@@ -154,15 +141,24 @@ public class GraphPage extends BasePage {
     }
 
     @Step("Удаление графа")
-    public void deleteGraph() {
+    public void delete() {
         deleteButton.click();
         new DeleteDialog().inputValidIdAndDelete();
     }
 
+    @Step("Проверка недоступности удаления используемого графа")
+    public GraphPage checkDeleteUsedGraphUnavailable(Graph graph) {
+        deleteButton.click();
+        new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
+                " объектами. Отвяжите граф от объектов и повторите попытку");
+        usageLink.click();
+        checkTabIsSelected("Использование");
+        return this;
+    }
+
     @Step("Возврат в список графов")
     public GraphsListPage returnToGraphsList() {
-        TestUtils.scrollToTheTop();
-        graphsList.click();
+        graphsListLink.scrollIntoView(false).click();
         return new GraphsListPage();
     }
 
@@ -170,6 +166,39 @@ public class GraphPage extends BasePage {
     public GraphPage setAuthor(String value) {
         goToMainTab();
         authorInput.setValue(value);
+        return this;
+    }
+
+    @Step("Проверка, что отображается объект использования '{product.name}'")
+    public GraphPage checkUsageInProduct(Product product) {
+        checkUsageTable(product.getName(), "Продукт", product.getVersion(), product.getGraphVersion()
+                , product.getGraphVersion());
+        return this;
+    }
+
+    @Step("Проверка, что отображается объект использования '{graph.name}'")
+    public GraphPage checkUsageInGraph(Graph graph) {
+        checkUsageTable(graph.getName(), "Граф", graph.getVersion(), "", "");
+        return this;
+    }
+
+    @Step("Проверка данных в таблице 'Объекты использования'")
+    private void checkUsageTable(String name, String type, String objectVersion, String graphVersion,
+                                 String calculatedGraphVersion) {
+        String nameColumn = "Имя";
+        Table table = new Table(nameColumn);
+        table.getRowByColumnValue(nameColumn, name);
+        table.getRowByColumnValue("Тип", type);
+        table.getRowByColumnValue("Версия объекта", objectVersion);
+        table.getRowByColumnValue("Версия графа", graphVersion);
+        table.getRowByColumnValue("Расчетная версия графа", calculatedGraphVersion);
+    }
+
+    @Step("Проверка заголовков списка зависимых объектов")
+    public GraphPage checkUsageTableHeaders() {
+        String nameColumn = "Имя";
+        AssertUtils.assertHeaders(new Table(nameColumn),
+                nameColumn, "Тип", "Версия объекта", "Версия графа", "Расчетная версия графа", "", "");
         return this;
     }
 }

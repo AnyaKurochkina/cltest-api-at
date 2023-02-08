@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
-import ui.models.Template;
 
 @Feature("Просмотр списка шаблонов узлов")
 public class TemplatesListTest extends TemplateBaseTest {
@@ -26,8 +25,7 @@ public class TemplatesListTest extends TemplateBaseTest {
     @Test
     @TmsLink("1116098")
     @DisplayName("Поиск в списке шаблонов")
-    public void searchGraphTest() {
-        Template template = new Template(NAME);
+    public void searchTemplateTest() {
         new IndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template)
                 .findTemplateByValue(TITLE, template)

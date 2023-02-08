@@ -2,21 +2,36 @@ package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.GraphItem;
+import models.cloud.productCatalog.product.Categories;
+import models.cloud.productCatalog.product.Payment;
+import models.cloud.productCatalog.product.Product;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
-import ui.models.Graph;
+
+import java.util.Arrays;
+import java.util.UUID;
+
+import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 
 @Feature("Удаление графа")
 public class DeleteGraphTest extends GraphBaseTest {
+
+    @AfterEach
+    @DisplayName("Удаление графов, созданных в сетапе (не требуется)")
+    public void tearDownForGraphTests() {
+    }
 
     @Test
     @TmsLink("1114449")
     @DisplayName("Удаление графа из списка")
     public void deleteGraphFromList() {
-        Graph graph = new Graph(NAME);
         new IndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .deleteGraph(NAME)
@@ -36,8 +51,61 @@ public class DeleteGraphTest extends GraphBaseTest {
                 .checkGraphNotFound(NAME);
     }
 
-    @AfterEach
-    @DisplayName("Удаление графов, созданных в сетапе")
-    public void tearDownForGraphTests() {
+    @Test
+    @TmsLink("540777")
+    @DisplayName("Удаление графа, используемого в продукте")
+    public void deleteGraphUsedInProduct() {
+        String name = UUID.randomUUID().toString();
+        Product product = Product.builder()
+                .name(name)
+                .title("AT UI Product")
+                .version("1.0.0")
+                .graphId(graph.getGraphId())
+                .graphVersion("1.0.0")
+                .category(Categories.VM.getValue())
+                .categoryV2(Categories.COMPUTE)
+                .maxCount(1)
+                .payment(Payment.PAID)
+                .author("AT UI")
+                .inGeneralList(false)
+                .number(51)
+                .build()
+                .createObject();
+        new IndexPage().goToGraphsPage()
+                .findGraphByValue(NAME, graph)
+                .checkDeleteUsedGraphUnavailable(graph)
+                .checkUsageInProduct(product)
+                .checkDeleteUsedGraphUnavailable(graph)
+                .checkUsageTableHeaders();
+    }
+
+    @Test
+    @TmsLink("1095969")
+    @DisplayName("Удаление графа, используемого в другом графе")
+    public void deleteGraphUsedInGraph() {
+        String name = UUID.randomUUID().toString();
+        Graph superGraph = Graph.builder()
+                .name(name)
+                .title(TITLE)
+                .version("1.0.0")
+                .type(GraphType.CREATING.getValue())
+                .description(DESCRIPTION)
+                .author(AUTHOR)
+                .build()
+                .createObject();
+        JSONObject graphItem = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .subgraphId(graph.getGraphId())
+                .build()
+                .toJson();
+        JSONObject graphJSON = new JSONObject().put("graph", Arrays.asList(graphItem));
+        partialUpdateGraph(superGraph.getGraphId(), graphJSON);
+        superGraph.setVersion("1.0.1");
+        new IndexPage().goToGraphsPage()
+                .findGraphByValue(NAME, graph)
+                .checkDeleteUsedGraphUnavailable(graph)
+                .checkUsageInGraph(superGraph)
+                .checkDeleteUsedGraphUnavailable(graph);
     }
 }

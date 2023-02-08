@@ -60,7 +60,7 @@ public class GraphItem {
     @JsonProperty("priority")
     private Object priority;
     @JsonProperty("subgraph_id")
-    private Object subgraphId;
+    private String subgraphId;
     @JsonProperty("on_prebilling")
     private Boolean onPrebilling;
     @JsonProperty("input")

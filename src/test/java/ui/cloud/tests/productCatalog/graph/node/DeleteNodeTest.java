@@ -22,8 +22,8 @@ public class DeleteNodeTest extends GraphBaseTest {
     @AfterEach
     @DisplayName("Удаление подграфа")
     public void tearDownForGraphTests() {
-        deleteGraph(NAME);
-        deleteGraph(SUBGRAPH_NAME);
+        deleteGraphByApi(NAME);
+        deleteGraphByApi(SUBGRAPH_NAME);
     }
 
     @Test
