@@ -32,7 +32,7 @@ public class DnsZone {
     private Object created_by;
     private Object updated_by;
     private List<Object> external_id;
-    private List<Object> rrsets;
+    private List<Rrset> rrsets;
 
 
     public JSONObject toJson() {

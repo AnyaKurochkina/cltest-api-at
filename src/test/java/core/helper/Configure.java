@@ -30,6 +30,7 @@ public class Configure {
     public static String Day2ServiceURL;
     public static String ImageService;
     public static String DNSService;
+    public static String PowerDns;
 
     static {
         try {
@@ -65,6 +66,7 @@ public class Configure {
             Day2ServiceURL = kongURL + "day2-core";
             ImageService = kongURL + "cloud-images";
             DNSService = kongURL + "cloud-dns";
+            PowerDns = "http://10.89.16.17:8081";
         } catch (Exception e) {
             e.printStackTrace();
         }
