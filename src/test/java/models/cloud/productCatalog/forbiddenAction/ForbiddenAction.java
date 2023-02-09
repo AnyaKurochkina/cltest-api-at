@@ -58,7 +58,7 @@ public class ForbiddenAction extends Entity {
         jsonTemplate = "productCatalog/forbiddenAction/createForbiddenAction.json";
         productName = "/api/v1/forbidden_actions/";
         if (actionId == null) {
-            Action action = Action.builder().actionName(RandomStringUtils.randomAlphabetic(10).toLowerCase())
+            Action action = Action.builder().name(RandomStringUtils.randomAlphabetic(10).toLowerCase())
                     .build()
                     .createObject();
             actionId = action.getActionId();

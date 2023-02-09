@@ -92,7 +92,6 @@ public class ProductPage extends BasePage {
                 info.getTextArea().getValue().replaceAll("\\s", ""));
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
-        goToGraphTab();
         Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
         Assertions.assertEquals(product.getGraphVersion(), graphVersionSelect.getValue());
         goToAdditionalParamsTab();
@@ -135,7 +134,7 @@ public class ProductPage extends BasePage {
         authorInput.setValue(product.getAuthor());
         authorRequiredFieldHint.shouldNotBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.enabled);
-        backButton.click();
+        cancelButton.click();
         Selenide.prompt();
         return new ProductsListPage();
     }
@@ -217,7 +216,7 @@ public class ProductPage extends BasePage {
             }
             nameValidationHint.shouldBe(Condition.visible);
         }
-        backButton.click();
+        cancelButton.click();
         return new ProductsListPage();
     }
 
@@ -227,7 +226,7 @@ public class ProductPage extends BasePage {
         titleInput.setValue(product.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.disabled);
-        backButton.click();
+        cancelButton.click();
         return new ProductsListPage();
     }
 

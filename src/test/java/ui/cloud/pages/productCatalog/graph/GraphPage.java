@@ -4,28 +4,34 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
+import models.cloud.productCatalog.service.Service;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
+import ui.cloud.pages.productCatalog.actions.ActionPage;
+import ui.cloud.pages.productCatalog.product.ProductPage;
+import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.Table;
 import ui.elements.TextArea;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.switchTo;
 
 public class GraphPage extends BasePage {
     protected static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
-    private final Input nameInput = Input.byName("name");
     private final SelenideElement graphTitleInput = $x("//input[@name='title']");
     private final Input authorInput = Input.byName("author");
     private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
+    private final String nameColumn = "Имя";
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -128,6 +134,12 @@ public class GraphPage extends BasePage {
         return this;
     }
 
+    @Step("Переход на вкладку 'Использование'")
+    public GraphPage goToUsageTab() {
+        goToTab("Использование");
+        return this;
+    }
+
     @Step("Переход на вкладку 'История изменений'")
     public AuditPage goToAuditTab() {
         goToTab("История изменений");
@@ -171,13 +183,67 @@ public class GraphPage extends BasePage {
 
     @Step("Проверка, что отображается объект использования '{product.name}'")
     public GraphPage checkUsageInProduct(Product product) {
+        goToUsageTab();
         checkUsageTable(product.getName(), "Продукт", product.getVersion(), product.getGraphVersion()
                 , product.getGraphVersion());
         return this;
     }
 
+    @Step("Проверка, что отображается объект использования '{action.name}'")
+    public GraphPage checkUsageInAction(Action action) {
+        goToUsageTab();
+        checkUsageTable(action.getName(), "Действие", action.getVersion(), action.getGraphVersion()
+                , action.getGraphVersion());
+        return this;
+    }
+
+    @Step("Проверка, что отображается объект использования '{service.name}'")
+    public GraphPage checkUsageInService(Service service) {
+        goToUsageTab();
+        checkUsageTable(service.getName(), "Сервис", service.getVersion(), service.getGraphVersion()
+                , service.getGraphVersion());
+        return this;
+    }
+
+    @Step("Переход на страницу продукта '{product.name}' с вкладки использования")
+    public ProductPage goToProductByUsageLink(Product product) {
+        goToUsageTab();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, product.getName()).get().$x(".//*[name()='svg' and @class]")
+                .click();
+        switchTo().window(1);
+        return new ProductPage();
+    }
+
+    @Step("Переход на страницу действия '{action.name}' с вкладки использования")
+    public ActionPage goToActionByUsageLink(Action action) {
+        goToUsageTab();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, action.getName()).get()
+                .$x(".//*[name()='svg' and @class]").click();
+        switchTo().window(1);
+        return new ActionPage();
+    }
+
+    @Step("Переход на страницу сервиса '{service.name}' с вкладки использования")
+    public ServicePage goToServiceByUsageLink(Service service) {
+        goToUsageTab();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, service.getName()).get()
+                .$x(".//*[name()='svg' and @class]").click();
+        switchTo().window(1);
+        return new ServicePage();
+    }
+
+    @Step("Переход на страницу графа '{graph.name}' с вкладки использования")
+    public GraphPage goToGraphByUsageLink(Graph graph) {
+        goToUsageTab();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, graph.getName()).get()
+                .$x(".//*[name()='svg' and @class]").click();
+        switchTo().window(1);
+        return new GraphPage();
+    }
+
     @Step("Проверка, что отображается объект использования '{graph.name}'")
     public GraphPage checkUsageInGraph(Graph graph) {
+        goToUsageTab();
         checkUsageTable(graph.getName(), "Граф", graph.getVersion(), "", "");
         return this;
     }
@@ -185,7 +251,6 @@ public class GraphPage extends BasePage {
     @Step("Проверка данных в таблице 'Объекты использования'")
     private void checkUsageTable(String name, String type, String objectVersion, String graphVersion,
                                  String calculatedGraphVersion) {
-        String nameColumn = "Имя";
         Table table = new Table(nameColumn);
         table.getRowByColumnValue(nameColumn, name);
         table.getRowByColumnValue("Тип", type);
@@ -196,7 +261,7 @@ public class GraphPage extends BasePage {
 
     @Step("Проверка заголовков списка зависимых объектов")
     public GraphPage checkUsageTableHeaders() {
-        String nameColumn = "Имя";
+        goToUsageTab();
         AssertUtils.assertHeaders(new Table(nameColumn),
                 nameColumn, "Тип", "Версия объекта", "Версия графа", "Расчетная версия графа", "", "");
         return this;

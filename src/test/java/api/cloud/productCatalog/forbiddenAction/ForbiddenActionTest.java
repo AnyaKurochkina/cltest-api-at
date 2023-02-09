@@ -41,7 +41,7 @@ public class ForbiddenActionTest extends Tests {
     @Test
     public void createForbiddenActionWithParentToSelf() {
         Action action = Action.builder()
-                .actionName("action_for_forbidden_action_api_test")
+                .name("action_for_forbidden_action_api_test")
                 .title("api_test")
                 .build()
                 .createObject();
@@ -55,7 +55,7 @@ public class ForbiddenActionTest extends Tests {
                 .toJson();
         String message = createForbiddenAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(String.format("This direction (parent_to_self) is depricated. Please, use another option. (%s:%s:None,parent_to_self)",
-                action.getActionName(), action.getTitle()), message);
+                action.getName(), action.getTitle()), message);
 
     }
 }

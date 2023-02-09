@@ -4,7 +4,6 @@ import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
@@ -41,12 +40,6 @@ public class GraphBaseTest extends BaseTest {
     @DisplayName("Создание графов через API")
     public void setUpForGraphsTest() {
         createGraph(NAME, TITLE);
-    }
-
-    @AfterEach
-    @DisplayName("Удаление графов, созданных в сетапе")
-    public void tearDownForGraphTests() {
-        deleteGraphByApi(NAME);
     }
 
     public void createGraph(String name, String title) {

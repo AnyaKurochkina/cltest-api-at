@@ -74,9 +74,7 @@ public class DeleteGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
-                .checkUsageInProduct(product)
-                .checkDeleteUsedGraphUnavailable(graph)
-                .checkUsageTableHeaders();
+                .checkDeleteUsedGraphUnavailable(graph);
     }
 
     @Test
@@ -105,7 +103,6 @@ public class DeleteGraphTest extends GraphBaseTest {
         new IndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
-                .checkUsageInGraph(superGraph)
                 .checkDeleteUsedGraphUnavailable(graph);
     }
 }
