@@ -59,6 +59,9 @@ public class Pipeline {
 
         setEnv(testPlanName, Arrays.asList("dev", "ift", "blue"));
 
+        if(ENV.equals("blue"))
+            throw new Error("blue :(");
+
         JsonPath jsonPath = RestAssured.given()
                 .config(RestAssured.config().sslConfig(config))
                 .header("Authorization", "PrivateToken " + properties.getPrivateToken())
