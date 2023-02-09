@@ -76,8 +76,8 @@ public class Redis extends IProduct {
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", isTest())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.appuser_password", appUserPassword)
-                .set("$.order.attrs.appuser", appUser)
+                .set("$.order.attrs.user_password", appUserPassword)
+                .set("$.order.attrs.user", appUser)
                 .set("$.order.label", getLabel())
                 .build();
     }
