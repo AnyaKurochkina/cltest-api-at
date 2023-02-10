@@ -2,15 +2,18 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import models.cloud.orderService.products.ScyllaDbCluster;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
+import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
-import ui.elements.DropDown;
-import ui.elements.Table;
+import ui.elements.*;
 
+import java.util.List;
+
+import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -34,7 +37,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
-
+    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public ScyllaDbClusterPage(ScyllaDbCluster product) {
         super(product);
@@ -171,6 +174,79 @@ public class ScyllaDbClusterPage extends IProductPage {
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isEmpty(), "Ошибка удаления пользователя БД");
         }
     }
+    public SelenideElement getRoleNode() {
+        return new Table("Роли узла").getRow(0).get();
+    }
+
+    @Step("Добавить новые группы {group} с ролью {role}")
+    public void addGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            Select.byLabel("Роль").set(role);
+            groups.forEach(group -> Select.byLabel("Группы").set(group));
+        },ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
+
+    @Step("Изменить состав групп у роли {role} на {groups}")
+    public void updateGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+            DropDown groupsElement = DropDown.byLabel("Группы").clear();
+            groups.forEach(groupsElement::select);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
+
+    @Step("Удалить группу доступа с ролью {role}")
+    public void deleteGroup(String role) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
+        //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
+
+    }
+
+    //Таблица ролей
+    public class RoleTable extends Table {
+        @Override
+        protected void open() {
+            btnGeneralInfo.click();
+            getRoleNode().scrollIntoView(scrollCenter).click();
+        }
+
+        public RoleTable() {
+            super("Группы");
+        }
+
+        private SelenideElement getRoleMenuElement(String name) {
+            return getRoleRow(name).$("button");
+        }
+
+        private SelenideElement getRoleRow(String name) {
+            return getRowElementByColumnValue("", name);
+        }
+
+        private String getGroupsRole(String name) {
+            open();
+            return getRowByColumnValue("", name).getValueByColumn("Группы");
+        }
+    }
+
 
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable(String columnName) {

@@ -24,7 +24,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product;// = Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/2ad8b165-54b0-4ea9-a3cc-c402b43f208e/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Astra product;// = Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/a652f246-08ee-41bc-8fe3-9496f1fb36b5/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

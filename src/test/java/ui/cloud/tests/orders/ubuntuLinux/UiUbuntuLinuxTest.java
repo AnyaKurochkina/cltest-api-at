@@ -26,8 +26,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
 public class UiUbuntuLinuxTest extends UiProductTest {
 
-    Ubuntu product;
-    //= Ubuntu.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/9d680891-9998-491b-a5db-a6cf2d2fa29b/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    Ubuntu product;// = Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/e90baa09-3707-49b0-91bd-81005fd31307/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

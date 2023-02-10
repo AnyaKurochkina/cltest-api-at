@@ -26,7 +26,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/e49ce769-69db-45bc-97b2-b00db1ecb013/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/e97aaf5e-4940-4c25-8340-e73d589fcd07/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";

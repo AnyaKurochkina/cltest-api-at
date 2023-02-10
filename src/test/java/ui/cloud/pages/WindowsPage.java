@@ -1,6 +1,7 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -20,7 +21,7 @@ public class WindowsPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
 
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
-
+    private static final SelenideElement acceptCheckBoxDeletionProtect = Selenide.$x("//*[text()='Подтвердить']");
     private static final String HEADER_PATH = "Путь";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
@@ -162,6 +163,18 @@ public class WindowsPage extends IProductPage {
         runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }
+    public void addKeyAstrom() {
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Добавить ключ Астром");
+        acceptCheckBoxDeletionProtect.shouldBe(Condition.enabled).click();
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+    }
+    public void deleteKeyAstrom() {
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Удалить ключ Астром");
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+    }
+
 
     private SelenideElement getDiskMenuElement(String name) {
         return new Table(HEADER_CONNECT_STATUS).getRowElementByColumnValue(HEADER_PATH, name).$("button");

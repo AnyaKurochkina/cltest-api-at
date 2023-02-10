@@ -26,8 +26,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_podman")})
 public class UiPodmanTest extends UiProductTest {
 
-    Podman product;
-    //= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/af70df85-c2f2-4141-9676-f321e18aa54d/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Podman product;//= Podman.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/containers/orders/c0a61920-3f0b-45f4-93b6-6b264ea429b9/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

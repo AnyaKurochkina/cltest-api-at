@@ -23,7 +23,7 @@ import static core.helper.StringUtils.$x;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product;//= ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/194e3485-9981-4aa7-90d3-edf6c6d2ebce/group?context=proj-pkvckn08w9&type=project&org=vtb");
+    ClickHouseCluster product = ClickHouseCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/b1387ba5-c77e-4006-825d-4ed9e6ed6791/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
