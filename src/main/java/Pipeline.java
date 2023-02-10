@@ -4,6 +4,7 @@ import io.restassured.path.json.JsonPath;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
+import org.openqa.selenium.NotFoundException;
 import ru.testit.properties.AppProperties;
 
 import java.io.BufferedWriter;
@@ -37,8 +38,8 @@ public class Pipeline {
         if (argsMap.containsKey(TEST_IT_TOKEN))
             properties.setPrivateToken(argsMap.get(TEST_IT_TOKEN));
 
-        String testPlanName = null;
         String threadCount = "";
+        List<String> tags = new ArrayList<>();
         if ((argsMap.get(TEST_PLAN_ID)) != null) {
             JsonPath path = RestAssured.given()
                     .config(RestAssured.config().sslConfig(config))
@@ -49,18 +50,18 @@ public class Pipeline {
                     .extract()
                     .response()
                     .jsonPath();
-            testPlanName = path.getString("name");
-            List<String> tags = path.getList("tags.name");
+            tags = path.getList("tags.name");
             threadCount = tags.stream().filter(s -> s.startsWith("thread_count=")).findFirst().orElse("thread_count=").substring(13);
             if (threadCount.length() > 0) {
                 threadCount = " -Djunit.jupiter.execution.parallel.config.fixed.parallelism=" + threadCount;
             }
         }
 
-        setEnv(testPlanName, Arrays.asList("dev", "ift", "blue"));
+        setEnv(tags, Arrays.asList("dev", "ift", "blue", "t1ift", "t1prod", "t1prod"));
 
-        if(ENV.equals("blue") && argsMap.containsKey(TEST_SECRET))
-            throw new Error("blue :(");
+        if (argsMap.containsKey(TEST_SECRET))
+            if (ENV.startsWith("t1") || !ENV.equals("blue"))
+                throw new Error("blue or t1 :(");
 
         JsonPath jsonPath = RestAssured.given()
                 .config(RestAssured.config().sslConfig(config))
@@ -82,7 +83,7 @@ public class Pipeline {
             }
             String command = "-DCI -DfailIfNoTests=false -Dmaven.test.skip=false" + threadCount +
                     " -DtestItToken=" + properties.getPrivateToken() + " -Denv=" + ENV + " -DtestPlanId=" +
-                    argsMap.get(TEST_PLAN_ID)  + " -DtestRunId=" +
+                    argsMap.get(TEST_PLAN_ID) + " -DtestRunId=" +
                     argsMap.get(TEST_RUN_ID) + " -Dtest=" + String.join(",", externalIds);
 
             System.out.println("##teamcity[setParameter name='env.testArguments' value='" + command + "']");
@@ -91,15 +92,7 @@ public class Pipeline {
 
     }
 
-    private static void setEnv(String testPlanName, List<String> environments) {
-        if (testPlanName == null)
-            return;
-        String name = testPlanName.toLowerCase();
-        for (String env : environments) {
-            if (name.contains(env)) {
-                ENV = env;
-                return;
-            }
-        }
+    private static void setEnv(List<String> tags, List<String> environments) {
+        ENV = tags.stream().filter(environments::contains).findFirst().orElseThrow(() -> new NotFoundException("Нет тега с env в тестплане"));
     }
 }
