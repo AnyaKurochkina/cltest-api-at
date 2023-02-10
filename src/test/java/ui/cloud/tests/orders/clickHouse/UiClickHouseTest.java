@@ -27,6 +27,7 @@ public class UiClickHouseTest extends UiProductTest {
     //= ClickHouse.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/18a7a4de-878c-4f70-a518-0763cd7f3795/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameAD = "at_ad_user";
+    String nameFull = "at_user";
     String nameLocalAD = "at_local_user";
 
 
@@ -140,7 +141,16 @@ public class UiClickHouseTest extends UiProductTest {
 
     @Test
     @Order(8)
-    @TmsLink("")
+    @TmsLink("1422751")
+    @DisplayName("UI ClickHouse . Cбросить пароль ТУЗ с полными правами")
+    void resetPasswordFullRights() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.resetPasswordFullRights(nameFull));
+    }
+
+    @Test
+    @Order(9)
+    @TmsLink("1419321")
     @DisplayName("UI ClickHouse. Cоздание локальной УЗ")
     void createLocalAccount() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -148,8 +158,8 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(9)
-    @TmsLink("")
+    @Order(10)
+    @TmsLink("1422714")
     @DisplayName("UI ClickHouse . Cбросить пароль локальной УЗ")
     void resetPasswordLA() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -157,8 +167,8 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(10)
-    @TmsLink("")
+    @Order(11)
+    @TmsLink("1419324")
     @DisplayName("UI ClickHouse . Добавление УЗ AD")
     void addAccountAD() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -166,8 +176,8 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(11)
-    @TmsLink("")
+    @Order(12)
+    @TmsLink("1419320")
     @DisplayName("UI ClickHouse . Удаление локальной УЗ")
     void deleteLocalAccount() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -175,8 +185,8 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(12)
-    @TmsLink("")
+    @Order(13)
+    @TmsLink("1419319")
     @DisplayName("UI ClickHouse . Удаление УЗ АD")
     void deleteAccountAD() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -184,8 +194,8 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
-    @Order(13)
-    @TmsLink("")
+    @Order(14)
+    @TmsLink("1419322")
     @DisplayName("UI ClickHouse . Удалить  пользовательскую группу")
     void deleteGroupAD() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -194,7 +204,7 @@ public class UiClickHouseTest extends UiProductTest {
 
     @Test
     @Order(15)
-    @TmsLink("")
+    @TmsLink("1419325")
     @DisplayName("UI ClickHouse . Удалить группу администраторов")
     void deleteGroupAdmin() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -203,7 +213,7 @@ public class UiClickHouseTest extends UiProductTest {
 
     @Test
     @Order(16)
-    @TmsLink("")
+    @TmsLink("1419326")
     @DisplayName("UI ClickHouse . Добавить пользовательскую группу")
     void addGroupAD() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -213,7 +223,7 @@ public class UiClickHouseTest extends UiProductTest {
 
     @Test
     @Order(17)
-    @TmsLink("")
+    @TmsLink("1419323")
     @DisplayName("UI ClickHouse . Добавить группу администраторов")
     void addGroupAdmin() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

@@ -37,7 +37,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @TmsLink("378275")
     @Order(1)
     @DisplayName("UI Astra. Заказ")
-    void orderScyllaDB() {
+    void orderAstra() {
         double preBillingProductPrice;
         try {
             new IndexPage()
