@@ -224,6 +224,15 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
+    @Order(22)
+    @TmsLink("1296753")
+    @DisplayName("UI ClickHouse Cluster. Мониторинг ОС")
+    void monitoringOs() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.checkClusterMonitoringOs();
+    }
+
+    @Test
     @Order(100)
     @TmsLink("1138090")
     @DisplayName("UI ClickHouse Cluster. Удаление продукта")
