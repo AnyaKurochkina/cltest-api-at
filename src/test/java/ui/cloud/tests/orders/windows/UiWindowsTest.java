@@ -239,7 +239,7 @@ public class UiWindowsTest extends UiProductTest {
 
     @Test
     @Order(18)
-    @TmsLink("")
+    @TmsLink("1418993")
     @DisplayName("UI Windows. Добавить ключ Астром")
     void addKeyAstrom() {
         WindowsPage winPage = new WindowsPage(product);
@@ -248,7 +248,7 @@ public class UiWindowsTest extends UiProductTest {
 
     @Test
     @Order(19)
-    @TmsLink("")
+    @TmsLink("1419327")
     @DisplayName("UI Windows. Удалить ключ Астром")
     void deleteKeyAstrom() {
         WindowsPage winPage = new WindowsPage(product);

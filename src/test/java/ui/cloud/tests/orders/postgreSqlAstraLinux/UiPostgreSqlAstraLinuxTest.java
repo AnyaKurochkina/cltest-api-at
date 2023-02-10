@@ -248,8 +248,8 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @TmsLinks({@TmsLink("1091089"), @TmsLink("1091067")})
-    @Order(25)
+    @TmsLinks({@TmsLink("1091014"), @TmsLink("1091010")})
+    @Order(23)
     @DisplayName("UI PostgreSQLAstra. Добавление/удаление группы доступа")
     void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -259,8 +259,8 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @TmsLink("1091118")
-    @Order(26)
+    @TmsLink("1091055")
+    @Order(24)
     @DisplayName("UI PostgreSQLAstra. Изменение группы доступа")
     void updateGroup() {
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();

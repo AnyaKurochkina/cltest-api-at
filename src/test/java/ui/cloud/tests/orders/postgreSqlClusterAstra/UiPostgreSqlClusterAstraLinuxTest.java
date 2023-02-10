@@ -252,8 +252,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @TmsLinks({@TmsLink(""), @TmsLink("")})
-    @Order(25)
+    @TmsLinks({@TmsLink("1091089"), @TmsLink("1091067")})
+    @Order(22)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Добавление/удаление группы доступа")
     void deleteGroup() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
@@ -263,8 +263,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @TmsLink("")
-    @Order(26)
+    @TmsLink("1091118")
+    @Order(23)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменение группы доступа")
     void updateGroup() {
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
@@ -274,7 +274,32 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
+    @Test
+    @Order(24)
+    @TmsLink("1429760")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Обновить ОС")
+    void updateOs() {
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::updateOs);
+    }
 
+    @Test
+    @Order(25)
+    @TmsLink("1151320")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить конфигурацию нод СУБД")
+    void changeConfiguration() {
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::changeConfiguration);
+    }
+
+    @Test
+    @Order(25)
+    @TmsLink("1429759")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Обновить минорную версию СУБД")
+    void updateMinorVersion() {
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::updateMinorVersion);
+    }
 
     @Test
     @Order(100)
