@@ -19,7 +19,7 @@ public class Pipeline {
     final static AppProperties properties = new AppProperties();
     final static String TEST_RUN_ID = "testRunId";
     final static String TEST_PLAN_ID = "testPlanId";
-//    final static String TEST_SECRET = "Secret";
+    final static String TEST_SECRET = "Secret";
 
     final static String pathTestResourcesDir = Paths.get("src/test/resources").toAbsolutePath().toString();
     static String ENV = "prod";
@@ -58,6 +58,9 @@ public class Pipeline {
         }
 
         setEnv(testPlanName, Arrays.asList("dev", "ift", "blue"));
+
+        if(ENV.equals("blue") && argsMap.containsKey(TEST_SECRET))
+            throw new Error("blue :(");
 
         JsonPath jsonPath = RestAssured.given()
                 .config(RestAssured.config().sslConfig(config))

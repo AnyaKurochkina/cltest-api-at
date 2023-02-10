@@ -12,6 +12,7 @@ import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
 
 @Epic("Продукты")
@@ -47,7 +48,8 @@ public class VaultTest extends Tests {
     @ParameterizedTest(name = "Изменить право доступа {0}")
     void editRule(Vault product) {
         try (Vault vault = product.createObjectExclusiveAccess()) {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(vault.getProjectId(), "", "vlt");
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(vault.getProjectId(),
+                    OrderServiceSteps.getDomainByProject(vault.getProjectId()), "vlt");
             vault.addRule(accessGroup, "user-ro", "portal-ro", "user-rw");
             vault.changeRule(accessGroup, "user-ro");
         }

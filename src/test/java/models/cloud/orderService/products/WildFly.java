@@ -7,9 +7,7 @@ import lombok.experimental.SuperBuilder;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
-import net.minidev.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
@@ -136,14 +134,13 @@ public class WildFly extends IProduct {
     //Добавление группы WildFly
     public void addGroup(String name, String role) {
         OrderServiceSteps.executeAction("wildfly_add_group", this,
-                new JSONObject().put("new_wildfly_user",
-                        new JSONObject().put("group_name", new JSONArray().appendElement(name)).put("user_role", role)), this.getProjectId());
+                new JSONObject().put("new_wildfly_user", new JSONObject().put("group_name", name).put("user_role", role)), this.getProjectId());
     }
 
     //Удаление группы WildFly
     public void deleteGroup(String name, String role) {
         OrderServiceSteps.executeAction("wildfly_del_group", this,
-                new JSONObject().put("wildfly_deployer", "").put("user_role", role).put("wildfly_" + role.toLowerCase(), name), this.getProjectId());
+                new JSONObject().put("wildfly_deployer", name).put("user_role", role), this.getProjectId());
     }
 
     public void expandMountPoint() {
