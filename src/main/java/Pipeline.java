@@ -57,7 +57,7 @@ public class Pipeline {
             }
         }
 
-        setEnv(tags, Arrays.asList("dev", "ift", "blue", "t1ift", "t1prod", "t1prod"));
+        setEnv(tags, Arrays.asList("dev", "ift", "prod", "blue", "t1ift", "t1prod", "t1prod"));
 
         if (argsMap.containsKey(TEST_SECRET))
             if (ENV.startsWith("t1") || !ENV.equals("blue"))
