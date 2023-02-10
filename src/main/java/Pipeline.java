@@ -93,6 +93,8 @@ public class Pipeline {
     }
 
     private static void setEnv(List<String> tags, List<String> environments) {
+        System.out.println(Arrays.toString(tags.toArray()));
+        environments = environments.stream().map(String::toLowerCase).collect(Collectors.toList());
         ENV = tags.stream().filter(environments::contains).findFirst().orElseThrow(() -> new NotFoundException("Нет тега с env в тестплане"));
     }
 }
