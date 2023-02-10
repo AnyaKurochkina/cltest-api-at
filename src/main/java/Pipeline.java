@@ -60,7 +60,7 @@ public class Pipeline {
         setEnv(tags, Arrays.asList("dev", "ift", "prod", "blue", "t1ift", "t1prod", "t1prod"));
 
         if (argsMap.containsKey(TEST_SECRET))
-            if (ENV.startsWith("t1") || !ENV.equals("blue"))
+            if (ENV.startsWith("t1") || ENV.equals("blue"))
                 throw new Error("blue or t1 :(");
 
         JsonPath jsonPath = RestAssured.given()
