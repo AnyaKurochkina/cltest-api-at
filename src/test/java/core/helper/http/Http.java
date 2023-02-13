@@ -33,6 +33,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
@@ -249,7 +250,7 @@ public class Http {
                 }
                 specification.header("Authorization", token);
             }
-            SEMAPHORE.acquire();
+            SEMAPHORE.tryAcquire(1, TimeUnit.MINUTES);
             if (field.length() > 0) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
                 if (Objects.isNull(mimeType))
