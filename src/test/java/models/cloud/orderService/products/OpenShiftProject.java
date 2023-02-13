@@ -67,6 +67,7 @@ public class OpenShiftProject extends IProduct {
                 .findFirst().orElseThrow(() -> new NoSuchFieldException("Список кластеров пуст"));
         resourcePoolLabel = resourcePool.getLabel();
         return JsonHelper.getJsonTemplate(jsonTemplate)
+                .set("$.order.product_id", productId)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)
