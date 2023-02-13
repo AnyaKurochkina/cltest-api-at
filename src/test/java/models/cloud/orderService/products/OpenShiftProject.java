@@ -37,7 +37,7 @@ public class OpenShiftProject extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/openshift_project.json";
-        productName = "OpenShift project";
+        productName = "OpenShift project (Ключ Астром)";
         initProduct();
         if(roles == null) {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
