@@ -134,7 +134,7 @@ public class WildFly extends IProduct {
     //Добавление группы WildFly
     public void addGroup(String name, String role) {
         OrderServiceSteps.executeAction("wildfly_add_group", this,
-                new JSONObject().put("new_wildfly_user", new JSONObject().put("group_name", name).put("user_role", role)), this.getProjectId());
+                new JSONObject().put("new_wildfly_user", new JSONObject().append("group_name", name).put("user_role", role)), this.getProjectId());
     }
 
     //Удаление группы WildFly
