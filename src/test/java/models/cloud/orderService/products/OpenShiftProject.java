@@ -40,7 +40,7 @@ public class OpenShiftProject extends IProduct {
         productName = "OpenShift project (Ключ Астром)";
         initProduct();
         if(roles == null) {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), "", "compute");
             roles = Collections.singletonList(new Role("edit", accessGroup));
         }
         if(segment == null)
