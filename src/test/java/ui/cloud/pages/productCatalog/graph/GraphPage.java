@@ -1,13 +1,16 @@
 package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -20,18 +23,17 @@ import ui.elements.Input;
 import ui.elements.Table;
 import ui.elements.TextArea;
 
-import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.switchTo;
+import static com.codeborne.selenide.Selenide.*;
 
 public class GraphPage extends BasePage {
     protected static final String saveGraphAlertText = "Граф успешно сохранен";
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
-    private final SelenideElement graphTitleInput = $x("//input[@name='title']");
     private final Input authorInput = Input.byName("author");
     private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
     private final String nameColumn = "Имя";
+    private final String alertText = "Внесенные изменения не сохранятся. Покинуть страницу?";
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -40,7 +42,7 @@ public class GraphPage extends BasePage {
     @Step("Проверка атрибутов графа '{graph.name}'")
     public GraphPage checkAttributes(Graph graph) {
         nameInput.getInput().shouldHave(Condition.exactValue(graph.getName()));
-        graphTitleInput.shouldHave(Condition.exactValue(graph.getTitle()));
+        titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         checkGraphVersion(graph.getVersion());
         descriptionTextArea.getTextArea().shouldHave(Condition.exactText(graph.getDescription()));
         authorInput.getInput().shouldHave(Condition.exactValue(graph.getAuthor()));
@@ -159,7 +161,7 @@ public class GraphPage extends BasePage {
     }
 
     @Step("Проверка недоступности удаления используемого графа")
-    public GraphPage checkDeleteUsedGraphUnavailable(Graph graph) {
+    public GraphPage checkDeleteUsedGraphUnavailable() {
         deleteButton.click();
         new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
@@ -178,6 +180,53 @@ public class GraphPage extends BasePage {
     public GraphPage setAuthor(String value) {
         goToMainTab();
         authorInput.setValue(value);
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Отмена")
+    public GraphPage checkUnsavedChangesAlertDismiss() {
+        String newValue = "new";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        dismissAlert(alertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        graphsListLink.click();
+        dismissAlert(alertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        backButton.click();
+        dismissAlert(alertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        mainPageLink.click();
+        dismissAlert(alertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Ок")
+    public GraphPage checkUnsavedChangesAlertAccept(Graph graph) {
+        String newValue = "new title";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        acceptAlert(alertText);
+        new GraphsListPage().openGraphPage(graph.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
+        titleInput.setValue(newValue);
+        graphsListLink.click();
+        acceptAlert(alertText);
+        new GraphsListPage().openGraphPage(graph.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
+        titleInput.setValue(newValue);
+        backButton.click();
+        acceptAlert(alertText);
+        new GraphsListPage().openGraphPage(graph.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
+        titleInput.setValue(newValue);
+        mainPageLink.click();
+        acceptAlert(alertText);
+        new IndexPage().goToGraphsPage().openGraphPage(graph.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         return this;
     }
 
