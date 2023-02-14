@@ -19,29 +19,32 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 public class S3CephTenantPage extends IProductPage {
     private static final String BLOCK_INFO = "Общая информация";
-    private static final String BLOCK_VM = "Виртуальная машина";
-    private static final String BLOCK_DB = "Базы данных";
-    private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
-    private static final String BLOCK_DB_AT_USER = "at_db_at_user";
+    private static final String BLOCK_RULE = "Правила жизненного цикла";
+    private static final String BLOCK_PARAM = "Параметры";
+    private static final String BLOCK_VERSION = "Версионирование";
+    private static final String BLOCK_USERS = "Список пользователей";
     private static final String BLOCK_DB_USERS = "Пользователи";
-    private static final String HEADER_CONNECT_STATUS = "Статус подключения";
+    private static final String HEADER_PREFIX = "Префикс";
     private static final String HEADER_NAME = "Имя";
-    private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
+    private static final String HEADER_NAME_RULE = "Имя правила";
     private static final String STATUS = "Статус";
-    private static final String HEADER_PATH = "Файловая система";
+    private static final String HEADER_NAME_USER = "Имя пользователя";
     private static final String HEADER_SORT = "Сортировка";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
-    private static final String HEADER_COMMENTS = "Комментарий";
+    private static final String HEADER_LIST_POLICY = "Список политик";
 
 
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    SelenideElement btnAccessPolicy = $x("//button[.='Политики доступа']");
+    SelenideElement btnRule = $x("//button[.='Правила жизненного цикла']");
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
     SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
-
+    SelenideElement generatePassButton1 = $x("//button[@aria-label='generate']");
+    SelenideElement generatePassButton2 = $x("(//button[@aria-label='generate'])[2]");
 
     public S3CephTenantPage(S3Ceph product) {
         super(product);
@@ -64,12 +67,12 @@ public class S3CephTenantPage extends IProductPage {
         checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
-    public void checkConfiguration() {
-        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        new Table("Роли узла").getRowByIndex(0).scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
-    }
+//    public void checkConfiguration() {
+//        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+//        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+//        new Table("Роли узла").getRowByIndex(0).scrollIntoView(scrollCenter).click();
+//        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
+//    }
 
     public void resetPassword() {
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -141,21 +144,7 @@ public class S3CephTenantPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
-    public void createDb(String name) {
-        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
-        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
-                Dialog dlg = Dialog.byTitle("Добавить БД");
-                dlg.setInputValue("Имя базы данных", name);
-                generatePassButton.shouldBe(Condition.enabled).click();
-                Alert.green("Значение скопировано");
-            });
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertEquals(name, new Table(HEADER_NAME).getRowByColumnValue(HEADER_NAME, name).getValueByColumn(HEADER_NAME));
-        }
-    }
+
 
     public void addUserDb(String nameDb, String nameUserDb, String comment) {
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -176,16 +165,16 @@ public class S3CephTenantPage extends IProductPage {
         }
     }
 
-    public void removeDb(String name) {
-        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
-        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithoutParameters(name, "Удалить БД");
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
-        }
-    }
+//    public void removeDb(String name) {
+//        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+//        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+//        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
+//            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+//            runActionWithoutParameters(name, "Удалить БД");
+//            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+//            Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
+//        }
+//    }
     public void enlargeDisk(String name, String size, SelenideElement node) {
 
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
@@ -212,15 +201,15 @@ public class S3CephTenantPage extends IProductPage {
         });
     }
 
-    public void deleteUserDb(String nameUser) {
-        btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_NAME).isColumnValueContains("", nameUser)) {
-            runActionWithParameters(BLOCK_DB_AT_USER, "Удалить пользователя", "Подтвердить", () -> {
-            });
-            btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertFalse(new Table(HEADER_NAME).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
-        }
-    }
+//    public void deleteUserDb(String nameUser) {
+//        btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+//        if (new Table(HEADER_NAME).isColumnValueContains("", nameUser)) {
+//            runActionWithParameters(BLOCK_DB_AT_USER, "Удалить пользователя", "Подтвердить", () -> {
+//            });
+//            btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+//            Assertions.assertFalse(new Table(HEADER_NAME).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
+//        }
+//    }
 
     public SelenideElement getRoleNode() {
         return new Table("Версионирование").getRow(0).get();
@@ -277,17 +266,114 @@ public class S3CephTenantPage extends IProductPage {
         });
         btnGeneralInfo.click();
         Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, "de-plux-bucket"), "Ошибка создания");
-        new S3CephTenantPage.VirtualMachineTable("Статус").checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void deleteBucket() {
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
         getRoleNode().click();
-        runActionWithoutParameters("Параметры", "Удалить бакет",ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(BLOCK_PARAM, "Удалить бакет",ActionParameters.builder().node(getRoleNode()).build());
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
         Assertions.assertFalse(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, "de-plux-bucket"), "Ошибка удаления");
     }
 
+    public void changeSettingsBucket(String size) {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().click();
+        runActionWithParameters(BLOCK_PARAM, "Изменить настройки бакета", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Изменить настройки бакета");
+            dlgActions.setInputValue("Макс. объем, ГБ", size);
+            CheckBox.byLabel("Версионирование").setChecked(true);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(BLOCK_VERSION, "true"), "Ошибка изменения");
+    }
+
+    public void addRuLifeCycle(String name,String size) {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().click();
+        btnRule.click();
+        runActionWithParameters(getBtnAction("",3), "Добавить правило жизненного цикла", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Добавить правило жизненного цикла");
+            dlgActions.setInputValue("Название", name);
+            dlgActions.setSelectValue("тип","Expiration");
+            RadioGroup.byLabel("Условие срабатывания").select("Кол-во дней");
+            dlgActions.setInputValue("Кол-во дней", size);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        getRoleNode().click();
+        btnRule.click();
+        Assertions.assertTrue(new Table(HEADER_NAME_RULE).isColumnValueEquals(HEADER_NAME_RULE, name), "Ошибка добавления правила ");
+    }
+
+    public void changeRuLifeCycle(String prefix,String size) {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().click();
+        btnRule.click();
+        runActionWithParameters(getBtnAction("",4), "Изменить правило жизненного цикла", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Изменить правило жизненного цикла");
+            dlgActions.setInputValue("Кол-во дней", size);
+            dlgActions.setInputValue(HEADER_PREFIX, prefix);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        getRoleNode().click();
+        btnRule.click();
+        Assertions.assertTrue(new Table(HEADER_PREFIX).isColumnValueEquals(HEADER_PREFIX, prefix), "Ошибка изменения правила ");
+    }
+
+    public void deleteRuLifeCycle() {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().click();
+        btnRule.click();
+        runActionWithoutParameters(getBtnAction("",4), "Удалить правило жизненного цикла",ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        getRoleNode().click();
+        btnRule.click();
+        Assertions.assertTrue(new Table(HEADER_PREFIX).isEmpty(), "Ошибка изменения правила ");
+    }
+
+    public void addUser(String name) {
+        btnUsers.click();
+        runActionWithParameters(BLOCK_USERS, "Добавить пользователя", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Добавить пользователя");
+            dlgActions.setInputValue("Имя", name);
+            generatePassButton1.shouldBe(Condition.enabled).click();
+            generatePassButton2.shouldBe(Condition.enabled).click();
+        });
+        btnUsers.click();
+        Assertions.assertTrue(new Table(HEADER_NAME_USER).isColumnValueEquals(HEADER_NAME_USER, name), "Ошибка создания");
+    }
+
+    public void addAccessPolicy(String name) {
+        btnAccessPolicy.click();
+        runActionWithParameters(HEADER_LIST_POLICY, "Добавить политику", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Добавить пользователя");
+            dlgActions.setSelectValue("Имя пользователя",name);
+            dlgActions.setSelectValue("Права","Полные");
+        });
+        btnAccessPolicy.click();
+        //Assertions.assertTrue(new Table(HEADER_NAME_USER).isColumnValueEquals(HEADER_NAME_USER, name), "Ошибка создания");
+    }
+
+    public void deleteUser() {
+        btnUsers.click();
+        runActionWithoutParameters(getBtnAction("",3), "Удалить пользователя");
+        btnUsers.click();
+        Assertions.assertTrue(new Table(HEADER_NAME_USER).isEmpty(), "Ошибка удаления правила ");
+    }
+
+    public void deleteTenant() {
+        runActionWithParameters(BLOCK_INFO, "Удалить тенант", "Удалить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Удаление");
+            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+        });
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);}
 
     //Таблица ролей
     public class RoleTable extends Table {

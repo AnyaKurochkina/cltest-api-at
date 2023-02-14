@@ -36,130 +36,133 @@ public class UiS3CephTenantTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-//    @Test
-//    @TmsLink("")
-//    @Order(1)
-//    @DisplayName("UI S3CephTenant. Заказ")
-//    void orderS3Ceph() {
-//        try {
-//            new IndexPage()
-//                    .clickOrderMore()
-//                    .selectProduct(product.getProductName());
-//              S3CephTenantOrderPage orderPage = new S3CephTenantOrderPage();
-//              orderPage.getSegment().selectByValue(product.getSegment());
-//            orderPage.orderClick();
-//            new OrdersPage()
-//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-//                    .getElementByColumn("Продукт")
-//                    .hover()
-//                    .click();
-//            S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
-//            s3CepthPages.waitChangeStatus(Duration.ofMinutes(25));
-//            s3CepthPages.checkLastAction("Развертывание");
-//        } catch (Throwable e) {
-//            product.setError(e.toString());
-//            throw e;
-//        }
-//    }
+    @Test
+    @TmsLink("891754")
+    @Order(1)
+    @DisplayName("UI S3CephTenant. Заказ")
+    void orderS3Ceph() {
+        try {
+            new IndexPage()
+                    .clickOrderMore()
+                    .selectProduct(product.getProductName());
+              S3CephTenantOrderPage orderPage = new S3CephTenantOrderPage();
+              orderPage.getSegment().selectByValue(product.getSegment());
+            orderPage.orderClick();
+            new OrdersPage()
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
+                    .hover()
+                    .click();
+            S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+            s3CepthPages.waitChangeStatus(Duration.ofMinutes(25));
+            s3CepthPages.checkLastAction("Развертывание");
+        } catch (Throwable e) {
+            product.setError(e.toString());
+            throw e;
+        }
+    }
 
-
-//    @Test
-//    @TmsLink("")
-//    @Order(2)
-//    @DisplayName("UI S3CephTenant. Проверка полей заказа")
-//    void checkHeaderHistoryTable() {
-//        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
-//        s3CepthPages.getBtnGeneralInfo().click();
-//        s3CepthPages.checkHeadersHistory();
-//        s3CepthPages.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-//        new Graph().checkGraph();
-//    }
+    @Test
+    @TmsLink("1458370")
+    @Order(2)
+    @DisplayName("UI S3CephTenant. Проверка полей заказа")
+    void checkHeaderHistoryTable() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.getBtnGeneralInfo().click();
+        s3CepthPages.checkHeadersHistory();
+        s3CepthPages.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        new Graph().checkGraph();
+    }
 
     @Test
     @Order(3)
-    @TmsLink("")
+    @TmsLink("891767")
     @DisplayName("UI S3CephTenant. Добавить бакет")
     void addBucket() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
         s3CepthPages.runActionWithCheckCost(CompareType.MORE, () -> s3CepthPages.addBucket("bucket","12"));
     }
 
-//    @Test
-//    @Order(29)
-//    @TmsLink("")
-//    @DisplayName("UI S3CephTenant. Удалить бакет")
-//    void deleteBucket() {
-//        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
-//        s3CepthPages.runActionWithCheckCost(CompareType.LESS, () -> s3CepthPages.deleteBucket());
-//    }
+    @Test
+    @Order(4)
+    @TmsLink("891769")
+    @DisplayName("UI S3CephTenant. Изменить настройки бакета")
+    void changeSettingsBucket() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.MORE, () -> s3CepthPages.changeSettingsBucket("14"));
+    }
 
-//
-//    @Test
-//    @Order(10)
-//    @TmsLink("")
-//    @DisplayName("UI RedisAstra. Изменить конфигурацию")
-//    void changeConfiguration() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.runActionWithCheckCost(CompareType.MORE, redisPage::changeConfiguration);
-//    }
-//
-//    @Test
-//    @Order(11)
-//    @TmsLink("")
-//    @DisplayName("UI RedisAstra. Проверить конфигурацию")
-//    void vmActCheckConfig() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::checkConfiguration);
-//    }
-//
-//    @Test
-//    @Order(19)
-//    @TmsLink("")
-//    @DisplayName("UI RedisAstra. Сбросить пароль")
-//    void resetPassword () {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::resetPassword);
-//    }
-//
-//    @Test
-//    @TmsLinks({@TmsLink(""), @TmsLink("1454015")})
-//    @Order(25)
-//    @DisplayName("UI RedisAstra. Добавление/удаление группы доступа")
-//    void deleteGroup() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        //redisPage.deleteGroup("superuser");
-//        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-//        redisPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
-//    }
-//
-//    @Test
-//    @TmsLink("")
-//    @Order(26)
-//    @DisplayName("UI RedisAstra. Изменение группы доступа")
-//    void updateGroup() {
-//        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-//        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.updateGroup("superuser",
-//                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
-//    }
-//
-//    @Test
-//    @Order(27)
-//    @TmsLink("")
-//    @DisplayName("UI Windows. Мониторинг ОС")
-//    void monitoringOs() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.checkMonitoringOs();
-//    }
-//
-//    @Test
-//    @Order(100)
-//    @TmsLink("")
-//    @DisplayName("UI RedisAstra. Удаление продукта")
-//    void delete() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.delete();
-//    }
+    @Test
+    @Order(5)
+    @TmsLink("1240592")
+    @DisplayName("UI S3CephTenant. Добавить правило жизненного цикла")
+    void addRuLifeCycle() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addRuLifeCycle("name","11"));
+    }
+
+    @Test
+    @Order(6)
+    @TmsLink("1240621")
+    @DisplayName("UI S3CephTenant. Изменить правило жизненного цикла")
+    void changeRuLifeCycle() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.changeRuLifeCycle("ift","15"));
+    }
+
+    @Test
+    @Order(7)
+    @TmsLink("1240649")
+    @DisplayName("UI S3CephTenant. Удалить правило жизненного цикла")
+    void deleteRuLifeCycle() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.deleteRuLifeCycle());
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("891772")
+    @DisplayName("UI S3CephTenant. Добавить пользователя")
+    void addUser() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addUser("user"));
+    }
+
+    @Test
+    @Order(9)
+    @TmsLink("891774")
+    @DisplayName("UI S3CephTenant. Удалить пользователя")
+    void deleteUser() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.deleteUser());
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("891775")
+    @DisplayName("UI S3CephTenant. Добавить политику")
+    void addAccessPolicy() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addAccessPolicy("user"));
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("891770")
+    @DisplayName("UI S3CephTenant. Удалить бакет")
+    void deleteBucket() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.LESS, () -> s3CepthPages.deleteBucket());
+    }
+
+    @Test
+    @Order(100)
+    @TmsLink("891766")
+    @DisplayName("UI S3CephTenant. Удалить тенант")
+    void deleteTenant() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.LESS, () -> s3CepthPages.deleteTenant());
+    }
+
 
  }
