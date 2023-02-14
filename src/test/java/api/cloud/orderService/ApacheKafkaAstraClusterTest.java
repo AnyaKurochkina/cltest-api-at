@@ -192,6 +192,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("847095")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

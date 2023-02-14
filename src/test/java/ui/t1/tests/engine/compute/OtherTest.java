@@ -75,6 +75,7 @@ public class OtherTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Создание/Удаление ВМ c публичным IP")
     void createVmWidthPublicIp() {
         String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        createdIpList.add(ip);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         String orderIdIp = ipPage.getOrderId();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()

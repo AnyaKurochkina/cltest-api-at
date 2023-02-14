@@ -37,10 +37,10 @@ public class OpenShiftProject extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/openshift_project.json";
-        productName = "OpenShift project";
+        productName = "OpenShift project (Ключ Астром)";
         initProduct();
         if(roles == null) {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), "", "compute");
             roles = Collections.singletonList(new Role("edit", accessGroup));
         }
         if(segment == null)
@@ -67,6 +67,7 @@ public class OpenShiftProject extends IProduct {
                 .findFirst().orElseThrow(() -> new NoSuchFieldException("Список кластеров пуст"));
         resourcePoolLabel = resourcePool.getLabel();
         return JsonHelper.getJsonTemplate(jsonTemplate)
+                .set("$.order.product_id", productId)
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)

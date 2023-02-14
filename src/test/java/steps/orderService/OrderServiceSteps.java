@@ -395,7 +395,7 @@ public class OrderServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list.code");
-        if(list.contains(dc))
+        if (list.contains(dc))
             return dc;
         return list.get(new Random().nextInt(list.size()));
     }
@@ -414,7 +414,7 @@ public class OrderServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list.code");
-        if(list.contains(platform))
+        if (list.contains(platform))
             return platform;
         return list.get(new Random().nextInt(list.size()));
     }
@@ -444,7 +444,7 @@ public class OrderServiceSteps extends Steps {
             actions = Arrays.toString(pathList.toArray());
         Assertions.assertNotEquals("", id, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
 
-        return id;
+        return Objects.requireNonNull(id, "Нет действия " + action + " у продукта" + product);
     }
 
     /**

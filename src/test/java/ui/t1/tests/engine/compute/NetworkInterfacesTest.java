@@ -40,9 +40,10 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        new VmList().selectCompute(vm.getName()).checkCreate();
         String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
-        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
+        createdIpList.add(ip);
+        new PublicIpList().selectIp(ip).checkCreate();
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).attachIp(ip);
         networkInterfaceList.selectNetworkInterfaceByVm(vm.getName()).detachComputeIp(ip);

@@ -19,6 +19,9 @@ import ui.t1.pages.IndexPage;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 @Epic("Cloud Compute")
@@ -34,6 +37,7 @@ public abstract class AbstractComputeTest extends Tests {
     protected String flavorName = "Intel";
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
     protected String sshKey = getRandomName();
+    protected List<String> createdIpList = new ArrayList<>();
 
     public AbstractComputeTest() {
         project = Project.builder().isForOrders(true).build().createObject();
@@ -79,6 +83,7 @@ public abstract class AbstractComputeTest extends Tests {
                 .filter(e -> e.startsWith(entitiesPrefix)).forEach(e -> deleteProduct(new IndexPage().goToImages().selectImage(e)));
         new IndexPage().goToSshKeys().getSshKeysList().stream()
                 .filter(e -> e.startsWith(entitiesPrefix)).forEach(e -> new IndexPage().goToSshKeys().deleteKey(e));
+        createdIpList.forEach(e -> deleteProduct(new IndexPage().goToPublicIps().selectIp(e)));
         Selenide.closeWebDriver();
     }
 }
