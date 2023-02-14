@@ -1,10 +1,8 @@
 package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;

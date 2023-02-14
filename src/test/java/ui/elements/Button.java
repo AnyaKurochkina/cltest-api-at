@@ -36,7 +36,6 @@ public class Button implements TypifiedElement {
         return new Button($x("//button[@aria-label='{}']", value));
     }
 
-    @Step("Получение Button по id '{id}'")
     public static Button byId(String id) {
         return new Button($x("//button[@id='{}']", id));
     }
