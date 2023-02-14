@@ -444,7 +444,7 @@ public class OrderServiceSteps extends Steps {
             actions = Arrays.toString(pathList.toArray());
         Assertions.assertNotEquals("", id, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
 
-        return Objects.requireNonNull(id, "Нет действия " + action + "у продукта" + product);
+        return Objects.requireNonNull(id, "Нет действия " + action + " у продукта" + product);
     }
 
     /**

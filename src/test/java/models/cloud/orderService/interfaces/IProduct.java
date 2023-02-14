@@ -133,7 +133,7 @@ public abstract class IProduct extends Entity {
         Organization org = Organization.builder().build().createObject();
         return Objects.requireNonNull(ReferencesStep
                 .getJsonPathList(String.format("tags__contains=%s,%s,%s&directory__name=geo_distribution", envType().toUpperCase(), product, org.getName()))
-                .getString(String.format("find{it.name == '%s'}.id", name)), "Id geo_distribution not found");
+                .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found "+ name);
     }
 
     @Override
