@@ -1,6 +1,7 @@
 package steps.t1.dns;
 
 import core.helper.http.Http;
+import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.t1.dns.DnsZone;
 import models.t1.dns.PowerDnsRrset;
@@ -26,6 +27,14 @@ public class DnsSteps extends Steps {
                 .post(apiUrl + "projects/{}/zones", projectId)
                 .assertStatus(200)
                 .extractAs(DnsZone.class);
+    }
+
+    @Step("Создание public zone")
+    public static Response createPublicZoneResponse(JSONObject object, String projectId) {
+        return new Http(DNSService)
+                .setRole(CLOUD_ADMIN)
+                .body(object)
+                .post(apiUrl + "projects/{}/zones", projectId);
     }
 
     @Step("Создание Rrset")
@@ -56,7 +65,7 @@ public class DnsSteps extends Steps {
     }
 
     @Step("Удаление zone из OpenDns")
-    public static void deleteZoneFromOpenDns(String zoneId) {
+    public static void deleteZoneFromPowerDns(String zoneId) {
         new Http(PowerDns)
                 .setWithoutToken()
                 .addHeader("X-Api-Key", "6e3bc9a0fa7eaebf282ad2e5")
@@ -149,6 +158,17 @@ public class DnsSteps extends Steps {
         List<DnsZone> list = getPublicZoneList(projectId);
         for (DnsZone zone : list) {
             if (zone.getId().equals(zoneId)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Step("Проверка существования зоны по имени")
+    public static boolean isZoneByNameExist(String name, String projectId) {
+        List<DnsZone> list = getPublicZoneList(projectId);
+        for (DnsZone zone : list) {
+            if (zone.getName().equals(name)) {
                 return true;
             }
         }
