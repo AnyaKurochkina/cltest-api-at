@@ -7,12 +7,14 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.back;
 
 public class ServicePage extends BasePage {
 
@@ -360,5 +362,52 @@ public class ServicePage extends BasePage {
         deleteButton.getButton().hover();
         Assertions.assertFalse(Tooltip.isVisible());
         deleteButton.getButton().shouldBe(Condition.enabled);
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Отмена")
+    public ServicePage checkUnsavedChangesAlertDismiss() {
+        String newValue = "new";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        serviceListLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        backButton.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        mainPageLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Ок")
+    public ServicePage checkUnsavedChangesAlertAccept(Service service) {
+        String newValue = "new title";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        acceptAlert(unsavedChangesAlertText);
+        new ServicesListPagePC().openServicePage(service.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
+        titleInput.setValue(newValue);
+        serviceListLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new ServicesListPagePC().openServicePage(service.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
+        titleInput.setValue(newValue);
+        backButton.click();
+        acceptAlert(unsavedChangesAlertText);
+        new ServicesListPagePC().openServicePage(service.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
+        titleInput.setValue(newValue);
+        mainPageLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new IndexPage().goToServicesListPagePC().openServicePage(service.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
+        return this;
     }
 }

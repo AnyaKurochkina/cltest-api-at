@@ -1,14 +1,11 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.productCatalog.graph.GraphPage;
-import ui.elements.Graph;
 
 @Feature("Сохранение графа")
 public class SaveGraphTest extends GraphBaseTest {
@@ -91,7 +88,7 @@ public class SaveGraphTest extends GraphBaseTest {
 
     @Test
     @TmsLink("1073764")
-    @DisplayName("Баннер о несохраненных изменениях")
+    @DisplayName("Баннер при несохраненных изменениях")
     public void checkUnsavedChangesAlert() {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)

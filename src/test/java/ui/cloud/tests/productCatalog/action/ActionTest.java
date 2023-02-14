@@ -263,16 +263,14 @@ public class ActionTest extends BaseTest {
 
     @Test
     @TmsLink("1071773")
-    @DisplayName("Баннер при закрытии формы с несохраненными данными, Отмена")
+    @DisplayName("Баннер при закрытии формы с несохраненными данными")
     public void bannerWhenCloseFormAndNotSaveCancel() {
-        String name = "action_for_banner_test_ui";
-        createActionByApi(name);
-        new IndexPage()
-                .goToActionsPage()
+        String name = UUID.randomUUID().toString();
+        Action action = createActionByApi(name);
+        new IndexPage().goToActionsPage()
                 .openActionForm(name)
-                .setPriority(1)
-                .backOnBrowserAndAlertCancel()
-                .backByActionsLinkAndAlertCancel();
+                .checkUnsavedChangesAlertAccept(action)
+                .checkUnsavedChangesAlertDismiss();
     }
 
     @Test

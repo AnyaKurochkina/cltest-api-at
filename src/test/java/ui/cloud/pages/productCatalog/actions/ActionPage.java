@@ -10,6 +10,7 @@ import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
@@ -150,26 +151,6 @@ public class ActionPage extends BasePage {
         return new ActionsListPage();
     }
 
-    @Step("Назад с помощью кнопки браузера и отмена оповещения о несохранненных данных")
-    public ActionPage backOnBrowserAndAlertCancel() {
-        back();
-        String alertMsg = switchTo().alert().getText();
-        assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
-        switchTo().alert().dismiss();
-        actionsListLink.shouldBe(Condition.visible);
-        return this;
-    }
-
-    @Step("Закрытие текущей вкладки и отмена оповещения о несохранненных данных")
-    public ActionPage closeTabAndAlertCancel() {
-        closeWindow();
-        String alertMsg = switchTo().alert().getText();
-        assertEquals("Возможно, внесенные изменения не сохранятся.", alertMsg);
-        switchTo().alert().dismiss();
-        actionsListLink.shouldBe(Condition.visible);
-        return this;
-    }
-
     @Step("Переход на список действий и отмена оповещения о несохранненных данных")
     public ActionPage backByActionsLinkAndAlertCancel() {
         actionsListLink.scrollIntoView(TypifiedElement.scrollCenter);
@@ -274,6 +255,53 @@ public class ActionPage extends BasePage {
 
     public ActionPage goToAdditionalParamsTab() {
         goToTab("Дополнительные параметры");
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Отмена")
+    public ActionPage checkUnsavedChangesAlertDismiss() {
+        String newValue = "new";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        actionsListLink.scrollIntoView(false).click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        backButton.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        mainPageLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Ок")
+    public ActionPage checkUnsavedChangesAlertAccept(Action action) {
+        String newValue = "new title";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        acceptAlert(unsavedChangesAlertText);
+        new ActionsListPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
+        titleInput.setValue(newValue);
+        actionsListLink.scrollIntoView(false).click();
+        acceptAlert(unsavedChangesAlertText);
+        new ActionsListPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
+        titleInput.setValue(newValue);
+        backButton.click();
+        acceptAlert(unsavedChangesAlertText);
+        new ActionsListPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
+        titleInput.setValue(newValue);
+        mainPageLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new IndexPage().goToActionsPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         return this;
     }
 }

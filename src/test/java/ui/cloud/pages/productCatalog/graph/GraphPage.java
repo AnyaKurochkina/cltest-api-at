@@ -31,7 +31,6 @@ public class GraphPage extends BasePage {
     private final Input authorInput = Input.byName("author");
     private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
     private final String nameColumn = "Имя";
-    private final String alertText = "Внесенные изменения не сохранятся. Покинуть страницу?";
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -187,16 +186,16 @@ public class GraphPage extends BasePage {
         goToMainTab();
         titleInput.setValue(newValue);
         back();
-        dismissAlert(alertText);
+        dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         graphsListLink.click();
-        dismissAlert(alertText);
+        dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         backButton.click();
-        dismissAlert(alertText);
+        dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         mainPageLink.click();
-        dismissAlert(alertText);
+        dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
     }
@@ -207,22 +206,22 @@ public class GraphPage extends BasePage {
         goToMainTab();
         titleInput.setValue(newValue);
         back();
-        acceptAlert(alertText);
+        acceptAlert(unsavedChangesAlertText);
         new GraphsListPage().openGraphPage(graph.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         titleInput.setValue(newValue);
         graphsListLink.click();
-        acceptAlert(alertText);
+        acceptAlert(unsavedChangesAlertText);
         new GraphsListPage().openGraphPage(graph.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         titleInput.setValue(newValue);
         backButton.click();
-        acceptAlert(alertText);
+        acceptAlert(unsavedChangesAlertText);
         new GraphsListPage().openGraphPage(graph.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         titleInput.setValue(newValue);
         mainPageLink.click();
-        acceptAlert(alertText);
+        acceptAlert(unsavedChangesAlertText);
         new IndexPage().goToGraphsPage().openGraphPage(graph.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         return this;

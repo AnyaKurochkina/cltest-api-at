@@ -33,6 +33,7 @@ public class BasePage {
     protected final Input nameInput = Input.byName("name");
     protected final Input titleInput = Input.byName("title");
     protected final SelenideElement mainPageLink = $x("//a[@href='/meccano/home']");
+    protected final String unsavedChangesAlertText = "Внесенные изменения не сохранятся. Покинуть страницу?";
 
     @Step("Сохранение объекта без изменения версии")
     public BasePage saveWithoutPatchVersion(String alertText) {

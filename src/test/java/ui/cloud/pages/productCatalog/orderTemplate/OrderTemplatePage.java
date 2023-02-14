@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -95,5 +96,42 @@ public class OrderTemplatePage extends BasePage {
         deleteButton.getButton().hover();
         Assertions.assertFalse(Tooltip.isVisible());
         deleteButton.getButton().shouldBe(Condition.enabled);
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Отмена")
+    public OrderTemplatePage checkUnsavedChangesAlertDismiss() {
+        String newValue = "new";
+        titleInput.setValue(newValue);
+        back();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        orderTemplatesLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        mainPageLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Ок")
+    public OrderTemplatePage checkUnsavedChangesAlertAccept(ItemVisualTemplate template) {
+        String newValue = "new title";
+        titleInput.setValue(newValue);
+        back();
+        acceptAlert(unsavedChangesAlertText);
+        new OrderTemplatesListPage().openTemplatePage(template.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
+        titleInput.setValue(newValue);
+        orderTemplatesLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new OrderTemplatesListPage().openTemplatePage(template.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
+        titleInput.setValue(newValue);
+        mainPageLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new IndexPage().goToOrderTemplatesPage().openTemplatePage(template.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
+        return this;
     }
 }
