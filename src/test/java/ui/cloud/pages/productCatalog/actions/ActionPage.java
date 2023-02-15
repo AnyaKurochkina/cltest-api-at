@@ -300,7 +300,7 @@ public class ActionPage extends BasePage {
         titleInput.setValue(newValue);
         mainPageLink.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToActionsPage().openActionForm(action.getName());
+        new IndexPage().goToActionsListPage().openActionForm(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         return this;
     }

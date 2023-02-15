@@ -93,6 +93,12 @@ public class BasePage {
         }
     }
 
+    @Step("Переход на вкладку 'История изменений'")
+    public AuditPage goToAuditTab() {
+        goToTab("История изменений");
+        return new AuditPage();
+    }
+
     @Step("Проверка, что открыта вкладка '{title}'")
     public void checkTabIsSelected(String title) {
         SelenideElement tab = $x("//button[span[text()='" + title + "']]");
