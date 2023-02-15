@@ -2,14 +2,13 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
-import ui.elements.Input;
-import ui.elements.Select;
+import ui.elements.*;
 import ui.models.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -18,19 +17,17 @@ public class GraphModifiersPage extends GraphPage {
 
     private final SelenideElement addModifierButton = $x("//div[text()='Добавить']//ancestor::button");
     private final SelenideElement nameInput = $x("//form//input[@name='name']");
-    private final SelenideElement devEnvCheckbox = $x("//form//input[@name='dev']");
-    private final SelenideElement testEnvCheckbox = $x("//form//input[@name='test']");
-    private final SelenideElement prodEnvCheckbox = $x("//form//input[@name='prod']");
     private final Input numberInput = Input.byLabelV2("Порядок применения");
     private final Select schemaSelect = Select.byLabel("Схема");
     private final Select typeSelect = Select.byLabel("Способ изменения");
+    private final MultiSelect envTypeSelect = MultiSelect.byLabel("Тип среды");
     private final SelenideElement pathInput = $x("//form//input[@name='path']");
     private final SelenideElement modifierData = $x("//form//span[text()='ModifierData']/ancestor::div[2]//textarea");
     private final SelenideElement formSaveButton = $x("//form//div[text()='Сохранить']/parent::button");
     private final SelenideElement formCancelButton = $x("//form//div[text()='Отмена']/parent::button");
-    private final SelenideElement jsonSchemaButton = $x("//button[@id='JSON']");
-    private final SelenideElement uiSchemaButton = $x("//button[@id='UI']");
-    private final SelenideElement staticDataButton = $x("//button[@id='StaticData']");
+    private final Button jsonSchemaButton = Button.byId("JSON");
+    private final Button uiSchemaButton = Button.byId("UI");
+    private final Button staticDataButton = Button.byId("StaticData");
     private final SelenideElement modifierNameValidationHint = $x("//form//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement modifierNumberValidationHint = $x("//form//div[text()='Допустимое значение от 1 до 2147483647']");
     private final SelenideElement devEnvRadioButton = $x("//input[@type='radio' and @name='dev']");
@@ -42,9 +39,9 @@ public class GraphModifiersPage extends GraphPage {
     @Step("Добавление модификатора '{modifier.name}' и сохранение графа")
     public GraphModifiersPage addModifierAndSave(GraphModifier modifier) {
         addModifierButton.click();
-        TestUtils.wait(500);
+        Waiting.sleep(500);
         nameInput.setValue(modifier.getName());
-        setEnvs(modifier.getEnvs());
+        envTypeSelect.set(modifier.getEnvs());
         schemaSelect.set(modifier.getSchema());
         typeSelect.set(modifier.getType());
         pathInput.setValue(modifier.getPath());
@@ -58,7 +55,7 @@ public class GraphModifiersPage extends GraphPage {
     public GraphModifiersPage checkModifierAttributes(GraphModifier modifier) {
         $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
         nameInput.shouldHave(Condition.exactValue(modifier.getName()));
-        checkSelectedEnvs(modifier.getEnvs());
+        Assertions.assertEquals(modifier.getEnvs()[0], envTypeSelect.getValue());
         numberInput.getInput().shouldHave(Condition.exactValue(modifier.getNumber()));
         $x("//form//div[text()='" + modifier.getSchema() + "']").shouldBe(Condition.visible);
         pathInput.shouldHave(Condition.exactValue(modifier.getPath()));
@@ -74,8 +71,7 @@ public class GraphModifiersPage extends GraphPage {
         $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
         nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nameInput.setValue(modifier.getName());
-        clearSelectedEnvs();
-        setEnvs(modifier.getEnvs());
+        envTypeSelect.set(modifier.getEnvs());
         schemaSelect.set(modifier.getSchema());
         typeSelect.set(modifier.getType());
         pathInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
@@ -176,39 +172,6 @@ public class GraphModifiersPage extends GraphPage {
         TestUtils.wait(1100);
         Assertions.assertFalse($x("//td[@value='" + name + "']").exists());
         return this;
-    }
-
-    @Step("Задание сред для модификатора")
-    private void setEnvs(String[] envs) {
-        for (String env : envs) {
-            switch (env) {
-                case "dev":
-                    devEnvCheckbox.click();
-                    break;
-                case "test":
-                    testEnvCheckbox.click();
-                    break;
-                case "prod":
-                    prodEnvCheckbox.click();
-                    break;
-            }
-        }
-    }
-
-    @Step("Проверка выбранных сред модификатора")
-    private void checkSelectedEnvs(String[] envs) {
-        for (String env : envs) {
-            $x("//form//input[@name='" + env + "' and @checked]").shouldBe(Condition.visible);
-        }
-    }
-
-    @Step("Очистка выбранных сред модификатора")
-    private void clearSelectedEnvs() {
-        for (String env : new String[]{"dev", "test", "prod"}) {
-            if ($x("//form//input[@name='" + env + "' and @checked]").exists()) {
-                $x("//form//input[@name='" + env + "' and @checked]").click();
-            }
-        }
     }
 
     @Step("Выбор среды просмотра модификатора")

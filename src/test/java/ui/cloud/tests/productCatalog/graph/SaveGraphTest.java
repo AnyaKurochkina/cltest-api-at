@@ -85,4 +85,14 @@ public class SaveGraphTest extends GraphBaseTest {
                 .saveGraphWithManualVersion("999.999.999")
                 .checkVersionLimit();
     }
+
+    @Test
+    @TmsLink("1073764")
+    @DisplayName("Баннер при несохраненных изменениях")
+    public void checkUnsavedChangesAlert() {
+        new IndexPage().goToGraphsPage()
+                .findAndOpenGraphPage(NAME)
+                .checkUnsavedChangesAlertAccept(graph)
+                .checkUnsavedChangesAlertDismiss();
+    }
 }

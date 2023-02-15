@@ -30,7 +30,7 @@ public class ActionsListTest extends Tests {
     public void getActionListTest() {
         String actionName = "create_action_example_for_get_list_test_api";
         Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .build()
                 .createObject();
         List<Action> list = getActionList();
@@ -54,12 +54,12 @@ public class ActionsListTest extends Tests {
     public void getActionListByNameTest() {
         String actionName = "create_action_example_for_get_list_by_name_test_api";
         Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .build()
                 .createObject();
         List<Action> list = getActionListByName(actionName);
         assertEquals(1, list.size());
-        assertEquals(actionName, list.get(0).getActionName());
+        assertEquals(actionName, list.get(0).getName());
     }
 
     @DisplayName("Получение списка действий по именам")
@@ -68,20 +68,20 @@ public class ActionsListTest extends Tests {
     public void getActionListByNamesTest() {
         String actionName = "create_action_example_for_get_list_by_names_1_test_api";
         Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title("api_test")
                 .build()
                 .createObject();
         String secondAction = "create_action_example_for_get_list_by_names_2_test_api";
         Action.builder()
-                .actionName(secondAction)
+                .name(secondAction)
                 .title("test")
                 .build()
                 .createObject();
         List<Action> list = getActionListByNames(actionName, secondAction);
         assertEquals(2, list.size(), "Список не содержит значений");
-        assertEquals(secondAction, list.get(1).getActionName());
-        assertEquals(actionName, list.get(0).getActionName());
+        assertEquals(secondAction, list.get(1).getName());
+        assertEquals(actionName, list.get(0).getName());
     }
 
     @DisplayName("Получение списка действий по типу")
@@ -91,7 +91,7 @@ public class ActionsListTest extends Tests {
         String actionName = "create_action_example_for_get_list_by_type_test_api";
         String actionType = "delete";
         Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .type(actionType)
                 .build()
                 .createObject();
@@ -108,7 +108,7 @@ public class ActionsListTest extends Tests {
         String actionName = "create_action_example_for_get_list_by_title_with_multisearch_test_api";
         String actionTitle = "action_title";
         Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionTitle)
                 .build()
                 .createObject();
@@ -124,11 +124,11 @@ public class ActionsListTest extends Tests {
     public void searchActionByName() {
         String actionName = "action_multisearch_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        String actionIdWithMultiSearch = getActionIdByNameWithMultiSearch(action.getActionName());
+        String actionIdWithMultiSearch = getActionIdByNameWithMultiSearch(action.getName());
         assertAll(
                 () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", actionName)),
                 () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
