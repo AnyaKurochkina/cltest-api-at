@@ -87,7 +87,7 @@ public class PostgreSQL extends IProduct {
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", !isDev())
                 .set("$.order.label", getLabel())
                 .build();
     }

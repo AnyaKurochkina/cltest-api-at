@@ -414,8 +414,8 @@ public abstract class IProduct extends Entity {
         return jsonObject;
     }
 
-    protected boolean isTest() {
-        return envType().contains("test");
+    protected boolean isDev() {
+        return envType().contains("dev");
     }
 
     public String envType() {
@@ -424,9 +424,9 @@ public abstract class IProduct extends Entity {
     }
 
     public void connectVmException(String message) throws ConnectException {
-        if (!isTest())
+        if (isDev())
             throw new ConnectException(message);
-        throw new TestAbortedException("Тест отключен для продуктов в TEST средах");
+        throw new TestAbortedException("Тест отключен для продуктов в TEST и PROD средах");
     }
 
 }

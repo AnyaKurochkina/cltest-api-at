@@ -88,7 +88,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka-4:zookeeper-3"))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
-                .remove("$.order.attrs.ad_logon_grants", isTest())
+                .remove("$.order.attrs.ad_logon_grants", !isDev())
                 //Fix
 
                 .set("$.order.project_name", project.id)

@@ -70,7 +70,7 @@ public class Astra extends IProduct {
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", getSupport())
                 .build();
     }
 

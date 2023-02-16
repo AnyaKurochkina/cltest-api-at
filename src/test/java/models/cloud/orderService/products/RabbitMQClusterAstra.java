@@ -47,7 +47,7 @@ public class RabbitMQClusterAstra extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/rabbitmq_cluster.json";
         productName = "RabbitMQ Cluster Astra";
-        role = "administrator";
+        role = "manager";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -68,8 +68,6 @@ public class RabbitMQClusterAstra extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
-        if (isTest())
-            role = "manager";
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -83,7 +81,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.on_support", /*isTest()*/getSupport())
+                .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq", "rabbitmq-2"))
                 .set("$.order.label", getLabel())
                 .build();
