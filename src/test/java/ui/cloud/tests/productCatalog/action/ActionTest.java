@@ -23,6 +23,7 @@ import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.BaseTest;
 
 import java.time.LocalDateTime;
@@ -386,5 +387,33 @@ public class ActionTest extends BaseTest {
                 .openActionForm(name)
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", "actions", "201", "создан");
+    }
+
+    @Test
+    @TmsLink("1364724")
+    @DisplayName("Проверка фильтрации по типу графа")
+    public void checkGraphTypeFilterTest() {
+        String actionName = UUID.randomUUID().toString();
+        createActionByApi(actionName);
+        Graph creatingGraph = Graph.builder()
+                .name(UUID.randomUUID().toString())
+                .title("AT UI Graph")
+                .version("1.0.0")
+                .type(GraphType.CREATING.getValue())
+                .author("AT UI")
+                .build()
+                .createObject();
+        Graph actionGraph = Graph.builder()
+                .name(UUID.randomUUID().toString())
+                .title("AT UI Graph")
+                .version("1.0.0")
+                .type(GraphType.ACTION.getValue())
+                .author("AT UI")
+                .build()
+                .createObject();
+        new IndexPage().goToActionsListPage()
+                .openActionForm(actionName)
+                .setGraph(actionGraph.getName())
+                .checkGraphNotFound(creatingGraph.getName());
     }
 }
