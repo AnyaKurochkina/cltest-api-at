@@ -223,7 +223,7 @@ public class GraphTest extends Tests {
                 .build().createObject();
 
         Action action = Action.builder()
-                .actionName("action_for_graph_test_api")
+                .name("action_for_graph_test_api")
                 .graphId(mainGraphId)
                 .build().createObject();
 
@@ -231,7 +231,7 @@ public class GraphTest extends Tests {
         String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
         assertEquals("1.0.0", version);
         assertEquals(String.format("Нельзя удалить граф: %s. Он используется:\nProduct: (name: %s, version: 1.0.0)\nAction: (name: %s, version: 1.0.0)\nService: (name: %s, version: 1.0.0)",
-                mainGraph.getName(), product.getName(), action.getActionName(), service.getName()), deleteResponse);
+                mainGraph.getName(), product.getName(), action.getName(), service.getName()), deleteResponse);
     }
 
     @DisplayName("Удаление графа")

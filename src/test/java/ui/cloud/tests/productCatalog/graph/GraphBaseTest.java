@@ -4,7 +4,6 @@ import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
@@ -12,9 +11,7 @@ import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.BaseTest;
 import ui.models.Node;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static steps.productCatalog.GraphSteps.deleteGraphById;
 import static steps.productCatalog.GraphSteps.getGraphByName;
@@ -43,12 +40,6 @@ public class GraphBaseTest extends BaseTest {
         createGraph(NAME, TITLE);
     }
 
-    @AfterEach
-    @DisplayName("Удаление графов, созданных в сетапе")
-    public void tearDownForGraphTests() {
-        deleteGraphByApi(NAME);
-    }
-
     public void createGraph(String name, String title) {
         graph = Graph.builder()
                 .name(name)
@@ -70,12 +61,15 @@ public class GraphBaseTest extends BaseTest {
         Template.builder()
                 .name(name)
                 .title(TEMPLATE_TITLE)
-                .type("creating")
-                .description(DESCRIPTION)
+                .description("Template for node")
                 .type("system_nodes")
                 .run("internal")
+                .rollback("")
                 .input(input)
                 .output(output)
+                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
+                    put("type", "text");
+                }}))
                 .timeout(100)
                 .build()
                 .createObject();

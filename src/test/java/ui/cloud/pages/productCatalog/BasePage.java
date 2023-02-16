@@ -11,6 +11,7 @@ import ui.elements.Input;
 import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.switchTo;
 
 public class BasePage {
 
@@ -31,6 +32,8 @@ public class BasePage {
     protected final Button closeJSONView = Button.byAriaLabel("close");
     protected final Input nameInput = Input.byName("name");
     protected final Input titleInput = Input.byName("title");
+    protected final SelenideElement mainPageLink = $x("//a[@href='/meccano/home']");
+    protected final String unsavedChangesAlertText = "Внесенные изменения не сохранятся. Покинуть страницу?";
 
     @Step("Сохранение объекта без изменения версии")
     public BasePage saveWithoutPatchVersion(String alertText) {
@@ -104,5 +107,17 @@ public class BasePage {
         expandJSONView.click();
         closeJSONView.click();
         return this;
+    }
+
+    @Step("Отмена в баннере о несохраненных изменениях и проверка текста")
+    protected void dismissAlert(String text) {
+        Assertions.assertTrue(switchTo().alert().getText().contains(text), "Текст баннера отличается от " + text);
+        switchTo().alert().dismiss();
+    }
+
+    @Step("Продолжить в баннере о несохраненных изменениях и проверка текста")
+    protected void acceptAlert(String text) {
+        Assertions.assertTrue(switchTo().alert().getText().contains(text), "Текст баннера отличается от " + text);
+        switchTo().alert().accept();
     }
 }

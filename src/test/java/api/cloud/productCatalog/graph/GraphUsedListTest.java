@@ -56,7 +56,7 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         Action createActionResponse = Action.builder()
-                .actionName("action_for_used_graph_test_api")
+                .name("action_for_used_graph_test_api")
                 .graphId(usedGraphId)
                 .build()
                 .createObject();
@@ -94,7 +94,7 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         Action.builder()
-                .actionName("action_for_type_used_graph_test_api")
+                .name("action_for_type_used_graph_test_api")
                 .graphId(usedGraphId)
                 .build()
                 .createObject();
@@ -149,19 +149,19 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         Action.builder()
-                .actionName("action_for_last_object_used_graph_test_api")
+                .name("action_for_last_object_used_graph_test_api")
                 .graphId(usedGraphId)
                 .build()
                 .createObject();
 
         Action lastAction = Action.builder()
-                .actionName("last_action_for_last_object_used_graph_test_api")
+                .name("last_action_for_last_object_used_graph_test_api")
                 .graphId(usedGraphId)
                 .build()
                 .createObject();
 
         Response response = getLastObjectUsedGraph(usedGraphId);
-        assertEquals(lastAction.getActionName(), response.jsonPath().getString("name[1]"));
+        assertEquals(lastAction.getName(), response.jsonPath().getString("name[1]"));
         assertEquals(lastService.getName(), response.jsonPath().getString("name[2]"));
         assertEquals(lastProduct.getName(), response.jsonPath().getString("name[0]"));
     }
@@ -200,7 +200,7 @@ public class GraphUsedListTest extends Tests {
         String serviceVersion = serviceSteps.getById(service.getId(), GetServiceResponse.class).getVersion();
 
         Action action = Action.builder()
-                .actionName("action_for_last_object_used_graph_test_api")
+                .name("action_for_last_object_used_graph_test_api")
                 .graphId(usedGraphId)
                 .build()
                 .createObject();

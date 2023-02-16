@@ -34,7 +34,7 @@ public class ActionCreateWithEventTypeProviderTest extends Tests {
                 Collections.singletonList(new EventTypeProvider("vm", "vsphere"));
         String actionName = "create_action_with_exist_event_type_provider_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .version("1.0.1")
                 .build()
@@ -52,7 +52,7 @@ public class ActionCreateWithEventTypeProviderTest extends Tests {
                 Collections.singletonList(eventTypeProvider);
         String actionName = "create_action_with_not_exist_event_type_provider_test_api";
         JSONObject json = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .version("1.0.1")
                 .build()

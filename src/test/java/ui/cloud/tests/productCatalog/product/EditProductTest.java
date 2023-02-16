@@ -99,4 +99,14 @@ public class EditProductTest extends ProductBaseTest {
                 .saveWithManualVersion("1.0.2")
                 .checkVersion("1.0.2");
     }
+
+    @Test
+    @TmsLink("1071825")
+    @DisplayName("Баннер при несохраненных изменениях")
+    public void checkUnsavedChangesAlert() {
+        new IndexPage().goToProductsListPage()
+                .findAndOpenProductPage(NAME)
+                .checkUnsavedChangesAlertAccept(product)
+                .checkUnsavedChangesAlertDismiss();
+    }
 }

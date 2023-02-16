@@ -33,14 +33,14 @@ public class ContextRestrictionIntegrationTests extends Tests {
     public void checkActionWithContextRestriction(Astra product) {
         String actionName = "action_for_context_restriction_api_test";
         Action action = Action.builder()
-                .actionName(actionName )
+                .name(actionName )
                 .title(actionName )
                 .eventTypeProvider(Collections.singletonList(new EventTypeProvider("vm", "vsphere")))
                 .requiredItemStatuses(Collections.singletonList("on"))
                 .requiredOrderStatuses(Collections.singletonList("success"))
                 .build()
                 .createObject();
-        OrderServiceSteps.registrationAction(action.getActionName());
+        OrderServiceSteps.registrationAction(action.getName());
         try (Astra astra = product.createObjectExclusiveAccess()) {
             assertTrue((Boolean) OrderServiceSteps.getProductsField(astra,String.format("data[0].actions.any{it.name==%s}", actionName)));
             int i = 0;

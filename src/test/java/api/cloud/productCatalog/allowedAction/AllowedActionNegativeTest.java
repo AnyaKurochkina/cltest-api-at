@@ -27,7 +27,7 @@ public class AllowedActionNegativeTest extends Tests {
     public void createAllowedActionWithNotUniqActionIdTest() {
         String actionName = "create_allowed_action_with_not_unig_action_id_test_api";
         Action action = Action.builder()
-                .actionName("action_for_allowed_action_test_api")
+                .name("action_for_allowed_action_test_api")
                 .build()
                 .createObject();
         AllowedAction.builder()

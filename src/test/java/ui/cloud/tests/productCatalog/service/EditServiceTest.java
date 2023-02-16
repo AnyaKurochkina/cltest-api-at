@@ -97,4 +97,14 @@ public class EditServiceTest extends ServiceBaseTest {
                 .findAndOpenServicePage(service.getName())
                 .deleteIcon();
     }
+
+    @Test
+    @TmsLink("1071896")
+    @DisplayName("Баннер при несохраненных изменениях")
+    public void checkUnsavedChangesAlert() {
+        new IndexPage().goToServicesListPagePC()
+                .findAndOpenServicePage(NAME)
+                .checkUnsavedChangesAlertAccept(service)
+                .checkUnsavedChangesAlertDismiss();
+    }
 }

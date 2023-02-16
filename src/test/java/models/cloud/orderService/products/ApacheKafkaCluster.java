@@ -85,7 +85,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
-                .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka-3:zookeeper-1"))
+                .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka-4:zookeeper-3"))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .remove("$.order.attrs.ad_logon_grants", isTest())

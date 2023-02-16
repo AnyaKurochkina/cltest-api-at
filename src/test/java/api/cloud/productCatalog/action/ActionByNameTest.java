@@ -28,7 +28,7 @@ public class ActionByNameTest extends Tests {
     public void getActionByNameTest() {
         String actionName = "get_action_by_name_example_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -42,7 +42,7 @@ public class ActionByNameTest extends Tests {
     public void patchTest() {
         String actionName = "action_patch_by_name_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .priority(0)
                 .build()
@@ -57,7 +57,7 @@ public class ActionByNameTest extends Tests {
     public void deleteActionByNameTest() {
         String actionName = "action_delete_by_name_test_api";
         JSONObject jsonObject = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .init()
@@ -73,12 +73,12 @@ public class ActionByNameTest extends Tests {
     public void copyActionByNameTest() {
         String actionName = "clone_action_by_name_test_api";
         Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
         Action cloneAction = copyActionByName(actionName);
-        String cloneName = cloneAction.getActionName();
+        String cloneName = cloneAction.getName();
         assertTrue(isActionExists(cloneName), "Действие не существует");
         deleteActionByName(cloneName);
         assertFalse(isActionExists(cloneName), "Действие существует");
@@ -90,7 +90,7 @@ public class ActionByNameTest extends Tests {
     public void dumpToGitlabActionByNameTest() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .build()
@@ -107,7 +107,7 @@ public class ActionByNameTest extends Tests {
     public void exportActionByNameTest() {
         String actionName = "action_export_by_name_test_api";
         Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
