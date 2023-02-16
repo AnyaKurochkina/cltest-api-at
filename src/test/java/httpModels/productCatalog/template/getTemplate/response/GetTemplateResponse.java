@@ -58,7 +58,7 @@ public class GetTemplateResponse implements GetImpl {
 	private Integer coordsX;
 
 	@JsonProperty("printed_output")
-	private PrintedOutput printedOutput;
+	private Object printedOutput;
 
 	@JsonProperty("printed_output_can_be_overridden")
 	private Boolean printedOutputCanBeOverridden;
