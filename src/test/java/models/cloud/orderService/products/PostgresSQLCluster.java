@@ -92,6 +92,8 @@ public class PostgresSQLCluster extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", getSupport())
+                .set("$.order.attrs.on_backup", envType().contains("prod"))
+                .set("$.order.attrs.replication", envType().contains("prod"))
                 .set("$.order.label", getLabel())
                 .build();
     }
