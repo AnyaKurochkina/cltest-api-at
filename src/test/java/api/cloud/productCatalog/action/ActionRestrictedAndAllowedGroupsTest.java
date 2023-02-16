@@ -31,7 +31,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionRestrictedGroupRealmLevelTest() {
         Action action = Action.builder()
-                .actionName("action_for_restricted_group_api_test2")
+                .name("action_for_restricted_group_api_test2")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("qa-admin"))
                 .build()
@@ -47,7 +47,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionAllowedGroupRealmLevelTest() {
         Action action = Action.builder()
-                .actionName("action_for_allowed_group_realm_api_test")
+                .name("action_for_allowed_group_realm_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList("superadmin"))
                 .build()
@@ -63,7 +63,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionRestrictedGroupRealmLevelAndAllowedGroupAccountTest() {
         Action action = Action.builder()
-                .actionName("action_for_restricted_group_and_allowed_group_api_test")
+                .name("action_for_restricted_group_and_allowed_group_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("qa-admin"))
                 .allowedGroups(Collections.singletonList("account:test"))
@@ -80,7 +80,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionAllowedGroupRealmLevelAndRestrictedGroupAccountTest() {
         Action action = Action.builder()
-                .actionName("action_for_restricted_group_account_lvl_and_allowed_group_realm_lvl_api_test")
+                .name("action_for_restricted_group_account_lvl_and_allowed_group_realm_lvl_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .allowedGroups(Collections.singletonList("superadmin"))
@@ -97,7 +97,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionAllowedGroupAccountTest() {
         Action action = Action.builder()
-                .actionName("action_for_allowed_group_api_test")
+                .name("action_for_allowed_group_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList("account:role_api_tests"))
                 .build()
@@ -113,7 +113,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionRestrictedGroupAccountTest() {
         Action action = Action.builder()
-                .actionName("action_for_restricted_group_api_test")
+                .name("action_for_restricted_group_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .build()
@@ -132,7 +132,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
                 .role(Role.PRODUCT_CATALOG_VIEWER)
                 .build().createObject();
         Action action = Action.builder()
-                .actionName("action_with_user_name_in_restriction_group_api_test")
+                .name("action_with_user_name_in_restriction_group_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList(user.getUsername()))
                 .build()
@@ -151,7 +151,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
                 .role(Role.PRODUCT_CATALOG_ADMIN)
                 .build().createObject();
         Action action = Action.builder()
-                .actionName("action_with_user_name_in_allowed_group_api_test")
+                .name("action_with_user_name_in_allowed_group_api_test")
                 .version("1.0.1")
                 .allowedGroups(Collections.singletonList(user.getUsername()))
                 .build()

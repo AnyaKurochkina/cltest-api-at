@@ -76,32 +76,32 @@ public class JinjaNegativeTest extends Tests {
     @TmsLink("660126")
     @Test
     public void createJinjaWithInvalidCharacters() {
-        Action.builder()
-                .actionName("NameWithUppercase")
+        Jinja2.builder()
+                .name("NameWithUppercase")
                 .build()
                 .negativeCreateRequest(400);
-        Action.builder()
-                .actionName("nameWithUppercaseInMiddle")
+        Jinja2.builder()
+                .name("nameWithUppercaseInMiddle")
                 .build()
                 .negativeCreateRequest(400);
-        Action.builder()
-                .actionName("имя")
+        Jinja2.builder()
+                .name("имя")
                 .build()
                 .negativeCreateRequest(400);
-        Action.builder()
-                .actionName("Имя")
+        Jinja2.builder()
+                .name("Имя")
                 .build()
                 .negativeCreateRequest(400);
-        Action.builder()
-                .actionName("a&b&c")
+        Jinja2.builder()
+                .name("a&b&c")
                 .build()
                 .negativeCreateRequest(400);
-        Action.builder()
-                .actionName("")
+        Jinja2.builder()
+                .name("")
                 .build()
                 .negativeCreateRequest(400);
-        Action.builder()
-                .actionName(" ")
+        Jinja2.builder()
+                .name(" ")
                 .build()
                 .negativeCreateRequest(400);
     }

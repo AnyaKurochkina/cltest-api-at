@@ -231,4 +231,10 @@ public class OrderTemplatesListPage extends BaseListPage {
         Assertions.assertFalse(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
         return this;
     }
+
+    @Step("Открытие страницы шаблона '{name}'")
+    public OrderTemplatePage openTemplatePage(String name) {
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
+        return new OrderTemplatePage();
+    }
 }

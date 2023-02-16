@@ -56,7 +56,7 @@ public class ActionSteps extends Steps {
     @Step("Создание действия")
     public static Action createAction(String name) {
         return Action.builder()
-                .actionName(name)
+                .name(name)
                 .build()
                 .createObject();
     }
@@ -96,7 +96,7 @@ public class ActionSteps extends Steps {
                 .get(actionUrl + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(GetActionList.class).getList();
         for (Action action : list) {
-            if (action.getActionName().equals(name)) {
+            if (action.getName().equals(name)) {
                 actionId = action.getActionId();
                 break;
             }
@@ -351,7 +351,7 @@ public class ActionSteps extends Steps {
         for (Action action : actionList) {
             List<EventTypeProvider> eventTypeProviderList = action.getEventTypeProvider();
             assertTrue(isTypeProviderContains(eventType, eventProvider, eventTypeProviderList),
-                    String.format("%s не содержит eventType %s и %s eventProvider", action.getActionName(), eventType, eventProvider));
+                    String.format("%s не содержит eventType %s и %s eventProvider", action.getName(), eventType, eventProvider));
         }
     }
 

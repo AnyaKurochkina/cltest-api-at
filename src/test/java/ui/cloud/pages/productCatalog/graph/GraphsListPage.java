@@ -135,7 +135,7 @@ public class GraphsListPage extends BaseListPage {
         searchInput.setValue(name);
         TestUtils.wait(500);
         new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
-        TestUtils.wait(500);
+        TestUtils.wait(1000);
         return new GraphPage();
     }
 

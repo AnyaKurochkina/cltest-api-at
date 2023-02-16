@@ -9,14 +9,11 @@ public class EditOrderTemplateTest extends OrderTemplateBaseTest {
 
     @Test
     @TmsLink("1073593")
-    @DisplayName("Баннер при возврате с формы с несохраненными данными (Отмена)")
-    public void checkUnsavedChangesAlertAndCancel() {
-        orderTemplate.setDescription("test");
+    @DisplayName("Баннер при возврате с формы с несохраненными данными")
+    public void checkUnsavedChangesAlert() {
         new IndexPage().goToOrderTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
-                .setDescription("test")
-                .backAndDismissAlert()
-                .goToTemplatesListAndDismissAlert()
-                .checkAttributes(orderTemplate);
+                .checkUnsavedChangesAlertAccept(orderTemplate)
+                .checkUnsavedChangesAlertDismiss();
     }
 }

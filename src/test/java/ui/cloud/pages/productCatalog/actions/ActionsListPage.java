@@ -129,7 +129,7 @@ public class ActionsListPage extends BaseListPage {
     public ActionsListPage findActionByValue(String value, Action action) {
         searchInput.setValue(value);
         Waiting.sleep(1000);
-        assertTrue(new Table(NAME_COLUMN).isColumnValueEquals(NAME_COLUMN, action.getActionName()));
+        assertTrue(new Table(NAME_COLUMN).isColumnValueEquals(NAME_COLUMN, action.getName()));
         return this;
     }
 }
