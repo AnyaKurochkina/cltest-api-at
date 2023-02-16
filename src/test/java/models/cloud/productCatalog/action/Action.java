@@ -37,6 +37,8 @@ public class Action extends Entity {
     private String iconStoreId;
     @JsonProperty("icon_url")
     private String iconUrl;
+    @JsonProperty("icon_base64")
+    private String iconBase64;
     @JsonProperty("location_restriction")
     private String locationRestriction;
     @JsonProperty("graph_version")

@@ -39,6 +39,8 @@ public class Product extends Entity {
     private String iconStoreId;
     @JsonProperty("icon_url")
     private String iconUrl;
+    @JsonProperty("icon_base64")
+    private String iconBase64;
     @JsonProperty("version_create_dt")
     private String versionCreateDt;
     @JsonProperty("description")

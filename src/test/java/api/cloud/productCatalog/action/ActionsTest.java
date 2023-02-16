@@ -360,6 +360,9 @@ public class ActionsTest extends Tests {
     @TmsLink("642530")
     public void deleteAction() {
         String actionName = "action_delete_test_api";
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
         String graphId = createGraph(RandomStringUtils.randomAlphabetic(10).toLowerCase()).getGraphId();
         JSONObject action = Action.builder()
                 .actionName(actionName)

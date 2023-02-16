@@ -20,6 +20,5 @@ public class ContextRestrictionsItem {
 
     public ContextRestrictionsItem(ProjectEnvironment projectEnvironment) {
         this.project_environment = projectEnvironment;
-
     }
 }

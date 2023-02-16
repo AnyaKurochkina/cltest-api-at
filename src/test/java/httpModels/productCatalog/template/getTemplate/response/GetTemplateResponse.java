@@ -123,6 +123,9 @@ public class GetTemplateResponse implements GetImpl {
 	@JsonProperty("current_version")
 	private String currentVersion;
 
+	@JsonProperty("icon_base64")
+	private String iconBase64;
+
 	@Override
 	public String getName() {
 		return name;

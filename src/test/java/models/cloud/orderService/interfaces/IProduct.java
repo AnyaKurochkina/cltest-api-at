@@ -78,7 +78,8 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String platform;
 
-    @ToString.Include @Setter
+    @ToString.Include
+    @Setter
     protected String segment;
     @Setter
     protected String dataCentre, domain;
@@ -111,15 +112,15 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String productCatalogName;
 
-    public String getDataCentre(){
+    public String getDataCentre() {
         return Objects.requireNonNull(dataCentre, "Поле dataCentre пустое");
     }
 
-    public String getDomain(){
+    public String getDomain() {
         return Objects.requireNonNull(domain, "Поле domain пустое");
     }
 
-    public String getSegment(){
+    public String getSegment() {
         return Objects.requireNonNull(segment, "Поле segment пустое");
     }
 
@@ -174,6 +175,7 @@ public abstract class IProduct extends Entity {
     }
 
     public static String certPath = "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration";
+
     //Обновить сертификаты
     protected void updateCerts(String action) {
         OrderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"), this.getProjectId());
@@ -230,12 +232,12 @@ public abstract class IProduct extends Entity {
     //Удалить рекурсивно
     @Step("Удаление продукта")
     protected void delete(String action) {
-        if(envType().contains("prod")){
+        if (envType().contains("prod")) {
             OrderServiceSteps.switchProtect(this, false);
         }
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
-        if(Objects.isNull(platform))
+        if (Objects.isNull(platform))
             return;
         if (platform.equalsIgnoreCase("vSphere") && Configure.ENV.equalsIgnoreCase("IFT")) {
             GlobalUser user = GlobalUser.builder().role(Role.IPAM).build().createObject();
@@ -326,12 +328,12 @@ public abstract class IProduct extends Entity {
     protected boolean getSupport() {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
-        Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
-        if(Objects.isNull(support)) {
+        Object support = graphResponse.getStaticData().get("on_support");
+        if (support instanceof String || Objects.isNull(support)) {
             support = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
                     .getBoolean("on_support.default");
         }
-        return Objects.requireNonNull(support, "on_support не найден в графе");
+        return (Boolean) Objects.requireNonNull(support, "on_support не найден в графе");
     }
 
     @SneakyThrows

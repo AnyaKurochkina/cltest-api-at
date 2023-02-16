@@ -34,6 +34,9 @@ public class GetServiceResponse implements GetImpl {
 	@JsonProperty("icon_store_id")
 	private String iconStoreId;
 
+	@JsonProperty("icon_base64")
+	private String iconBase64;
+
 	@JsonProperty("description")
 	private String description;
 

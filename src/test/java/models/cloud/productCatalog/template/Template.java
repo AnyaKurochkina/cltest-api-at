@@ -37,6 +37,8 @@ public class Template extends Entity implements IProductCatalog {
     private String iconUrl;
     @JsonProperty("icon_store_id")
     private String iconStoreId;
+    @JsonProperty("icon_base64")
+    private String iconBase64;
     private String type;
     private String description;
     private String run;
