@@ -91,13 +91,11 @@ public class EditTemplateTest extends TemplateBaseTest {
 
     @Test
     @TmsLink("1186452")
-    @DisplayName("Баннер при возврате с формы с несохраненными данными (Отмена)")
-    public void checkUnsavedChangesAlertAndCancel() {
+    @DisplayName("Баннер при возврате с формы с несохраненными данными")
+    public void checkUnsavedChangesAlert() {
         new IndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
-                .setRunQueue("test1")
-                .backInBrowserAndDismissAlert()
-                .goToTemplatesListAndDismissAlert()
-                .backAndDismissAlert();
+                .checkUnsavedChangesAlertAccept(template)
+                .checkUnsavedChangesAlertDismiss();
     }
 }

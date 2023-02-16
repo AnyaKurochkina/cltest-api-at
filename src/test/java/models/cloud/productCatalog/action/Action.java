@@ -72,7 +72,7 @@ public class Action extends Entity {
     @JsonProperty("data_config_key")
     private String dataConfigKey;
     @JsonProperty("name")
-    private String actionName;
+    private String name;
     private Integer number;
     @JsonProperty("allowed_groups")
     private List<Object> allowedGroups;
@@ -125,12 +125,13 @@ public class Action extends Entity {
         return JsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
-                .set("$.name", actionName)
+                .set("$.name", name)
                 .set("$.title", title)
                 .set("$.type", type)
                 .set("$.current_version", currentVersion)
                 .set("$.description", description)
                 .set("$.graph_id", graphId)
+                .set("$.graph_version", graphVersion)
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
@@ -148,19 +149,19 @@ public class Action extends Entity {
 
     @Override
     protected void create() {
-        if (isActionExists(actionName)) {
-            deleteActionByName(actionName);
+        if (isActionExists(name)) {
+            deleteActionByName(name);
         }
         Action createAction = createAction(toJson())
                 .assertStatus(201)
                 .extractAs(Action.class);
         StringUtils.copyAvailableFields(createAction, this);
-        assertNotNull(actionId, "Действие с именем: " + actionName + ", не создался");
+        assertNotNull(actionId, "Действие с именем: " + name + ", не создался");
     }
 
     @Override
     protected void delete() {
         deleteActionById(actionId);
-        assertFalse(isActionExists(actionName));
+        assertFalse(isActionExists(name));
     }
 }

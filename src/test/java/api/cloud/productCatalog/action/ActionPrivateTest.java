@@ -33,7 +33,7 @@ public class ActionPrivateTest extends Tests {
             deleteActionByName(actionName);
         }
         JSONObject jsonObject = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .graphId(createGraph(RandomStringUtils.randomAlphabetic(5).toLowerCase()).getGraphId())
                 .build()
                 .toJson();
@@ -65,7 +65,7 @@ public class ActionPrivateTest extends Tests {
             deleteActionByName(actionName);
         }
         JSONObject jsonObject = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .graphId(createGraph(RandomStringUtils.randomAlphabetic(5).toLowerCase()).getGraphId())
                 .build()
                 .toJson();

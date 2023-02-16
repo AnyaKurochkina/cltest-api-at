@@ -89,7 +89,7 @@ public class ActionTest extends BaseTest {
         String name = "copy_action_test_ui";
         String cloneName = name + "-clone";
         Action.builder()
-                .actionName(name)
+                .name(name)
                 .title(name)
                 .number(0)
                 .build()
@@ -110,7 +110,7 @@ public class ActionTest extends BaseTest {
             deleteActionByName(name);
         }
         JSONObject json = Action.builder()
-                .actionName(name)
+                .name(name)
                 .title(name)
                 .number(0)
                 .build()
@@ -133,7 +133,7 @@ public class ActionTest extends BaseTest {
             deleteActionByName(name);
         }
         JSONObject json = Action.builder()
-                .actionName(name)
+                .name(name)
                 .title(name)
                 .number(0)
                 .build()
@@ -152,7 +152,7 @@ public class ActionTest extends BaseTest {
     public void checkActionVersions() {
         String name = "check_action_versions_test_ui";
         Action action = Action.builder()
-                .actionName(name)
+                .name(name)
                 .title(name)
                 .number(0)
                 .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
@@ -179,7 +179,7 @@ public class ActionTest extends BaseTest {
     public void editAction() {
         String name = "edit_action_test_ui";
         Action.builder()
-                .actionName(name)
+                .name(name)
                 .title(name)
                 .number(0)
                 .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
@@ -206,7 +206,7 @@ public class ActionTest extends BaseTest {
                 .createObject();
         String name = "delete_icon_action_test_ui";
         Action.builder()
-                .actionName(name)
+                .name(name)
                 .title(name)
                 .number(0)
                 .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
@@ -263,16 +263,14 @@ public class ActionTest extends BaseTest {
 
     @Test
     @TmsLink("1071773")
-    @DisplayName("Баннер при закрытии формы с несохраненными данными, Отмена")
+    @DisplayName("Баннер при закрытии формы с несохраненными данными")
     public void bannerWhenCloseFormAndNotSaveCancel() {
-        String name = "action_for_banner_test_ui";
-        createActionByApi(name);
-        new IndexPage()
-                .goToActionsPage()
+        String name = UUID.randomUUID().toString();
+        Action action = createActionByApi(name);
+        new IndexPage().goToActionsPage()
                 .openActionForm(name)
-                .setPriority(1)
-                .backOnBrowserAndAlertCancel()
-                .backByActionsLinkAndAlertCancel();
+                .checkUnsavedChangesAlertAccept(action)
+                .checkUnsavedChangesAlertDismiss();
     }
 
     @Test
@@ -350,7 +348,7 @@ public class ActionTest extends BaseTest {
     @Step("Создание действия '{name}'")
     private Action createActionByApi(String name) {
         return Action.builder()
-                .actionName(name)
+                .name(name)
                 .title(TITLE)
                 .number(0)
                 .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()

@@ -27,7 +27,7 @@ public class ForbiddenActionNegativeTest extends Tests {
     @Test
     public void createForbiddenActionWithNotUnigActionDirectionTest() {
         Action action = Action.builder()
-                .actionName("action_for_non_unique_action_direction_test_api")
+                .name("action_for_non_unique_action_direction_test_api")
                 .build()
                 .createObject();
         ForbiddenAction.builder()
