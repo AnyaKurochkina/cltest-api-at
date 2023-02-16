@@ -81,7 +81,7 @@ public class PostgresSQLCluster extends IProduct {
                 .set("$.order.attrs.domain", getDomain());
         if (envType().contains("prod")) {
             template.put("$.order.attrs", "geo_distribution", true)
-                    .put("$.order.attrs", "layout", getIdGeoDistribution("postgresql", "postgresql_etcd-1:postgresql-2"));
+                    .put("$.order.attrs", "layout", getIdGeoDistribution("postgresql_etcd-1:postgresql-2", "postgresql"));
         }
         return template.set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())

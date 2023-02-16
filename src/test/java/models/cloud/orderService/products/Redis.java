@@ -70,7 +70,7 @@ public class Redis extends IProduct {
                 .set("$.order.product_id", productId);
         if (envType().contains("prod")) {
             template.put("$.order.attrs", "geo_distribution", true)
-                    .put("$.order.attrs", "layout", getIdGeoDistribution("redis", "2-single-node-servers"));
+                    .put("$.order.attrs", "layout", getIdGeoDistribution("2-single-node-servers", "redis"));
         }
         return template.set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())

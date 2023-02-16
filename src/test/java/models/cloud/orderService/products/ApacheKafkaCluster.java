@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.portalBack.AccessGroup;
@@ -76,6 +77,7 @@ public class ApacheKafkaCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
+        Organization org = Organization.builder().build().createObject();
         String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
@@ -85,7 +87,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
-                .set("$.order.attrs.layout", getIdGeoDistribution("kafka", "kafka-4:zookeeper-3"))
+                .set("$.order.attrs.layout", getIdGeoDistribution("kafka-4:zookeeper-3", envType().toUpperCase(), "kafka", org.getName()))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .remove("$.order.attrs.ad_logon_grants", !isDev())

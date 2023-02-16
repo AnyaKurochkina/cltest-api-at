@@ -6,6 +6,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.portalBack.AccessGroup;
@@ -66,6 +67,7 @@ public class RabbitMQClusterAstra extends IProduct {
 
     @Override
     public JSONObject toJson() {
+        Organization org = Organization.builder().build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
         String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
@@ -82,7 +84,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", getSupport())
-                .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq", "rabbitmq-2"))
+                .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq-2", envType().toUpperCase(), "rabbitmq", org.getName()))
                 .set("$.order.label", getLabel())
                 .build();
     }

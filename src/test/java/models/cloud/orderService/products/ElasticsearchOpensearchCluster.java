@@ -68,7 +68,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .set("$.order.attrs.domain", getDomain());
         if (envType().contains("prod")) {
             template.put("$.order.attrs", "geo_distribution", true)
-                    .put("$.order.attrs", "layout", getIdGeoDistribution("elasticsearch_os", "Elasticsearch_Master:3"));
+                    .put("$.order.attrs", "layout", getIdGeoDistribution("Elasticsearch_Master:3", "elasticsearch_os"));
         }
         return template.set("$.order.attrs.flavor_data", new JSONObject(flavorData.toString()))
                 .set("$.order.attrs.flavor_master", new JSONObject(flavorMaster.toString()))

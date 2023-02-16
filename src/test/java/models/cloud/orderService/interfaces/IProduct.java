@@ -128,11 +128,11 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    @Step("Получение Id geoDistribution у продукта '{product}' с именем '{name}'")
-    protected String getIdGeoDistribution(String product, String name) {
-        Organization org = Organization.builder().build().createObject();
-        return Objects.requireNonNull(ReferencesStep
-                .getJsonPathList(String.format("tags__contains=%s,%s,%s&directory__name=geo_distribution", envType().toUpperCase(), product, org.getName()))
+    @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
+    protected String getIdGeoDistribution(String name, String ... tags) {
+        StringJoiner tagsJoiner = new StringJoiner(",");
+        Arrays.stream(tags).forEach(tagsJoiner::add);
+        return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tagsJoiner))
                 .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found "+ name);
     }
 
