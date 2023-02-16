@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import api.Tests;
+import steps.portalBack.PortalBackSteps;
 
 @Epic("Продукты")
 @Feature("WildFly (Astra)")
@@ -167,8 +168,9 @@ public class WildFlyAstraTest extends Tests {
     @ParameterizedTest(name = "Добавление/Удаление группы WildFly {0}")
     void group(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.addGroup("group1", "Deployer");
-            wildFly.deleteGroup("group1", "Deployer");
+            String group = PortalBackSteps.getRandomAccessGroup(wildFly.getProjectId(), wildFly.getDomain(), "compute");
+            wildFly.addGroup(group, "Deployer");
+            wildFly.deleteGroup(group, "Deployer");
         }
     }
 

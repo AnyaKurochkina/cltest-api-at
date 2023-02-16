@@ -25,16 +25,8 @@ public class PublicSshKeysTest extends AbstractComputeTest {
     }
 
     @Test
-    @TmsLink("1398315")
-    @Order(2)
-    @DisplayName("Cloud Compute. Копирование SSH-ключа (публичный)")
-    void copyKey() {
-        new IndexPage().goToSshKeys().copyKey(name);
-    }
-
-    @Test
     @TmsLink("1398316")
-    @Order(3)
+    @Order(2)
     @DisplayName("Cloud Compute. Редактирование SSH-ключа (публичный)")
     void editKey() {
         String newName = getRandomName();
@@ -44,7 +36,7 @@ public class PublicSshKeysTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1398321")
-    @Order(4)
+    @Order(3)
     @DisplayName("Cloud Compute. Удаление SSH-ключа (публичный)")
     void deleteKey() {
         new IndexPage().goToSshKeys().deleteKey(name);

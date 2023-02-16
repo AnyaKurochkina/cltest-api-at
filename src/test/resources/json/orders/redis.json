@@ -32,9 +32,9 @@
 			],
 			"redis_version": "5.0.5",
 			"ad_integration": true,
-			"app_user": "app_user",
-			"app_user_password": "xxM9glNSuxkV2Bu55N5L7tYrEiRDPMGOWzNsfs4t7bsJDNI74",
-			"auth": true,
+			"user": "appuser",
+			"user_password": "xxM9glNSuxkV2Bu55N5L7tYrEiRDPMGOWzNsfs4t7bsJDNI74",
+			"auth": false,
 			"auth_user": "user",
 			"ad_logon_grants": [
 				{

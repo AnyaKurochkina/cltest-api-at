@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
-import ui.models.Graph;
 
 @Feature("Просмотр списка графов")
 public class GraphsListTest extends GraphBaseTest {
@@ -27,7 +26,6 @@ public class GraphsListTest extends GraphBaseTest {
     @TmsLink("962859")
     @DisplayName("Поиск в списке графов")
     public void searchGraphTest() {
-        Graph graph = new Graph(NAME);
         new IndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .findGraphByValue(TITLE, graph)

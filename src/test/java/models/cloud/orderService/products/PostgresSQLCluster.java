@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.helper.JsonTemplate;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -60,13 +61,13 @@ public class PostgresSQLCluster extends IProduct {
             osVersion = getRandomOsVersion();
         if (postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
@@ -74,19 +75,25 @@ public class PostgresSQLCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
-        return JsonHelper.getJsonTemplate(jsonTemplate)
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        JsonTemplate template = JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", getDomain())
-                .set("$.order.attrs.default_nic.net_segment", getSegment())
+                .set("$.order.attrs.domain", getDomain());
+        if (envType().contains("prod")) {
+            template.put("$.order.attrs", "geo_distribution", true)
+                    .put("$.order.attrs", "layout", getIdGeoDistribution("postgresql_etcd-1:postgresql-2", "postgresql"));
+        }
+        return template.set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", getSupport())
+                .set("$.order.attrs.on_backup", envType().contains("prod"))
+                .set("$.order.attrs.replication", envType().contains("prod"))
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -104,7 +111,7 @@ public class PostgresSQLCluster extends IProduct {
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction(getEnv().equalsIgnoreCase("LT")?"postgresql_cluster_create_db":"postgresql_cluster_create_db_nonprod",
+        OrderServiceSteps.executeAction(getEnv().equalsIgnoreCase("LT") ? "postgresql_cluster_create_db" : "postgresql_cluster_create_db_nonprod",
                 this, new JSONObject(String.format("{conn_limit: -1, db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, adminPassword)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
         database.add(new Db(dbName));

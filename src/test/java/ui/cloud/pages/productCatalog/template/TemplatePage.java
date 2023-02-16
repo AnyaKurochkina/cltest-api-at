@@ -2,15 +2,21 @@ package ui.cloud.pages.productCatalog.template;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.template.Template;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.DropDown;
+import ui.elements.Alert;
 import ui.elements.Input;
+import ui.elements.Select;
 import ui.elements.TextArea;
-import ui.models.Template;
+
+import java.util.Arrays;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,19 +25,48 @@ public class TemplatePage extends BasePage {
     private static final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
     private final SelenideElement templateVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
-    private final SelenideElement deleteButton = $x("//div[text()='Удалить']/parent::button");
-    private final Input nameInput = Input.byLabel("Код шаблона");
-    private final Input titleInput = Input.byLabel("Наименование");
-    private final TextArea description = TextArea.byName("description");
-    private final Input runQueueInput = Input.byLabel("Название очереди для старта задачи");
-    private final Input rollbackQueueInput = Input.byLabel("Название очереди для отката");
-    private final DropDown typeDropDown = DropDown.byLabel("Тип");
-    private final SelenideElement saveButton = $x("//div[text()='Сохранить']/parent::button");
-    private final SelenideElement cancelButton = $x("//div[text()='Отмена']/parent::button");
-    private final SelenideElement paramsTab = $x("//span[text()='Параметры']//parent::button");
+    private final TextArea descriptionTextArea = TextArea.byName("description");
+    private final Input runQueueInput = Input.byName("run");
+    private final Input rollbackQueueInput = Input.byName("rollback");
+    private final Input timeoutInput = Input.byName("timeout");
+    private final TextArea input = TextArea.byLabel("Input");
+    private final TextArea output = TextArea.byLabel("Output");
+    private final TextArea printedOutput = TextArea.byLabel("Printed output");
+    private final Select typeSelect = Select.byLabel("Тип");
+    private final SelenideElement templateNameValidationHint =
+            $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
+    private final SelenideElement nonuniqueNameValidationHint =
+            nameInput.getInput().$x("following::div[text()='Шаблон с таким именем уже существует']");
+    private final String requiredFieldText = "Поле обязательно для заполнения";
+    private final SelenideElement nameRequiredFieldHint =
+            nameInput.getInput().$x("ancestor::div[2]//div[text()='" + requiredFieldText + "']");
+    private final SelenideElement titleRequiredFieldHint =
+            titleInput.getInput().$x("ancestor::div[2]//div[text()='" + requiredFieldText + "']");
+    private final SelenideElement runQueueRequiredFieldHint =
+            runQueueInput.getInput().$x("ancestor::div[2]//div[text()='" + requiredFieldText + "']");
 
     public TemplatePage() {
         templatesListLink.shouldBe(Condition.visible);
+    }
+
+    @Step("Создание шаблона узлов '{template.name}'")
+    public TemplatePage createTemplate(Template template) {
+        titleInput.setValue(template.getTitle());
+        nameInput.setValue(template.getName());
+        descriptionTextArea.setValue(template.getDescription());
+        runQueueInput.setValue(template.getRun());
+        rollbackQueueInput.setValue(template.getRollback());
+        typeSelect.set(template.getType());
+        timeoutInput.setValue(template.getTimeout());
+        goToParamsTab();
+        input.setValue(new JSONObject(template.getInput()).toString());
+        output.setValue(new JSONObject(template.getOutput()).toString());
+        String printedOutputJSON = new JSONObject(template.getPrintedOutput().get(0)).toString();
+        printedOutput.setValue(Arrays.asList(printedOutputJSON).toString());
+        saveButton.click();
+        Alert.green("Шаблон успешно создан");
+        Waiting.sleep(2000);
+        return new TemplatePage();
     }
 
     @Step("Проверка, что отображаемая версия шаблона равна '{version}'")
@@ -41,25 +76,30 @@ public class TemplatePage extends BasePage {
     }
 
     @Step("Проверка атрибутов шаблона '{template.name}'")
-    public TemplatePage checkTemplateAttributes(Template template) {
+    public TemplatePage checkAttributes(Template template) {
         nameInput.getInput().shouldHave(Condition.exactValue(template.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
-        description.getTextArea().shouldHave(Condition.exactValue(template.getDescription()));
-        runQueueInput.getInput().shouldHave(Condition.exactValue(template.getRunQueue()));
-        rollbackQueueInput.getInput().shouldHave(Condition.exactValue(template.getRollbackQueue()));
-        Assertions.assertTrue(typeDropDown.getValue().equals(template.getType()));
+        descriptionTextArea.getTextArea().shouldHave(Condition.exactValue(template.getDescription()));
+        runQueueInput.getInput().shouldHave(Condition.exactValue(template.getRun()));
+        rollbackQueueInput.getInput().shouldHave(Condition.exactValue(template.getRollback().toString()));
+        Assertions.assertTrue(typeSelect.getValue().equals(template.getType()));
+        timeoutInput.getInput().shouldHave(Condition.exactValue(String.valueOf(template.getTimeout())));
         checkTemplateVersion(template.getVersion());
+        goToParamsTab();
+        String printedOutputJSON = new JSONObject(template.getPrintedOutput().get(0)).toString();
+        Assertions.assertEquals(Arrays.asList(printedOutputJSON).toString(),
+                printedOutput.getTextArea().getValue().replaceAll("\\s", ""));
         return this;
     }
 
     @Step("Редактирование атрибутов шаблона '{template.name}'")
-    public TemplatePage setTemplateAttributes(Template template) {
+    public TemplatePage setAttributes(Template template) {
         nameInput.setValue(template.getName());
         titleInput.setValue(template.getTitle());
-        description.setValue(template.getDescription());
-        runQueueInput.setValue(template.getRunQueue());
-        rollbackQueueInput.setValue(template.getRollbackQueue());
-        typeDropDown.select(template.getType());
+        descriptionTextArea.setValue(template.getDescription());
+        runQueueInput.setValue(template.getRun());
+        rollbackQueueInput.setValue(template.getRollback());
+        typeSelect.set(template.getType());
         return this;
     }
 
@@ -83,8 +123,7 @@ public class TemplatePage extends BasePage {
 
     @Step("Возврат в список шаблонов")
     public TemplatesListPage goToTemplatesList() {
-        TestUtils.scrollToTheTop();
-        templatesListLink.click();
+        templatesListLink.scrollIntoView(false).click();
         return new TemplatesListPage();
     }
 
@@ -121,7 +160,7 @@ public class TemplatePage extends BasePage {
     @Step("Проверка недоступности сохранения шаблона при достижении лимита версий")
     public TemplatePage checkVersionLimit() {
         $x("//div[text()='Достигнут предел допустимого значения версии. Нельзя сохранить следующую версию']").shouldBe(Condition.visible);
-        saveButton.shouldBe(Condition.disabled);
+        saveButton.getButton().shouldBe(Condition.disabled);
         return new TemplatePage();
     }
 
@@ -161,15 +200,13 @@ public class TemplatePage extends BasePage {
 
     @Step("Переход на вкладку 'Параметры'")
     public TemplatePage goToParamsTab() {
-        paramsTab.click();
-        TestUtils.wait(500);
+        goToTab("Параметры");
         return new TemplatePage();
     }
 
     @Step("Переход на вкладку 'Сравнение версий'")
     public TemplatePage goToVersionComparisonTab() {
-        TestUtils.scrollToTheTop();
-        versionComparisonTab.click();
+        goToTab("Сравнение версий");
         return this;
     }
 
@@ -177,5 +214,96 @@ public class TemplatePage extends BasePage {
     public TemplatesListPage backToTemplatesList() {
         backButton.click();
         return new TemplatesListPage();
+    }
+
+    @Step("Проверка валидации недопустимых значений в коде шаблона")
+    public TemplatesListPage checkTemplateNameValidation(String[] names) {
+        for (String name : names) {
+            nameInput.setValue(name);
+            TestUtils.wait(500);
+            if (!templateNameValidationHint.exists()) {
+                TestUtils.wait(500);
+                nameInput.getInput().sendKeys("t");
+            }
+            templateNameValidationHint.shouldBe(Condition.visible);
+        }
+        cancelButton.click();
+        return new TemplatesListPage();
+    }
+
+    @Step("Проверка валидации некорректных параметров при создании шаблона")
+    public TemplatesListPage checkCreateTemplateDisabled(Template template) {
+        titleInput.setValue(template.getTitle());
+        nameInput.setValue(template.getName());
+        descriptionTextArea.setValue(template.getDescription());
+        runQueueInput.setValue(template.getRun());
+        rollbackQueueInput.setValue(template.getRollback());
+        typeSelect.set(template.getType());
+        if (template.getTitle().isEmpty()) {
+            titleRequiredFieldHint.shouldBe(Condition.visible);
+        }
+        if (template.getName().isEmpty()) {
+            nameRequiredFieldHint.shouldBe(Condition.visible);
+        }
+        if (template.getRun().isEmpty()) {
+            runQueueRequiredFieldHint.shouldBe(Condition.visible);
+        }
+        saveButton.getButton().shouldBe(Condition.disabled);
+        cancelButton.click();
+        return new TemplatesListPage();
+    }
+
+    public TemplatesListPage checkNonUniqueNameValidation(Template template) {
+        nameInput.setValue(template.getName());
+        titleInput.setValue(template.getTitle());
+        nonuniqueNameValidationHint.shouldBe(Condition.visible);
+        saveButton.getButton().shouldBe(Condition.disabled);
+        cancelButton.click();
+        return new TemplatesListPage();
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Отмена")
+    public TemplatePage checkUnsavedChangesAlertDismiss() {
+        String newValue = "new";
+        titleInput.setValue(newValue);
+        back();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        templatesListLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        backButton.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        mainPageLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Ок")
+    public TemplatePage checkUnsavedChangesAlertAccept(Template template) {
+        String newValue = "new title";
+        titleInput.setValue(newValue);
+        back();
+        acceptAlert(unsavedChangesAlertText);
+        new TemplatesListPage().openTemplatePage(template.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
+        titleInput.setValue(newValue);
+        templatesListLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new TemplatesListPage().openTemplatePage(template.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
+        titleInput.setValue(newValue);
+        backButton.click();
+        acceptAlert(unsavedChangesAlertText);
+        new TemplatesListPage().openTemplatePage(template.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
+        titleInput.setValue(newValue);
+        mainPageLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new IndexPage().goToTemplatesPage().openTemplatePage(template.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
+        return this;
     }
 }

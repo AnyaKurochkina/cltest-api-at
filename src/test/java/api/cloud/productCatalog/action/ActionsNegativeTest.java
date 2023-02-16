@@ -29,7 +29,7 @@ public class ActionsNegativeTest extends Tests {
     public void getActionByIdWithOutTokenTest() {
         String actionName = "get_action_without_token_example_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -42,7 +42,7 @@ public class ActionsNegativeTest extends Tests {
     public void copyActionByIdWithOutTokenTest() {
         String actionName = "copy_action_without_token_example_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -55,7 +55,7 @@ public class ActionsNegativeTest extends Tests {
     public void deleteActionWithOutToken() {
         String actionName = "delete_action_without_token_example_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -68,31 +68,31 @@ public class ActionsNegativeTest extends Tests {
     @Test
     public void createActionWithInvalidCharacters() {
         Action.builder()
-                .actionName("NameWithUppercase")
+                .name("NameWithUppercase")
                 .build()
                 .negativeCreateRequest(400);
         Action.builder()
-                .actionName("nameWithUppercaseInMiddle")
+                .name("nameWithUppercaseInMiddle")
                 .build()
                 .negativeCreateRequest(400);
         Action.builder()
-                .actionName("имя")
+                .name("имя")
                 .build()
                 .negativeCreateRequest(400);
         Action.builder()
-                .actionName("Имя")
+                .name("Имя")
                 .build()
                 .negativeCreateRequest(400);
         Action.builder()
-                .actionName("a&b&c")
+                .name("a&b&c")
                 .build()
                 .negativeCreateRequest(400);
         Action.builder()
-                .actionName("")
+                .name("")
                 .build()
                 .negativeCreateRequest(400);
         Action.builder()
-                .actionName(" ")
+                .name(" ")
                 .build()
                 .negativeCreateRequest(400);
     }
@@ -103,7 +103,7 @@ public class ActionsNegativeTest extends Tests {
     public void createActionWithSameName() {
         String actionName = "create_action_with_same_name_example_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -117,7 +117,7 @@ public class ActionsNegativeTest extends Tests {
     public void updateActionByIdWithOutToken() {
         String actionName = "update_action_without_token_example_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -130,7 +130,7 @@ public class ActionsNegativeTest extends Tests {
     @Test
     public void doubleVersionTest() {
         Response response = createAction(Action.builder()
-                .actionName("negative_object")
+                .name("negative_object")
                 .build()
                 .init()
                 .getTemplate()
@@ -149,13 +149,13 @@ public class ActionsNegativeTest extends Tests {
     public void sameVersionTest() {
         String actionName = "action_same_version_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.1")
                 .build()
                 .createObject();
         String message = partialUpdateAction(action.getActionId(), action.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Версия %s для %s:%s уже существует", action.getVersion(), action.getActionName(), action.getTitle()),
+        assertEquals(String.format("Версия %s для %s:%s уже существует", action.getVersion(), action.getName(), action.getTitle()),
                 message);
     }
 
@@ -165,7 +165,7 @@ public class ActionsNegativeTest extends Tests {
     public void setInvalidCurrentVersionAction() {
         String actionName = "invalid_current_version_action_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .build()

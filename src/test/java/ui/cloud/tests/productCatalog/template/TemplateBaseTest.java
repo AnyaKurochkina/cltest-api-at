@@ -9,9 +9,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
 import ui.models.Node;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static steps.productCatalog.TemplateSteps.deleteTemplateById;
 import static steps.productCatalog.TemplateSteps.getTemplateByName;
@@ -54,6 +52,9 @@ public class TemplateBaseTest extends BaseTest {
                 .rollback("")
                 .input(input)
                 .output(output)
+                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
+                    put("type", "text");
+                }}))
                 .timeout(100)
                 .build()
                 .createObject();

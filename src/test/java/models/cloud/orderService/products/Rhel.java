@@ -40,7 +40,7 @@ public class Rhel extends IProduct {
             setProjectId(project.getId());
         }
         if(productName == null) {
-            if(isTest())
+            if(!isDev())
                 productName = "RHEL General Application";
             else
                 productName = "Rhel";
@@ -68,7 +68,7 @@ public class Rhel extends IProduct {
     }
 
     public JSONObject toJson() {
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -79,7 +79,7 @@ public class Rhel extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", getProjectId())
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", !isDev())
                 .set("$.order.label", getLabel())
                 .build();
     }

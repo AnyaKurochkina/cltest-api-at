@@ -8,7 +8,7 @@
     "priority": 0,
     "rollback": "",
     "log_level": "",
-    "printed_output": {},
+    "printed_output": [{"type":"text"}],
     "additional_input": false,
     "additional_output": false,
     "log_can_be_overridden": false,

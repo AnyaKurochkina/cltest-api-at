@@ -4,7 +4,6 @@ import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import httpModels.productCatalog.template.getTemplate.response.PrintedOutput;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
@@ -21,6 +20,7 @@ import static steps.productCatalog.TemplateSteps.*;
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
@@ -51,7 +51,7 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("coords_x")
     private Integer coordsX;
     @JsonProperty("printed_output")
-    private PrintedOutput printedOutput;
+    private List<Map<String, String>> printedOutput;
     @JsonProperty("printed_output_can_be_overridden")
     private Boolean printedOutputCanBeOverridden;
     @JsonProperty("restricted_paths")
@@ -105,6 +105,7 @@ public class Template extends Entity implements IProductCatalog {
                 .set("$.rollback", rollback)
                 .set("$.input", input)
                 .set("$.output", output)
+                .set("$.printed_output", printedOutput)
                 .set("$.timeout", timeout)
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)

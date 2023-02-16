@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
@@ -76,7 +75,7 @@ public class LoadBalancer extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -115,7 +114,7 @@ public class LoadBalancer extends IProduct {
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
         backends.add(backend);
         save();
-        if (!isTest())
+        if (isDev())
             Assertions.assertTrue(isStateContains(backend.getBackendName()));
     }
 
@@ -127,7 +126,7 @@ public class LoadBalancer extends IProduct {
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не создался");
         frontends.add(frontend);
         save();
-        if (!isTest())
+        if (isDev())
             Assertions.assertTrue(isStateContains(frontend.getFrontendName()));
     }
 
@@ -148,7 +147,7 @@ public class LoadBalancer extends IProduct {
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
         backends.remove(backend);
         save();
-        if (!isTest())
+        if (isDev())
             Assertions.assertFalse(isStateContains(backend.getBackendName()));
     }
 
@@ -159,7 +158,7 @@ public class LoadBalancer extends IProduct {
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не удален");
         frontends.remove(frontend);
         save();
-        if (!isTest())
+        if (isDev())
             Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
     }
 

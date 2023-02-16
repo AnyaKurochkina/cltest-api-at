@@ -57,7 +57,7 @@ public class Ubuntu extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -69,7 +69,7 @@ public class Ubuntu extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", !isDev())
                 .build();
     }
 

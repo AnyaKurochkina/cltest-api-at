@@ -11,18 +11,18 @@ import models.cloud.productCatalog.product.Product;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.back;
 
 public class ProductPage extends BasePage {
 
     private final SelenideElement productsListLink = $x("//a[text()='Список продуктов']");
-    private final Input titleInput = Input.byName("title");
-    private final Input nameInput = Input.byName("name");
     private final Input authorInput = Input.byName("author");
     private final Input descriptionInput = Input.byName("description");
     private final Input maxCountInput = Input.byName("max_count");
@@ -94,7 +94,6 @@ public class ProductPage extends BasePage {
                 info.getTextArea().getValue().replaceAll("\\s", ""));
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
-        goToGraphTab();
         Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
         Assertions.assertEquals(product.getGraphVersion(), graphVersionSelect.getValue());
         goToAdditionalParamsTab();
@@ -137,7 +136,7 @@ public class ProductPage extends BasePage {
         authorInput.setValue(product.getAuthor());
         authorRequiredFieldHint.shouldNotBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.enabled);
-        backButton.click();
+        cancelButton.click();
         Selenide.prompt();
         return new ProductsListPage();
     }
@@ -219,7 +218,7 @@ public class ProductPage extends BasePage {
             }
             nameValidationHint.shouldBe(Condition.visible);
         }
-        backButton.click();
+        cancelButton.click();
         return new ProductsListPage();
     }
 
@@ -229,7 +228,7 @@ public class ProductPage extends BasePage {
         titleInput.setValue(product.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.disabled);
-        backButton.click();
+        cancelButton.click();
         return new ProductsListPage();
     }
 
@@ -288,5 +287,52 @@ public class ProductPage extends BasePage {
     public ProductsListPage backToProductsList() {
         backButton.click();
         return new ProductsListPage();
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Отмена")
+    public ProductPage checkUnsavedChangesAlertDismiss() {
+        String newValue = "new";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        productsListLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        backButton.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        mainPageLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Ок")
+    public ProductPage checkUnsavedChangesAlertAccept(Product product) {
+        String newValue = "new title";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        acceptAlert(unsavedChangesAlertText);
+        new ProductsListPage().openProductPage(product.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
+        titleInput.setValue(newValue);
+        productsListLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new ProductsListPage().openProductPage(product.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
+        titleInput.setValue(newValue);
+        backButton.click();
+        acceptAlert(unsavedChangesAlertText);
+        new ProductsListPage().openProductPage(product.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
+        titleInput.setValue(newValue);
+        mainPageLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new IndexPage().goToProductsListPage().openProductPage(product.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
+        return this;
     }
 }

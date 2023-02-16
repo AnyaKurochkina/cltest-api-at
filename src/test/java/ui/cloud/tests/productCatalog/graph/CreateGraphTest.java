@@ -3,11 +3,11 @@ package ui.cloud.tests.productCatalog.graph;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
-import ui.models.Graph;
 
 import java.util.UUID;
 
@@ -27,11 +27,18 @@ public class CreateGraphTest extends GraphBaseTest {
 
     @Step("Создание графа")
     public void createGraph() {
-        Graph graph = new Graph(name, TITLE, GraphType.ACTION, "1.0.0", DESCRIPTION, AUTHOR);
+        Graph graph = Graph.builder()
+                .name(name)
+                .title(TITLE)
+                .type(GraphType.ACTION.getValue())
+                .version("1.0.0")
+                .description(DESCRIPTION)
+                .author(AUTHOR)
+                .build();
         new IndexPage().goToGraphsPage()
                 .createGraph(graph)
-                .checkGraphAttributes(graph);
-        deleteGraph(name);
+                .checkAttributes(graph);
+        deleteGraphByApi(name);
     }
 
     @Step("Создание графа без заполнения обязательных полей")

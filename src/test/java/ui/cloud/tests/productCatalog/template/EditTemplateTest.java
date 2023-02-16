@@ -6,9 +6,7 @@ import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
-import ui.models.Template;
-
-import java.util.UUID;
+import ui.cloud.pages.productCatalog.template.TemplatePage;
 
 @Feature("Редактирование шаблона")
 public class EditTemplateTest extends TemplateBaseTest {
@@ -17,19 +15,13 @@ public class EditTemplateTest extends TemplateBaseTest {
     @TmsLinks({@TmsLink("506509"), @TmsLink("972523")})
     @DisplayName("Редактирование шаблона")
     public void editTemplateTest() {
-        Template template = new Template(UUID.randomUUID().toString());
-        Template template2 = new Template(UUID.randomUUID().toString());
-        template2.setTitle("Edited title");
-        template2.setDescription("Edited description");
+        template.setDescription("New description");
+        template.setTitle("New title");
         new IndexPage().goToTemplatesPage()
-                .createTemplate(template)
-                .goToTemplatesList()
-                .findAndOpenTemplatePage(template.getName())
-                .setTemplateAttributes(template2)
-                .saveWithoutPatchVersion()
-                .checkTemplateAttributes(template2)
-                .goToTemplatesList()
-                .deleteTemplate(template2.getName());
+                .findAndOpenTemplatePage(NAME)
+                .setAttributes(template)
+                .saveWithoutPatchVersion();
+        new TemplatePage().checkAttributes(template);
     }
 
     @Test
@@ -99,13 +91,11 @@ public class EditTemplateTest extends TemplateBaseTest {
 
     @Test
     @TmsLink("1186452")
-    @DisplayName("Баннер при возврате с формы с несохраненными данными (Отмена)")
-    public void checkUnsavedChangesAlertAndCancel() {
+    @DisplayName("Баннер при возврате с формы с несохраненными данными")
+    public void checkUnsavedChangesAlert() {
         new IndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
-                .setRunQueue("test1")
-                .backInBrowserAndDismissAlert()
-                .goToTemplatesListAndDismissAlert()
-                .backAndDismissAlert();
+                .checkUnsavedChangesAlertAccept(template)
+                .checkUnsavedChangesAlertDismiss();
     }
 }

@@ -6,9 +6,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
-import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
-import ui.models.Graph;
 
 @Feature("Сравнение версий графа")
 public class CompareVersionsTest extends GraphBaseTest {
@@ -19,7 +17,7 @@ public class CompareVersionsTest extends GraphBaseTest {
     public void compareVersionsTest() {
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
-                .editGraph(new Graph(NAME, TITLE, GraphType.CREATING, "1.0.0", "", "QA-1"))
+                .setAuthor("QA-1")
                 .saveGraphWithPatchVersion()
                 .goToVersionComparisonTab();
         new DiffPage().checkCurrentVersionInDiff("1.0.1")

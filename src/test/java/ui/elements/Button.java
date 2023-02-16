@@ -25,11 +25,19 @@ public class Button implements TypifiedElement {
 
     @Step("Получение Button по тексту {text}")
     public static Button byText(String text) {
-        return new Button($x("//button[.='{}']", text));
+        return byText(text, 1);
+    }
+
+    public static Button byText(String text, int index) {
+        return new Button($x("(//button[.='{}'])" + postfix, text, TypifiedElement.getIndex(index)));
     }
 
     public static Button byAriaLabel(String value) {
         return new Button($x("//button[@aria-label='{}']", value));
+    }
+
+    public static Button byId(String id) {
+        return new Button($x("//button[@id='{}']", id));
     }
 
     public static Button byXpath(@Language("XPath") String xPath) {

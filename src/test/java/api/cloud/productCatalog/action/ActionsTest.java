@@ -41,7 +41,7 @@ public class ActionsTest extends Tests {
     public void createActionTest() {
         String actionName = "create_action_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .version("1.0.1")
                 .build()
                 .createObject();
@@ -60,7 +60,7 @@ public class ActionsTest extends Tests {
                 .createObject();
         String actionName = "create_action_with_icon_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
@@ -81,13 +81,13 @@ public class ActionsTest extends Tests {
                 .createObject();
         String actionName = "create_first_action_with_same_icon_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
         Action secondAction = Action.builder()
-                .actionName("create_second_action_with_same_icon_test_api")
+                .name("create_second_action_with_same_icon_test_api")
                 .version("1.0.1")
                 .iconStoreId(icon.getId())
                 .build()
@@ -104,11 +104,11 @@ public class ActionsTest extends Tests {
     public void checkActionExists() {
         String actionName = "action_exist_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        assertTrue(isActionExists(action.getActionName()), "Действие не существует");
+        assertTrue(isActionExists(action.getName()), "Действие не существует");
         assertFalse(isActionExists("NoExistsAction"), "Действие существует");
     }
 
@@ -118,7 +118,7 @@ public class ActionsTest extends Tests {
     public void locationRestrictionCheckDefaultValue() {
         String actionName = "location_restriction_default_value_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -134,7 +134,7 @@ public class ActionsTest extends Tests {
         String actionName = "location_restriction_value_test_api";
         String fieldName = "local";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .locationRestriction(fieldName)
                 .build()
@@ -149,7 +149,7 @@ public class ActionsTest extends Tests {
     public void getActionByIdTest() {
         String actionName = "get_action_by_id_example_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -163,7 +163,7 @@ public class ActionsTest extends Tests {
     public void getActionByIdWithVersionFieldTest() {
         String actionName = "get_action_by_id_with_version_fields_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -180,12 +180,12 @@ public class ActionsTest extends Tests {
     public void copyActionByIdTest() {
         String actionName = "clone_action_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
         Action cloneAction = copyActionById(action.getActionId());
-        String cloneName = cloneAction.getActionName();
+        String cloneName = cloneAction.getName();
         assertTrue(isActionExists(cloneName), "Действие не существует");
         deleteActionByName(cloneName);
         assertFalse(isActionExists(cloneName), "Действие существует");
@@ -197,11 +197,11 @@ public class ActionsTest extends Tests {
     public void copyActionByIdAndFieldCheck() {
         String actionName = "clone_action_check_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
-        String cloneName = action.getActionName() + "-clone";
+        String cloneName = action.getName() + "-clone";
         Action cloneAction = copyActionById(action.getActionId());
         String cloneId = cloneAction.getActionId();
         Action updatedCloneAction = partialUpdateAction(cloneId, new JSONObject().put("priority", 1))
@@ -224,7 +224,7 @@ public class ActionsTest extends Tests {
                 ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
                 assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                         String.format("Даты создания действий с именами %s и %s не соответсвуют условию сортировки."
-                                , list.get(i).getActionName(), list.get(i + 1).getActionName()));
+                                , list.get(i).getName(), list.get(i + 1).getName()));
             }
         }
     }
@@ -240,7 +240,7 @@ public class ActionsTest extends Tests {
                 ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpdateDt());
                 assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
                         String.format("Даты обновлений действий с именами %s и %s не соответсвуют условию сортировки."
-                                , list.get(i).getActionName(), list.get(i + 1).getActionName()));
+                                , list.get(i).getName(), list.get(i + 1).getName()));
             }
         }
     }
@@ -251,7 +251,7 @@ public class ActionsTest extends Tests {
     public void checkAccessWithPublicToken() {
         String actionName = "action_access_with_public_token_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -271,7 +271,7 @@ public class ActionsTest extends Tests {
     public void exportActionByIdTest() {
         String actionName = "action_export_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -285,7 +285,7 @@ public class ActionsTest extends Tests {
     public void checkVersionWhenIndependentParamUpdated() {
         String actionName = "action_check_param_version_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .build()
@@ -305,7 +305,7 @@ public class ActionsTest extends Tests {
     @Test
     public void updateActionAndGetVersion() {
         Action actionTest = Action.builder()
-                .actionName("action_version_test_api")
+                .name("action_version_test_api")
                 .version("1.0.999")
                 .priority(0)
                 .build()
@@ -331,7 +331,7 @@ public class ActionsTest extends Tests {
     public void patchTest() {
         String actionName = "action_patch_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .priority(0)
                 .build()
@@ -346,7 +346,7 @@ public class ActionsTest extends Tests {
     public void getKeyGraphVersionCalculatedInResponse() {
         String actionName = "action_get_key_version_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -365,7 +365,7 @@ public class ActionsTest extends Tests {
         }
         String graphId = createGraph(RandomStringUtils.randomAlphabetic(10).toLowerCase()).getGraphId();
         JSONObject action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .graphId(graphId)
                 .build()
@@ -381,7 +381,7 @@ public class ActionsTest extends Tests {
     public void checkCurrentVersionAction() {
         String actionName = "current_version_action_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -396,7 +396,7 @@ public class ActionsTest extends Tests {
     public void setCurrentVersionAction() {
         String actionName = "set_current_version_action_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .priority(0)
@@ -416,7 +416,7 @@ public class ActionsTest extends Tests {
     public void getCurrentVersionAction() {
         String actionName = "create_current_version_action_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .priority(0)
@@ -438,7 +438,7 @@ public class ActionsTest extends Tests {
         String key = "extra";
         String value = "data";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .extraData(new LinkedHashMap<String, String>() {{
@@ -457,7 +457,7 @@ public class ActionsTest extends Tests {
     public void dumpToGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .build()
@@ -474,7 +474,7 @@ public class ActionsTest extends Tests {
     public void loadFromGitlabAction() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .version("1.0.0")
                 .build()
@@ -495,7 +495,7 @@ public class ActionsTest extends Tests {
     public void compareActionVersionsTest() {
         String actionName = "compare_action_versions_test_api";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .title(actionName)
                 .build()
                 .createObject();
@@ -513,7 +513,7 @@ public class ActionsTest extends Tests {
     public void createActionWithDefaultNumber() {
         String actionName = "create_action_with_default_number";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .version("1.0.1")
                 .build()
                 .createObject();
@@ -527,7 +527,7 @@ public class ActionsTest extends Tests {
     public void createActionWithIsSafe() {
         String actionName = "create_action_with_is_safe_true";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .isSafe(true)
                 .version("1.0.1")
                 .build()
@@ -545,7 +545,7 @@ public class ActionsTest extends Tests {
     public void createActionWithoutIsSafe() {
         String actionName = "create_action_without_is_safe_true";
         Action action = Action.builder()
-                .actionName(actionName)
+                .name(actionName)
                 .version("1.0.1")
                 .build()
                 .createObject();

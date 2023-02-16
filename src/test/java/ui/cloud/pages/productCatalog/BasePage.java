@@ -3,12 +3,15 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.elements.Alert;
 import ui.elements.Button;
+import ui.elements.Input;
 import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.switchTo;
 
 public class BasePage {
 
@@ -27,6 +30,10 @@ public class BasePage {
     protected final Button viewJSONButton = Button.byText("JSON");
     protected final Button expandJSONView = Button.byAriaLabel("fullscreen");
     protected final Button closeJSONView = Button.byAriaLabel("close");
+    protected final Input nameInput = Input.byName("name");
+    protected final Input titleInput = Input.byName("title");
+    protected final SelenideElement mainPageLink = $x("//a[@href='/meccano/home']");
+    protected final String unsavedChangesAlertText = "Внесенные изменения не сохранятся. Покинуть страницу?";
 
     @Step("Сохранение объекта без изменения версии")
     public BasePage saveWithoutPatchVersion(String alertText) {
@@ -86,6 +93,12 @@ public class BasePage {
         }
     }
 
+    @Step("Проверка, что открыта вкладка '{title}'")
+    public void checkTabIsSelected(String title) {
+        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
+        Assertions.assertTrue(Boolean.valueOf(tab.getAttribute("aria-selected")), "Вкладка " + title + " не выбрана");
+    }
+
     @Step("Просмотр JSON и проверка отображения '{value}'")
     public BasePage checkJSONcontains(String value) {
         viewJSONButton.click();
@@ -94,5 +107,17 @@ public class BasePage {
         expandJSONView.click();
         closeJSONView.click();
         return this;
+    }
+
+    @Step("Отмена в баннере о несохраненных изменениях и проверка текста")
+    protected void dismissAlert(String text) {
+        Assertions.assertTrue(switchTo().alert().getText().contains(text), "Текст баннера отличается от " + text);
+        switchTo().alert().dismiss();
+    }
+
+    @Step("Продолжить в баннере о несохраненных изменениях и проверка текста")
+    protected void acceptAlert(String text) {
+        Assertions.assertTrue(switchTo().alert().getText().contains(text), "Текст баннера отличается от " + text);
+        switchTo().alert().accept();
     }
 }

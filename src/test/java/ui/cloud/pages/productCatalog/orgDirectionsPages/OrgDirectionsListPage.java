@@ -41,15 +41,15 @@ public class OrgDirectionsListPage extends BaseListPage {
     @Step("Поиск направления по значению '{value}'")
     public OrgDirectionsListPage findDirectionByValue(String value, OrgDirection orgDirection) {
         searchInput.setValue(value);
-        TestUtils.wait(1000);
+        Waiting.sleep(1000);
         assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, orgDirection.getName()));
-        return new OrgDirectionsListPage();
+        return this;
     }
 
     public OrgDirectionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
                 "Наименование", nameColumn, "Дата создания", "Описание", "", "");
-        return new OrgDirectionsListPage();
+        return this;
     }
 
     @Step("Переход на страницу редактирования направления с именем {name}")

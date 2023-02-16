@@ -4,8 +4,13 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
+import models.cloud.productCatalog.graph.Graph;
+import org.junit.jupiter.api.Assertions;
+import steps.productCatalog.GraphSteps;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
@@ -21,10 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ActionPage extends BasePage {
     private static final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
-    private final SelenideElement inputNameField = $x("//*[@name = 'name']");
-    private final SelenideElement inputTitleField = $x("//*[@name = 'title']");
     private final SelenideElement info = $x("//div[@role = 'status']");
-    private final SelenideElement inputDescriptionField = $x("//textarea[@name ='description']");
+    private final TextArea descriptionTextArea = TextArea.byName("description");
     private final SelenideElement locationInOrderTab = $x("//*[text()= 'Расположение в заказе']");
     private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
     private final SelenideElement paramsTab = $x("//button[span[text()='Параметры']]");
@@ -38,10 +41,26 @@ public class ActionPage extends BasePage {
     private final SelenideElement currentVersionInput = $x("//label[text()='Выберите версию']/following::div[@id='selectValueWrapper']/div");
     private final SelenideElement addTypeAndProviderButton = $x("//button[div[text()='Добавить']]");
     private final Input priorityInput = Input.byName("priority");
+    private final MultiSelect requiredItemStatusesSelect = MultiSelect.byLabel("Обязательные статусы item");
+    private final MultiSelect requiredOrderStatusesSelect = MultiSelect.byLabel("Обязательные статусы заказа");
 
     public ActionPage() {
         actionsListLink.shouldBe(Condition.visible);
         info.shouldBe(Condition.visible);
+    }
+
+    @Step("Проверка атрибутов действия '{action.name}'")
+    public ActionPage checkAttributes(Action action) {
+        checkVersion(action.getVersion());
+        goToMainTab();
+        nameInput.getInput().shouldHave(Condition.exactValue(action.getName()));
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
+        descriptionTextArea.getTextArea().shouldHave(Condition.exactValue(action.getDescription()));
+        goToGraphTab();
+        Graph graph = GraphSteps.getGraphById(action.getGraphId());
+        Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
+        Assertions.assertEquals(action.getGraphVersion(), graphVersionSelect.getValue());
+        return this;
     }
 
     @Step("Возврат на страницу списка Действий через кнопку Отмена")
@@ -118,18 +137,11 @@ public class ActionPage extends BasePage {
         return this;
     }
 
-    @Step("Ввод значения в поле {label}")
-    public ActionPage inputByLabel(String label, String value) {
-        Input.byLabel(label).clear();
-        Input.byLabel(label).setValue(value);
-        return this;
-    }
-
     @Step("Сравнение значений полей")
     public ActionPage compareFields(String name, String title, String version) {
         currentVersionInput.shouldHave(Condition.exactText(version));
-        inputNameField.shouldHave(Condition.exactValue(name));
-        inputTitleField.shouldHave(Condition.exactValue(title));
+        nameInput.getInput().shouldHave(Condition.exactValue(name));
+        titleInput.getInput().shouldHave(Condition.exactValue(title));
         return this;
     }
 
@@ -137,26 +149,6 @@ public class ActionPage extends BasePage {
     public ActionsListPage backByBrowserButtonBack() {
         back();
         return new ActionsListPage();
-    }
-
-    @Step("Назад с помощью кнопки браузера и отмена оповещения о несохранненных данных")
-    public ActionPage backOnBrowserAndAlertCancel() {
-        back();
-        String alertMsg = switchTo().alert().getText();
-        assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
-        switchTo().alert().dismiss();
-        actionsListLink.shouldBe(Condition.visible);
-        return this;
-    }
-
-    @Step("Закрытие текущей вкладки и отмена оповещения о несохранненных данных")
-    public ActionPage closeTabAndAlertCancel() {
-        closeWindow();
-        String alertMsg = switchTo().alert().getText();
-        assertEquals("Возможно, внесенные изменения не сохранятся.", alertMsg);
-        switchTo().alert().dismiss();
-        actionsListLink.shouldBe(Condition.visible);
-        return this;
     }
 
     @Step("Переход на список действий и отмена оповещения о несохранненных данных")
@@ -186,12 +178,12 @@ public class ActionPage extends BasePage {
     public ActionsListPage fillAndSave(String name, String title, String description, ItemStatus status, OrderStatus orderStatus, ActionType actionType,
                                        String configPath, String configKey, String valueOfData, String graphTitle, EventType eventType, EventProvider eventProvider) {
         WebDriverRunner.getWebDriver().manage().window().maximize();
-        inputNameField.setValue(name);
-        inputTitleField.setValue(title);
-        inputDescriptionField.setValue(description);
-        MultiSelect.byLabel("Обязательные статусы item").set(status.getValue());
-        MultiSelect.byLabel("Обязательные статусы заказа").set(orderStatus.getValue());
-        Select.byLabel("Тип").set(actionType.getValue());
+        nameInput.setValue(name);
+        titleInput.setValue(title);
+        descriptionTextArea.setValue(description);
+        requiredItemStatusesSelect.set(status.getValue());
+        requiredOrderStatusesSelect.set(orderStatus.getValue());
+        Select.byName("type").set(actionType.getValue());
         paramsTab.scrollIntoView(false).click();
         addTypeAndProviderButton.click();
         Table table = new Table("Тип");
@@ -248,6 +240,68 @@ public class ActionPage extends BasePage {
     @Step("Переход на вкладку 'Сравнение версий'")
     public ActionPage goToVersionComparisonTab() {
         goToTab("Сравнение версий");
+        return this;
+    }
+
+    public ActionPage goToMainTab() {
+        goToTab("Основное");
+        return this;
+    }
+
+    public ActionPage goToGraphTab() {
+        goToTab("Граф");
+        return this;
+    }
+
+    public ActionPage goToAdditionalParamsTab() {
+        goToTab("Дополнительные параметры");
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Отмена")
+    public ActionPage checkUnsavedChangesAlertDismiss() {
+        String newValue = "new";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        actionsListLink.scrollIntoView(false).click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        backButton.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        mainPageLink.click();
+        dismissAlert(unsavedChangesAlertText);
+        titleInput.getInput().shouldHave(Condition.exactValue(newValue));
+        return this;
+    }
+
+    @Step("Проверка баннера о несохранённых изменениях. Ок")
+    public ActionPage checkUnsavedChangesAlertAccept(Action action) {
+        String newValue = "new title";
+        goToMainTab();
+        titleInput.setValue(newValue);
+        back();
+        acceptAlert(unsavedChangesAlertText);
+        new ActionsListPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
+        titleInput.setValue(newValue);
+        actionsListLink.scrollIntoView(false).click();
+        acceptAlert(unsavedChangesAlertText);
+        new ActionsListPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
+        titleInput.setValue(newValue);
+        backButton.click();
+        acceptAlert(unsavedChangesAlertText);
+        new ActionsListPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
+        titleInput.setValue(newValue);
+        mainPageLink.click();
+        acceptAlert(unsavedChangesAlertText);
+        new IndexPage().goToActionsPage().openActionForm(action.getName());
+        titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         return this;
     }
 }

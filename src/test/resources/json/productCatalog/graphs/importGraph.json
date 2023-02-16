@@ -13,7 +13,7 @@
     "current_version": "",
     "name": "import_graph_test_api",
     "title": "import_graph_test_api",
-    "description": "",
+    "description": "graph for import test",
     "type": "action",
     "allowed_developers": [],
     "restricted_developers": [],

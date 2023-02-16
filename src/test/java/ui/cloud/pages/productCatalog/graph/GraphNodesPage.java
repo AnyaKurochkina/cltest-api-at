@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
@@ -9,21 +10,23 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.TextArea;
-import ui.elements.TypifiedElement;
 import ui.models.Node;
 import ui.models.SubgraphNode;
 import ui.models.TemplateNode;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.actions;
 import static core.helper.StringUtils.$x;
 
 public class GraphNodesPage extends GraphPage {
 
-    private final SelenideElement addNodeButton = $x("//button[@aria-label = 'add node']");
-    private final SelenideElement editNodeButton = $x("//button[@aria-label = 'edit node']");
-    private final SelenideElement copyNode = $x("//li[@id='clone_node']");
-    private final SelenideElement deleteNodesButton = $x("//button[@aria-label = 'delete items']");
+    private final SelenideElement addNodeButton = $x("(//div[@class='react-flow']/" +
+            "div[contains(@class,'LayoutButtonsStyled')]//*[name()='svg'])[1]");
+    private final SelenideElement editNodeButton = $x("(//div[@class='react-flow']//" +
+            "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[1]");
+    private final SelenideElement copyNodeButton = $x("(//div[@class='react-flow']//" +
+            "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[2]");
+    private final SelenideElement deleteNodeButton = $x("(//div[@class='react-flow']//" +
+            "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[3]");
     private final SelenideElement nodeName = $x("//form//input[@name = 'name']");
     private final SelenideElement nodeDescription = $x("//form//input[@name = 'description']");
     private final Input subgraphInput = Input.byLabelV2("Подграф");
@@ -60,13 +63,13 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement subgraphVersion = $x("(//label[text()='Версия'])[2]/following::div[@id='selectValueWrapper']");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
-    private final SelenideElement staticData = $x("//label[text()='Static data']/parent::div//textarea");
+    private final TextArea staticDataTextArea = TextArea.byLabel("Static data");
     private final SelenideElement searchNodesInput = $x("//input[@placeholder='Поиск...']");
 
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(Node node) {
         addNodeButton.click();
-        TestUtils.wait(1000);
+        Waiting.sleep(1000);
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
         if (node instanceof SubgraphNode) {
@@ -103,9 +106,7 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Редактирование узла '{node.name}' с подграфом")
     public GraphNodesPage editSubgraphNode(SubgraphNode node, String version, String description) {
-        TestUtils.scrollToTheBottom();
         selectNodeInGraph(node);
-        TestUtils.scrollToTheTop();
         editNodeButton.click();
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
@@ -121,9 +122,7 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Редактирование узла '{node.name}' с шаблоном")
     public GraphNodesPage editTemplateNode(TemplateNode node, String version, String description) {
-        TestUtils.scrollToTheBottom();
         selectNodeInGraph(node);
-        TestUtils.scrollToTheTop();
         editNodeButton.click();
         nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
@@ -140,15 +139,8 @@ public class GraphNodesPage extends GraphPage {
     @Step("Копирование узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage copyNodeAndSave(Node node) {
         String cloneName = node.getName() + "_clone";
-        TestUtils.scrollToTheBottom();
         selectNodeInGraph(node);
-        TestUtils.scrollToTheTop();
-        actions().pause(1000)
-                .moveToElement($x("//div[@class='g6-grid-container']/following-sibling::canvas"))
-                .moveByOffset(0, 70)
-                .contextClick()
-                .perform();
-        copyNode.scrollIntoView(TypifiedElement.scrollCenter).click();
+        copyNodeButton.click();
         nodeName.shouldHave(Condition.exactValue(cloneName));
         TestUtils.wait(500);
         formAddNodeButton.click();
@@ -158,7 +150,8 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Проверка отсутствия узла '{node.name}' в списке узлов")
     public GraphNodesPage checkNodeNotFound(SubgraphNode node) {
-        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]").shouldBe(Condition.not(Condition.visible));
+        $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]")
+                .shouldBe(Condition.not(Condition.visible));
         return this;
     }
 
@@ -206,11 +199,9 @@ public class GraphNodesPage extends GraphPage {
         if (node.getNumber().equals("")) {
             node.setNumber("1");
         }
-        TestUtils.scrollToTheBottom();
         selectNodeInGraph(node);
-        TestUtils.scrollToTheTop();
         editNodeButton.click();
-        TestUtils.wait(500);
+        Waiting.sleep(1000);
         nodeName.shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.shouldHave(Condition.exactValue(node.getDescription()));
         if (node instanceof SubgraphNode) {
@@ -262,18 +253,15 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Удаление узла '{node.name}' и сохранение графа")
     public GraphNodesPage deleteNodeAndSave(Node node) {
-        TestUtils.scrollToTheBottom();
         selectNodeInGraph(node);
-        TestUtils.scrollToTheTop();
-        deleteNodesButton.click();
+        deleteNodeButton.click();
         saveGraphWithPatchVersion();
         return this;
     }
 
     @Step("Задать для StaticData значение '{value}'")
     public GraphNodesPage setStaticData(String value) {
-        staticData.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-        staticData.setValue(value);
+        staticDataTextArea.setValue(value);
         saveGraphWithPatchVersion();
         return this;
     }
@@ -282,8 +270,6 @@ public class GraphNodesPage extends GraphPage {
         if (node.getNumber().equals("")) {
             node.setNumber("1");
         }
-        $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
-                .click();
-
+        $x("//div[@class='react-flow']//div[text()='{}']", node.getDescription()).scrollIntoView(false).click();
     }
 }

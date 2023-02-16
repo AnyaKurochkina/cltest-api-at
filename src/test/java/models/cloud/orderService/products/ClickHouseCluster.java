@@ -106,7 +106,7 @@ public class ClickHouseCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         Flavor flavorCh = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:clickhouse:dev:dev").get(0);
         Flavor flavorZk = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:zookeeper:dev:dev").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
@@ -128,7 +128,7 @@ public class ClickHouseCluster extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.ch_customer_admin", chCustomerAdmin)
                 .set("$.order.attrs.ch_customer_admin_password", chCustomerAdminPassword)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.label", getLabel())
                 .build();
 

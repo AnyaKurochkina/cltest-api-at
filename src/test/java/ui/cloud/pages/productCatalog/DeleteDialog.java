@@ -3,7 +3,6 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 
@@ -42,12 +41,11 @@ public class DeleteDialog extends Dialog {
         Alert.green(alertText);
     }
 
-    @Step("Вводим верный id")
+    @Step("Проверка недоступности удаления и текста уведомления")
     public void inputValidIdAndDeleteNotAvailable(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
-        Alert.red(alertText);
-        TestUtils.wait(6000);
+        new Alert().check(Alert.Color.RED, alertText);
     }
 
     @Step("Подтверждение удаления объекта")
