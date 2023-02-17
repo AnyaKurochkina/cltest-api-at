@@ -45,17 +45,19 @@ public class BaseListPage {
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.scrollIntoView(false).click();
-        Waiting.sleep(1000);
+        Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         String firstValue = table.getValueByColumnInFirstRow(header).getText();
         String lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();
-        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0 || lastValue.equals(firstValue));
+        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) > 0 || lastValue.equals(firstValue),
+                "Некорректная сортировка по столбцу " + header);
         columnHeader.click();
-        Waiting.sleep(1000);
+        Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         firstValue = table.getValueByColumnInFirstRow(header).getText();
         lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();
-        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0 || lastValue.equals(firstValue));
+        Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0 || lastValue.equals(firstValue),
+                "Некорректная сортировка по столбцу " + header);
     }
 
     @Step("Проверка сортировки по дате по столбцу '{header}'")
@@ -64,7 +66,7 @@ public class BaseListPage {
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.click();
-        Waiting.sleep(1000);
+        Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         String firstDateString = table.getValueByColumnInFirstRow(header).getText();
         String lastDateString = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();
@@ -73,7 +75,7 @@ public class BaseListPage {
         LocalDateTime lastDate = LocalDateTime.parse(lastDateString, formatter);
         Assertions.assertTrue(lastDate.isAfter(firstDate) || lastDate.isEqual(firstDate));
         columnHeader.click();
-        Waiting.sleep(1000);
+        Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         firstDateString = table.getValueByColumnInFirstRow(header).getText();
         lastDateString = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();

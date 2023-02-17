@@ -94,7 +94,8 @@ public class ProductPage extends BasePage {
                 info.getTextArea().getValue().replaceAll("\\s", ""));
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
-        Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
+        Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()),
+                "Название графа не содержит " + graph.getName());
         Assertions.assertEquals(product.getGraphVersion(), graphVersionSelect.getValue());
         goToAdditionalParamsTab();
         Assertions.assertEquals(product.getCategory(), categorySelect.getValue());

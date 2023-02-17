@@ -163,13 +163,13 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Проверка сортировки по наименованию")
     public GraphsListPage checkSortingByTitle() {
-        BaseListPage.checkSortingByStringField("Наименование");
+        checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду графа")
     public GraphsListPage checkSortingByName() {
-        BaseListPage.checkSortingByStringField("Код графа");
+        checkSortingByStringField("Код графа");
         return this;
     }
 

@@ -32,7 +32,9 @@ public class ProductsListPage extends BaseListPage {
     @Step("Создание продукта '{product.name}'")
     public ProductPage createProduct(Product product) {
         addNewObjectButton.click();
-        return new ProductPage().setAttributes(product).saveWithoutPatchVersion("Продукт успешно создан");
+        ProductPage productPage = new ProductPage().setAttributes(product).saveWithoutPatchVersion("Продукт успешно создан");
+        Waiting.sleep(500);
+        return productPage;
     }
 
     @Step("Проверка обязательных полей при создании продукта")
@@ -64,7 +66,7 @@ public class ProductsListPage extends BaseListPage {
     public ProductPage findAndOpenProductPage(String name) {
         search(name);
         new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
-        TestUtils.wait(500);
+        TestUtils.wait(1000);
         return new ProductPage();
     }
 

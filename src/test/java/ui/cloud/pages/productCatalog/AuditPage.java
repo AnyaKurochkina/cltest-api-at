@@ -39,7 +39,7 @@ public class AuditPage extends BasePage {
         if (!table.isColumnValueContains("Тип операции", operationType)) {
             TestUtils.wait(2000);
             Selenide.refresh();
-            new GraphPage().goToAuditTab();
+            new BasePage().goToAuditTab();
             table = new Table("Учетная запись");
         }
         table.getValueByColumnInFirstRow("Дата и время").shouldHave(Condition.text(dateTime));

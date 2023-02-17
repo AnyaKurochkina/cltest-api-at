@@ -66,7 +66,7 @@ public class ServicesListTest extends ServiceBaseTest {
         Selenide.back();
         new ServicesListPagePC().checkServiceIsHighlighted(NAME);
         new ServicesListPagePC().openServicePage(NAME)
-                .cancel()
+                .backToServicesList()
                 .checkServiceIsHighlighted(NAME);
     }
 }
