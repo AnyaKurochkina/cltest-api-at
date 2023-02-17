@@ -51,7 +51,7 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("coords_x")
     private Integer coordsX;
     @JsonProperty("printed_output")
-    private List<Map<String, String>> printedOutput;
+    private Map<String, String> printedOutput;
     @JsonProperty("printed_output_can_be_overridden")
     private Boolean printedOutputCanBeOverridden;
     @JsonProperty("restricted_paths")
