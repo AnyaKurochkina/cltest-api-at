@@ -27,6 +27,9 @@ public enum Role {
     @SerializedName("product-catalog.admin")
     PRODUCT_CATALOG_ADMIN("product-catalog.admin"),
 
+    @SerializedName("tag-service.admin")
+    TAG_SERVICE_ADMIN("tag-service.admin"),
+
     @SerializedName("ipam")
     IPAM("ipam"),
 

@@ -142,11 +142,12 @@ public class ObjectPoolEntity {
         return getLockedThreads(thread).contains(threadLock);
     }
 
+    @SneakyThrows
     public void lock() {
         if(isDeadLock(Thread.currentThread().getName(), lock.getOwnerThreadName()))
             throw new CreateEntityException("Тестовое исключение. Надо перезапустить тест :(");
         writeLog("lock() " + status + " " + entity);
-        lock.lock();
+        lock.tryLock(2, TimeUnit.HOURS);
         writeLog("lockPost() " + status + " " + entity);
     }
 
