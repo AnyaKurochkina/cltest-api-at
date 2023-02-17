@@ -44,6 +44,14 @@ public class ServiceSteps extends Steps {
                 .createObject();
     }
 
+    @Step("Частичное обновление сервиса по id")
+    public static Response partialUpdateServiceById(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(serviceUrl + id + "/");
+    }
+
     @Step("Получение сервиса по Id")
     public static Service getServiceById(String objectId) {
         return new Http(ProductCatalogURL)

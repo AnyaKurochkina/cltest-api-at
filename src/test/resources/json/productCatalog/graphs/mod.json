@@ -1,0 +1,12 @@
+{
+  "name": "wqe",
+  "data": {},
+  "envs": [],
+  "env_names": [
+    "DSO"
+  ],
+  "order": 2,
+  "path": "",
+  "root_path": "json_schema",
+  "update_type": "replace"
+}

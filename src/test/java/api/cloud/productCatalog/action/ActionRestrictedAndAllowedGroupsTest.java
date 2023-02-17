@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.action;
 
+import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -11,10 +12,10 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
 import java.util.Collections;
 
+import static core.enums.Role.PRODUCT_CATALOG_VIEWER;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static steps.productCatalog.ActionSteps.getActionById;
@@ -31,7 +32,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionRestrictedGroupRealmLevelTest() {
         Action action = Action.builder()
-                .name("action_for_restricted_group_api_test2")
+                .name("action_for_restricted_group_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("qa-admin"))
                 .build()
@@ -129,7 +130,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionWithUserNameInRestrictedGroupTest() {
         GlobalUser user = GlobalUser.builder()
-                .role(Role.PRODUCT_CATALOG_VIEWER)
+                .role(PRODUCT_CATALOG_VIEWER)
                 .build().createObject();
         Action action = Action.builder()
                 .name("action_with_user_name_in_restriction_group_api_test")
@@ -160,5 +161,18 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
         assertNotNull(actionById);
         String msg = getActionViewerById(action.getActionId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
         assertEquals("No Action matches the given query.", msg);
+    }
+
+    @DisplayName("Создание действия с ограничением restricted group на уровне realm")
+    @TmsLink("1274379")
+    @Test
+    public void actionRestrictedGrosupRealmLevelTest() {
+        Action action = Action.builder()
+                .name("action_for_restricted_group_api_test")
+                .version("1.0.1")
+                .restrictedGroups(Collections.singletonList("tag_admins"))
+                .build()
+                .createObject();
+        Action actionById = getActionById(action.getActionId());
     }
 }

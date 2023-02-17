@@ -10,12 +10,12 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ServiceSteps;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.productCatalog.OrgDirectionSteps.*;
+import static steps.productCatalog.ServiceSteps.*;
 
 @Log4j2
 @Builder
@@ -31,6 +31,8 @@ public class OrgDirection extends Entity implements IProductCatalog {
     private String iconUrl;
     @JsonProperty("icon_store_id")
     private String iconStoreId;
+    @JsonProperty("icon_base64")
+    private String iconBase64;
     private String name;
     private String description;
     private String id;
@@ -61,7 +63,12 @@ public class OrgDirection extends Entity implements IProductCatalog {
     protected void create() {
         if (isOrgDirectionExists(name)) {
             List<String> serviceIdList = getServiceUsedOrgDirection(getOrgDirectionByName(name).getId()).jsonPath().getList("id");
-            serviceIdList.forEach(ServiceSteps::deleteServiceById);
+            serviceIdList.forEach((id) -> {
+                if (getServiceById(id).getIsPublished()) {
+                    partialUpdateServiceById(id, new JSONObject().put("is_published", false));
+                }
+                deleteServiceById(id);
+            });
             deleteOrgDirectionById(getOrgDirectionByName(name).getId());
         }
         OrgDirection createOrgDirection = createOrgDirection(toJson())

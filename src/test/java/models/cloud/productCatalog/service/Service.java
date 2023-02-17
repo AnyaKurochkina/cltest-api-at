@@ -36,6 +36,8 @@ public class Service extends Entity implements IProductCatalog {
     private String iconUrl;
     @JsonProperty("icon_store_id")
     private String iconStoreId;
+    @JsonProperty("icon_base64")
+    private String iconBase64;
     @JsonProperty("description")
     private String description;
     @JsonProperty("service_info")
@@ -148,6 +150,9 @@ public class Service extends Entity implements IProductCatalog {
 
     @Override
     protected void delete() {
+        if (isPublished) {
+            partialUpdateServiceByName(name, new JSONObject().put("is_published", false));
+        }
         deleteServiceById(id);
         Assertions.assertFalse(isServiceExists(name));
     }

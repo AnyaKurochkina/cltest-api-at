@@ -92,7 +92,7 @@ public class Artemis extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", getProjectId())
                 .set("$.order.attrs.on_support", getSupport())
-                .set("$.order.attrs.layout", getIdGeoDistribution("artemis-1:artemis-1", envType().toUpperCase(), "artemis", org.getName()))
+                .set("$.order.attrs.layout", getIdGeoDistribution("artemis-2:artemis-2", envType().toUpperCase(), "artemis", org.getName()))
                 .set("$.order.label", getLabel())
                 .build();
     }

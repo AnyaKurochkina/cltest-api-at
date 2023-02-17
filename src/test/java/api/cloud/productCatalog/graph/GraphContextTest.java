@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.GraphSteps.getGraphById;
 import static steps.productCatalog.GraphSteps.getGraphByIdContext;
 
 @Tag("product_catalog")
@@ -32,7 +33,6 @@ public class GraphContextTest extends Tests {
     Project project;
 
     public GraphContextTest() {
-
         project = Project.builder()
                 .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
                 .isForOrders(true)
@@ -121,5 +121,50 @@ public class GraphContextTest extends Tests {
                 .createObject();
         Graph createdGraph = getGraphByIdContext(project.getId(), graph.getGraphId());
         assertEquals(titleValue, createdGraph.getJsonSchema().get("title"));
+    }
+
+    @DisplayName("Получение графа c модификаторами без контекста")
+    @TmsLink("")
+    @Test
+    public void getGraphWithModsWithOutContextTest() {
+        String jsonData = "dev_title";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envNames(Collections.singletonList("IFT"))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        String uiData = "ui_schema_dev_title";
+        Modification uiSchema = Modification.builder()
+                .name("ui_schema_dev_mod")
+                .envNames(Collections.singletonList("IFT"))
+                .order(2)
+                .path("title")
+                .rootPath(RootPath.UI_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(uiData)
+                .build();
+        String expectedTitle = "default";
+        Graph graph = Graph.builder()
+                .name("get_graph_with_out_context_test_api")
+                .version("1.0.0")
+                .modifications(Arrays.asList(jsonSchema, uiSchema))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .uiSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .staticData(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .build()
+                .createObject();
+        Graph createdGraph = getGraphById(graph.getGraphId());
+        assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
+        assertEquals(expectedTitle, createdGraph.getUiSchema().get("title"));
     }
 }
