@@ -2,21 +2,17 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Astra;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.elements.Dialog;
-import ui.elements.DropDown;
 import ui.elements.Select;
 import ui.elements.Table;
 
 import java.util.List;
 
-import static api.Tests.activeCnd;
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -60,8 +56,11 @@ public class AstraLinuxPage extends IProductPage {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
-        btnGeneralInfo.click();
+        {
+            Select.byLabel("Конфигурация Core/RAM").set(Product.getFlavor(maxFlavor));
+            agreeToReloadCheckBox.setChecked(true);
+        });
+        goToGeneralInfoTab();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -101,8 +100,8 @@ public class AstraLinuxPage extends IProductPage {
     public void updateGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(new AstraLinuxPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
-            DropDown groupsElement = DropDown.byLabel("Группы").clear();
-            groups.forEach(groupsElement::select);
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
         });
         groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -161,13 +160,13 @@ public class AstraLinuxPage extends IProductPage {
 
     //Таблица ролей
     public class RoleTable extends Table {
+        public RoleTable() {
+            super("Группы");
+        }
+
         @Override
         protected void open() {
             btnGeneralInfo.click();
-        }
-
-        public RoleTable() {
-            super("Группы");
         }
 
         private SelenideElement getRoleMenuElement(String name) {

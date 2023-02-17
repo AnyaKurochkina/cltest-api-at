@@ -24,7 +24,8 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product;// = Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/2ad8b165-54b0-4ea9-a3cc-c402b43f208e/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Astra product;
+     //= Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/e0958c78-e4e0-4c10-a19b-b017774f9639/history?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -73,7 +74,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Test
     @TmsLink("1236736")
     @Order(2)
-    @DisplayName("UI AstraLinux. Проверка полей заказа")
+    @DisplayName("UI AstraLinux. Проверка развертывания в истории действий")
     void checkHeaderHistoryTable() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.getBtnGeneralInfo().click();
@@ -104,7 +105,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Test
     @Order(5)
     @TmsLink("382920")
-    @DisplayName("UI AstraLinux. Расширить диск")
+    @DisplayName("UI AstraLinux. Расширить точку монтирования")
     void expandDisk() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> astraLinuxPage.enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
@@ -122,7 +123,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Test
     @Order(8)
     @TmsLinks({@TmsLink("1090926"), @TmsLink("1090863")})
-    @DisplayName("UI AstraLinux. Добавить группу доступа")
+    @DisplayName("UI AstraLinux. Удалить и добавить группу доступа")
     void addGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.deleteGroup("user"));
