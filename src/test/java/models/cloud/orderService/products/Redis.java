@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.helper.JsonTemplate;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -52,29 +53,33 @@ public class Redis extends IProduct {
         }
         if (redisVersion == null)
             redisVersion = getRandomProductVersionByPathEnum("redis_version.enum");
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
 
     public JSONObject toJson() {
         String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
-        return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.order.product_id", productId)
-                .set("$.order.attrs.domain", getDomain())
+        JsonTemplate template = JsonHelper.getJsonTemplate(jsonTemplate)
+                .set("$.order.product_id", productId);
+        if (envType().contains("prod")) {
+            template.put("$.order.attrs", "geo_distribution", true)
+                    .put("$.order.attrs", "layout", getIdGeoDistribution("2-single-node-servers", "redis"));
+        }
+        return template.set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.redis_version", redisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.user_password", appUserPassword)
                 .set("$.order.attrs.user", appUser)

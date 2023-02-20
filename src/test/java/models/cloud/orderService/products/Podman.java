@@ -69,8 +69,8 @@ public class Podman extends IProduct {
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.ad_logon_grants[0].role", isTest() ? "podman_admin" : "superuser")
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "podman_admin")
+                .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.label", getLabel())
                 .build();
     }

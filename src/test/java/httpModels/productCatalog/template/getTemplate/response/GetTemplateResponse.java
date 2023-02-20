@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
-import java.util.Map;
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -17,141 +15,144 @@ import java.util.Map;
 
 public class GetTemplateResponse implements GetImpl {
 
-    @JsonProperty("additional_input")
-    private Boolean additionalInput;
+	@JsonProperty("additional_input")
+	private Boolean additionalInput;
 
-    @JsonProperty("title")
-    private String title;
+	@JsonProperty("title")
+	private String title;
 
-    @JsonProperty("color")
-    private String color;
+	@JsonProperty("color")
+	private String color;
 
-    @JsonProperty("version_list")
-    private List<String> versionList;
+	@JsonProperty("version_list")
+	private List<String> versionList;
 
-    @JsonProperty("icon_url")
-    private String iconUrl;
+	@JsonProperty("icon_url")
+	private String iconUrl;
 
-    @JsonProperty("icon_store_id")
-    private String iconStoreId;
+	@JsonProperty("icon_store_id")
+	private String iconStoreId;
 
-    @JsonProperty("type")
-    private String type;
+	@JsonProperty("type")
+	private String type;
 
-    @JsonProperty("description")
-    private String description;
+	@JsonProperty("description")
+	private String description;
 
-    @JsonProperty("run")
-    private String run;
+	@JsonProperty("run")
+	private String run;
 
-    @JsonProperty("priority_can_be_overridden")
-    private Boolean priorityCanBeOverridden;
+	@JsonProperty("priority_can_be_overridden")
+	private Boolean priorityCanBeOverridden;
 
-    @JsonProperty("log_can_be_overridden")
-    private Boolean logCanBeOverridden;
+	@JsonProperty("log_can_be_overridden")
+	private Boolean logCanBeOverridden;
 
-    @JsonProperty("timeout")
-    private Integer timeout;
+	@JsonProperty("timeout")
+	private Integer timeout;
 
-    @JsonProperty("output")
-    private Output output;
+	@JsonProperty("output")
+	private Output output;
 
-    @JsonProperty("coords_x")
-    private Integer coordsX;
+	@JsonProperty("coords_x")
+	private Integer coordsX;
 
-    @JsonProperty("printed_output")
-    private List<Map<String, String>> printedOutput;
+	@JsonProperty("printed_output")
+	private Object printedOutput;
 
-    @JsonProperty("printed_output_can_be_overridden")
-    private Boolean printedOutputCanBeOverridden;
+	@JsonProperty("printed_output_can_be_overridden")
+	private Boolean printedOutputCanBeOverridden;
 
-    @JsonProperty("restricted_paths")
-    private List<Object> restrictedPaths;
+	@JsonProperty("restricted_paths")
+	private List<Object> restrictedPaths;
 
-    @JsonProperty("id")
-    private Integer id;
+	@JsonProperty("id")
+	private Integer id;
 
-    @JsonProperty("coords_y")
-    private Integer coordsY;
+	@JsonProperty("coords_y")
+	private Integer coordsY;
 
-    @JsonProperty("rollback")
-    private Object rollback;
+	@JsonProperty("rollback")
+	private Object rollback;
 
-    @JsonProperty("allowed_paths")
-    private List<Object> allowedPaths;
+	@JsonProperty("allowed_paths")
+	private List<Object> allowedPaths;
 
-    @JsonProperty("log_level")
-    private Object logLevel;
+	@JsonProperty("log_level")
+	private Object logLevel;
 
-    @JsonProperty("version_create_dt")
-    private String versionCreateDt;
+	@JsonProperty("version_create_dt")
+	private String versionCreateDt;
 
-    @JsonProperty("restricted_groups")
-    private List<Object> restrictedGroups;
+	@JsonProperty("restricted_groups")
+	private List<Object> restrictedGroups;
 
-    @JsonProperty("priority")
-    private Integer priority;
+	@JsonProperty("priority")
+	private Integer priority;
 
-    @JsonProperty("version")
-    private String version;
+	@JsonProperty("version")
+	private String version;
 
-    @JsonProperty("input")
-    private Input input;
+	@JsonProperty("input")
+	private Input input;
 
-    @JsonProperty("extra_data")
-    private Object extraData;
+	@JsonProperty("extra_data")
+	private Object extraData;
 
-    @JsonProperty("version_changed_by_user")
-    private String versionChangedByUser;
+	@JsonProperty("version_changed_by_user")
+	private String versionChangedByUser;
 
-    @JsonProperty("name")
-    private String name;
+	@JsonProperty("name")
+	private String name;
 
-    @JsonProperty("allowed_groups")
-    private List<Object> allowedGroups;
+	@JsonProperty("allowed_groups")
+	private List<Object> allowedGroups;
 
-    @JsonProperty("additional_output")
-    private Boolean additionalOutput;
+	@JsonProperty("additional_output")
+	private Boolean additionalOutput;
 
-    @JsonProperty("last_version")
-    private String last_version;
+	@JsonProperty("last_version")
+	private String last_version;
 
-    @JsonProperty("create_dt")
-    private String create_dt;
+	@JsonProperty("create_dt")
+	private String create_dt;
 
-    @JsonProperty("update_dt")
-    private String update_dt;
+	@JsonProperty("update_dt")
+	private String update_dt;
 
-    @JsonProperty("current_version")
-    private String currentVersion;
+	@JsonProperty("current_version")
+	private String currentVersion;
 
-    @Override
-    public String getName() {
-        return name;
-    }
+	@JsonProperty("icon_base64")
+	private String iconBase64;
 
-    @Override
-    public String getTitle() {
-        return null;
-    }
+	@Override
+	public String getName() {
+		return name;
+	}
 
-    @Override
-    public String getVersion() {
-        return version;
-    }
+	@Override
+	public String getTitle() {
+		return null;
+	}
 
-    @Override
-    public String getGraphVersionCalculated() {
-        return null;
-    }
+	@Override
+	public String getVersion() {
+		return version;
+	}
 
-    @Override
-    public String getDescription() {
-        return description;
-    }
+	@Override
+	public String getGraphVersionCalculated() {
+		return null;
+	}
 
-    @Override
-    public String getId() {
-        return String.valueOf(id);
-    }
+	@Override
+	public String getDescription() {
+		return description;
+	}
+
+	@Override
+	public String getId() {
+		return String.valueOf(id);
+	}
 }

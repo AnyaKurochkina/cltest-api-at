@@ -128,7 +128,7 @@ public class ClickHouseCluster extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.ch_customer_admin", chCustomerAdmin)
                 .set("$.order.attrs.ch_customer_admin_password", chCustomerAdminPassword)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.label", getLabel())
                 .build();
 

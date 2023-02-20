@@ -49,12 +49,14 @@ public final class StringUtils {
             if (!Modifier.isStatic(field.getModifiers())
                     && !Modifier.isFinal(field.getModifiers())) {
                 field.setAccessible(true);
-                field.set(target, field.get(source));
+                Object value = field.get(source);
+                if (Objects.nonNull(value))
+                    field.set(target, value);
             }
         }
     }
 
-    public static String getClipBoardText(){
+    public static String getClipBoardText() {
         Selenide.executeJavaScript("async function getCBContents() { try { window.cb = await navigator.clipboard.readText(); console.log(\"Pasted content: \", window.cb); } catch (err) { console.error(\"Failed to read clipboard contents: \", err); window.cb = \"Error : \" + err; } } getCBContents();");
         return Objects.requireNonNull(Selenide.executeJavaScript("return window.cb;"));
     }

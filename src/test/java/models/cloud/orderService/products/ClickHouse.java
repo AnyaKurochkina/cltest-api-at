@@ -262,7 +262,7 @@ public class ClickHouse extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.clickhouse_users", clickhouseUser)
                 .set("$.order.attrs.clickhouse_password", clickhousePassword)
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", !isDev())
                 .set("$.order.label", getLabel())
                 .build();
 

@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.GlobalUser;
+import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.interfaces.IProduct;
@@ -76,6 +77,7 @@ public class Artemis extends IProduct {
     }
 
     public JSONObject toJson() {
+        Organization org = Organization.builder().build().createObject();
         String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
@@ -90,7 +92,7 @@ public class Artemis extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", getProjectId())
                 .set("$.order.attrs.on_support", getSupport())
-                .set("$.order.attrs.layout", getIdGeoDistribution("artemis", "artemis-1:artemis-1"))
+                .set("$.order.attrs.layout", getIdGeoDistribution("artemis-2:artemis-2", envType().toUpperCase(), "artemis", org.getName()))
                 .set("$.order.label", getLabel())
                 .build();
     }

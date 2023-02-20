@@ -1,9 +1,17 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
 import core.helper.http.Http;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,10 +19,13 @@ import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
 
+import java.util.Objects;
+import java.util.function.Supplier;
+
 @NoArgsConstructor
 @SuperBuilder
+@JsonIgnoreProperties(value = { "objectClassName", "uuid",  "configurationId"})
 public abstract class Entity implements AutoCloseable {
-
     public String objectClassName;
 
     public abstract Entity init();
@@ -29,14 +40,23 @@ public abstract class Entity implements AutoCloseable {
     protected abstract void create();
 
     protected abstract void delete();
-
     public String uuid;
-    @Setter
-    @Getter
+
+    @Setter @Getter
     String configurationId;
 
     public void save() {
         ObjectPoolService.saveEntity(this);
+    }
+
+    @SneakyThrows
+    protected JSONObject serialize(Object object){
+        return new JSONObject(new ObjectMapper().writeValueAsString(object));
+    }
+
+    @SneakyThrows
+    protected JSONObject serialize(){
+        return serialize(this);
     }
 
     @Override

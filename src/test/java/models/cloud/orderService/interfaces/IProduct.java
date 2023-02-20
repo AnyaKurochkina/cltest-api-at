@@ -78,7 +78,8 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String platform;
 
-    @ToString.Include @Setter
+    @ToString.Include
+    @Setter
     protected String segment;
     @Setter
     protected String dataCentre, domain;
@@ -111,15 +112,15 @@ public abstract class IProduct extends Entity {
     @Getter
     protected String productCatalogName;
 
-    public String getDataCentre(){
+    public String getDataCentre() {
         return Objects.requireNonNull(dataCentre, "Поле dataCentre пустое");
     }
 
-    public String getDomain(){
+    public String getDomain() {
         return Objects.requireNonNull(domain, "Поле domain пустое");
     }
 
-    public String getSegment(){
+    public String getSegment() {
         return Objects.requireNonNull(segment, "Поле segment пустое");
     }
 
@@ -128,11 +129,11 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    @Step("Получение Id geoDistribution у продукта '{product}' с именем '{name}'")
-    protected String getIdGeoDistribution(String product, String name) {
-        Organization org = Organization.builder().build().createObject();
-        return Objects.requireNonNull(ReferencesStep
-                .getJsonPathList(String.format("tags__contains=%s,%s,%s&directory__name=geo_distribution", envType().toUpperCase(), product, org.getName()))
+    @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
+    protected String getIdGeoDistribution(String name, String ... tags) {
+        StringJoiner tagsJoiner = new StringJoiner(",");
+        Arrays.stream(tags).forEach(tagsJoiner::add);
+        return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tagsJoiner))
                 .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found "+ name);
     }
 
@@ -174,6 +175,7 @@ public abstract class IProduct extends Entity {
     }
 
     public static String certPath = "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration";
+
     //Обновить сертификаты
     protected void updateCerts(String action) {
         OrderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"), this.getProjectId());
@@ -230,12 +232,12 @@ public abstract class IProduct extends Entity {
     //Удалить рекурсивно
     @Step("Удаление продукта")
     protected void delete(String action) {
-        if(envType().contains("prod")){
+        if (envType().contains("prod")) {
             OrderServiceSteps.switchProtect(this, false);
         }
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
-        if(Objects.isNull(platform))
+        if (Objects.isNull(platform))
             return;
         if (platform.equalsIgnoreCase("vSphere") && Configure.ENV.equalsIgnoreCase("IFT")) {
             GlobalUser user = GlobalUser.builder().role(Role.IPAM).build().createObject();
@@ -326,12 +328,12 @@ public abstract class IProduct extends Entity {
     protected boolean getSupport() {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
-        Boolean support = (Boolean) graphResponse.getStaticData().get("on_support");
-        if(Objects.isNull(support)) {
+        Object support = graphResponse.getStaticData().get("on_support");
+        if (support instanceof String || Objects.isNull(support)) {
             support = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getJsonSchema().get("properties")))
                     .getBoolean("on_support.default");
         }
-        return Objects.requireNonNull(support, "on_support не найден в графе");
+        return (Boolean) Objects.requireNonNull(support, "on_support не найден в графе");
     }
 
     @SneakyThrows
@@ -414,8 +416,8 @@ public abstract class IProduct extends Entity {
         return jsonObject;
     }
 
-    protected boolean isTest() {
-        return envType().contains("test");
+    protected boolean isDev() {
+        return envType().contains("dev");
     }
 
     public String envType() {
@@ -424,9 +426,9 @@ public abstract class IProduct extends Entity {
     }
 
     public void connectVmException(String message) throws ConnectException {
-        if (!isTest())
+        if (isDev())
             throw new ConnectException(message);
-        throw new TestAbortedException("Тест отключен для продуктов в TEST средах");
+        throw new TestAbortedException("Тест отключен для продуктов в TEST и PROD средах");
     }
 
 }
