@@ -13,7 +13,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -42,12 +41,12 @@ public class PrivateDnsTest extends Tests {
     @DisplayName("Создание/Удаление приватной зоны")
     public void createPrivateZoneTest() {
         DnsZone zone = DnsZone.builder()
-                .name("create_private_zone_test_api")
-                .domainName("private.zone.test.api.ru")
-                .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
+                .name("gg")
+                .domainName("gg.ru")
+//                .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), "proj-ls0vejlv7c");
+        DnsZone dnsZone = createZone(zone.toJson(), "proj-ls0vejlv7c");
 //        assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
 //        deleteZone(dnsZone.getId(), projectId);
 //        assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
@@ -62,7 +61,7 @@ public class PrivateDnsTest extends Tests {
                 .domainName("partial.update.private.zone.test.api.ru")
                 .type("private")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), projectId);
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
         String description = "update description";
         DnsZone updatedZone = partialUpdateZone(new JSONObject().put("description", description), dnsZone.getId(), projectId);
         assertEquals(description, updatedZone.getDescription());
@@ -78,7 +77,7 @@ public class PrivateDnsTest extends Tests {
                 .type("private")
                 .build()
                 .toJson();
-        createPublicZone(json, projectId);
+        createZone(json, projectId);
         List<DnsZone> publicZoneList = getPublicZoneList(projectId);
         assertTrue(publicZoneList.size() > 0, "Длина списка долна быть больше 0");
     }
@@ -93,7 +92,7 @@ public class PrivateDnsTest extends Tests {
                 .type("public")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         List<Rrset> rrsetList = getRrsetList(dnsZone.getId(), projectId);
         assertEquals(2, rrsetList.size());
     }
@@ -108,7 +107,7 @@ public class PrivateDnsTest extends Tests {
                 .type("private")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         String recordName = "create_rrset_private";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
@@ -138,7 +137,7 @@ public class PrivateDnsTest extends Tests {
                 .type("private")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         String recordName = "update_rrset";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)

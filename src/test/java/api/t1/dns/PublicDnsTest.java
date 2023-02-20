@@ -33,7 +33,11 @@ public class PublicDnsTest extends Tests {
     @AfterAll
     public static void clearTestData() {
         List<DnsZone> publicZoneList = getPublicZoneList(projectId);
-        publicZoneList.forEach(x -> deleteZone(x.getId(), projectId));
+        publicZoneList.forEach(x -> {
+            if (x.getType().equals("public")) {
+                deleteZone(x.getId(), projectId);
+            }
+        });
     }
 
     @Test
@@ -45,12 +49,26 @@ public class PublicDnsTest extends Tests {
                 .domainName("public.zone.test.api.ru")
                 .type("public")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), projectId);
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
         assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
         assertTrue(isZoneExistInOpenDns(zone.getDomainName()), String.format("Зона с именем %s не создалась в PowerDns", zone.getName()));
         deleteZone(dnsZone.getId(), projectId);
         assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
         assertFalse(isZoneExistInOpenDns(zone.getDomainName()), String.format("Зона с именем %s не удалена в PowerDns", zone.getName()));
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Получение публичной зоны по id")
+    public void getPublicZoneByIdTest() {
+        DnsZone zone = DnsZone.builder()
+                .name("get_public_zone_by_id_test_api")
+                .domainName("getpubliczonebyid.test.api.ru")
+                .type("public")
+                .build();
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        DnsZone getZone = getZoneById(projectId, dnsZone.getId());
+        assertEquals(dnsZone, getZone);
     }
 
     @Test
@@ -62,7 +80,7 @@ public class PublicDnsTest extends Tests {
                 .domainName("partial.update.public.zone.test.api.ru")
                 .type("public")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), projectId);
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
         String description = "update description";
         DnsZone updatedZone = partialUpdateZone(new JSONObject().put("description", description), dnsZone.getId(), projectId);
         assertEquals(description, updatedZone.getDescription());
@@ -70,7 +88,7 @@ public class PublicDnsTest extends Tests {
 
     @Test
     @TmsLink("")
-    @DisplayName("Получение списка публиных зон")
+    @DisplayName("Получение списка публичных зон")
     public void getPublicZoneListTest() {
         JSONObject json = DnsZone.builder()
                 .name("public_zone_get_list_test_api")
@@ -78,7 +96,7 @@ public class PublicDnsTest extends Tests {
                 .type("public")
                 .build()
                 .toJson();
-        createPublicZone(json, projectId);
+        createZone(json, projectId);
         List<DnsZone> publicZoneList = getPublicZoneList(projectId);
         assertTrue(publicZoneList.size() > 0, "Длина списка долна быть больше 0");
     }
@@ -93,7 +111,7 @@ public class PublicDnsTest extends Tests {
                 .type("public")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         List<Rrset> rrsetList = getRrsetList(dnsZone.getId(), projectId);
         assertEquals(2, rrsetList.size());
     }
@@ -108,7 +126,7 @@ public class PublicDnsTest extends Tests {
                 .type("public")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         String recordName = "create_rrset";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
@@ -138,7 +156,7 @@ public class PublicDnsTest extends Tests {
                 .type("public")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         String recordName = "update_rrset";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
