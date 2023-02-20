@@ -45,10 +45,10 @@ public class UiAstraLinuxTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
@@ -108,7 +108,8 @@ public class UiAstraLinuxTest extends UiProductTest {
     @DisplayName("UI AstraLinux. Расширить точку монтирования")
     void expandDisk() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> astraLinuxPage.enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
+        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> astraLinuxPage
+                .enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
     }
 
     @Test

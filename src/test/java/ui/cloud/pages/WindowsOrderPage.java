@@ -9,7 +9,7 @@ import ui.elements.Select;
 import java.util.UUID;
 
 @Getter
-public class WindowsOrderPage extends Product {
+public class WindowsOrderPage extends NewOrderPage {
 
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");

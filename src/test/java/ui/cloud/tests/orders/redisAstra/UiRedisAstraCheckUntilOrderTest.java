@@ -3,7 +3,6 @@ package ui.cloud.tests.orders.redisAstra;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Redis;
@@ -15,7 +14,6 @@ import api.Tests;
 import ui.cloud.pages.*;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
-import ui.extesions.UiProductTest;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
@@ -58,7 +56,7 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new RedisAstraOrderPage().checkOrderDetails();

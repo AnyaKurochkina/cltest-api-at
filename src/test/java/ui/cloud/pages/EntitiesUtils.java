@@ -38,7 +38,7 @@ public class EntitiesUtils {
     }
 
     public static void updatePreBillingPrice() {
-        if (Product.getCalculationDetails().exists()) {
+        if (NewOrderPage.getCalculationDetails().exists()) {
             preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
         } else preBillingPrice.set(null);
     }
@@ -63,7 +63,7 @@ public class EntitiesUtils {
                 .replace(',', '.').replaceAll(" ", ""));
     }
 
-    @Step("Ожидание выполнение действия с продуктом")
+    @Step("Ожидание выполнения действия с продуктом")
     public static void waitChangeStatus(Table table, Duration duration) {
         table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->

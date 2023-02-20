@@ -44,7 +44,6 @@ public abstract class IProductPage {
     SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
-    CheckBox agreeToReloadCheckBox = CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))

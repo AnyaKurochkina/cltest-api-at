@@ -3,7 +3,6 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Podman;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -15,7 +14,6 @@ import ui.elements.Table;
 
 import java.util.List;
 
-import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
@@ -61,7 +59,7 @@ public class PodmanPage extends IProductPage {
         checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
+                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
@@ -96,7 +94,7 @@ public class PodmanPage extends IProductPage {
             DropDown.byLabel("Роль").selectByTextContains(role);
             groups.forEach(group -> DropDown.byLabel("Группы").select(group));
         },ActionParameters.builder().node(node).build());
-        btnGeneralInfo.click();
+        goToGeneralInfoTab();
         node.scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new PodmanPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -109,7 +107,7 @@ public class PodmanPage extends IProductPage {
             DropDown groupsElement = DropDown.byLabel("Группы").clear();
             groups.forEach(groupsElement::select);
         },ActionParameters.builder().node(node).build());
-        btnGeneralInfo.click();
+        goToGeneralInfoTab();
         node.scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new PodmanPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -146,7 +144,7 @@ public class PodmanPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.click();
+        goToGeneralInfoTab();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));

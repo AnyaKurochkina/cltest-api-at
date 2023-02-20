@@ -7,6 +7,7 @@ import models.cloud.orderService.products.Astra;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
+import ui.elements.CheckBox;
 import ui.elements.Dialog;
 import ui.elements.Select;
 import ui.elements.Table;
@@ -57,8 +58,8 @@ public class AstraLinuxPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
-            Select.byLabel("Конфигурация Core/RAM").set(Product.getFlavor(maxFlavor));
-            agreeToReloadCheckBox.setChecked(true);
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
         });
         goToGeneralInfoTab();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");

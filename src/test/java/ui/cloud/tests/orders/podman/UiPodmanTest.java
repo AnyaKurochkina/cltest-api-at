@@ -7,7 +7,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Podman;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -27,7 +26,7 @@ import java.util.Collections;
 public class UiPodmanTest extends UiProductTest {
 
     Podman product;
-    //= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/af70df85-c2f2-4141-9676-f321e18aa54d/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    //= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/103e20a2-2c9a-4a9c-96cd-c8d6b1307cae/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -47,10 +46,10 @@ public class UiPodmanTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             PodmanOrderPage orderPage = new PodmanOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
@@ -72,14 +71,13 @@ public class UiPodmanTest extends UiProductTest {
         Assertions.assertEquals(preBillingProductPrice, podmanPage.getCostOrder(), 0.01);
     }
 
-
     @Test
     @TmsLink("1349840")
     @Order(2)
-    @DisplayName("UI Podman. Проверка полей заказа")
+    @DisplayName("UI Podman. Проверка развертывания в истории действий")
     void checkHeaderHistoryTable() {
         PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.getBtnGeneralInfo().click();
+        podmanPage.goToGeneralInfoTab();
         podmanPage.checkHeadersHistory();
         podmanPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();
@@ -88,10 +86,11 @@ public class UiPodmanTest extends UiProductTest {
     @Test
     @Order(5)
     @TmsLink("851388")
-    @DisplayName("UI Podman. Расширить диск")
+    @DisplayName("UI Podman. Расширить точку монтирования")
     void expandDisk() {
         PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.MORE, () -> podmanPage.enlargeDisk("/app", "20", new Table("Роли узла").getRowByIndex(0)));
+        podmanPage.runActionWithCheckCost(CompareType.MORE, () -> podmanPage
+                .enlargeDisk("/app", "20", new Table("Роли узла").getRowByIndex(0)));
     }
 
     @Test
@@ -100,19 +99,22 @@ public class UiPodmanTest extends UiProductTest {
     @DisplayName("UI Podman. Проверить конфигурацию")
     void vmActCheckConfig() {
         PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage.checkConfiguration(new Table("Роли узла").getRowByIndex(0)));
+        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
+                .checkConfiguration(new Table("Роли узла").getRowByIndex(0)));
     }
 
     @Test
     @Order(8)
     @TmsLinks({@TmsLink("1091838"), @TmsLink("1091841")})
-    @DisplayName("UI Podman. Добавить группу доступа")
+    @DisplayName("UI Podman. Удалить и добавить группу доступа")
     void addGroup() {
         PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage.deleteGroup("podman_admin",new Table("Роли узла").getRowByIndex(0)));
+        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
+                .deleteGroup("podman_admin", new Table("Роли узла").getRow(0).get()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage.addGroup("podman_admin", Collections.singletonList(accessGroup.getPrefixName()),new Table("Роли узла").getRowByIndex(0)));
-
+        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
+                .addGroup("podman_admin", Collections.singletonList(accessGroup.getPrefixName()),
+                        new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
@@ -122,19 +124,20 @@ public class UiPodmanTest extends UiProductTest {
     void changeGroup() {
         PodmanPage podmanPage = new PodmanPage(product);
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random())
+                .projectName(product.getProjectId()).build().createObject();
         podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage.updateGroup("podman_admin",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName()),new Table("Роли узла").getRowByIndex(0)));
+                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName()),
+                new Table("Роли узла").getRow(0).get()));
     }
 
 
     @Test
     @Order(100)
     @TmsLink("851392")
-    @DisplayName("UI Podman. Удаление продукта")
+    @DisplayName("UI Podman. Удалить рекурсивно")
     void delete() {
         PodmanPage podmanPage = new PodmanPage(product);
         podmanPage.runActionWithCheckCost(CompareType.LESS, podmanPage::delete);
     }
-
 }

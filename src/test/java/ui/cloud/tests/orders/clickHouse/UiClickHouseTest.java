@@ -16,7 +16,6 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-import java.util.Collections;
 
 @Epic("UI Продукты")
 @Feature("ClickHouse")
@@ -54,7 +53,7 @@ public class UiClickHouseTest extends UiProductTest {
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(Product.getFlavor(product.getMaxFlavor()));
+            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getGroup2().select(accessGroup.getPrefixName());

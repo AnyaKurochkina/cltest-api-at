@@ -3,7 +3,6 @@ package ui.cloud.pages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
-import ui.cloud.pages.Product;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.Select;
@@ -13,7 +12,7 @@ import java.util.UUID;
 import static core.helper.StringUtils.$x;
 
 @Getter
-public class ClickHouseOrderPage extends Product {
+public class ClickHouseOrderPage extends NewOrderPage {
 
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");
