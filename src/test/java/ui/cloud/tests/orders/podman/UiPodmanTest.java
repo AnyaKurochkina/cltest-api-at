@@ -51,7 +51,7 @@ public class UiPodmanTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getGroupSelect().set(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
@@ -130,7 +130,6 @@ public class UiPodmanTest extends UiProductTest {
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName()),
                 new Table("Роли узла").getRow(0).get()));
     }
-
 
     @Test
     @Order(100)

@@ -59,7 +59,7 @@ class UiPodmanCheckUntilOrderTest extends Tests {
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new PodmanOrderPage().checkOrderDetails();
     }
 

@@ -47,13 +47,13 @@ public class UiRedisAstraTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getGroupSelect().set(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
