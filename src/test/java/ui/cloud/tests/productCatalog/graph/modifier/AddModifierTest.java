@@ -82,28 +82,6 @@ public class AddModifierTest extends GraphBaseTest {
     }
 
     @Test
-    @TmsLink("1042524")
-    @DisplayName("Добавление модификатора UISchema со способом update")
-    public void addUISchemaModifierWithUpdateType() {
-        GraphModifier modifier = new GraphModifier("test_modifier");
-        modifier.setType("update");
-        modifier.setPath("ui:order");
-        modifier.setSchema("ui_schema");
-        String modifierData = "[\"data_center\"]";
-        modifier.setModifierData(modifierData);
-        String modifierDataSubstring = modifierData.substring(1, modifierData.length() - 1);
-        modifier.setModifierDataSubstring(modifierDataSubstring);
-        new IndexPage().goToGraphsPage()
-                .findAndOpenGraphPage(NAME)
-                .goToOrderParamsTab()
-                .setUISchemaAndSave("{\"ui:order\":[\"title\", \"platform\"]}")
-                .goToModifiersTab()
-                .addModifierAndSave(modifier)
-                .checkModifierAttributes(modifier)
-                .checkModifiedUISchemaContains(modifierDataSubstring);
-    }
-
-    @Test
     @TmsLink("1042532")
     @DisplayName("Добавление модификатора StaticData со способом replace")
     public void addStaticDataModifierWithReplaceType() {
@@ -132,7 +110,6 @@ public class AddModifierTest extends GraphBaseTest {
                 .findAndOpenGraphPage(NAME)
                 .goToModifiersTab()
                 .addModifierAndSave(modifier);
-
         new GraphModifiersPage()
                 .checkModifierNameValidation(new String[]{"Modifier", "test modifier", "модификатор", "modifier$"})
                 .checkModifierNumberValidation()

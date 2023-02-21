@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.service;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
@@ -66,7 +67,7 @@ public class ServicePage extends BasePage {
         titleInput.setValue(service.getTitle());
         descriptionInput.setValue(service.getDescription());
         goToGraphTab();
-        TestUtils.wait(2000);
+        Waiting.sleep(2500);
         graphVersionSelect.set(service.getGraphVersion());
         return this;
     }
@@ -348,6 +349,12 @@ public class ServicePage extends BasePage {
     @Step("Отмена просмотра страницы сервиса")
     public ServicesListPagePC cancel() {
         cancelButton.click();
+        return new ServicesListPagePC();
+    }
+
+    @Step("Назад в список сервисов")
+    public ServicesListPagePC backToServicesList() {
+        backButton.click();
         return new ServicesListPagePC();
     }
 

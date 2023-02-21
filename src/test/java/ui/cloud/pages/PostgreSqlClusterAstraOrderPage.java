@@ -12,7 +12,7 @@ import java.util.UUID;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
-public class PostgreSqlClusterAstraOrderPage extends Product {
+public class PostgreSqlClusterAstraOrderPage extends NewOrderPage {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");

@@ -5,36 +5,37 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.models.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.$x;
 
 public class GraphModifiersPage extends GraphPage {
 
     private final SelenideElement addModifierButton = $x("//div[text()='Добавить']//ancestor::button");
-    private final SelenideElement nameInput = $x("//form//input[@name='name']");
+    private final Input nameInput = Input.byXpath("//form//input[@name='name']");
     private final Input numberInput = Input.byLabelV2("Порядок применения");
     private final Select schemaSelect = Select.byLabel("Схема");
     private final Select typeSelect = Select.byLabel("Способ изменения");
     private final MultiSelect envTypeSelect = MultiSelect.byLabel("Тип среды");
-    private final SelenideElement pathInput = $x("//form//input[@name='path']");
-    private final SelenideElement modifierData = $x("//form//span[text()='ModifierData']/ancestor::div[2]//textarea");
+    private final Input pathInput = Input.byXpath("//form//input[@name='path']");
+    private final TextArea modifierData = TextArea.byXPath("//form//span[text()='ModifierData']/ancestor::div[2]//textarea");
     private final SelenideElement formSaveButton = $x("//form//div[text()='Сохранить']/parent::button");
     private final SelenideElement formCancelButton = $x("//form//div[text()='Отмена']/parent::button");
     private final Button jsonSchemaButton = Button.byId("JSON");
     private final Button uiSchemaButton = Button.byId("UI");
     private final Button staticDataButton = Button.byId("StaticData");
-    private final SelenideElement modifierNameValidationHint = $x("//form//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
-    private final SelenideElement modifierNumberValidationHint = $x("//form//div[text()='Допустимое значение от 1 до 2147483647']");
-    private final SelenideElement devEnvRadioButton = $x("//input[@type='radio' and @name='dev']");
-    private final SelenideElement testEnvRadioButton = $x("//input[@type='radio' and @name='test']");
-    private final SelenideElement prodEnvRadioButton = $x("//input[@type='radio' and @name='prod']");
-    private final SelenideElement nonUniqueModifierNameHint = $x("//form//div[text()='Такое наименование уже существует']");
-    private final SelenideElement nonUniqueModifierNumberHint = $x("//form//div[text()='Порядковый номер уже существует']");
+    private final SelenideElement modifierNameValidationHint =
+            $x("//form//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
+    private final SelenideElement modifierNumberValidationHint =
+            $x("//form//div[text()='Допустимое значение от 1 до 2147483647']");
+    private final SelenideElement nonUniqueModifierNameHint =
+            $x("//form//div[text()='Такое наименование уже существует']");
+    private final SelenideElement nonUniqueModifierNumberHint =
+            $x("//form//div[text()='Порядковый номер уже существует']");
 
     @Step("Добавление модификатора '{modifier.name}' и сохранение графа")
     public GraphModifiersPage addModifierAndSave(GraphModifier modifier) {
@@ -54,11 +55,11 @@ public class GraphModifiersPage extends GraphPage {
     @Step("Проверка атрибутов модификатора")
     public GraphModifiersPage checkModifierAttributes(GraphModifier modifier) {
         $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
-        nameInput.shouldHave(Condition.exactValue(modifier.getName()));
+        nameInput.getInput().shouldHave(Condition.exactValue(modifier.getName()));
         Assertions.assertEquals(modifier.getEnvs()[0], envTypeSelect.getValue());
         numberInput.getInput().shouldHave(Condition.exactValue(modifier.getNumber()));
         $x("//form//div[text()='" + modifier.getSchema() + "']").shouldBe(Condition.visible);
-        pathInput.shouldHave(Condition.exactValue(modifier.getPath()));
+        pathInput.getInput().shouldHave(Condition.exactValue(modifier.getPath()));
         $x("//form//div[contains(@class,'monaco-editor')]//span[contains(text(),'"
                 + modifier.getModifierDataSubstring() + "')]")
                 .shouldBe(Condition.visible);
@@ -68,15 +69,12 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Редактирование модификатора '{modifier.name}' и сохранение графа")
     public GraphModifiersPage editModifierAndSave(GraphModifier modifier) {
-        $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
-        nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+        $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").scrollIntoView(false).click();
         nameInput.setValue(modifier.getName());
         envTypeSelect.set(modifier.getEnvs());
         schemaSelect.set(modifier.getSchema());
         typeSelect.set(modifier.getType());
-        pathInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         pathInput.setValue(modifier.getPath());
-        modifierData.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         modifierData.setValue(modifier.getModifierData());
         formSaveButton.click();
         Alert.green(saveGraphAlertText);
@@ -88,11 +86,10 @@ public class GraphModifiersPage extends GraphPage {
         addModifierButton.click();
         TestUtils.wait(500);
         for (String name : names) {
-            nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
             nameInput.setValue(name);
             TestUtils.wait(600);
             if (!modifierNameValidationHint.exists()) {
-                nameInput.sendKeys("t");
+                nameInput.getInput().sendKeys("t");
             }
             modifierNameValidationHint.shouldBe(Condition.visible);
         }
@@ -104,7 +101,6 @@ public class GraphModifiersPage extends GraphPage {
     @Step("Проверка валидации неуникального названия '{name}' модификатора")
     public GraphModifiersPage checkNonUniqueModifierName(String name) {
         addModifierButton.click();
-        nameInput.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nameInput.setValue(name);
         nonUniqueModifierNameHint.shouldBe(Condition.visible);
         formSaveButton.shouldBe(Condition.disabled);
@@ -137,9 +133,8 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Проверка, что JSONSchema содержит значение '{value}'")
     public GraphModifiersPage checkModifiedJSONSchemaContains(String value) {
-        TestUtils.wait(500);
-        TestUtils.scroll(300);
-        jsonSchemaButton.click();
+        Waiting.sleep(500);
+        jsonSchemaButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
         $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'" + value + "')]")
                 .shouldBe(Condition.visible);
         return this;
@@ -147,9 +142,8 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Проверка, что UISchema содержит значение '{value}'")
     public GraphModifiersPage checkModifiedUISchemaContains(String value) {
-        TestUtils.wait(500);
-        TestUtils.scroll(300);
-        uiSchemaButton.click();
+        Waiting.sleep(500);
+        uiSchemaButton.getButton().scrollIntoView(true).click();
         $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'" + value + "')]")
                 .shouldBe(Condition.visible);
         return this;
@@ -174,19 +168,17 @@ public class GraphModifiersPage extends GraphPage {
         return this;
     }
 
+    @Step("Выбор типа среды просмотра модификатора")
+    public GraphModifiersPage setEnvType(String value) {
+        $x("//span[text()='Тип среды']/following::div[text()='{}']", value)
+                .scrollIntoView(TypifiedElement.scrollCenter).click();
+        return this;
+    }
+
     @Step("Выбор среды просмотра модификатора")
-    public GraphModifiersPage selectEnv(String env) {
-        switch (env) {
-            case "dev":
-                devEnvRadioButton.click();
-                break;
-            case "test":
-                testEnvRadioButton.click();
-                break;
-            case "prod":
-                prodEnvRadioButton.click();
-                break;
-        }
+    public GraphModifiersPage setEnv(String value) {
+        $x("//span[text()='Среда']/following::div[text()='{}']", value)
+                .scrollIntoView(TypifiedElement.scrollCenter).click();
         return this;
     }
 }

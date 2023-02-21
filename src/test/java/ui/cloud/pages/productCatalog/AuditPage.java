@@ -12,7 +12,7 @@ import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class AuditPage extends GraphPage {
+public class AuditPage extends BasePage {
 
     private final SelenideElement contextId = $x("//span[text()='ID контекста']/following::span[1]");
     private final SelenideElement address = $x("//span[text()='Адрес']/following::span[1]");
@@ -39,7 +39,7 @@ public class AuditPage extends GraphPage {
         if (!table.isColumnValueContains("Тип операции", operationType)) {
             TestUtils.wait(2000);
             Selenide.refresh();
-            new GraphPage().goToAuditTab();
+            new BasePage().goToAuditTab();
             table = new Table("Учетная запись");
         }
         table.getValueByColumnInFirstRow("Дата и время").shouldHave(Condition.text(dateTime));

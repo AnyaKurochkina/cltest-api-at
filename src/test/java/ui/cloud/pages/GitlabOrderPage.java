@@ -9,7 +9,7 @@ import ui.elements.TextArea;
 import java.util.UUID;
 
 @Getter
-public class GitlabOrderPage extends Product {
+public class GitlabOrderPage extends NewOrderPage {
 
     Input label = Input.byLabel("Метка");
     Input projectName = Input.byLabel("Название");

@@ -1,8 +1,6 @@
 package ui.cloud.pages;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Windows;
 import models.cloud.subModels.Flavor;
@@ -13,8 +11,6 @@ import ui.elements.*;
 import java.util.List;
 
 import static core.helper.StringUtils.$x;
-import static api.Tests.activeCnd;
-import static api.Tests.clickableCnd;
 
 public class WindowsPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
@@ -61,7 +57,7 @@ public class WindowsPage extends IProductPage {
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
+                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");

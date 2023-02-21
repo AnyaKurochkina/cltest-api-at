@@ -11,7 +11,7 @@ import java.util.UUID;
 import static core.helper.StringUtils.$x;
 
 @Getter
-public class ClickHouseClusterOrderPage extends Product {
+public class ClickHouseClusterOrderPage extends NewOrderPage {
 
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");

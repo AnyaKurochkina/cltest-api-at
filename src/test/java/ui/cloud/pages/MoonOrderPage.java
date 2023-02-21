@@ -8,19 +8,16 @@ import ui.elements.Input;
 import java.util.UUID;
 
 @Getter
-public class MoonOrderPage extends Product {
+public class MoonOrderPage extends NewOrderPage {
 
-    DropDown dataCentre = DropDown.byLabel("Дата-центр");
-    DropDown segment = DropDown.byLabel("Сетевой сегмент");
     DropDown cluster = DropDown.byLabel("Кластер OpenShift");
     Input countSession = Input.byLabel("Количество параллельных сессий");
-    Input label = Input.byLabel("Метка");
     Input projectName = Input.byLabel("Имя проекта");
 
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public MoonOrderPage() {
-       label.setValue(labelValue);
+       labelInput.setValue(labelValue);
     }
 
     public void checkOrderDetails(){

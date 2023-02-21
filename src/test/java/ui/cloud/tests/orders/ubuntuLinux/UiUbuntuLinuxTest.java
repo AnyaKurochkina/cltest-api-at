@@ -3,11 +3,11 @@ package ui.cloud.tests.orders.ubuntuLinux;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Ubuntu;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -27,7 +27,7 @@ import java.util.Collections;
 public class UiUbuntuLinuxTest extends UiProductTest {
 
     Ubuntu product;
-    //= Ubuntu.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/9d680891-9998-491b-a5db-a6cf2d2fa29b/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    //= Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/bed207dc-ccbc-49fb-92fa-d889fc22e2c3/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -47,12 +47,13 @@ public class UiUbuntuLinuxTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             UbuntuLinuxOrderPage orderPage = new UbuntuLinuxOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getRoleSelect().set("user");
+            orderPage.getGroupSelect().set(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
@@ -69,14 +70,14 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             throw e;
         }
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
+        Waiting.sleep(1000);
         Assertions.assertEquals(preBillingProductPrice, ubuntuLinuxPage.getCostOrder(), 0.01);
     }
-
 
     @Test
     @TmsLink("1342206")
     @Order(2)
-    @DisplayName("UI UbuntuLinux. Проверка полей заказа")
+    @DisplayName("UI UbuntuLinux. Проверка развертывания в истории действий")
     void checkHeaderHistoryTable() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
         ubuntuLinuxPage.getBtnGeneralInfo().click();
@@ -98,10 +99,11 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     @Test
     @Order(5)
     @TmsLink("378050")
-    @DisplayName("UI UbuntuLinux. Расширить диск")
+    @DisplayName("UI UbuntuLinux. Расширить точку монтирования")
     void expandDisk() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
-        ubuntuLinuxPage.runActionWithCheckCost(CompareType.MORE, () ->ubuntuLinuxPage.enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
+        ubuntuLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> ubuntuLinuxPage
+                .enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
     }
 
     @Test
@@ -116,13 +118,12 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     @Test
     @Order(8)
     @TmsLinks({@TmsLink("1090952"), @TmsLink("1090957")})
-    @DisplayName("UI UbuntuLinux. Добавить группу доступа")
+    @DisplayName("UI UbuntuLinux. Удалить и добавить группу доступа")
     void addGroup() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.deleteGroup("user"));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
-
     }
 
     @Test

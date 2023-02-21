@@ -6,16 +6,17 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Podman;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.*;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.PodmanOrderPage;
+import ui.cloud.pages.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
-import ui.extesions.UiProductTest;
 
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
@@ -47,16 +48,16 @@ class UiPodmanCheckUntilOrderTest extends Tests {
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
         //Проверка поля Кол-во
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "0", "10");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "100", "30");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "N", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "", "1");
 
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().selectByValue(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
+        orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new PodmanOrderPage().checkOrderDetails();

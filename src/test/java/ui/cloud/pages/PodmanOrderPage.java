@@ -4,32 +4,22 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 import ui.elements.DropDown;
-import ui.elements.Input;
 
 import java.util.UUID;
 
 import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
-public class PodmanOrderPage extends Product {
+public class PodmanOrderPage extends NewOrderPage {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
-
-    DropDown platform = DropDown.byLabel("Платформа");
-    DropDown osVersion = DropDown.byLabel("Версия ОС");
     DropDown group = DropDown.byLabel("Группы");
-    DropDown dataCentre = DropDown.byLabel("Дата-центр");
-    DropDown segment = DropDown.byLabel("Сетевой сегмент");
-    DropDown configure = DropDown.byLabel("Конфигурация Core/RAM");
-    Input countVm = Input.byLabel("Количество");
-    Input label = Input.byLabel("Метка");
-
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public PodmanOrderPage() {
-        label.setValue(labelValue);
-        platform.getElement().shouldBe(Condition.enabled);
+        labelInput.setValue(labelValue);
+        platformSelect.getElement().shouldBe(Condition.enabled);
     }
 
     public void checkOrderDetails(){

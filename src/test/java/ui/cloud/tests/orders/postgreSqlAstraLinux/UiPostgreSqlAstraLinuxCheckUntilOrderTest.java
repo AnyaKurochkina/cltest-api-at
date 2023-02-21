@@ -14,10 +14,9 @@ import ru.testit.annotations.Title;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.PostgreSqlAstraOrderPage;
-import ui.cloud.pages.Product;
+import ui.cloud.pages.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
-import ui.extesions.UiProductTest;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
@@ -59,7 +58,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getOsVersion().select(product.getOsVersion());
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new PostgreSqlAstraOrderPage().checkOrderDetails();

@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.Keys;
 
 import static core.helper.StringUtils.$x;
@@ -25,6 +26,10 @@ public class TextArea implements TypifiedElement {
 
     public static TextArea byName(String name) {
         return new TextArea($x("//textarea[@name='{}']", name));
+    }
+
+    public static TextArea byXPath(@Language("XPath") String xPath) {
+        return new TextArea($x(xPath));
     }
 
     public void setValue(String value) {

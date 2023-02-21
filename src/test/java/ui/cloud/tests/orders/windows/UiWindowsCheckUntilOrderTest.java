@@ -3,11 +3,9 @@ package ui.cloud.tests.orders.windows;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Windows;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -16,11 +14,10 @@ import ru.testit.annotations.Title;
 import api.Tests;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
-import ui.cloud.pages.Product;
+import ui.cloud.pages.NewOrderPage;
 import ui.cloud.pages.WindowsOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
-import ui.extesions.UiProductTest;
 
 import static com.codeborne.selenide.Selenide.$;
 
@@ -64,7 +61,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.getSegment().selectByValue(product.getSegment());
         orderPage.getPlatform().selectByValue(product.getPlatform());
         orderPage.getRoleServer().selectByValue(product.getRole());
-        orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
+        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroup().select(accessGroup.getPrefixName());
         new WindowsOrderPage().checkOrderDetails();

@@ -2,9 +2,7 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Ubuntu;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -14,7 +12,6 @@ import ui.elements.*;
 
 import java.util.List;
 
-import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
@@ -54,6 +51,7 @@ public class UbuntuLinuxPage extends IProductPage {
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
+
     @Step("Проверка вкладки Мониторинг")
     public void checkMonitoringOs() {
         Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
@@ -64,9 +62,9 @@ public class UbuntuLinuxPage extends IProductPage {
     public void changeConfiguration() {
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->{
-                CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
-                DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor));
+        runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () -> {
+            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
         });
         btnGeneralInfo.click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
@@ -168,13 +166,13 @@ public class UbuntuLinuxPage extends IProductPage {
 
     //Таблица ролей
     public class RoleTable extends Table {
+        public RoleTable() {
+            super("Группы");
+        }
+
         @Override
         protected void open() {
             btnGeneralInfo.click();
-        }
-
-        public RoleTable() {
-            super("Группы");
         }
 
         private SelenideElement getRoleMenuElement(String name) {
