@@ -13,11 +13,9 @@ import models.cloud.productCatalog.visualTeamplate.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
+import steps.productCatalog.VisualTemplateSteps;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -297,9 +295,28 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         ItemVisualTemplate visualTemplate = getItemVisualTemplateByTypeProvider(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
-        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
+        VisualTemplateSteps.partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertEquals(visualTemplate.getEventProvider(), visualTemplate.getEventProvider());
         assertEquals(visualTemplate.getEventType(), visualTemplate.getEventType());
+    }
+
+    @DisplayName("Проверка отсутствия поля default_order в ответе на запрос get item_visual_template/eventType/eventProvider/")
+    @TmsLink("1467526")
+    @Test
+    public void checkIsDefaultOrderIsNotExistsTest() {
+        String name = "check_is_default_order_is_not_exist_item_visual_template_test_api";
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
+                .name(name)
+                .eventProvider(Collections.singletonList("hcp"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(true)
+                .build()
+                .createObject();
+        ItemVisualTemplate visualTemplate = getItemVisualTemplateByTypeProvider(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
+        VisualTemplateSteps.partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject().put("is_active", false));
+        assertNull(visualTemplate.getDefaultOrder());
     }
 
     @DisplayName("Сортировка шаблонов визуализации по статусу")
@@ -379,6 +396,7 @@ public class VisualTemplateTest extends Tests {
 
     @Test
     @DisplayName("Загрузка VisualTemplate в GitLab")
+    @Disabled
     @TmsLink("975416")
     public void dumpToGitlabVisualTemplate() {
         String visualTemplateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";

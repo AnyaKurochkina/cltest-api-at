@@ -349,4 +349,19 @@ public class TemplatesTest extends Tests {
         , template.getName(), graph.getName(), "1.0.1");
         assertEquals(expectedErrorMessage, errMsg);
     }
+
+    @DisplayName("Создание шаблона с допустимым типом")
+    @TmsLink("1468913")
+    @Test
+    public void createTemplateWithInvalidType() {
+        String templateName = "create_template_with_invalid_type_test_api";
+        String expectedType = "rpc";
+        Template template = Template.builder()
+                .name(templateName)
+                .type(expectedType)
+                .build()
+                .createObject();
+        String actualType = getTemplateById(template.getId()).getType();
+        assertEquals(expectedType, actualType);
+    }
 }

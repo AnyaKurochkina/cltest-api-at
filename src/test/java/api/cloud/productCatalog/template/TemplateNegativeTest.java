@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.template;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -11,7 +12,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.TemplateSteps.createTemplate;
@@ -46,6 +46,20 @@ public class TemplateNegativeTest extends Tests {
                 .build()
                 .createObject();
         steps.copyByIdWithOutToken(String.valueOf(template.getId()));
+    }
+
+    @DisplayName("Негативный тест на создание шаблона с недопустимым типом")
+    @TmsLink("1468815")
+    @Test
+    public void createTemplateWithInvalidType() {
+        String templateName = "create_template_with_invalid_type_test_api";
+        JSONObject template = Template.builder()
+                .name(templateName)
+                .type("sdf")
+                .build()
+                .toJson();
+        String errorMessage = createTemplate(template).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Template не может быть создан с таким type", errorMessage);
     }
 
     @DisplayName("Негативный тест на частичное обновление шаблона по Id без токена")
