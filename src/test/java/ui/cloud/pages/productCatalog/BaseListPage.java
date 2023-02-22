@@ -62,6 +62,11 @@ public class BaseListPage {
 
     @Step("Проверка сортировки по дате по столбцу '{header}'")
     public static void checkSortingByDateField(String header) {
+        checkSortingByDateField(header, DateTimeFormatter.ofPattern("dd.MM.yyyy'\n'HH:mm"));
+    }
+
+    @Step("Проверка сортировки по дате по столбцу '{header}' c форматом '{formatter}'")
+    public static void checkSortingByDateField(String header, DateTimeFormatter formatter) {
         Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
@@ -70,7 +75,6 @@ public class BaseListPage {
         arrowIcon.shouldBe(Condition.visible);
         String firstDateString = table.getValueByColumnInFirstRow(header).getText();
         String lastDateString = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy'\n'HH:mm");
         LocalDateTime firstDate = LocalDateTime.parse(firstDateString, formatter);
         LocalDateTime lastDate = LocalDateTime.parse(lastDateString, formatter);
         Assertions.assertTrue(lastDate.isAfter(firstDate) || lastDate.isEqual(firstDate));

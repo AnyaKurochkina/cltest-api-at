@@ -65,15 +65,19 @@ public class GraphAuditTest extends GraphBaseTest {
         new AuditPage().setOperationTypeFilterAndApply("delete")
                 .checkRecordsNotFound()
                 .clearAdditionalFilters()
-                .setUserFilterAndApply("test_user")
+                .setUserFilter("test_user")
+                .applyAdditionalFilters()
                 .checkRecordsNotFound()
                 .clearAdditionalFilters()
-                .setStatusCodeFilterAndApply("500")
+                .setStatusCodeFilter("500")
+                .applyAdditionalFilters()
                 .checkRecordsNotFound()
                 .clearAdditionalFilters()
                 .setOperationTypeFilterAndApply("create")
-                .setUserFilterAndApply(user.getUsername())
-                .setStatusCodeFilterAndApply("201")
+                .setUserFilter(user.getUsername())
+                .applyAdditionalFilters()
+                .setStatusCodeFilter("201")
+                .applyAdditionalFilters()
                 .checkRecordWithOperationTypeFound("create");
     }
 }
