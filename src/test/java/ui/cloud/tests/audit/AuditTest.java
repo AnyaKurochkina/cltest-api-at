@@ -111,7 +111,7 @@ public class AuditTest extends Tests {
                 .checkFirstRecordDetails(graph.getGraphId(), graphsObject, noValue, noValue)
                 .showRequestAndResponse()
                 .checkFirstRecordDetails(graph.getGraphId(), graphsObject, graph.getDescription(), graph.getGraphId())
-                //TODO.checkCopyToClipboard(graph.getTitle())
-                .checkResponseFullViewContains(graph.getName());
+                //TODO.checkCopyToClipboard(graph.getTitle(), graph.getGraphId())
+                .checkResponseFullViewContains(graph.getName(), graph.getGraphId());
     }
 }

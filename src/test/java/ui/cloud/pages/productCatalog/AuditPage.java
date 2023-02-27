@@ -117,11 +117,7 @@ public class AuditPage extends BasePage {
 
     @Step("Проверка детальных сведений записи с contextId '{contextId}'")
     public AuditPage checkRecordDetailsByContextId(String contextId, String address, String request, String response) {
-        Table table = new Table("Учетная запись");
-        for (SelenideElement row : table.getRows()) {
-            if (this.contextId.exists() && this.contextId.getText().equals(contextId)) break;
-            row.scrollIntoView(TypifiedElement.scrollCenter).click();
-        }
+        openRecordByContextId(contextId);
         this.contextId.shouldHave(Condition.exactText(contextId));
         this.address.shouldHave(Condition.text(address));
         if (showRequest.getChecked() && !request.equals(NO_VALUE)) {
@@ -134,7 +130,6 @@ public class AuditPage extends BasePage {
         } else {
             this.response.$x(".//i").shouldHave(Condition.exactText(response));
         }
-        table.getRow(0).get().click();
         return this;
     }
 
@@ -154,27 +149,23 @@ public class AuditPage extends BasePage {
     }
 
     @Step("Проверка копирования в буфер обмена")
-    public AuditPage checkCopyToClipboard(String value) {
-        Table table = new Table("Учетная запись");
-        table.getRow(0).get().click();
-        copyDataButton.getButton().scrollIntoView(false).click();
-        Assertions.assertTrue(StringUtils.getClipBoardText().contains(contextId.getText()));
+    public AuditPage checkCopyToClipboard(String value, String contextId) {
+        openRecordByContextId(contextId);
+        copyDataButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
+        Assertions.assertTrue(StringUtils.getClipBoardText().contains(this.contextId.getText()));
         copyAddressButton.click();
         Assertions.assertTrue(StringUtils.getClipBoardText().equals(address.getText()));
-        if (!request.$x(".//i").getText().equals(NO_VALUE)) {
+        if (!request.$x(".//i").exists()) {
             copyRequestButton.click();
             Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
         }
         copyResponseButton.click();
         Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
-        table.getRow(0).get().scrollIntoView(TypifiedElement.scrollCenter).click();
         return this;
     }
 
     @Step("Проверка отображения '{value}' в полноэкранном режиме ответа")
-    public AuditPage checkResponseFullViewContains(String value) {
-        Table table = new Table("Учетная запись");
-        table.getRow(0).get().click();
+    public AuditPage checkResponseFullViewContains(String value, String contextId) {
         showFullView.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
         Waiting.sleep(500);
         Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed());
@@ -187,7 +178,7 @@ public class AuditPage extends BasePage {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
             TypifiedElement.refresh();
-            new BasePage().goToAuditTab();
+            if (Tab.byText("История изменений").getElement().exists()) new BasePage().goToAuditTab();
         }
     }
 
@@ -291,5 +282,14 @@ public class AuditPage extends BasePage {
     public AuditPage checkSortingByDate() {
         BaseListPage.checkSortingByDateField("Дата и время", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
         return this;
+    }
+
+    @Step("Раскрыть запись с contextId '{contextId}'")
+    private void openRecordByContextId(String contextId) {
+        Table table = new Table("Учетная запись");
+        for (SelenideElement row : table.getRows()) {
+            if (this.contextId.exists() && this.contextId.getText().equals(contextId)) break;
+            row.scrollIntoView(TypifiedElement.scrollCenter).click();
+        }
     }
 }

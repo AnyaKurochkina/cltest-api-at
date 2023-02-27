@@ -19,7 +19,7 @@ public class Tab implements TypifiedElement {
     }
 
     public static Tab byText(String text) {
-        return new Tab($x("//button[span[text()='{}']]", text));
+        return new Tab($x("//button[span[.='{}']]", text));
     }
 
     @Step("Получение значения, выбрана ли вкладка '{this.text}'")

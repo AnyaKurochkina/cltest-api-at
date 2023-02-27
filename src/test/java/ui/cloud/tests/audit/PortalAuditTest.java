@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import ui.cloud.pages.ContextPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.productCatalog.AuditPage;
@@ -122,7 +123,24 @@ public class PortalAuditTest extends Tests {
                 .checkRecordDetailsByContextId(graphCopy.getGraphId(), projectsObject, noValue, noValue)
                 .showRequestAndResponse()
                 .checkRecordDetailsByContextId(graphCopy.getGraphId(), projectsObject, noValue, graphCopy.getGraphId())
-                .checkCopyToClipboard(graph.getTitle())
-                .checkResponseFullViewContains(graphCopy.getName());
+                .checkCopyToClipboard(graphCopy.getTitle(), graphCopy.getGraphId())
+                .checkResponseFullViewContains(graphCopy.getName(), graphCopy.getGraphId());
+    }
+
+    @Test
+    @TmsLink("1458196")
+    @DisplayName("Просмотр записи аудита в родительском контексте")
+    public void checkAuditInParentContext() {
+        new IndexPage().goToPortalAuditPage()
+                .setOperationTypeFilterAndApply(createType)
+                .setUserFilter(pcAdmin.getEmail())
+                .setStatusCodeFilter(okCode)
+                .applyAdditionalFilters()
+                .checkRecordDetailsByContextId(graphCopy.getGraphId(), projectsObject, noValue, noValue);
+        new ContextPage().openUserContext().selectOrgContext();
+        new AuditPage()
+                .setUserFilter(pcAdmin.getEmail())
+                .applyAdditionalFilters()
+                .checkRecordDetailsByContextId(graphCopy.getGraphId(), projectsObject, noValue, noValue);
     }
 }

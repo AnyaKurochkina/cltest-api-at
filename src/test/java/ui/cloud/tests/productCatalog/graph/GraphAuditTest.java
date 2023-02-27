@@ -46,8 +46,8 @@ public class GraphAuditTest extends GraphBaseTest {
                 .checkFirstRecordDetails(graph.getGraphId(), graph.getGraphId(), noValue, noValue)
                 .showRequestAndResponse()
                 .checkFirstRecordDetails(graph.getGraphId(), graph.getGraphId(), "1.0.0", graph.getGraphId())
-                .checkCopyToClipboard(graph.getTitle())
-                .checkResponseFullViewContains(graph.getName());
+                .checkCopyToClipboard(graph.getTitle(), graph.getGraphId())
+                .checkResponseFullViewContains(graph.getName(), graph.getGraphId());
     }
 
     @Step("Проверка фильтрации по диапазону дат")
