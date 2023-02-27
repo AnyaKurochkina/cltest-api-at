@@ -34,6 +34,7 @@ public class IndexPage {
     private final SelenideElement orderTemplates = $x("//a[@href='/meccano/order-templates']");
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
+    private final SelenideElement portalAuditLink = $x("//a[@href='/analytics/audit']");
     private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
     private final Select sectionSelect = Select.byXpath("//select/parent::div");
 
@@ -96,6 +97,13 @@ public class IndexPage {
     public AuditPage goToAuditPage() {
         sectionSelect.set("Утилиты");
         auditLink.click();
+        Waiting.sleep(500);
+        return new AuditPage();
+    }
+
+    @Step("Переход на страницу Аналитика.Аудит")
+    public AuditPage goToPortalAuditPage() {
+        portalAuditLink.click();
         Waiting.sleep(500);
         return new AuditPage();
     }

@@ -9,7 +9,6 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -20,12 +19,13 @@ import static com.codeborne.selenide.Selenide.$x;
 @Getter
 public class AuditPage extends BasePage {
 
+    public static final String NO_VALUE = "—";
     private final SelenideElement contextId = $x("//span[text()='ID контекста']/following::span[1]");
     private final SelenideElement address = $x("//span[text()='Адрес']/following::span[1]");
     private final SelenideElement request = $x("//span[text()='Запрос']/ancestor::div[2]");
     private final SelenideElement response = $x("//span[text()='Ответ']/ancestor::div[2]");
-    private final SelenideElement showRequest = $x("//input[@name='returnLogBody']");
-    private final SelenideElement showResponse = $x("//input[@name='returnLogReplyBody']");
+    private final CheckBox showRequest = CheckBox.byName("returnLogBody");
+    private final CheckBox showResponse = CheckBox.byName("returnLogReplyBody");
     private final Button copyDataButton = Button.byXpath("//span[text()='Адрес']/preceding::button[1]");
     private final Button showFullView = Button.byXpath("//span[text()='Ответ']//following::button[1]");
     private final Button copyAddressButton = Button.byXpath("//span[text()='Адрес']/following::button[1]");
@@ -41,6 +41,8 @@ public class AuditPage extends BasePage {
     private final SearchSelect serviceFilterSelect = SearchSelect.byLabel("Сервис");
     private final Input beginDateInput = Input.byLabelV2("Начало");
     private final Input endDateInput = Input.byLabelV2("Окончание");
+    private final Select beginTimeSelect = Select.byXpath("(//input[@placeholder='Время']/parent::div)[1]");
+    private final Select endTimeSelect = Select.byXpath("(//input[@placeholder='Время']/parent::div)[2]");
     private final Input statusCodeInput = Input.byLabelV2("Код статуса");
     private final Input objectTypeFilterInput = Input.byLabelV2("Тип объекта");
     private final Input objectIdFilterInput = Input.byLabelV2("ID объекта");
@@ -67,11 +69,11 @@ public class AuditPage extends BasePage {
 
     @Step("Проверка первой записи в таблице аудита")
     public AuditPage checkFirstRecord(String dateTime, String user, String operationType, String object, String statusCode, String status) {
-        TestUtils.wait(1000);
+        Waiting.sleep(1000);
         checkAuditIsLoaded();
         Table table = new Table("Учетная запись");
         if (!table.isColumnValueContains("Тип операции", operationType)) {
-            TestUtils.wait(2000);
+            Waiting.sleep(2000);
             Selenide.refresh();
             new BasePage().goToAuditTab();
             table = new Table("Учетная запись");
@@ -96,15 +98,38 @@ public class AuditPage extends BasePage {
     @Step("Проверка детальных сведений первой записи в таблице аудита")
     public AuditPage checkFirstRecordDetails(String contextId, String address, String request, String response) {
         Table table = new Table("Учетная запись");
-        table.getRow(0).get().scrollIntoView(true).click();
+        table.getRow(0).get().scrollIntoView(TypifiedElement.scrollCenter).click();
         this.contextId.shouldHave(Condition.exactText(contextId));
         this.address.shouldHave(Condition.text(address));
-        if (showRequest.isSelected()) {
+        if (showRequest.getChecked() && !request.equals(NO_VALUE)) {
             this.request.$x(".//descendant::span[2]").shouldHave(Condition.text(request));
         } else {
             this.request.$x(".//i").shouldHave(Condition.exactText(request));
         }
-        if (showResponse.isSelected()) {
+        if (showResponse.getChecked() && !response.equals(NO_VALUE)) {
+            this.response.$x(".//descendant::span[2]").shouldHave(Condition.text(response));
+        } else {
+            this.response.$x(".//i").shouldHave(Condition.exactText(response));
+        }
+        table.getRow(0).get().click();
+        return this;
+    }
+
+    @Step("Проверка детальных сведений записи с contextId '{contextId}'")
+    public AuditPage checkRecordDetailsByContextId(String contextId, String address, String request, String response) {
+        Table table = new Table("Учетная запись");
+        for (SelenideElement row : table.getRows()) {
+            if (this.contextId.exists() && this.contextId.getText().equals(contextId)) break;
+            row.scrollIntoView(TypifiedElement.scrollCenter).click();
+        }
+        this.contextId.shouldHave(Condition.exactText(contextId));
+        this.address.shouldHave(Condition.text(address));
+        if (showRequest.getChecked() && !request.equals(NO_VALUE)) {
+            this.request.$x(".//descendant::span[2]").shouldHave(Condition.text(request));
+        } else {
+            this.request.$x(".//i").shouldHave(Condition.exactText(request));
+        }
+        if (showResponse.getChecked() && !response.equals(NO_VALUE)) {
             this.response.$x(".//descendant::span[2]").shouldHave(Condition.text(response));
         } else {
             this.response.$x(".//i").shouldHave(Condition.exactText(response));
@@ -122,8 +147,9 @@ public class AuditPage extends BasePage {
 
     @Step("Включение отображения запроса и ответа")
     public AuditPage showRequestAndResponse() {
-        showRequest.click();
-        showResponse.click();
+        showRequest.getElement().scrollIntoView(false);
+        showRequest.setChecked(true);
+        showResponse.setChecked(true);
         return this;
     }
 
@@ -131,12 +157,14 @@ public class AuditPage extends BasePage {
     public AuditPage checkCopyToClipboard(String value) {
         Table table = new Table("Учетная запись");
         table.getRow(0).get().click();
-        copyDataButton.getButton().scrollIntoView(true).click();
+        copyDataButton.getButton().scrollIntoView(false).click();
         Assertions.assertTrue(StringUtils.getClipBoardText().contains(contextId.getText()));
         copyAddressButton.click();
         Assertions.assertTrue(StringUtils.getClipBoardText().equals(address.getText()));
-        copyRequestButton.click();
-        Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
+        if (!request.$x(".//i").getText().equals(NO_VALUE)) {
+            copyRequestButton.click();
+            Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
+        }
         copyResponseButton.click();
         Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
         table.getRow(0).get().scrollIntoView(TypifiedElement.scrollCenter).click();
@@ -147,8 +175,8 @@ public class AuditPage extends BasePage {
     public AuditPage checkResponseFullViewContains(String value) {
         Table table = new Table("Учетная запись");
         table.getRow(0).get().click();
-        showFullView.getButton().scrollIntoView(true).click();
-        TestUtils.wait(500);
+        showFullView.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
+        Waiting.sleep(500);
         Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed());
         closeFullViewButton.click();
         return this;
@@ -235,7 +263,11 @@ public class AuditPage extends BasePage {
         TestUtils.scrollToTheTop();
         periodSelect.set("задать период");
         beginDateInput.setValue(beginDate);
+        beginTimeSelect.getElement().$x(".//*[name()='svg']").click();
+        beginTimeSelect.set("00:00");
         endDateInput.setValue(endDate);
+        endTimeSelect.getElement().$x(".//*[name()='svg']").click();
+        endTimeSelect.set("23:30");
         applyFiltersByDateButton.click();
         return this;
     }

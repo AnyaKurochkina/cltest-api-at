@@ -1,4 +1,4 @@
-package ui.cloud.tests.utils.audit;
+package ui.cloud.tests.audit;
 
 import api.Tests;
 import com.codeborne.selenide.Condition;
@@ -53,7 +53,7 @@ public class AuditTest extends Tests {
     @Test
     @TmsLink("1189306")
     @DisplayName("Просмотр аудита за период")
-    public void setAuditPeriodTest() {
+    public void checkFilterByDate() {
         AuditPage page = new IndexPage().goToAuditPage();
         Assertions.assertEquals("последний 1 час", page.getPeriodSelect().getValue());
         page.getBeginDateInput().getInput().shouldBe(Condition.disabled);
@@ -102,7 +102,7 @@ public class AuditTest extends Tests {
     @Test
     @TmsLink("1189305")
     @DisplayName("Просмотр записи аудита")
-    public void checkAuditRecord() {
+    public void checkAuditRecordDetails() {
         new IndexPage().goToAuditPage()
                 .setObjectIdFilter(graph.getGraphId())
                 .applyAdditionalFilters()

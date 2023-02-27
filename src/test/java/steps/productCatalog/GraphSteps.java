@@ -144,6 +144,14 @@ public class GraphSteps extends Steps {
                 .assertStatus(204);
     }
 
+    @Step("Удаление графа по Id в контексте")
+    public static void deleteGraphByIdInContext(String objectId, String projectId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete("/api/v1/projects/{}/graphs/{}/", projectId, objectId)
+                .assertStatus(204);
+    }
+
     @Step("Удаление графа по Id")
     public static Response getDeleteResponse(String objectId) {
         return new Http(ProductCatalogURL)
@@ -238,6 +246,14 @@ public class GraphSteps extends Steps {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(graphUrl + objectId + "/copy/")
+                .assertStatus(200);
+    }
+
+    @Step("Копирование графа по Id в контексте")
+    public static void copyGraphByIdInContext(String objectId, String projectId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post("/api/v1/projects/{}/graphs/{}", projectId, objectId + "/copy/")
                 .assertStatus(200);
     }
 

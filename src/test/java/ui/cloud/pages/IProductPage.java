@@ -38,6 +38,7 @@ public abstract class IProductPage {
     protected Double preBillingCostAction;
     protected SelenideElement btnHistory = $x("//button[.='История действий']");
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
+    protected Tab generalInfoTab = Tab.byText("Общая информация");
     IProduct product;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
     SelenideElement currentProduct = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
@@ -268,18 +269,6 @@ public abstract class IProductPage {
         double cost = EntitiesUtils.getPreBillingCostAction(currentPriceOrder.shouldBe(Condition.visible, Duration.ofMinutes(3)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
-    }
-
-    public void goToGeneralInfoTab() {
-        goToTab("Общая информация");
-    }
-
-    @Step("Переход на вкладку '{title}'")
-    public void goToTab(String title) {
-        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
-        if (tab.getAttribute("aria-selected").equals("false")) {
-            tab.scrollIntoView(false).click();
-        }
     }
 
     private static class TopInfo extends Table {
