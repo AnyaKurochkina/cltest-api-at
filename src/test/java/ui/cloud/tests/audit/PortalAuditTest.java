@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,20 +33,21 @@ public class PortalAuditTest extends Tests {
 
     private final String projectsObject = "projects";
     private final String noValue = AuditPage.NO_VALUE;
-    private final GlobalUser superviewer = GlobalUser.builder().role(Role.SUPERVIEWER).build().createObject();
+    private final GlobalUser cloudAdmin = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
     private final GlobalUser pcAdmin = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final String okCode = "200";
     private final String okStatus = "ок";
     private final String createType = "create";
-    private final Project project = Project.builder().build().createObject();
+    private final Project project = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
+            .build().createObject();
     private String graphName;
     private Graph graph;
     private Graph graphCopy;
 
     @BeforeEach
     public void setUp() {
-        new LoginPage(project.getId()).signIn(superviewer.getRole());
+        new LoginPage(project.getId()).signIn(cloudAdmin.getRole());
 
         graphName = UUID.randomUUID().toString();
         graph = Graph.builder()
