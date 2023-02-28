@@ -10,6 +10,7 @@ import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Dialog;
 import ui.elements.DropDown;
+import ui.elements.Select;
 import ui.elements.Table;
 
 import java.util.List;
@@ -59,7 +60,7 @@ public class PodmanPage extends IProductPage {
         checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
+                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
@@ -91,8 +92,8 @@ public class PodmanPage extends IProductPage {
         node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
-            DropDown.byLabel("Роль").selectByTextContains(role);
-            groups.forEach(group -> DropDown.byLabel("Группы").select(group));
+            Select.byLabel("Роль").setContains(role);
+            groups.forEach(group -> Select.byLabel("Группы").set(group));
         },ActionParameters.builder().node(node).build());
         generalInfoTab.switchTo();
         node.scrollIntoView(scrollCenter).click();

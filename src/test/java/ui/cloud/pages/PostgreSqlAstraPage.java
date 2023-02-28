@@ -92,7 +92,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void changeTransactionIsolation(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation", "Подтвердить", () -> {
-            DropDown.byLabel("default_transaction_isolation").select(value);
+            Select.byLabel("default_transaction_isolation").set(value);
         });
         btnGeneralInfo.click();
         Assertions.assertEquals(value.toLowerCase(), default_transaction_isolation.getText(), "default_transaction_isolation " +
@@ -117,7 +117,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
+                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -258,8 +258,8 @@ public class PostgreSqlAstraPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
-            DropDown groupsElement = DropDown.byLabel("Группы").clear();
-            groups.forEach(groupsElement::select);
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
