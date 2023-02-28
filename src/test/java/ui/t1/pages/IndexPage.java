@@ -3,14 +3,13 @@ package ui.t1.pages;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
-import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
+import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
@@ -38,7 +37,7 @@ public class IndexPage {
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
     public static void go() {
-        $x("//img[contains(@alt,'logo')]").shouldBe(Condition.visible).click();
+        $x("(//img[contains(@alt,'logo')])[2]").shouldBe(Condition.visible).click();
     }
 
     public Profile goToProfile(){
