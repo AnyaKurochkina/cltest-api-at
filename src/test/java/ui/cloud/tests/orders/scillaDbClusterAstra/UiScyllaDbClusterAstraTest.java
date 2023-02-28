@@ -197,7 +197,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @DisplayName("UI Scylla_db_cluster_astra. Добавление/удаление группы доступа")
     void deleteGroup() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-        //scyllaPage.deleteGroup("superuser");
+        scyllaPage.deleteGroup("superuser");
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         scyllaPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
