@@ -9,10 +9,7 @@ import static core.helper.StringUtils.$x;
 public class MoonPage extends IProductPage {
 
     private static final String BLOCK_APP = "Приложение";
-
-
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
-
     private static final String HEADER_PATH = "Путь";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 

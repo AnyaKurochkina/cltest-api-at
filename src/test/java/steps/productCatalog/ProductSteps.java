@@ -49,6 +49,14 @@ public class ProductSteps extends Steps {
                 .extractAs(GetProductList.class).getList();
     }
 
+    public static Product getProductByProjectContext(String projectId, String productId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/projects/{}/products/{}/", projectId, productId)
+                .assertStatus(200)
+                .extractAs(Product.class);
+    }
+
     @Step("Получение списка продуктов по фильтру {filter}")
     public static List<Product> getProductListByFilter(String filter) {
         return new Http(ProductCatalogURL)

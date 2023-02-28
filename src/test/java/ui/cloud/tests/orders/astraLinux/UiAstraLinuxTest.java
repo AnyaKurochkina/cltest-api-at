@@ -24,7 +24,8 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product;// = Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/a652f246-08ee-41bc-8fe3-9496f1fb36b5/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Astra product;
+     //= Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/e0958c78-e4e0-4c10-a19b-b017774f9639/history?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -37,17 +38,17 @@ public class UiAstraLinuxTest extends UiProductTest {
     @TmsLink("378275")
     @Order(1)
     @DisplayName("UI Astra. Заказ")
-    void orderAstra() {
+    void orderScyllaDB() {
         double preBillingProductPrice;
         try {
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
@@ -73,7 +74,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Test
     @TmsLink("1236736")
     @Order(2)
-    @DisplayName("UI AstraLinux. Проверка полей заказа")
+    @DisplayName("UI AstraLinux. Проверка развертывания в истории действий")
     void checkHeaderHistoryTable() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.getBtnGeneralInfo().click();
@@ -104,10 +105,11 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Test
     @Order(5)
     @TmsLink("382920")
-    @DisplayName("UI AstraLinux. Расширить диск")
+    @DisplayName("UI AstraLinux. Расширить точку монтирования")
     void expandDisk() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> astraLinuxPage.enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
+        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> astraLinuxPage
+                .enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
     }
 
     @Test
@@ -122,7 +124,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Test
     @Order(8)
     @TmsLinks({@TmsLink("1090926"), @TmsLink("1090863")})
-    @DisplayName("UI AstraLinux. Добавить группу доступа")
+    @DisplayName("UI AstraLinux. Удалить и добавить группу доступа")
     void addGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.deleteGroup("user"));

@@ -13,7 +13,7 @@ import java.util.UUID;
 import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
-public class ApacheKafkaClusterOrderPage extends Product {
+public class ApacheKafkaClusterOrderPage extends NewOrderPage {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");

@@ -5,10 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
-import ui.elements.Alert;
-import ui.elements.Button;
-import ui.elements.Input;
-import ui.elements.Select;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.switchTo;
@@ -25,7 +22,7 @@ public class BasePage {
     protected final Button backButton = Button.byText("Назад");
     protected final SelenideElement deleteIconButton = $x("//img/following::*[name()='svg'][1]");
     protected final SelenideElement addIconLabel = $x("//label[text()='Добавить иконку']");
-    protected final Select graphSelect = Select.byLabel("Граф");
+    protected final SearchSelect graphSelect = SearchSelect.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
     protected final Button viewJSONButton = Button.byText("JSON");
     protected final Button expandJSONView = Button.byAriaLabel("fullscreen");
@@ -91,6 +88,12 @@ public class BasePage {
         if (tab.getAttribute("aria-selected").equals("false")) {
             tab.scrollIntoView(false).click();
         }
+    }
+
+    @Step("Переход на вкладку 'История изменений'")
+    public AuditPage goToAuditTab() {
+        goToTab("История изменений");
+        return new AuditPage();
     }
 
     @Step("Проверка, что открыта вкладка '{title}'")

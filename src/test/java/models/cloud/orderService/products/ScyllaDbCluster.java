@@ -95,7 +95,7 @@ public class ScyllaDbCluster extends IProduct {
                 .set("$.order.attrs.scylla_cluster_configuration.dc2", dc2)
                 .set("$.order.attrs.scylla_cluster_configuration.dc3", dc3)
                 .set("$.order.project_name", getProjectId())
-                .set("$.order.attrs.on_support", isTest())
+                .set("$.order.attrs.on_support", !isDev())
                 .set("$.order.label", getLabel())
                 .build();
     }

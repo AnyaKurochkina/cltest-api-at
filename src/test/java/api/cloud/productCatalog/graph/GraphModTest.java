@@ -1,0 +1,242 @@
+package api.cloud.productCatalog.graph;
+
+import api.Tests;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.Env;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.Modification;
+import models.cloud.productCatalog.graph.RootPath;
+import models.cloud.productCatalog.graph.UpdateType;
+import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.GraphSteps.*;
+
+@Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Графы")
+@DisabledIfEnv("prod")
+public class GraphModTest extends Tests {
+
+    @DisplayName("Получение графа c модификаторами без query параметров")
+    @TmsLink("1458128")
+    @Test
+    public void getGraphWithModsWithOutContextTest() {
+        String jsonData = "dev_title";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envNames(Collections.singletonList("IFT"))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        String uiData = "ui_schema_dev_title";
+        Modification uiSchema = Modification.builder()
+                .name("ui_schema_dev_mod")
+                .envs(Collections.singletonList(Env.TEST))
+                .order(2)
+                .path("title")
+                .rootPath(RootPath.UI_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(uiData)
+                .build();
+        String expectedTitle = "default";
+        Graph graph = Graph.builder()
+                .name("get_graph_with_out_context_test_api")
+                .version("1.0.0")
+                .modifications(Arrays.asList(jsonSchema, uiSchema))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .uiSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .build()
+                .createObject();
+        Graph createdGraph = getGraphById(graph.getGraphId());
+        assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
+        assertEquals(expectedTitle, createdGraph.getUiSchema().get("title"));
+    }
+
+    @DisplayName("Получение графа по типу среды не совпадающей с типом среды модификатора")
+    @TmsLink("1458129")
+    @Test
+    public void getGraphByEnvTypeNotEqualsModEnvTypeTest() {
+        String jsonData = "dev_title";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envs(Collections.singletonList(Env.TEST))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        String expectedTitle = "default";
+        Graph graph = Graph.builder()
+                .name("get_graph_by_env_type_not_equals_mod_env_type_test_api")
+                .version("1.0.0")
+                .modifications(Collections.singletonList(jsonSchema))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .build()
+                .createObject();
+        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=dev");
+        assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
+    }
+
+    @DisplayName("Получение графа по среде совпадающей со средой модификатора")
+    @TmsLink("1458167")
+    @Test
+    public void getGraphByEnvEqualsModEnvTest() {
+        String jsonData = "graph_env_equals_mod_env";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envNames(Arrays.asList("DSO", "LT", "IFT"))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        String expectedTitle = "default";
+        Graph graph = Graph.builder()
+                .name("get_graph_by_env_equals_mod_env_test_api")
+                .version("1.0.0")
+                .modifications(Collections.singletonList(jsonSchema))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .build()
+                .createObject();
+        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env_name=dso");
+        assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
+    }
+
+    @DisplayName("Получение графа по типу среды совпадающей с типом среды модификатора и по среде отличающейся от среды модификатора")
+    @TmsLink("1458235")
+    @Test
+    public void getGraphByEnvTypeEqualsModEnvTypeAndEnvNotEqualsModEnvTest() {
+        String jsonData = "graph_env_equals_mod_env";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envNames(Arrays.asList("DSO", "LT", "IFT"))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        String uiData = "ui_schema_dev_title";
+        Modification uiSchema = Modification.builder()
+                .name("ui_schema_dev_mod")
+                .envs(Collections.singletonList(Env.TEST))
+                .order(2)
+                .path("title")
+                .rootPath(RootPath.UI_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(uiData)
+                .build();
+        String expectedTitle = "default";
+        Graph graph = Graph.builder()
+                .name("get_graph_by_env_type_equals_mod_env_type_and_env_not_equals_mod_env")
+                .version("1.0.0")
+                .modifications(Arrays.asList(jsonSchema, uiSchema))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .uiSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .build()
+                .createObject();
+        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=test&env_name=migr");
+        assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
+        assertEquals(uiData, createdGraph.getUiSchema().get("title"));
+    }
+
+    @DisplayName("Получение графа по типу среды и среды совпадающими с типом среды и среды модификатора")
+    @TmsLink("1458388")
+    @Test
+    public void getGraphByEnvTypeAndEnvEqualsModEnvTypeAndEnvTest() {
+        String jsonData = "graph_env_equals_mod_env";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envNames(Arrays.asList("DSO", "LT", "IFT"))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        String uiData = "ui_schema_dev_title";
+        Modification uiSchema = Modification.builder()
+                .name("ui_schema_dev_mod")
+                .envs(Collections.singletonList(Env.TEST))
+                .order(2)
+                .path("title")
+                .rootPath(RootPath.UI_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(uiData)
+                .build();
+        String expectedTitle = "default";
+        Graph graph = Graph.builder()
+                .name("get_graph_by_env_type_and_type_equals_mod_env_type_and_env")
+                .version("1.0.0")
+                .modifications(Arrays.asList(jsonSchema, uiSchema))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .uiSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .build()
+                .createObject();
+        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=test&env_name=lt");
+        assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
+        assertEquals(uiData, createdGraph.getUiSchema().get("title"));
+    }
+
+    @DisplayName("")
+    @TmsLink("")
+    @Test
+    public void getGraphByEnvTypeAdndEnvEqualsModEnvTypeAndEnvTest() {
+        String jsonData = "graph_env_equals_mod_env";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envNames(Arrays.asList("DSO", "LT", "IFT"))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        String expectedTitle = "default";
+        Graph graph = Graph.builder()
+                .name("get_graph_by_env_type_and_type_equals_mod_env_type_and_env")
+                .version("1.0.1")
+                .modifications(Arrays.asList(jsonSchema))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .uiSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", expectedTitle);
+                }})
+                .build()
+                .createObject();
+        jsonSchema.setEnvNames(Collections.singletonList("EDU"));
+        partialUpdateGraph(graph.getGraphId(), jsonSchema.toJson());
+    }
+}

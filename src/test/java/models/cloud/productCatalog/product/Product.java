@@ -6,6 +6,7 @@ import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.cloud.productCatalog.ContextRestrictionsItem;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -38,6 +39,8 @@ public class Product extends Entity {
     private String iconStoreId;
     @JsonProperty("icon_url")
     private String iconUrl;
+    @JsonProperty("icon_base64")
+    private String iconBase64;
     @JsonProperty("version_create_dt")
     private String versionCreateDt;
     @JsonProperty("description")
@@ -89,7 +92,7 @@ public class Product extends Entity {
     @JsonProperty("payment")
     private Payment payment;
     @JsonProperty("context_restrictions")
-    private List<Object> contextRestrictions;
+    private List<ContextRestrictionsItem> contextRestrictions;
     @JsonProperty("version_fields")
     private List<String> versionFields;
 
@@ -137,6 +140,7 @@ public class Product extends Entity {
                 .setIfNullRemove("$.number", number)
                 .set("$.allowed_groups", allowedGroups)
                 .set("$.restricted_groups", restrictedGroups)
+                .set("$.context_restrictions", contextRestrictions)
                 .set("$.description", description)
                 .set("$.author", author)
                 .set("$.max_count", maxCount)

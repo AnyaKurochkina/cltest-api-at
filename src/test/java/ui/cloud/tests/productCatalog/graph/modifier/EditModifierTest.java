@@ -30,10 +30,13 @@ public class EditModifierTest extends GraphBaseTest {
         modifier.setEnvs(new String[]{"test"});
         modifierData = "\"testTitle\"";
         modifier.setModifierData(modifierData);
-        new GraphModifiersPage().editModifierAndSave(modifier)
-                .selectEnv("test")
+        new GraphModifiersPage()
+                .editModifierAndSave(modifier)
+                .setEnvType("test")
                 .checkModifiedJSONSchemaContains(modifierData)
-                .selectEnv("dev")
+                .setEnv("IFT")
+                .checkModifiedJSONSchemaContains(modifierData)
+                .setEnvType("dev")
                 .checkModifiedJSONSchemaContains("\"defaultTitle\"");
     }
 }

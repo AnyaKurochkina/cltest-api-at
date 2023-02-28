@@ -3,17 +3,12 @@ package ui.cloud.tests.orders.moon;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Moon;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.*;
-import ui.extesions.ConfigExtension;
-import ui.extesions.InterceptTestExtension;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
@@ -41,15 +36,16 @@ public class UiMoonTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             MoonOrderPage orderPage = new MoonOrderPage();
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getDataCentre().selectByValue(product.getDataCentre());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getProjectName().setValue(new Generex("moon-[a-z]{5,15}").random());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
             new OrdersPage()
-                    .getRowElementByColumnValue("Продукт",
+                    .getRowByColumnValue("Продукт",
                             orderPage.getLabelValue())
+                    .get()
                     .hover()
                     .click();
             MoonPage moonPages = new MoonPage(product);

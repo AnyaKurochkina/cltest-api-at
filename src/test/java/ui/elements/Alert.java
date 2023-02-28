@@ -67,6 +67,7 @@ public class Alert implements TypifiedElement {
         return this;
     }
 
+    @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
         try {
             SelenideElement e = new Alert().getElements().first().shouldBe(Condition.visible, Duration.ofSeconds(5));

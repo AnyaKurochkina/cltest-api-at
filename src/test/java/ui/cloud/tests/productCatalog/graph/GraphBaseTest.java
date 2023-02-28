@@ -67,9 +67,9 @@ public class GraphBaseTest extends BaseTest {
                 .rollback("")
                 .input(input)
                 .output(output)
-                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
+                .printedOutput(new HashMap<String, String>() {{
                     put("type", "text");
-                }}))
+                }})
                 .timeout(100)
                 .build()
                 .createObject();

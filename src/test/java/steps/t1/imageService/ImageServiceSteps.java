@@ -21,7 +21,7 @@ public class ImageServiceSteps extends Steps {
 
     private static final String apiUrl = "/api/v1";
 
-    @Step("Полуение списка image groups")
+    @Step("Получение списка image groups")
     public static List<ImageGroup> getImageGroupsList(boolean isNeedAll) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
@@ -31,7 +31,7 @@ public class ImageServiceSteps extends Steps {
                 .getList("", ImageGroup.class);
     }
 
-    @Step("Полуение версии сервиса")
+    @Step("Получение версии сервиса")
     public static Response getImageServiceVersion() {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
@@ -49,7 +49,7 @@ public class ImageServiceSteps extends Steps {
                 .getString("status");
     }
 
-    @Step("Полуение списка marketing")
+    @Step("Получение списка marketing")
     public static List<Marketing> getMarketingList() {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
@@ -59,7 +59,7 @@ public class ImageServiceSteps extends Steps {
                 .getList("", Marketing.class);
     }
 
-    @Step("Полуение списка Logo")
+    @Step("Получение списка Logo")
     public static List<Logo> getLogoList() {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
@@ -79,7 +79,7 @@ public class ImageServiceSteps extends Steps {
                 .getList("", Image.class);
     }
 
-    @Step("Полуение списка image groups по region {region}")
+    @Step("Получение списка image groups по region {region}")
     public static List<ImageGroup> getImageGroupsListByRegion(String region) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)

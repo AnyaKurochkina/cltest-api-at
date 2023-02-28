@@ -6,6 +6,8 @@ import core.helper.http.Response;
 import io.restassured.path.json.JsonPath;
 import steps.Steps;
 
+import java.util.Objects;
+
 import static core.helper.Configure.ResourceManagerURL;
 
 public class ResourceManagerSteps extends Steps {
@@ -17,11 +19,20 @@ public class ResourceManagerSteps extends Steps {
                 .assertStatus(200);
     }
 
-    public static JsonPath getProjectPath(String id) {
+    public static JsonPath getProjectJsonPath(String id) {
         return new Http(ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/projects/{}?include=information_system,project_environment,environment_prefix,availability", id)
                 .assertStatus(200)
                 .jsonPath();
+    }
+
+    public static String getProjectPath(String type, String id) {
+        return Objects.requireNonNull(new Http(ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/v1/{}/{}/path", type, id)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("data.path"));
     }
 }

@@ -118,7 +118,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
+                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -160,7 +160,6 @@ public class PostgreSqlAstraPage extends IProductPage {
             Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB), "БД не принадлежит пользователю");
         }
     }
-
     public void updateExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -170,7 +169,6 @@ public class PostgreSqlAstraPage extends IProductPage {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
     }
-
     public void changeExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -310,7 +308,6 @@ public class PostgreSqlAstraPage extends IProductPage {
         public VirtualMachineTable() {
             super("Роли узла");
         }
-
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

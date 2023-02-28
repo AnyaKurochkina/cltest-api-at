@@ -300,8 +300,21 @@ public class ActionPage extends BasePage {
         titleInput.setValue(newValue);
         mainPageLink.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToActionsPage().openActionForm(action.getName());
+        new IndexPage().goToActionsListPage().openActionForm(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         return this;
+    }
+
+    @Step("Выбор графа '{name}'")
+    public ActionPage setGraph(String name) {
+        goToGraphTab();
+        graphSelect.setContains(name);
+        return this;
+    }
+
+    @Step("Проверка отсутствия графа '{name}' в доступных для выбора")
+    public void checkGraphNotFound(String name) {
+        goToGraphTab();
+        graphSelect.checkNoMatches(name);
     }
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
+import ui.cloud.pages.productCatalog.graph.GraphPage;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -37,8 +38,8 @@ public class GraphAuditTest extends GraphBaseTest {
                 .findAndOpenGraphPage(NAME)
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", graphsObject, "201", "создан")
-                .checkFirstRecordDetails(graph.getGraphId(), graphsObject, noValue, noValue)
-                .setAuthor("QA-1")
+                .checkFirstRecordDetails(graph.getGraphId(), graphsObject, noValue, noValue);
+        new GraphPage().setAuthor("QA-1")
                 .saveGraphWithPatchVersion()
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "modify", graphsObject, "200", "ок")

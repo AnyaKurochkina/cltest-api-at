@@ -1,6 +1,8 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
 import core.helper.http.Http;
@@ -13,16 +15,20 @@ import org.json.JSONObject;
 
 @NoArgsConstructor
 @SuperBuilder
+@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId"})
 public abstract class Entity implements AutoCloseable {
-
     public String objectClassName;
+    public String uuid;
+    @Setter
+    @Getter
+    String configurationId;
 
     public abstract Entity init();
 
     public abstract JSONObject toJson();
 
     @JsonIgnore
-    public JsonTemplate getTemplate(){
+    public JsonTemplate getTemplate() {
         return new JsonTemplate(toJson());
     }
 
@@ -30,29 +36,34 @@ public abstract class Entity implements AutoCloseable {
 
     protected abstract void delete();
 
-    public String uuid;
-    @Setter
-    @Getter
-    String configurationId;
-
     public void save() {
         ObjectPoolService.saveEntity(this);
+    }
+
+    @SneakyThrows
+    protected JSONObject serialize(Object object) {
+        return new JSONObject(new ObjectMapper().writeValueAsString(object));
+    }
+
+    @SneakyThrows
+    protected JSONObject serialize() {
+        return serialize(this);
     }
 
     @Override
     public void close() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
-        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED)
+        if (objectPoolEntity.getStatus() == ObjectStatus.FAILED)
             return;
         objectPoolEntity.release();
     }
 
     @SneakyThrows
-    void deleteObjectV2(){
+    void deleteObjectV2() {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
         if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
-        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
+        if (objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
             throw objectPoolEntity.getError();
         try {
             delete();
@@ -68,7 +79,7 @@ public abstract class Entity implements AutoCloseable {
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
         if (objectPoolEntity.getStatus() == ObjectStatus.DELETED)
             return;
-        if(objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
+        if (objectPoolEntity.getStatus() == ObjectStatus.FAILED_DELETE)
             throw objectPoolEntity.getError();
         try {
             delete();
@@ -80,11 +91,12 @@ public abstract class Entity implements AutoCloseable {
     public <T extends Entity> T createObject() {
         return createObject(false, true);
     }
+
     public <T extends Entity> T createObjectPrivateAccess() {
         return createObject(false, false);
     }
 
-    protected  <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
+    protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         return ObjectPoolService.create(this, exclusiveAccess, isPublic);
     }
 
@@ -95,7 +107,7 @@ public abstract class Entity implements AutoCloseable {
             create();
 
         } catch (Http.StatusResponseException e) {
-            if(e.getStatus() != expectedStatus)
+            if (e.getStatus() != expectedStatus)
                 throw e;
             return;
         }
@@ -106,7 +118,7 @@ public abstract class Entity implements AutoCloseable {
         try {
             delete();
         } catch (Http.StatusResponseException e) {
-            if(e.getStatus() != expectedStatus)
+            if (e.getStatus() != expectedStatus)
                 throw e;
         }
     }

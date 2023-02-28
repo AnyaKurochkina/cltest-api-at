@@ -52,7 +52,7 @@ public class S3Ceph extends IProduct {
     }
 
     public String getBucketName(String name){
-        JsonPath path = ResourceManagerSteps.getProjectPath(projectId);
+        JsonPath path = ResourceManagerSteps.getProjectJsonPath(projectId);
         return path.getString("data.environment_prefix.name") + "-" +
                 path.getString("data.information_system.code")  + "-" + name;
     }

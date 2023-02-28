@@ -13,6 +13,19 @@
     }
   },
   {
+    "objectClassName": "models.cloud.authorizer.Project",
+    "informationSystem": "c9fd31c7-25a5-45ca-863c-18425d1ae927",
+    "id": "proj-vlvdo4h3n1",
+    "projectName": "regress IFT",
+    "isForOrders":true,
+    "projectEnvironmentPrefix": {
+      "env": "IFT",
+      "id": "94ccf84f-5bf2-404d-a5dd-d3edc78c20a3",
+      "projectEnvironmentId": "0d8e0128-84a1-42de-ab85-960aa50e5a13",
+      "envType": "TEST"
+    }
+  },
+  {
     "objectClassName": "models.cloud.portalBack.AccessGroup",
     "prefixName": "cloud-crux-for-api-tests",
     "users": [],

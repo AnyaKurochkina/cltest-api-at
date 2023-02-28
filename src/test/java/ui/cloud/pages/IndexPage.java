@@ -51,7 +51,7 @@ public class IndexPage {
     }
 
     @Step("Переход на страницу Конструктор.Действия")
-    public ActionsListPage goToActionsPage() {
+    public ActionsListPage goToActionsListPage() {
         actions.scrollTo();
         actions.click();
         return new ActionsListPage();
