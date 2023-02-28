@@ -25,7 +25,7 @@ import java.util.Collections;
 @Epic("UI Продукты")
 @Feature("S3CephTenant")
 @Tags({@Tag("ui"), @Tag("ui_s3_ceph_tenant")})
-public class UiS3CephTenantTest extends UiProductTest {
+public class UiS3CephTenantTest extends NewOrderPage {
 
     S3Ceph product = S3Ceph.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/object_storage/orders/0469c17f-1b54-42a4-adce-09b96ecc2f49/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
@@ -46,7 +46,7 @@ public class UiS3CephTenantTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
               S3CephTenantOrderPage orderPage = new S3CephTenantOrderPage();
-              orderPage.getSegment().selectByValue(product.getSegment());
+              orderPage.getSegmentSelect().set(product.getSegment());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())

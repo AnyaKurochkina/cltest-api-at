@@ -30,6 +30,7 @@ public class NewOrderPage {
     protected Select platformSelect = Select.byLabel("Платформа");
     protected Select osVersionSelect = Select.byLabel("Версия ОС");
     protected Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
+    protected Select groupSelect = Select.byLabel("Группы");
 
     public static SelenideElement getCalculationDetails() {
         return $x("(//div[text()='Детали заказа'])[2]");

@@ -257,8 +257,8 @@ public class PostgreSqlAstraPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
-            DropDown groupsElement = DropDown.byLabel("Группы").clear();
-            groups.forEach(groupsElement::select);
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
         },ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
