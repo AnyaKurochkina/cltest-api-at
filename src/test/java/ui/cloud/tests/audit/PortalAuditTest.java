@@ -27,7 +27,7 @@ import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.*;
 
-@Feature("Просмотр аудита в Control panel")
+@Feature("Просмотр аудита на портале")
 @ExtendWith(ConfigExtension.class)
 public class PortalAuditTest extends Tests {
 

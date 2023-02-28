@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 import com.codeborne.selenide.Condition;
+import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -16,6 +17,8 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
 
 @Epic("UI Продукты")
 @Feature("PostgreSQL (Astra Linux)")
@@ -23,7 +26,7 @@ import java.time.Duration;
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
     PostgreSQL product;
-    //= PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/b4a63096-940e-44df-af71-390b9f3da7d8/main?context=proj-iv550odo9a&type=project&org=vtb");
+    // = PostgreSQL.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/e97aaf5e-4940-4c25-8340-e73d589fcd07/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
@@ -241,13 +244,26 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(25)
     @TmsLinks({@TmsLink("1091014"), @TmsLink("1091010")})
-    @DisplayName("UI PostgreSQLAstra. Добавить и удалить группу доступа")
-    void deleteGroupAccess() {
+    @Order(23)
+    @DisplayName("UI PostgreSQLAstra. Удалить и добавить группу доступа")
+    void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.addGroupAccess(pSqlPage.getRoleNode());
-        pSqlPage.deleteGroupAccess(pSqlPage.getRoleNode());
+        pSqlPage.deleteGroup("superuser");
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+    }
+
+    @Test
+    @TmsLink("1091055")
+    @Order(24)
+    @DisplayName("UI PostgreSQLAstra. Изменить состав группы доступа")
+    void updateGroup() {
+        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateGroup("superuser",
+                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
     @Test
