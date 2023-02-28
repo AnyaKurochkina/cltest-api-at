@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.t1.dns.DnsZone;
 import models.t1.dns.Rrset;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
@@ -44,9 +45,10 @@ public class PublicDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Создание/Удаление публичной зоны")
     public void createPublicZoneTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         DnsZone zone = DnsZone.builder()
                 .name("create_public_zone_test_api")
-                .domainName("public.zone.test.api.ru")
+                .domainName(domainName)
                 .type("public")
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
@@ -120,14 +122,15 @@ public class PublicDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Создание/удаление rrset")
     public void createRrsetTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         JSONObject json = DnsZone.builder()
                 .name("create_rrset_public_zone_test_api")
-                .domainName("create.rrset.public.zone.test.api.ru")
+                .domainName(domainName)
                 .type("public")
                 .build()
                 .toJson();
         DnsZone dnsZone = createZone(json, projectId);
-        String recordName = "create_rrset";
+        String recordName = "generate." + domainName + ".";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
                 .recordType("A")
@@ -150,14 +153,15 @@ public class PublicDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("")
     public void partialUpdateRrsetTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         JSONObject json = DnsZone.builder()
                 .name("partial_update_rrset_public_zone_test_api")
-                .domainName("partial_update.rrset.public.zone.test.api.ru")
+                .domainName(domainName)
                 .type("public")
                 .build()
                 .toJson();
         DnsZone dnsZone = createZone(json, projectId);
-        String recordName = "update_rrset";
+        String recordName = "partial.update." + domainName + ".";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
                 .recordType("A")
@@ -165,6 +169,7 @@ public class PublicDnsTest extends Tests {
         String zoneId = dnsZone.getId();
         createRrset(projectId, zoneId, rrset.toJson());
         Rrset createdRrset = getRrsetByName(recordName, zoneId, projectId);
-        partialUpdateRrset(projectId, zoneId, Objects.requireNonNull(createdRrset).getId(), new JSONObject().put("record_name", "update_name"));
+        createdRrset.setRecordName("partia2l.update." + domainName + ".");
+        partialUpdateRrset(projectId, zoneId, Objects.requireNonNull(createdRrset).getId(), createdRrset.toJson());
     }
 }

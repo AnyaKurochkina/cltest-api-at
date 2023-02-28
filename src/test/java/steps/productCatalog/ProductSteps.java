@@ -128,6 +128,23 @@ public class ProductSteps extends Steps {
                 .extractAs(Product.class);
     }
 
+    @Step("Получение order_restrictions продукта по Id")
+    public static Response getProductOrderRestrictionById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrl + objectId + "/order_restrictions/")
+                .assertStatus(200);
+    }
+
+    @Step("Получение order_restrictions продукта по Id")
+    public static Response createProductOrderRestrictionById(String objectId, JSONObject jsonObject) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(jsonObject)
+                .post(productUrl + objectId + "/order_restrictions/")
+                .assertStatus(200);
+    }
+
     @Step("Получение продукта по Id без токена")
     public static Response getProductByIdWithOutToken(String objectId) {
         return new Http(ProductCatalogURL)

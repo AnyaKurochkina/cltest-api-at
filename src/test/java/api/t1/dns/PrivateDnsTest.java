@@ -13,6 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,9 +42,9 @@ public class PrivateDnsTest extends Tests {
     @DisplayName("Создание/Удаление приватной зоны")
     public void createPrivateZoneTest() {
         DnsZone zone = DnsZone.builder()
-                .name("gg")
-                .domainName("gg.ru")
-//                .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
+                .name("testapi.com")
+                .domainName("testapi.com")
+                .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), "proj-ls0vejlv7c");

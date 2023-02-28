@@ -43,7 +43,6 @@ public class Product extends Entity {
     private String iconBase64;
     @JsonProperty("version_create_dt")
     private String versionCreateDt;
-    @JsonProperty("description")
     private String description;
     @JsonProperty("graph_version")
     private String graphVersion;
@@ -89,13 +88,11 @@ public class Product extends Entity {
     private List<String> allowedDevelopers;
     @JsonProperty("restricted_developers")
     private List<String> restrictedDevelopers;
-    @JsonProperty("payment")
     private Payment payment;
     @JsonProperty("context_restrictions")
     private List<ContextRestrictionsItem> contextRestrictions;
     @JsonProperty("version_fields")
     private List<String> versionFields;
-
     private Object envs;
 
     @Override

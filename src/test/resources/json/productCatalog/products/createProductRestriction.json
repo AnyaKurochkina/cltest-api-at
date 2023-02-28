@@ -1,0 +1,16 @@
+{"order_restriction": {
+  "environments": [],
+  "created_at": "",
+  "net_segments": [],
+  "domains": [],
+  "product_name": "ubuntu",
+  "platforms": ["zvirt","vsphere"],
+  "data_centers": [],
+  "is_deleted": false,
+  "updated_at": "",
+  "product_id": "",
+  "organization": "t1-cloud",
+  "is_blocking": false,
+  "id": "",
+  "weight": 2
+}}
