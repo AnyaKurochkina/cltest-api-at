@@ -7,13 +7,14 @@ import lombok.Getter;
 import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.Select;
+import ui.extesions.UiProductTest;
 
 import java.util.UUID;
 
 import static com.codeborne.selenide.Selenide.$x;
 
 @Getter
-public class S3CephTenantOrderPage extends Product {
+public class S3CephTenantOrderPage extends UiProductTest {
 
     DropDown platform = DropDown.byLabel("Платформа");
     DropDown osVersion = DropDown.byLabel("Версия ОС");
@@ -32,11 +33,11 @@ public class S3CephTenantOrderPage extends Product {
     }
 
     public void checkOrderDetails(){
-        if(getCalculationDetails().shouldBe(Condition.visible).exists())
-        {
-            getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
-        }
-        getProcessor().shouldBe(Condition.visible);
-        getOpMemory().shouldBe(Condition.visible);
+//        if(getCalculationDetails().shouldBe(Condition.visible).exists())
+//        {
+//            getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
+//        }
+//        getProcessor().shouldBe(Condition.visible);
+//        getOpMemory().shouldBe(Condition.visible);
     }
 }

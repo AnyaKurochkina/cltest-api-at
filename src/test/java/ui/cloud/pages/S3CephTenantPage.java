@@ -136,7 +136,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_INFO, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(Product.getFlavor(maxFlavor)));
+                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();

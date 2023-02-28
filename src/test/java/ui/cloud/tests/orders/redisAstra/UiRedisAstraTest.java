@@ -26,7 +26,8 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_redis_astra")})
 public class UiRedisAstraTest extends UiProductTest {
 
-    Redis product; // = Redis.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/365e253d-bd94-4462-a282-5b3d44f1c9c6/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Redis product;
+    // = Redis.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/365e253d-bd94-4462-a282-5b3d44f1c9c6/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

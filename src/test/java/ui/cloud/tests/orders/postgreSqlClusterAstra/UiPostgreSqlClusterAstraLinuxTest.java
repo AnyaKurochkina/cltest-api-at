@@ -28,7 +28,8 @@ import static core.helper.StringUtils.$x;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product;// = PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/1afd6cd2-3ede-4700-93f7-e6217c02893a/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgresSQLCluster product;
+    // = PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/1afd6cd2-3ede-4700-93f7-e6217c02893a/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
@@ -55,7 +56,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(Product.getFlavor(product.getMinFlavor()));
+            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroup().select(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
