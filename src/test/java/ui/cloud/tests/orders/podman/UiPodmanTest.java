@@ -42,6 +42,7 @@ public class UiPodmanTest extends UiProductTest {
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -50,7 +51,6 @@ public class UiPodmanTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getGroupSelect().set(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());

@@ -36,6 +36,7 @@ class UiAstraLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1235787")
     @DisplayName("UI AstraLinux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -55,7 +56,6 @@ class UiAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new AstraLinuxOrderPage().checkOrderDetails();
     }

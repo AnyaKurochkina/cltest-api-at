@@ -40,6 +40,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1139488")
     @DisplayName("UI PostgreSQLAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -59,7 +60,6 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new PostgreSqlAstraOrderPage().checkOrderDetails();
     }

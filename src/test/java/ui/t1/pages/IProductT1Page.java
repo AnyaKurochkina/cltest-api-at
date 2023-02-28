@@ -1,7 +1,6 @@
 package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -65,9 +64,9 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
         getBtnGeneralInfo().getButton().shouldBe(Condition.visible);
-        if(btnHistory.exists()) {
+        if(historyTab.getElement().exists()) {
             TypifiedElement.refresh();
-            btnHistory.shouldBe(Condition.enabled).click();
+            historyTab.switchTo();
             History history = new History();
             checkErrorByStatus(history.lastActionStatus());
             Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");

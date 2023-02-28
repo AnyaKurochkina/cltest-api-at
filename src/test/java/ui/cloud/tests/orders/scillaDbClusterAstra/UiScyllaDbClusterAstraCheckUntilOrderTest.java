@@ -37,6 +37,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
     @TmsLink("1368045")
     @DisplayName("UI Scylla_db_cluster_astra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -56,9 +57,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new ScyllaDbClusterOrderPage().checkOrderDetails();
     }
-
 }

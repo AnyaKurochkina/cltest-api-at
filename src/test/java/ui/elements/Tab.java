@@ -15,14 +15,14 @@ public class Tab implements TypifiedElement {
 
     public Tab(SelenideElement element) {
         this.element = element;
-        text = element.getText();
     }
 
     public static Tab byText(String text) {
-        return new Tab($x("//button[span[.='{}']]", text));
+        Tab tab = new Tab($x("//button[span[.='{}']]", text));
+        tab.text = text;
+        return tab;
     }
 
-    @Step("Получение значения, выбрана ли вкладка '{this.text}'")
     public boolean isSelected() {
         return Boolean.valueOf(element.getAttribute("aria-selected"));
     }

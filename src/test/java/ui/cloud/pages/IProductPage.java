@@ -36,9 +36,9 @@ public abstract class IProductPage {
     protected final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
     private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double preBillingCostAction;
-    protected SelenideElement btnHistory = $x("//button[.='История действий']");
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
     protected Tab generalInfoTab = Tab.byText("Общая информация");
+    protected Tab historyTab = Tab.byText("История действий");
     IProduct product;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
     SelenideElement currentProduct = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
@@ -254,7 +254,7 @@ public abstract class IProductPage {
 
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
-        btnHistory.shouldBe(Condition.enabled).click();
+        historyTab.switchTo();
         History history = new History();
         checkErrorByStatus(history.lastActionStatus());
         Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");
@@ -284,7 +284,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnHistory.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            historyTab.switchTo();
         }
 
         public String lastActionName() {
@@ -315,7 +315,7 @@ public abstract class IProductPage {
 
         @Override
         protected void open() {
-            btnGeneralInfo.click();
+            generalInfoTab.switchTo();
         }
 
         public String getPowerStatus(String header) {

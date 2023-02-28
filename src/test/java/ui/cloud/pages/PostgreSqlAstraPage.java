@@ -2,21 +2,16 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import io.qameta.allure.Step;
 import models.cloud.orderService.products.PostgreSQL;
 import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
-import java.time.Duration;
-import java.util.List;
-
-import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class PostgreSqlAstraPage extends IProductPage {
@@ -160,6 +155,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB), "БД не принадлежит пользователю");
         }
     }
+
     public void updateExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -169,6 +165,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
     }
+
     public void changeExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -234,80 +231,44 @@ public class PostgreSqlAstraPage extends IProductPage {
         }
     }
 
+    public void addGroupAccess(SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
+        if (!(new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()))) {
+            runActionWithParameters(HEADER_ROLE, "Добавить группу доступа", "Подтвердить", () -> {
+                Select.byLabel("Группы").set(accessGroup.getPrefixName());
+            }, ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
+            generalInfoTab.switchTo();
+            currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+            node.scrollIntoView(scrollCenter).click();
+            Assertions.assertTrue(
+                    new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()), "Ошибка добавления группы доступа");
+        }
+    }
+
+    public void deleteGroupAccess(SelenideElement node) {
+        node.scrollIntoView(scrollCenter).click();
+        runActionWithParameters(getBtnAction(HEADER_GROUPS), "Удалить группу доступа", "Подтвердить", () -> {
+        }, ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
+        generalInfoTab.switchTo();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        node.scrollIntoView(scrollCenter).click();
+        Assertions.assertTrue(
+                new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()), "Ошибка добавления группы доступа");
+    }
+
+    public SelenideElement getNode(String name, int index) {
+        return new Table(name).getRow(index).get();
+    }
+
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
     }
-
-    @Step("Добавить новые группы {group} с ролью {role}")
-    public void addGroup(String role, List<String> groups) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
-            Select.byLabel("Роль").set(role);
-            groups.forEach(group -> Select.byLabel("Группы").set(group));
-        },ActionParameters.builder().node(getRoleNode()).build());
-        btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
-    }
-
-    @Step("Изменить состав групп у роли {role} на {groups}")
-    public void updateGroup(String role, List<String> groups) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
-            Select groupsElement = Select.byLabel("Группы").clear();
-            groups.forEach(groupsElement::set);
-        },ActionParameters.builder().node(getRoleNode()).build());
-        btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
-    }
-
-    @Step("Удалить группу доступа с ролью {role}")
-    public void deleteGroup(String role) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().node(getRoleNode()).build());
-        btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
-    }
-
-    //Таблица ролей
-    public class RoleTable extends Table {
-        @Override
-        protected void open() {
-            btnGeneralInfo.click();
-            getRoleNode().scrollIntoView(scrollCenter).click();
-        }
-
-        public RoleTable() {
-            super("Группы");
-        }
-
-        private SelenideElement getRoleMenuElement(String name) {
-            return getRoleRow(name).$("button");
-        }
-
-        private SelenideElement getRoleRow(String name) {
-            return getRowElementByColumnValue("", name);
-        }
-
-        private String getGroupsRole(String name) {
-            open();
-            return getRowByColumnValue("", name).getValueByColumn("Группы");
-        }
-    }
-
 
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable() {
             super("Роли узла");
         }
+
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

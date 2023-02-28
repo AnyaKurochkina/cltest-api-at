@@ -37,8 +37,11 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
     @TmsLink("1235642")
     @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
+                .selectCategory("Базы данных")
+                .expandProductsList()
                 .selectProduct(product.getProductName());
         RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
 
@@ -55,11 +58,10 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
-        orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
+        orderPage.getCreateDefaultUserSwitch().setEnabled(true);
+        orderPage.getGeneratePassButton().click();
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new RedisAstraOrderPage().checkOrderDetails();
     }
-
 }
