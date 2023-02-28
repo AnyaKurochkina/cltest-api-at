@@ -2,10 +2,12 @@ package ui.cloud.tests.orders.redisAstra;
 
 
 import com.codeborne.selenide.Condition;
+import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Redis;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -16,13 +18,17 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+
 @Epic("UI Продукты")
 @Feature("Redis (Astra)")
 @Tags({@Tag("ui"), @Tag("ui_redis_astra")})
 public class UiRedisAstraTest extends UiProductTest {
 
     Redis product;
-    //= Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/e22c213b-8358-4b59-82de-e34a76cfd527/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    // = Redis.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/365e253d-bd94-4462-a282-5b3d44f1c9c6/main?context=proj-iv550odo9a&type=project&org=vtb");
+
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
@@ -34,7 +40,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @TmsLink("796925")
     @Order(1)
     @DisplayName("UI RedisAstra. Заказ")
-    void orderPostgreSQL() {
+    void orderRedisAstra() {
         double preBillingProductPrice;
         try {
             new IndexPage()
@@ -56,15 +62,15 @@ public class UiRedisAstraTest extends UiProductTest {
                     .getElementByColumn("Продукт")
                     .hover()
                     .click();
-            RedisAstraPage pSqlPages = new RedisAstraPage (product);
-            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
-            pSqlPages.checkLastAction("Развертывание");
+            RedisAstraPage redisPages = new RedisAstraPage (product);
+            redisPages.waitChangeStatus(Duration.ofMinutes(25));
+            redisPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        Assertions.assertEquals(preBillingProductPrice, redisPage.getCostOrder(), 0.01);
     }
 
 
@@ -73,10 +79,10 @@ public class UiRedisAstraTest extends UiProductTest {
     @Order(2)
     @DisplayName("UI RedisAstra. Проверка полей заказа")
     void checkHeaderHistoryTable() {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.getBtnGeneralInfo().click();
-        pSqlPage.checkHeadersHistory();
-        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.getBtnGeneralInfo().click();
+        redisPage.checkHeadersHistory();
+        redisPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();
     }
 
@@ -85,8 +91,8 @@ public class UiRedisAstraTest extends UiProductTest {
     @TmsLink("796991")
     @DisplayName("UI RedisAstra. Расширить диск")
     void expandDisk() {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/app/redis/data", "20", new Table("Роли узла").getRowByIndex(0)));
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis/data", "20", new Table("Роли узла").getRowByIndex(0)));
     }
 
 
@@ -95,8 +101,8 @@ public class UiRedisAstraTest extends UiProductTest {
     @TmsLink("797003")
     @DisplayName("UI RedisAstra. Изменить конфигурацию")
     void changeConfiguration() {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.MORE, redisPage::changeConfiguration);
     }
 
     @Test
@@ -104,8 +110,8 @@ public class UiRedisAstraTest extends UiProductTest {
     @TmsLink("797006")
     @DisplayName("UI RedisAstra. Проверить конфигурацию")
     void vmActCheckConfig() {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::checkConfiguration);
     }
 
     @Test
@@ -113,8 +119,40 @@ public class UiRedisAstraTest extends UiProductTest {
     @TmsLink("796997")
     @DisplayName("UI RedisAstra. Сбросить пароль")
     void resetPassword () {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPassword);
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::resetPassword);
+    }
+
+    @Test
+    @TmsLinks({@TmsLink("1454017"), @TmsLink("1454015")})
+    @Order(25)
+    @DisplayName("UI RedisAstra. Добавление/удаление группы доступа")
+    void deleteGroup() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        //redisPage.deleteGroup("superuser");
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        redisPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+    }
+
+    @Test
+    @TmsLink("1454016")
+    @Order(26)
+    @DisplayName("UI RedisAstra. Изменение группы доступа")
+    void updateGroup() {
+        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.updateGroup("superuser",
+                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+    }
+
+    @Test
+    @Order(27)
+    @TmsLink("1296747")
+    @DisplayName("UI Windows. Мониторинг ОС")
+    void monitoringOs() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.checkMonitoringOs();
     }
 
     @Test
@@ -122,8 +160,8 @@ public class UiRedisAstraTest extends UiProductTest {
     @TmsLink("796989")
     @DisplayName("UI RedisAstra. Удаление продукта")
     void delete() {
-        RedisAstraPage pSqlPage = new RedisAstraPage(product);
-        pSqlPage.delete();
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.delete();
     }
 
  }

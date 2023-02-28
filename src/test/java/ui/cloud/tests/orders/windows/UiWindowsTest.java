@@ -27,7 +27,7 @@ import java.util.Collections;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product= Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/2dff3539-3992-48be-9924-847f831d4f4d/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    Windows product;// = Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/bef89e26-d094-4bc1-82f7-a0bdb6092c76/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -236,6 +236,25 @@ public class UiWindowsTest extends UiProductTest {
         WindowsPage winPage = new WindowsPage(product);
         winPage.checkMonitoringOs();
     }
+
+    @Test
+    @Order(18)
+    @TmsLink("1418993")
+    @DisplayName("UI Windows. Добавить ключ Астром")
+    void addKeyAstrom() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.addKeyAstrom();
+    }
+
+    @Test
+    @Order(19)
+    @TmsLink("1419327")
+    @DisplayName("UI Windows. Удалить ключ Астром")
+    void deleteKeyAstrom() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.deleteKeyAstrom();
+    }
+
 
     @Test
     @Order(100)

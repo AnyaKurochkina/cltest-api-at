@@ -2,12 +2,16 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import models.cloud.orderService.products.PostgresSQLCluster;
 import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
+
+import java.util.List;
 
 import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
@@ -26,6 +30,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_ROLE = "Роли";
+    private static final String HEADER_GROUP_COLUMN = "Роль";
     private static final String HEADER_GROUPS = "Группы";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
@@ -66,6 +71,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
+
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
@@ -104,6 +110,20 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         Assertions.assertEquals(value, max_connections.getText(), "Максимальное количество подключений " +
                 "не соответствует установленному значению ");
     }
+    public void updateOs() {
+        new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_APP, "Обновить ОС", "Подтвердить", () -> {
+            CheckBox.byLabel("Я подтверждаю, что уведомлен, что в процессе выполнения действия может быть выполнена последовательная перезагрузка нод кластера").setChecked(true);
+        });
+        new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    public void updateMinorVersion() {
+        new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_APP, "Обновить минорную версию СУБД", "Подтвердить", () -> {
+            CheckBox.byLabel("Я подтверждаю, что уведомлен, что в процессе выполнения действия может быть выполнена последовательная перезагрузка нод кластера").setChecked(true);
+        });
+        new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
 
     public void stopHard() {
         checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -114,7 +134,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void changeConfiguration() {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
+        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию нод СУБД", "Подтвердить", () ->
                 DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
@@ -251,19 +271,78 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
         }
     }
-
-    public void addGroupAccess(SelenideElement node) {
-        node.scrollIntoView(scrollCenter).click();
-        runActionWithParameters(HEADER_ROLE, "Добавить группу доступа", "Подтвердить", () -> {
-           Select.byLabel("Группы").set(accessGroup.getPrefixName());
-        },ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).build());
-        btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        node.scrollIntoView(scrollCenter).click();
-        Assertions.assertTrue(
-                new Table(HEADER_GROUPS).isColumnValueContains(HEADER_GROUPS, accessGroup.getPrefixName()),"Ошибка добавления группы доступа");
+    public SelenideElement getRoleNode() {
+        return new Table("Роли узла").getRow(0).get();
     }
 
+    @Step("Добавить новые группы {group} с ролью {role}")
+    public void addGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            Select.byLabel("Роль").set(role);
+            groups.forEach(group -> Select.byLabel("Группы").set(group));
+        },ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
+
+    @Step("Изменить состав групп у роли {role} на {groups}")
+    public void updateGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+            DropDown groupsElement = DropDown.byLabel("Группы").clear();
+            groups.forEach(groupsElement::select);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
+
+    @Step("Удалить группу доступа с ролью {role}")
+    public void deleteGroup(String role) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
+        //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
+
+    }
+
+    //Таблица ролей
+    public class RoleTable extends Table {
+        @Override
+        protected void open() {
+            btnGeneralInfo.click();
+            getRoleNode().scrollIntoView(scrollCenter).click();
+        }
+
+        public RoleTable() {
+            super("Группы");
+        }
+
+        private SelenideElement getRoleMenuElement(String name) {
+            return getRoleRow(name).$("button");
+        }
+
+        private SelenideElement getRoleRow(String name) {
+            return getRowElementByColumnValue("", name);
+        }
+
+        private String getGroupsRole(String name) {
+            open();
+            return getRowByColumnValue("", name).getValueByColumn("Группы");
+        }
+    }
 
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable() {
