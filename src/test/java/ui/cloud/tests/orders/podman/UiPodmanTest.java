@@ -52,7 +52,7 @@ public class UiPodmanTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroup().select(accessGroup);
+            orderPage.getGroupSelect().set(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
