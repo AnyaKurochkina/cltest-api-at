@@ -15,7 +15,6 @@ public class AstraLinuxOrderPage extends NewOrderPage {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
-    DropDown group = DropDown.byLabel("Группы");
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public AstraLinuxOrderPage() {

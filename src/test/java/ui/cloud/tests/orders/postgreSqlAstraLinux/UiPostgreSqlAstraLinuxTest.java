@@ -1,7 +1,6 @@
 package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
@@ -27,12 +26,12 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/e97aaf5e-4940-4c25-8340-e73d589fcd07/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    PostgreSQL product;
+    // = PostgreSQL.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/e97aaf5e-4940-4c25-8340-e73d589fcd07/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
-
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -77,11 +76,10 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
     }
 
-
     @Test
     @TmsLink("1236733")
     @Order(2)
-    @DisplayName("UI PostgreSQLAstra. Проверка полей заказа")
+    @DisplayName("UI PostgreSQLAstra. Проверка развертывания заказа в истории действий")
     void checkHeaderHistoryTable() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.getBtnGeneralInfo().click();
@@ -126,16 +124,14 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
     }
 
-
     @Test
     @Order(9)
     @TmsLink("993389")
-    @DisplayName("UI PostgreSQLAstra. Расширить диск")
+    @DisplayName("UI PostgreSQLAstra. Расширить точку монтирования")
     void expandDisk() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", new Table("Роли узла").getRowByIndex(0)));
     }
-
 
     @Test
     @Order(10)
@@ -158,7 +154,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(12)
     @TmsLink("993398")
-    @DisplayName("UI PostgreSQLAstra. Создание БД")
+    @DisplayName("UI PostgreSQLAstra. Добавить БД")
     void createDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
@@ -178,7 +174,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(16)
     @TmsLink("993394")
-    @DisplayName("UI PostgreSQLAstra. Добавить пользователя")
+    @DisplayName("UI PostgreSQLAstra. Добавить пользователя БД")
     void addUserDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
@@ -230,7 +226,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(21)
     @TmsLink("993400")
-    @DisplayName("UI PostgreSQLAstra. Удаление БД")
+    @DisplayName("UI PostgreSQLAstra. Удалить БД")
     void removeDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
@@ -251,7 +247,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @TmsLinks({@TmsLink("1091014"), @TmsLink("1091010")})
     @Order(23)
-    @DisplayName("UI PostgreSQLAstra. Добавление/удаление группы доступа")
+    @DisplayName("UI PostgreSQLAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.deleteGroup("superuser");
@@ -262,7 +258,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @TmsLink("1091055")
     @Order(24)
-    @DisplayName("UI PostgreSQLAstra. Изменение группы доступа")
+    @DisplayName("UI PostgreSQLAstra. Изменить состав группы доступа")
     void updateGroup() {
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
@@ -270,7 +266,6 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateGroup("superuser",
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
-
 
     @Test
     @Order(100)
@@ -280,5 +275,4 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.delete();
     }
-
 }

@@ -11,12 +11,11 @@ import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
-import java.time.Duration;
 import java.util.List;
 
-import static core.helper.StringUtils.$x;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class PostgreSqlAstraPage extends IProductPage {
@@ -93,7 +92,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void changeTransactionIsolation(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation", "Подтвердить", () -> {
-            DropDown.byLabel("default_transaction_isolation").select(value);
+            Select.byLabel("default_transaction_isolation").set(value);
         });
         btnGeneralInfo.click();
         Assertions.assertEquals(value.toLowerCase(), default_transaction_isolation.getText(), "default_transaction_isolation " +
@@ -118,7 +117,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
+                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -160,6 +159,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB), "БД не принадлежит пользователю");
         }
     }
+
     public void updateExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -169,6 +169,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
     }
+
     public void changeExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -245,7 +246,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").set(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
-        },ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
@@ -259,7 +260,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             Select groupsElement = Select.byLabel("Группы").clear();
             groups.forEach(groupsElement::set);
-        },ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
@@ -270,7 +271,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void deleteGroup(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
@@ -279,14 +280,14 @@ public class PostgreSqlAstraPage extends IProductPage {
 
     //Таблица ролей
     public class RoleTable extends Table {
+        public RoleTable() {
+            super("Группы");
+        }
+
         @Override
         protected void open() {
             btnGeneralInfo.click();
             getRoleNode().scrollIntoView(scrollCenter).click();
-        }
-
-        public RoleTable() {
-            super("Группы");
         }
 
         private SelenideElement getRoleMenuElement(String name) {
@@ -308,6 +309,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         public VirtualMachineTable() {
             super("Роли узла");
         }
+
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

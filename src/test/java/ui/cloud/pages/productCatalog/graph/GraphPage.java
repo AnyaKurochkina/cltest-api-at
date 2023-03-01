@@ -16,10 +16,7 @@ import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.actions.ActionPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
-import ui.elements.DropDown;
-import ui.elements.Input;
-import ui.elements.Table;
-import ui.elements.TextArea;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 
@@ -54,8 +51,8 @@ public class GraphPage extends BasePage {
 
     @Step("Выбор версии графа '{version}'")
     public GraphPage selectGraphVersion(String version) {
-        DropDown graphVersion = DropDown.byLabel("Выберите версию");
-        graphVersion.selectByValue(version);
+        Select graphVersion = Select.byLabel("Выберите версию");
+        graphVersion.set(version);
         return this;
     }
 

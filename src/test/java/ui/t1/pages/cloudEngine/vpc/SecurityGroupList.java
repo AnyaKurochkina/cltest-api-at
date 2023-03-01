@@ -17,12 +17,12 @@ public class SecurityGroupList {
         Input.byLabel("Имя").setValue(name);
         TextArea.byLabel("Описание").setValue(desc);
         Dialog.byTitle("Добавить группу безопасности").clickButton("Добавить");
-        Waiting.findWidthRefresh(() -> getSecurityGroup(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> getSecurityGroup(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1));
     }
 
     public void deleteGroup(String name) {
         getSecurityGroup(name).get().$("button").click();
-        Waiting.findWidthRefresh(() -> !new SecurityGroupsTable().isColumnValueEquals(Column.NOMINATION, name), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> !new SecurityGroupsTable().isColumnValueEquals(Column.NOMINATION, name), Duration.ofMinutes(1));
     }
 
     public SecurityGroup selectGroup(String name) {

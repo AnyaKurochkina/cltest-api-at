@@ -20,7 +20,7 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
         productLink = WebDriverRunner.getWebDriver().getCurrentUrl();
         new IndexPage().goToHistory();
         EntitiesUtils.waitCreate(() ->
-                Waiting.findWidthRefresh(() -> !ComputeHistory.getLastActionStatus().getText().equals("В процессе"), Duration.ofMinutes(1)));
+                Waiting.findWithRefresh(() -> !ComputeHistory.getLastActionStatus().getText().equals("В процессе"), Duration.ofMinutes(1)));
     }
 
     @Override

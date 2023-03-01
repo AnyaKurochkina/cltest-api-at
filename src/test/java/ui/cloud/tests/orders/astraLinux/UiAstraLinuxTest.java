@@ -26,7 +26,7 @@ import java.util.Collections;
 public class UiAstraLinuxTest extends UiProductTest {
 
     Astra product;
-     //= Astra.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/e0958c78-e4e0-4c10-a19b-b017774f9639/history?context=proj-pkvckn08w9&type=project&org=vtb");
+    //= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/ae50ab87-de69-4c30-bcdd-c339726b8d13/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -71,14 +71,13 @@ public class UiAstraLinuxTest extends UiProductTest {
         Assertions.assertEquals(preBillingProductPrice, astraLinuxPage.getCostOrder(), 0.01);
     }
 
-
     @Test
     @TmsLink("1236736")
     @Order(2)
     @DisplayName("UI AstraLinux. Проверка развертывания в истории действий")
     void checkHeaderHistoryTable() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.getBtnGeneralInfo().click();
+        astraLinuxPage.getGeneralInfoTab().switchTo();
         astraLinuxPage.checkHeadersHistory();
         astraLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();
@@ -146,7 +145,6 @@ public class UiAstraLinuxTest extends UiProductTest {
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
-
     @Test
     @Order(11)
     @TmsLink("382915")
@@ -172,5 +170,4 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.LESS, astraLinuxPage::delete);
     }
-
 }

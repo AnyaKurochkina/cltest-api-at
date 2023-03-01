@@ -139,7 +139,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
-
     @Test
     @Order(11)
     @TmsLink("378040")
@@ -157,7 +156,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
         ubuntuLinuxPage.checkMonitoringOs();
     }
-
 
     @Test
     @Order(100)
