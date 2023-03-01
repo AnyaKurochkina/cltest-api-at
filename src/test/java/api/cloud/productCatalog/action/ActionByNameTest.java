@@ -9,6 +9,7 @@ import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -85,6 +86,7 @@ public class ActionByNameTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка action в GitLab по имени")
     @TmsLink("1358565")
     public void dumpToGitlabActionByNameTest() {

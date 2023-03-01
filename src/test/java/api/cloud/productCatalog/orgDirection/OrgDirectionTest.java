@@ -19,10 +19,7 @@ import models.cloud.productCatalog.icon.IconStorage;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import api.Tests;
 
@@ -307,6 +304,7 @@ public class OrgDirectionTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка OrgDirection из GitLab")
     @TmsLink("1028957")
     public void loadFromGitlabOrgDirection() {

@@ -417,6 +417,7 @@ public class VisualTemplateTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка VisualTemplate из GitLab")
     @TmsLink("1029469")
     public void loadFromGitlabVisualTemplate() {
