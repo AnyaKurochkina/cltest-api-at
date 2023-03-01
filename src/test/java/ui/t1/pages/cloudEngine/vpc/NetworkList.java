@@ -20,14 +20,14 @@ public class NetworkList {
         TextArea.byLabel("Описание").setValue(desc);
         Dialog.byTitle("Добавить сеть").clickButton("Добавить");
         Assertions.assertTrue(new NetworksTable().isColumnValueEquals(Column.NAME, name));
-        Waiting.findWidthRefresh(() -> new NetworksTable().getRowByColumnValue(Column.NAME, name).getValueByColumn(Column.STATUS).equals("Доступно"),
+        Waiting.findWithRefresh(() -> new NetworksTable().getRowByColumnValue(Column.NAME, name).getValueByColumn(Column.STATUS).equals("Доступно"),
                 Duration.ofMinutes(1));
     }
 
     @Step("Удалить сеть {name}")
     public void deleteNetwork(String name) {
         Menu.byElement(new NetworksTable().getRowByColumnValue(Column.NAME, name).get().$("button")).select("Удалить");
-        Waiting.findWidthRefresh(() -> !new NetworksTable().isColumnValueEquals(Column.NAME, name), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> !new NetworksTable().isColumnValueEquals(Column.NAME, name), Duration.ofMinutes(1));
     }
 
     @Step("Выбрать сеть {name}")

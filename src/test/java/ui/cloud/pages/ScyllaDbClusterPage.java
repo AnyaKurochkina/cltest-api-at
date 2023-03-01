@@ -118,8 +118,8 @@ public class ScyllaDbClusterPage extends IProductPage {
         if (!(new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb))) {
             runActionWithParameters(BLOCK_ACCESS, "Добавить права доступа пользователю БД", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить права доступа пользователю БД");
-                DropDown.byLabel("Имя базы данных").select(nameDb);
-                DropDown.byLabel("Имя пользователя").select(nameUserDb);
+                Select.byLabel("Имя базы данных").set(nameDb);
+                Select.byLabel("Имя пользователя").set(nameUserDb);
             });
             btnGeneralInfo.click();
             Assertions.assertTrue(
@@ -198,8 +198,8 @@ public class ScyllaDbClusterPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
-            DropDown groupsElement = DropDown.byLabel("Группы").clear();
-            groups.forEach(groupsElement::select);
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
         },ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();

@@ -84,10 +84,7 @@ public class BasePage {
 
     @Step("Переход на вкладку '{title}'")
     public void goToTab(String title) {
-        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
-        if (tab.getAttribute("aria-selected").equals("false")) {
-            tab.scrollIntoView(false).click();
-        }
+        Tab.byText(title).switchTo();
     }
 
     @Step("Переход на вкладку 'История изменений'")
@@ -98,8 +95,7 @@ public class BasePage {
 
     @Step("Проверка, что открыта вкладка '{title}'")
     public void checkTabIsSelected(String title) {
-        SelenideElement tab = $x("//button[span[text()='" + title + "']]");
-        Assertions.assertTrue(Boolean.valueOf(tab.getAttribute("aria-selected")), "Вкладка " + title + " не выбрана");
+        Assertions.assertTrue(Tab.byText(title).isSelected(), "Вкладка " + title + " не выбрана");
     }
 
     @Step("Просмотр JSON и проверка отображения '{value}'")

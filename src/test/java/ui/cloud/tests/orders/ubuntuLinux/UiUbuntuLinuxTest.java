@@ -43,6 +43,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -51,7 +52,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getRoleSelect().set("user");
             orderPage.getGroupSelect().set(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
@@ -138,7 +138,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
-
     @Test
     @Order(11)
     @TmsLink("378040")
@@ -156,7 +155,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
         ubuntuLinuxPage.checkMonitoringOs();
     }
-
 
     @Test
     @Order(100)
