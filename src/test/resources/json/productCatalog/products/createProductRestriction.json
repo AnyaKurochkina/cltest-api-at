@@ -3,14 +3,15 @@
   "created_at": "",
   "net_segments": [],
   "domains": [],
-  "product_name": "ubuntu",
-  "platforms": ["zvirt","vsphere"],
+  "product_name": "",
+  "platforms": [],
   "data_centers": [],
   "is_deleted": false,
   "updated_at": "",
   "product_id": "",
-  "organization": "t1-cloud",
+  "organization": "vtb",
   "is_blocking": false,
   "id": "",
   "weight": 2
-}}
+}
+}

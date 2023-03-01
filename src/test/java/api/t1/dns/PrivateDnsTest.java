@@ -27,7 +27,7 @@ public class PrivateDnsTest extends Tests {
     private static String projectId;
 
     public PrivateDnsTest() {
-        Project project = Project.builder().isForOrders(true).build().createObject();
+        Project project = Project.builder().projectName("AM").isForOrders(true).build().createObject();
         projectId = project.getId();
     }
 
@@ -47,10 +47,10 @@ public class PrivateDnsTest extends Tests {
                 .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();
-        DnsZone dnsZone = createZone(zone.toJson(), "proj-ls0vejlv7c");
-//        assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
-//        deleteZone(dnsZone.getId(), projectId);
-//        assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
+        deleteZone(dnsZone.getId(), projectId);
+        assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
     }
 
     @Test

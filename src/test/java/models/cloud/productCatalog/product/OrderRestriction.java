@@ -12,7 +12,9 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderRestriction{
+
+
+public class OrderRestriction {
 
 	private List<Object> environments;
 	@JsonProperty("created_at")
@@ -22,7 +24,7 @@ public class OrderRestriction{
 	private List<String> domains;
 	@JsonProperty("product_name")
 	private String productName;
-	private List<Object> platforms;
+	private List<String> platforms;
 	@JsonProperty("data_centers")
 	private List<String> dataCenters;
 	@JsonProperty("is_deleted")
@@ -34,5 +36,6 @@ public class OrderRestriction{
 	private String organization;
 	@JsonProperty("is_blocking")
 	private Boolean isBlocking;
+	private Integer weight;
 	private String id;
 }
