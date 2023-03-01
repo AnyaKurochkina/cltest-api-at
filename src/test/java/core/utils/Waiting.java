@@ -48,7 +48,7 @@ public class Waiting {
     }
 
     @SneakyThrows
-    public static void findWidthRefresh(Supplier<Boolean> b, Duration duration) {
+    public static void findWithRefresh(Supplier<Boolean> b, Duration duration) {
         Instant start = Instant.now();
         while(duration.compareTo(Duration.between(start, Instant.now())) > 0){
             if(b.get()) return;

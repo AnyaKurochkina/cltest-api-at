@@ -20,7 +20,7 @@ public class SecurityGroup {
 
     public void deleteRule(String rule) {
         RulesTable.removeRule(rule).click();
-        Waiting.findWidthRefresh(() -> !new RulesTable().isColumnValueEquals(Column.DESC, rule), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> !new RulesTable().isColumnValueEquals(Column.DESC, rule), Duration.ofMinutes(1));
     }
 
 
