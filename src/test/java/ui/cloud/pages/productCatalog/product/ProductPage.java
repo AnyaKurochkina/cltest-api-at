@@ -34,8 +34,8 @@ public class ProductPage extends BasePage {
     private final Select categoryV2Select = Select.byLabel("КатегорияV2");
     private final Select onRequestSelect = Select.byLabel("Продукт по запросу");
     private final Select paymentSelect = Select.byLabel("Выбор оплаты");
-    private final Switch inGeneralListSwitch = Switch.byLabel("В общем списке маркетплейса");
-    private final Switch isOpen = Switch.byLabel("Открытый");
+    private final Switch inGeneralListSwitch = Switch.byText("В общем списке маркетплейса");
+    private final Switch isOpen = Switch.byText("Открытый");
     private final SelenideElement nameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement nonUniqueNameValidationHint =

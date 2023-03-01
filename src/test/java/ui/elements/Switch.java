@@ -18,9 +18,9 @@ public class Switch implements TypifiedElement{
         this.label = element;
     }
 
-    @Step("Получение Switch по label {label}")
-    public static Switch byLabel(String label){
-        return new Switch($x("//*[.='{}']/label[@role='switch']", label));
+    @Step("Получение Switch по тексту '{text}'")
+    public static Switch byText(String text){
+        return new Switch($x("//*[.='{}']/label[@role='switch']", text));
     }
 
     @Step("Получение Switch по input name {name}")
