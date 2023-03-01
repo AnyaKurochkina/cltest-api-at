@@ -11,6 +11,7 @@ import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.extesions.UiProductTest;
@@ -45,6 +46,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void orderClickHouseCluster() {
         double preBillingProductPrice;
         try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -56,11 +58,10 @@ public class UiClickHouseClusterTest extends UiProductTest {
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getGroup2().select(accessGroup.getPrefixName());
-            orderPage.getGroup3().select(accessGroup.getPrefixName());
-            orderPage.getGroup4().select(accessGroup.getPrefixName());
+            orderPage.getGroup().select(accessGroup);
+            orderPage.getGroup2().select(accessGroup);
+            orderPage.getGroup3().select(accessGroup);
+            orderPage.getGroup4().select(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();

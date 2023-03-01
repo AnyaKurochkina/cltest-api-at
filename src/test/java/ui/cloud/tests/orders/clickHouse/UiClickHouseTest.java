@@ -10,6 +10,7 @@ import models.cloud.orderService.products.ClickHouse;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -44,6 +45,7 @@ public class UiClickHouseTest extends UiProductTest {
     void orderClickHouse() {
         double preBillingProductPrice;
         try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -55,11 +57,10 @@ public class UiClickHouseTest extends UiProductTest {
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
             orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getGroup2().select(accessGroup.getPrefixName());
-            orderPage.getGroup3().select(accessGroup.getPrefixName());
-            orderPage.getGroup4().select(accessGroup.getPrefixName());
+            orderPage.getGroup().select(accessGroup);
+            orderPage.getGroup2().select(accessGroup);
+            orderPage.getGroup3().select(accessGroup);
+            orderPage.getGroup4().select(accessGroup);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
             new OrdersPage()

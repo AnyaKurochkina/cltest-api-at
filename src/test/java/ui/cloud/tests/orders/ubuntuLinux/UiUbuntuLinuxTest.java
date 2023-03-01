@@ -12,6 +12,7 @@ import models.cloud.orderService.products.Ubuntu;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -43,6 +44,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -51,9 +53,8 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             orderPage.getRoleSelect().set("user");
-            orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+            orderPage.getGroupSelect().set(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();

@@ -39,6 +39,7 @@ class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1342205")
     @DisplayName("UI UbuntuLinux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
