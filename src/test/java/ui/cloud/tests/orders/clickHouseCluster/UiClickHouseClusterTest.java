@@ -24,12 +24,11 @@ import static core.helper.StringUtils.$x;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product;
-    // = ClickHouseCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/5694dd78-53a9-400e-9a41-ded295c945b8/main?context=proj-iv550odo9a&type=project&org=vtb");
-
+    ClickHouseCluster product = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b0be1e0c-2540-4c04-9128-4bee54d97b52/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
-    String nameGroup ="cloud-plux-group-at";
+    String nameGroup =accessGroup.getPrefixName();
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
 
     @BeforeEach
