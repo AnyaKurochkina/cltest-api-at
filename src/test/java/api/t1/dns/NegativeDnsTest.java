@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.t1.dns.DnsZone;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
@@ -79,27 +80,31 @@ public class NegativeDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Изменение домена")
     public void changeDomenPublicZoneTest() {
+        String expectedDomainName = "change.domen.public.zone.negative.test.api.ru";
         DnsZone zone = DnsZone.builder()
                 .name("change_domen_public_zone_test_api")
-                .domainName("change.domen.public.zone.negative.test.api.ru")
+                .domainName(expectedDomainName)
                 .type("public")
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
-        partialUpdateZone(new JSONObject().put("domain_name", "change.domain.ru"), dnsZone.getId(), projectId);
-
+        String domen = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".com";
+        DnsZone actualZone = partialUpdateZone(new JSONObject().put("domain_name", domen), dnsZone.getId(), projectId);
+        assertEquals(expectedDomainName, actualZone.getDomainName());
     }
 
     @Test
     @TmsLink("")
     @DisplayName("Изменение типа зоны")
     public void changeTypePublicZoneTest() {
+        String expectedType = "public";
         DnsZone zone = DnsZone.builder()
                 .name("change_type_public_zone_test_api")
                 .domainName("change.type.public.zone.negative.test.api.ru")
-                .type("public")
+                .type(expectedType)
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
-        partialUpdateZone(new JSONObject().put("type", "public"), dnsZone.getId(), projectId);
+        DnsZone actualZone = partialUpdateZone(new JSONObject().put("type", "private"), dnsZone.getId(), projectId);
+        assertEquals(expectedType, actualZone.getType());
         //todo https://jira.t1-cloud.ru/jira-test/browse/PO-858 на анализе
     }
 

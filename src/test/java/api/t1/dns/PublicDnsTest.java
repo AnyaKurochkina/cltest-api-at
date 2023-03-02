@@ -130,7 +130,7 @@ public class PublicDnsTest extends Tests {
                 .build()
                 .toJson();
         DnsZone dnsZone = createZone(json, projectId);
-        String recordName = "generate." + domainName + ".";
+        String recordName = "generate." + domainName;
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
                 .recordType("A")
@@ -161,7 +161,7 @@ public class PublicDnsTest extends Tests {
                 .build()
                 .toJson();
         DnsZone dnsZone = createZone(json, projectId);
-        String recordName = "partial.update." + domainName + ".";
+        String recordName = "partial.update." + domainName;
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
                 .recordType("A")
@@ -169,7 +169,7 @@ public class PublicDnsTest extends Tests {
         String zoneId = dnsZone.getId();
         createRrset(projectId, zoneId, rrset.toJson());
         Rrset createdRrset = getRrsetByName(recordName, zoneId, projectId);
-        createdRrset.setRecordName("partia2l.update." + domainName + ".");
+        createdRrset.setRecordName("partia2l.update." + domainName);
         partialUpdateRrset(projectId, zoneId, Objects.requireNonNull(createdRrset).getId(), createdRrset.toJson());
     }
 }

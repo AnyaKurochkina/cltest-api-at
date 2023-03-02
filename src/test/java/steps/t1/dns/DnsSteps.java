@@ -116,6 +116,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования записи в зоне OpenDns")
     public static boolean isRrsetExistInOpenDnsZone(String name, String domainName) {
+        name = name + ".";
         List<PowerDnsRrset> rrsetList = getZoneOpenDnsById(domainName).getRrsets();
         for (PowerDnsRrset rrset : rrsetList) {
             if (rrset.getName().equals(name)) {
@@ -186,6 +187,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования записи")
     public static boolean isRrsetExist(String recordName, String zoneId, String projectId) {
+        recordName = recordName + ".";
         List<Rrset> list = getRrsetList(zoneId, projectId);
         for (Rrset rrset : list) {
             if (rrset.getRecordName().equals(recordName)) {
@@ -197,6 +199,7 @@ public class DnsSteps extends Steps {
 
     @Step("Получение записи по имени")
     public static Rrset getRrsetByName(String recordName, String zoneId, String projectId) {
+        recordName = recordName + ".";
         List<Rrset> list = getRrsetList(zoneId, projectId);
         for (Rrset rrset : list) {
             if (rrset.getRecordName().equals(recordName)) {
