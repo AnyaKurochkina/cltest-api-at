@@ -24,7 +24,9 @@ import static core.helper.StringUtils.$x;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b0be1e0c-2540-4c04-9128-4bee54d97b52/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ClickHouseCluster product;
+    // = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b0be1e0c-2540-4c04-9128-4bee54d97b52/main?context=proj-ln4zg69jek&type=project&org=vtb");
+
     AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
@@ -184,9 +186,8 @@ public class UiClickHouseClusterTest extends UiProductTest {
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS,() -> clickHouseClusterPage.deleteGroupAD(nameGroup));
     }
 
-
-        @Test
-    @Order(14)
+    @Test
+    @Order(15)
     @TmsLink("1152793")
     @DisplayName("UI ClickHouse Cluster. Добавить группу администраторов")
     void addGroupAdmin() {
@@ -194,7 +195,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
             clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS,() -> clickHouseClusterPage.addGroupAdmin(nameGroup));
     }
     @Test
-    @Order(15)
+    @Order(14)
     @TmsLink("1152794")
     @DisplayName("UI ClickHouse Cluster. Удалить группу администраторов")
     void deleteGroupAdmin() {

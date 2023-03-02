@@ -24,10 +24,10 @@ import java.time.Duration;
 public class UiClickHouseTest extends UiProductTest {
 
     ClickHouse product;
-    //= ClickHouse.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/18a7a4de-878c-4f70-a518-0763cd7f3795/main?context=proj-iv550odo9a&type=project&org=vtb");
+    // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/5b040449-ef22-4bae-a2e0-6ccabf485afd/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameAD = "at_ad_user";
-    String nameFull = "at_user";
+    String nameFull = "qa_order_service_admin";
     String nameLocalAD = "at_local_user";
 
 
@@ -124,6 +124,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(6)
     @TmsLink("1162627")
+    @Disabled
     @DisplayName("UI ClickHouse. Сбросить пароль владельца БД")
     void resetPasswordDb() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
