@@ -142,6 +142,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             runActionWithoutParameters(name, "Удалить БД");
+            generalInfoTab.switchTo();
             Assertions.assertFalse(new Table("").isColumnValueEquals("", name), "БД существует");
         }
     }
@@ -225,7 +226,6 @@ public class ScyllaDbClusterPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
         //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
-
     }
 
     //Таблица ролей
