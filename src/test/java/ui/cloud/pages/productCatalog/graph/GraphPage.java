@@ -16,7 +16,10 @@ import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.actions.ActionPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
-import ui.elements.*;
+import ui.elements.Input;
+import ui.elements.Select;
+import ui.elements.Table;
+import ui.elements.TextArea;
 
 import static com.codeborne.selenide.Selenide.*;
 

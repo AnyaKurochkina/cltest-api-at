@@ -4,15 +4,15 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.graph.GraphItem;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.Keys;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.TextArea;
-import ui.models.Node;
-import ui.models.SubgraphNode;
-import ui.models.TemplateNode;
+
+import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
@@ -28,7 +28,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement deleteNodeButton = $x("(//div[@class='react-flow']//" +
             "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[3]");
     private final SelenideElement nodeName = $x("//form//input[@name = 'name']");
-    private final SelenideElement nodeDescription = $x("//form//input[@name = 'description']");
+    private final Input nodeDescription = Input.byXpath("//form//input[@name = 'description']");
     private final Input subgraphInput = Input.byLabelV2("Подграф");
     private final Input templateInput = Input.byLabelV2("Шаблон");
     private final SelenideElement formAddNodeButton = $x("//form//div[text() = 'Добавить']//parent::button");
@@ -67,32 +67,32 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement searchNodesInput = $x("//input[@placeholder='Поиск...']");
 
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
-    public GraphNodesPage addNodeAndSave(Node node) {
+    public GraphNodesPage addNodeAndSave(GraphItem node) {
         addNodeButton.click();
         Waiting.sleep(1000);
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
-        if (node instanceof SubgraphNode) {
+        if (!Objects.isNull(node.getSubgraphVersion())) {
             subgraphInput.click();
-            subgraphInput.setValue(((SubgraphNode) node).getSubgraphName());
-            $x("//div[contains(text(),'" + ((SubgraphNode) node).getSubgraphName() + "')]")
+            subgraphInput.setValue(node.getName());
+            $x("//div[contains(text(),'" + node.getName() + "')]")
                     .shouldBe(Condition.enabled).click();
             paramsTab.click();
-            inputTextArea.setValue(node.getInput());
-            outputTextArea.setValue(node.getOutput());
+            inputTextArea.setValue(new JSONObject(node.getInput()).toString());
+            outputTextArea.setValue(new JSONObject(node.getOutput()).toString());
             additionalTab.click();
             numberInput.setValue(String.valueOf(node.getNumber()));
             timeoutInput.setValue(String.valueOf(node.getTimeout()));
             loggingLevelSelect.shouldBe(Condition.disabled);
-            countInput.setValue(String.valueOf(node.getCount()));
         }
-        if (node instanceof TemplateNode) {
+        if (!Objects.isNull(node.getTemplateVersion())) {
             templateInput.click();
-            templateInput.setValue(((TemplateNode) node).getTemplateName());
-            $x("//div[contains(text(),'" + ((TemplateNode) node).getTemplateName() + "')]")
+            templateInput.setValue(node.getName());
+            $x("//div[contains(text(),'" + node.getName() + "')]")
                     .shouldBe(Condition.enabled).click();
         }
         additionalTab.click();
+        countInput.setValue(String.valueOf(node.getCount()));
         onPrebillingToggle.click();
         runOnRollbackToggle.click();
         holdToggle.click();
@@ -105,10 +105,9 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Редактирование узла '{node.name}' с подграфом")
-    public GraphNodesPage editSubgraphNode(SubgraphNode node, String version, String description) {
+    public GraphNodesPage editSubgraphNode(GraphItem node, String version, String description) {
         selectNodeInGraph(node);
         editNodeButton.click();
-        nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showSubgraphVersions.click();
         $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
@@ -121,10 +120,9 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Редактирование узла '{node.name}' с шаблоном")
-    public GraphNodesPage editTemplateNode(TemplateNode node, String version, String description) {
+    public GraphNodesPage editTemplateNode(GraphItem node, String version, String description) {
         selectNodeInGraph(node);
         editNodeButton.click();
-        nodeDescription.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
         nodeDescription.setValue(description);
         showTemplateVersions.click();
         $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
@@ -137,7 +135,7 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Копирование узла графа '{node.name}' и сохранение графа")
-    public GraphNodesPage copyNodeAndSave(Node node) {
+    public GraphNodesPage copyNodeAndSave(GraphItem node) {
         String cloneName = node.getName() + "_clone";
         selectNodeInGraph(node);
         copyNodeButton.click();
@@ -149,19 +147,19 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Проверка отсутствия узла '{node.name}' в списке узлов")
-    public GraphNodesPage checkNodeNotFound(SubgraphNode node) {
+    public GraphNodesPage checkNodeNotFound(GraphItem node) {
         $x("//div[text()='" + node.getDescription() + "']/..//*[name()='svg' and @class]")
                 .shouldBe(Condition.not(Condition.visible));
         return this;
     }
 
     @Step("Проверка некорректного заполнения полей при добавлении узла")
-    public GraphNodesPage checkAddNodeSubgraphDisabled(SubgraphNode node) {
+    public GraphNodesPage checkAddNodeSubgraphDisabled(GraphItem node) {
         addNodeButton.click();
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
         subgraphInput.click();
-        subgraphInput.setValue(node.getSubgraphName());
+        subgraphInput.setValue(node.getName());
         if (node.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
         }
@@ -173,10 +171,10 @@ public class GraphNodesPage extends GraphPage {
         timeoutInput.setValue(String.valueOf(node.getTimeout()));
         loggingLevelSelect.shouldBe(Condition.disabled);
         countInput.setValue(String.valueOf(node.getCount()));
-        if (node.getNumber().equals("0")) {
+        if (node.getNumber().equals(0)) {
             incorrectNumberHint.shouldBe(Condition.visible);
         }
-        if (node.getTimeout().equals("0")) {
+        if (node.getTimeout().equals(0)) {
             incorrectTimeoutHint.shouldBe(Condition.visible);
         }
         formAddNodeButton.shouldBe(Condition.disabled);
@@ -185,7 +183,7 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Проверка валидации неуникального имени узла при добавлении узла")
-    public GraphNodesPage checkAddNodeSubgraphWithNonUniqueNameDisabled(SubgraphNode node) {
+    public GraphNodesPage checkAddNodeSubgraphWithNonUniqueNameDisabled(GraphItem node) {
         TestUtils.scrollToTheTop();
         addNodeButton.click();
         nodeName.setValue(node.getName());
@@ -195,32 +193,32 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Проверка значений атрибутов узла '{node.name}'")
-    public GraphNodesPage checkNodeAttributes(Node node) {
-        if (node.getNumber().equals("")) {
-            node.setNumber("1");
+    public GraphNodesPage checkNodeAttributes(GraphItem node) {
+        if (Objects.isNull(node.getNumber())) {
+            node.setNumber(1);
         }
         selectNodeInGraph(node);
         editNodeButton.click();
         Waiting.sleep(1000);
         nodeName.shouldHave(Condition.exactValue(node.getName()));
-        nodeDescription.shouldHave(Condition.exactValue(node.getDescription()));
-        if (node instanceof SubgraphNode) {
+        nodeDescription.getInput().shouldHave(Condition.exactValue(node.getDescription()));
+        if (!Objects.isNull(node.getSubgraphVersion())) {
             Select subgraphDropDown = Select.byLabel("Подграф");
-            Assertions.assertTrue(subgraphDropDown.getElement().getText().contains(((SubgraphNode) node).getSubgraphName()));
-            subgraphVersion.shouldHave(Condition.exactText(((SubgraphNode) node).getSubgraphVersion()));
+            Assertions.assertTrue(subgraphDropDown.getElement().getText().contains(node.getName()));
+            subgraphVersion.shouldHave(Condition.exactText(node.getSubgraphVersion()));
         }
-        if (node instanceof TemplateNode) {
-            $x("//div[text() = '" + ((TemplateNode) node).getTemplateName() + "']").shouldBe(Condition.visible);
-            templateVersion.shouldHave(Condition.exactText(((TemplateNode) node).getTemplateVersion()));
+        if (!Objects.isNull(node.getTemplateVersion())) {
+            $x("//div[text() = '" + node.getName() + "']").shouldBe(Condition.visible);
+            templateVersion.shouldHave(Condition.exactText(node.getTemplateVersion()));
         }
         paramsTab.click();
-        $x("//form//label[text()='Input']/following::div[contains(@class,'view-lines')][1]//span[contains(text(),'{}')]",
-                node.getInputKey()).shouldBe(Condition.visible);
-        $x("//form//label[text()='Output']/following::div[contains(@class,'view-lines')][1]//span[contains(text(),'{}')]",
-                node.getOutputKey()).shouldBe(Condition.visible);
+        Assertions.assertEquals(new JSONObject(node.getInput()).toString(),
+                inputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
+        Assertions.assertEquals(new JSONObject(node.getOutput()).toString(),
+                outputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
         additionalTab.click();
-        numberInput.shouldHave(Condition.exactValue(node.getNumber()));
-        //timeoutInput.shouldHave(Condition.exactValue(node.getTimeout()));
+        numberInput.shouldHave(Condition.exactValue(node.getNumber() + ""));
+        timeoutInput.shouldHave(Condition.exactValue(node.getTimeout() + ""));
         countInput.shouldHave(Condition.exactValue(node.getCount()));
         onPrebillingToggleOn.shouldBe(Condition.visible);
         runOnRollbackToggleOn.shouldBe(Condition.visible);
@@ -232,9 +230,9 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Проверка, что узел '{node.name}' найден при поиске '{text}'")
-    public GraphNodesPage findNode(String text, Node node) {
-        if (node.getNumber().equals("")) {
-            node.setNumber("1");
+    public GraphNodesPage findNode(String text, GraphItem node) {
+        if (Objects.isNull(node.getNumber())) {
+            node.setNumber(1);
         }
         searchNodesInput.setValue(text);
         TestUtils.wait(500);
@@ -244,7 +242,7 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Проверка, что узел '{node.name}' не найден при поиске '{text}'")
-    public GraphNodesPage checkNodeNotFound(String text, Node node) {
+    public GraphNodesPage checkNodeNotFound(String text, GraphItem node) {
         searchNodesInput.setValue(text);
         Assertions.assertFalse($x("//div[text()='" + node.getNumber() + ". " + node.getDescription() + "']")
                 .exists());
@@ -252,7 +250,7 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Удаление узла '{node.name}' и сохранение графа")
-    public GraphNodesPage deleteNodeAndSave(Node node) {
+    public GraphNodesPage deleteNodeAndSave(GraphItem node) {
         selectNodeInGraph(node);
         deleteNodeButton.click();
         saveGraphWithPatchVersion();
@@ -266,9 +264,9 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    private void selectNodeInGraph(Node node) {
+    private void selectNodeInGraph(GraphItem node) {
         if (node.getNumber().equals("")) {
-            node.setNumber("1");
+            node.setNumber(1);
         }
         $x("//div[@class='react-flow']//div[text()='{}']", node.getDescription()).scrollIntoView(false).click();
     }

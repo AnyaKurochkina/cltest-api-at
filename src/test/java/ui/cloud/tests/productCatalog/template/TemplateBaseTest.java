@@ -7,7 +7,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
-import ui.models.Node;
 
 import java.util.*;
 
@@ -38,11 +37,11 @@ public class TemplateBaseTest extends BaseTest {
     }
 
     private void createTemplate(String name) {
-        Map<String, String> value = new LinkedHashMap<>();
-        Map<String, Map<String, String>> input = new LinkedHashMap<>();
-        Map<String, Map<String, String>> output = new LinkedHashMap<>();
-        input.put(new Node().getInputKey(), value);
-        output.put(new Node().getOutputKey(), value);
+        Map<String, String> value = new HashMap<>();
+        Map<String, Map<String, String>> input = new HashMap<>();
+        Map<String, Map<String, String>> output = new HashMap<>();
+        input.put("input_param", value);
+        output.put("output_param", value);
         template = Template.builder()
                 .name(name)
                 .title(TITLE)

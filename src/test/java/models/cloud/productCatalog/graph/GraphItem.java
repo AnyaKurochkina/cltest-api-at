@@ -52,7 +52,7 @@ public class GraphItem {
     @JsonProperty("depends")
     private List<Object> depends;
     @JsonProperty("count")
-    private Object count;
+    private String count;
     @JsonProperty("log_level")
     private Object logLevel;
     @JsonProperty("damage_order_on_error")

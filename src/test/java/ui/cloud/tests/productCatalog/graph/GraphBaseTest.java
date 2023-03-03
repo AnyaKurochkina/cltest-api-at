@@ -9,9 +9,10 @@ import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.BaseTest;
-import ui.models.Node;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.deleteGraphById;
 import static steps.productCatalog.GraphSteps.getGraphByName;
@@ -53,11 +54,11 @@ public class GraphBaseTest extends BaseTest {
     }
 
     public void createTemplate(String name) {
-        Map<String, String> value = new LinkedHashMap<>();
-        Map<String, Map<String, String>> input = new LinkedHashMap<>();
-        Map<String, Map<String, String>> output = new LinkedHashMap<>();
-        input.put(new Node().getInputKey(), value);
-        output.put(new Node().getOutputKey(), value);
+        Map<String, String> value = new HashMap<>();
+        Map<String, Map<String, String>> input = new HashMap<>();
+        Map<String, Map<String, String>> output = new HashMap<>();
+        input.put("input_param", value);
+        output.put("output_param", value);
         Template.builder()
                 .name(name)
                 .title(TEMPLATE_TITLE)
