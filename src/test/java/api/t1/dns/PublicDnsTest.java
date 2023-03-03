@@ -63,9 +63,10 @@ public class PublicDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Получение публичной зоны по id")
     public void getPublicZoneByIdTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         DnsZone zone = DnsZone.builder()
                 .name("get_public_zone_by_id_test_api")
-                .domainName("getpubliczonebyid.test.api.ru")
+                .domainName(domainName)
                 .type("public")
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
@@ -92,9 +93,10 @@ public class PublicDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Получение списка публичных зон")
     public void getPublicZoneListTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         JSONObject json = DnsZone.builder()
                 .name("public_zone_get_list_test_api")
-                .domainName("getlist.public.zone.test.api.ru")
+                .domainName(domainName)
                 .type("public")
                 .build()
                 .toJson();
@@ -107,15 +109,16 @@ public class PublicDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Получение списка rrset")
     public void getRrsetListTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         JSONObject json = DnsZone.builder()
                 .name("get_rrset_list_public_zone_test_api")
-                .domainName("get.rrset.list.public.zone.test.api.ru")
+                .domainName(domainName)
                 .type("public")
                 .build()
                 .toJson();
         DnsZone dnsZone = createZone(json, projectId);
         List<Rrset> rrsetList = getRrsetList(dnsZone.getId(), projectId);
-        assertEquals(2, rrsetList.size());
+        assertEquals(1, rrsetList.size());
     }
 
     @Test

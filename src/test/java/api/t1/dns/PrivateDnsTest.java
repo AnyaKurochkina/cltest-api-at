@@ -4,7 +4,6 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.authorizer.Project;
 import models.t1.dns.DnsZone;
 import models.t1.dns.Rrset;
 import org.json.JSONObject;
@@ -27,8 +26,8 @@ public class PrivateDnsTest extends Tests {
     private static String projectId;
 
     public PrivateDnsTest() {
-        Project project = Project.builder().projectName("AM").isForOrders(true).build().createObject();
-        projectId = project.getId();
+ //       Project project = Project.builder().isForOrders(true).build().createObject();
+        projectId = "proj-ls0vejlv7c";
     }
 
     @AfterAll
@@ -42,8 +41,8 @@ public class PrivateDnsTest extends Tests {
     @DisplayName("Создание/Удаление приватной зоны")
     public void createPrivateZoneTest() {
         DnsZone zone = DnsZone.builder()
-                .name("testapi.com")
-                .domainName("testapi.com")
+                .name("testapid.com")
+                .domainName("testapid.com")
                 .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();
