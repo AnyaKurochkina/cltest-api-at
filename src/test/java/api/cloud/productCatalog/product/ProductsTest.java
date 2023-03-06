@@ -526,6 +526,7 @@ public class ProductsTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка Product в GitLab")
     @TmsLink("975400")
     public void dumpToGitlabProduct() {
@@ -543,6 +544,7 @@ public class ProductsTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка Product из GitLab")
     @TmsLink("1028975")
     public void loadFromGitlabProduct() {

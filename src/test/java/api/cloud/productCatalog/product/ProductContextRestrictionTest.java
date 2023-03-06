@@ -6,6 +6,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.productCatalog.ContextRestrictionsItem;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.ProjectEnvironment;
 import models.cloud.productCatalog.product.Product;
 import org.junit.DisabledIfEnv;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductSteps.getProductByProjectContext;
 
 @Tag("product_catalog")
@@ -37,6 +39,9 @@ public class ProductContextRestrictionTest {
                 .contextRestrictions((Arrays.asList(contItem)))
                 .build()
                 .createObject();
-        getProductByProjectContext(projectTest.getId(), product.getProductId());
+        String errorMsg = getProductByProjectContext(projectTest.getId(), product.getProductId()).assertStatus(404)
+                .extractAs(ErrorMessage.class)
+                .getMessage();
+        assertEquals("No Product matches the given query.", errorMsg);
     }
 }

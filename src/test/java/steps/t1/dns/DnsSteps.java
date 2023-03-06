@@ -19,8 +19,8 @@ import static core.helper.Configure.PowerDns;
 public class DnsSteps extends Steps {
     private static final String apiUrl = "/api/v1/";
 
-    @Step("Создание public zone")
-    public static DnsZone createPublicZone(JSONObject object, String projectId) {
+    @Step("Создание zone")
+    public static DnsZone createZone(JSONObject object, String projectId) {
         return new Http(DNSService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
@@ -29,12 +29,21 @@ public class DnsSteps extends Steps {
                 .extractAs(DnsZone.class);
     }
 
-    @Step("Создание public zone")
-    public static Response createPublicZoneResponse(JSONObject object, String projectId) {
+    @Step("Создание zone")
+    public static Response createZoneResponse(JSONObject object, String projectId) {
         return new Http(DNSService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(apiUrl + "projects/{}/zones", projectId);
+    }
+
+    @Step("Получение zone по id={zoneId}")
+    public static DnsZone getZoneById(String projectId, String zoneId) {
+        return new Http(DNSService)
+                .setRole(CLOUD_ADMIN)
+                .get(apiUrl + "projects/{}/zones/{}", projectId, zoneId)
+                .assertStatus(200)
+                .extractAs(DnsZone.class);
     }
 
     @Step("Создание Rrset")
@@ -107,6 +116,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования записи в зоне OpenDns")
     public static boolean isRrsetExistInOpenDnsZone(String name, String domainName) {
+        name = name + ".";
         List<PowerDnsRrset> rrsetList = getZoneOpenDnsById(domainName).getRrsets();
         for (PowerDnsRrset rrset : rrsetList) {
             if (rrset.getName().equals(name)) {
@@ -177,6 +187,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования записи")
     public static boolean isRrsetExist(String recordName, String zoneId, String projectId) {
+        recordName = recordName + ".";
         List<Rrset> list = getRrsetList(zoneId, projectId);
         for (Rrset rrset : list) {
             if (rrset.getRecordName().equals(recordName)) {
@@ -188,6 +199,7 @@ public class DnsSteps extends Steps {
 
     @Step("Получение записи по имени")
     public static Rrset getRrsetByName(String recordName, String zoneId, String projectId) {
+        recordName = recordName + ".";
         List<Rrset> list = getRrsetList(zoneId, projectId);
         for (Rrset rrset : list) {
             if (rrset.getRecordName().equals(recordName)) {

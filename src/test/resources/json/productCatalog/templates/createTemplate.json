@@ -5,7 +5,7 @@
   "icon_store_id" : "",
   "run": "run",
   "rollback": "Rollback",
-  "type": "check_vm",
+  "type": "rpc",
   "timeout": 1,
   "input": {},
   "output": {},

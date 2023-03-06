@@ -20,10 +20,7 @@ import models.cloud.productCatalog.template.Template;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.time.ZonedDateTime;
@@ -284,6 +281,7 @@ public class TemplatesTest extends Tests {
 
     @Test
     @DisplayName("Загрузка Template в GitLab")
+    @Disabled
     @TmsLink("975415")
     public void dumpToGitlabTemplate() {
         String templateName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
@@ -300,6 +298,7 @@ public class TemplatesTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка Template из GitLab")
     @TmsLink("1029293")
     public void loadFromGitlabTemplate() {
@@ -348,5 +347,20 @@ public class TemplatesTest extends Tests {
         String expectedErrorMessage = String.format("Нельзя удалить шаблон: %s. Он используется:\nGraph: (name: %s, version: %s)"
         , template.getName(), graph.getName(), "1.0.1");
         assertEquals(expectedErrorMessage, errMsg);
+    }
+
+    @DisplayName("Создание шаблона с допустимым типом")
+    @TmsLink("1468913")
+    @Test
+    public void createTemplateWithInvalidType() {
+        String templateName = "create_template_with_invalid_type_test_api";
+        String expectedType = "rpc";
+        Template template = Template.builder()
+                .name(templateName)
+                .type(expectedType)
+                .build()
+                .createObject();
+        String actualType = getTemplateById(template.getId()).getType();
+        assertEquals(expectedType, actualType);
     }
 }

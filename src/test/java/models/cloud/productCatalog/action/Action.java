@@ -112,6 +112,8 @@ public class Action extends Entity {
     private Boolean isSafe;
     @JsonProperty("version_fields")
     private List<String> versionFields;
+    @JsonProperty("default_item")
+    private Object defaultItem;
 
     @Override
     public Entity init() {
@@ -144,6 +146,7 @@ public class Action extends Entity {
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.event_type_provider", eventTypeProvider)
+                .set("$.default_item", defaultItem)
                 .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)
                 .build();
