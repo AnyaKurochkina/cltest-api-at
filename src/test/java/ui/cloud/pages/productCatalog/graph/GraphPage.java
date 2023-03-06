@@ -16,15 +16,13 @@ import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.actions.ActionPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Table;
-import ui.elements.TextArea;
+import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 
 public class GraphPage extends BasePage {
-    protected static final String saveGraphAlertText = "Граф успешно сохранен";
+    protected final String saveGraphAlertText = "Граф успешно сохранен";
+    protected final Tab generalInfoTab = Tab.byText("Общая информация");
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final TextArea descriptionTextArea = TextArea.byName("description");

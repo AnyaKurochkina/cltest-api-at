@@ -2,7 +2,9 @@ package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.template.Template;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -10,12 +12,12 @@ import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.BaseTest;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-import static steps.productCatalog.GraphSteps.deleteGraphById;
-import static steps.productCatalog.GraphSteps.getGraphByName;
+import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.TemplateSteps.deleteTemplateById;
 import static steps.productCatalog.TemplateSteps.getTemplateByName;
 
@@ -31,9 +33,11 @@ public class GraphBaseTest extends BaseTest {
     protected final String NAME = UUID.randomUUID().toString();
     protected final String SUBGRAPH_NAME = UUID.randomUUID().toString();
     protected final String TEMPLATE_NAME = UUID.randomUUID().toString();
+    protected String nodeDescription = "Тестовый узел";
     protected ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
     protected Graph graph;
+    protected Template template;
 
     @BeforeEach
     @DisplayName("Создание графов через API")
@@ -41,7 +45,7 @@ public class GraphBaseTest extends BaseTest {
         createGraph(NAME, TITLE);
     }
 
-    public void createGraph(String name, String title) {
+    public Graph createGraph(String name, String title) {
         graph = Graph.builder()
                 .name(name)
                 .title(title)
@@ -51,15 +55,16 @@ public class GraphBaseTest extends BaseTest {
                 .author(AUTHOR)
                 .build()
                 .createObject();
+        return graph;
     }
 
-    public void createTemplate(String name) {
+    public Template createTemplate(String name) {
         Map<String, String> value = new HashMap<>();
         Map<String, Map<String, String>> input = new HashMap<>();
         Map<String, Map<String, String>> output = new HashMap<>();
         input.put("input_param", value);
         output.put("output_param", value);
-        Template.builder()
+        template = Template.builder()
                 .name(name)
                 .title(TEMPLATE_TITLE)
                 .description("Template for node")
@@ -74,6 +79,7 @@ public class GraphBaseTest extends BaseTest {
                 .timeout(100)
                 .build()
                 .createObject();
+        return template;
     }
 
     public void deleteGraphByApi(String name) {
@@ -82,5 +88,10 @@ public class GraphBaseTest extends BaseTest {
 
     public void deleteTemplate(String name) {
         deleteTemplateById(getTemplateByName(name).getId());
+    }
+
+    protected void patchGraphWithGraphItem(Graph graph, GraphItem graphItem) {
+        JSONObject graphItemsJSON = new JSONObject().put("graph", Arrays.asList(graphItem.toJson()));
+        partialUpdateGraph(graph.getGraphId(), graphItemsJSON);
     }
 }

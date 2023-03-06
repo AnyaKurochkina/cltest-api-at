@@ -2,6 +2,7 @@ package ui.cloud.tests.productCatalog.graph.node;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -15,12 +16,15 @@ import java.util.HashMap;
 
 @Feature("Редактирование узла графа")
 public class EditNodeTest extends GraphBaseTest {
+    private Graph graph;
+    private Graph subgraph;
 
     @BeforeEach
     @DisplayName("Создание подграфа для узла графа")
     public void setUpForGraphNodesTest() {
-        createGraph(SUBGRAPH_NAME, SUBGRAPH_TITLE);
-        createTemplate(TEMPLATE_NAME);
+        graph = super.graph;
+        subgraph = createGraph(SUBGRAPH_NAME, SUBGRAPH_TITLE);
+        template = createTemplate(TEMPLATE_NAME);
     }
 
     @AfterEach
@@ -37,8 +41,8 @@ public class EditNodeTest extends GraphBaseTest {
     public void editNodeSubgraphTest() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
-                .subgraphVersion("Последняя")
                 .description("Тестовый узел")
+                .subgraphId(subgraph.getGraphId())
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
                 }})
@@ -47,12 +51,11 @@ public class EditNodeTest extends GraphBaseTest {
                 }})
                 .timeout(100)
                 .number(1)
-                .count("")
                 .build();
+        patchGraphWithGraphItem(graph, node);
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
-                .addNodeAndSave(node)
                 .editSubgraphNode(node, "1.0.0", "edit")
                 .checkNodeAttributes(node)
                 .deleteNodeAndSave(node);
@@ -64,11 +67,10 @@ public class EditNodeTest extends GraphBaseTest {
     public void editTemplateNodeTest() {
         GraphItem node = GraphItem.builder()
                 .name(TEMPLATE_NAME)
-                .templateVersion("Последняя")
+                .templateId(template.getId())
                 .description("Тестовый узел")
                 .timeout(100)
                 .number(1)
-                .count("")
                 .build();
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)

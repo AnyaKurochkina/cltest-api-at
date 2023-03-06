@@ -92,7 +92,7 @@ public class GraphItem {
                 .set("$.hold", hold)
                 .set("$.template_version", templateVersion)
                 .set("$.color", color)
-                .set("$.subgraphVersion", subgraphVersion)
+                .set("$.subgraph_version", subgraphVersion)
                 .set("$.icon_url", iconUrl)
                 .set("$.subgraph_version_pattern", subgraphVersionPattern)
                 .set("$.for_each", forEach)

@@ -3,6 +3,7 @@ package ui.cloud.tests.productCatalog.graph.node;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -17,10 +18,12 @@ import java.util.HashMap;
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
 
+    private Graph subgraph;
+
     @BeforeEach
     @DisplayName("Создание подграфа и шаблона для узлов графа")
     public void setUpForGraphNodeTests() {
-        createGraph(SUBGRAPH_NAME, SUBGRAPH_TITLE);
+        subgraph = createGraph(SUBGRAPH_NAME, SUBGRAPH_TITLE);
         createTemplate(TEMPLATE_NAME);
     }
 
@@ -36,28 +39,21 @@ public class AddNodeTest extends GraphBaseTest {
     @TmsLink("489507")
     @DisplayName("Добавление узла графа с подграфом")
     public void addNodeSubgraphTest() {
-        addNodeSubgraphWithRequiredParameters();
-        addNodeSubgraphWithAllParameters();
-        addNodeSubgraphWithoutRequiredParameters();
-        addNodeSubgraphWithIncorrectParameters();
-        addNodeSubgraphWithNonUniqueName();
+        addSubgraphNodeWithRequiredParameters();
+        addSubgraphNodeWithAllParameters();
+        addSubgraphNodeWithoutRequiredParameters();
+        addSubgraphNodeWithIncorrectParameters();
+        addSubgraphNodeWithNonUniqueName();
     }
 
     @Step("Добавление узла графа (подграф) с указанием обязательных параметров")
-    public void addNodeSubgraphWithRequiredParameters() {
+    public void addSubgraphNodeWithRequiredParameters() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
+                .description(nodeDescription)
+                .subgraphId(subgraph.getGraphId())
                 .subgraphVersion("Последняя")
-                .description("Тестовый узел")
-                .input(new HashMap<String, String>() {{
-                    put("input_param", "test_value_1");
-                }})
-                .output(new HashMap<String, Object>() {{
-                    put("output_param", "test_value_2");
-                }})
-                .timeout(100)
                 .number(1)
-                .count("")
                 .build();
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
@@ -68,10 +64,11 @@ public class AddNodeTest extends GraphBaseTest {
     }
 
     @Step("Добавление узла графа (подграф) с указанием всех параметров")
-    public void addNodeSubgraphWithAllParameters() {
+    public void addSubgraphNodeWithAllParameters() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
-                .description("Тестовый узел")
+                .description(nodeDescription)
+                .subgraphId(subgraph.getGraphId())
                 .subgraphVersion("Последняя")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
@@ -81,7 +78,13 @@ public class AddNodeTest extends GraphBaseTest {
                 }})
                 .number(3)
                 .timeout(10)
-                .count("2")
+                .count("quantity")
+                .condition("storage_profile == 'SSD'")
+                .onPrebilling(true)
+                .runOnRollback(true)
+                .hold(true)
+                .isSequential(true)
+                .damageOrderOnError(true)
                 .build();
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
@@ -92,10 +95,11 @@ public class AddNodeTest extends GraphBaseTest {
     }
 
     @Step("Добавление узла без заполнения обязательных полей")
-    public void addNodeSubgraphWithoutRequiredParameters() {
+    public void addSubgraphNodeWithoutRequiredParameters() {
         GraphItem node = GraphItem.builder()
                 .name("")
                 .description("test")
+                .subgraphId(subgraph.getGraphId())
                 .number(1)
                 .timeout(1)
                 .build();
@@ -106,6 +110,7 @@ public class AddNodeTest extends GraphBaseTest {
         node = GraphItem.builder()
                 .name("test")
                 .description("")
+                .subgraphId(subgraph.getGraphId())
                 .number(1)
                 .timeout(1)
                 .build();
@@ -116,10 +121,11 @@ public class AddNodeTest extends GraphBaseTest {
     }
 
     @Step("Добавление узла графа (подграф) с указанием некорректных значений параметров")
-    public void addNodeSubgraphWithIncorrectParameters() {
+    public void addSubgraphNodeWithIncorrectParameters() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
-                .description("Тестовый узел")
+                .description(nodeDescription)
+                .subgraphId(subgraph.getGraphId())
                 .subgraphVersion("Последняя")
                 .number(0)
                 .timeout(0)
@@ -131,13 +137,12 @@ public class AddNodeTest extends GraphBaseTest {
     }
 
     @Step("Добавление узла графа (подграф) с неуникальным именем")
-    public void addNodeSubgraphWithNonUniqueName() {
+    public void addSubgraphNodeWithNonUniqueName() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
-                .description("Тестовый узел")
+                .description(nodeDescription)
+                .subgraphId(subgraph.getGraphId())
                 .subgraphVersion("Последняя")
-                .number(1)
-                .timeout(1)
                 .build();
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
@@ -152,11 +157,11 @@ public class AddNodeTest extends GraphBaseTest {
     public void addNodeByTemplateTest() {
         GraphItem node = GraphItem.builder()
                 .name(TEMPLATE_NAME)
-                .description("Тестовый узел")
+                .description(nodeDescription)
+                .templateId(template.getId())
                 .templateVersion("Последняя")
                 .timeout(100)
                 .number(1)
-                .count("1")
                 .build();
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
