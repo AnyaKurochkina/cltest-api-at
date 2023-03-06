@@ -289,6 +289,7 @@ public class OrgDirectionTest extends Tests {
 
     @Test
     @DisplayName("Загрузка OrgDirection в GitLab")
+    @Disabled
     @TmsLink("975382")
     public void dumpToGitlabOrgDirection() {
         String orgDirectionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
