@@ -59,7 +59,7 @@ public class Rule {
         Dialog dialog = Dialog.byTitle("Добавить правило");
         dialog.clickButton("Добавить");
         dialog.getDialog().shouldNotBe(Condition.visible);
-        Waiting.findWidthRefresh(() -> SecurityGroup.RulesTable.getRule(description).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> SecurityGroup.RulesTable.getRule(description).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1));
         return this;
     }
 

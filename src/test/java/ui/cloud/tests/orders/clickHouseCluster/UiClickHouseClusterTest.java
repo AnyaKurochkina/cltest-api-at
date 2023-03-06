@@ -23,7 +23,8 @@ import static core.helper.StringUtils.$x;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product;//= ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/194e3485-9981-4aa7-90d3-edf6c6d2ebce/group?context=proj-pkvckn08w9&type=project&org=vtb");
+    ClickHouseCluster product;
+    // = ClickHouseCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/5694dd78-53a9-400e-9a41-ded295c945b8/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
@@ -221,6 +222,15 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void stopSoft() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.LESS, clickHouseClusterPage::stopSoft);
+    }
+
+    @Test
+    @Order(22)
+    @TmsLink("1296753")
+    @DisplayName("UI ClickHouse Cluster. Мониторинг ОС")
+    void monitoringOs() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.checkClusterMonitoringOs();
     }
 
     @Test

@@ -37,8 +37,11 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
     @TmsLink("1235642")
     @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
+                .selectCategory("Базы данных")
+                .expandProductsList()
                 .selectProduct(product.getProductName());
         RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
 
@@ -46,20 +49,19 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
         //Проверка поля Кол-во
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "0", "10");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "100", "30");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "N", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "", "1");
 
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
+        orderPage.getCreateDefaultUserSwitch().setEnabled(true);
+        orderPage.getGeneratePassButton().click();
+        orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new RedisAstraOrderPage().checkOrderDetails();
     }
-
 }

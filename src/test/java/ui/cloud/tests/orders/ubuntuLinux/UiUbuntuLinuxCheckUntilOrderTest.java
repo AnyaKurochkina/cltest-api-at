@@ -39,6 +39,7 @@ class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1342205")
     @DisplayName("UI UbuntuLinux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -58,7 +59,6 @@ class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new UbuntuLinuxOrderPage().checkOrderDetails();
     }

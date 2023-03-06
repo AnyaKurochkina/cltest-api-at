@@ -56,7 +56,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     @DisplayName("Удаление графа, используемого в продукте")
     public void deleteGraphUsedInProduct() {
         String name = UUID.randomUUID().toString();
-        Product product = Product.builder()
+        Product.builder()
                 .name(name)
                 .title("AT UI Product")
                 .version("1.0.0")

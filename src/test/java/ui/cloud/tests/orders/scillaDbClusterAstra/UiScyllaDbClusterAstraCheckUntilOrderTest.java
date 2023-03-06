@@ -37,6 +37,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
     @TmsLink("1368045")
     @DisplayName("UI Scylla_db_cluster_astra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -46,19 +47,17 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
         //Проверка поля Кол-во
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "0", "10");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "100", "30");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "N", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "", "1");
 
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
+        orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new ScyllaDbClusterOrderPage().checkOrderDetails();
     }
-
 }

@@ -34,7 +34,10 @@ public enum Role {
     IPAM("ipam"),
 
     @SerializedName("roles/viewer")
-    VIEWER("roles/viewer");
+    VIEWER("roles/viewer"),
+
+    @SerializedName("superviewer")
+    SUPERVIEWER("superviewer");
 
     private final String name;
 

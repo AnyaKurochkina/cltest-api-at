@@ -131,7 +131,14 @@ public class ClickHousePage extends IProductPage {
             Alert.green("Значение скопировано");
         });
     }
-
+    public void resetPasswordFullRights(String name) {
+        btnUsers.shouldBe(Condition.enabled).click();
+        runActionWithParameters(name, "Сбросить пароль", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
+        });
+    }
 
     public void deleteLocalAccount(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
