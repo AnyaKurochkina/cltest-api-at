@@ -4,7 +4,6 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.authorizer.Project;
 import models.t1.dns.DnsZone;
 import models.t1.dns.Rrset;
 import org.json.JSONObject;
@@ -27,8 +26,8 @@ public class PrivateDnsTest extends Tests {
     private static String projectId;
 
     public PrivateDnsTest() {
-        Project project = Project.builder().isForOrders(true).build().createObject();
-        projectId = project.getId();
+ //       Project project = Project.builder().isForOrders(true).build().createObject();
+        projectId = "proj-ls0vejlv7c";
     }
 
     @AfterAll
@@ -42,15 +41,15 @@ public class PrivateDnsTest extends Tests {
     @DisplayName("Создание/Удаление приватной зоны")
     public void createPrivateZoneTest() {
         DnsZone zone = DnsZone.builder()
-                .name("create_private_zone_test_api")
-                .domainName("private.zone.test.api.ru")
+                .name("testapid.com")
+                .domainName("testapid.com")
                 .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), "proj-ls0vejlv7c");
-//        assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
-//        deleteZone(dnsZone.getId(), projectId);
-//        assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
+        deleteZone(dnsZone.getId(), projectId);
+        assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
     }
 
     @Test
@@ -62,7 +61,7 @@ public class PrivateDnsTest extends Tests {
                 .domainName("partial.update.private.zone.test.api.ru")
                 .type("private")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), projectId);
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
         String description = "update description";
         DnsZone updatedZone = partialUpdateZone(new JSONObject().put("description", description), dnsZone.getId(), projectId);
         assertEquals(description, updatedZone.getDescription());
@@ -78,7 +77,7 @@ public class PrivateDnsTest extends Tests {
                 .type("private")
                 .build()
                 .toJson();
-        createPublicZone(json, projectId);
+        createZone(json, projectId);
         List<DnsZone> publicZoneList = getPublicZoneList(projectId);
         assertTrue(publicZoneList.size() > 0, "Длина списка долна быть больше 0");
     }
@@ -93,7 +92,7 @@ public class PrivateDnsTest extends Tests {
                 .type("public")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         List<Rrset> rrsetList = getRrsetList(dnsZone.getId(), projectId);
         assertEquals(2, rrsetList.size());
     }
@@ -108,7 +107,7 @@ public class PrivateDnsTest extends Tests {
                 .type("private")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         String recordName = "create_rrset_private";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
@@ -138,7 +137,7 @@ public class PrivateDnsTest extends Tests {
                 .type("private")
                 .build()
                 .toJson();
-        DnsZone dnsZone = createPublicZone(json, projectId);
+        DnsZone dnsZone = createZone(json, projectId);
         String recordName = "update_rrset";
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)

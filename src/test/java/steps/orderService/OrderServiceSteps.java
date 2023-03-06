@@ -28,11 +28,11 @@ import java.lang.reflect.Type;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.enums.Role.ORDER_SERVICE_ADMIN;
+import static core.helper.Configure.OrderServiceAdminURL;
 import static core.helper.Configure.OrderServiceURL;
 
 @Log4j2
@@ -586,5 +586,11 @@ public class OrderServiceSteps extends Steps {
     public static void deleteProduct(IProduct product) {
         new Http(OrderServiceURL)
                 .delete("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId());
+    }
+
+    public static Response getProductOrderService(String name) {
+        return new Http(OrderServiceAdminURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/v1/order_restrictions?product_name={}", name);
     }
 }

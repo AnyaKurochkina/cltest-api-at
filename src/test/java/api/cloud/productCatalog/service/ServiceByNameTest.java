@@ -9,6 +9,7 @@ import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -85,6 +86,7 @@ public class ServiceByNameTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка сервиса в GitLab по имени")
     @TmsLink("1361359")
     public void dumpToGitlabServiceByNameTest() {

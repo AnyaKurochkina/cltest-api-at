@@ -10,6 +10,7 @@ import java.util.stream.Stream;
 public enum Categories {
     APPLICATION_INTEGRATION("application_integration"),
     COMPUTE("compute"),
+    COMPUTE_INSTANCE("compute-instance"),
     CONTAINER("container"),
     CONTAINERS("containers"),
     DB("db"),

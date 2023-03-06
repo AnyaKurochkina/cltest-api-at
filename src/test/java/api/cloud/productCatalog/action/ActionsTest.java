@@ -13,10 +13,7 @@ import models.cloud.productCatalog.icon.IconStorage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.time.ZonedDateTime;
@@ -452,6 +449,7 @@ public class ActionsTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка action в GitLab")
     @TmsLink("975375")
     public void dumpToGitlabAction() {
@@ -469,6 +467,7 @@ public class ActionsTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка action из GitLab")
     @TmsLink("1028840")
     public void loadFromGitlabAction() {

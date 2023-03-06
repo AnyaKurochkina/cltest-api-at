@@ -24,6 +24,7 @@ public class Configure {
     public static String CalculatorURL;
     public static String StateServiceURL;
     public static String OrderServiceURL;
+    public static String OrderServiceAdminURL;
     public static String ReferencesURL;
     public static String ResourceManagerURL;
     public static String FeedServiceURL;
@@ -60,6 +61,7 @@ public class Configure {
             CalculatorURL = kongURL + "calculator";
             ProductCatalogURL = kongURL + "product-catalog";
             OrderServiceURL = kongURL + "order-service/api";
+            OrderServiceAdminURL = kongURL + "order-service/admin/api";
             StateServiceURL = kongURL + "state-service";
             ReferencesURL = kongURL + "references";
             ResourceManagerURL = kongURL + "resource-manager/api";

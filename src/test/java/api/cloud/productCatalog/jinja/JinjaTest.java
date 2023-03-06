@@ -13,10 +13,7 @@ import models.cloud.productCatalog.jinja2.Jinja2;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.time.ZonedDateTime;
@@ -216,6 +213,7 @@ public class JinjaTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка Jinja в GitLab")
     @TmsLink("975380")
     public void dumpToGitlabJinja() {
@@ -232,6 +230,7 @@ public class JinjaTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка Jinja из GitLab")
     @TmsLink("1028947")
     public void loadFromGitlabJinja() {

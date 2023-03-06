@@ -49,12 +49,10 @@ public class ProductSteps extends Steps {
                 .extractAs(GetProductList.class).getList();
     }
 
-    public static Product getProductByProjectContext(String projectId, String productId) {
+    public static Response getProductByProjectContext(String projectId, String productId) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/projects/{}/products/{}/", projectId, productId)
-                .assertStatus(200)
-                .extractAs(Product.class);
+                .get("/api/v1/projects/{}/products/{}/", projectId, productId);
     }
 
     @Step("Получение списка продуктов по фильтру {filter}")
@@ -126,6 +124,23 @@ public class ProductSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(productUrl + objectId + "/")
                 .extractAs(Product.class);
+    }
+
+    @Step("Получение order_restrictions продукта по Id")
+    public static Response getProductOrderRestrictionById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrl + objectId + "/order_restrictions/")
+                .assertStatus(200);
+    }
+
+    @Step("Получение order_restrictions продукта по Id")
+    public static Response createProductOrderRestrictionById(String objectId, JSONObject jsonObject) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(jsonObject)
+                .post(productUrl + objectId + "/order_restrictions/")
+                .assertStatus(200);
     }
 
     @Step("Получение продукта по Id без токена")

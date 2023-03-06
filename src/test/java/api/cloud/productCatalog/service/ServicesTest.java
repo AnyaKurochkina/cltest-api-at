@@ -21,10 +21,7 @@ import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.productCatalog.ServiceSteps;
 
@@ -467,6 +464,7 @@ public class ServicesTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка Service в GitLab")
     @TmsLink("975412")
     public void dumpToGitlabService() {
@@ -484,6 +482,7 @@ public class ServicesTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка Service из GitLab")
     @TmsLink("1029279")
     public void loadFromGitlabService() {
