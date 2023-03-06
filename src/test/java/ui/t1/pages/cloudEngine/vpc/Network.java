@@ -23,7 +23,7 @@ public class Network {
     @Step("Удалить подсеть {subnet}")
     public void deleteSubnet(String subnet) {
         SubnetListInfo.getMenuSubnet(subnet).select("Удалить");
-        Waiting.findWidthRefresh(() -> !new SubnetListInfo().isColumnValueEquals(Column.NOMINATION, subnet), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> !new SubnetListInfo().isColumnValueEquals(Column.NOMINATION, subnet), Duration.ofMinutes(1));
     }
 
     @Getter
@@ -76,7 +76,7 @@ public class Network {
             dialog.clickButton("Добавить");
             dialog.getDialog().shouldNotBe(Condition.visible);
             EntitiesUtils.waitCreate(() ->
-                    Waiting.findWidthRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1)));
+                    Waiting.findWithRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1)));
             return this;
         }
     }

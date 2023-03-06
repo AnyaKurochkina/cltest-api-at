@@ -2,10 +2,12 @@ package ui.cloud.tests.orders.scillaDbClusterAstra;
 
 
 import com.codeborne.selenide.Condition;
+import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ScyllaDbCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -16,13 +18,15 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+
 @Epic("UI Продукты")
 @Feature("ScyllaDbClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
 public class UiScyllaDbClusterAstraTest extends UiProductTest{
 
-    ScyllaDbCluster product;
-    //=ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b076f027-b244-4e2b-be71-99a65439d5fc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    ScyllaDbCluster product;//=ScyllaDbCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/0075ee05-c5a1-4518-8f54-d0983c1b34da/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 
@@ -41,16 +45,16 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             ScyllaDbClusterOrderPage orderPage = new ScyllaDbClusterOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getGroupSelect().set(accessGroup.getPrefixName());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             orderPage.orderClick();
@@ -77,7 +81,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @DisplayName("UI Scylla_db_cluster_astra. Проверка полей заказа")
     void checkHeaderHistoryTable() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-        scyllaPage.getBtnGeneralInfo().click();
         scyllaPage.checkHeadersHistory();
         scyllaPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().checkGraph();
@@ -86,10 +89,11 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @Test
     @Order(9)
     @TmsLink("1335489")
-    @DisplayName("UI Scylla_db_cluster_astra. Расширить диск")
+    @DisplayName("UI Scylla_db_cluster_astra. Расширить точку монтирования")
     void expandDisk() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-        scyllaPage.runActionWithCheckCost(CompareType.MORE, () -> scyllaPage.enlargeDisk("/app/scylla/data", "20", new Table("Роли узла").getRow(0).get()));
+        scyllaPage.runActionWithCheckCost(CompareType.MORE, () -> scyllaPage
+                .enlargeDisk("/app/scylla/data", "20", new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
@@ -104,7 +108,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @Test
     @Order(12)
     @TmsLink("1335490")
-    @DisplayName("UI Scylla_db_cluster_astra. Создание БД")
+    @DisplayName("UI Scylla_db_cluster_astra. Добавить БД")
     void createDb() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
@@ -162,7 +166,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addUserDb(shortNameUserDB));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addRightsUser(nameDb,shortNameUserDB));
-
     }
 
     @Test
@@ -188,6 +191,30 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     }
 
     @Test
+    @TmsLinks({@TmsLink(""), @TmsLink("")})
+    @Order(25)
+    @DisplayName("UI Scylla_db_cluster_astra. Добавление/удаление группы доступа")
+    void deleteGroup() {
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
+        scyllaPage.deleteGroup("superuser");
+        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        scyllaPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+    }
+
+    @Test
+    @TmsLink("")
+    @Order(26)
+    @DisplayName("UI Scylla_db_cluster_astra. Изменение группы доступа")
+    void updateGroup() {
+        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
+        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.updateGroup("superuser",
+                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+    }
+
+
+    @Test
     @Order(100)
     @TmsLink("1335480")
     @DisplayName("UI Scylla_db_cluster_astra. Удаление продукта")
@@ -195,5 +222,4 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.delete();
     }
-
 }

@@ -16,22 +16,12 @@ public class ScyllaDbClusterOrderPage extends NewOrderPage {
 
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
-
-    DropDown platform = DropDown.byLabel("Платформа");
-    DropDown osVersion = DropDown.byLabel("Версия ОС");
-    DropDown scyllaDbVersion = DropDown.byLabel("Версия ScyllaDB");
-    DropDown group = DropDown.byLabel("Группы");
-    DropDown dataCentre = DropDown.byLabel("Дата-центр");
-    DropDown segment = DropDown.byLabel("Сетевой сегмент");
-    Select configure = Select.byLabel("Конфигурация Core/RAM");
-    Input countVm = Input.byLabel("Количество");
-    Input label = Input.byLabel("Метка");
-
+    Select scyllaDbVersionSelect = Select.byLabel("Версия ScyllaDB");
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public ScyllaDbClusterOrderPage() {
-        label.setValue(labelValue);
-        platform.getElement().shouldBe(Condition.enabled);
+        labelInput.setValue(labelValue);
+        platformSelect.getElement().shouldBe(Condition.enabled);
     }
 
     public void checkOrderDetails(){

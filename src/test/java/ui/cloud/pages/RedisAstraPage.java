@@ -2,14 +2,15 @@ package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import models.cloud.orderService.products.Redis;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
-import ui.elements.DropDown;
-import ui.elements.Table;
+import ui.elements.*;
+
+import java.util.List;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
@@ -104,7 +105,7 @@ public class RedisAstraPage extends IProductPage {
     public void changeTransactionIsolation(String value) {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation", "Подтвердить", () -> {
-            DropDown.byLabel("default_transaction_isolation").select(value);
+            Select.byLabel("default_transaction_isolation").set(value);
         });
         btnGeneralInfo.click();
         Assertions.assertEquals(value.toLowerCase(), default_transaction_isolation.getText(), "default_transaction_isolation " +
@@ -132,7 +133,7 @@ public class RedisAstraPage extends IProductPage {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
+                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor)));
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -220,7 +221,77 @@ public class RedisAstraPage extends IProductPage {
             Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
         }
     }
+    public SelenideElement getRoleNode() {
+        return new Table("Роли узла").getRow(0).get();
+    }
+    @Step("Добавить новые группы {group} с ролью {role}")
+    public void addGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            Select.byLabel("Роль").set(role);
+            groups.forEach(group -> Select.byLabel("Группы").set(group));
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
 
+    @Step("Изменить состав групп у роли {role} на {groups}")
+    public void updateGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
+
+    @Step("Удалить группу доступа с ролью {role}")
+    public void deleteGroup(String role) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
+
+    }
+
+
+    //Таблица ролей
+    public class RoleTable extends Table {
+        @Override
+        protected void open() {
+            btnGeneralInfo.click();
+            getRoleNode().scrollIntoView(scrollCenter).click();
+        }
+
+        public RoleTable() {
+            super("Группы");
+        }
+
+        private SelenideElement getRoleMenuElement(String name) {
+            return getRoleRow(name).$("button");
+        }
+
+        private SelenideElement getRoleRow(String name) {
+            return getRowElementByColumnValue("", name);
+        }
+
+        private String getGroupsRole(String name) {
+            open();
+            return getRowByColumnValue("", name).getValueByColumn("Группы");
+        }
+    }
 
     public class VirtualMachineTable extends VirtualMachine {
 

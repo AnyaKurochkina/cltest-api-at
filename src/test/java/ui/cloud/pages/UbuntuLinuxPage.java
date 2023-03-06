@@ -106,8 +106,8 @@ public class UbuntuLinuxPage extends IProductPage {
     public void updateGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(new UbuntuLinuxPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
-            DropDown groupsElement = DropDown.byLabel("Группы").clear();
-            groups.forEach(groupsElement::select);
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
         });
         groups.forEach(group -> Assertions.assertTrue(new UbuntuLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }

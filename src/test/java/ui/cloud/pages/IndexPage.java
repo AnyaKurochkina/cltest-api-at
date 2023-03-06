@@ -4,8 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
@@ -14,6 +16,7 @@ import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.pages.services.ServicesListPage;
+import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static api.Tests.activeCnd;
@@ -31,6 +34,9 @@ public class IndexPage {
     private final SelenideElement orderTemplates = $x("//a[@href='/meccano/order-templates']");
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
+    private final SelenideElement portalAuditLink = $x("//a[@href='/analytics/audit']");
+    private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
+    private final Select sectionSelect = Select.byXpath("//select/parent::div");
 
     public ProductsPage clickOrderMore() {
         orderMoreBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
@@ -85,5 +91,20 @@ public class IndexPage {
     public ProductsListPage goToProductsListPage() {
         productsLink.click();
         return new ProductsListPage();
+    }
+
+    @Step("Переход на страницу Утилиты.Аудит")
+    public AuditPage goToAuditPage() {
+        sectionSelect.set("Утилиты");
+        auditLink.click();
+        Waiting.sleep(500);
+        return new AuditPage();
+    }
+
+    @Step("Переход на страницу Аналитика.Аудит")
+    public AuditPage goToPortalAuditPage() {
+        portalAuditLink.click();
+        Waiting.sleep(500);
+        return new AuditPage();
     }
 }
