@@ -42,7 +42,7 @@ public class VmCreate {
     }
 
     public VmCreate setFlavor(String flavor) {
-        this.flavor = Select.byLabel("CPU / RAM").set(flavor);
+        this.flavor = Select.byLabel("Конфигурация").set(flavor);
         return this;
     }
 

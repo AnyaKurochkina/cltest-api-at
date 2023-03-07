@@ -56,6 +56,8 @@ public class VMwareOrganizationPage {
         new DataCentreTable().clickAdd();
         return new DataCentreCreatePage()
                 .setDataCentreName(name)
+                .setCpu("2")
+                .setRam("4")
                 .orderDataCentre();
     }
 
