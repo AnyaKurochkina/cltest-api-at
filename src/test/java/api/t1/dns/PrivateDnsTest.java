@@ -6,13 +6,14 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.t1.dns.DnsZone;
 import models.t1.dns.Rrset;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,7 +33,7 @@ public class PrivateDnsTest extends Tests {
 
     @AfterAll
     public static void clearTestData() {
-        List<DnsZone> publicZoneList = getPublicZoneList(projectId);
+        List<DnsZone> publicZoneList = getZoneList(projectId);
         publicZoneList.forEach(x -> deleteZone(x.getId(), projectId));
     }
 
@@ -43,7 +44,7 @@ public class PrivateDnsTest extends Tests {
         DnsZone zone = DnsZone.builder()
                 .name("testapid.com")
                 .domainName("testapid.com")
-                .networks(Arrays.asList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
+                .networks(Collections.singletonList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
@@ -59,6 +60,7 @@ public class PrivateDnsTest extends Tests {
         DnsZone zone = DnsZone.builder()
                 .name("partial_update_private_zone_test_api")
                 .domainName("partial.update.private.zone.test.api.ru")
+                .networks(Collections.singletonList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
@@ -69,17 +71,19 @@ public class PrivateDnsTest extends Tests {
 
     @Test
     @TmsLink("")
-    @DisplayName("Получение списка приватных зон")
+    @DisplayName("Получение списка зон")
     public void getPublicZoneListTest() {
         JSONObject json = DnsZone.builder()
                 .name("private_zone_get_list_test_api")
                 .domainName("getlist.private.zone.test.api.ru")
+                .networks(Collections.singletonList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build()
                 .toJson();
         createZone(json, projectId);
-        List<DnsZone> publicZoneList = getPublicZoneList(projectId);
-        assertTrue(publicZoneList.size() > 0, "Длина списка долна быть больше 0");
+        List<DnsZone> zoneList = getZoneList(projectId);
+        assertTrue(zoneList.stream().anyMatch(zone -> zone.getName().equals("private_zone_get_list_test_api")));
+        assertTrue(zoneList.size() > 0, "Длина списка долна быть больше 0");
     }
 
     @Test
@@ -89,7 +93,7 @@ public class PrivateDnsTest extends Tests {
         JSONObject json = DnsZone.builder()
                 .name("get_rrset_list_public_zone_test_api")
                 .domainName("get.rrset.list.public.zone.test.api.ru")
-                .type("public")
+                .type("private")
                 .build()
                 .toJson();
         DnsZone dnsZone = createZone(json, projectId);
@@ -99,7 +103,7 @@ public class PrivateDnsTest extends Tests {
 
     @Test
     @TmsLink("")
-    @DisplayName("Создание/удаление rrset")
+    @DisplayName("Создание/удаление rrset в private zone")
     public void createRrsetTest() {
         JSONObject json = DnsZone.builder()
                 .name("createe_rrset_private_zone_test_api")
@@ -129,16 +133,18 @@ public class PrivateDnsTest extends Tests {
 
     @Test
     @TmsLink("")
-    @DisplayName("")
+    @DisplayName("Частичное обновление rrset в prvate zone")
     public void partialUpdateRrsetTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         JSONObject json = DnsZone.builder()
                 .name("partial_update_rrset_private_zone_test_api")
-                .domainName("partial_update.rrset.private.zone.test.api.ru")
+                .domainName(domainName)
+                .networks(Collections.singletonList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build()
                 .toJson();
         DnsZone dnsZone = createZone(json, projectId);
-        String recordName = "update_rrset";
+        String recordName = "partial.update." + domainName;
         Rrset rrset = Rrset.builder()
                 .recordName(recordName)
                 .recordType("A")
@@ -146,6 +152,9 @@ public class PrivateDnsTest extends Tests {
         String zoneId = dnsZone.getId();
         createRrset(projectId, zoneId, rrset.toJson());
         Rrset createdRrset = getRrsetByName(recordName, zoneId, projectId);
-        partialUpdateRrset(projectId, zoneId, Objects.requireNonNull(createdRrset).getId(), new JSONObject().put("record_name", "update_name"));
+        String updatedName = "r.update." + domainName;
+        Objects.requireNonNull(createdRrset).setRecordName("r.update." + domainName);
+        partialUpdateRrset(projectId, zoneId, Objects.requireNonNull(createdRrset).getId(), createdRrset.toJson());
+        assertTrue(isRrsetExist(updatedName, zoneId, projectId));
     }
 }

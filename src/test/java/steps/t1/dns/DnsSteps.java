@@ -126,8 +126,8 @@ public class DnsSteps extends Steps {
         return false;
     }
 
-    @Step("Получение списка публиных зон")
-    public static List<DnsZone> getPublicZoneList(String projectId) {
+    @Step("Получение списка зон")
+    public static List<DnsZone> getZoneList(String projectId) {
         return new Http(DNSService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "projects/{}/zones", projectId)
@@ -165,7 +165,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования зоны")
     public static boolean isZoneExist(String zoneId, String projectId) {
-        List<DnsZone> list = getPublicZoneList(projectId);
+        List<DnsZone> list = getZoneList(projectId);
         for (DnsZone zone : list) {
             if (zone.getId().equals(zoneId)) {
                 return true;
@@ -176,7 +176,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования зоны по имени")
     public static boolean isZoneByNameExist(String name, String projectId) {
-        List<DnsZone> list = getPublicZoneList(projectId);
+        List<DnsZone> list = getZoneList(projectId);
         for (DnsZone zone : list) {
             if (zone.getName().equals(name)) {
                 return true;

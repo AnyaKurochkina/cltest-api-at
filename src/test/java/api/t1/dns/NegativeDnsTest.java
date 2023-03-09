@@ -34,7 +34,7 @@ public class NegativeDnsTest extends Tests {
 
     @AfterAll
     public static void clearTestData() {
-        List<DnsZone> publicZoneList = getPublicZoneList(projectId);
+        List<DnsZone> publicZoneList = getZoneList(projectId);
         publicZoneList.forEach(x -> deleteZone(x.getId(), projectId));
     }
 
@@ -49,7 +49,7 @@ public class NegativeDnsTest extends Tests {
                 .build();
         createZone(zone.toJson(), projectId);
         DnsZone zone2 = DnsZone.builder()
-                .name("exist2_domen_public_zone_test_api")
+                .name("already_exist_domen_public_zone_test_api")
                 .domainName("public.zone.negative.test.api.ru")
                 .type("public")
                 .build();

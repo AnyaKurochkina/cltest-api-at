@@ -33,7 +33,7 @@ public class PublicDnsTest extends Tests {
 
     @AfterAll
     public static void clearTestData() {
-        List<DnsZone> publicZoneList = getPublicZoneList(projectId);
+        List<DnsZone> publicZoneList = getZoneList(projectId);
         publicZoneList.forEach(x -> {
             if (x.getType().equals("public")) {
                 deleteZone(x.getId(), projectId);
@@ -91,18 +91,20 @@ public class PublicDnsTest extends Tests {
 
     @Test
     @TmsLink("")
-    @DisplayName("Получение списка публичных зон")
+    @DisplayName("Получение списка зон")
     public void getPublicZoneListTest() {
         String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
+        String name = "public_zone_get_list_test_api";
         JSONObject json = DnsZone.builder()
-                .name("public_zone_get_list_test_api")
+                .name(name)
                 .domainName(domainName)
                 .type("public")
                 .build()
                 .toJson();
         createZone(json, projectId);
-        List<DnsZone> publicZoneList = getPublicZoneList(projectId);
-        assertTrue(publicZoneList.size() > 0, "Длина списка долна быть больше 0");
+        List<DnsZone> zoneList = getZoneList(projectId);
+        assertTrue(zoneList.stream().anyMatch(zone -> zone.getName().equals(name)));
+        assertTrue(zoneList.size() > 0, "Длина списка долна быть больше 0");
     }
 
     @Test
@@ -154,7 +156,7 @@ public class PublicDnsTest extends Tests {
 
     @Test
     @TmsLink("")
-    @DisplayName("")
+    @DisplayName("Частичное обновление rrset")
     public void partialUpdateRrsetTest() {
         String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
         JSONObject json = DnsZone.builder()
@@ -172,7 +174,9 @@ public class PublicDnsTest extends Tests {
         String zoneId = dnsZone.getId();
         createRrset(projectId, zoneId, rrset.toJson());
         Rrset createdRrset = getRrsetByName(recordName, zoneId, projectId);
-        createdRrset.setRecordName("partia2l.update." + domainName);
+        String updatedName = "r.update." + domainName;
+        Objects.requireNonNull(createdRrset).setRecordName("r.update." + domainName);
         partialUpdateRrset(projectId, zoneId, Objects.requireNonNull(createdRrset).getId(), createdRrset.toJson());
+        assertTrue(isRrsetExist(updatedName, zoneId, projectId));
     }
 }
