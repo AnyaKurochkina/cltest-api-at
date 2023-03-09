@@ -46,6 +46,7 @@ public class UiRedisAstraTest extends UiProductTest {
             AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
             new IndexPage()
                     .clickOrderMore()
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());

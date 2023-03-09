@@ -40,7 +40,6 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
-                .selectCategory("Базы данных")
                 .expandProductsList()
                 .selectProduct(product.getProductName());
         RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
