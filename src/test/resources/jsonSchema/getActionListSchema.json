@@ -94,9 +94,6 @@
             },
             "context_restrictions": {
               "type": "array"
-            },
-            "default_item": {
-              "type": "object"
             }
           },
           "additionalProperties": false,
@@ -120,8 +117,7 @@
             "icon_url",
             "is_safe",
             "icon_store_id",
-            "context_restrictions",
-            "default_item"
+            "context_restrictions"
           ]
         }
       ]
