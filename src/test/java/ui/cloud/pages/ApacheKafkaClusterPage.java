@@ -121,7 +121,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateCertificate() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить кластерный сертификат", "Подтвердить", () -> {
-            //CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
+            CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -198,11 +198,11 @@ public class ApacheKafkaClusterPage extends IProductPage {
             for (int i = 0; i < names.size(); i++) {
                 if (i != 0)
                     btnAdd.shouldBe(Condition.enabled).click();
-                DropDown.byLabel("Топики", i + 1).select(names.get(i));
-                DropDown.byLabel("Изменяемый параметр топика",2).select("compact");
+                Select.byLabel("Топик", i + 1).set(names.get(i));
+                Select.byLabel("Тип очистки").set("compact");
                 //dlg.setDropDownValue("Топики", names.get(i));
-                if(i==1)
-                DropDown.byLabel("Изменяемый параметр топика",4).select("compact");
+//                if(i==1)
+//                Select.byLabel("Изменяемый параметр топика",4).set("compact");
             }
         });
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -377,7 +377,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         if (!(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueContains(HEADER_ACL_IDEMPOTENT, nameT1))) {
             runActionWithParameters("Идемпотентных ACL", "Создание идемпотентных ACL Kafka", "Подтвердить", () -> {
                 Input.byLabel("Common Name сертификата клиента").setValue(nameT1);
-            });
+            }, ActionParameters.builder().waitChangeStatus(false).build());
             btnIdempAcl.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertEquals(nameT1, new Table(HEADER_ACL_IDEMPOTENT).getRowByColumnValue(HEADER_ACL_IDEMPOTENT, nameT1).getValueByColumn(HEADER_ACL_IDEMPOTENT),
                     "Ошибка cоздания идемпотентных ACL Kafka");

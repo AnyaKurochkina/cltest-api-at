@@ -58,9 +58,7 @@ public class ProductsListTest extends ProductBaseTest {
     @DisplayName("Возврат в список со страницы продукта")
     public void returnToListFromProductPageTest() {
         new IndexPage().goToProductsListPage()
-                .sortByCreateDate()
-                .lastPage()
-                .openProductPage(NAME)
+                .findAndOpenProductPage(NAME)
                 .goToProductsList()
                 .checkProductIsHighlighted(NAME);
         new ProductsListPage().openProductPage(NAME);

@@ -6,10 +6,11 @@ import io.qameta.allure.Step;
 import models.cloud.orderService.products.ScyllaDbCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.function.Executable;
-import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.*;
+import ui.elements.Alert;
+import ui.elements.Dialog;
+import ui.elements.Select;
+import ui.elements.Table;
 
 import java.util.List;
 
@@ -32,8 +33,6 @@ public class ScyllaDbClusterPage extends IProductPage {
     private static final String HEADER_SORT = "Сортировка";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
-
-
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
@@ -59,6 +58,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Выключить");
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
+
     public void checkConfiguration(SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -80,7 +80,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-  public void stopHard() {
+    public void stopHard() {
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_OFF);
@@ -94,7 +94,7 @@ public class ScyllaDbClusterPage extends IProductPage {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя хранилища ключей", name);
             });
-            btnGeneralInfo.click();
+            generalInfoTab.switchTo();
             Assertions.assertTrue(new Table(HEADER_NAME_DB).isColumnValueContains(HEADER_NAME_DB, name), "БД не существует");
         }
     }
@@ -108,29 +108,33 @@ public class ScyllaDbClusterPage extends IProductPage {
                 generatePassButton.shouldBe(Condition.enabled).click();
                 Alert.green("Значение скопировано");
             });
-        btnGeneralInfo.click();
+            generalInfoTab.switchTo();
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Пользователь не существует");
         }
     }
 
-    public void addRightsUser(String nameDb,String nameUserDb) {
+    public void addRightsUser(String nameDb, String nameUserDb) {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        if (!(new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb))) {
+        if (!(new Table(HEADER_NAME_USER_DB, 2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb))) {
             runActionWithParameters(BLOCK_ACCESS, "Добавить права доступа пользователю БД", "Подтвердить", () -> {
-                Dialog dlg = Dialog.byTitle("Добавить права доступа пользователю БД");
+                Dialog.byTitle("Добавить права доступа пользователю БД");
                 Select.byLabel("Имя базы данных").set(nameDb);
                 Select.byLabel("Имя пользователя").set(nameUserDb);
             });
-            btnGeneralInfo.click();
+            generalInfoTab.switchTo();
             Assertions.assertTrue(
-                    new Table(HEADER_NAME_USER_DB,2).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Ошибка добавления прав доступа");
-        }}
+                    new Table(HEADER_NAME_USER_DB, 2).isColumnValueContains(HEADER_NAME_USER_DB, nameUserDb), "Ошибка добавления прав доступа");
+        }
+    }
 
     public void deleteRightsUser(String nameUserDb) {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        if (new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb)) {
+        new ScyllaDbClusterPage.VirtualMachineTable(POWER)
+                .checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        if (new Table(HEADER_NAME_USER_DB, 2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb)) {
             runActionWithoutParameters(getBtnAction(nameUserDb, 2), "Удалить права доступа пользователю БД");
-        Assertions.assertFalse(new Table(HEADER_NAME_USER_DB,2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb), "Ошибка удаления прав доступа");
+            generalInfoTab.switchTo();
+            Assertions.assertFalse(new Table(HEADER_NAME_USER_DB, 2)
+                    .isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb), "Ошибка удаления прав доступа");
         }
     }
 
@@ -138,9 +142,11 @@ public class ScyllaDbClusterPage extends IProductPage {
         new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             runActionWithoutParameters(name, "Удалить БД");
-        Assertions.assertFalse(new Table("").isColumnValueEquals("", name), "БД существует");
+            generalInfoTab.switchTo();
+            Assertions.assertFalse(new Table("").isColumnValueEquals("", name), "БД существует");
         }
     }
+
     public void enlargeDisk(String name, String size, SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
@@ -148,7 +154,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         String secondSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", "/app/scylla/logs").getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
-        btnGeneralInfo.click();
+        generalInfoTab.switchTo();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));
@@ -171,9 +177,11 @@ public class ScyllaDbClusterPage extends IProductPage {
     public void deleteUserDb(String nameUser) {
         if (new Table(HEADER_DB_USERS_ROLE).isColumnValueContains(HEADER_NAME_USER_DB, nameUser)) {
             runActionWithoutParameters(nameUser, "Удалить пользователя");
+            generalInfoTab.switchTo();
             Assertions.assertTrue(new Table(HEADER_DB_USERS_ROLE).isEmpty(), "Ошибка удаления пользователя БД");
         }
     }
+
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
     }
@@ -185,8 +193,8 @@ public class ScyllaDbClusterPage extends IProductPage {
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").set(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
-        },ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
-        btnGeneralInfo.click();
+        }, ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        generalInfoTab.switchTo();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
@@ -200,8 +208,8 @@ public class ScyllaDbClusterPage extends IProductPage {
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             Select groupsElement = Select.byLabel("Группы").clear();
             groups.forEach(groupsElement::set);
-        },ActionParameters.builder().node(getRoleNode()).build());
-        btnGeneralInfo.click();
+        }, ActionParameters.builder().node(getRoleNode()).build());
+        generalInfoTab.switchTo();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
@@ -212,25 +220,24 @@ public class ScyllaDbClusterPage extends IProductPage {
     public void deleteGroup(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
-        btnGeneralInfo.click();
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        generalInfoTab.switchTo();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
         //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
-
     }
 
     //Таблица ролей
     public class RoleTable extends Table {
+        public RoleTable() {
+            super("Группы");
+        }
+
         @Override
         protected void open() {
             btnGeneralInfo.click();
             getRoleNode().scrollIntoView(scrollCenter).click();
-        }
-
-        public RoleTable() {
-            super("Группы");
         }
 
         private SelenideElement getRoleMenuElement(String name) {

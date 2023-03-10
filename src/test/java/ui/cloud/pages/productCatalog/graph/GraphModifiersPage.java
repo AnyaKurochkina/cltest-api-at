@@ -161,9 +161,9 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Удаление модификатора '{name}'")
     public GraphModifiersPage deleteModifier(String name) {
-        $x("//td[@value='" + name + "']/parent::tr//button[2]").click();
+        $x("//td[@value='" + name + "']/parent::tr//button[2]").scrollIntoView(false).click();
         new DeleteDialog().inputValidIdAndDelete("Модификатор успешно удален");
-        TestUtils.wait(1100);
+        Waiting.sleep(1100);
         Assertions.assertFalse($x("//td[@value='" + name + "']").exists());
         return this;
     }

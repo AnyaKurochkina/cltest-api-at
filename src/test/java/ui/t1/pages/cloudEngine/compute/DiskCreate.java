@@ -45,14 +45,14 @@ public class DiskCreate {
     }
 
     public DiskCreate setMarketPlaceImage(SelectBox.Image marketPlaceImage) {
-        Switch.byLabel("Создать из образа").setEnabled(true);
+        Switch.byText("Создать из образа").setEnabled(true);
         SelectBox.setMarketPlaceImage(marketPlaceImage);
         this.marketPlaceImage = marketPlaceImage;
         return this;
     }
 
     public DiskCreate setUserImage(String userImage) {
-        Switch.byLabel("Создать из образа").setEnabled(true);
+        Switch.byText("Создать из образа").setEnabled(true);
         SelectBox.setUserImage(userImage);
         this.userImage = userImage;
         return this;

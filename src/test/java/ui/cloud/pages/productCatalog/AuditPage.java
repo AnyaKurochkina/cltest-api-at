@@ -135,7 +135,7 @@ public class AuditPage extends BasePage {
 
     @Step("Проверка отсутствия записей в аудите")
     public AuditPage checkRecordsNotFound() {
-        Waiting.sleep(600);
+        Waiting.sleep(1000);
         Assertions.assertTrue(new Table("Учетная запись").isEmpty());
         return this;
     }
@@ -166,9 +166,11 @@ public class AuditPage extends BasePage {
 
     @Step("Проверка отображения '{value}' в полноэкранном режиме ответа")
     public AuditPage checkResponseFullViewContains(String value, String contextId) {
+        openRecordByContextId(contextId);
         showFullView.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
         Waiting.sleep(500);
-        Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed());
+        Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed(),
+                "Ответ не содержит " + value);
         closeFullViewButton.click();
         return this;
     }

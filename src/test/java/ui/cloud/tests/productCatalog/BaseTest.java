@@ -10,7 +10,6 @@ import ui.cloud.pages.LoginPageControlPanel;
 import ui.extesions.ConfigExtension;
 
 @ExtendWith(ConfigExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 abstract public class BaseTest extends Tests {
 
     @BeforeEach

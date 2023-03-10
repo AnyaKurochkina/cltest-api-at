@@ -57,9 +57,7 @@ public class ServicesListTest extends ServiceBaseTest {
     @DisplayName("Проверка подсветки ранее открытого сервиса")
     public void returnToListFromServicePageTest() {
         new IndexPage().goToServicesListPagePC()
-                .sortByCreateDate()
-                .lastPage()
-                .openServicePage(NAME)
+                .findAndOpenServicePage(NAME)
                 .goToServicesList()
                 .checkServiceIsHighlighted(NAME);
         new ServicesListPagePC().openServicePage(NAME);

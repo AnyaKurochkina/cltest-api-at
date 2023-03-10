@@ -45,7 +45,7 @@ class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
                 .selectProduct(product.getProductName());
         UbuntuLinuxOrderPage orderPage = new UbuntuLinuxOrderPage();
 
-        //Проверка кнопки Заказать на неактивность, до заполнения полей
+        //Проверка кнопки Заказать на неактивность до заполнения полей
         orderPage.getOrderBtn().shouldBe(Condition.disabled);
 
         //Проверка поля Кол-во

@@ -2,21 +2,25 @@ package ui.cloud.tests.productCatalog.graph.node;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.GraphItem;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
-import ui.models.SubgraphNode;
 
 @Feature("Удаление узла графа")
 public class DeleteNodeTest extends GraphBaseTest {
+    private Graph graph;
+    private Graph subgraph;
 
     @BeforeEach
     @DisplayName("Создание подграфа для узла графа")
     public void setUpForGraphNodesTest() {
-        createGraph(SUBGRAPH_NAME, SUBGRAPH_TITLE);
+        graph = super.graph;
+        subgraph = createGraph(SUBGRAPH_NAME, SUBGRAPH_TITLE);
     }
 
     @AfterEach
@@ -30,11 +34,16 @@ public class DeleteNodeTest extends GraphBaseTest {
     @TmsLink("490447")
     @DisplayName("Удаление узла графа")
     public void deleteGraphNode() {
-        SubgraphNode node = new SubgraphNode(SUBGRAPH_NAME);
+        GraphItem node = GraphItem.builder()
+                .name(SUBGRAPH_NAME)
+                .description(nodeDescription)
+                .subgraphId(subgraph.getGraphId())
+                .number(1)
+                .build();
+        patchGraphWithGraphItem(graph, node);
         new IndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
-                .addNodeAndSave(node)
                 .deleteNodeAndSave(node)
                 .checkNodeNotFound(node);
     }

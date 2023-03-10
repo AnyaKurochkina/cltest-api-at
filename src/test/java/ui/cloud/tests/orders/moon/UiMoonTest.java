@@ -37,7 +37,6 @@ public class UiMoonTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             MoonOrderPage orderPage = new MoonOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getProjectName().setValue(new Generex("moon-[a-z]{5,15}").random());
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
@@ -67,5 +66,4 @@ public class UiMoonTest extends UiProductTest {
         MoonPage moonPage = new MoonPage(product);
         moonPage.runActionWithCheckCost(CompareType.LESS, moonPage::delete);
     }
-
 }

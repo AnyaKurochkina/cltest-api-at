@@ -36,7 +36,7 @@ public class ImportTemplateTest extends TemplateBaseTest {
                         .type(json.getString("Template.type"))
                         .description(json.getString("Template.description"))
                         .timeout(json.getInt("Template.timeout"))
-                        .printedOutput(json.get("Template.printed_output"))
+                        .printedOutput(json.getList("Template.printed_output"))
                         .version("1.0.0")
                         .build())
                 .deleteTemplate();
