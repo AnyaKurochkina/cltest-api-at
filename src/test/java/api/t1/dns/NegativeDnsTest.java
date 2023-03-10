@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.t1.dns.DnsZone;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
@@ -46,13 +47,13 @@ public class NegativeDnsTest extends Tests {
                 .domainName("public.zone.negative.test.api.ru")
                 .type("public")
                 .build();
-        createPublicZone(zone.toJson(), projectId);
+        createZone(zone.toJson(), projectId);
         DnsZone zone2 = DnsZone.builder()
                 .name("exist2_domen_public_zone_test_api")
                 .domainName("public.zone.negative.test.api.ru")
                 .type("public")
                 .build();
-        String errorMsg = createPublicZoneResponse(zone2.toJson(), projectId).assertStatus(400)
+        String errorMsg = createZoneResponse(zone2.toJson(), projectId).assertStatus(400)
                 .jsonPath().getString("detail");
         assertEquals("Zone is already exist", errorMsg);
         assertFalse(isZoneExist(zone2.getName(), projectId), String.format("Зона с именем %s создалась", zone.getName()));
@@ -68,7 +69,7 @@ public class NegativeDnsTest extends Tests {
                 .domainName(domain)
                 .type("public")
                 .build();
-        String errorMsg = createPublicZoneResponse(zone.toJson(), projectId).assertStatus(400)
+        String errorMsg = createZoneResponse(zone.toJson(), projectId).assertStatus(400)
                 .jsonPath().getString("detail");
         assertEquals("Invalid zone", errorMsg);
         assertFalse(isZoneExist(zone.getName(), projectId), String.format("Зона с именем %s создалась", zone.getName()));
@@ -79,27 +80,32 @@ public class NegativeDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Изменение домена")
     public void changeDomenPublicZoneTest() {
+        String expectedDomainName = "change.domen.public.zone.negative.test.api.ru";
         DnsZone zone = DnsZone.builder()
                 .name("change_domen_public_zone_test_api")
-                .domainName("change.domen.public.zone.negative.test.api.ru")
+                .domainName(expectedDomainName)
                 .type("public")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), projectId);
-        partialUpdateZone(new JSONObject().put("domain_name", "change.domain.ru"), dnsZone.getId(), projectId);
-
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        String domen = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".com";
+        DnsZone actualZone = partialUpdateZone(new JSONObject().put("domain_name", domen), dnsZone.getId(), projectId);
+        assertEquals(expectedDomainName, actualZone.getDomainName());
     }
 
     @Test
     @TmsLink("")
     @DisplayName("Изменение типа зоны")
     public void changeTypePublicZoneTest() {
+        String expectedType = "public";
         DnsZone zone = DnsZone.builder()
                 .name("change_type_public_zone_test_api")
                 .domainName("change.type.public.zone.negative.test.api.ru")
-                .type("public")
+                .type(expectedType)
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), projectId);
-        partialUpdateZone(new JSONObject().put("type", "public"), dnsZone.getId(), projectId);
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        DnsZone actualZone = partialUpdateZone(new JSONObject().put("type", "private"), dnsZone.getId(), projectId);
+        assertEquals(expectedType, actualZone.getType());
+        //todo https://jira.t1-cloud.ru/jira-test/browse/PO-858 на анализе
     }
 
     @Test
@@ -112,12 +118,26 @@ public class NegativeDnsTest extends Tests {
                 .domainName(name)
                 .type("public")
                 .build();
-        DnsZone dnsZone = createPublicZone(zone.toJson(), projectId);
-        //todo сравнить сообщение об ошибке
+        String errorMessage = createZoneResponse(zone.toJson(), projectId).assertStatus(400).jsonPath().getString("detail");
+        assertEquals("Zone already exist", errorMessage);
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Создание приватной зоны без указания network")
+    public void createPrivateZoneTest() {
+        DnsZone zone = DnsZone.builder()
+                .name("gg")
+                .domainName("gg.ru")
+                .type("private")
+                .build();
+        String actualErrorMessage = createZoneResponse(zone.toJson(), projectId).assertStatus(400).jsonPath().getString("detail");
+        assertEquals("Cannot create private zone with null networks", actualErrorMessage);
     }
 
     //todo Проверить что мы не можем создать один и тот же домен из другого проекта. Если пубчлиные то ошибка, если приватный то все ок.
-    //todo Ползователь создал example.com а ругой создает test.example.com
+    //todo Ползователь создал example.com а другой создает test.example.com
     //todo У пользака есть права на проект он создает там зону, потом он идет в другой проект и создает test.example.com
     // todo у приватный зоны отсутсвует дефолтная запись типа NS
+    //todo Создание public зоны когда private создана.
 }

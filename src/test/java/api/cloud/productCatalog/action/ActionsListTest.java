@@ -139,7 +139,7 @@ public class ActionsListTest extends Tests {
     @Test
     public void getActionListForItems() {
         List<Action> productObjectList = getActionListByFilter("for_items", true);
-        assertNotNull(productObjectList.get(0).getPriority());
+        productObjectList.forEach(x -> assertNotNull(x.getPriority()));
     }
 
     @DisplayName("Получение списка действий по type_provider_list")

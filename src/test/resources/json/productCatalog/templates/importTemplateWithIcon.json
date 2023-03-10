@@ -23,7 +23,7 @@
     "name": "import_template_with_icon_test_api",
     "title": "import_template_with_icon_test_api",
     "description": "",
-    "type": "check_vm",
+    "type": "rpc",
     "allowed_groups": [],
     "restricted_groups": [],
     "version_arr": [

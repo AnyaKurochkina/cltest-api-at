@@ -49,6 +49,8 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
     private String createDt;
     @JsonProperty("update_dt")
     private String updateDt;
+    @JsonProperty("default_order")
+    private Object defaultOrder;
 
     @Override
     public Entity init() {
@@ -67,6 +69,7 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
                 .set("$.compact_template", new JSONObject(compactTemplate))
                 .set("$.full_template", new JSONObject(fullTemplate))
                 .set("$.default_item", defaultItem)
+                .set("$.default_order", defaultOrder)
                 .build();
     }
 

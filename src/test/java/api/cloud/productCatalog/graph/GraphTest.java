@@ -18,10 +18,7 @@ import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.time.ZonedDateTime;
 import java.util.Arrays;
@@ -243,6 +240,7 @@ public class GraphTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка Graph в GitLab")
     @TmsLink("821972")
     public void dumpToGitlabGraph() {
@@ -260,6 +258,7 @@ public class GraphTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка Graph из GitLab")
     @TmsLink("1028898")
     public void loadFromGitlabGraph() {

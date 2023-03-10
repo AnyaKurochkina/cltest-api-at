@@ -25,5 +25,7 @@
   },
   "is_active": false,
   "default_item": {
+  },
+  "default_order": {
   }
 }

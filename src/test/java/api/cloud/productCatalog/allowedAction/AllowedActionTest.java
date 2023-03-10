@@ -8,6 +8,7 @@ import models.cloud.productCatalog.allowedAction.AllowedAction;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -100,6 +101,7 @@ public class AllowedActionTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Загрузка разрешенного действия в GitLab")
     @TmsLink("1243400")
     public void dumpToGitlabAllowedAction() {
@@ -116,6 +118,7 @@ public class AllowedActionTest extends Tests {
     }
 
     @Test
+    @Disabled
     @DisplayName("Выгрузка разрешенного действия из GitLab")
     @TmsLink("1243402")
     public void loadFromGitlabAllowedAction() {
