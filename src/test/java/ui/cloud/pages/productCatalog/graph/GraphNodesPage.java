@@ -71,7 +71,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
     private final TextArea staticDataTextArea = TextArea.byLabel("Static data");
-    private final Input searchNodesInput = Input.byPlaceholder("//input[@placeholder='Поиск...']");
+    private final Input searchNodesInput = Input.byPlaceholder("Поиск...");
     private final Button fitViewButton = Button.byAriaLabel("fit view");
     private final SearchSelect subgraphSelect = SearchSelect.byLabel("Подграф");
     private final SearchSelect templateSelect = SearchSelect.byLabel("Шаблон");
