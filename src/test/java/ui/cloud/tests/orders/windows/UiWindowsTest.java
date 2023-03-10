@@ -47,6 +47,8 @@ public class UiWindowsTest extends UiProductTest {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .selectCategory("Базовые вычисления")
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             WindowsOrderPage orderPage = new WindowsOrderPage();
             //  orderPage.getOsVersion().select(product.getOsVersion());

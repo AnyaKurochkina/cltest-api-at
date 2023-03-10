@@ -53,6 +53,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .selectCategory("Базы данных")
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
             orderPage.getOsVersion().select(product.getOsVersion());
