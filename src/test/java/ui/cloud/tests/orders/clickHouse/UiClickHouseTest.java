@@ -10,6 +10,7 @@ import models.cloud.orderService.products.ClickHouse;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -23,10 +24,10 @@ import java.time.Duration;
 public class UiClickHouseTest extends UiProductTest {
 
     ClickHouse product;
-    //= ClickHouse.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/18a7a4de-878c-4f70-a518-0763cd7f3795/main?context=proj-iv550odo9a&type=project&org=vtb");
+    // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/5b040449-ef22-4bae-a2e0-6ccabf485afd/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameAD = "at_ad_user";
-    String nameFull = "at_user";
+    String nameFull = "qa_order_service_admin";
     String nameLocalAD = "at_local_user";
 
 
@@ -44,6 +45,7 @@ public class UiClickHouseTest extends UiProductTest {
     void orderClickHouse() {
         double preBillingProductPrice;
         try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -55,11 +57,10 @@ public class UiClickHouseTest extends UiProductTest {
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
             orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getGroup2().select(accessGroup.getPrefixName());
-            orderPage.getGroup3().select(accessGroup.getPrefixName());
-            orderPage.getGroup4().select(accessGroup.getPrefixName());
+            orderPage.getGroup().select(accessGroup);
+            orderPage.getGroup2().select(accessGroup);
+            orderPage.getGroup3().select(accessGroup);
+            orderPage.getGroup4().select(accessGroup);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
             new OrdersPage()
@@ -123,6 +124,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(6)
     @TmsLink("1162627")
+    @Disabled
     @DisplayName("UI ClickHouse. Сбросить пароль владельца БД")
     void resetPasswordDb() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

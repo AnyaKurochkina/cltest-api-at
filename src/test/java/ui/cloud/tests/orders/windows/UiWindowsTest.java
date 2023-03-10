@@ -11,6 +11,7 @@ import models.cloud.orderService.products.Windows;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
@@ -43,17 +44,19 @@ public class UiWindowsTest extends UiProductTest {
     void orderWindows() {
         double preBillingProductPrice;
         try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .selectCategory("Базовые вычисления")
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             WindowsOrderPage orderPage = new WindowsOrderPage();
-          //  orderPage.getOsVersion().select(product.getOsVersion());
+            //  orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
             orderPage.getRoleServer().selectByValue(product.getRole());
             orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
+            orderPage.getGroup().select(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();

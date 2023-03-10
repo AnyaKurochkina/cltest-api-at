@@ -11,6 +11,7 @@ import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
 import ui.extesions.UiProductTest;
@@ -24,11 +25,12 @@ import static core.helper.StringUtils.$x;
 public class UiClickHouseClusterTest extends UiProductTest {
 
     ClickHouseCluster product;
-    // = ClickHouseCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/5694dd78-53a9-400e-9a41-ded295c945b8/main?context=proj-iv550odo9a&type=project&org=vtb");
+    // = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b0be1e0c-2540-4c04-9128-4bee54d97b52/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
+    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
-    String nameGroup ="cloud-plux-group-at";
+    String nameGroup =accessGroup.getPrefixName();
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
 
     @BeforeEach
@@ -45,6 +47,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void orderClickHouseCluster() {
         double preBillingProductPrice;
         try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -56,11 +59,10 @@ public class UiClickHouseClusterTest extends UiProductTest {
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegment().selectByValue(product.getSegment());
             orderPage.getPlatform().selectByValue(product.getPlatform());
-            AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-            orderPage.getGroup().select(accessGroup.getPrefixName());
-            orderPage.getGroup2().select(accessGroup.getPrefixName());
-            orderPage.getGroup3().select(accessGroup.getPrefixName());
-            orderPage.getGroup4().select(accessGroup.getPrefixName());
+            orderPage.getGroup().select(accessGroup);
+            orderPage.getGroup2().select(accessGroup);
+            orderPage.getGroup3().select(accessGroup);
+            orderPage.getGroup4().select(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
@@ -184,9 +186,8 @@ public class UiClickHouseClusterTest extends UiProductTest {
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS,() -> clickHouseClusterPage.deleteGroupAD(nameGroup));
     }
 
-
-        @Test
-    @Order(14)
+    @Test
+    @Order(15)
     @TmsLink("1152793")
     @DisplayName("UI ClickHouse Cluster. Добавить группу администраторов")
     void addGroupAdmin() {
@@ -194,7 +195,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
             clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS,() -> clickHouseClusterPage.addGroupAdmin(nameGroup));
     }
     @Test
-    @Order(15)
+    @Order(14)
     @TmsLink("1152794")
     @DisplayName("UI ClickHouse Cluster. Удалить группу администраторов")
     void deleteGroupAdmin() {
