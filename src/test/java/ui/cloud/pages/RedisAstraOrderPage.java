@@ -17,7 +17,7 @@ public class RedisAstraOrderPage extends NewOrderPage {
 
     private final Button generatePassButton = Button.byAriaLabel("generate");
     private final Input userInput = Input.byLabel("Пользователь");
-    private final Switch createDefaultUserSwitch = Switch.byLabel("Создать пользователя default");
+    private final Switch createDefaultUserSwitch = Switch.byText("Создать пользователя default");
     SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
     SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
     Select redisVersion = Select.byLabel("Версия Redis");

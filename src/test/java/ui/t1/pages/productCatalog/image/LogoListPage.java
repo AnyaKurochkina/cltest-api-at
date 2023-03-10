@@ -3,7 +3,6 @@ package ui.t1.pages.productCatalog.image;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.t1.imageService.ImageGroup;
 import models.t1.imageService.Logo;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;

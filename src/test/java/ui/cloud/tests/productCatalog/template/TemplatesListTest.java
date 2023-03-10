@@ -38,9 +38,7 @@ public class TemplatesListTest extends TemplateBaseTest {
     @DisplayName("Подсветка ранее открытого шаблона узлов")
     public void returnFromTemplatePageTest() {
         new IndexPage().goToTemplatesPage()
-                .sortByCreateDate()
-                .lastPage()
-                .openTemplatePage(NAME)
+                .findAndOpenTemplatePage(NAME)
                 .goToTemplatesList()
                 .checkTemplateIsHighlighted(NAME);
         new TemplatesListPage().openTemplatePage(NAME);

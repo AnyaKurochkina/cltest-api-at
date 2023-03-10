@@ -118,7 +118,7 @@ public class VmCreate {
     }
 
     public VmCreate setSwitchPublicIp(boolean checked){
-        Switch.byLabel("Подключить публичный IP").setEnabled(checked);
+        Switch.byText("Подключить публичный IP").setEnabled(checked);
         return this;
     }
 

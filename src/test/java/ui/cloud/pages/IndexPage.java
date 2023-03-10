@@ -95,6 +95,7 @@ public class IndexPage {
 
     @Step("Переход на страницу Утилиты.Аудит")
     public AuditPage goToAuditPage() {
+        Waiting.sleep(500);
         sectionSelect.set("Утилиты");
         auditLink.click();
         Waiting.sleep(500);

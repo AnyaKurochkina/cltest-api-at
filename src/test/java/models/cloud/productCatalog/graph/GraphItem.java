@@ -52,7 +52,7 @@ public class GraphItem {
     @JsonProperty("depends")
     private List<Object> depends;
     @JsonProperty("count")
-    private Object count;
+    private String count;
     @JsonProperty("log_level")
     private Object logLevel;
     @JsonProperty("damage_order_on_error")
@@ -92,7 +92,7 @@ public class GraphItem {
                 .set("$.hold", hold)
                 .set("$.template_version", templateVersion)
                 .set("$.color", color)
-                .set("$.subgraphVersion", subgraphVersion)
+                .set("$.subgraph_version", subgraphVersion)
                 .set("$.icon_url", iconUrl)
                 .set("$.subgraph_version_pattern", subgraphVersionPattern)
                 .set("$.for_each", forEach)

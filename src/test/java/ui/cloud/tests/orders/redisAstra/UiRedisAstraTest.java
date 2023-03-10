@@ -47,6 +47,7 @@ public class UiRedisAstraTest extends UiProductTest {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());

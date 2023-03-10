@@ -17,6 +17,8 @@ import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.back;
 
@@ -34,8 +36,8 @@ public class ProductPage extends BasePage {
     private final Select categoryV2Select = Select.byLabel("КатегорияV2");
     private final Select onRequestSelect = Select.byLabel("Продукт по запросу");
     private final Select paymentSelect = Select.byLabel("Выбор оплаты");
-    private final Switch inGeneralListSwitch = Switch.byLabel("В общем списке маркетплейса");
-    private final Switch isOpen = Switch.byLabel("Открытый");
+    private final Switch inGeneralListSwitch = Switch.byText("В общем списке маркетплейса");
+    private final Switch isOpen = Switch.byText("Открытый");
     private final SelenideElement nameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement nonUniqueNameValidationHint =
@@ -68,7 +70,9 @@ public class ProductPage extends BasePage {
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
         Waiting.sleep(3000);
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
         graphVersionSelect.set(product.getGraphVersion());
+        Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
         goToAdditionalParamsTab();
         authorInput.setValue(product.getAuthor());
         categorySelect.set(Categories.VM.getValue());
@@ -94,7 +98,7 @@ public class ProductPage extends BasePage {
                 info.getTextArea().getValue().replaceAll("\\s", ""));
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
-        Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()),
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(3),
                 "Название графа не содержит " + graph.getName());
         Assertions.assertEquals(product.getGraphVersion(), graphVersionSelect.getValue());
         goToAdditionalParamsTab();

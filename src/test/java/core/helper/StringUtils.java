@@ -85,4 +85,7 @@ public final class StringUtils {
         return stack.toString();
     }
 
+    public static boolean isNullOrEmpty(String value) {
+        return value == null || value.length() == 0;
+    }
 }

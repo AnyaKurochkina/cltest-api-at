@@ -254,7 +254,6 @@ public abstract class IProductPage {
 
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
-        historyTab.switchTo();
         History history = new History();
         checkErrorByStatus(history.lastActionStatus());
         Assertions.assertEquals(history.lastActionName(), action, "Название последнего действия не соответствует ожидаемому");
