@@ -86,6 +86,9 @@ public class Graph extends Entity implements IProductCatalog {
     private String currentVersion;
     @JsonProperty("lock_order_on_error")
     private Boolean lockOrderOnError;
+    @JsonProperty("default_item")
+    private Object defaultItem;
+
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");

@@ -73,7 +73,7 @@ public class NegativeDnsTest extends Tests {
                 .jsonPath().getString("detail");
         assertEquals("Invalid zone", errorMsg);
         assertFalse(isZoneExist(zone.getName(), projectId), String.format("Зона с именем %s создалась", zone.getName()));
-        assertFalse(isZoneExistInOpenDns(zone.getDomainName()), String.format("Зона с именем %s создалась в PowerDns", zone.getName()));
+        assertFalse(isZoneExistInPowerDns(zone.getDomainName()), String.format("Зона с именем %s создалась в PowerDns", zone.getName()));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class NegativeDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Создание зоны существующей в PowerDns")
     public void createExistInPowerDnsPublicZoneTest() {
-        String name = getZoneOpenDnsList().get(0).getName();
+        String name = getZonePowerDnsList().get(0).getName();
         DnsZone zone = DnsZone.builder()
                 .name("create_exist_in_power_dns_public_zone_test_api")
                 .domainName(name)

@@ -1,5 +1,6 @@
 package models.cloud.productCatalog.action;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
@@ -112,7 +113,7 @@ public class Action extends Entity {
     private Boolean isSafe;
     @JsonProperty("version_fields")
     private List<String> versionFields;
-    @JsonProperty("default_item")
+    @JsonIgnore
     private Object defaultItem;
 
     @Override

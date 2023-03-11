@@ -121,13 +121,13 @@ public class PrivateDnsTest extends Tests {
         createRrset(projectId, zoneId, rrset.toJson());
         assertTrue(isRrsetExist(recordName, zoneId, projectId),
                 String.format("Записи с recordName %s не существует", recordName));
-        assertTrue(isRrsetExistInOpenDnsZone(recordName, dnsZone.getDomainName()),
+        assertTrue(isRrsetExistInPowerDnsZone(recordName, dnsZone.getDomainName()),
                 String.format("Записи с name %s не существует в PowerDns", recordName));
         Rrset getRrset = Objects.requireNonNull(getRrsetByName(recordName, zoneId, projectId));
         deleteRrset(projectId, zoneId, getRrset.getId());
         assertFalse(isRrsetExist(recordName, zoneId, projectId),
                 String.format("Запись с recordName %s существует", recordName));
-        assertFalse(isRrsetExistInOpenDnsZone(recordName, dnsZone.getDomainName()),
+        assertFalse(isRrsetExistInPowerDnsZone(recordName, dnsZone.getDomainName()),
                 String.format("Запись с name %s существует в PowerDns", recordName));
     }
 

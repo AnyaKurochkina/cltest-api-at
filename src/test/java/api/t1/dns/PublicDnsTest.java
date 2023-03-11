@@ -53,10 +53,28 @@ public class PublicDnsTest extends Tests {
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
         assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
-        assertTrue(isZoneExistInOpenDns(zone.getDomainName()), String.format("Зона с именем %s не создалась в PowerDns", zone.getName()));
+        assertTrue(isZoneExistInPowerDns(zone.getDomainName()), String.format("Зона с именем %s не создалась в PowerDns", zone.getName()));
         deleteZone(dnsZone.getId(), projectId);
         assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
-        assertFalse(isZoneExistInOpenDns(zone.getDomainName()), String.format("Зона с именем %s не удалена в PowerDns", zone.getName()));
+        assertFalse(isZoneExistInPowerDns(zone.getDomainName()), String.format("Зона с именем %s не удалена в PowerDns", zone.getName()));
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Удаление публичной зоны из PowerDns. Проверка обратной синхронизации.")
+    public void deletePublicZoneFromPowerDns() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
+        DnsZone zone = DnsZone.builder()
+                .name("delete_public_zone_from_power_dns_test_api")
+                .domainName(domainName)
+                .type("public")
+                .build();
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не создалась", zone.getName()));
+        assertTrue(isZoneExistInPowerDns(zone.getDomainName()), String.format("Зона с именем %s не создалась в PowerDns", zone.getName()));
+        deleteZoneFromPowerDns(dnsZone.getDomainName());
+        assertTrue(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
+        assertFalse(isZoneExistInPowerDns(zone.getDomainName()), String.format("Зона с именем %s не удалена в PowerDns", zone.getName()));
     }
 
     @Test
@@ -144,13 +162,13 @@ public class PublicDnsTest extends Tests {
         createRrset(projectId, zoneId, rrset.toJson());
         assertTrue(isRrsetExist(recordName, zoneId, projectId),
                 String.format("Записи с recordName %s не существует", recordName));
-        assertTrue(isRrsetExistInOpenDnsZone(recordName, dnsZone.getDomainName()),
+        assertTrue(isRrsetExistInPowerDnsZone(recordName, dnsZone.getDomainName()),
                 String.format("Записи с name %s не существует в PowerDns", recordName));
         Rrset getRrset = Objects.requireNonNull(getRrsetByName(recordName, zoneId, projectId));
         deleteRrset(projectId, zoneId, getRrset.getId());
         assertFalse(isRrsetExist(recordName, zoneId, projectId),
                 String.format("Запись с recordName %s существует", recordName));
-        assertFalse(isRrsetExistInOpenDnsZone(recordName, dnsZone.getDomainName()),
+        assertFalse(isRrsetExistInPowerDnsZone(recordName, dnsZone.getDomainName()),
                 String.format("Запись с name %s существует в PowerDns", recordName));
     }
 
