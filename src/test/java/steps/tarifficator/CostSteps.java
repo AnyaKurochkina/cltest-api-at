@@ -80,7 +80,7 @@ public class CostSteps extends Steps {
             }
             break;
         }
-        Assertions.assertNotNull(consumption, "Расход заказа равна null");
+        Assertions.assertNotNull(consumption, "Расход заказа равен null");
         log.debug("Расход для заказа: " + consumption);
         return consumption;
     }
