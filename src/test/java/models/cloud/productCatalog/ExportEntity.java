@@ -10,10 +10,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ExportEntity {
-    private String id;
+    private Object id;
     private String version;
 
-    public ExportEntity(String id) {
+    public ExportEntity(Object id) {
         this.id = id;
     }
 }

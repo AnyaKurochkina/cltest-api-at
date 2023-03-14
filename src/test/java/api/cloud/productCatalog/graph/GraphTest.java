@@ -21,10 +21,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
 import java.time.ZonedDateTime;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.*;
@@ -382,5 +379,19 @@ public class GraphTest extends Tests {
                 .createObject();
         Graph actualGraph = getGraphById(graph.getGraphId());
         assertEquals(Env.TEST_LT, actualGraph.getModifications().get(0).getEnvs().get(0));
+    }
+
+    @DisplayName("Создание графа с не версионным полем default_item")
+    @TmsLink("1509589")
+    @Test
+    public void createGraphWithDefaultItemTest() {
+        Graph graph = Graph.builder()
+                .name("create_graph_with_default_item_test_api")
+                .build()
+                .createObject();
+        String expectedVersion = graph.getVersion();
+        assertTrue(Objects.nonNull(graph.getDefaultItem()));
+        partialUpdateGraph(graph.getGraphId(), new JSONObject().put("default_item", new JSONObject().put("test", "api")));
+        assertEquals(expectedVersion, getGraphById(graph.getGraphId()).getVersion());
     }
 }

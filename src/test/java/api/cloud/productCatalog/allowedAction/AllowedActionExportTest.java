@@ -40,8 +40,8 @@ public class AllowedActionExportTest extends Tests {
     @TmsLink("1507973")
     @Test
     public void exportAllowedActionsTest() {
-        ExportEntity e = new ExportEntity(String.valueOf(simpleAllowedAction.getId()));
-        ExportEntity e2 = new ExportEntity(String.valueOf(simpleAllowedAction2.getId()));
+        ExportEntity e = new ExportEntity(simpleAllowedAction.getId());
+        ExportEntity e2 = new ExportEntity(simpleAllowedAction2.getId());
         Response response = exportObjectsById("allowed_actions", new ExportData(Arrays.asList(e, e2)).toJson())
                 .assertStatus(201);
 //        byte[] bytes = response.getResponse().asByteArray();

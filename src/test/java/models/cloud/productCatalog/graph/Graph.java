@@ -123,6 +123,7 @@ public class Graph extends Entity implements IProductCatalog {
                 .setIfNullRemove("$.json_schema", jsonSchema)
                 .setIfNullRemove("$.ui_schema", jsonSchema)
                 .setIfNullRemove("$.static_data", jsonSchema)
+                .setIfNullRemove("$.default_item", defaultItem)
                 .build();
     }
 
