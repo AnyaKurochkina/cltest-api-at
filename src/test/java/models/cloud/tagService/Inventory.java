@@ -58,14 +58,13 @@ public class Inventory extends ContextEntity{
                 .assertStatus(200);
     }
 
-    public List<ListItem> byFilter(String dataSource, List<InventoryTags.Tag> tags){
-        InventoryTags inventoryTags = new InventoryTags(dataSource, tags);
-        new Http(Configure.TagService)
+    public List<ListItem> byFilter(Filter filter){
+        return new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
-                .body(serialize(inventoryTags))
+                .body(serialize(filter))
                 .post("/v2/{}/{}/inventories/filter/", contextType, contextId)
-                .assertStatus(200);
-        return null;
+                .assertStatus(200)
+                .jsonPath().getList("list", ListItem.class);
     }
 
     @Data
@@ -94,19 +93,6 @@ public class Inventory extends ContextEntity{
         String inventory;
         String contextPath;
         Map<String, String> tags;
-    }
-
-    @Data
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-    public static class Filter {
-        List<String> inventoryPks;
-        Tag tags;
-
-        @Data
-        @AllArgsConstructor
-        public static class Tag {
-        }
     }
 
 }

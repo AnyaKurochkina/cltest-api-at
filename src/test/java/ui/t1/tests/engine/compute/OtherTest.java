@@ -339,4 +339,38 @@ public class OtherTest extends AbstractComputeTest {
 
 //        new IndexPage().goToImages().selectImage(disk.getName()).runActionWithCheckCost(CompareType.ZERO, imagePage::delete);
     }
+
+    @Test
+    @TmsLink("1507767")
+    @DisplayName("Cloud Compute. Создать вм. Создать диск. Создать снимок. Подключить диск. Удалить снимок. Отключить диск. Изменить подсеть")
+    void scenario1() {
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setName(getRandomName())
+                .setAvailabilityZone(availabilityZone)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        new VmList().selectCompute(vm.getName()).checkCreate();
+
+        DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(vm.getName()).setSize(4L).clickOrder();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).checkCreate();
+
+        diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
+
+        new IndexPage().goToDisks().selectDisk(disk.getName());
+        diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), false));
+        Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName());
+        snapshot.runActionWithCheckCost(CompareType.LESS, snapshot::delete);
+
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .selectDisk(disk.getName())
+                .runActionWithCheckCost(CompareType.LESS, diskPage::detachComputeVolume);
+
+        NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
+        networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSubnet("default");
+    }
 }
