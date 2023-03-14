@@ -50,6 +50,8 @@ public class Pipeline {
                     .extract()
                     .response()
                     .jsonPath();
+            System.out.println("TestPlanId: " + argsMap.get(TEST_PLAN_ID));
+            System.out.println(path.getString(""));
             tags = path.getList("tags.name");
             threadCount = tags.stream().filter(s -> s.startsWith("thread_count=")).findFirst().orElse("thread_count=").substring(13);
             if (threadCount.length() > 0) {
