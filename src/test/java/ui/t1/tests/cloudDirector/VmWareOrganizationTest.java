@@ -5,7 +5,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
-import models.t1.portalBack.VmWareOrganization;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import steps.authorizer.AuthorizerSteps;
@@ -16,7 +15,6 @@ import ui.t1.pages.cloudDirector.CloudDirectorPage;
 
 import java.util.UUID;
 
-import static steps.portalBack.VdcOrganizationSteps.createVMwareOrganization;
 import static steps.portalBack.VdcOrganizationSteps.deleteVMwareOrganization;
 
 @ExtendWith(ConfigExtension.class)
@@ -30,15 +28,9 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
     @TmsLink("820925")
     @DisplayName("VMware. Проверка уникальности имени организации")
     void createVMwareOrganizationWithExistNameTest() {
-        String name = UUID.randomUUID().toString().substring(25);
-        VmWareOrganization vmWareOrganization = createVMwareOrganization(name, project.getId());
-        try {
-            new IndexPage()
-                    .goToCloudDirector()
-                    .createWithExistName(name);
-        } finally {
-            deleteVMwareOrganization(project.getId(), vmWareOrganization.getName());
-        }
+        new IndexPage()
+                .goToCloudDirector()
+                .createWithExistName(name);
     }
 
     @Test

@@ -11,8 +11,6 @@ import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 
-import static steps.portalBack.VdcOrganizationSteps.deleteVMwareOrganization;
-
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -75,6 +73,5 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
-        deleteVMwareOrganization(project.getId(), vmWareOrganization.getName());
     }
 }
