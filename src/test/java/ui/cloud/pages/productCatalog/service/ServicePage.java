@@ -38,7 +38,7 @@ public class ServicePage extends BasePage {
     private final SelenideElement deleteTagSubmitButton = $x("//form//button[@type='submit']");
     private final String tagTitleColumn = "Наименование";
     private final String noDataFound = "Нет данных для отображения";
-    private final Switch isPublished = Switch.byLabel("Опубликован");
+    private final Switch isPublished = Switch.byText("Опубликован");
 
     public ServicePage() {
         serviceListLink.shouldBe(Condition.visible);

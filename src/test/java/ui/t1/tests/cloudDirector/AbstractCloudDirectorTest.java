@@ -26,11 +26,12 @@ import static steps.portalBack.VdcOrganizationSteps.deleteVMwareOrganization;
 public abstract class AbstractCloudDirectorTest extends Tests {
     Project project;
     VmWareOrganization vmWareOrganization;
+    String name;
     String dataCentreName;
 
     public AbstractCloudDirectorTest() {
         project = Project.builder().isForOrders(true).build().createObject();
-        String name = UUID.randomUUID().toString().substring(25);
+        name = UUID.randomUUID().toString().substring(25);
         vmWareOrganization = createVMwareOrganization(name, project.getId());
         dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase();
     }

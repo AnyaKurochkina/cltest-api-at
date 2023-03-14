@@ -162,8 +162,9 @@ public class WindowsPage extends IProductPage {
     }
     public void addKeyAstrom() {
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Добавить ключ Астром");
-        acceptCheckBoxDeletionProtect.shouldBe(Condition.enabled).click();
+        runActionWithParameters(BLOCK_VM, "Добавить ключ Астром", "Подтвердить", () -> {
+            CheckBox.byLabel("Подтвердить").setChecked(true);
+        });
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
     public void deleteKeyAstrom() {

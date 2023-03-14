@@ -3,7 +3,6 @@ package ui.t1.pages.productCatalog.image;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.t1.imageService.ImageGroup;
 import models.t1.imageService.Logo;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
@@ -104,7 +103,7 @@ public class LogoListPage extends BaseListPage {
     public LogoListPage openEditDialog(Logo logo) {
         Table table = new Table(nameColumn);
         table.getRowByColumnValueContains(nameColumn, logo.getName()).get()
-                .$x(".//td[last()]//*[@class and name()='svg']").click();
+                .$x(".//td[last()-1]//*[@class and name()='svg']").click();
         return this;
     }
 
@@ -132,7 +131,7 @@ public class LogoListPage extends BaseListPage {
     public LogoListPage delete(Logo logo) {
         Table table = new Table(nameColumn);
         table.getRowByColumnValue(nameColumn, logo.getName()).get()
-                .$x(".//td[last()-1]//*[@class and name()='svg']").click();
+                .$x(".//td[last()]//*[@class and name()='svg']").click();
         new DeleteDialog().inputValidIdAndDelete("Логотип успешно удален");
         Assertions.assertFalse(table.isColumnValueEquals(nameColumn, logo.getName()));
         return this;

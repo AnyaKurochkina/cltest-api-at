@@ -12,9 +12,12 @@ import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.Table;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 
@@ -37,7 +40,8 @@ public class BaseListPage {
     protected final Select graphSelect = Select.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
     protected final Input searchInput = Input.byPlaceholder("Поиск");
-    private final Select recordsPerPageDropDown = Select.byXpath("//div[text()='Записей на странице:']");
+    private final Select recordsPerPageSelect = Select.byXpath("//div[div[contains(text(),'строк на странице ')]]");
+    private final Select recordsPerPageSelectV2 = Select.byXpath("//div[text()='Записей на странице:']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -105,13 +109,13 @@ public class BaseListPage {
     @Step("Выполнение действия копирования для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void copy(String columnName, String value) {
         openActionMenu(columnName, value);
-        copyAction.click();
+        copyAction.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
     }
 
     @Step("Выполнение действия удаления для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void delete(String columnName, String value) {
         openActionMenu(columnName, value);
-        deleteAction.click();
+        deleteAction.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
     }
 
     @Step("Переход на следующую страницу списка")
@@ -144,9 +148,15 @@ public class BaseListPage {
 
     @Step("Изменение количества отображаемых строк на '{number}'")
     public BaseListPage setRecordsPerPage(int number) {
+        String numberString = String.valueOf(number);
         WebDriverRunner.getWebDriver().manage().window().maximize();
-        recordsPerPageDropDown.set(Integer.toString(number));
-        Assertions.assertEquals(Integer.toString(number), recordsPerPageDropDown.getElement().$x(".//span").getText());
+        if (recordsPerPageSelect.getElement().exists()) {
+            recordsPerPageSelect.set(numberString);
+            Waiting.find(() -> recordsPerPageSelect.getValue().contains(numberString), Duration.ofSeconds(3));
+        } else {
+            recordsPerPageSelectV2.set(numberString);
+            Assertions.assertEquals(numberString, recordsPerPageSelectV2.getElement().$x(".//span").getText());
+        }
         return this;
     }
 }

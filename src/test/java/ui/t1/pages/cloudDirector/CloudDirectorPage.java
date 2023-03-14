@@ -26,7 +26,8 @@ public class CloudDirectorPage {
 
     @Step("Создание VMware организации с именем {name}")
     public String create(String name) {
-        createButton.click();
+      //  createButton.click();
+        new VmWareOrganizationList().clickAdd();
         String organizationName = PREFIX + name;
         Dialog dialog = Dialog.byTitle("Создать VMware организацию");
         dialog.setInputValue("Название", name);

@@ -61,7 +61,7 @@ public class PodmanPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
                 Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor)));
-        btnGeneralInfo.click();
+        generalInfoTab.switchTo();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -118,6 +118,7 @@ public class PodmanPage extends IProductPage {
         node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithoutParameters(new PodmanPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа",ActionParameters.builder().node(node).build());
+        generalInfoTab.switchTo();
         node.scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new PodmanPage.RoleTable().getRoleRow(role));
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();

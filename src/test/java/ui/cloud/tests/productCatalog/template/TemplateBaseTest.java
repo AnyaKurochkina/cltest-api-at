@@ -7,9 +7,11 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
-import ui.models.Node;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static steps.productCatalog.TemplateSteps.deleteTemplateById;
 import static steps.productCatalog.TemplateSteps.getTemplateByName;
@@ -38,11 +40,11 @@ public class TemplateBaseTest extends BaseTest {
     }
 
     private void createTemplate(String name) {
-        Map<String, String> value = new LinkedHashMap<>();
-        Map<String, Map<String, String>> input = new LinkedHashMap<>();
-        Map<String, Map<String, String>> output = new LinkedHashMap<>();
-        input.put(new Node().getInputKey(), value);
-        output.put(new Node().getOutputKey(), value);
+        Map<String, String> value = new HashMap<>();
+        Map<String, Map<String, String>> input = new HashMap<>();
+        Map<String, Map<String, String>> output = new HashMap<>();
+        input.put("input_param", value);
+        output.put("output_param", value);
         template = Template.builder()
                 .name(name)
                 .title(TITLE)
@@ -52,9 +54,9 @@ public class TemplateBaseTest extends BaseTest {
                 .rollback("")
                 .input(input)
                 .output(output)
-                .printedOutput(new HashMap<String, String>() {{
+                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
                     put("type", "text");
-                }})
+                }}))
                 .timeout(100)
                 .build()
                 .createObject();

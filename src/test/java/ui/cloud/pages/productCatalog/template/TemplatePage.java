@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.template.Template;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.IndexPage;
@@ -61,8 +62,7 @@ public class TemplatePage extends BasePage {
         goToParamsTab();
         input.setValue(new JSONObject(template.getInput()).toString());
         output.setValue(new JSONObject(template.getOutput()).toString());
-        String printedOutputJSON = new JSONObject(template.getPrintedOutput().get(0)).toString();
-        printedOutput.setValue(Arrays.asList(printedOutputJSON).toString());
+        printedOutput.setValue(new JSONArray(template.getPrintedOutput()).toString());
         saveButton.click();
         Alert.green("Шаблон успешно создан");
         Waiting.sleep(2000);
@@ -86,9 +86,9 @@ public class TemplatePage extends BasePage {
         timeoutInput.getInput().shouldHave(Condition.exactValue(String.valueOf(template.getTimeout())));
         checkTemplateVersion(template.getVersion());
         goToParamsTab();
-        String printedOutputJSON = new JSONObject(template.getPrintedOutput().get(0)).toString();
-        Assertions.assertEquals(Arrays.asList(printedOutputJSON).toString(),
-                printedOutput.getTextArea().getValue().replaceAll("\\s", ""));
+        String printedOutputJSON = new JSONArray(template.getPrintedOutput()).toString();
+        Assertions.assertEquals(printedOutputJSON, printedOutput.getTextArea().getValue()
+                .replaceAll("\\s", ""));
         return this;
     }
 
