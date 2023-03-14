@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class GraphSteps extends Steps {
 
     private static final String graphUrl = "/api/v1/graphs/";
+    private static final String graphUrl2 = "/api/v2/graphs/";
 
     @Step("Получение списка Графов продуктового каталога")
     public static List<Graph> getGraphList() {
@@ -86,6 +87,15 @@ public class GraphSteps extends Steps {
                 .patch(graphUrl + id + "/");
     }
 
+    @Step("Частичное обновление графа по имени {name}")
+    public static void partialUpdateGraphByName(String name, JSONObject object) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(graphUrl2 + name + "/");
+    }
+
+
     @Step("Создание графа")
     public static Response createGraph(JSONObject body) {
         return new Http(ProductCatalogURL)
@@ -110,6 +120,14 @@ public class GraphSteps extends Steps {
                 .extractAs(Graph.class);
     }
 
+    @Step("Получение графа по имени {name}")
+    public static Graph getGraphByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl2 + name + "/")
+                .extractAs(Graph.class);
+    }
+
     @Step("Получение графа по Id и фильтру {filter}")
     public static Graph getGraphByIdAndFilter(String objectId, String filter) {
         return new Http(ProductCatalogURL)
@@ -119,7 +137,7 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Получение графа по имени {name}")
-    public static Graph getGraphByName(String name) {
+    public static Graph getGraphByNameFilter(String name) {
         List<Graph> graphList = new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(graphUrl + "?name={}", name)
@@ -144,6 +162,14 @@ public class GraphSteps extends Steps {
                 .assertStatus(204);
     }
 
+    @Step("Удаление графа по имени {name}")
+    public static void deleteGraphByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(graphUrl2 + name + "/")
+                .assertStatus(204);
+    }
+
     @Step("Удаление графа по Id в контексте")
     public static void deleteGraphByIdInContext(String objectId, String projectId) {
         new Http(ProductCatalogURL)
@@ -164,6 +190,14 @@ public class GraphSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(graphUrl + "obj_import/", "file", new File(pathName));
+    }
+
+    @Step("Экспорт графа по Id")
+    public static Response exportGraphById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + objectId + "/obj_export/?as_file=true")
+                .assertStatus(200);
     }
 
     @Step("Получение графа по Id и Env")
@@ -249,6 +283,15 @@ public class GraphSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Копирование графа по имени {name}")
+    public static Graph copyGraphByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(graphUrl2 + name + "/copy/")
+                .assertStatus(200)
+                .extractAs(Graph.class);
+    }
+
     @Step("Копирование графа по Id в контексте")
     public static void copyGraphByIdInContext(String objectId, String projectId) {
         new Http(ProductCatalogURL)
@@ -259,7 +302,7 @@ public class GraphSteps extends Steps {
 
     @Step("Получение графа по Id и контексту")
     public static Graph getGraphByIdContext(String projectId, String objectId) {
-       return new Http(ProductCatalogURL)
+        return new Http(ProductCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/graphs/{}/", projectId, objectId)
                 .assertStatus(200)

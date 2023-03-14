@@ -149,7 +149,7 @@ public class GraphTest extends Tests {
         String cloneName = graph.getName() + "-clone";
         copyGraphById(graph.getGraphId());
         assertTrue(isGraphExists(cloneName));
-        deleteGraphById(getGraphByName(cloneName).getGraphId());
+        deleteGraphById(getGraphByNameFilter(cloneName).getGraphId());
         assertFalse(isGraphExists(cloneName));
     }
 
@@ -275,7 +275,7 @@ public class GraphTest extends Tests {
         String path = "graph_" + graphName + "_" + graph.getVersion();
         loadGraphFromBitbucket(new JSONObject().put("path", path));
         assertTrue(isGraphExists(graphName));
-        deleteGraphById(getGraphByName(graphName).getGraphId());
+        deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
         assertFalse(isGraphExists(graphName));
     }
 
@@ -354,7 +354,7 @@ public class GraphTest extends Tests {
                 .build()
                 .createObject();
         copyGraphById(graph.getGraphId());
-        String copyGraphId = getGraphByName(name + "-clone").getGraphId();
+        String copyGraphId = getGraphByNameFilter(name + "-clone").getGraphId();
         Graph copyGraph = getGraphById(copyGraphId);
         assertEquals(modName, copyGraph.getModifications().get(0).getName());
         deleteGraphById(copyGraphId);

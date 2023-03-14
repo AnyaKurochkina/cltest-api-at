@@ -42,8 +42,8 @@ public class PrivateDnsTest extends Tests {
     @DisplayName("Создание/Удаление приватной зоны")
     public void createPrivateZoneTest() {
         DnsZone zone = DnsZone.builder()
-                .name("testapid.com")
-                .domainName("testapid.com")
+                .name("testapidddd.com")
+                .domainName("testapidddd.com")
                 .networks(Collections.singletonList("dba21584-7f19-4692-bd0c-06c1a49d75ee"))
                 .type("private")
                 .build();

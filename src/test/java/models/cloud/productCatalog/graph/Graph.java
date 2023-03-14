@@ -142,7 +142,7 @@ public class Graph extends Entity implements IProductCatalog {
 
     private void deleteIfExist(String name) {
         if (isGraphExists(name)) {
-            String id = getGraphByName(name).getGraphId();
+            String id = getGraphByNameFilter(name).getGraphId();
             List<GetUsedListResponse> list = getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
             for (GetUsedListResponse resp : list) {
                 String type = resp.getType();

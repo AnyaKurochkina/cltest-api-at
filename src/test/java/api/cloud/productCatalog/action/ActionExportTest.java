@@ -15,10 +15,10 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.io.FileOutputStream;
 import java.util.Arrays;
 
 import static steps.productCatalog.ActionSteps.createAction;
+import static steps.productCatalog.ActionSteps.exportActionById;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
@@ -42,11 +42,20 @@ public class ActionExportTest extends Tests {
     public void exportActionsTest() {
         ExportEntity e = new ExportEntity(simpleAction.getActionId(), simpleAction.getVersion());
         ExportEntity e2 = new ExportEntity(simpleAction2.getActionId(), simpleAction2.getVersion());
-        Response response = exportObjectsById("actions", new ExportData(Arrays.asList(e, e2)).toJson());
-        byte[] bytes = response.getResponse().asByteArray();
-        try (FileOutputStream fos = new FileOutputStream("pathname.zip")) {
-            fos.write(bytes);
-            //fos.close(); There is no more need for this line since you had created the instance of "fos" inside the try. And this will automatically close the OutputStream
-        }
+        Response response = exportObjectsById("actions", new ExportData(Arrays.asList(e, e2)).toJson())
+                .assertStatus(201);
+//        byte[] bytes = response.getResponse().asByteArray();
+//        try (FileOutputStream fos = new FileOutputStream("pathname.zip")) {
+//            fos.write(bytes);
+//        }
+    }
+
+    @DisplayName("Экспорт действия по Id")
+    @TmsLink("642499")
+    @Test
+    public void exportActionByIdTest() {
+        String actionName = "action_export_test_api";
+        Action action = createAction(actionName);
+        exportActionById(action.getActionId());
     }
 }

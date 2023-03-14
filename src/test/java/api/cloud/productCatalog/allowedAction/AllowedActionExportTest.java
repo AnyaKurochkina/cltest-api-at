@@ -1,0 +1,61 @@
+package api.cloud.productCatalog.allowedAction;
+
+import api.Tests;
+import core.helper.http.Response;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
+import lombok.SneakyThrows;
+import models.cloud.productCatalog.ExportData;
+import models.cloud.productCatalog.ExportEntity;
+import models.cloud.productCatalog.allowedAction.AllowedAction;
+import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+
+import static steps.productCatalog.AllowedActionSteps.createAllowedAction;
+import static steps.productCatalog.AllowedActionSteps.exportAllowedActionById;
+import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
+
+@Tag("product_catalog")
+@Epic("Продуктовый каталог")
+@Feature("Действия")
+@DisabledIfEnv("prod")
+public class AllowedActionExportTest extends Tests {
+    private static AllowedAction simpleAllowedAction;
+    private static AllowedAction simpleAllowedAction2;
+
+    @BeforeAll
+    public static void setUp() {
+        simpleAllowedAction = createAllowedAction("export_allowed_action1_test_api");
+        simpleAllowedAction2 = createAllowedAction("export_allowed_action2_test_api");
+    }
+
+    @SneakyThrows
+    @DisplayName("Экспорт нескольких разрешенных действий")
+    @TmsLink("1507973")
+    @Test
+    public void exportAllowedActionsTest() {
+        ExportEntity e = new ExportEntity(String.valueOf(simpleAllowedAction.getId()));
+        ExportEntity e2 = new ExportEntity(String.valueOf(simpleAllowedAction2.getId()));
+        Response response = exportObjectsById("allowed_actions", new ExportData(Arrays.asList(e, e2)).toJson())
+                .assertStatus(201);
+//        byte[] bytes = response.getResponse().asByteArray();
+//        try (FileOutputStream fos = new FileOutputStream("pathname.zip")) {
+//            fos.write(bytes);
+//        }
+    }
+
+    @DisplayName("Экспорт разрешенного действия по Id")
+    @TmsLink("1507936")
+    @Test
+    public void exportAllowedActionByIdTest() {
+        String actionName = "allowed_action_export_test_api";
+        AllowedAction allowedAction = createAllowedAction(actionName);
+        exportAllowedActionById(allowedAction.getActionId());
+    }
+}

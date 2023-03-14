@@ -82,6 +82,15 @@ public class AllowedActionSteps extends Steps {
                 .post(allowedUrl);
     }
 
+    @Step("Создание разрешенного действия")
+    public static AllowedAction createAllowedAction(String name) {
+        return AllowedAction.builder()
+                .name(name)
+                .title(name)
+                .build()
+                .createObject();
+    }
+
     @Step("Получение списка разрешенных действий")
     public static List<AllowedAction> getAllowedActionList() {
         return new Http(ProductCatalogURL)
@@ -155,6 +164,14 @@ public class AllowedActionSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(allowedUrl + "obj_import/", "file", new File(pathName));
+    }
+
+    @Step("Экспорт разрешенного действия по Id")
+    public static Response exportAllowedActionById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(allowedUrl + objectId + "/obj_export/?as_file=true")
+                .assertStatus(200);
     }
 
     public static void checkEventProviderAllowedList(List<AllowedAction> actionList, String eventType, String eventProvider) {

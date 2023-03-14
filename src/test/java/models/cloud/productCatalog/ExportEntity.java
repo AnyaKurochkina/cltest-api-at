@@ -12,4 +12,8 @@ import lombok.NoArgsConstructor;
 public class ExportEntity {
     private String id;
     private String version;
+
+    public ExportEntity(String id) {
+        this.id = id;
+    }
 }
