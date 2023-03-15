@@ -101,7 +101,8 @@ public class S3CephTest extends Tests {
 
                 S3Ceph.PolicyAttrs policyAttrs = S3Ceph.PolicyAttrs.builder()
                         .policy(S3Ceph.PolicyAttrs.Policy.builder()
-                                .id(S3Ceph.PolicyAttrs.PolicyId.READ_WRITE)
+                                .read(true)
+                                .write(true)
                                 .build())
                         .bucketName(bucketAttrs.getName())
                         .userId(userName)
@@ -167,14 +168,15 @@ public class S3CephTest extends Tests {
 
                 S3Ceph.PolicyAttrs policyAttrs = S3Ceph.PolicyAttrs.builder()
                         .policy(S3Ceph.PolicyAttrs.Policy.builder()
-                                .id(S3Ceph.PolicyAttrs.PolicyId.READ_WRITE)
+                                .read(true)
+                                .write(true)
                                 .build())
                         .bucketName(bucketAttrs.getName())
                         .userId(userName)
                         .build();
                 s3Ceph.addPolicy(policyAttrs);
                 policyAttrs.setPolicy(S3Ceph.PolicyAttrs.Policy.builder()
-                        .id(S3Ceph.PolicyAttrs.PolicyId.READ)
+                        .read(true)
                         .build());
                 s3Ceph.updatePolicy(policyAttrs);
 
