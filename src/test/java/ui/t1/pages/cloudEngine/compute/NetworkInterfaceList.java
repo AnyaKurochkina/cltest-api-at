@@ -44,6 +44,14 @@ public class NetworkInterfaceList extends IProductListT1Page {
                 Arrays.stream(groups).forEach(select::set);
             });
         }
+
+        @Step("Изменить группы безопасности на {groups}")
+        public void updateSubnet(String subnet) {
+            runActionWithParameters(getMenuElement(index), "Изменить подсеть", "Подтвердить", () -> {
+                Dialog.byTitle("Изменить подсеть");
+                Select.byLabel("Подсеть").setStart(subnet);
+            });
+        }
     }
 
     public static class NetworkInterfaceTable extends DataTable {

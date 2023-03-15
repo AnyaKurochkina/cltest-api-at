@@ -70,4 +70,22 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
         new IndexPage().goToSecurityGroups().deleteGroup(vm.getName());
     }
+
+    @Test
+    @TmsLink("1508998")
+    @DisplayName("Cloud Compute. Сетевые интерфейсы. Изменить подсеть")
+    void changeSubnet() {
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setAvailabilityZone(availabilityZone)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
+        networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSubnet("default");
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+    }
 }

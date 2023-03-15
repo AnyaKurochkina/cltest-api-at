@@ -3,8 +3,10 @@ package ui.elements;
 import com.codeborne.selenide.*;
 import com.codeborne.selenide.ex.ElementNotFound;
 import core.helper.StringUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
@@ -14,6 +16,7 @@ import java.util.Objects;
 
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$$x;
+import static core.helper.StringUtils.$x;
 import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
@@ -26,10 +29,10 @@ public class Alert implements TypifiedElement {
     public Alert() {
     }
 
-    private ElementsCollection getElements() {
+    private SelenideElement getElement() {
         if (Objects.nonNull(element))
-            return new ElementsCollection((Driver) Selenide.webdriver(), Collections.singletonList(element));
-        return $$x("(//div[@role='alert' and @aria-live])");
+            return element;
+        return $x("//div[@role='alert' and string-length(.)>1]");
     }
 
     public static Alert green(String text, Object... args) {
@@ -42,7 +45,8 @@ public class Alert implements TypifiedElement {
 
     public void waitClose() {
         try {
-            element.shouldNot(Condition.visible);
+            if(element.exists())
+                element.shouldNot(Condition.visible);
         } catch (Throwable ignored) {
         }
     }
@@ -52,25 +56,26 @@ public class Alert implements TypifiedElement {
             Button button = Button.byElement(element.$("button"));
             button.click();
             waitClose();
-        } catch (ElementNotFound ignored) {}
+        } catch (Throwable ignored) {}
         return this;
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
-        element = getElements().shouldBe(CollectionCondition.anyMatch("Alert не найден", WebElement::isDisplayed))
-                .shouldBe(CollectionCondition.noneMatch("Alert не найден", e -> e.getText().equals("")))
-                .filter(Condition.visible).stream()
-                .filter(e -> e.getText().toLowerCase().contains(message.toLowerCase()) && fromString(e.getCssValue("border-bottom-color")).asHex().equals(color.getValue()))
-                .findFirst().orElseThrow(() -> new NotFoundException(String.format("Не найден Alert с сообщением '%s' и цветом %s", text, color)));
+        element = getElement().shouldBe(Condition.visible);
+        final String elementText = element.getText();
+        Assertions.assertTrue(elementText.toLowerCase().contains(message.toLowerCase()),
+                        String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));
+        Assertions.assertEquals(color.getValue(), fromString(element.getCssValue("border-bottom-color")).asHex(),
+                "Неверный цвет Alert");
         return this;
     }
 
     @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
         try {
-            SelenideElement e = new Alert().getElements().first().shouldBe(Condition.visible, Duration.ofSeconds(5));
+            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(5));
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }
