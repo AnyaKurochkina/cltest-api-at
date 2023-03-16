@@ -262,19 +262,6 @@ public class ActionsTest extends Tests {
         steps.deleteObjectWithPublicToken(action.getActionId()).assertStatus(403);
     }
 
-    @DisplayName("Экспорт действия по Id")
-    @TmsLink("642499")
-    @Test
-    public void exportActionByIdTest() {
-        String actionName = "action_export_test_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .build()
-                .createObject();
-        exportActionById(action.getActionId());
-    }
-
     //todo Добавить проверку на allowed groups
     @DisplayName("Проверка независимого от версии поля restricted_groups в действиях")
     @TmsLink("716373")

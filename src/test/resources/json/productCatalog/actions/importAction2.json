@@ -1,0 +1,814 @@
+{
+  "model_name": "Action",
+  "Action": {
+    "graph_id": "f0487d1d-9009-4340-8ce5-7d6d3b1b4272",
+    "multiple": false,
+    "priority": 0,
+    "extra_data": {
+      "delayable": true,
+      "service_name": "delay_action"
+    },
+    "graph_version": "1.0.57",
+    "data_config_key": null,
+    "data_config_path": null,
+    "item_restriction": null,
+    "data_config_fields": [],
+    "skip_on_prebilling": false,
+    "location_restriction": "",
+    "graph_version_pattern": "",
+    "auto_removing_if_failed": false,
+    "available_without_money": true,
+    "current_version": "",
+    "context_restrictions": [],
+    "event_type_provider": [
+      {
+        "event_type": "vm",
+        "event_provider": "vsphere"
+      },
+      {
+        "event_type": "vm",
+        "event_provider": "vcloud"
+      }
+    ],
+    "name": "import_action2_test_api",
+    "title": "import_action2_test_api",
+    "description": "",
+    "number": 50,
+    "is_safe": false,
+    "type": "",
+    "allowed_groups": [],
+    "restricted_groups": [],
+    "required_order_statuses": [
+      "success"
+    ],
+    "required_item_statuses": [
+      "on"
+    ],
+    "allowed_developers": [],
+    "restricted_developers": [],
+    "default_item": {},
+    "version_arr": [
+      1,
+      0,
+      2
+    ],
+    "icon_store_id": null,
+    "icon_store": null,
+    "event_type": [
+      "vm",
+      "vm"
+    ],
+    "event_provider": [
+      "vsphere",
+      "vcloud"
+    ]
+  },
+  "rel_foreign_models": {
+    "graph": {
+      "model_name": "Graph",
+      "Graph": {
+        "author": "Dmitriy Pyryakov",
+        "output": {},
+        "ui_schema": null,
+        "json_schema": null,
+        "static_data": {
+          "credentials": {
+            "linux": "VTB.Cloud-DEV",
+            "windows": "VTB.Cloud-DEV.windows.domain"
+          },
+          "job_template": "stop_vm_soft",
+          "resolved_item": true,
+          "inventory_template": "{% set inventory = {'all': {'hosts': {}}} %}{% do inventory.all.hosts.update({machine.hostname + '.' + machine.domain: {'ansible_host': machine.default_v4_address, 'os_type': machine.image.os.type}}) %}{{ inventory | tojson }}"
+        },
+        "modifications": [],
+        "printed_output": {},
+        "lock_order_on_error": false,
+        "damage_order_on_error": false,
+        "current_version": "",
+        "name": "stop_vm_soft",
+        "title": "\u0412\u044b\u043a\u043b\u044e\u0447\u0438\u0442\u044c \u0412\u041c",
+        "description": "",
+        "type": "action",
+        "allowed_developers": [],
+        "restricted_developers": [],
+        "version_arr": [
+          1,
+          0,
+          57
+        ]
+      },
+      "rel_foreign_models": {},
+      "rel_revers_models": {
+        "nodes": [
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "astrom_set_host_maintenance",
+              "color": "",
+              "count": "",
+              "input": {
+                "hostname": "resolved_item['data']['config']['hostname']",
+                "net_segment": "resolved_item['data']['config']['default_nic']['net_segment']"
+              },
+              "number": 1,
+              "output": {},
+              "depends": [],
+              "timeout": 30,
+              "coords_x": 1505.0,
+              "coords_y": 68.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "resolved_item['data']['config']['image']['os']['type'] == 'linux' and len([mount for mount in resolved_item['data']['config']['extra_mounts'] if mount['mount']=='/opt/dynatrace']) == 1",
+              "log_level": null,
+              "extra_data": {},
+              "description": "\u041f\u043e\u0441\u0442\u0430\u0432\u043a\u0430 \u0432 \u0440\u0435\u0436\u0438\u043c maintenance \u0434\u043b\u044f \u041a\u043b\u044e\u0447-\u0410\u0441\u0442\u0440\u043e\u043c",
+              "subgraph_id": null,
+              "template_id": 1269,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.0",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.0"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "run": "astrom:cmd",
+                  "input": {
+                    "hostname": {},
+                    "net_segment": {}
+                  },
+                  "output": {},
+                  "timeout": 1,
+                  "priority": 0,
+                  "rollback": "",
+                  "log_level": "",
+                  "printed_output": {},
+                  "additional_input": false,
+                  "additional_output": false,
+                  "log_can_be_overridden": false,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": false,
+                  "id": 1269,
+                  "current_version": "",
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "extra_data": null,
+                  "color": "",
+                  "name": "astrom:set_host_maintenance",
+                  "title": "astrom:set_host_maintenance",
+                  "description": "",
+                  "type": "rpc",
+                  "allowed_groups": [],
+                  "restricted_groups": [],
+                  "version_arr": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "disable_monitoring",
+              "color": "",
+              "count": null,
+              "input": {
+                "domain": "resolved_item['data']['config']['domain']",
+                "hostname": "resolved_item['data']['config']['hostname']"
+              },
+              "number": 5,
+              "output": {},
+              "depends": [],
+              "timeout": 120,
+              "coords_x": 140.0,
+              "coords_y": 68.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "resolved_item['data']['config']['image']['os']['distribution'] != 'rhcos' and resolved_item['data']['config']['environment_type']!='PROD' and resolved_item['data']['config']['image']['os']['type'] == 'linux'",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043e\u0442\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433\u0430",
+              "subgraph_id": null,
+              "template_id": 263,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.1",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.1"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "id": 263,
+                  "run": "zabbix_legacy:cmd",
+                  "name": "zabbix_legacy:disable_host",
+                  "type": "other",
+                  "color": "",
+                  "input": {},
+                  "title": "zabbix_legacy:disable_host",
+                  "output": {},
+                  "timeout": 120,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "priority": 0,
+                  "rollback": null,
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "",
+                  "allowed_groups": [],
+                  "printed_output": {},
+                  "additional_input": true,
+                  "additional_output": true,
+                  "restricted_groups": [],
+                  "log_can_be_overridden": false,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": false,
+                  "current_version": "",
+                  "version_arr": [
+                    1,
+                    0,
+                    1
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "disable_monitoring_new",
+              "color": "",
+              "count": null,
+              "input": {
+                "domain": "resolved_item['data']['config']['domain']",
+                "hostname": "resolved_item['data']['config']['hostname']"
+              },
+              "number": 5,
+              "output": {},
+              "depends": [],
+              "timeout": 120,
+              "coords_x": 520.0,
+              "coords_y": 68.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "resolved_item['data']['config']['image']['os']['distribution'] != 'rhcos' and resolved_item['data']['config']['environment_type']!='PROD'",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043e\u0442\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433\u0430 (new zabbix)",
+              "subgraph_id": null,
+              "template_id": 268,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.2",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.2"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "id": 268,
+                  "run": "zabbix:cmd",
+                  "name": "zabbix:disable_host",
+                  "type": "other",
+                  "color": "",
+                  "input": {},
+                  "title": "zabbix:disable_host",
+                  "output": {},
+                  "timeout": 120,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "priority": 0,
+                  "rollback": null,
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "",
+                  "allowed_groups": [],
+                  "printed_output": {},
+                  "additional_input": true,
+                  "additional_output": true,
+                  "restricted_groups": [],
+                  "log_can_be_overridden": false,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": false,
+                  "current_version": "",
+                  "version_arr": [
+                    1,
+                    0,
+                    2
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "disable_monitoring_old",
+              "color": "",
+              "count": null,
+              "input": {
+                "domain": "resolved_item['data']['config']['domain']",
+                "hostname": "resolved_item['data']['config']['hostname']"
+              },
+              "number": 5,
+              "output": {},
+              "depends": [],
+              "timeout": 120,
+              "coords_x": 900.0,
+              "coords_y": 68.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "resolved_item['data']['config']['image']['os']['distribution'] != 'rhcos' and resolved_item['data']['config']['image']['os']['type'] == 'windows'",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043e\u0442\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u043c\u043e\u043d\u0438\u0442\u043e\u0440\u0438\u043d\u0433\u0430 (old)",
+              "subgraph_id": null,
+              "template_id": 261,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.0",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.0"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "id": 261,
+                  "run": "scom:cmd",
+                  "name": "scom:disable_host",
+                  "type": "other",
+                  "color": "",
+                  "input": {},
+                  "title": "scom:disable_host",
+                  "output": {},
+                  "timeout": 30,
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "priority": 0,
+                  "rollback": null,
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "",
+                  "allowed_groups": [],
+                  "printed_output": {},
+                  "additional_input": true,
+                  "additional_output": true,
+                  "restricted_groups": [],
+                  "log_can_be_overridden": false,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": false,
+                  "current_version": "",
+                  "version_arr": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "make_inventory",
+              "color": "",
+              "count": null,
+              "input": {
+                "machine": "resolved_item['data']['config']",
+                "template": "inventory_template"
+              },
+              "number": 10,
+              "output": {
+                "formatted": "inventory"
+              },
+              "depends": [],
+              "timeout": 120,
+              "coords_x": 1280.0,
+              "coords_y": 68.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u0444\u043e\u0440\u043c\u0438\u0440\u0443\u0435\u043c \u0434\u0430\u043d\u043d\u044b\u0435 \u0434\u043b\u044f \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u043a \u0412\u041c",
+              "subgraph_id": null,
+              "template_id": 40,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.3",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.3"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "run": "internal",
+                  "input": {
+                    "template": {
+                      "required": true
+                    },
+                    "from_json": {}
+                  },
+                  "output": {
+                    "formatted": {}
+                  },
+                  "timeout": 120,
+                  "priority": 0,
+                  "rollback": null,
+                  "log_level": "full",
+                  "printed_output": [
+                    {
+                      "type": "text",
+                      "data_path": "data",
+                      "node_state": "completed"
+                    },
+                    {
+                      "type": "text",
+                      "data_path": "data.formatted",
+                      "node_state": "completed"
+                    }
+                  ],
+                  "additional_input": true,
+                  "additional_output": false,
+                  "log_can_be_overridden": true,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": true,
+                  "id": 40,
+                  "current_version": "",
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "extra_data": null,
+                  "color": "",
+                  "name": "jinja2_format",
+                  "title": "jinja2_format",
+                  "description": "\u0444\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0445 \u0441 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435\u043c jinja2 \u0448\u0430\u0431\u043b\u043e\u043d\u0430",
+                  "type": "system_nodes",
+                  "allowed_groups": [],
+                  "restricted_groups": [],
+                  "version_arr": [
+                    1,
+                    0,
+                    3
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "exec_shutdown",
+              "color": "",
+              "count": null,
+              "input": {
+                "inventory": "inventory",
+                "credentials": "[credentials[resolved_item['data']['config']['image']['os']['type']]]",
+                "net_segment": "resolved_item['data']['config']['default_nic']['net_segment']",
+                "job_template": "job_template",
+                "environment_type": "environment_type"
+              },
+              "number": 20,
+              "output": {},
+              "depends": [
+                "disable_monitoring",
+                "disable_monitoring_new",
+                "disable_monitoring_old",
+                "make_inventory",
+                "astrom_set_host_maintenance"
+              ],
+              "timeout": 7200,
+              "coords_x": 710.0,
+              "coords_y": 254.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043e\u0442\u043f\u0440\u0430\u0432\u043b\u044f\u0435\u043c \u0441\u0438\u0433\u043d\u0430\u043b \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u0438\u0437 \u041e\u0421",
+              "subgraph_id": null,
+              "template_id": 43,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.2",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.2"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "run": "awx:cmd",
+                  "input": {
+                    "inventory": {},
+                    "credential": {},
+                    "extra_vars": {},
+                    "net_segment": {},
+                    "job_template": {}
+                  },
+                  "output": {
+                    "config": {},
+                    "item_id": {}
+                  },
+                  "timeout": 7200,
+                  "priority": 0,
+                  "rollback": null,
+                  "log_level": null,
+                  "printed_output": {},
+                  "additional_input": true,
+                  "additional_output": true,
+                  "log_can_be_overridden": false,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": true,
+                  "id": 43,
+                  "current_version": "",
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "extra_data": null,
+                  "color": "",
+                  "name": "ansible_awx",
+                  "title": "ansible_awx",
+                  "description": "\u0437\u0430\u043f\u0443\u0441\u043a job_template \u0432 Ansible AWX",
+                  "type": "rpc",
+                  "allowed_groups": [],
+                  "restricted_groups": [],
+                  "version_arr": [
+                    1,
+                    0,
+                    2
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "wait_vm_shutdown",
+              "color": "",
+              "count": null,
+              "input": {
+                "tenant": "resolved_item['data']['config']['tenant']",
+                "item_id": "item_id",
+                "resource_pool": "resolved_item['data']['config']['resource_pool']"
+              },
+              "number": 30,
+              "output": {},
+              "depends": [
+                "exec_shutdown"
+              ],
+              "timeout": 7200,
+              "coords_x": 710.0,
+              "coords_y": 440.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043e\u0436\u0438\u0434\u0430\u0435\u043c \u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0430 \u0412\u041c",
+              "subgraph_id": null,
+              "template_id": 67,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.0",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.0"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "run": "platform:cmd",
+                  "input": {},
+                  "output": {},
+                  "timeout": 7200,
+                  "priority": 0,
+                  "rollback": null,
+                  "log_level": null,
+                  "printed_output": {},
+                  "additional_input": true,
+                  "additional_output": true,
+                  "log_can_be_overridden": false,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": false,
+                  "id": 67,
+                  "current_version": "",
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "extra_data": null,
+                  "color": "",
+                  "name": "wait_vm_shutdown",
+                  "title": "wait_vm_shutdown",
+                  "description": "",
+                  "type": "virtualization_platform",
+                  "allowed_groups": [],
+                  "restricted_groups": [],
+                  "version_arr": [
+                    1,
+                    0,
+                    0
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          },
+          {
+            "model_name": "Node",
+            "Node": {
+              "hold": false,
+              "name": "update_vm_status",
+              "color": "",
+              "count": null,
+              "input": {
+                "type": "enums.EventType.VM.value",
+                "status": "enums.EventState.OFF.value",
+                "item_id": "item_id",
+                "subtype": "enums.EventSubType.STATE.value"
+              },
+              "number": 40,
+              "output": {},
+              "depends": [
+                "wait_vm_shutdown"
+              ],
+              "timeout": 120,
+              "coords_x": 710.0,
+              "coords_y": 626.0,
+              "for_each": "",
+              "priority": null,
+              "condition": "",
+              "log_level": null,
+              "extra_data": null,
+              "description": "\u043f\u043e\u043c\u0435\u0447\u0430\u0435\u043c \u0412\u041c \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043d\u043e\u0439 \u0432 \u0441\u0435\u0440\u0432\u0438\u0441\u0435 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+              "subgraph_id": null,
+              "template_id": 45,
+              "icon_store_id": null,
+              "is_sequential": false,
+              "on_prebilling": false,
+              "printed_output": {},
+              "run_on_rollback": false,
+              "subgraph_version": "",
+              "template_version": "1.0.1",
+              "lock_order_on_error": false,
+              "not_damage_on_error": false,
+              "damage_order_on_error": false,
+              "subgraph_version_pattern": "",
+              "template_version_pattern": "",
+              "subgraph_version_calculated": "",
+              "template_version_calculated": "1.0.1"
+            },
+            "rel_foreign_models": {
+              "template": {
+                "model_name": "Template",
+                "Template": {
+                  "run": "internal",
+                  "input": {
+                    "data": {},
+                    "type": {},
+                    "status": {},
+                    "item_id": {},
+                    "subtype": {}
+                  },
+                  "output": {
+                    "data": {}
+                  },
+                  "timeout": 120,
+                  "priority": 0,
+                  "rollback": null,
+                  "log_level": null,
+                  "printed_output": {},
+                  "additional_input": true,
+                  "additional_output": true,
+                  "log_can_be_overridden": false,
+                  "priority_can_be_overridden": false,
+                  "printed_output_can_be_overridden": false,
+                  "id": 45,
+                  "current_version": "",
+                  "coords_x": 0.0,
+                  "coords_y": 0.0,
+                  "extra_data": null,
+                  "color": "",
+                  "name": "add_event",
+                  "title": "add_event",
+                  "description": "\u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 Event \u0432 \u0441\u0435\u0440\u0432\u0438\u0441 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+                  "type": "system_nodes",
+                  "allowed_groups": [],
+                  "restricted_groups": [],
+                  "version_arr": [
+                    1,
+                    0,
+                    1
+                  ],
+                  "icon_store_id": null,
+                  "icon_store": null
+                },
+                "rel_foreign_models": {}
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "dump_version": 5.0,
+  "dump_date": "2023-03-07 13:50:19",
+  "is_pinned_versions": true
+}

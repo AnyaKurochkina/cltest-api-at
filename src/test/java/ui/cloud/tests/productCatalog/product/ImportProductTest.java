@@ -26,7 +26,7 @@ public class ImportProductTest extends ProductBaseTest {
         JsonPath json = new JsonPath(data);
         String name = json.getString("Product.name");
         if (isProductExists(name)) deleteProductByApi(name);
-        Graph graph = GraphSteps.getGraphByName(json.getString("rel_foreign_models.graph.Graph.name"));
+        Graph graph = GraphSteps.getGraphByNameFilter(json.getString("rel_foreign_models.graph.Graph.name"));
         new IndexPage()
                 .goToProductsListPage()
                 .importProduct("src/test/resources/json/productCatalog/products/importProduct.json")

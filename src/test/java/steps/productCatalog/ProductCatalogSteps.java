@@ -10,9 +10,11 @@ import httpModels.productCatalog.GetListImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.MetaImpl;
 import io.qameta.allure.Step;
+import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -25,15 +27,43 @@ import java.util.List;
 import java.util.Objects;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static io.restassured.RestAssured.given;
+import static steps.keyCloak.KeyCloakSteps.getNewUserToken;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class ProductCatalogSteps {
     String productName;
     String templatePath;
 
     public ProductCatalogSteps(String productName) {
         this.productName = productName;
+    }
+
+    @Step("Импорт нескольких {entityName}")
+    public static io.restassured.response.Response importObjects(String entityName, String pathName, String pathName2) {
+        return given().log().all()
+                .baseUri(ProductCatalogURL)
+                .config(RestAssured.config().sslConfig(Http.sslConfig))
+                .header("authorization", "bearer " + getNewUserToken(Role.PRODUCT_CATALOG_ADMIN))
+                .multiPart(new File(pathName))
+                .multiPart(new File(pathName2))
+                .when()
+                .post("/api/v1/{entityName}/obj_import/", entityName)
+                .then().log().all()
+                .statusCode(200)
+                .extract()
+                .response();
+    }
+
+    @Step("Экспорт нескольких {entityName} по Id")
+    public static Response exportObjectsById(String entityName, JSONObject json) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(json)
+                .get("/api/v1/{}/objects_export/?as_file=true", entityName)
+                .assertStatus(200);
     }
 
     @Step("Получение версии продуктового каталога")

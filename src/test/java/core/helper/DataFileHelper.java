@@ -24,6 +24,11 @@ public class DataFileHelper {
         Files.write(Paths.get(fileName), text.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     }
 
+    @SneakyThrows
+    public static void delete(String fileName) {
+       Files.delete(Paths.get(fileName));
+    }
+
     /**
      * Добавление текста в конец файла
      *

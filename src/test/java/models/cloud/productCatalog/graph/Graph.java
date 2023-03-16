@@ -86,6 +86,9 @@ public class Graph extends Entity implements IProductCatalog {
     private String currentVersion;
     @JsonProperty("lock_order_on_error")
     private Boolean lockOrderOnError;
+    @JsonProperty("default_item")
+    private Object defaultItem;
+
     @Builder.Default
     protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
@@ -120,6 +123,7 @@ public class Graph extends Entity implements IProductCatalog {
                 .setIfNullRemove("$.json_schema", jsonSchema)
                 .setIfNullRemove("$.ui_schema", jsonSchema)
                 .setIfNullRemove("$.static_data", jsonSchema)
+                .setIfNullRemove("$.default_item", defaultItem)
                 .build();
     }
 
@@ -139,7 +143,7 @@ public class Graph extends Entity implements IProductCatalog {
 
     private void deleteIfExist(String name) {
         if (isGraphExists(name)) {
-            String id = getGraphByName(name).getGraphId();
+            String id = getGraphByNameFilter(name).getGraphId();
             List<GetUsedListResponse> list = getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
             for (GetUsedListResponse resp : list) {
                 String type = resp.getType();

@@ -34,7 +34,7 @@ public class NegativeDnsTest extends Tests {
 
     @AfterAll
     public static void clearTestData() {
-        List<DnsZone> publicZoneList = getPublicZoneList(projectId);
+        List<DnsZone> publicZoneList = getZoneList(projectId);
         publicZoneList.forEach(x -> deleteZone(x.getId(), projectId));
     }
 
@@ -49,7 +49,7 @@ public class NegativeDnsTest extends Tests {
                 .build();
         createZone(zone.toJson(), projectId);
         DnsZone zone2 = DnsZone.builder()
-                .name("exist2_domen_public_zone_test_api")
+                .name("already_exist_domen_public_zone_test_api")
                 .domainName("public.zone.negative.test.api.ru")
                 .type("public")
                 .build();
@@ -73,7 +73,7 @@ public class NegativeDnsTest extends Tests {
                 .jsonPath().getString("detail");
         assertEquals("Invalid zone", errorMsg);
         assertFalse(isZoneExist(zone.getName(), projectId), String.format("Зона с именем %s создалась", zone.getName()));
-        assertFalse(isZoneExistInOpenDns(zone.getDomainName()), String.format("Зона с именем %s создалась в PowerDns", zone.getName()));
+        assertFalse(isZoneExistInPowerDns(zone.getDomainName()), String.format("Зона с именем %s создалась в PowerDns", zone.getName()));
     }
 
     @Test
@@ -112,7 +112,7 @@ public class NegativeDnsTest extends Tests {
     @TmsLink("")
     @DisplayName("Создание зоны существующей в PowerDns")
     public void createExistInPowerDnsPublicZoneTest() {
-        String name = getZoneOpenDnsList().get(0).getName();
+        String name = getZonePowerDnsList().get(0).getName();
         DnsZone zone = DnsZone.builder()
                 .name("create_exist_in_power_dns_public_zone_test_api")
                 .domainName(name)
