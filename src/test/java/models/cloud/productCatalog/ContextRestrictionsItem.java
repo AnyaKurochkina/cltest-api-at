@@ -14,7 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 public class ContextRestrictionsItem {
 
-    private List<String> organization;
+    private String organization;
     @JsonProperty("project_environment")
     private ProjectEnvironment project_environment;
     @JsonProperty("information_system")
@@ -24,7 +24,7 @@ public class ContextRestrictionsItem {
         this.project_environment = projectEnvironment;
     }
 
-    public ContextRestrictionsItem(ProjectEnvironment projectEnvironment, List<String> organization) {
+    public ContextRestrictionsItem(ProjectEnvironment projectEnvironment, String organization) {
         this.project_environment = projectEnvironment;
         this.organization = organization;
     }

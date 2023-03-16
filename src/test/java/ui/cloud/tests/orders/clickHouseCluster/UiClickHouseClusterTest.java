@@ -27,10 +27,10 @@ public class UiClickHouseClusterTest extends UiProductTest {
     ClickHouseCluster product;
     // = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/b0be1e0c-2540-4c04-9128-4bee54d97b52/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
-    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+    //AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
     String nameAD= "at_ad_user";
     String nameLocalAD= "at_local_user";
-    String nameGroup =accessGroup.getPrefixName();
+    String nameGroup ="cloud-zorg-dev-group";
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
 
     @BeforeEach
