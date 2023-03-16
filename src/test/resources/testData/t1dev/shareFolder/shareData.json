@@ -10,5 +10,11 @@
     "id": "proj-ls0vejlv7c",
     "projectName": "AМ",
     "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
+    "id": "sa_proj-ls0vejlv7c-8c",
+    "secret": "09e47954f06b6804f246662ed2264c0a",
+    "projectId": "proj-ls0vejlv7c"
   }
 ]

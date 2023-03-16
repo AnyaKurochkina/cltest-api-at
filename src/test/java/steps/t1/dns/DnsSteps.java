@@ -20,6 +20,16 @@ public class DnsSteps extends Steps {
     private static final String apiUrl = "/api/v1/";
     private static final String apiKey = "6e3bc9a0fa7eaebf282ad2e5";
 
+    @Step("Создание приватной zone")
+    public static DnsZone createPrivateZone(JSONObject object, String projectId) {
+        return new Http(DNSService)
+                .withServiceToken()
+                .body(object)
+                .post(apiUrl + "projects/{}/zones", projectId)
+                .assertStatus(200)
+                .extractAs(DnsZone.class);
+    }
+
     @Step("Создание zone")
     public static DnsZone createZone(JSONObject object, String projectId) {
         return new Http(DNSService)
@@ -64,6 +74,13 @@ public class DnsSteps extends Steps {
                 .setRole(CLOUD_ADMIN)
                 .delete(apiUrl + "projects/{}/zones/{}", projectId, zoneId)
                 .assertStatus(200);
+    }
+
+    @Step("Удаление уже существующей zone")
+    public static void deleteIfExistZone(String zoneId, String projectId) {
+        if (isZoneExist(zoneId, projectId)) {
+            deleteZone(zoneId, projectId);
+        }
     }
 
     @Step("Удаление Rrset")

@@ -42,20 +42,15 @@ public class AllowedActionExportTest extends Tests {
     public void exportAllowedActionsTest() {
         ExportEntity e = new ExportEntity(simpleAllowedAction.getId());
         ExportEntity e2 = new ExportEntity(simpleAllowedAction2.getId());
-        Response response = exportObjectsById("allowed_actions", new ExportData(Arrays.asList(e, e2)).toJson())
-                .assertStatus(201);
-//        byte[] bytes = response.getResponse().asByteArray();
-//        try (FileOutputStream fos = new FileOutputStream("pathname.zip")) {
-//            fos.write(bytes);
-//        }
+        Response response = exportObjectsById("allowed_actions", new ExportData(Arrays.asList(e, e2)).toJson());
     }
 
     @DisplayName("Экспорт разрешенного действия по Id")
     @TmsLink("1507936")
     @Test
     public void exportAllowedActionByIdTest() {
-        String actionName = "allowed_action_export_test_api";
-        AllowedAction allowedAction = createAllowedAction(actionName);
-        exportAllowedActionById(allowedAction.getActionId());
+        String allowedActionName = "allowed_action_export_test_api";
+        AllowedAction allowedAction = createAllowedAction(allowedActionName);
+        exportAllowedActionById(String.valueOf(allowedAction.getId()));
     }
 }
