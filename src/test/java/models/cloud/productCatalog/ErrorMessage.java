@@ -15,6 +15,10 @@ public class ErrorMessage {
     List<String> errMessage;
     @JsonProperty("err_details")
     Object errDetails;
+    @JsonProperty("imported_objects")
+    Object importedObjects;
+    @JsonProperty("logs")
+    Object logs;
 
     public String getMessage() {
         return errMessage.get(0);

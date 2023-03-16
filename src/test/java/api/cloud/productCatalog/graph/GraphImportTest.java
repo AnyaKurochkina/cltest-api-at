@@ -83,7 +83,7 @@ public class GraphImportTest extends Tests {
             deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
         }
         importGraph(PATHNAME).assertStatus(200);
-        String expectedMsg = "Версия \"1.0.0\" Graph:import_graph_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.";
+        String expectedMsg = "Error loading dump: (Graph: import_graph_test_api, version = 1.0.0), ['Версия \"1.0.0\" Graph:import_graph_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.']";
         String message = importGraph(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(expectedMsg, message);
         assertTrue(isGraphExists(graphName), "Граф не существует");

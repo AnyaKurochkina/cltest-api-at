@@ -59,6 +59,9 @@
             "restricted_developers": {
               "type": "array",
               "items": {}
+            },
+            "default_item": {
+              "type": "object"
             }
           },
           "additionalProperties": false,
@@ -72,7 +75,8 @@
             "description",
             "type",
             "allowed_developers",
-            "restricted_developers"
+            "restricted_developers",
+            "default_item"
           ]
         }
       ]

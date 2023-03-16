@@ -48,11 +48,11 @@ public class ActionImportTest extends Tests {
     @TmsLink("")
     @Test
     public void importActionsTest() {
-        String actionName = "import_action_test_api";
+        String actionName = "multi_import_action_test_api";
         if (isActionExists(actionName)) {
             deleteActionByName(actionName);
         }
-        String actionName2 = "import_action2_test_api";
+        String actionName2 = "multi_import_action2_test_api";
         if (isActionExists(actionName2)) {
             deleteActionByName(actionName2);
         }
@@ -96,7 +96,7 @@ public class ActionImportTest extends Tests {
             deleteActionByName(actionName);
         }
         importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(200);
-        String expectedMsg = "Версия \"1.0.0\" Action:import_action_test_api:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.";
+        String expectedMsg = "Error loading dump: (Action: import_action_test_api, version = 1.0.2), ['Версия \"1.0.2\" Action:import_action_test_api:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 2]\") у импортируемого объекта и попробуйте снова.']";
         String actualMsg = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400)
                 .extractAs(ErrorMessage.class).getMessage();
         assertEquals(expectedMsg, actualMsg);
