@@ -103,7 +103,7 @@ public class LogoListPage extends BaseListPage {
     public LogoListPage openEditDialog(Logo logo) {
         Table table = new Table(nameColumn);
         table.getRowByColumnValueContains(nameColumn, logo.getName()).get()
-                .$x(".//td[last()]//*[@class and name()='svg']").click();
+                .$x(".//td[last()-1]//*[@class and name()='svg']").click();
         return this;
     }
 
@@ -131,7 +131,7 @@ public class LogoListPage extends BaseListPage {
     public LogoListPage delete(Logo logo) {
         Table table = new Table(nameColumn);
         table.getRowByColumnValue(nameColumn, logo.getName()).get()
-                .$x(".//td[last()-1]//*[@class and name()='svg']").click();
+                .$x(".//td[last()]//*[@class and name()='svg']").click();
         new DeleteDialog().inputValidIdAndDelete("Логотип успешно удален");
         Assertions.assertFalse(table.isColumnValueEquals(nameColumn, logo.getName()));
         return this;

@@ -18,6 +18,17 @@ import static core.helper.Configure.PowerDns;
 
 public class DnsSteps extends Steps {
     private static final String apiUrl = "/api/v1/";
+    private static final String apiKey = "6e3bc9a0fa7eaebf282ad2e5";
+
+    @Step("Создание приватной zone")
+    public static DnsZone createPrivateZone(JSONObject object, String projectId) {
+        return new Http(DNSService)
+                .withServiceToken()
+                .body(object)
+                .post(apiUrl + "projects/{}/zones", projectId)
+                .assertStatus(200)
+                .extractAs(DnsZone.class);
+    }
 
     @Step("Создание zone")
     public static DnsZone createZone(JSONObject object, String projectId) {
@@ -65,6 +76,13 @@ public class DnsSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Удаление уже существующей zone")
+    public static void deleteIfExistZone(String zoneId, String projectId) {
+        if (isZoneExist(zoneId, projectId)) {
+            deleteZone(zoneId, projectId);
+        }
+    }
+
     @Step("Удаление Rrset")
     public static void deleteRrset(String projectId, String zoneId, String rrsetId) {
         new Http(DNSService)
@@ -73,39 +91,39 @@ public class DnsSteps extends Steps {
                 .assertStatus(200);
     }
 
-    @Step("Удаление zone из OpenDns")
+    @Step("Удаление zone из PowerDns")
     public static void deleteZoneFromPowerDns(String zoneId) {
         new Http(PowerDns)
                 .setWithoutToken()
-                .addHeader("X-Api-Key", "6e3bc9a0fa7eaebf282ad2e5")
+                .addHeader("X-Api-Key", apiKey)
                 .delete(apiUrl + "servers/localhost/zones/{}", zoneId)
                 .assertStatus(204);
     }
 
-    @Step("Получение списка zone в OpenDns")
-    public static List<PowerDnsZone> getZoneOpenDnsList() {
+    @Step("Получение списка zone в PowerDns")
+    public static List<PowerDnsZone> getZonePowerDnsList() {
         return new Http(PowerDns)
                 .setWithoutToken()
-                .addHeader("X-Api-Key", "6e3bc9a0fa7eaebf282ad2e5")
+                .addHeader("X-Api-Key", apiKey)
                 .get(apiUrl + "servers/localhost/zones")
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", PowerDnsZone.class);
     }
 
-    @Step("Получение zone в OpenDns по ZoneId")
-    public static PowerDnsZone getZoneOpenDnsById(String domainName) {
+    @Step("Получение zone в PowerDns по ZoneId")
+    public static PowerDnsZone getZonePowerDnsById(String domainName) {
         return new Http(PowerDns)
                 .setWithoutToken()
-                .addHeader("X-Api-Key", "6e3bc9a0fa7eaebf282ad2e5")
+                .addHeader("X-Api-Key", apiKey)
                 .get(apiUrl + "servers/localhost/zones/{}", domainName)
                 .assertStatus(200)
                 .extractAs(PowerDnsZone.class);
     }
 
-    @Step("Проверка существования зоны в OpenDns")
-    public static boolean isZoneExistInOpenDns(String domainName) {
-        List<PowerDnsZone> list = getZoneOpenDnsList();
+    @Step("Проверка существования зоны в PowerDns")
+    public static boolean isZoneExistInPowerDns(String domainName) {
+        List<PowerDnsZone> list = getZonePowerDnsList();
         for (PowerDnsZone zone : list) {
             if (zone.getId().equals(domainName + ".")) {
                 return true;
@@ -114,10 +132,10 @@ public class DnsSteps extends Steps {
         return false;
     }
 
-    @Step("Проверка существования записи в зоне OpenDns")
-    public static boolean isRrsetExistInOpenDnsZone(String name, String domainName) {
+    @Step("Проверка существования записи в зоне PowerDns")
+    public static boolean isRrsetExistInPowerDnsZone(String name, String domainName) {
         name = name + ".";
-        List<PowerDnsRrset> rrsetList = getZoneOpenDnsById(domainName).getRrsets();
+        List<PowerDnsRrset> rrsetList = getZonePowerDnsById(domainName).getRrsets();
         for (PowerDnsRrset rrset : rrsetList) {
             if (rrset.getName().equals(name)) {
                 return true;
@@ -126,8 +144,8 @@ public class DnsSteps extends Steps {
         return false;
     }
 
-    @Step("Получение списка публиных зон")
-    public static List<DnsZone> getPublicZoneList(String projectId) {
+    @Step("Получение списка зон")
+    public static List<DnsZone> getZoneList(String projectId) {
         return new Http(DNSService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "projects/{}/zones", projectId)
@@ -165,7 +183,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования зоны")
     public static boolean isZoneExist(String zoneId, String projectId) {
-        List<DnsZone> list = getPublicZoneList(projectId);
+        List<DnsZone> list = getZoneList(projectId);
         for (DnsZone zone : list) {
             if (zone.getId().equals(zoneId)) {
                 return true;
@@ -176,7 +194,7 @@ public class DnsSteps extends Steps {
 
     @Step("Проверка существования зоны по имени")
     public static boolean isZoneByNameExist(String name, String projectId) {
-        List<DnsZone> list = getPublicZoneList(projectId);
+        List<DnsZone> list = getZoneList(projectId);
         for (DnsZone zone : list) {
             if (zone.getName().equals(name)) {
                 return true;

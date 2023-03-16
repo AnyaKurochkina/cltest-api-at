@@ -61,7 +61,7 @@ public class PortalAuditTest extends Tests {
                 .createObject();
 
         copyGraphByIdInContext(graph.getGraphId(), project.getId());
-        graphCopy = getGraphByName(graph.getName() + "-clone");
+        graphCopy = getGraphByNameFilter(graph.getName() + "-clone");
         deleteGraphByIdInContext(graphCopy.getGraphId(), project.getId());
     }
 

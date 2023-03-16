@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.action;
 
+import api.Tests;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -10,7 +11,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
 import java.util.List;
 

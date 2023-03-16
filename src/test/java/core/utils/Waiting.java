@@ -51,9 +51,9 @@ public class Waiting {
     public static void findWithRefresh(Supplier<Boolean> b, Duration duration) {
         Instant start = Instant.now();
         while(duration.compareTo(Duration.between(start, Instant.now())) > 0){
-            if(b.get()) return;
             Waiting.sleep(500);
             TypifiedElement.refresh();
+            if(b.get()) return;
         }
         throw new TimeoutException("Return false, duration: "+ duration);
     }

@@ -1,26 +1,22 @@
 package ui.elements;
 
 
-import com.codeborne.selenide.*;
-import core.utils.Waiting;
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.function.Executable;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 import static core.helper.StringUtils.$x;
 
@@ -200,7 +196,7 @@ public class Table implements TypifiedElement {
 
     @Step("Получение значения по колонке '{column}' в строке #{rowIndex}")
     public SelenideElement getValueByColumnInRow(int rowIndex, String column) {
-        SelenideElement row = getRowByIndex(rowIndex);
+        SelenideElement row = getRow(rowIndex).get();
         SelenideElement element;
         try {
             element = row.$$x("td").get(getHeaderIndex(column));

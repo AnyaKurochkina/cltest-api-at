@@ -235,7 +235,7 @@ public class Http {
 
             RequestSpecification specification = RestAssured.given()
                     .spec(build.build())
-                    .filter(new SwaggerCoverage())
+                 //   .filter(new SwaggerCoverage())
                     .config(RestAssured.config().sslConfig(sslConfig))
                     .contentType(contentType)
                     .headers(headers)

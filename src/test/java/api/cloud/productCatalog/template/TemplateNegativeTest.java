@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static steps.productCatalog.TemplateSteps.createTemplate;
+import static steps.productCatalog.TemplateSteps.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -53,6 +53,9 @@ public class TemplateNegativeTest extends Tests {
     @Test
     public void createTemplateWithInvalidType() {
         String templateName = "create_template_with_invalid_type_test_api";
+        if(isTemplateExists(templateName)) {
+            deleteTemplateByName(templateName);
+        }
         JSONObject template = Template.builder()
                 .name(templateName)
                 .type("sdf")
