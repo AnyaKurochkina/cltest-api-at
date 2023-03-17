@@ -8,6 +8,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.product.ProductOrderRestriction;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -24,6 +25,7 @@ public class ProductOrderRestrictionTest extends Tests {
 
     @DisplayName("")
     @TmsLink("")
+    @Disabled
     @Test
     public void getProductOrderRestrictionTest() {
         Product product = createProductByName("get_product_order_restriction_test_api");

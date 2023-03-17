@@ -70,7 +70,7 @@ public class Configure {
             ImageService = kongURL + "cloud-images";
             TagService = kongURL + "tags-service/api";
             DNSService = kongURL + "cloud-dns";
-            PowerDns = "http://10.89.16.17:8081";
+            PowerDns = getAppProp("url.powerdns");
         } catch (Exception e) {
             e.printStackTrace();
         }

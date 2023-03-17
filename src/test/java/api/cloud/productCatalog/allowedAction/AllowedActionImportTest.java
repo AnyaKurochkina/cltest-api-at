@@ -2,6 +2,7 @@ package api.cloud.productCatalog.allowedAction;
 
 import api.Tests;
 import core.helper.Configure;
+import core.helper.DataFileHelper;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.AllowedActionSteps.*;
+import static steps.productCatalog.ProductCatalogSteps.importObjects;
 import static steps.productCatalog.ProductSteps.importProduct;
 
 @Tag("product_catalog")
@@ -38,6 +40,35 @@ public class AllowedActionImportTest extends Tests {
         assertTrue(isAllowedActionExists(allowedActionName), "Разрешенное действие не существует");
         deleteAllowedActionByName(allowedActionName);
         assertFalse(isAllowedActionExists(allowedActionName), "Разрешенное действие существует");
+    }
+
+    @DisplayName("Импорт нескольких разрешенный действий")
+    @TmsLink("1507972")
+    @Test
+    public void importMultiAllowedActionTest() {
+        String allowedActionName = "import_allowed_action_test_api";
+        if (isAllowedActionExists(allowedActionName)) {
+            deleteAllowedActionByName(allowedActionName);
+        }
+        String allowedActionName2 = "import_allowed_action2_test_api";
+        if (isAllowedActionExists(allowedActionName2)) {
+            deleteAllowedActionByName(allowedActionName2);
+        }
+        AllowedAction allowedAction = createAllowedAction(allowedActionName);
+        AllowedAction allowedAction2 = createAllowedAction(allowedActionName2);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedAction.json";
+        String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedAction2.json";
+        DataFileHelper.write(filePath, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
+        DataFileHelper.write(filePath2, exportAllowedActionById(String.valueOf(allowedAction2.getId())).toString());
+        deleteAllowedActionByName(allowedActionName);
+        deleteAllowedActionByName(allowedActionName2);
+        importObjects("allowed_actions", filePath, filePath2);
+        DataFileHelper.delete(filePath);
+        DataFileHelper.delete(filePath2);
+        assertTrue(isAllowedActionExists(allowedActionName), "Разрешенное действие не существует");
+        assertTrue(isAllowedActionExists(allowedActionName2), "Разрешенное действие не существует");
+        deleteAllowedActionByName(allowedActionName);
+        deleteAllowedActionByName(allowedActionName2);
     }
 
     @DisplayName("Импорт уже существующего разрешенного действия")

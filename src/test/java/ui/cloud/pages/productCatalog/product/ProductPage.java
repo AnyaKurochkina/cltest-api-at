@@ -208,7 +208,7 @@ public class ProductPage extends BasePage {
 
     @Step("Переход на вкладку 'Сравнение версий'")
     public ProductPage goToVersionComparisonTab() {
-        goToTab("Сравнение версий");
+        goToTab("Сравнение");
         return this;
     }
 

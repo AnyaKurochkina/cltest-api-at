@@ -239,7 +239,7 @@ public class ActionPage extends BasePage {
 
     @Step("Переход на вкладку 'Сравнение версий'")
     public ActionPage goToVersionComparisonTab() {
-        goToTab("Сравнение версий");
+        goToTab("Сравнение");
         return this;
     }
 

@@ -142,16 +142,17 @@ public class S3Ceph extends IProduct {
     public static class PolicyAttrs {
         PolicyAttrs.Policy policy;
         String userId;
+        @Builder.Default
+        String selectedRights = "Настраиваемые";
         String bucketName;
 
         @Builder
         public static class Policy {
-            PolicyId id;
-        }
-
-        public enum PolicyId{
-            READ_WRITE,
-            READ
+            boolean write;
+            boolean read;
+            boolean putBucketCors;
+            boolean delete;
+            boolean abortMultipartUpload;
         }
     }
 

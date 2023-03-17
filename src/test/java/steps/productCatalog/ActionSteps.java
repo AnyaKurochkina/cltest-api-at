@@ -35,6 +35,15 @@ public class ActionSteps extends Steps {
                 .extractAs(GetActionList.class).getList();
     }
 
+    @Step("Получение списка действий продуктового каталога")
+    public static GetActionList f(Integer next) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + "?page={}", next)
+                .assertStatus(200)
+                .extractAs(GetActionList.class);
+    }
+
     @Step("Получение Meta данных списка действий продуктового каталога")
     public static Meta getMetaActionList() {
         return new Http(ProductCatalogURL)
@@ -178,8 +187,8 @@ public class ActionSteps extends Steps {
     }
 
     @Step("Частичное обновление действия по имени {name}")
-    public static Response partialUpdateActionByName(String name, JSONObject object) {
-        return new Http(ProductCatalogURL)
+    public static void partialUpdateActionByName(String name, JSONObject object) {
+         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(actionUrlV2 + name + "/");
@@ -367,10 +376,10 @@ public class ActionSteps extends Steps {
     }
 
     @Step("Экспорт действия по Id")
-    public static void exportActionById(String objectId) {
-        new Http(ProductCatalogURL)
+    public static Response exportActionById(String objectId) {
+        return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(actionUrl + objectId + "/obj_export/")
+                .get(actionUrl + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);
     }
 

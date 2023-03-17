@@ -17,6 +17,7 @@ import static core.helper.Configure.ProductCatalogURL;
 
 public class ForbiddenActionSteps extends Steps {
     private static final String endPoint = "/api/v1/forbidden_actions/";
+    private static final String endPointV2 = "/api/v2/forbidden_actions/";
 
     @Step("Проверка существования запрещенного действия продуктового каталога по имени")
     public static boolean isForbiddenActionExists(String name) {
@@ -24,6 +25,15 @@ public class ForbiddenActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
+    }
+
+    @Step("Создание запрещенного действия")
+    public static ForbiddenAction createForbiddenAction(String name) {
+        return ForbiddenAction.builder()
+                .name(name)
+                .title(name)
+                .build()
+                .createObject();
     }
 
     @Step("Создание запрещенного действия")
@@ -84,5 +94,13 @@ public class ForbiddenActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(endPoint + id + "/");
+    }
+
+    @Step("Экспорт запрещенного действия по Id")
+    public static Response exportForbiddenActionById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(endPoint + objectId + "/obj_export/?as_file=true")
+                .assertStatus(200);
     }
 }

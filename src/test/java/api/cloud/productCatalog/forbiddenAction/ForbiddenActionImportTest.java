@@ -2,6 +2,7 @@ package api.cloud.productCatalog.forbiddenAction;
 
 import api.Tests;
 import core.helper.Configure;
+import core.helper.DataFileHelper;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ForbiddenActionSteps.*;
+import static steps.productCatalog.ProductCatalogSteps.importObjects;
 import static steps.productCatalog.ProductSteps.importProduct;
 
 @Tag("product_catalog")
@@ -69,5 +71,34 @@ public class ForbiddenActionImportTest extends Tests {
         String expectedMsg = "Импортируемый объект \"ForbiddenAction\" не соответствует разделу \"Product\"";
         String error = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(expectedMsg, error);
+    }
+
+    @DisplayName("Импорт нескольких запрещенных действий")
+    @TmsLink("1518484")
+    @Test
+    public void importMultiForbiddenActionTest() {
+        String forbiddenActionName = "import_forbidden_action_test_api";
+        if (isForbiddenActionExists(forbiddenActionName)) {
+            deleteForbiddenActionByName(forbiddenActionName);
+        }
+        String forbiddenActionName2 = "import_forbidden_action2_test_api";
+        if (isForbiddenActionExists(forbiddenActionName2)) {
+            deleteForbiddenActionByName(forbiddenActionName2);
+        }
+        ForbiddenAction forbiddenAction = createForbiddenAction(forbiddenActionName);
+        ForbiddenAction forbiddenAction2 = createForbiddenAction(forbiddenActionName2);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/multiForbiddenAction.json";
+        String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/multiForbiddenAction2.json";
+        DataFileHelper.write(filePath, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
+        DataFileHelper.write(filePath2, exportForbiddenActionById(String.valueOf(forbiddenAction2.getId())).toString());
+        deleteForbiddenActionByName(forbiddenActionName);
+        deleteForbiddenActionByName(forbiddenActionName2);
+        importObjects("forbidden_actions", filePath, filePath2);
+        DataFileHelper.delete(filePath);
+        DataFileHelper.delete(filePath2);
+        assertTrue(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие не существует");
+        assertTrue(isForbiddenActionExists(forbiddenActionName2), "Запрещенное действие не существует");
+        deleteForbiddenActionByName(forbiddenActionName);
+        deleteForbiddenActionByName(forbiddenActionName2);
     }
 }

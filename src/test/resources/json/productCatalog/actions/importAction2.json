@@ -30,8 +30,8 @@
         "event_provider": "vcloud"
       }
     ],
-    "name": "import_action_test_api",
-    "title": "import_action_test_api",
+    "name": "import_action2_test_api",
+    "title": "import_action2_test_api",
     "description": "",
     "number": 50,
     "is_safe": false,

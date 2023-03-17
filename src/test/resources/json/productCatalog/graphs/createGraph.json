@@ -15,5 +15,8 @@
   ],
   "restricted_developers": [
 
-  ]
+  ],
+  "default_item": {
+
+  }
 }
