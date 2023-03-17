@@ -48,11 +48,11 @@ public class GraphImportTest extends Tests {
     @TmsLink("1507294")
     @Test
     public void importMultiGraphTest() {
-        String graphName = "import_graph_test_api";
+        String graphName = "multi_import_graph_test_api";
         if (isGraphExists(graphName)) {
             deleteGraphByName(graphName);
         }
-        String graphName2 = "import_graph2_test_api";
+        String graphName2 = "multi_import_graph2_test_api";
         if (isGraphExists(graphName2)) {
             deleteGraphByName(graphName2);
         }
