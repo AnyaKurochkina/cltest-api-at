@@ -20,7 +20,7 @@ public class GraphModifiersPage extends GraphPage {
     private final Input numberInput = Input.byLabelV2("Порядок применения");
     private final Select schemaSelect = Select.byLabel("Схема");
     private final Select typeSelect = Select.byLabel("Способ изменения");
-    private final MultiSelect envTypeSelect = MultiSelect.byLabel("Тип среды");
+    private final MultiSelect envTypeSelect = MultiSelect.byLabel("Типы сред");
     private final Input pathInput = Input.byXpath("//form//input[@name='path']");
     private final TextArea modifierData = TextArea.byXPath("//form//span[text()='ModifierData']/ancestor::div[2]//textarea");
     private final SelenideElement formSaveButton = $x("//form//div[text()='Сохранить']/parent::button");
