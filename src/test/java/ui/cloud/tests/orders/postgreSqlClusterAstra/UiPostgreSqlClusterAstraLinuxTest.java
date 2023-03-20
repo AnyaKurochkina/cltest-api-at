@@ -11,6 +11,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgresSQLCluster;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -183,7 +184,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(15)
     @TmsLink("1171492")
-    @Disabled // only PROD
+    @EnabledIfEnv("prod")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Назначить предел подключений")
     void setLimitConnection() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
