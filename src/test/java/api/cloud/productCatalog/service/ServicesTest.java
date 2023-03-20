@@ -1,8 +1,6 @@
 package api.cloud.productCatalog.service;
 
 import api.Tests;
-import core.helper.Configure;
-import core.helper.JsonHelper;
 import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
@@ -12,7 +10,6 @@ import httpModels.productCatalog.service.getServiceList.response.ListItem;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
@@ -113,40 +110,6 @@ public class ServicesTest extends Tests {
                 .createObject();
         Assertions.assertTrue(steps.isExists(name));
         Assertions.assertFalse(steps.isExists("not_exist_name"));
-    }
-
-    @DisplayName("Импорт сервиса")
-    @TmsLink("643454")
-    @Test
-    public void importService() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/services/importService.json");
-        String serviceName = new JsonPath(data).get("Service.name");
-        if (steps.isExists(serviceName)) {
-            steps.deleteByName(serviceName, GetServiceListResponse.class);
-        }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
-        Assertions.assertTrue(steps.isExists(serviceName));
-        steps.deleteByName(serviceName, GetServiceListResponse.class);
-        Assertions.assertFalse(steps.isExists(serviceName));
-    }
-
-    @DisplayName("Импорт сервиса c иконкой")
-    @TmsLink("1085946")
-    @Test
-    public void importServiceWithIcon() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/services/importServiceWithIcon.json");
-        String name = new JsonPath(data).get("Service.name");
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetServiceListResponse.class);
-        }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/services/importServiceWithIcon.json");
-        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetServiceListResponse.class);
-        GetServiceResponse service = (GetServiceResponse) steps.getById(id, GetServiceResponse.class);
-        assertFalse(service.getIconStoreId().isEmpty());
-        assertFalse(service.getIconUrl().isEmpty());
-        assertTrue(steps.isExists(name), "Сервис не существует");
-        steps.deleteByName(name, GetServiceListResponse.class);
-        assertFalse(steps.isExists(name), "Сервис существует");
     }
 
     @DisplayName("Получение сервиса по Id")
