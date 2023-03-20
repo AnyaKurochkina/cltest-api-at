@@ -23,7 +23,7 @@ import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
-@Feature("Действия")
+@Feature("Разрешенные действия")
 @DisabledIfEnv("prod")
 public class AllowedActionExportTest extends Tests {
     private static AllowedAction simpleAllowedAction;

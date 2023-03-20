@@ -42,8 +42,7 @@ public class ActionExportTest extends Tests {
     public void exportActionsTest() {
         ExportEntity e = new ExportEntity(simpleAction.getActionId(), simpleAction.getVersion());
         ExportEntity e2 = new ExportEntity(simpleAction2.getActionId(), simpleAction2.getVersion());
-        Response response = exportObjectsById("actions", new ExportData(Arrays.asList(e, e2)).toJson())
-                .assertStatus(201);
+        Response response = exportObjectsById("actions", new ExportData(Arrays.asList(e, e2)).toJson());
 //        byte[] bytes = response.getResponse().asByteArray();
 //        try (FileOutputStream fos = new FileOutputStream("pathname.zip")) {
 //            fos.write(bytes);

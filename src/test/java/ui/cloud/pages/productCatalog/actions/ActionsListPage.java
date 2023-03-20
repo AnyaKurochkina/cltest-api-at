@@ -113,7 +113,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Проверка заголовков списка действий")
     public ActionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(NAME_COLUMN),
-                "Наименование", NAME_COLUMN, "Дата создания", "", "");
+                "Наименование", NAME_COLUMN, "Дата создания", "Тип", "Провайдер, , ");
         return this;
     }
 

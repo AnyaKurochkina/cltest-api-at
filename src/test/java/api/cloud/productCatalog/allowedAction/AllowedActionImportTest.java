@@ -50,14 +50,14 @@ public class AllowedActionImportTest extends Tests {
         if (isAllowedActionExists(allowedActionName)) {
             deleteAllowedActionByName(allowedActionName);
         }
-        String allowedActionName2 = "import_graph2_test_api";
+        String allowedActionName2 = "import_allowed_action2_test_api";
         if (isAllowedActionExists(allowedActionName2)) {
             deleteAllowedActionByName(allowedActionName2);
         }
         AllowedAction allowedAction = createAllowedAction(allowedActionName);
         AllowedAction allowedAction2 = createAllowedAction(allowedActionName2);
-        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedActionGraph.json";
-        String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedActionGraph2.json";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedAction.json";
+        String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedAction2.json";
         DataFileHelper.write(filePath, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
         DataFileHelper.write(filePath2, exportAllowedActionById(String.valueOf(allowedAction2.getId())).toString());
         deleteAllowedActionByName(allowedActionName);
