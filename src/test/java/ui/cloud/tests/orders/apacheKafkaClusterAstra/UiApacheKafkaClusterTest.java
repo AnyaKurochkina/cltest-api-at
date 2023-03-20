@@ -19,6 +19,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import static ui.elements.TypifiedElement.scrollCenter;
+
 @Epic("UI Продукты")
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
@@ -28,7 +30,8 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    ApacheKafkaCluster product;//=ApacheKafkaCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/application_integration/orders/66311f62-b205-443a-a636-0ed5b29a044c/main?context=proj-iv550odo9a&type=project&org=vtb");
+    ApacheKafkaCluster product;
+    // =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/acfaf6b1-028c-4c88-bcd8-b314e1bfccee/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -290,6 +293,15 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     void checkConfiguration() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
+    }
+    @Test
+    @Order(25)
+    @TmsLink("1216972")
+    @DisplayName("UI ApacheKafkaCluster. Мониторинг ОС")
+    void monitoringOs() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
+        pSqlPage.checkClusterMonitoringOs();
     }
 
     @Test

@@ -174,7 +174,14 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             runActionWithParameters(name, "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
         }
     }
-
+    public void setLimitConnection(String name) {
+        new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
+            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            runActionWithParameters(name, "Назначить предел подключений", "Подтвердить", () -> Input.byLabel("Предел подключений").setValue(name));
+        }
+    }
     public void addUserDb(String nameDb, String nameUserDb, String comment) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -280,12 +287,13 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
-            Select.byLabel("Роль").set(role);
+            Select.byLabel("Роль").setContains(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         },ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
+        btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
@@ -295,8 +303,8 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
-            DropDown groupsElement = DropDown.byLabel("Группы").clear();
-            groups.forEach(groupsElement::select);
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
         },ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
@@ -314,8 +322,6 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
-        //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
-
     }
 
     //Таблица ролей
@@ -339,7 +345,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         }
 
         private String getGroupsRole(String name) {
-            open();
+
             return getRowByColumnValue("", name).getValueByColumn("Группы");
         }
     }
