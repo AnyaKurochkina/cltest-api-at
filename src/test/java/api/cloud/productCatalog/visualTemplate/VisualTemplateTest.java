@@ -1,13 +1,10 @@
 package api.cloud.productCatalog.visualTemplate;
 
 import api.Tests;
-import core.helper.Configure;
-import core.helper.JsonHelper;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.apache.commons.lang.RandomStringUtils;
@@ -149,18 +146,6 @@ public class VisualTemplateTest extends Tests {
         steps.putObjectByIdWithPublicToken(visualTemplates.getId(), steps
                 .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
         steps.deleteObjectWithPublicToken(visualTemplates.getId()).assertStatus(403);
-    }
-
-    @DisplayName("Импорт шаблона визуализации")
-    @TmsLink("643640")
-    @Test
-    public void importVisualTemplate() {
-        String data = JsonHelper.getStringFromFile("productCatalog/itemVisualTemplate/visualTemplateImport.json");
-        String importName = new JsonPath(data).get("ItemVisualisationTemplate.name");
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/itemVisualTemplate/visualTemplateImport.json");
-        assertTrue(steps.isExists(importName));
-        deleteVisualTemplateByName(importName);
-        assertFalse(steps.isExists(importName));
     }
 
     @DisplayName("Получение шаблона визуализации по Id")

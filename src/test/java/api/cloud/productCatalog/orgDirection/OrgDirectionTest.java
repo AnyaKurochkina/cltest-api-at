@@ -1,7 +1,6 @@
 package api.cloud.productCatalog.orgDirection;
 
-import core.helper.Configure;
-import core.helper.JsonHelper;
+import api.Tests;
 import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
@@ -10,23 +9,20 @@ import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOr
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ErrorMessage;
-import models.cloud.productCatalog.orgDirection.OrgDirection;
-import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
+import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 
 @Tag("product_catalog")
@@ -112,37 +108,6 @@ public class OrgDirectionTest extends Tests {
                 .createObject();
         Assertions.assertTrue(steps.isExists(orgName));
         Assertions.assertFalse(steps.isExists("NoExistsAction"));
-    }
-
-    @DisplayName("Импорт направления")
-    @TmsLink("643311")
-    @Test
-    public void importOrgDirection() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
-        String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
-        steps.importObject(RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
-        Assertions.assertTrue(steps.isExists(orgDirectionName));
-        steps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
-        Assertions.assertFalse(steps.isExists(orgDirectionName));
-    }
-
-    @DisplayName("Импорт направления c иконкой")
-    @TmsLink("1086532")
-    @Test
-    public void importOrgDirectionWithIcon() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirectionWithIcon.json");
-        String name = new JsonPath(data).get("OrgDirection.name");
-        if (steps.isExists(name)) {
-            steps.deleteByName(name, GetOrgDirectionListResponse.class);
-        }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirectionWithIcon.json");
-        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetOrgDirectionListResponse.class);
-        GetOrgDirectionResponse orgDirection = (GetOrgDirectionResponse) steps.getById(id, GetOrgDirectionResponse.class);
-        assertFalse(orgDirection.getIconStoreId().isEmpty());
-        assertFalse(orgDirection.getIconUrl().isEmpty());
-        assertTrue(steps.isExists(name), "Направление не существует");
-        steps.deleteByName(name, GetOrgDirectionListResponse.class);
-        assertFalse(steps.isExists(name), "Направление существует");
     }
 
     @DisplayName("Получение направления по Id")
@@ -240,18 +205,6 @@ public class OrgDirectionTest extends Tests {
         steps.putObjectByIdWithPublicToken(orgDirectionId, steps.createJsonObject("update_object_with_public_token_api"))
                 .assertStatus(403);
         steps.deleteObjectWithPublicToken(orgDirectionId).assertStatus(403);
-    }
-
-    @DisplayName("Экспорт направления по Id")
-    @TmsLink("643334")
-    @Test
-    public void exportOrgDirectionById() {
-        OrgDirection orgDirection = OrgDirection.builder()
-                .name("export_org_direction_test_api")
-                .title("title_org_direction_at_test-:2022.")
-                .build()
-                .createObject();
-        steps.exportById(orgDirection.getId());
     }
 
     @DisplayName("Удаление направления")

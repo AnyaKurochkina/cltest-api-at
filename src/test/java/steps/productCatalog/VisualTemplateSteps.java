@@ -10,6 +10,7 @@ import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.json.JSONObject;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -18,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class VisualTemplateSteps extends Steps {
 
     private static final String visualTemplateUrl = "/api/v1/item_visual_templates/";
+    private static final String visualTemplateUrl2 = "/api/v2/item_visual_templates/";
 
     @Step("Получение списка шаблонов отображения")
     public static List<ItemVisualTemplate> getVisualTemplateList() {
@@ -64,12 +66,6 @@ public class VisualTemplateSteps extends Steps {
         return itemVisualTemplateList.get(0);
     }
 
-    @Step("Удаление шаблона отображения по имени {name}")
-    public static void deleteVisualTemplateByName(String name) {
-        deleteVisualTemplateById(getVisualTemplateByName(name).getId())
-                .assertStatus(204);
-    }
-
     @Step("Получение шаблона визуализации по event_type и event_provider")
     public static ItemVisualTemplate getItemVisualTemplateByTypeProvider(String eventType, String eventProvider) {
         return new Http(ProductCatalogURL)
@@ -112,5 +108,35 @@ public class VisualTemplateSteps extends Steps {
                 .get(visualTemplateUrl + filter)
                 .assertStatus(200)
                 .extractAs(GetVisualTemplateList.class).getList();
+    }
+
+    @Step("Импорт шаблона визуализаций")
+    public static Response importVisualTemplate(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(visualTemplateUrl + "obj_import/", "file", new File(pathName));
+    }
+
+    @Step("Создание шаблона визуализаций")
+    public static Response createVisualTemplate(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(visualTemplateUrl);
+    }
+    @Step("Экспорт шаблона визуализаций по Id {id}")
+    public static Response exportVisualTemplateById(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(visualTemplateUrl + id + "/obj_export/?as_file=true")
+                .assertStatus(200);
+    }
+
+    @Step("Удаление шаблона по имени {name}")
+    public static void deleteVisualTemplateByName(String name) {
+        new Http(ProductCatalogURL)
+                .withServiceToken()
+                .delete(visualTemplateUrl2 + name + "/")
+                .assertStatus(204);
     }
 }

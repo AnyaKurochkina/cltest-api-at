@@ -1,8 +1,6 @@
 package api.cloud.productCatalog.template;
 
 import api.Tests;
-import core.helper.Configure;
-import core.helper.JsonHelper;
 import core.helper.http.Response;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
@@ -10,7 +8,6 @@ import httpModels.productCatalog.template.getTemplate.response.GetTemplateRespon
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
@@ -159,42 +156,6 @@ public class TemplatesTest extends Tests {
         String actual = steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class)
                 .getDescription();
         Assertions.assertEquals(expectedValue, actual);
-    }
-
-    @DisplayName("Импорт шаблона")
-    @TmsLink("643608")
-    @Test
-    public void importTemplate() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplate.json");
-        String templateName = new JsonPath(data).get("Template.name");
-        if(steps.isExists(templateName)) {
-            steps.deleteByName(templateName, GetTemplateListResponse.class);
-        }
-        String versionArr = new JsonPath(data).get("Template.version_arr").toString();
-        Assertions.assertEquals("[1, 0, 0]", versionArr);
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
-        Assertions.assertTrue(steps.isExists(templateName));
-        steps.deleteByName(templateName, GetTemplateListResponse.class);
-        Assertions.assertFalse(steps.isExists(templateName));
-    }
-
-    @DisplayName("Импорт шаблона c иконкой")
-    @TmsLink("1086370")
-    @Test
-    public void importTemplateWithIcon() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/templates/importTemplateWithIcon.json");
-        String name = new JsonPath(data).get("Template.name");
-        if(steps.isExists(name)) {
-            steps.deleteByName(name, GetTemplateListResponse.class);
-        }
-        steps.importObject(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplateWithIcon.json");
-        String id = steps.getProductObjectIdByNameWithMultiSearch(name, GetTemplateListResponse.class);
-        GetTemplateResponse template =(GetTemplateResponse) steps.getById(id, GetTemplateResponse.class);
-        assertFalse(template.getIconStoreId().isEmpty());
-        assertFalse(template.getIconUrl().isEmpty());
-        assertTrue(steps.isExists(name), "Шаблон не существует");
-        steps.deleteByName(name, GetTemplateListResponse.class);
-        assertFalse(steps.isExists(name), "Шаблон существует");
     }
 
     @DisplayName("Обновление шаблона узла с указанием версии в граничных значениях")
