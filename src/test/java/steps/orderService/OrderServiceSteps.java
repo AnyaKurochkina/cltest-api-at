@@ -111,7 +111,7 @@ public class OrderServiceSteps extends Steps {
                 endPoint = endPoint.substring(0, endPoint.length() - 2);
             }
             idOfAllSuccessProductsOnOnePage = new Http(OrderServiceURL)
-                    .setProjectId(projectId, ORDER_SERVICE_ADMIN)
+                    .setRole(ORDER_SERVICE_ADMIN)
                     .get(endPoint)
                     .assertStatus(200)
                     .jsonPath()
