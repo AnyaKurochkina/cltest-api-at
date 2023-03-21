@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.switchTo;
 public class BasePage {
 
     protected final Select versionDropDown = Select.byLabel("Выберите версию");
-    protected final WebElement versionComparisonTab = $x("//button[span[text()='Сравнение версий']]");
+    protected final WebElement versionComparisonTab = $x("//button[span[text()='Сравнение']]");
     protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     protected final Button createButton = Button.byText("Создать");
     protected final Button saveButton = Button.byText("Сохранить");

@@ -127,7 +127,7 @@ public class GraphPage extends BasePage {
 
     @Step("Переход на вкладку 'Сравнение версий'")
     public GraphPage goToVersionComparisonTab() {
-        goToTab("Сравнение версий");
+        goToTab("Сравнение");
         return this;
     }
 

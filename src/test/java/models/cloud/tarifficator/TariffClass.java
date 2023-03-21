@@ -15,6 +15,7 @@ public class TariffClass {
 	private String kind;
 	private String resourceType;
 	private String tariffPlanServiceId;
+	private Object parametersAffectingBilling;
 	private String title;
 	private String script;
 	private String priceUnit;
