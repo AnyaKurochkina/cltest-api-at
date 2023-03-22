@@ -1,6 +1,7 @@
 package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.Epic;
+import models.cloud.productCatalog.enums.LogLevel;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.template.Template;
@@ -76,6 +77,8 @@ public class GraphBaseTest extends BaseTest {
                 .printedOutput(Arrays.asList(new HashMap<String, String>() {{
                     put("type", "text");
                 }}))
+                .logLevel(LogLevel.SHORT.getValue())
+                .logCanBeOverridden(true)
                 .timeout(100)
                 .build()
                 .createObject();

@@ -1,10 +1,14 @@
 package ui.cloud.tests.productCatalog.graph.node;
 
+import com.codeborne.selenide.Condition;
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.enums.LogLevel;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
+import models.cloud.productCatalog.template.Template;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +16,16 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
+import ui.elements.Tooltip;
 
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Random;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
@@ -176,5 +188,78 @@ public class AddNodeTest extends GraphBaseTest {
         new GraphNodesPage()
                 .checkNodeAttributes(node)
                 .deleteNodeAndSave(node);
+    }
+
+    @Test
+    @TmsLink("883403")
+    @DisplayName("Добавление узла с разрешённым переопределением уровня логирования")
+    public void addNodeWithAllowedLogLevelOverride() {
+        GraphItem node = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .number(1)
+                .build();
+        new IndexPage()
+                .goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .openAddNodeDialog();
+        GraphNodesPage page = new GraphNodesPage();
+        page.getNodeName().setValue(node.getName());
+        page.getNodeDescription().setValue(node.getDescription());
+        page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        page.getAdditionalTab().click();
+        page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.enabled);
+        assertEquals(LogLevel.EMPTY.getDisplayName(), page.getLogLevelSelect().getValue());
+        page.getLogLevelSelect().set(LogLevel.FULL.getDisplayName());
+        page.getFormAddNodeButton().click();
+        page.saveGraphWithPatchVersion();
+        page.openEditDialog(node);
+        page.getAdditionalTab().click();
+        page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.enabled);
+        Waiting.find(() -> page.getLogLevelSelect().getValue().equals(LogLevel.FULL.getDisplayName()), Duration.ofSeconds(3));
+    }
+
+    @Test
+    @TmsLink("1532218")
+    @DisplayName("Добавление узла с запрещённым переопределением уровня логирования")
+    public void addNodeWithForbiddenLogLevelOverride() {
+        String templateName = UUID.randomUUID().toString();
+        Template.builder()
+                .name(templateName)
+                .title(TEMPLATE_TITLE)
+                .type("system_nodes")
+                .run("internal")
+                .logLevel(LogLevel.SHORT.getValue())
+                .logCanBeOverridden(false)
+                .timeout(1)
+                .build()
+                .createObject();
+        GraphItem node = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .number(1)
+                .build();
+        new IndexPage()
+                .goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .openAddNodeDialog();
+        GraphNodesPage page = new GraphNodesPage();
+        page.getNodeName().setValue(node.getName());
+        page.getNodeDescription().setValue(node.getDescription());
+        page.getTemplateSelect().setContains(templateName);
+        page.getAdditionalTab().click();
+        page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
+        page.getLogLevelTooltipIcon().hover();
+        assertTrue(new Tooltip().getElement().getText().equals("Поле можно редактировать только для узла с параметром " +
+                "\"Название очереди для старта задачи\" = \"internal\" и включенным переопределением уровня логирования"));
+        Waiting.find(() -> page.getLogLevelSelect().getValue().equals(LogLevel.SHORT.getDisplayName()), Duration.ofSeconds(3));
+        page.getFormAddNodeButton().click();
+        page.saveGraphWithPatchVersion();
+        page.openEditDialog(node);
+        page.getAdditionalTab().click();
+        page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
+        Waiting.find(() -> page.getLogLevelSelect().getValue().equals(LogLevel.SHORT.getDisplayName()), Duration.ofSeconds(3));
     }
 }

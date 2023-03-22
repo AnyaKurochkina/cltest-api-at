@@ -54,7 +54,7 @@ public class GraphItem {
     @JsonProperty("count")
     private String count;
     @JsonProperty("log_level")
-    private Object logLevel;
+    private String logLevel;
     @JsonProperty("damage_order_on_error")
     private Boolean damageOrderOnError;
     @JsonProperty("priority")
