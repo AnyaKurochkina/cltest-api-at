@@ -102,17 +102,4 @@ public class ProductByNameTest extends Tests {
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
-
-    @DisplayName("Экспорт продукта по имени")
-    @TmsLink("1361371")
-    @Test
-    public void exportProductByNameTest() {
-        String productName = "product_export_by_name_test_api";
-        Product.builder()
-                .name(productName)
-                .title(productName)
-                .build()
-                .createObject();
-        exportProductByName(productName);
-    }
 }

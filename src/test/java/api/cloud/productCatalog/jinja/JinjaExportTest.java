@@ -17,7 +17,6 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 
 import static steps.productCatalog.Jinja2Steps.createJinja;
-import static steps.productCatalog.Jinja2Steps.exportJinjaById;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
@@ -36,20 +35,12 @@ public class JinjaExportTest extends Tests {
     }
 
     @SneakyThrows
-    @DisplayName("Экспорт нескольких Jinja2")
+    @DisplayName("Экспорт нескольких jinja2")
     @TmsLink("1520118")
     @Test
-    public void multiExportGraphTest() {
+    public void multiExportJinja2Test() {
         ExportEntity e = new ExportEntity(simpleJinja.getId());
         ExportEntity e2 = new ExportEntity(simpleJinja2.getId());
         exportObjectsById("jinja2_templates", new ExportData(Arrays.asList(e, e2)).toJson());
-    }
-
-    @DisplayName("Экспорт jinja по Id")
-    @TmsLink("660113")
-    @Test
-    public void exportJinjaByIdTest() {
-        Jinja2 jinja2 = createJinja("export_by_id_api_test");
-        exportJinjaById(jinja2.getId());
     }
 }

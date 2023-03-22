@@ -37,16 +37,6 @@ public class GraphExportTest extends Tests {
         simpleGraph2 = createGraph("export_graph2_test_api");
     }
 
-    @SneakyThrows
-    @DisplayName("Экспорт нескольких графов")
-    @TmsLink("1520078")
-    @Test
-    public void multiExportGraphTest() {
-        ExportEntity e = new ExportEntity(simpleGraph.getGraphId());
-        ExportEntity e2 = new ExportEntity(simpleGraph2.getGraphId());
-        exportObjectsById("graphs", new ExportData(Arrays.asList(e, e2)).toJson());
-    }
-
     @DisplayName("Экспорт графа по Id")
     @TmsLink("1507286")
     @Test
@@ -66,5 +56,15 @@ public class GraphExportTest extends Tests {
         importGraph(filePath);
         assertTrue(isGraphExists(graphName));
         deleteGraphByName(graphName);
+    }
+
+    @SneakyThrows
+    @DisplayName("Экспорт нескольких графов")
+    @TmsLink("1520078")
+    @Test
+    public void multiExportGraphsTest() {
+        ExportEntity e = new ExportEntity(simpleGraph.getGraphId(), simpleGraph.getVersion());
+        ExportEntity e2 = new ExportEntity(simpleGraph2.getGraphId(), simpleGraph2.getVersion());
+        exportObjectsById("graphs", new ExportData(Arrays.asList(e, e2)).toJson());
     }
 }
