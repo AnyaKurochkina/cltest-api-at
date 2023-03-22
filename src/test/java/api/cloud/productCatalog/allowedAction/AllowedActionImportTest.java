@@ -8,7 +8,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -97,8 +96,14 @@ public class AllowedActionImportTest extends Tests {
     @DisplayName("Негативный тест импорт разрешенного действия в другой раздел")
     @TmsLink("1320584")
     public void importAllowedActionToAnotherSection() {
-        String expectedMsg = "Импортируемый объект \"AllowedAction\" не соответствует разделу \"Product\"";
-        String error = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(expectedMsg, error);
+        String data = JsonHelper.getStringFromFile("productCatalog/allowedAction/importAllowedAction2.json");
+        String allowedActionName = new JsonPath(data).get("AllowedAction.name");
+        if (isAllowedActionExists(allowedActionName)) {
+            deleteAllowedActionByName(allowedActionName);
+        }
+        importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/importAllowedAction2.json").assertStatus(200);
+        assertTrue(isAllowedActionExists(allowedActionName), "Разрешенное действие не существует");
+        deleteAllowedActionByName(allowedActionName);
+        assertFalse(isAllowedActionExists(allowedActionName), "Разрешенное действие существует");
     }
 }

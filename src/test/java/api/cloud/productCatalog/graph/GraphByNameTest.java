@@ -45,6 +45,9 @@ public class GraphByNameTest extends Tests {
     @TmsLink("1505952")
     public void deleteGraphByNameTest() {
         String graphName = "graph_delete_by_name_test_api";
+        if (isGraphExists(graphName)) {
+            deleteGraphByName(graphName);
+        }
         JSONObject jsonObject = Graph.builder()
                 .name(graphName)
                 .title(graphName)
