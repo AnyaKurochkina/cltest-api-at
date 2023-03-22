@@ -48,7 +48,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         WindowsOrderPage orderPage = new WindowsOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
+        orderPage.checkOrderDisabled();
 
         //Проверка поля Кол-во
         orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");

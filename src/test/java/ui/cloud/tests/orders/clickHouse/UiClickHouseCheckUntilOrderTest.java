@@ -44,7 +44,7 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
         ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
+        orderPage.checkOrderDisabled();
 
         //Проверка Детали заказа
         orderPage.getOsVersion().select(product.getOsVersion());

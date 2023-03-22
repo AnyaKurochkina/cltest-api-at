@@ -1,6 +1,5 @@
 package ui.cloud.tests.orders.redisAstra;
 
-
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
@@ -75,7 +74,6 @@ public class UiRedisAstraTest extends UiProductTest {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         Assertions.assertEquals(preBillingProductPrice, redisPage.getCostOrder(), 0.01);
     }
-
 
     @Test
     @TmsLink("1236732")

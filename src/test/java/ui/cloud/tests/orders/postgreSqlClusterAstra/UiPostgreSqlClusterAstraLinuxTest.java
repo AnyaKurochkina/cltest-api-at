@@ -1,6 +1,5 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
-import api.Tests;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.mifmif.common.regex.Generex;
@@ -17,7 +16,6 @@ import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.elements.Graph;
-import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
@@ -25,6 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static core.helper.StringUtils.$x;
+
 @Epic("UI Продукты")
 @Feature("PostgreSQL Cluster Astra Linux")
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
@@ -33,7 +32,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     PostgresSQLCluster product;
     // = PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/1afd6cd2-3ede-4700-93f7-e6217c02893a/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameDb = "at_db";
-    String limit="20";
+    String limit = "20";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
     SelenideElement node = $x("(//td[.='postgresql'])[1]");
@@ -55,15 +54,14 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
-                    .selectCategory("Базы данных")
                     .expandProductsList()
                     .selectProduct(product.getProductName());
             PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroup().select(accessGroup);
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getGroupSelect().set(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
@@ -82,7 +80,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
     }
-
 
     @Test
     @TmsLink("1236731")
@@ -324,5 +321,4 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.delete();
     }
-
 }
