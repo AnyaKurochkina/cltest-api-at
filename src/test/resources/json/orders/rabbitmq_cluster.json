@@ -34,7 +34,7 @@
 			"rabbitmq_node_number": 1,
 			"ad_logon_grants": [
 				{
-					"role": "rabbitmq_admin",
+					"role": "superuser",
 					"groups": [
 						"cloud-s9crux-denisapi"
 					]
