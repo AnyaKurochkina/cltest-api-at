@@ -73,7 +73,7 @@ public class ClickHouse extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (clickhouseUser == null)
-            clickhouseUser = "clickhouseUser";
+            clickhouseUser = "clickhouse_user";
         if (clickhousePassword == null)
             clickhousePassword = "vrItfk0k8sf8ICbwsMs7nB3";
         if (chCustomerPassword == null)
