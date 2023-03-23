@@ -4,12 +4,10 @@ import api.Tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.helper.JsonHelper;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
@@ -45,7 +43,7 @@ public class ActionImportTest extends Tests {
     }
 
     @DisplayName("Импорт нескольких действий")
-    @TmsLink("")
+    @TmsLink("1531556")
     @Test
     public void importActionsTest() {
         String actionName = "multi_import_action_test_api";
@@ -96,9 +94,9 @@ public class ActionImportTest extends Tests {
             deleteActionByName(actionName);
         }
         importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(200);
-        String expectedMsg = "Error loading dump: (Action: import_action_test_api, version = 1.0.2), ['Версия \"1.0.2\" Action:import_action_test_api:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 2]\") у импортируемого объекта и попробуйте снова.']";
-        String actualMsg = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400)
-                .extractAs(ErrorMessage.class).getMessage();
+        String expectedMsg = "Error loading dump: (Action: import_action_test_api, 1.0.2), ['Версия \"1.0.2\" Action:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 2]\") у импортируемого объекта и попробуйте снова.']";
+        String actualMsg = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(200)
+                .jsonPath().getString("imported_objects[0].messages");
         assertEquals(expectedMsg, actualMsg);
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
@@ -128,9 +126,15 @@ public class ActionImportTest extends Tests {
     @DisplayName("Негативный тест импорт действия в другой раздел")
     @TmsLink("1319697")
     public void importActionToAnotherSection() {
-        String expectedMsg = "Импортируемый объект \"Action\" не соответствует разделу \"Product\"";
-        Response response = importProduct(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(400);
-        String error = response.extractAs(ErrorMessage.class).getMessage();
-        assertEquals(expectedMsg, error);
+        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction2.json");
+        String actionName = new JsonPath(data).get("Action.name");
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        importProduct(RESOURCE_PATH + "/json/productCatalog/actions/importAction2.json").assertStatus(200);
+        assertTrue(isActionExists(actionName), "Действие не существует");
+        deleteActionByName(actionName);
+        assertFalse(isActionExists(actionName), "Действие существует");
+
     }
 }

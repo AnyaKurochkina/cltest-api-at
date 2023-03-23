@@ -155,7 +155,7 @@ public class ActionsNegativeTest extends Tests {
                 .build()
                 .createObject();
         String message = partialUpdateAction(action.getActionId(), action.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Версия %s для %s:%s уже существует", action.getVersion(), action.getName(), action.getTitle()),
+        assertEquals(String.format("Версия %s для %s уже существует", action.getVersion(), action.getName()),
                 message);
     }
 

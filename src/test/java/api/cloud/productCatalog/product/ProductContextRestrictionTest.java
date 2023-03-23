@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductSteps.getProductByProjectContext;
@@ -27,16 +27,16 @@ public class ProductContextRestrictionTest {
     Project projectTest = Project.builder().isForOrders(true)
             .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("TEST")).build().createObject();
 
-    @DisplayName("")
-    @TmsLink("")
+    @DisplayName("Получение продукта с контекстным ограничением")
+    @TmsLink("1533717")
     @Test
     public void getProductWithContextRestrictionTest() {
-        ContextRestrictionsItem contItem = new ContextRestrictionsItem(new ProjectEnvironment(Arrays.asList("dev")));
+        ContextRestrictionsItem contItem = new ContextRestrictionsItem(new ProjectEnvironment(Collections.singletonList("dev")));
         String productName = "get_product_with_context_restriction_test_api";
         Product product = Product.builder()
                 .name(productName)
                 .title(productName)
-                .contextRestrictions((Arrays.asList(contItem)))
+                .contextRestrictions((Collections.singletonList(contItem)))
                 .build()
                 .createObject();
         String errorMsg = getProductByProjectContext(projectTest.getId(), product.getProductId()).assertStatus(404)

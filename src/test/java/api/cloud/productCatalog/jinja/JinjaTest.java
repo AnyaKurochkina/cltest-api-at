@@ -84,8 +84,6 @@ public class JinjaTest extends Tests {
         assertFalse(isJinja2Exists("not_exist_jinja_test_api"));
     }
 
-    //toDO тест по импорту.
-
     @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах Jinja")
     @TmsLink("742344")
     @Test
@@ -136,17 +134,6 @@ public class JinjaTest extends Tests {
         assertTrue(steps.isExists(cloneName));
         steps.deleteByName(cloneName, GetJinjaListResponse.class);
         assertFalse(steps.isExists(cloneName));
-    }
-
-    @DisplayName("Экспорт jinja по Id")
-    @TmsLink("660113")
-    @Test
-    public void exportJinjaById() {
-        Jinja2 jinja2 = Jinja2.builder()
-                .name("copy_jinja_test_api")
-                .build()
-                .createObject();
-        steps.exportById(jinja2.getId());
     }
 
     @DisplayName("Частичное обновление jinja по Id")
