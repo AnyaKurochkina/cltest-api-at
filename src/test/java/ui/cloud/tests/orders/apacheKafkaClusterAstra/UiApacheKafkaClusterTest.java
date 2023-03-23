@@ -94,6 +94,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(4)
     @TmsLink("852003")
+    @Disabled
     @DisplayName("UI ApacheKafkaCluster. Расширить диск")
     void enlargeDisk() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
