@@ -123,7 +123,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(8)
     @TmsLink("851811")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить max_connections")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Максимизировать max_connections")
     void changeMaxConnections() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
@@ -133,7 +133,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(9)
     @TmsLink("851714")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Расширить диск")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Расширить точку монтирования")
     void expandDisk() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", node));

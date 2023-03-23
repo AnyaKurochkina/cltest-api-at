@@ -10,10 +10,14 @@ import java.util.UUID;
 public class PostgreSqlAstraOrderPage extends NewOrderPage {
 
     Select pSqlVersion = Select.byLabel("Версия PostgreSQL");
-    String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public PostgreSqlAstraOrderPage() {
         labelInput.setValue(labelValue);
         platformSelect.getElement().shouldBe(Condition.enabled);
+    }
+
+    public void checkOrderDetails(){
+        super.checkOrderDetails();
+        getHardDrive2().shouldBe(Condition.visible);
     }
 }

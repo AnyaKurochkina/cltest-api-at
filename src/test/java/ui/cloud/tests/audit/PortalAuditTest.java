@@ -47,8 +47,6 @@ public class PortalAuditTest extends Tests {
 
     @BeforeEach
     public void setUp() {
-        new LoginPage(project.getId()).signIn(cloudAdmin.getRole());
-
         graphName = UUID.randomUUID().toString();
         graph = Graph.builder()
                 .name(graphName)
@@ -63,6 +61,8 @@ public class PortalAuditTest extends Tests {
         copyGraphByIdInContext(graph.getGraphId(), project.getId());
         graphCopy = getGraphByNameFilter(graph.getName() + "-clone");
         deleteGraphByIdInContext(graphCopy.getGraphId(), project.getId());
+
+        new LoginPage(project.getId()).signIn(cloudAdmin.getRole());
     }
 
     @Test

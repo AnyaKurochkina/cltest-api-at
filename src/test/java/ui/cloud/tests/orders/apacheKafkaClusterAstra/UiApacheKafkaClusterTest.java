@@ -52,11 +52,11 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroup().select(accessGroup);
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getGroupSelect().set(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();

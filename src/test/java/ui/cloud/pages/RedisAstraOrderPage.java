@@ -16,10 +16,14 @@ public class RedisAstraOrderPage extends NewOrderPage {
     private final Input userInput = Input.byLabel("Пользователь");
     private final Switch createDefaultUserSwitch = Switch.byText("Создать пользователя default");
     Select redisVersion = Select.byLabel("Версия Redis");
-    String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public RedisAstraOrderPage() {
         labelInput.setValue(labelValue);
         platformSelect.getElement().shouldBe(Condition.enabled);
+    }
+
+    public void checkOrderDetails(){
+        super.checkOrderDetails();
+        getHardDrive2().shouldBe(Condition.visible);
     }
 }

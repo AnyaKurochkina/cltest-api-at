@@ -51,19 +51,19 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.checkOrderDisabled();
 
         //Проверка поля Кол-во
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "0", "10");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "100", "30");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "N", "1");
-        orderPage.autoChangeableFieldCheck(orderPage.getCountVm(), "", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "0", "10");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "100", "30");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "N", "1");
+        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "", "1");
 
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getRoleServer().selectByValue(product.getRole());
-        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
+        orderPage.getRoleServer().set(product.getRole());
+        orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new WindowsOrderPage().checkOrderDetails();
     }
 

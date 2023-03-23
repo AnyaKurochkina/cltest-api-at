@@ -10,6 +10,8 @@ import ui.elements.Button;
 import ui.elements.Input;
 import ui.elements.Select;
 
+import java.util.UUID;
+
 import static com.codeborne.selenide.Selenide.$x;
 
 @Data
@@ -33,6 +35,7 @@ public class NewOrderPage {
     protected Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
     protected Select roleSelect = Select.byLabel("Роль");
     protected Select groupSelect = Select.byLabel("Группы");
+    protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public static SelenideElement getCalculationDetails() {
         return $x("(//div[text()='Детали заказа'])[2]");
@@ -63,8 +66,7 @@ public class NewOrderPage {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }
         getProcessor().shouldBe(Condition.visible);
-        getHardDrive1().shouldBe(Condition.visible);
-        getHardDrive2().shouldBe(Condition.visible);
+        getHardDrive().shouldBe(Condition.visible);
         getOpMemory().shouldBe(Condition.visible);
     }
 }
