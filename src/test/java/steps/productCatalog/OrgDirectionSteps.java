@@ -9,6 +9,7 @@ import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -16,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrgDirectionSteps extends Steps {
     private static final String orgDirUrl = "/api/v1/org_direction/";
+    private static final String orgDirUrl2 = "/api/v2/org_direction/";
 
     @Step("Получение списка сервисов использующих направление")
     public static Response getServiceUsedOrgDirection(String id) {
@@ -62,6 +64,14 @@ public class OrgDirectionSteps extends Steps {
                 .assertStatus(204);
     }
 
+    @Step("Удаление направления по name {name}")
+    public static void deleteOrgDirectionByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(orgDirUrl2 + name + "/")
+                .assertStatus(204);
+    }
+
     @Step("Создание направления")
     public static Response createOrgDirection(JSONObject body) {
         return new Http(ProductCatalogURL)
@@ -76,5 +86,36 @@ public class OrgDirectionSteps extends Steps {
                 .name(name)
                 .build()
                 .createObject();
+    }
+
+    @Step("Импорт направления")
+    public static Response importOrgDirection(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(orgDirUrl + "obj_import/", "file", new File(pathName));
+    }
+
+    @Step("Получение направления по Id {objectId}")
+    public static OrgDirection getOrgDirectionById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(orgDirUrl + objectId + "/")
+                .extractAs(OrgDirection.class);
+    }
+
+    @Step("Получение направления по name {name}")
+    public static OrgDirection getOrgDirectionByNameV2(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(orgDirUrl2 + name + "/")
+                .extractAs(OrgDirection.class);
+    }
+
+    @Step("Экспорт направления по Id")
+    public static Response exportOrgDirectionById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(orgDirUrl + objectId + "/obj_export/?as_file=true")
+                .assertStatus(200);
     }
 }

@@ -9,6 +9,7 @@ import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -88,11 +89,34 @@ public class TemplateSteps extends Steps {
                 .extractAs(Template.class);
     }
 
-    @Step("Удаление действия по имени {name}")
+    @Step("Удаление шаблона по имени {name}")
     public static void deleteTemplateByName(String name) {
         new Http(ProductCatalogURL)
                 .withServiceToken()
                 .delete(templateUrlV2 + name + "/")
                 .assertStatus(204);
+    }
+
+    @Step("Импорт шаблона")
+    public static Response importTemplate(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(templateUrl + "obj_import/", "file", new File(pathName));
+    }
+
+    @Step("Экспорт шаблона по Id {id}")
+    public static Response exportTemplateById(Integer id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl + id + "/obj_export/?as_file=true")
+                .assertStatus(200);
+    }
+
+    @Step("Экспорт шаблона по имени {name}")
+    public static void exportTemplateByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrlV2 + name + "/obj_export/")
+                .assertStatus(200);
     }
 }

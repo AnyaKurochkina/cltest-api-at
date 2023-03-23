@@ -2,8 +2,7 @@
   "title": "item_visual_template_test_api",
   "name": "item_visual_template_test_api",
   "description": "",
-  "event_type": [
-  ],
+  "event_type": ["s3"],
   "event_provider": [
   ],
   "full_template": {

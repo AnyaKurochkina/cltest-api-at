@@ -26,8 +26,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_podman")})
 public class UiPodmanTest extends UiProductTest {
 
-    Podman product;
-    //= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/103e20a2-2c9a-4a9c-96cd-c8d6b1307cae/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Podman product;// = Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/913eaeee-04d1-40ca-b653-9593c3bf63fa/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -40,7 +39,7 @@ public class UiPodmanTest extends UiProductTest {
     @TmsLink("851389")
     @Order(1)
     @DisplayName("UI Podman. Заказ")
-    void orderScyllaDB() {
+    void orderPodman() {
         double preBillingProductPrice;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");

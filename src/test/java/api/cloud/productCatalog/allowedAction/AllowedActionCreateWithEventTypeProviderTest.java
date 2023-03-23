@@ -58,7 +58,7 @@ public class AllowedActionCreateWithEventTypeProviderTest extends Tests {
                 .init()
                 .toJson();
         String message = createAllowedAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("String 1: Wrong value (%s) of event_type", eventTypeProvider.getEvent_type()),
+        assertEquals(String.format("Ошибка валидации (event_type_provider): String 1: Wrong value (%s) of event_type", eventTypeProvider.getEvent_type()),
                 message);
     }
 }

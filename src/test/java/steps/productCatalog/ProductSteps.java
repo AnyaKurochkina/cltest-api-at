@@ -285,6 +285,14 @@ public class ProductSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Экспорт продукта по Id {id}")
+    public static Response exportProductById(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrl + id + "/obj_export/?as_file=true")
+                .assertStatus(200);
+    }
+
     @Step("Загрузка продукта в Gitlab")
     public static Response dumpProductToBitbucket(String id) {
         return new Http(ProductCatalogURL)
