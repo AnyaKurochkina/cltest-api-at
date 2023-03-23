@@ -73,7 +73,7 @@ public class ClickHouse extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (clickhouseUser == null)
-            clickhouseUser = "username_created";
+            clickhouseUser = "clickhouseUser";
         if (clickhousePassword == null)
             clickhousePassword = "vrItfk0k8sf8ICbwsMs7nB3";
         if (chCustomerPassword == null)
@@ -111,7 +111,7 @@ public class ClickHouse extends IProduct {
     }
 
     public void resetPasswordOwner() {
-        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        String password = "uAhHmuyQnT2kCvTpOPgw9JIab0OwNvyj";
         OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", clickhouseUser, password)), this.getProjectId());
         clickhousePassword = password;
         save();
@@ -270,11 +270,10 @@ public class ClickHouse extends IProduct {
 
 
     public void checkConnectDb() {
-        Assertions.assertThrows(ConnectException.class, () ->
         checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
                 ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
                         .replaceFirst("/play", "")
-                        .replaceFirst("https:", "clickhouse:")), "UNKNOWN_DATABASE");
+                        .replaceFirst("https:", "clickhouse:"));
     }
 
 }
