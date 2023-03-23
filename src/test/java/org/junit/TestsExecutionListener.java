@@ -58,8 +58,9 @@ public class TestsExecutionListener implements TestExecutionListener {
 
         baseUrl = URL;
         isRemote();
-//        Configuration.browserSize = "1530x870";
-        Configuration.browserPosition = "2x2";
+        Configuration.browserSize = "1920x1080";
+        Configuration.startMaximized = true;
+        Configuration.pageLoadTimeout = 60000;
         Configuration.timeout = 45000;
         Configuration.driverManagerEnabled = false;
         Configuration.browser = "chrome";
