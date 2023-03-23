@@ -110,7 +110,7 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "ТУЗ локальные, создание/удаление локальной УЗ {0}")
     void createUserAccount(ClickHouse product) {
         try (ClickHouse cluster = product.createObjectExclusiveAccess()) {
-            cluster.createUserAccount("test", "qBZ7hUOija_gSSyOEt7rA-.nk-x.R4UzdJvrv8y1JJk.lpp");
+            cluster.createUserAccount("test", "helv1gONd1kINnQe7XsAzqiPPtyq50E0LAA2NX");
             cluster.deleteUserAccount("test");
         }
     }
