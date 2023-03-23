@@ -193,6 +193,7 @@ public class ScyllaDbCluster extends IProduct {
         delete("delete_scylladb_cluster");
     }
 
+    @SneakyThrows
     public void checkConnectDb(String db, String user, String password) {
         super.checkConnectDb(db, user, password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }

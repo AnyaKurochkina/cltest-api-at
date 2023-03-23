@@ -119,6 +119,7 @@ public class PostgresSQLCluster extends IProduct {
         save();
     }
 
+    @SneakyThrows
     public void checkConnection(String dbName) {
         checkConnectDb(dbName, dbName + "_admin", adminPassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)).split(",")[0]);
     }

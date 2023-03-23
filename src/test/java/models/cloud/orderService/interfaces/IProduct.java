@@ -214,18 +214,17 @@ public abstract class IProduct extends Entity {
         }
     }
 
-    @SneakyThrows
-    protected void checkConnectDb(String dbName, String user, String password, String url) {
+
+    protected void checkConnectDb(String dbName, String user, String password, String url) throws ConnectException {
         String connectUrl = "jdbc:" + url + "/" + dbName;
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
+            connection.close();
         } catch (Exception e) {
             connectVmException("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
         }
-        assert connection != null;
-        connection.close();
         log.debug("Успешное подключение к " + getProductName());
     }
 

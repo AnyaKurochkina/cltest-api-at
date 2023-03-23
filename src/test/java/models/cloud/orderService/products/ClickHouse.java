@@ -269,11 +269,17 @@ public class ClickHouse extends IProduct {
     }
 
 
+    @SneakyThrows
     public void checkConnectDb() {
-        checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
-                ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
-                        .replaceFirst("/play", "")
-                        .replaceFirst("https:", "clickhouse:"));
+        try {
+            checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
+                    ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
+                            .replaceFirst("/play", "")
+                            .replaceFirst("https:", "clickhouse:"));
+        } catch (ConnectException e){
+            if(!e.getMessage().contains("(UNKNOWN_DATABASE)"))
+                throw e;
+        }
     }
 
 }

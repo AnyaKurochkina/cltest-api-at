@@ -197,6 +197,7 @@ public class PostgreSQL extends IProduct {
         Assertions.assertEquals(flavor.data.memory, memoryAfter);
     }
 
+    @SneakyThrows
     public void checkConnection(String dbName, String password) {
         checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
