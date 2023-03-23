@@ -22,6 +22,7 @@ public enum Categories {
     STREAMING("streaming"),
     WEB("web"),
     SAAS("saas"),
+    RPA("rpa"),
     QA_TEST("qa_test"),
     OMNI_SERVICES("omni_services"),
     PRODUCT_TEMPLATE("product_template"),

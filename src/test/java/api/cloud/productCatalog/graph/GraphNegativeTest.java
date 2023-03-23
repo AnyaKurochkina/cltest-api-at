@@ -113,7 +113,7 @@ public class GraphNegativeTest extends Tests {
                 .init()
                 .toJson();
         String error = createGraph(jsonObject).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Значения поля \"envs\" неуникальные: (%s)", env.getValue()), error);
+        assertEquals(String.format("Значения поля (envs) неуникальные: (%s)", env.getValue()), error);
     }
 
     @DisplayName("Негативный тест на создание графа с не валидным значением поля envs в модификациях")

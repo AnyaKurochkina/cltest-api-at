@@ -1,7 +1,6 @@
 package api.cloud.productCatalog.action;
 
 import api.Tests;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -37,16 +36,12 @@ public class ActionExportTest extends Tests {
 
     @SneakyThrows
     @DisplayName("Экспорт нескольких действий")
-    @TmsLink("")
+    @TmsLink("1531483")
     @Test
     public void exportActionsTest() {
         ExportEntity e = new ExportEntity(simpleAction.getActionId(), simpleAction.getVersion());
         ExportEntity e2 = new ExportEntity(simpleAction2.getActionId(), simpleAction2.getVersion());
-        Response response = exportObjectsById("actions", new ExportData(Arrays.asList(e, e2)).toJson());
-//        byte[] bytes = response.getResponse().asByteArray();
-//        try (FileOutputStream fos = new FileOutputStream("pathname.zip")) {
-//            fos.write(bytes);
-//        }
+        exportObjectsById("actions", new ExportData(Arrays.asList(e, e2)).toJson());
     }
 
     @DisplayName("Экспорт действия по Id")

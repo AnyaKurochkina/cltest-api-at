@@ -8,7 +8,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +26,6 @@ import static steps.productCatalog.ProductSteps.importProduct;
 public class GraphImportTest extends Tests {
 
     private static final String PATHNAME = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json";
-
 
     @DisplayName("Импорт графа")
     @TmsLink("642628")
@@ -83,8 +81,8 @@ public class GraphImportTest extends Tests {
             deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
         }
         importGraph(PATHNAME).assertStatus(200);
-        String expectedMsg = "Error loading dump: (Graph: import_graph_test_api, version = 1.0.0), ['Версия \"1.0.0\" Graph:import_graph_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.']";
-        String message = importGraph(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        String expectedMsg = "Error loading dump: (Graph: import_graph_test_api, 1.0.0), ['Версия \"1.0.0\" Graph:import_graph_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.']";
+        String message = importGraph(PATHNAME).assertStatus(200).jsonPath().getString("imported_objects[0].messages");
         assertEquals(expectedMsg, message);
         assertTrue(isGraphExists(graphName), "Граф не существует");
         deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
@@ -95,8 +93,15 @@ public class GraphImportTest extends Tests {
     @DisplayName("Негативный тест импорт графа в другой раздел")
     @TmsLink("1320923")
     public void importGraphToAnotherSection() {
-        String expectedMsg = "Импортируемый объект \"Graph\" не соответствует разделу \"Product\"";
-        String message = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(expectedMsg, message);
+        String graphName = "import_graph_for_another_section_test_api";
+        Graph graph = createGraph(graphName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraphAnother.json";
+        DataFileHelper.write(filePath, exportGraphById(String.valueOf(graph.getGraphId())).toString());
+        deleteGraphByName(graphName);
+        importProduct(filePath).assertStatus(200);
+        assertTrue(isGraphExists(graphName), "Граф не существует");
+        deleteGraphByName(graphName);
+        assertFalse(isGraphExists(graphName), "Граф существует");
+
     }
 }
