@@ -8,7 +8,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -68,9 +67,15 @@ public class ForbiddenActionImportTest extends Tests {
     @DisplayName("Негативный тест импорт запрещенного действия в другой раздел")
     @TmsLink("1320775")
     public void importForbiddenActionToAnotherSection() {
-        String expectedMsg = "Импортируемый объект \"ForbiddenAction\" не соответствует разделу \"Product\"";
-        String error = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(expectedMsg, error);
+        String forbiddenActionName = "import_forb_action_for_another_section_test_api";
+        ForbiddenAction forbiddenAction = createForbiddenAction(forbiddenActionName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/importForbiddenActionAnother.json";
+        DataFileHelper.write(filePath, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
+        deleteForbiddenActionByName(forbiddenActionName);
+        importProduct(filePath).assertStatus(200);
+        assertTrue(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие не существует");
+        deleteForbiddenActionByName(forbiddenActionName);
+        assertFalse(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие существует");
     }
 
     @DisplayName("Импорт нескольких запрещенных действий")

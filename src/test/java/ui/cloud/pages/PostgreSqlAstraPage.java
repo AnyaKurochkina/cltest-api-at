@@ -107,6 +107,18 @@ public class PostgreSqlAstraPage extends IProductPage {
                 "не соответствует установленному значению ");
     }
 
+    public void updateMinorVersion() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_APP, "Обновить минорную версию СУБД", "Подтвердить", () -> {
+            CheckBox.byLabel("Я подтверждаю, что уведомлен, что в процессе выполнения действия может быть временная недоступность сервера").setChecked(true);
+        });
+        runActionWithoutParameters(BLOCK_APP, "Обновить минорную версию СУБД");
+        CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
+        btnGeneralInfo.click();
+//        Assertions.assertEquals(value, max_connections.getText(), "Максимальное количество подключений " +
+//                "не соответствует установленному значению ");
+    }
+
     public void stopHard() {
         checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");

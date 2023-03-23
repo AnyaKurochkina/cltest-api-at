@@ -268,6 +268,15 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Order(25)
+    @TmsLink("1429077")
+    @DisplayName("UI PostgreSQLAstra. Обновить минорную версию СУБД")
+    void updateMinorVersion() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS,  pSqlPage::updateMinorVersion);
+    }
+
+    @Test
     @Order(100)
     @TmsLink("993399")
     @DisplayName("UI PostgreSQLAstra. Удаление продукта")

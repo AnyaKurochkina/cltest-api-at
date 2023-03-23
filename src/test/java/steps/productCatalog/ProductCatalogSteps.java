@@ -62,7 +62,7 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
-                .get("/api/v1/{}/objects_export/?as_file=true", entityName)
+                .post("/api/v1/{}/objects_export/", entityName)
                 .assertStatus(200);
     }
 
