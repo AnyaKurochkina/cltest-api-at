@@ -139,7 +139,7 @@ public class PortalAuditTest extends Tests {
                 .setStatusCodeFilter(okCode)
                 .applyAdditionalFilters()
                 .checkRecordDetailsByContextId(graphCopy.getGraphId(), projectsObject, noValue, noValue);
-        new ContextPage().openUserContext().selectOrgContext();
+        new ContextPage().openUserContext().setContext("VTB-VTB.Cloud-QA-AT-DEV");
         new AuditPage()
                 .setUserFilter(pcAdmin.getEmail())
                 .applyAdditionalFilters()
