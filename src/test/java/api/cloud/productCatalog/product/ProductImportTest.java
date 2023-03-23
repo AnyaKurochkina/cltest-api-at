@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.product.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
@@ -16,8 +17,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static core.helper.Configure.RESOURCE_PATH;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
 import static steps.productCatalog.ProductSteps.*;
@@ -34,7 +34,12 @@ public class ProductImportTest extends Tests {
     public void importProductTest() {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         String name = new JsonPath(data).get("Product.name");
-        importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProduct.json").assertStatus(200);
+        if (isProductExists(name)) {
+            deleteProductByName(name);
+        }
+        ImportObject importObject = importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProduct.json");
+        assertEquals(name, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         assertTrue(isProductExists(name));
         deleteProductByName(name);
         assertFalse(isProductExists(name));
@@ -91,12 +96,24 @@ public class ProductImportTest extends Tests {
         if (isProductExists(name)) {
             deleteProductByName(name);
         }
-        importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json").assertStatus(200);
+        importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json");
         Product product = getProductById(getProductByName(name).getProductId());
         assertFalse(product.getIconStoreId().isEmpty());
         assertFalse(product.getIconUrl().isEmpty());
         assertTrue(isProductExists(name), "Продукт не существует");
         deleteProductByName(name);
         assertFalse(isProductExists(name), "Продукт существует");
+    }
+
+    @DisplayName("Импорт уже существующего продукта")
+    @TmsLink("1535300")
+    @Test
+    public void importExistProductTest() {
+        Product product = createProductByName("import_exist_product_test_api");
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/products/existProductImport.json";
+        DataFileHelper.write(filePath, exportProductById(product.getProductId()).toString());
+        importProduct(filePath);
+        DataFileHelper.delete(filePath);
+        //todo после исправления добавить проверки
     }
 }

@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
 import models.cloud.productCatalog.product.Product;
@@ -271,10 +272,15 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Импорт продукта")
-    public static Response importProduct(String pathName) {
+    public static ImportObject importProduct(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(productUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(productUrl + "obj_import/", "file", new File(pathName))
+                .assertStatus(200)
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Экспорт продукта по имени {name}")

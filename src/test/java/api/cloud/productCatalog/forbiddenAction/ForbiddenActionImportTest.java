@@ -72,7 +72,7 @@ public class ForbiddenActionImportTest extends Tests {
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/importForbiddenActionAnother.json";
         DataFileHelper.write(filePath, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
         deleteForbiddenActionByName(forbiddenActionName);
-        importProduct(filePath).assertStatus(200);
+        importProduct(filePath);
         assertTrue(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие не существует");
         deleteForbiddenActionByName(forbiddenActionName);
         assertFalse(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие существует");

@@ -101,7 +101,7 @@ public class AllowedActionImportTest extends Tests {
         if (isAllowedActionExists(allowedActionName)) {
             deleteAllowedActionByName(allowedActionName);
         }
-        importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/importAllowedAction2.json").assertStatus(200);
+        importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/importAllowedAction2.json");
         assertTrue(isAllowedActionExists(allowedActionName), "Разрешенное действие не существует");
         deleteAllowedActionByName(allowedActionName);
         assertFalse(isAllowedActionExists(allowedActionName), "Разрешенное действие существует");

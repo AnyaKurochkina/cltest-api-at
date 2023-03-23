@@ -1,0 +1,59 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "imported_objects": {
+      "type": "array",
+      "items": [
+        {
+          "type": "object",
+          "properties": {
+            "model_name": {
+              "type": "string"
+            },
+            "object_id": {
+              "type": "string"
+            },
+            "object_name": {
+              "type": "string"
+            },
+            "file_name": {
+              "type": "string"
+            },
+            "is_pinned_versions": {
+              "type": "boolean"
+            },
+            "version": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "messages": {
+              "type": "array",
+              "items": [
+                {
+                  "type": "string"
+                }
+              ]
+            }
+          },
+          "additionalProperties": false,
+          "required": [
+            "model_name",
+            "object_id",
+            "object_name",
+            "file_name",
+            "is_pinned_versions",
+            "version",
+            "status",
+            "messages"
+          ]
+        }
+      ]
+    }
+  },
+  "required": [
+    "imported_objects"
+  ]
+}

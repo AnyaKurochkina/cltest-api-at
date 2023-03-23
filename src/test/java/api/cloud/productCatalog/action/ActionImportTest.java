@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
@@ -36,7 +37,9 @@ public class ActionImportTest extends Tests {
         if (isActionExists(actionName)) {
             deleteActionByName(actionName);
         }
-        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
+        ImportObject importObject = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
+        assertEquals(actionName, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName), "Действие существует");
@@ -88,15 +91,14 @@ public class ActionImportTest extends Tests {
     @TmsLink("1319922")
     @Test
     public void importExistActionTest() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/actions/importAction.json");
-        String actionName = new JsonPath(data).get("Action.name");
-        if (isActionExists(actionName)) {
-            deleteActionByName(actionName);
-        }
-        importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(200);
+        String actionName = "import_exist_action_test_api";
+        Action action = createAction(actionName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/existProductImport.json";
+        DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
+        importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
         String expectedMsg = "Error loading dump: (Action: import_action_test_api, 1.0.2), ['Версия \"1.0.2\" Action:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 2]\") у импортируемого объекта и попробуйте снова.']";
-        String actualMsg = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json").assertStatus(200)
-                .jsonPath().getString("imported_objects[0].messages");
+        String actualMsg = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json")
+                .getMessages().get(0);
         assertEquals(expectedMsg, actualMsg);
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
@@ -131,7 +133,7 @@ public class ActionImportTest extends Tests {
         if (isActionExists(actionName)) {
             deleteActionByName(actionName);
         }
-        importProduct(RESOURCE_PATH + "/json/productCatalog/actions/importAction2.json").assertStatus(200);
+        importProduct(RESOURCE_PATH + "/json/productCatalog/actions/importAction2.json");
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName), "Действие существует");

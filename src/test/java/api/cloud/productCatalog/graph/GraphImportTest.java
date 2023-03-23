@@ -98,7 +98,7 @@ public class GraphImportTest extends Tests {
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraphAnother.json";
         DataFileHelper.write(filePath, exportGraphById(String.valueOf(graph.getGraphId())).toString());
         deleteGraphByName(graphName);
-        importProduct(filePath).assertStatus(200);
+        importProduct(filePath);
         assertTrue(isGraphExists(graphName), "Граф не существует");
         deleteGraphByName(graphName);
         assertFalse(isGraphExists(graphName), "Граф существует");
