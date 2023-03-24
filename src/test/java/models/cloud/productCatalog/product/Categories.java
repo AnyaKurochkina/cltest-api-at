@@ -27,6 +27,7 @@ public enum Categories {
     OMNI_SERVICES("omni_services"),
     PRODUCT_TEMPLATE("product_template"),
     COMPLEX_REQUEST("complex_request"),
+    CDN("cdn"),
     VM("vm");
 
     private final String value;

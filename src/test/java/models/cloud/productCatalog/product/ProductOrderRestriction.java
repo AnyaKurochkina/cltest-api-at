@@ -17,6 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 
 @JsonRootName(value = "order_restriction")
+@EqualsAndHashCode(exclude = {"id", "createdAt", "updatedAt"})
+@ToString
 public class ProductOrderRestriction {
 
     private List<Object> environments;
@@ -25,6 +27,8 @@ public class ProductOrderRestriction {
     @JsonProperty("net_segments")
     private List<String> netSegments;
     private List<String> domains;
+    @JsonProperty("information_system_ids")
+    private List<String> informSystemIds;
     @JsonProperty("product_name")
     private String productName;
     private List<String> platforms;
@@ -47,6 +51,7 @@ public class ProductOrderRestriction {
                 .set("order_restriction.product_name", productName)
                 .set("order_restriction.weight", weight)
                 .set("order_restriction.platforms", platforms)
+                .set("order_restriction.environments", environments)
                 .build();
     }
 }
