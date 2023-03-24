@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgreSQL;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -20,6 +21,8 @@ import ui.extesions.UiProductTest;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
 @Feature("PostgreSQL (Astra Linux)")
@@ -223,6 +226,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeExtensions(nameDb));
     }
 
+
     @Test
     @Order(21)
     @TmsLink("993400")
@@ -274,6 +278,17 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     void updateMinorVersion() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS,  pSqlPage::updateMinorVersion);
+    }
+
+    @Test
+    @Order(26)
+    @TmsLink("1296731")
+    @EnabledIfEnv("prod")
+    @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
+    void monitoringOs() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
+        pSqlPage.checkClusterMonitoringOs();
     }
 
     @Test

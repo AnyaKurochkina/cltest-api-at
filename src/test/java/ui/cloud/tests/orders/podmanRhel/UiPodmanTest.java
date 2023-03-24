@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.podman;
+package ui.cloud.tests.orders.podmanRhel;
 
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Podman;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -20,6 +21,8 @@ import ui.extesions.UiProductTest;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
 @Feature("Podman")
@@ -129,6 +132,17 @@ public class UiPodmanTest extends UiProductTest {
         podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage.updateGroup("podman_admin",
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName()),
                 new Table("Роли узла").getRow(0).get()));
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("1296740")
+    @EnabledIfEnv("prod")
+    @DisplayName("UI Podman. Мониторинг ОС")
+    void monitoringOs() {
+        PodmanPage podmanPage = new PodmanPage(product);
+        new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
+        podmanPage.checkClusterMonitoringOs();
     }
 
     @Test

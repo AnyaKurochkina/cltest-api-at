@@ -174,14 +174,24 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             runActionWithParameters(name, "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
         }
     }
-    public void setLimitConnection(String name) {
+    public void setLimitConnection(String quantity) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
+        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", quantity)) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithParameters(name, "Назначить предел подключений", "Подтвердить", () -> Input.byLabel("Предел подключений").setValue(name));
+            runActionWithParameters(quantity, "Назначить предел подключений", "Подтвердить", () -> Input.byLabel("Предел подключений").setValue(quantity));
         }
     }
+
+    public void deleteLimitConnection(String quantity) {
+        new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", quantity)) {
+            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            runActionWithoutParameters(quantity, "Убрать предел подключений");
+        }
+    }
+
     public void addUserDb(String nameDb, String nameUserDb, String comment) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -224,31 +234,8 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-//        Assertions.assertTrue(new Table(HEADER_CONNECT_STATUS).isColumnValueContains(HEADER_DISK_SIZE,
-//                value));
     }
-//    public void enlargeDisk(String name, String size, SelenideElement node) {
-//        node.scrollIntoView(scrollCenter).click();
-//        String firstSizeDisk = String.valueOf(Integer.parseInt(getTableByHeader("Дополнительные точки монтирования")
-//                .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE))+
-//                Integer.parseInt(getTableByHeader("Дополнительные точки монтирования")
-//                        .getRowByColumnValue("", "/app/etcd").getValueByColumn(HEADER_DISK_SIZE)));
-//        String secondSizeDisk = String.valueOf(Integer.parseInt(getTableByHeader("Дополнительные точки монтирования")
-//                .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE)));
-//        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-//        runActionWithParameters(BLOCK_APP, "Расширить точку монтирования /pg_data","Подтвердить",() -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
-//        btnGeneralInfo.shouldBe(Condition.enabled).click();
-//        node.scrollIntoView(scrollCenter).click();
-//        int value = Integer.parseInt(secondSizeDisk) +
-//                Integer.parseInt(size);
-//        int value2 = Integer.parseInt(firstSizeDisk) +
-//                Integer.parseInt(size);
-//        Assertions.assertEquals(String.valueOf(value), getTableByHeader("Дополнительные точки монтирования")
-//                        .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
-//                "Неверный размер диска");
-//        Assertions.assertTrue(new Table(HEADER_CONNECT_STATUS).isColumnValueContains(HEADER_DISK_SIZE,
-//                String.valueOf(value2)));
-//    }
+
 
     public void resetPasswordDb() {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);

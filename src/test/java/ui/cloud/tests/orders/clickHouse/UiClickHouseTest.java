@@ -8,6 +8,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouse;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -17,6 +18,8 @@ import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
+
+import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
 @Feature("ClickHouse")
@@ -252,6 +255,17 @@ public class UiClickHouseTest extends UiProductTest {
     void stopSoft() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.LESS, clickHousePage::stopSoft);
+    }
+
+    @Test
+    @Order(20)
+    @TmsLink("1536880")
+    @EnabledIfEnv("prod")
+    @DisplayName("UI ClickHouse. Мониторинг ОС")
+    void monitoringOs() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
+        clickHousePage.checkClusterMonitoringOs();
     }
 
     @Test

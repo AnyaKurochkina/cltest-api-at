@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.podman;
+package ui.cloud.tests.orders.podmanRhel;
 
 import api.Tests;
 import com.codeborne.selenide.Condition;
