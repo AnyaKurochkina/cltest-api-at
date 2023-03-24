@@ -35,6 +35,7 @@ public class GraphBaseTest extends BaseTest {
     protected final String SUBGRAPH_NAME = UUID.randomUUID().toString();
     protected final String TEMPLATE_NAME = UUID.randomUUID().toString();
     protected String nodeDescription = "Тестовый узел";
+    protected String printedOutputValue = "[{\"type\":\"text\"}]";
     protected ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
     protected Graph graph;
@@ -77,8 +78,9 @@ public class GraphBaseTest extends BaseTest {
                 .printedOutput(Arrays.asList(new HashMap<String, String>() {{
                     put("type", "text");
                 }}))
+                .printedOutputCanBeOverridden(true)
                 .logLevel(LogLevel.SHORT.getValue())
-                .logCanBeOverridden(true)
+                .logCanBeOverridden(false)
                 .timeout(100)
                 .build()
                 .createObject();

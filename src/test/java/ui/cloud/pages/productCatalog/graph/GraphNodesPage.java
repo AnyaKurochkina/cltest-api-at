@@ -43,6 +43,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
     private final TextArea inputTextArea = TextArea.byLabel("Input");
     private final TextArea outputTextArea = TextArea.byLabel("Output");
+    private final TextArea printedOutputTextArea = TextArea.byLabelContains("Printed output");
     private final Input numberInput = Input.byName("number");
     private final Input timeoutInput = Input.byName("timeout");
     private final Input countInput = Input.byName("count");
@@ -66,6 +67,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия'])[2]/following::*[name()='svg'][1]");
     private final SelenideElement templateVersion = $x("(//label[text()='Версия'])[1]/following::div[@id='selectValueWrapper']");
     private final SelenideElement subgraphVersion = $x("(//label[text()='Версия'])[2]/following::div[@id='selectValueWrapper']");
+    private final SelenideElement mainTab = $x("//button[text()='Основное']");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
     private final TextArea staticDataTextArea = TextArea.byLabel("Static data");
@@ -76,6 +78,9 @@ public class GraphNodesPage extends GraphPage {
     private final Button fullScreenButton = Button.byAriaLabel("fullscreen");
     private final Select logLevelSelect = Select.byXpath("//label[.='Уровень логирования']/following::div[1]");
     private final SelenideElement logLevelTooltipIcon = $x("//div[text()='Уровень логирования']/following::*[name()='svg'][1]");
+    private final SelenideElement inputHint = $x("//label[text()='Input']/following-sibling::p");
+    private final SelenideElement outputHint = $x("//label[text()='Output']/following-sibling::p");
+    private final SelenideElement printedOutputHint = $x("//label[text()='Printed output ']/following-sibling::p");
 
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(GraphItem node) {
@@ -243,9 +248,10 @@ public class GraphNodesPage extends GraphPage {
         }
         paramsTab.click();
         assertEquals(new JSONObject(node.getInput()).toString(),
-                inputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
+                inputTextArea.getValue());
         assertEquals(new JSONObject(node.getOutput()).toString(),
-                outputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
+                outputTextArea.getValue());
+        assertEquals(node.getPrintedOutput().toString(), printedOutputTextArea.getValue());
         additionalTab.click();
         numberInput.getInput().shouldHave(Condition.exactValue(node.getNumber() + ""));
         timeoutInput.getInput().shouldHave(Condition.exactValue(node.getTimeout() + ""));

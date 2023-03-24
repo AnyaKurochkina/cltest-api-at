@@ -17,8 +17,6 @@ import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.TextArea;
 
-import java.util.Arrays;
-
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -79,7 +77,7 @@ public class TemplatePage extends BasePage {
     public TemplatePage checkAttributes(Template template) {
         nameInput.getInput().shouldHave(Condition.exactValue(template.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
-        descriptionTextArea.getTextArea().shouldHave(Condition.exactValue(template.getDescription()));
+        descriptionTextArea.getElement().shouldHave(Condition.exactValue(template.getDescription()));
         runQueueInput.getInput().shouldHave(Condition.exactValue(template.getRun()));
         rollbackQueueInput.getInput().shouldHave(Condition.exactValue(template.getRollback().toString()));
         Assertions.assertTrue(typeSelect.getValue().equals(template.getType()));
@@ -87,7 +85,7 @@ public class TemplatePage extends BasePage {
         checkTemplateVersion(template.getVersion());
         goToParamsTab();
         String printedOutputJSON = new JSONArray(template.getPrintedOutput()).toString();
-        Assertions.assertEquals(printedOutputJSON, printedOutput.getTextArea().getValue()
+        Assertions.assertEquals(printedOutputJSON, printedOutput.getElement().getValue()
                 .replaceAll("\\s", ""));
         return this;
     }

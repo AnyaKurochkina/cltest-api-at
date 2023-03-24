@@ -39,7 +39,7 @@ public class GraphPage extends BasePage {
         nameInput.getInput().shouldHave(Condition.exactValue(graph.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         checkGraphVersion(graph.getVersion());
-        descriptionTextArea.getTextArea().shouldHave(Condition.exactText(graph.getDescription()));
+        descriptionTextArea.getElement().shouldHave(Condition.exactText(graph.getDescription()));
         authorInput.getInput().shouldHave(Condition.exactValue(graph.getAuthor()));
         return new GraphPage();
     }

@@ -8,28 +8,29 @@ import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.enums.LogLevel;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
-import models.cloud.productCatalog.template.Template;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.elements.Tooltip;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Random;
-import java.util.UUID;
 
+import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
 
+    ProductCatalogSteps templateSteps = new ProductCatalogSteps("/api/v1/templates/",
+            "productCatalog/templates/createTemplate.json");
     private Graph subgraph;
 
     @BeforeEach
@@ -185,6 +186,7 @@ public class AddNodeTest extends GraphBaseTest {
         node.setOutput(new HashMap<String, Object>() {{
             put("output_param", "");
         }});
+        node.setPrintedOutput(printedOutputValue);
         new GraphNodesPage()
                 .checkNodeAttributes(node)
                 .deleteNodeAndSave(node);
@@ -194,6 +196,8 @@ public class AddNodeTest extends GraphBaseTest {
     @TmsLink("883403")
     @DisplayName("Добавление узла с разрешённым переопределением уровня логирования")
     public void addNodeWithAllowedLogLevelOverride() {
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("log_can_be_overridden", true));
         GraphItem node = GraphItem.builder()
                 .name("1")
                 .description("1")
@@ -224,17 +228,6 @@ public class AddNodeTest extends GraphBaseTest {
     @TmsLink("1532218")
     @DisplayName("Добавление узла с запрещённым переопределением уровня логирования")
     public void addNodeWithForbiddenLogLevelOverride() {
-        String templateName = UUID.randomUUID().toString();
-        Template.builder()
-                .name(templateName)
-                .title(TEMPLATE_TITLE)
-                .type("system_nodes")
-                .run("internal")
-                .logLevel(LogLevel.SHORT.getValue())
-                .logCanBeOverridden(false)
-                .timeout(1)
-                .build()
-                .createObject();
         GraphItem node = GraphItem.builder()
                 .name("1")
                 .description("1")
@@ -248,7 +241,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
-        page.getTemplateSelect().setContains(templateName);
+        page.getTemplateSelect().setContains(TEMPLATE_NAME);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         page.getLogLevelTooltipIcon().hover();
@@ -261,5 +254,84 @@ public class AddNodeTest extends GraphBaseTest {
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         Waiting.find(() -> page.getLogLevelSelect().getValue().equals(LogLevel.SHORT.getDisplayName()), Duration.ofSeconds(3));
+    }
+
+    @Test
+    @TmsLink("1035648")
+    @DisplayName("Добавление узла с запрещённым переопределением Input, Output, Printed output")
+    public void addNodeWithForbiddenParamsOverride() {
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("printed_output_can_be_overridden", false));
+        GraphItem node = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .number(1)
+                .build();
+        new IndexPage()
+                .goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .openAddNodeDialog();
+        GraphNodesPage page = new GraphNodesPage();
+        page.getNodeName().setValue(node.getName());
+        page.getNodeDescription().setValue(node.getDescription());
+        page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        page.getParamsTab().click();
+        Waiting.sleep(1500);
+        page.getInputTextArea().setValue("{\"override_param_1\":\"1\"}");
+        assertTrue(page.getInputHint().getText().equals("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)"));
+        page.getOutputTextArea().setValue("{\"override_param_2\":\"1\"}");
+        assertTrue(page.getOutputHint().getText().equals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)"));
+        $x("//label[text()='Printed output (Переопределение Printed output запрещено в шаблоне)']")
+                .shouldBe(Condition.visible);
+        assertEquals("{}", page.getPrintedOutputTextArea().getValue());
+    }
+
+    @Test
+    @TmsLink("1536653")
+    @DisplayName("Добавление узла с разрешенным переопределением Input, Output, Printed output")
+    public void addNodeWithAllowedParamsOverride() {
+        String inputValue = "{\"override_param_1\":\"1\"}";
+        String outputValue = "{\"override_param_2\":\"1\"}";
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("additional_input", true)
+                .put("additional_output", true));
+        GraphItem node = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .number(1)
+                .build();
+        new IndexPage()
+                .goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab()
+                .openAddNodeDialog();
+        GraphNodesPage page = new GraphNodesPage();
+        page.getNodeName().setValue(node.getName());
+        page.getNodeDescription().setValue(node.getDescription());
+        page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        page.getParamsTab().click();
+        Waiting.sleep(1500);
+        page.getInputTextArea().setValue(inputValue);
+        page.getInputHint().shouldNotBe(Condition.visible);
+        page.getOutputTextArea().setValue(outputValue);
+        page.getOutputHint().shouldNotBe(Condition.visible);
+        $x("//label[text()='Printed output ']").shouldBe(Condition.visible);
+        page.getPrintedOutputTextArea().clear();
+        page.getFormAddNodeButton().click();
+        page.saveGraphWithPatchVersion();
+        page.openEditDialog(node);
+        page.getParamsTab().click();
+        assertEquals(inputValue, page.getInputTextArea().getValue());
+        assertEquals(outputValue, page.getOutputTextArea().getValue());
+        assertEquals("{}", page.getPrintedOutputTextArea().getValue());
+        page.getMainTab().click();
+        //TODO баг, что не сразу отображается текст
+        Waiting.findWithAction(() -> $x("//div[text()='Параметры в \"Input\", \"Output\" узла не совпадают с параметрами шаблона']")
+                        .isDisplayed(),
+                () -> {
+                    page.getParamsTab().click();
+                    page.getMainTab().click();
+                }, Duration.ofSeconds(3));
     }
 }

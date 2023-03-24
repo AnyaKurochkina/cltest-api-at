@@ -99,6 +99,7 @@ public class GraphItem {
                 .set("$.description", description)
                 .set("$.timeout", timeout)
                 .set("$.output", output)
+                .set("$.printed_output", printedOutput)
                 .set("$.coords_x", coordsX)
                 .set("$.depends", depends)
                 .set("$.count", count)
