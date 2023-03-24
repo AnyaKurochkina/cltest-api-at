@@ -8,7 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.ErrorMessage;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +28,6 @@ public class GraphImportTest extends Tests {
 
     private static final String PATHNAME = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraph.json";
 
-
     @DisplayName("Импорт графа")
     @TmsLink("642628")
     @Test
@@ -38,7 +37,9 @@ public class GraphImportTest extends Tests {
         if (isGraphExists(graphName)) {
             deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
         }
-        importGraph(PATHNAME).assertStatus(200);
+        ImportObject importObject = importGraph(PATHNAME);
+        assertEquals(graphName, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         assertTrue(isGraphExists(graphName));
         deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
         assertFalse(isGraphExists(graphName));
@@ -77,15 +78,16 @@ public class GraphImportTest extends Tests {
     @TmsLink("1320916")
     @Test
     public void importExistGraphTest() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
-        String graphName = new JsonPath(data).get("Graph.name");
-        if (isGraphExists(graphName)) {
-            deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
-        }
-        importGraph(PATHNAME).assertStatus(200);
-        String expectedMsg = "Error loading dump: (Graph: import_graph_test_api, version = 1.0.0), ['Версия \"1.0.0\" Graph:import_graph_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.']";
-        String message = importGraph(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(expectedMsg, message);
+        String graphName = "import_exist_graph_test_api";
+        Graph graph = createGraph(graphName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/existGraphImport.json";
+        DataFileHelper.write(filePath, exportGraphById(graph.getGraphId()).toString());
+        importGraph(filePath);
+        ImportObject importObject = importGraph(filePath);
+        assertEquals("error", importObject.getStatus());
+        assertEquals(String.format("Error loading dump: Версия \"%s\" %s:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
+                        graph.getVersion(), importObject.getModelName(), importObject.getObjectName()),
+                importObject.getMessages().get(0));
         assertTrue(isGraphExists(graphName), "Граф не существует");
         deleteGraphById(getGraphByNameFilter(graphName).getGraphId());
         assertFalse(isGraphExists(graphName), "Граф существует");
@@ -95,8 +97,15 @@ public class GraphImportTest extends Tests {
     @DisplayName("Негативный тест импорт графа в другой раздел")
     @TmsLink("1320923")
     public void importGraphToAnotherSection() {
-        String expectedMsg = "Импортируемый объект \"Graph\" не соответствует разделу \"Product\"";
-        String message = importProduct(PATHNAME).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(expectedMsg, message);
+        String graphName = "import_graph_for_another_section_test_api";
+        Graph graph = createGraph(graphName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraphAnother.json";
+        DataFileHelper.write(filePath, exportGraphById(String.valueOf(graph.getGraphId())).toString());
+        deleteGraphByName(graphName);
+        importProduct(filePath);
+        assertTrue(isGraphExists(graphName), "Граф не существует");
+        deleteGraphByName(graphName);
+        assertFalse(isGraphExists(graphName), "Граф существует");
+
     }
 }

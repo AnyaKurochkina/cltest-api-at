@@ -28,6 +28,7 @@ import java.util.Objects;
 
 import static core.helper.Configure.ProductCatalogURL;
 import static io.restassured.RestAssured.given;
+import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static steps.keyCloak.KeyCloakSteps.getNewUserToken;
 
 @Data
@@ -52,6 +53,8 @@ public class ProductCatalogSteps {
                 .when()
                 .post("/api/v1/{entityName}/obj_import/", entityName)
                 .then().log().all()
+                .assertThat()
+                .body(matchesJsonSchemaInClasspath("jsonSchema/importResponseSchema.json"))
                 .statusCode(200)
                 .extract()
                 .response();
@@ -62,7 +65,7 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
-                .get("/api/v1/{}/objects_export/?as_file=true", entityName)
+                .post("/api/v1/{}/objects_export/", entityName)
                 .assertStatus(200);
     }
 

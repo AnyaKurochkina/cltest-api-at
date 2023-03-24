@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ContextRestrictionsItem {
 
-    private String organization;
+    private Object organization;
     @JsonProperty("project_environment")
     private ProjectEnvironment project_environment;
     @JsonProperty("information_system")

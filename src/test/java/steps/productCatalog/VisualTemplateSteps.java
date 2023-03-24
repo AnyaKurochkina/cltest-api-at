@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.visualTeamplate.GetVisualTemplateList;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
@@ -111,10 +112,14 @@ public class VisualTemplateSteps extends Steps {
     }
 
     @Step("Импорт шаблона визуализаций")
-    public static Response importVisualTemplate(String pathName) {
+    public static ImportObject importVisualTemplate(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(visualTemplateUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(visualTemplateUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Создание шаблона визуализаций")

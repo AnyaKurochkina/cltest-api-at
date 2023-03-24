@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.service.GetServiceList;
 import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
@@ -152,9 +153,13 @@ public class ServiceSteps extends Steps {
     }
 
     @Step("Импорт сервиса")
-    public static Response importService(String pathName) {
+    public static ImportObject importService(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(serviceUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(serviceUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 }

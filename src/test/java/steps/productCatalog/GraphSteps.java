@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.graph.GetGraphList;
 import models.cloud.productCatalog.graph.Graph;
@@ -186,10 +187,14 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Импорт графа")
-    public static Response importGraph(String pathName) {
+    public static ImportObject importGraph(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(graphUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(graphUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Экспорт графа по Id")

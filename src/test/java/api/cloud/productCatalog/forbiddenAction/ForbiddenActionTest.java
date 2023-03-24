@@ -54,8 +54,6 @@ public class ForbiddenActionTest extends Tests {
                 .init()
                 .toJson();
         String message = createForbiddenAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("This direction (parent_to_self) is depricated. Please, use another option. (%s:%s:None,parent_to_self)",
-                action.getName(), action.getTitle()), message);
-
+        assertEquals("Значение parent_to_self устарело. Пожалуйста, выберите другое.", message);
     }
 }

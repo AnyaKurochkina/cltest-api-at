@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.feedService.action.EventTypeProvider;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
 import models.cloud.productCatalog.allowedAction.GetAllowedActionList;
 import org.json.JSONObject;
@@ -160,10 +161,14 @@ public class AllowedActionSteps extends Steps {
     }
 
     @Step("Импорт разрешенного действия")
-    public static Response importAllowedAction(String pathName) {
+    public static ImportObject importAllowedAction(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(allowedUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(allowedUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Экспорт разрешенного действия по Id")

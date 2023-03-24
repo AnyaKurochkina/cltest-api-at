@@ -38,7 +38,7 @@ public class AllowedActionListTest extends Tests {
     }
 
     @DisplayName("Получение списка разрешенных действий по type_provider_list")
-    @TmsLink("")
+    @TmsLink("1531861")
     @Test
     public void getAllowedActionListByTypeProviderTest() {
         JSONObject obj = JsonHelper.getJsonTemplate("/productCatalog/typeProvider.json")
