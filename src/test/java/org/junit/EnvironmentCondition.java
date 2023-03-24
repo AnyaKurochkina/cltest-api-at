@@ -19,7 +19,7 @@ public class EnvironmentCondition implements ExecutionCondition {
             return ConditionEvaluationResult.enabled("enabled");
         Method method = methodOptional.orElseThrow(Exception::new);
         Class<?> clazz = method.getDeclaringClass();
-        String env = null;
+        String[] env = null;
         if (clazz.isAnnotationPresent(EnabledIfEnv.class)) {
             env = clazz.getAnnotation(EnabledIfEnv.class).value();
         }
@@ -27,8 +27,10 @@ public class EnvironmentCondition implements ExecutionCondition {
             env = method.getAnnotation(EnabledIfEnv.class).value();
         }
         if (Objects.nonNull(env)) {
-            if (!Configure.ENV.equals(env.toLowerCase()))
-                return ConditionEvaluationResult.disabled("Тест отключен на стенде " + Configure.ENV);
+            for (String s : env) {
+                if (!Configure.ENV.equals(s.toLowerCase()))
+                    return ConditionEvaluationResult.disabled("Тест отключен на стенде " + Configure.ENV);
+            }
         }
         env = null;
         if (clazz.isAnnotationPresent(DisabledIfEnv.class)) {
@@ -38,8 +40,10 @@ public class EnvironmentCondition implements ExecutionCondition {
             env = method.getAnnotation(DisabledIfEnv.class).value();
         }
         if (Objects.nonNull(env)) {
-            if (Configure.ENV.equals(env.toLowerCase()))
-                return ConditionEvaluationResult.disabled("Тест отключен на стенде " + Configure.ENV);
+            for (String s : env) {
+                if (Configure.ENV.equals(s.toLowerCase()))
+                    return ConditionEvaluationResult.disabled("Тест отключен на стенде " + Configure.ENV);
+            }
         }
         return ConditionEvaluationResult.enabled("enabled");
     }
