@@ -4,6 +4,7 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.product.ProductOrderRestriction;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -27,7 +28,7 @@ import static steps.productCatalog.ProductSteps.*;
 public class ProductOrderRestrictionTest extends Tests {
 
     @DisplayName("Создание/Получение/Обновление/Удаление order_restriction по id")
-    @TmsLink("")
+    @TmsLinks({@TmsLink("1536988"), @TmsLink("1536992"), @TmsLink("1536995"), @TmsLink("1536997")})
     @Test
     public void productOrderRestrictionTest() {
         Product product = createProductByName("create_product_order_restriction_test_api");
@@ -46,7 +47,11 @@ public class ProductOrderRestrictionTest extends Tests {
                 .build();
         String productId = product.getProductId();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionById(productId, orderRestriction.toJson())
+                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
+                .assertStatus(200)
                 .extractAs(ProductOrderRestriction.class);
+        assertEquals(product.getName(), createdOrderRestriction.getProductName());
+        assertEquals(product.getProductId(), createdOrderRestriction.getProductId());
         List<ProductOrderRestriction> list = getProductOrderRestrictionById(productId).jsonPath()
                 .getList("list", ProductOrderRestriction.class);
         assertEquals(1, list.size());
@@ -65,7 +70,7 @@ public class ProductOrderRestrictionTest extends Tests {
     }
 
     @DisplayName("Создание/Получение/Обновление/Удаление order_restriction по имени")
-    @TmsLink("")
+    @TmsLinks({@TmsLink("1536999"), @TmsLink("1537001"), @TmsLink("1537004"), @TmsLink("1537008")})
     @Test
     public void productOrderRestrictionByNameTest() {
         Product product = createProductByName("create_product_order_restriction_by_name_test_api");
@@ -84,7 +89,11 @@ public class ProductOrderRestrictionTest extends Tests {
                 .platforms(Collections.singletonList("vsphere"))
                 .build();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionByName(productName, orderRestriction.toJson())
+                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
+                .assertStatus(200)
                 .extractAs(ProductOrderRestriction.class);
+        assertEquals(product.getName(), createdOrderRestriction.getProductName());
+        assertEquals(product.getProductId(), createdOrderRestriction.getProductId());
         List<ProductOrderRestriction> list = getProductOrderRestrictionByName(productName).jsonPath()
                 .getList("list", ProductOrderRestriction.class);
         assertEquals(1, list.size());
@@ -103,7 +112,7 @@ public class ProductOrderRestrictionTest extends Tests {
     }
 
     @DisplayName("Создание ограничения с уже занятым weight")
-    @TmsLink("")
+    @TmsLink("1537013")
     @Test
     public void createProductOrderRestrictionWithUsedWeight() {
         Product product = createProductByName(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_test_api");
@@ -122,7 +131,10 @@ public class ProductOrderRestrictionTest extends Tests {
                 .build();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionById(product.getProductId(), orderRestriction.toJson())
                 .extractAs(ProductOrderRestriction.class);
-        createProductOrderRestrictionById(product.getProductId(), orderRestriction.toJson());
+        String error = createProductOrderRestrictionById(product.getProductId(), orderRestriction.toJson())
+                .assertStatus(422)
+                .jsonPath().getString("error.message");
+        assertTrue(error.contains("В рамках одной организации не должно быть ограничений одинакового веса."));
         deleteProductOrderRestrictionById(product.getProductId(), createdOrderRestriction.getId());
     }
 }

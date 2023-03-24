@@ -148,9 +148,7 @@ public class ProductSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
-                .post(productUrl + objectId + "/order_restrictions/")
-                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
-                .assertStatus(200);
+                .post(productUrl + objectId + "/order_restrictions/");
     }
 
     @Step("Удаление order_restrictions продукта по Id")
