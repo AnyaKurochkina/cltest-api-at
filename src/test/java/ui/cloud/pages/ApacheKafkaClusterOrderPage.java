@@ -16,4 +16,9 @@ public class ApacheKafkaClusterOrderPage extends NewOrderPage {
         labelInput.setValue(labelValue);
         platformSelect.getElement().shouldBe(Condition.enabled);
     }
+
+    public void checkOrderDetails(){
+        super.checkOrderDetails();
+        getHardDrive2().shouldBe(Condition.visible);
+    }
 }
