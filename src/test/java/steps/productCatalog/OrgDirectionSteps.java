@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.orgDirection.GetOrgDirectionList;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
@@ -89,10 +90,14 @@ public class OrgDirectionSteps extends Steps {
     }
 
     @Step("Импорт направления")
-    public static Response importOrgDirection(String pathName) {
+    public static ImportObject importOrgDirection(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(orgDirUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(orgDirUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Получение направления по Id {objectId}")

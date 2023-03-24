@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -35,7 +36,9 @@ public class TemplateImportTest extends Tests {
         }
         String versionArr = new JsonPath(data).get("Template.version_arr").toString();
         assertEquals("[1, 0, 0]", versionArr);
-        importTemplate(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
+        ImportObject importObject = importTemplate(Configure.RESOURCE_PATH + "/json/productCatalog/templates/importTemplate.json");
+        assertEquals(templateName, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         assertTrue(isTemplateExists(templateName));
         deleteTemplateByName(templateName);
         assertFalse(isTemplateExists(templateName));

@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import models.cloud.productCatalog.forbiddenAction.GetForbiddenActionList;
 import org.json.JSONObject;
@@ -82,10 +83,14 @@ public class ForbiddenActionSteps extends Steps {
     }
 
     @Step("Импорт запрещенного действия")
-    public static Response importForbiddenAction(String pathName) {
+    public static ImportObject importForbiddenAction(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(endPoint + "obj_import/", "file", new File(pathName));
+                .multiPart(endPoint + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Частичное обновление запрещенного действия")

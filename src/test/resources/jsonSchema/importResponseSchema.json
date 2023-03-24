@@ -12,7 +12,7 @@
               "type": "string"
             },
             "object_id": {
-              "type": "string"
+              "type": ["string", "integer"]
             },
             "object_name": {
               "type": "string"

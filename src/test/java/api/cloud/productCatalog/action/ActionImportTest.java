@@ -93,16 +93,14 @@ public class ActionImportTest extends Tests {
     public void importExistActionTest() {
         String actionName = "import_exist_action_test_api";
         Action action = createAction(actionName);
-        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/existProductImport.json";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/existActionImport.json";
         DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
-        importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json");
-        String expectedMsg = "Error loading dump: (Action: import_action_test_api, 1.0.2), ['Версия \"1.0.2\" Action:import_action_test_api уже существует. Измените значение версии (\"version_arr: [1, 0, 2]\") у импортируемого объекта и попробуйте снова.']";
-        String actualMsg = importAction(RESOURCE_PATH + "/json/productCatalog/actions/importAction.json")
-                .getMessages().get(0);
-        assertEquals(expectedMsg, actualMsg);
-        assertTrue(isActionExists(actionName), "Действие не существует");
-        deleteActionByName(actionName);
-        assertFalse(isActionExists(actionName), "Действие существует");
+        ImportObject importObject = importAction(filePath);
+        DataFileHelper.delete(filePath);
+        assertEquals("error", importObject.getStatus());
+        assertEquals( String.format("Error loading dump: Версия \"%s\" %s:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
+                        action.getVersion(), importObject.getModelName(), action.getName()),
+                importObject.getMessages().get(0));
     }
 
     @DisplayName("Импорт действия c иконкой")

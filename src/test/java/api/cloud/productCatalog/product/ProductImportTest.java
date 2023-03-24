@@ -112,8 +112,11 @@ public class ProductImportTest extends Tests {
         Product product = createProductByName("import_exist_product_test_api");
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/products/existProductImport.json";
         DataFileHelper.write(filePath, exportProductById(product.getProductId()).toString());
-        importProduct(filePath);
+        ImportObject importObject = importProduct(filePath);
         DataFileHelper.delete(filePath);
-        //todo после исправления добавить проверки
+        assertEquals("error", importObject.getStatus());
+        assertEquals( String.format("Error loading dump: Версия \"%s\" Product:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
+                        product.getVersion(), product.getName()),
+                importObject.getMessages().get(0));
     }
 }
