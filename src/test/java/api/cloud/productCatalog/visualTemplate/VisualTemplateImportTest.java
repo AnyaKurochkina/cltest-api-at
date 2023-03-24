@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -16,9 +17,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
+import static steps.productCatalog.TemplateSteps.deleteTemplateByName;
 import static steps.productCatalog.VisualTemplateSteps.*;
 
 @Epic("Продуктовый каталог")
@@ -43,7 +45,12 @@ public class VisualTemplateImportTest extends Tests {
     public void importVisualTemplateTest() {
         String data = JsonHelper.getStringFromFile("productCatalog/itemVisualTemplate/visualTemplateImport.json");
         String importName = new JsonPath(data).get("ItemVisualisationTemplate.name");
-        importVisualTemplate(Configure.RESOURCE_PATH + "/json/productCatalog/itemVisualTemplate/visualTemplateImport.json");
+        if (isVisualTemplateExists(importName)) {
+            deleteTemplateByName(importName);
+        }
+        ImportObject importObject = importVisualTemplate(Configure.RESOURCE_PATH + "/json/productCatalog/itemVisualTemplate/visualTemplateImport.json");
+        assertEquals(importName, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         assertTrue(isVisualTemplateExists(importName));
         deleteVisualTemplateByName(importName);
         assertFalse(isVisualTemplateExists(importName));

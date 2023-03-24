@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Assertions;
@@ -16,8 +17,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static core.helper.Configure.RESOURCE_PATH;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.OrgDirectionSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
 
@@ -52,7 +53,12 @@ public class OrgDirectionImportTest extends Tests {
     public void importOrgDirectionTest() {
         String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
         String orgDirectionName = new JsonPath(data).get("OrgDirection.name");
-        importOrgDirection(RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
+        if (isOrgDirectionExists(orgDirectionName)) {
+            deleteOrgDirectionByName(orgDirectionName);
+        }
+        ImportObject importObject = importOrgDirection(RESOURCE_PATH + "/json/productCatalog/orgDirection/importOrgDirection.json");
+        assertEquals(orgDirectionName, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         Assertions.assertTrue(isOrgDirectionExists(orgDirectionName));
         deleteOrgDirectionByName(orgDirectionName);
         Assertions.assertFalse(isOrgDirectionExists(orgDirectionName));

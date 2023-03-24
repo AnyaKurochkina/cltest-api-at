@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -35,7 +36,9 @@ public class ForbiddenActionImportTest extends Tests {
         if (isForbiddenActionExists(forbiddenActionName)) {
             deleteForbiddenActionByName(forbiddenActionName);
         }
-        importForbiddenAction(PATHNAME);
+        ImportObject importObject = importForbiddenAction(PATHNAME);
+        assertEquals(forbiddenActionName, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         assertTrue(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие не существует");
         deleteForbiddenActionByName(forbiddenActionName);
         assertFalse(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие существует");
@@ -50,13 +53,13 @@ public class ForbiddenActionImportTest extends Tests {
         if (isForbiddenActionExists(forbiddenActionName)) {
             deleteForbiddenActionByName(forbiddenActionName);
         }
-        importForbiddenAction(PATHNAME).assertStatus(200);
+        importForbiddenAction(PATHNAME);
         Integer id = getForbiddenActionIdByNameWithMultiSearch(forbiddenActionName);
         String description = "test_test";
         partialUpdateForbiddenAction(id, new JSONObject().put("description", description));
         ForbiddenAction updatedForbiddenAction = getForbiddenActionById(id);
         assertEquals(description, updatedForbiddenAction.getDescription());
-        importForbiddenAction(PATHNAME).assertStatus(200);
+        importForbiddenAction(PATHNAME);
         assertNotEquals(updatedForbiddenAction, getForbiddenActionById(id));
         assertTrue(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие не существует");
         deleteForbiddenActionByName(forbiddenActionName);
@@ -72,7 +75,7 @@ public class ForbiddenActionImportTest extends Tests {
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/importForbiddenActionAnother.json";
         DataFileHelper.write(filePath, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
         deleteForbiddenActionByName(forbiddenActionName);
-        importProduct(filePath).assertStatus(200);
+        importProduct(filePath);
         assertTrue(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие не существует");
         deleteForbiddenActionByName(forbiddenActionName);
         assertFalse(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие существует");
