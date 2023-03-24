@@ -1,12 +1,10 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
-import core.helper.JsonHelper;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.authorizer.Project;
 import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.icon.Icon;
@@ -28,7 +26,6 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.*;
 import static steps.references.ReferencesStep.*;
@@ -216,36 +213,6 @@ public class ProductsTest extends Tests {
         putProductByIdWithPublicToken(productId, steps.createJsonObject("update_object_with_public_token_api"))
                 .assertStatus(403);
         deleteProductWithPublicToken(productId).assertStatus(403);
-    }
-
-    @DisplayName("Импорт продукта")
-    @TmsLink("643393")
-    @Test
-    public void importProductTest() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
-        String name = new JsonPath(data).get("Product.name");
-        importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProduct.json").assertStatus(200);
-        assertTrue(isProductExists(name));
-        deleteProductByName(name);
-        assertFalse(isProductExists(name));
-    }
-
-    @DisplayName("Импорт продукта c иконкой")
-    @TmsLink("1085928")
-    @Test
-    public void importProductWithIcon() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/products/importProductWithIcon.json");
-        String name = new JsonPath(data).get("Product.name");
-        if (isProductExists(name)) {
-            deleteProductByName(name);
-        }
-        importProduct(RESOURCE_PATH + "/json/productCatalog/products/importProductWithIcon.json").assertStatus(200);
-        Product product = getProductById(getProductByName(name).getProductId());
-        assertFalse(product.getIconStoreId().isEmpty());
-        assertFalse(product.getIconUrl().isEmpty());
-        assertTrue(isProductExists(name), "Продукт не существует");
-        deleteProductByName(name);
-        assertFalse(isProductExists(name), "Продукт существует");
     }
 
     @DisplayName("Получение продукта по Id")

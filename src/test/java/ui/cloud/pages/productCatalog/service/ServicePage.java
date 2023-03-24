@@ -50,7 +50,7 @@ public class ServicePage extends BasePage {
         goToMainTab();
         nameInput.getInput().shouldHave(Condition.exactValue(service.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
-        descriptionInput.getTextArea().shouldHave(Condition.exactValue(service.getDescription()));
+        descriptionInput.getElement().shouldHave(Condition.exactValue(service.getDescription()));
         if (service.getGraphId() != null) {
             Graph graph = GraphSteps.getGraphById(service.getGraphId());
             goToGraphTab();

@@ -7,6 +7,7 @@ import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.template.Template;
@@ -15,10 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import steps.productCatalog.TemplateSteps;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Button;
-import ui.elements.Input;
-import ui.elements.SearchSelect;
-import ui.elements.TextArea;
+import ui.elements.*;
 
 import java.util.Objects;
 
@@ -27,6 +25,7 @@ import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Getter
 public class GraphNodesPage extends GraphPage {
 
     private final SelenideElement addNodeButton = $x("(//div[@class='react-flow']/" +
@@ -44,6 +43,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
     private final TextArea inputTextArea = TextArea.byLabel("Input");
     private final TextArea outputTextArea = TextArea.byLabel("Output");
+    private final TextArea printedOutputTextArea = TextArea.byLabelContains("Printed output");
     private final Input numberInput = Input.byName("number");
     private final Input timeoutInput = Input.byName("timeout");
     private final Input countInput = Input.byName("count");
@@ -55,7 +55,6 @@ public class GraphNodesPage extends GraphPage {
     private final SwitchV2 isSequentialSwitch = SwitchV2.byInputName("is_sequential");
     private final SwitchV2 damageOrderOnErrorSwitch =
             SwitchV2.byXPath("//form//input[@name='damage_order_on_error']/ancestor::span[contains(@class, 'switchBase')]");
-    private final SelenideElement loggingLevelSelect = $x("//div[text()='Уровень логирования']/following::select[1]");
     private final SelenideElement nameRequiredFieldHint =
             $x("//label[contains(text(),'Название')]/ancestor::div[2]//div[text()='Поле обязательно для заполнения']");
     private final SelenideElement descriptionRequiredFieldHint =
@@ -68,6 +67,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия'])[2]/following::*[name()='svg'][1]");
     private final SelenideElement templateVersion = $x("(//label[text()='Версия'])[1]/following::div[@id='selectValueWrapper']");
     private final SelenideElement subgraphVersion = $x("(//label[text()='Версия'])[2]/following::div[@id='selectValueWrapper']");
+    private final SelenideElement mainTab = $x("//button[text()='Основное']");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
     private final TextArea staticDataTextArea = TextArea.byLabel("Static data");
@@ -76,6 +76,11 @@ public class GraphNodesPage extends GraphPage {
     private final SearchSelect subgraphSelect = SearchSelect.byLabel("Подграф");
     private final SearchSelect templateSelect = SearchSelect.byLabel("Шаблон");
     private final Button fullScreenButton = Button.byAriaLabel("fullscreen");
+    private final Select logLevelSelect = Select.byXpath("//label[.='Уровень логирования']/following::div[1]");
+    private final SelenideElement logLevelTooltipIcon = $x("//div[text()='Уровень логирования']/following::*[name()='svg'][1]");
+    private final SelenideElement inputHint = $x("//label[text()='Input']/following-sibling::p");
+    private final SelenideElement outputHint = $x("//label[text()='Output']/following-sibling::p");
+    private final SelenideElement printedOutputHint = $x("//label[text()='Printed output ']/following-sibling::p");
 
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(GraphItem node) {
@@ -94,7 +99,7 @@ public class GraphNodesPage extends GraphPage {
             additionalTab.click();
             numberInput.setValue(String.valueOf(node.getNumber()));
             timeoutInput.setValue(String.valueOf(node.getTimeout()));
-            loggingLevelSelect.shouldBe(Condition.disabled);
+            logLevelSelect.getElement().$x(".//select").shouldBe(Condition.disabled);
         }
         if (!Objects.isNull(node.getTemplateId())) {
             Template template = TemplateSteps.getTemplateById(node.getTemplateId());
@@ -150,6 +155,15 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
+    @Step("Открытие диалога редактирования узла '{node.name}'")
+    public GraphNodesPage openEditDialog(GraphItem node) {
+        generalInfoTab.getElement().scrollIntoView(true);
+        fitViewButton.click();
+        selectNodeInGraph(node);
+        editNodeButton.click();
+        return this;
+    }
+
     @Step("Копирование узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage copyNodeAndSave(GraphItem node) {
         WebDriverRunner.getWebDriver().manage().window().maximize();
@@ -187,7 +201,7 @@ public class GraphNodesPage extends GraphPage {
         additionalTab.click();
         numberInput.setValue(String.valueOf(node.getNumber()));
         timeoutInput.setValue(String.valueOf(node.getTimeout()));
-        loggingLevelSelect.shouldBe(Condition.disabled);
+        logLevelSelect.getElement().$x(".//select").shouldBe(Condition.disabled);
         countInput.setValue(String.valueOf(node.getCount()));
         if (node.getNumber().equals(0)) {
             incorrectNumberHint.shouldBe(Condition.visible);
@@ -234,9 +248,10 @@ public class GraphNodesPage extends GraphPage {
         }
         paramsTab.click();
         assertEquals(new JSONObject(node.getInput()).toString(),
-                inputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
+                inputTextArea.getValue());
         assertEquals(new JSONObject(node.getOutput()).toString(),
-                outputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
+                outputTextArea.getValue());
+        assertEquals(node.getPrintedOutput().toString(), printedOutputTextArea.getValue());
         additionalTab.click();
         numberInput.getInput().shouldHave(Condition.exactValue(node.getNumber() + ""));
         timeoutInput.getInput().shouldHave(Condition.exactValue(node.getTimeout() + ""));
@@ -289,9 +304,13 @@ public class GraphNodesPage extends GraphPage {
     }
 
     private void selectNodeInGraph(GraphItem node) {
-        if (node.getNumber().equals("")) {
-            node.setNumber(1);
-        }
+        if (node.getNumber().equals("")) node.setNumber(1);
         $x("//div[@class='react-flow']//div[text()='{}']", node.getDescription()).scrollIntoView(false).click();
+    }
+
+    @Step("Открытие диалога добавления узла")
+    public GraphNodesPage openAddNodeDialog() {
+        addNodeButton.click();
+        return this;
     }
 }

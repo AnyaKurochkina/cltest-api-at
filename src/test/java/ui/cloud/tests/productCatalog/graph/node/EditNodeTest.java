@@ -82,6 +82,7 @@ public class EditNodeTest extends GraphBaseTest {
         node.setOutput(new HashMap<String, Object>() {{
             put("output_param", "");
         }});
+        node.setPrintedOutput(printedOutputValue);
         new GraphNodesPage()
                 .editTemplateNode(node, "1.0.0", "edit")
                 .checkNodeAttributes(node)

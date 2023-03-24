@@ -63,7 +63,7 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("allowed_paths")
     private List<Object> allowedPaths;
     @JsonProperty("log_level")
-    private Object logLevel;
+    private String logLevel;
     @JsonProperty("version_create_dt")
     private String versionCreateDt;
     @JsonProperty("restricted_groups")
@@ -106,6 +106,11 @@ public class Template extends Entity implements IProductCatalog {
                 .set("$.input", input)
                 .set("$.output", output)
                 .set("$.printed_output", printedOutput)
+                .set("$.additional_input", additionalInput)
+                .set("$.additional_output", additionalOutput)
+                .set("$.printed_output_can_be_overridden", printedOutputCanBeOverridden)
+                .set("$.log_level", logLevel)
+                .set("$.log_can_be_overridden", logCanBeOverridden)
                 .set("$.timeout", timeout)
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)

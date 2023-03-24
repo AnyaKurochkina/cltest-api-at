@@ -13,15 +13,19 @@ import static api.Tests.clickableCnd;
 
 public class TextArea implements TypifiedElement {
     @Getter
-    SelenideElement textArea;
+    SelenideElement element;
 
     public TextArea(SelenideElement input) {
-        this.textArea = input;
+        this.element = input;
     }
 
     @Step("Получение TextArea по label {label}")
     public static TextArea byLabel(String label) {
         return new TextArea($x("//label[text()='{}']/following::textarea[1]", label));
+    }
+
+    public static TextArea byLabelContains(String label) {
+        return new TextArea($x("//label[contains(text(),'{}')]/following::textarea[1]", label));
     }
 
     public static TextArea byName(String name) {
@@ -33,18 +37,23 @@ public class TextArea implements TypifiedElement {
     }
 
     public void setValue(String value) {
-        textArea.shouldBe(Condition.visible).shouldBe(Condition.enabled);
+        element.shouldBe(Condition.visible).shouldBe(Condition.enabled);
         clear();
-        textArea.setValue(value);
+        element.setValue(value);
     }
 
     public TextArea click() {
-        textArea.scrollIntoView(scrollCenter);
-        textArea.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
+        element.scrollIntoView(scrollCenter);
+        element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
         return this;
     }
 
     public void clear() {
-        textArea.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+        element.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
+    }
+
+    @Step("Получение значения TextArea без пробелов")
+    public String getValue() {
+        return element.getValue().replaceAll("\\s", "");
     }
 }

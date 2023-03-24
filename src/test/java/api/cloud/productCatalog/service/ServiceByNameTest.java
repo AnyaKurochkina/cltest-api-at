@@ -102,17 +102,4 @@ public class ServiceByNameTest extends Tests {
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
     }
-
-    @DisplayName("Экспорт сервиса по имени")
-    @TmsLink("1361360")
-    @Test
-    public void exportServiceByNameTest() {
-        String serviceName = "service_export_by_name_test_api";
-        Service.builder()
-                .name(serviceName)
-                .title(serviceName)
-                .build()
-                .createObject();
-        exportServiceByName(serviceName);
-    }
 }

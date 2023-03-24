@@ -9,14 +9,15 @@ import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
 
 public class ServiceSteps extends Steps {
 
-    private static String serviceUrl = "/api/v1/services/";
-    private static String serviceUrlV2 = "/api/v2/services/";
+    private static final String serviceUrl = "/api/v1/services/";
+    private static final String serviceUrlV2 = "/api/v2/services/";
 
     @Step("Получение списка Сервисов продуктового каталога")
     public static List<Service> getServiceList() {
@@ -140,5 +141,20 @@ public class ServiceSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(serviceUrlV2 + name + "/obj_export/")
                 .assertStatus(200);
+    }
+
+    @Step("Экспорт сервиса по Id {id}")
+    public static Response exportServiceById(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(serviceUrl + id + "/obj_export/?as_file=true")
+                .assertStatus(200);
+    }
+
+    @Step("Импорт сервиса")
+    public static Response importService(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(serviceUrl + "obj_import/", "file", new File(pathName));
     }
 }
