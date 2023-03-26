@@ -19,7 +19,6 @@ public class TextArea implements TypifiedElement {
         this.element = input;
     }
 
-    @Step("Получение TextArea по label {label}")
     public static TextArea byLabel(String label) {
         return new TextArea($x("//label[text()='{}']/following::textarea[1]", label));
     }

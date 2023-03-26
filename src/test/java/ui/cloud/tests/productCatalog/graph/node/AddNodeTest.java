@@ -13,7 +13,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
@@ -29,8 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
 
-    ProductCatalogSteps templateSteps = new ProductCatalogSteps("/api/v1/templates/",
-            "productCatalog/templates/createTemplate.json");
     private Graph subgraph;
 
     @BeforeEach

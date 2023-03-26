@@ -41,8 +41,8 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement formAddNodeButton = $x("//form//div[text() = 'Добавить']//parent::button");
     private final SelenideElement formSaveNodeButton = $x("//form//div[text() = 'Сохранить']//parent::button");
     private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
-    private final TextArea inputTextArea = TextArea.byLabel("Input");
-    private final TextArea outputTextArea = TextArea.byLabel("Output");
+    private final TextArea inputTextArea = TextArea.byXPath("//form//label[text()='Input']/following::textarea[1]");
+    private final TextArea outputTextArea = TextArea.byXPath("//form//label[text()='Output']/following::textarea[1]");
     private final TextArea printedOutputTextArea = TextArea.byLabelContains("Printed output");
     private final Input numberInput = Input.byName("number");
     private final Input timeoutInput = Input.byName("timeout");
@@ -63,10 +63,8 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement incorrectTimeoutHint =
             $x("//label[text()='Время ожидания, сек']/ancestor::div[2]//div[text()='Введите корректное значение']");
     private final SelenideElement nameNonUniqueHint = $x("//div[text()='Узел с данным названием уже существует']");
-    private final SelenideElement showTemplateVersions = $x("(//label[text()='Версия'])[1]/following::*[name()='svg'][1]");
-    private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия'])[2]/following::*[name()='svg'][1]");
-    private final SelenideElement templateVersion = $x("(//label[text()='Версия'])[1]/following::div[@id='selectValueWrapper']");
-    private final SelenideElement subgraphVersion = $x("(//label[text()='Версия'])[2]/following::div[@id='selectValueWrapper']");
+    private final Select templateVersionSelect = Select.byXpath("(//label[text()='Версия'])[1]/following::div[select]");
+    private final Select subgraphVersionSelect = Select.byXpath("(//label[text()='Версия'])[2]/following::div[select]");
     private final SelenideElement mainTab = $x("//button[text()='Основное']");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
@@ -80,7 +78,7 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement logLevelTooltipIcon = $x("//div[text()='Уровень логирования']/following::*[name()='svg'][1]");
     private final SelenideElement inputHint = $x("//label[text()='Input']/following-sibling::p");
     private final SelenideElement outputHint = $x("//label[text()='Output']/following-sibling::p");
-    private final SelenideElement printedOutputHint = $x("//label[text()='Printed output ']/following-sibling::p");
+    private final SelenideElement printedOutputHint = $x("//label[text()='Printed output ']/following::p");
 
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(GraphItem node) {
@@ -94,6 +92,7 @@ public class GraphNodesPage extends GraphPage {
             Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
             subgraphSelect.setContains(subgraph.getName());
             paramsTab.click();
+            Waiting.sleep(1500);
             inputTextArea.setValue(new JSONObject(node.getInput()).toString());
             outputTextArea.setValue(new JSONObject(node.getOutput()).toString());
             additionalTab.click();
@@ -127,8 +126,7 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         editNodeButton.click();
         nodeDescription.setValue(description);
-        showSubgraphVersions.click();
-        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
+        subgraphVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setSubgraphVersion(version);
@@ -145,8 +143,7 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         editNodeButton.click();
         nodeDescription.setValue(description);
-        showTemplateVersions.click();
-        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
+        templateVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setTemplateVersion(version);
@@ -239,14 +236,15 @@ public class GraphNodesPage extends GraphPage {
         if (!StringUtils.isNullOrEmpty(node.getSubgraphId())) {
             Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
             assertTrue(subgraphSelect.getValue().contains(subgraph.getName()));
-            subgraphVersion.shouldHave(Condition.exactText(node.getSubgraphVersion()));
+            assertEquals(node.getSubgraphVersion(), subgraphVersionSelect.getValue());
         }
         if (!Objects.isNull(node.getTemplateId())) {
             Template template = TemplateSteps.getTemplateById(node.getTemplateId());
             assertTrue(templateSelect.getValue().contains(template.getName()));
-            templateVersion.shouldHave(Condition.exactText(node.getTemplateVersion()));
+            assertEquals(node.getTemplateVersion(), templateVersionSelect.getValue());
         }
         paramsTab.click();
+        Waiting.sleep(1500);
         assertEquals(new JSONObject(node.getInput()).toString(),
                 inputTextArea.getValue());
         assertEquals(new JSONObject(node.getOutput()).toString(),

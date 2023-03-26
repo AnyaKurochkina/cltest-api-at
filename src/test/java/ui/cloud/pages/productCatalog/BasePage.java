@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.WebElement;
 import ui.elements.*;
@@ -10,6 +11,7 @@ import ui.elements.*;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.switchTo;
 
+@Getter
 public class BasePage {
 
     protected final Select versionDropDown = Select.byLabel("Выберите версию");

@@ -36,8 +36,10 @@ public class GraphBaseTest extends BaseTest {
     protected final String TEMPLATE_NAME = UUID.randomUUID().toString();
     protected String nodeDescription = "Тестовый узел";
     protected String printedOutputValue = "[{\"type\":\"text\"}]";
-    protected ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
+    protected ProductCatalogSteps graphSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
+    protected ProductCatalogSteps templateSteps = new ProductCatalogSteps("/api/v1/templates/",
+            "productCatalog/templates/createTemplate.json");
     protected Graph graph;
     protected Template template;
 
