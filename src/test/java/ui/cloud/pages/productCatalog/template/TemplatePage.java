@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.template.Template;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,9 +18,12 @@ import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.TextArea;
 
+import java.util.ArrayList;
+
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Getter
 public class TemplatePage extends BasePage {
     private static final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
@@ -60,7 +64,7 @@ public class TemplatePage extends BasePage {
         goToParamsTab();
         input.setValue(new JSONObject(template.getInput()).toString());
         output.setValue(new JSONObject(template.getOutput()).toString());
-        printedOutput.setValue(new JSONArray(template.getPrintedOutput()).toString());
+        printedOutput.setValue(new JSONArray((ArrayList) template.getPrintedOutput()).toString());
         saveButton.click();
         Alert.green("Шаблон успешно создан");
         Waiting.sleep(2000);
@@ -84,7 +88,7 @@ public class TemplatePage extends BasePage {
         timeoutInput.getInput().shouldHave(Condition.exactValue(String.valueOf(template.getTimeout())));
         checkTemplateVersion(template.getVersion());
         goToParamsTab();
-        String printedOutputJSON = new JSONArray(template.getPrintedOutput()).toString();
+        String printedOutputJSON = new JSONArray((ArrayList) template.getPrintedOutput()).toString();
         Assertions.assertEquals(printedOutputJSON, printedOutput.getElement().getValue()
                 .replaceAll("\\s", ""));
         return this;
