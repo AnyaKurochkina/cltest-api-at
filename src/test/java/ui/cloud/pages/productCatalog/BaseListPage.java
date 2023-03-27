@@ -96,7 +96,7 @@ public class BaseListPage {
         lastDate = LocalDateTime.parse(lastDateString, formatter);
         Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate),
                 format("Некорректная сортировка по столбцу '{}'. firstDate = '{}', lastDate = '{}'",
-                header, firstDate, lastDate));
+                        header, firstDate, lastDate));
     }
 
     @Step("Раскрытие меню действий для строки, содержащей в столбце '{columnName}' значение '{value}'")

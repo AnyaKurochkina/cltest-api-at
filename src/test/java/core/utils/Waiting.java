@@ -2,7 +2,6 @@ package core.utils;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.junit.jupiter.api.function.Executable;
 import ui.elements.TypifiedElement;
 
 import java.time.Duration;
