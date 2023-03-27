@@ -246,10 +246,10 @@ public class GraphNodesPage extends GraphPage {
         paramsTab.click();
         Waiting.sleep(1500);
         assertEquals(new JSONObject(node.getInput()).toString(),
-                inputTextArea.getValue());
+                inputTextArea.getWhitespacesRemovedValue());
         assertEquals(new JSONObject(node.getOutput()).toString(),
-                outputTextArea.getValue());
-        assertEquals(node.getPrintedOutput().toString(), printedOutputTextArea.getValue());
+                outputTextArea.getWhitespacesRemovedValue());
+        assertEquals(node.getPrintedOutput().toString(), printedOutputTextArea.getWhitespacesRemovedValue());
         additionalTab.click();
         numberInput.getInput().shouldHave(Condition.exactValue(node.getNumber() + ""));
         timeoutInput.getInput().shouldHave(Condition.exactValue(node.getTimeout() + ""));

@@ -281,7 +281,7 @@ public class AddNodeTest extends GraphBaseTest {
         assertTrue(page.getOutputHint().getText().equals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)"));
         $x("//label[text()='Printed output (Переопределение Printed output запрещено в шаблоне)']")
                 .shouldBe(Condition.visible);
-        assertEquals("{}", page.getPrintedOutputTextArea().getValue());
+        assertEquals("{}", page.getPrintedOutputTextArea().getWhitespacesRemovedValue());
     }
 
     @Test
@@ -319,9 +319,9 @@ public class AddNodeTest extends GraphBaseTest {
         page.saveGraphWithPatchVersion();
         page.openEditDialog(node);
         page.getParamsTab().click();
-        assertEquals(inputValue, page.getInputTextArea().getValue());
-        assertEquals(outputValue, page.getOutputTextArea().getValue());
-        assertEquals("{}", page.getPrintedOutputTextArea().getValue());
+        assertEquals(inputValue, page.getInputTextArea().getWhitespacesRemovedValue());
+        assertEquals(outputValue, page.getOutputTextArea().getWhitespacesRemovedValue());
+        assertEquals("{}", page.getPrintedOutputTextArea().getWhitespacesRemovedValue());
         page.getMainTab().click();
         //TODO баг, что не сразу отображается текст
         Waiting.findWithAction(() -> $x("//div[text()='Параметры в \"Input\", \"Output\" узла не совпадают с параметрами шаблона']")

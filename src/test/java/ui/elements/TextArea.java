@@ -51,8 +51,13 @@ public class TextArea implements TypifiedElement {
         element.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
     }
 
-    @Step("Получение значения TextArea без пробелов")
+    @Step("Получение значения TextArea")
     public String getValue() {
+        return element.getValue();
+    }
+
+    @Step("Получение значения TextArea без пробелов")
+    public String getWhitespacesRemovedValue() {
         return element.getValue().replaceAll("\\s", "");
     }
 }

@@ -95,7 +95,7 @@ public class ProductPage extends BasePage {
         titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
         descriptionInput.getInput().shouldHave(Condition.exactValue(product.getDescription()));
         Assertions.assertEquals(new JSONObject(product.getInfo()).toString(),
-                info.getValue());
+                info.getWhitespacesRemovedValue());
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(3),
@@ -112,7 +112,7 @@ public class ProductPage extends BasePage {
         Assertions.assertEquals(product.getInGeneralList(), inGeneralListSwitch.isEnabled());
         numberInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getNumber())));
         Assertions.assertEquals(new JSONObject(product.getExtraData()).toString(),
-                extraData.getValue());
+                extraData.getWhitespacesRemovedValue());
         return this;
     }
 
