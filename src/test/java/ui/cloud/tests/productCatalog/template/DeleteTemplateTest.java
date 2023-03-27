@@ -2,11 +2,26 @@ package ui.cloud.tests.productCatalog.template;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.graph.GraphItem;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.enums.graph.GraphType;
+import ui.cloud.pages.productCatalog.template.TemplatePage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
+import ui.elements.Alert;
+
+import java.util.Arrays;
+import java.util.UUID;
+
+import static steps.productCatalog.GraphSteps.partialUpdateGraph;
+import static ui.cloud.pages.productCatalog.template.TemplatesListPage.goToUsageButton;
+import static ui.cloud.pages.productCatalog.template.TemplatesListPage.nameColumn;
 
 @Feature("Удаление шаблона")
 public class DeleteTemplateTest extends TemplateBaseTest {
@@ -35,5 +50,42 @@ public class DeleteTemplateTest extends TemplateBaseTest {
                 .inputValidIdAndDelete();
         new TemplatesListPage()
                 .checkTemplateNotFound(NAME);
+    }
+
+    @Test
+    @TmsLink("1416624")
+    @DisplayName("Удаление шаблона, используемого в узле графе")
+    public void deleteTemplateUsedInGraph() {
+        String alertText = "Нельзя удалить шаблон, который используется другими объектами. " +
+                "Отвяжите шаблон от объектов и повторите попытку";
+        Graph graph = Graph.builder()
+                .name(UUID.randomUUID().toString())
+                .title("AT UI Graph")
+                .version("1.0.0")
+                .type(GraphType.CREATING.getValue())
+                .description("Delete used template test")
+                .author("QA")
+                .build()
+                .createObject();
+        JSONObject graphItem = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .templateId(template.getId())
+                .build()
+                .toJson();
+        JSONObject graphJSON = new JSONObject().put("graph", Arrays.asList(graphItem));
+        partialUpdateGraph(graph.getGraphId(), graphJSON);
+        new IndexPage().goToTemplatesPage()
+                .findTemplateByValue(NAME, template);
+        BaseListPage.delete(nameColumn, template.getName());
+        new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
+        goToUsageButton.click();
+        new Alert().close();
+        TemplatePage page = new TemplatePage();
+        page.checkTabIsSelected("Использование");
+        page.getDeleteButton().click();
+        new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
+        goToUsageButton.click();
+        page.checkTabIsSelected("Использование");
     }
 }

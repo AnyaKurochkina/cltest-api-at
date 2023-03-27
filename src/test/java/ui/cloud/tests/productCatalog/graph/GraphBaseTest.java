@@ -1,6 +1,7 @@
 package ui.cloud.tests.productCatalog.graph;
 
 import io.qameta.allure.Epic;
+import models.cloud.productCatalog.enums.LogLevel;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.template.Template;
@@ -34,8 +35,11 @@ public class GraphBaseTest extends BaseTest {
     protected final String SUBGRAPH_NAME = UUID.randomUUID().toString();
     protected final String TEMPLATE_NAME = UUID.randomUUID().toString();
     protected String nodeDescription = "Тестовый узел";
-    protected ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/graphs/",
+    protected String printedOutputValue = "[{\"type\":\"text\"}]";
+    protected ProductCatalogSteps graphSteps = new ProductCatalogSteps("/api/v1/graphs/",
             "productCatalog/graphs/createGraph.json");
+    protected ProductCatalogSteps templateSteps = new ProductCatalogSteps("/api/v1/templates/",
+            "productCatalog/templates/createTemplate.json");
     protected Graph graph;
     protected Template template;
 
@@ -76,6 +80,9 @@ public class GraphBaseTest extends BaseTest {
                 .printedOutput(Arrays.asList(new HashMap<String, String>() {{
                     put("type", "text");
                 }}))
+                .printedOutputCanBeOverridden(true)
+                .logLevel(LogLevel.SHORT.getValue())
+                .logCanBeOverridden(false)
                 .timeout(100)
                 .build()
                 .createObject();

@@ -77,6 +77,7 @@ public class OrgDirectionsListPage extends BaseListPage {
     public OrgDirectionsListPage uploadFile(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         new InputFile(path).importFileAndSubmit();
+        closeButton.click();
         return this;
     }
 

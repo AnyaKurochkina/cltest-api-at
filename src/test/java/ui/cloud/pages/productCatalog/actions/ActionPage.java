@@ -55,7 +55,7 @@ public class ActionPage extends BasePage {
         goToMainTab();
         nameInput.getInput().shouldHave(Condition.exactValue(action.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
-        descriptionTextArea.getTextArea().shouldHave(Condition.exactValue(action.getDescription()));
+        descriptionTextArea.getElement().shouldHave(Condition.exactValue(action.getDescription()));
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(action.getGraphId());
         Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
