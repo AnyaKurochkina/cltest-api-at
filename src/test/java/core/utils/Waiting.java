@@ -60,12 +60,12 @@ public class Waiting {
     }
 
     @SneakyThrows
-    public static void findWithAction(Supplier<Boolean> b, Executable executable, Duration duration) {
+    public static void findWithAction(Supplier<Boolean> b, Runnable action, Duration duration) {
         Instant start = Instant.now();
         while (duration.compareTo(Duration.between(start, Instant.now())) > 0) {
             if (b.get()) return;
             Waiting.sleep(500);
-            executable.execute();
+            action.run();
         }
         throw new TimeoutException("Return false, duration: " + duration);
     }
