@@ -7,6 +7,7 @@ import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.template.Template;
@@ -15,10 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import steps.productCatalog.TemplateSteps;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Button;
-import ui.elements.Input;
-import ui.elements.SearchSelect;
-import ui.elements.TextArea;
+import ui.elements.*;
 
 import java.util.Objects;
 
@@ -27,6 +25,7 @@ import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Getter
 public class GraphNodesPage extends GraphPage {
 
     private final SelenideElement addNodeButton = $x("(//div[@class='react-flow']/" +
@@ -42,8 +41,9 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement formAddNodeButton = $x("//form//div[text() = 'Добавить']//parent::button");
     private final SelenideElement formSaveNodeButton = $x("//form//div[text() = 'Сохранить']//parent::button");
     private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
-    private final TextArea inputTextArea = TextArea.byLabel("Input");
-    private final TextArea outputTextArea = TextArea.byLabel("Output");
+    private final TextArea inputTextArea = TextArea.byXPath("//form//label[text()='Input']/following::textarea[1]");
+    private final TextArea outputTextArea = TextArea.byXPath("//form//label[text()='Output']/following::textarea[1]");
+    private final TextArea printedOutputTextArea = TextArea.byLabelContains("Printed output");
     private final Input numberInput = Input.byName("number");
     private final Input timeoutInput = Input.byName("timeout");
     private final Input countInput = Input.byName("count");
@@ -55,7 +55,6 @@ public class GraphNodesPage extends GraphPage {
     private final SwitchV2 isSequentialSwitch = SwitchV2.byInputName("is_sequential");
     private final SwitchV2 damageOrderOnErrorSwitch =
             SwitchV2.byXPath("//form//input[@name='damage_order_on_error']/ancestor::span[contains(@class, 'switchBase')]");
-    private final SelenideElement loggingLevelSelect = $x("//div[text()='Уровень логирования']/following::select[1]");
     private final SelenideElement nameRequiredFieldHint =
             $x("//label[contains(text(),'Название')]/ancestor::div[2]//div[text()='Поле обязательно для заполнения']");
     private final SelenideElement descriptionRequiredFieldHint =
@@ -64,10 +63,9 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement incorrectTimeoutHint =
             $x("//label[text()='Время ожидания, сек']/ancestor::div[2]//div[text()='Введите корректное значение']");
     private final SelenideElement nameNonUniqueHint = $x("//div[text()='Узел с данным названием уже существует']");
-    private final SelenideElement showTemplateVersions = $x("(//label[text()='Версия'])[1]/following::*[name()='svg'][1]");
-    private final SelenideElement showSubgraphVersions = $x("(//label[text()='Версия'])[2]/following::*[name()='svg'][1]");
-    private final SelenideElement templateVersion = $x("(//label[text()='Версия'])[1]/following::div[@id='selectValueWrapper']");
-    private final SelenideElement subgraphVersion = $x("(//label[text()='Версия'])[2]/following::div[@id='selectValueWrapper']");
+    private final Select templateVersionSelect = Select.byXpath("(//label[text()='Версия'])[1]/following::div[select]");
+    private final Select subgraphVersionSelect = Select.byXpath("(//label[text()='Версия'])[2]/following::div[select]");
+    private final SelenideElement mainTab = $x("//button[text()='Основное']");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
     private final TextArea staticDataTextArea = TextArea.byLabel("Static data");
@@ -76,6 +74,11 @@ public class GraphNodesPage extends GraphPage {
     private final SearchSelect subgraphSelect = SearchSelect.byLabel("Подграф");
     private final SearchSelect templateSelect = SearchSelect.byLabel("Шаблон");
     private final Button fullScreenButton = Button.byAriaLabel("fullscreen");
+    private final Select logLevelSelect = Select.byXpath("//label[.='Уровень логирования']/following::div[1]");
+    private final SelenideElement logLevelTooltipIcon = $x("//div[text()='Уровень логирования']/following::*[name()='svg'][1]");
+    private final SelenideElement inputHint = $x("//label[text()='Input']/following-sibling::p");
+    private final SelenideElement outputHint = $x("//label[text()='Output']/following-sibling::p");
+    private final SelenideElement printedOutputHint = $x("//label[text()='Printed output ']/following::p");
 
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(GraphItem node) {
@@ -89,12 +92,13 @@ public class GraphNodesPage extends GraphPage {
             Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
             subgraphSelect.setContains(subgraph.getName());
             paramsTab.click();
+            Waiting.sleep(1500);
             inputTextArea.setValue(new JSONObject(node.getInput()).toString());
             outputTextArea.setValue(new JSONObject(node.getOutput()).toString());
             additionalTab.click();
             numberInput.setValue(String.valueOf(node.getNumber()));
             timeoutInput.setValue(String.valueOf(node.getTimeout()));
-            loggingLevelSelect.shouldBe(Condition.disabled);
+            logLevelSelect.getElement().$x(".//select").shouldBe(Condition.disabled);
         }
         if (!Objects.isNull(node.getTemplateId())) {
             Template template = TemplateSteps.getTemplateById(node.getTemplateId());
@@ -122,8 +126,7 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         editNodeButton.click();
         nodeDescription.setValue(description);
-        showSubgraphVersions.click();
-        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
+        subgraphVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setSubgraphVersion(version);
@@ -140,13 +143,21 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         editNodeButton.click();
         nodeDescription.setValue(description);
-        showTemplateVersions.click();
-        $x("//div[text()='" + version + "']").shouldBe(Condition.enabled).click();
+        templateVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
         node.setTemplateVersion(version);
         node.setDescription(description);
         Waiting.sleep(1000);
+        return this;
+    }
+
+    @Step("Открытие диалога редактирования узла '{node.name}'")
+    public GraphNodesPage openEditDialog(GraphItem node) {
+        generalInfoTab.getElement().scrollIntoView(true);
+        fitViewButton.click();
+        selectNodeInGraph(node);
+        editNodeButton.click();
         return this;
     }
 
@@ -187,7 +198,7 @@ public class GraphNodesPage extends GraphPage {
         additionalTab.click();
         numberInput.setValue(String.valueOf(node.getNumber()));
         timeoutInput.setValue(String.valueOf(node.getTimeout()));
-        loggingLevelSelect.shouldBe(Condition.disabled);
+        logLevelSelect.getElement().$x(".//select").shouldBe(Condition.disabled);
         countInput.setValue(String.valueOf(node.getCount()));
         if (node.getNumber().equals(0)) {
             incorrectNumberHint.shouldBe(Condition.visible);
@@ -225,18 +236,20 @@ public class GraphNodesPage extends GraphPage {
         if (!StringUtils.isNullOrEmpty(node.getSubgraphId())) {
             Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
             assertTrue(subgraphSelect.getValue().contains(subgraph.getName()));
-            subgraphVersion.shouldHave(Condition.exactText(node.getSubgraphVersion()));
+            assertEquals(node.getSubgraphVersion(), subgraphVersionSelect.getValue());
         }
         if (!Objects.isNull(node.getTemplateId())) {
             Template template = TemplateSteps.getTemplateById(node.getTemplateId());
             assertTrue(templateSelect.getValue().contains(template.getName()));
-            templateVersion.shouldHave(Condition.exactText(node.getTemplateVersion()));
+            assertEquals(node.getTemplateVersion(), templateVersionSelect.getValue());
         }
         paramsTab.click();
+        Waiting.sleep(1500);
         assertEquals(new JSONObject(node.getInput()).toString(),
-                inputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
+                inputTextArea.getWhitespacesRemovedValue());
         assertEquals(new JSONObject(node.getOutput()).toString(),
-                outputTextArea.getTextArea().getValue().replaceAll("\\s", ""));
+                outputTextArea.getWhitespacesRemovedValue());
+        assertEquals(node.getPrintedOutput().toString(), printedOutputTextArea.getWhitespacesRemovedValue());
         additionalTab.click();
         numberInput.getInput().shouldHave(Condition.exactValue(node.getNumber() + ""));
         timeoutInput.getInput().shouldHave(Condition.exactValue(node.getTimeout() + ""));
@@ -289,9 +302,13 @@ public class GraphNodesPage extends GraphPage {
     }
 
     private void selectNodeInGraph(GraphItem node) {
-        if (node.getNumber().equals("")) {
-            node.setNumber(1);
-        }
+        if (node.getNumber().equals("")) node.setNumber(1);
         $x("//div[@class='react-flow']//div[text()='{}']", node.getDescription()).scrollIntoView(false).click();
+    }
+
+    @Step("Открытие диалога добавления узла")
+    public GraphNodesPage openAddNodeDialog() {
+        addNodeButton.click();
+        return this;
     }
 }

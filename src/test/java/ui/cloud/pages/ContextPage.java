@@ -1,12 +1,13 @@
 package ui.cloud.pages;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.elements.Tab;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
-import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.$x;
 
 public class ContextPage {
 
@@ -19,9 +20,18 @@ public class ContextPage {
     }
 
     @Step("Выбор контекста организации")
-    public ContextPage selectOrgContext() {
+    public ContextPage setOrgContext() {
         Tab.byText("Все").switchTo();
-        $x("(//div[@role='dialog']//table/tbody//tr//p[@color])[1]").click();
+        $x("(//div[@role='dialog']//table/tbody//tr//p[@color])[1]").hover()
+                .shouldBe(Condition.enabled).click();
+        return this;
+    }
+
+    @Step("Выбор контекста '{value}'")
+    public ContextPage setContext(String value) {
+        Tab.byText("Все").switchTo();
+        $x("(//div[@role='dialog']//table/tbody//tr//p[@color][text()='{}'])[1]", value).hover()
+                .shouldBe(Condition.enabled).click();
         return this;
     }
 }

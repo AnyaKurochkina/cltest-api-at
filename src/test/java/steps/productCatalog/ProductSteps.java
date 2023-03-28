@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
 import models.cloud.productCatalog.product.Product;
@@ -134,12 +135,62 @@ public class ProductSteps extends Steps {
                 .assertStatus(200);
     }
 
-    @Step("Получение order_restrictions продукта по Id")
+    @Step("Обновление order_restrictions продукта по Id")
+    public static Response updateProductOrderRestrictionById(String objectId, String restrictionId, JSONObject json) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(json)
+                .patch(productUrl + objectId + "/order_restrictions/?order_restriction_id={}", restrictionId)
+                .assertStatus(200);
+    }
+
+    @Step("Создание order_restrictions продукта по Id")
     public static Response createProductOrderRestrictionById(String objectId, JSONObject jsonObject) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
-                .post(productUrl + objectId + "/order_restrictions/")
+                .post(productUrl + objectId + "/order_restrictions/");
+    }
+
+    @Step("Удаление order_restrictions продукта по Id")
+    public static void deleteProductOrderRestrictionById(String objectId, String restrictionId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(productUrl + objectId + "/order_restrictions/?order_restriction_id={}", restrictionId)
+                .assertStatus(200);
+    }
+
+    @Step("Получение order_restrictions продукта по имени")
+    public static Response getProductOrderRestrictionByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrlV2 + name + "/order_restrictions/")
+                .assertStatus(200);
+    }
+
+    @Step("Создание order_restrictions продукта по имени")
+    public static Response createProductOrderRestrictionByName(String name, JSONObject jsonObject) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(jsonObject)
+                .post(productUrlV2 + name + "/order_restrictions/")
+                .assertStatus(200);
+    }
+
+    @Step("Обновление order_restrictions продукта по имени")
+    public static Response updateProductOrderRestrictionByName(String name, String restrictionId, JSONObject json) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(json)
+                .patch(productUrlV2 + name + "/order_restrictions/?order_restriction_id={}", restrictionId)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление order_restrictions продукта по имени")
+    public static void deleteProductOrderRestrictionByName(String name, String restrictionId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(productUrlV2 + name + "/order_restrictions/?order_restriction_id={}", restrictionId)
                 .assertStatus(200);
     }
 
@@ -271,10 +322,15 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Импорт продукта")
-    public static Response importProduct(String pathName) {
+    public static ImportObject importProduct(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(productUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(productUrl + "obj_import/", "file", new File(pathName))
+                .assertStatus(200)
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Экспорт продукта по имени {name}")

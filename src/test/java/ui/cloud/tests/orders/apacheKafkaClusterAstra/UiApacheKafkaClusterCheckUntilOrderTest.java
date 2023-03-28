@@ -44,16 +44,15 @@ class UiApacheKafkaClusterCheckUntilOrderTest extends Tests {
         ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
-
+        orderPage.checkOrderDisabled();
 
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
+        orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         new ApacheKafkaClusterOrderPage().checkOrderDetails();
     }
 

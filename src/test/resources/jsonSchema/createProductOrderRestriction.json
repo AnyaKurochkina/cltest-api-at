@@ -1,0 +1,79 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "object",
+  "properties": {
+    "id": {
+      "type": "string"
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "updated_at": {
+      "type": "string"
+    },
+    "product_id": {
+      "type": "string"
+    },
+    "product_name": {
+      "type": "string"
+    },
+    "organization": {
+      "type": "string"
+    },
+    "environments": {
+      "type": "array",
+      "items": {}
+    },
+    "net_segments": {
+      "type": "array",
+      "items": {}
+    },
+    "platforms": {
+      "type": "array",
+      "items": [
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "data_centers": {
+      "type": "array",
+      "items": {}
+    },
+    "domains": {
+      "type": "array",
+      "items": {}
+    },
+    "information_system_ids": {
+      "type": "array",
+      "items": {}
+    },
+    "is_blocking": {
+      "type": "boolean"
+    },
+    "is_deleted": {
+      "type": "boolean"
+    },
+    "weight": {
+      "type": "integer"
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "created_at",
+    "updated_at",
+    "product_id",
+    "product_name",
+    "organization",
+    "environments",
+    "net_segments",
+    "platforms",
+    "data_centers",
+    "domains",
+    "information_system_ids",
+    "is_blocking",
+    "is_deleted",
+    "weight"
+  ]
+}

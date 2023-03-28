@@ -190,6 +190,7 @@ public class GraphsListPage extends BaseListPage {
         importButton.click();
         new InputFile(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
+        closeButton.click();
         return this;
     }
 

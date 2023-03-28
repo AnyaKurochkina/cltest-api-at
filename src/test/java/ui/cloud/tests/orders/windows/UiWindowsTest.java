@@ -52,11 +52,11 @@ public class UiWindowsTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             WindowsOrderPage orderPage = new WindowsOrderPage();
             //  orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getRoleServer().selectByValue(product.getRole());
-            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroup().select(accessGroup);
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getRoleServer().set(product.getRole());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getGroupSelect().set(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
@@ -257,7 +257,6 @@ public class UiWindowsTest extends UiProductTest {
         WindowsPage winPage = new WindowsPage(product);
         winPage.deleteKeyAstrom();
     }
-
 
     @Test
     @Order(100)

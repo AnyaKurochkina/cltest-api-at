@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.template.Template;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -17,11 +18,12 @@ import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.TextArea;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Getter
 public class TemplatePage extends BasePage {
     private static final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
@@ -62,7 +64,7 @@ public class TemplatePage extends BasePage {
         goToParamsTab();
         input.setValue(new JSONObject(template.getInput()).toString());
         output.setValue(new JSONObject(template.getOutput()).toString());
-        printedOutput.setValue(new JSONArray(template.getPrintedOutput()).toString());
+        printedOutput.setValue(new JSONArray((ArrayList) template.getPrintedOutput()).toString());
         saveButton.click();
         Alert.green("Шаблон успешно создан");
         Waiting.sleep(2000);
@@ -79,15 +81,15 @@ public class TemplatePage extends BasePage {
     public TemplatePage checkAttributes(Template template) {
         nameInput.getInput().shouldHave(Condition.exactValue(template.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
-        descriptionTextArea.getTextArea().shouldHave(Condition.exactValue(template.getDescription()));
+        descriptionTextArea.getElement().shouldHave(Condition.exactValue(template.getDescription()));
         runQueueInput.getInput().shouldHave(Condition.exactValue(template.getRun()));
         rollbackQueueInput.getInput().shouldHave(Condition.exactValue(template.getRollback().toString()));
         Assertions.assertTrue(typeSelect.getValue().equals(template.getType()));
         timeoutInput.getInput().shouldHave(Condition.exactValue(String.valueOf(template.getTimeout())));
         checkTemplateVersion(template.getVersion());
         goToParamsTab();
-        String printedOutputJSON = new JSONArray(template.getPrintedOutput()).toString();
-        Assertions.assertEquals(printedOutputJSON, printedOutput.getTextArea().getValue()
+        String printedOutputJSON = new JSONArray((ArrayList) template.getPrintedOutput()).toString();
+        Assertions.assertEquals(printedOutputJSON, printedOutput.getElement().getValue()
                 .replaceAll("\\s", ""));
         return this;
     }

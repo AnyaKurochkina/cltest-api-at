@@ -36,8 +36,6 @@ public class AuditTest extends Tests {
 
     @BeforeEach
     public void setUp() {
-        new LoginPageControlPanel().signIn(superviewer.getRole());
-
         graphName = UUID.randomUUID().toString();
         graph = Graph.builder()
                 .name(graphName)
@@ -48,6 +46,8 @@ public class AuditTest extends Tests {
                 .author("AT UI")
                 .build()
                 .createObject();
+
+        new LoginPageControlPanel().signIn(superviewer.getRole());
     }
 
     @Test

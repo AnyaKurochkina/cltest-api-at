@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.podman;
+package ui.cloud.tests.orders.podmanRhel;
 
 import api.Tests;
 import com.codeborne.selenide.Condition;
@@ -46,7 +46,7 @@ class UiPodmanCheckUntilOrderTest extends Tests {
         PodmanOrderPage orderPage = new PodmanOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
+        orderPage.checkOrderDisabled();
 
         //Проверка поля Кол-во
         orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "0", "10");

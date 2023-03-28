@@ -5,20 +5,24 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.template.Template;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
+import ui.elements.Button;
 import ui.elements.InputFile;
 import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Getter
 public class TemplatesListPage extends BaseListPage {
 
-    private static final String nameColumn = "Код шаблона";
+    public static final Button goToUsageButton = Button.byText("Перейти в использование");
+    public static final String nameColumn = "Код шаблона";
     private final SelenideElement pageTitle = $x("//div[text() = 'Шаблоны узлов']");
     private final SelenideElement createTemplateButton = $x("//div[@data-testid = 'add-button']//button");
 
@@ -82,7 +86,7 @@ public class TemplatesListPage extends BaseListPage {
 
     @Step("Открытие страницы шаблона '{name}'")
     public TemplatePage openTemplatePage(String name) {
-        new Table(nameColumn).getRowElementByColumnValue(nameColumn, name).click();
+        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
         return new TemplatePage();
     }
 
@@ -147,6 +151,7 @@ public class TemplatesListPage extends BaseListPage {
         importButton.click();
         new InputFile(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
+        closeButton.click();
         return this;
     }
 }

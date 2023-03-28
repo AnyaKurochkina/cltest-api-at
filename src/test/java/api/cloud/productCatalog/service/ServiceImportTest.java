@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
@@ -15,8 +16,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.OrgDirectionSteps.createOrgDirectionByName;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
 import static steps.productCatalog.ServiceSteps.*;
@@ -36,7 +37,9 @@ public class ServiceImportTest extends Tests {
         if (isServiceExists(serviceName)) {
             deleteServiceByName(serviceName);
         }
-        importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
+        ImportObject importObject = importService(Configure.RESOURCE_PATH + "/json/productCatalog/services/importService.json");
+        assertEquals(serviceName, importObject.getObjectName());
+        assertEquals("success", importObject.getStatus());
         assertTrue(isServiceExists(serviceName));
         deleteServiceByName(serviceName);
         assertFalse(isServiceExists(serviceName));

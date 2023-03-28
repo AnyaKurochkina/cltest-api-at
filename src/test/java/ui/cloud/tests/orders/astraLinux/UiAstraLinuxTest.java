@@ -26,7 +26,7 @@ import java.util.Collections;
 public class UiAstraLinuxTest extends UiProductTest {
 
     Astra product;
-    //= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/ae50ab87-de69-4c30-bcdd-c339726b8d13/main?context=proj-iv550odo9a&type=project&org=vtb");
+    //= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/94ef7758-4ebc-443c-a94e-46e1410f398a/main?context=proj-lww1vo6okh&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
