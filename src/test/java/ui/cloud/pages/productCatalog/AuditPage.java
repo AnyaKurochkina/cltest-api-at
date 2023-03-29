@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -63,6 +64,7 @@ public class AuditPage extends BasePage {
     @Step("Проверка отсутствия пользователя ")
     public AuditPage checkUserNotFound(String userName) {
         Table table = new Table("Учетная запись");
+        Waiting.find(() -> table.getHeadersCollection().last().isDisplayed(), Duration.ofSeconds(3));
         Assertions.assertFalse(table.isColumnValueEquals("Учетная запись", userName));
         return this;
     }

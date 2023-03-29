@@ -125,7 +125,7 @@ public class EditNodeTest extends GraphBaseTest {
                 .put("printed_output_can_be_overridden", false));
         GraphNodesPage page = new GraphNodesPage();
         page.getSaveButton().click();
-        Alert.red("Переопределение printed_output в ноде 1 запрещено шаблоном");
+        Alert.red("Переопределение printed_output в ноде (1) запрещено шаблоном");
         page.openEditDialog(node);
         $x("//div[text()='Проверьте корректность заполнения полей']").shouldBe(Condition.visible);
         page.getParamsTab().click();

@@ -20,11 +20,10 @@ import java.util.List;
 
 import static core.helper.StringUtils.$x;
 
+@Getter
 public class Table implements TypifiedElement {
-    @Getter
     List<String> headers;
     SelenideElement table;
-    @Getter
     ElementsCollection rows;
     ElementsCollection headersCollection;
     @Language("XPath")

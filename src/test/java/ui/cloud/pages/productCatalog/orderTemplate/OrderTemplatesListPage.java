@@ -14,6 +14,7 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrderTemplatesListPage extends BaseListPage {
 
@@ -29,7 +30,6 @@ public class OrderTemplatesListPage extends BaseListPage {
             nameInput.getInput().$x("./following::div[text()='Шаблон с таким кодом уже существует']");
     private final SelenideElement nameValidationHint =
             nameInput.getInput().$x("./following::div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
-    private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final Select typeDropDown = Select.byLabel("Тип");
     private final Select providerDropDown = Select.byLabel("Провайдер");
     private final Select stateDropDown = Select.byLabel("Состояние");
@@ -154,7 +154,7 @@ public class OrderTemplatesListPage extends BaseListPage {
     @Step("Проверка, что шаблоны не найдены при поиске по '{value}'")
     public OrderTemplatesListPage checkTemplateNotFound(String value) {
         search(value);
-        noDataFound.shouldBe(Condition.visible);
+        assertTrue(new Table(nameColumn).isEmpty());
         return this;
     }
 
@@ -177,7 +177,7 @@ public class OrderTemplatesListPage extends BaseListPage {
     @Step("Проверка, что шаблон '{template.name}' найден при поиске по значению '{value}'")
     public OrderTemplatesListPage findTemplateByValue(String value, ItemVisualTemplate template) {
         search(value);
-        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
+        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
         return this;
     }
 
@@ -222,7 +222,7 @@ public class OrderTemplatesListPage extends BaseListPage {
 
     @Step("Проверка, что шаблон '{template.name}' отображается в списке")
     public OrderTemplatesListPage checkTemplateIsDisplayed(ItemVisualTemplate template) {
-        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
+        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
         return this;
     }
 

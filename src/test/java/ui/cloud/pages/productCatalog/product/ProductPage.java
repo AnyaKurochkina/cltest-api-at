@@ -69,7 +69,7 @@ public class ProductPage extends BasePage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.sleep(3000);
+        Waiting.sleep(4000);
         Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
@@ -216,11 +216,8 @@ public class ProductPage extends BasePage {
     public ProductsListPage checkNameValidation(String[] names) {
         for (String name : names) {
             nameInput.setValue(name);
-            TestUtils.wait(500);
-            if (!nameValidationHint.exists()) {
-                TestUtils.wait(1000);
-                nameInput.getInput().sendKeys("t");
-            }
+            Waiting.findWithAction(() -> nameValidationHint.isDisplayed(),
+                    () -> nameInput.getInput().sendKeys("t"), Duration.ofSeconds(3));
             nameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();
