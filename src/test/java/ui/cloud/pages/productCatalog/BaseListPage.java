@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Button;
@@ -20,11 +21,13 @@ import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.format;
 
+@Getter
 public class BaseListPage {
 
     protected static final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
-    protected static final SelenideElement importButton = $x("//input[@placeholder='Поиск']/following::button[1]");
+    protected static final SelenideElement importButton = $x("//a[.='Импорт']");
     protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
@@ -35,6 +38,7 @@ public class BaseListPage {
     protected final Button saveButton = Button.byText("Сохранить");
     protected final Button cancelButton = Button.byText("Отмена");
     protected final Button backButton = Button.byText("Назад");
+    protected final Button closeButton = Button.byText("Закрыть");
     protected final Button applyFiltersButton = Button.byText("Применить");
     protected final Button clearFiltersButton = Button.byText("Сбросить фильтры");
     protected final Select graphSelect = Select.byLabel("Граф");
@@ -61,7 +65,8 @@ public class BaseListPage {
         firstValue = table.getValueByColumnInFirstRow(header).getText();
         lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();
         Assertions.assertTrue(lastValue.compareToIgnoreCase(firstValue) < 0 || lastValue.equals(firstValue),
-                "Некорректная сортировка по столбцу " + header);
+                format("Некорректная сортировка по столбцу '{}'. firstValue = '{}', lastValue = '{}'",
+                        header, firstValue, lastValue));
     }
 
     @Step("Проверка сортировки по дате по столбцу '{header}'")
@@ -89,7 +94,9 @@ public class BaseListPage {
         lastDateString = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();
         firstDate = LocalDateTime.parse(firstDateString, formatter);
         lastDate = LocalDateTime.parse(lastDateString, formatter);
-        Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate));
+        Assertions.assertTrue(lastDate.isBefore(firstDate) || lastDate.isEqual(firstDate),
+                format("Некорректная сортировка по столбцу '{}'. firstDate = '{}', lastDate = '{}'",
+                        header, firstDate, lastDate));
     }
 
     @Step("Раскрытие меню действий для строки, содержащей в столбце '{columnName}' значение '{value}'")

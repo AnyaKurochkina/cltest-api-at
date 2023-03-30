@@ -5,6 +5,7 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.feedService.action.EventTypeProvider;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.action.GetActionList;
@@ -154,10 +155,14 @@ public class ActionSteps extends Steps {
     }
 
     @Step("Импорт действия продуктового каталога")
-    public static Response importAction(String pathName) {
+    public static ImportObject importAction(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(actionUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(actionUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Копирование действия по Id")

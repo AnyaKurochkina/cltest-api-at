@@ -1,18 +1,19 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
-
 import api.Tests;
-import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.PostgresSQLCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.*;
+import steps.portalBack.PortalBackSteps;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.NewOrderPage;
+import ui.cloud.pages.PostgreSqlClusterAstraOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 
@@ -37,19 +38,20 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1151310")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
         new IndexPage()
                 .clickOrderMore()
+                .expandProductsList()
                 .selectProduct(product.getProductName());
         PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
         //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
+        orderPage.checkOrderDisabled();
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
+        orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+        orderPage.getGroupSelect().set(accessGroup);
         new PostgreSqlClusterAstraOrderPage().checkOrderDetails();
     }
 }

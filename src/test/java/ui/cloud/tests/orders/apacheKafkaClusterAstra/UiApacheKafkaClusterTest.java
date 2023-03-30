@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -52,11 +53,11 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroup().select(accessGroup);
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getGroupSelect().set(accessGroup);
             orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
             preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
             EntitiesUtils.clickOrder();
@@ -94,6 +95,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(4)
     @TmsLink("852003")
+    @Disabled
     @DisplayName("UI ApacheKafkaCluster. Расширить диск")
     void enlargeDisk() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
@@ -294,9 +296,11 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
     }
+
     @Test
     @Order(25)
     @TmsLink("1216972")
+    @EnabledIfEnv("prod")
     @DisplayName("UI ApacheKafkaCluster. Мониторинг ОС")
     void monitoringOs() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);

@@ -53,7 +53,7 @@ public class Alert implements TypifiedElement {
 
     public Alert close() {
         try {
-            Button button = Button.byElement(element.$("button"));
+            Button button = Button.byElement(getElement().$x("button[.='']"));
             button.click();
             waitClose();
         } catch (Throwable ignored) {}

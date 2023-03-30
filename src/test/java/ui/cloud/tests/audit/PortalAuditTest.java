@@ -47,8 +47,6 @@ public class PortalAuditTest extends Tests {
 
     @BeforeEach
     public void setUp() {
-        new LoginPage(project.getId()).signIn(cloudAdmin.getRole());
-
         graphName = UUID.randomUUID().toString();
         graph = Graph.builder()
                 .name(graphName)
@@ -63,6 +61,8 @@ public class PortalAuditTest extends Tests {
         copyGraphByIdInContext(graph.getGraphId(), project.getId());
         graphCopy = getGraphByNameFilter(graph.getName() + "-clone");
         deleteGraphByIdInContext(graphCopy.getGraphId(), project.getId());
+
+        new LoginPage(project.getId()).signIn(cloudAdmin.getRole());
     }
 
     @Test
@@ -139,7 +139,7 @@ public class PortalAuditTest extends Tests {
                 .setStatusCodeFilter(okCode)
                 .applyAdditionalFilters()
                 .checkRecordDetailsByContextId(graphCopy.getGraphId(), projectsObject, noValue, noValue);
-        new ContextPage().openUserContext().selectOrgContext();
+        new ContextPage().openUserContext().setContext("VTB-VTB.Cloud-QA-AT-DEV");
         new AuditPage()
                 .setUserFilter(pcAdmin.getEmail())
                 .applyAdditionalFilters()

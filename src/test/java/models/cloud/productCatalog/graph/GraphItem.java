@@ -54,7 +54,7 @@ public class GraphItem {
     @JsonProperty("count")
     private String count;
     @JsonProperty("log_level")
-    private Object logLevel;
+    private String logLevel;
     @JsonProperty("damage_order_on_error")
     private Boolean damageOrderOnError;
     @JsonProperty("priority")
@@ -99,6 +99,7 @@ public class GraphItem {
                 .set("$.description", description)
                 .set("$.timeout", timeout)
                 .set("$.output", output)
+                .set("$.printed_output", printedOutput)
                 .set("$.coords_x", coordsX)
                 .set("$.depends", depends)
                 .set("$.count", count)

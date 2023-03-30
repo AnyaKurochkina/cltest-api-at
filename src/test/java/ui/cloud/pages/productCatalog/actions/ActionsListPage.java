@@ -89,6 +89,7 @@ public class ActionsListPage extends BaseListPage {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
         new InputFile(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
+        closeButton.click();
         return this;
     }
 

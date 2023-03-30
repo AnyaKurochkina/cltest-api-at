@@ -44,21 +44,21 @@ class UiClickHouseClusterCheckUntilOrderTest extends Tests {
         ClickHouseClusterOrderPage orderPage = new ClickHouseClusterOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
+        orderPage.checkOrderDisabled();
 
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getNameCluster().setValue("cluster");
         orderPage.getNameUser().setValue("at_user");
         orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
         orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
-        orderPage.getGroup2().select(accessGroup.getPrefixName());
-        orderPage.getGroup3().select(accessGroup.getPrefixName());
-        orderPage.getGroup4().select(accessGroup.getPrefixName());
+        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        orderPage.getGroup2().set(accessGroup.getPrefixName());
+        orderPage.getGroup3().set(accessGroup.getPrefixName());
+        orderPage.getGroup4().set(accessGroup.getPrefixName());
         new ClickHouseClusterOrderPage().checkOrderDetails();
     }
 

@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.template.GetTemplateList;
 import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
@@ -98,10 +99,14 @@ public class TemplateSteps extends Steps {
     }
 
     @Step("Импорт шаблона")
-    public static Response importTemplate(String pathName) {
+    public static ImportObject importTemplate(String pathName) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(templateUrl + "obj_import/", "file", new File(pathName));
+                .multiPart(templateUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Экспорт шаблона по Id {id}")

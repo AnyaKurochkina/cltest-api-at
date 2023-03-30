@@ -1,6 +1,5 @@
 package ui.cloud.tests.orders.scillaDbClusterAstra;
 
-
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
@@ -34,7 +33,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-       // product.setProductName(""); Для Rhel версии
+        //product.setProductName("ScyllaDB Cluster RHEL"); //Для Rhel версии
         new LoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -213,7 +212,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.updateGroup("superuser",
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
-
 
     @Test
     @Order(100)

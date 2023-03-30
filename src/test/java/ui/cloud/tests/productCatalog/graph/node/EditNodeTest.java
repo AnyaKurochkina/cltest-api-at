@@ -1,9 +1,12 @@
 package ui.cloud.tests.productCatalog.graph.node;
 
+import com.codeborne.selenide.Condition;
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,8 +14,13 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
+import ui.elements.Alert;
 
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.HashMap;
+
+import static com.codeborne.selenide.Selenide.$x;
 
 @Feature("Редактирование узла графа")
 public class EditNodeTest extends GraphBaseTest {
@@ -82,9 +90,135 @@ public class EditNodeTest extends GraphBaseTest {
         node.setOutput(new HashMap<String, Object>() {{
             put("output_param", "");
         }});
+        node.setPrintedOutput(printedOutputValue);
         new GraphNodesPage()
                 .editTemplateNode(node, "1.0.0", "edit")
                 .checkNodeAttributes(node)
                 .deleteNodeAndSave(node);
+    }
+
+    @Test
+    @TmsLink("1035795")
+    @DisplayName("Выключение переопределения Printed output в используемом шаблоне узла")
+    public void saveNodeWithForbiddenPrintedOutputOverride() {
+        GraphItem node = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .templateId(template.getId())
+                .templateVersion("")
+                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
+                    put("type", "text");
+                }}))
+                .number(1)
+                .build();
+        graphSteps.partialUpdateObject(graph.getGraphId(), new JSONObject()
+                .put("graph", Arrays.asList(node.toJson())));
+        new IndexPage()
+                .goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab();
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("printed_output_can_be_overridden", false));
+        GraphNodesPage page = new GraphNodesPage();
+        page.getSaveButton().click();
+        Alert.red("Переопределение printed_output в ноде 1 запрещено шаблоном");
+        page.openEditDialog(node);
+        $x("//div[text()='Проверьте корректность заполнения полей']").shouldBe(Condition.visible);
+        page.getParamsTab().click();
+        page.getPrintedOutputHint().shouldHave(Condition
+                .exactText("Переопределение запрещено в шаблоне. Очистите поле или включите переопределение Printed output в шаблоне узлов"));
+        page.getPrintedOutputTextArea().clear();
+        page.getFormSaveNodeButton().click();
+        page.saveGraphWithPatchVersion();
+    }
+
+    @Test
+    @TmsLink("1035865")
+    @DisplayName("Выключение переопределения Input в используемом шаблоне узла")
+    public void saveNodeWithForbiddenInputOverride() {
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("additional_input", true));
+        GraphItem node = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .templateId(template.getId())
+                .templateVersion("")
+                .number(1)
+                .input(new HashMap<String, String>() {{
+                    put("override_param_1", "1");
+                }})
+                .build();
+        graphSteps.partialUpdateObject(graph.getGraphId(), new JSONObject()
+                .put("graph", Arrays.asList(node.toJson())));
+        new IndexPage()
+                .goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab();
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("additional_input", false));
+        GraphNodesPage page = new GraphNodesPage();
+        page.getSaveButton().click();
+        Alert.red("Node \"input\" key(s) \"override_param_1\" not exists in Template");
+        page.openEditDialog(node);
+        Waiting.findWithAction(() -> $x("//div[text()='Проверьте корректность заполнения полей']").isDisplayed(),
+                () -> {
+                    page.getAdditionalTab().click();
+                    page.getMainTab().click();
+                }, Duration.ofSeconds(3));
+        page.getParamsTab().click();
+        Waiting.sleep(1500);
+        page.getInputHint().shouldHave(Condition
+                .exactText("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)"));
+        node.setInput(new HashMap<String, String>() {{
+            put("input_param", "");
+        }});
+        page.getInputTextArea().setValue(new JSONObject(node.getInput()).toString());
+        page.getFormSaveNodeButton().click();
+        page.saveGraphWithPatchVersion();
+    }
+
+    @Test
+    @TmsLink("1539903")
+    @DisplayName("Выключение переопределения Output в используемом шаблоне узла")
+    public void saveNodeWithForbiddenOutputOverride() {
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("additional_output", true));
+        GraphItem node = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .templateId(template.getId())
+                .templateVersion("")
+                .number(1)
+                .output(new HashMap<String, Object>() {{
+                    put("override_param_1", "1");
+                }})
+                .build();
+        graphSteps.partialUpdateObject(graph.getGraphId(), new JSONObject()
+                .put("graph", Arrays.asList(node.toJson())));
+        new IndexPage()
+                .goToGraphsPage()
+                .openGraphPage(NAME)
+                .goToNodesTab();
+        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+                .put("additional_output", false));
+        GraphNodesPage page = new GraphNodesPage();
+        page.getSaveButton().click();
+        Alert.red("Node \"output\" key(s) \"override_param_1\" not exists in Template");
+        page.openEditDialog(node);
+        Waiting.findWithAction(() -> $x("//div[text()='Проверьте корректность заполнения полей']").isDisplayed(),
+                () -> {
+                    page.getAdditionalTab().click();
+                    page.getMainTab().click();
+                }, Duration.ofSeconds(3));
+        page.getParamsTab().click();
+        Waiting.sleep(1500);
+        page.getOutputHint().shouldHave(Condition
+                .exactText("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)"));
+        node.setOutput(new HashMap<String, Object>() {{
+            put("output_param", "");
+        }});
+        page.getOutputTextArea().setValue(new JSONObject(node.getOutput()).toString());
+        page.getFormSaveNodeButton().click();
+        page.saveGraphWithPatchVersion();
     }
 }

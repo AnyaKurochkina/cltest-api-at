@@ -1,8 +1,6 @@
 package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
-
 import api.Tests;
-import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
@@ -47,7 +45,7 @@ class UiPostgreSqlAstraLinuxCheckUntilOrderTest extends Tests {
         PostgreSqlAstraOrderPage orderPage = new PostgreSqlAstraOrderPage();
 
         //Проверка кнопки Заказать на неактивность, до заполнения полей
-        orderPage.getOrderBtn().shouldBe(Condition.disabled);
+        orderPage.checkOrderDisabled();
 
         //Проверка поля Кол-во
         orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "0", "10");
