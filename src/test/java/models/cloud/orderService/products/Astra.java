@@ -112,7 +112,7 @@ public class Astra extends IProduct {
     public void checkUseSsh() {
         String accessGroup = getAccessGroup();
         String ip = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.ip");
-        SshClient ssh = new SshClient(ip, getEnv());
+        SshClient ssh = new SshClient(ip, envType());
         Assertions.assertTrue(ssh.execute("sudo realm list").contains(accessGroup));
         Assertions.assertTrue(ssh.execute("sudo ls cd /etc/sudoers.d").contains(String.format("group_%s_%s", role, accessGroup)));
     }
