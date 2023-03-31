@@ -82,7 +82,6 @@ public class SshClient {
         JSch jsch = new JSch();
         Session session = jsch.getSession(username, host, SSH_PORT);
         session.setPassword(password);
-        log.info("{} {} {}", host, username, password);
         UserInfo userInfo = new SshUserInfo();
         session.setUserInfo(userInfo);
         session.setConfig("StrictHostKeyChecking", "no");
