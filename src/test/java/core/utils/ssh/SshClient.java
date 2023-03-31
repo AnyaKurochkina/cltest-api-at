@@ -1,14 +1,13 @@
 package core.utils.ssh;
 
 import com.jcraft.jsch.*;
+import core.helper.Configure;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Objects;
 
 @Log4j2
 public class SshClient {
@@ -21,37 +20,31 @@ public class SshClient {
 
     public SshClient(String host, String user, String password) {
         this.host = host;
-        this.user = user;
+        this.user = Objects.requireNonNull(user, "Не задан");
         this.password = password;
     }
 
-
-    public void execCommandToList(String command) {
-        List<String> lines = connectAndExecuteListCommand(command);
-        log.debug("{}", lines);
-    }
-
-
-    public String execCommandToString(String command, int index) {
-        List<String> lines = connectAndExecuteListCommand(command);
-        log.debug(lines.get(index));
-        return lines.get(index);
+    public SshClient(String host, String env) {
+        this.host = host;
+        this.user = Objects.requireNonNull(Configure.getAppProp(env + ".user"),
+                "Не задан параметр " + env + ".user");
+        this.password = Objects.requireNonNull(Configure.getAppProp(env + ".password"),
+                "Не задан параметр " + env + ".password");
+        ;
     }
 
 
     @SneakyThrows
-    public List<String> connectAndExecuteListCommand(String cmd) {
-        List<String> lines;
+    public String execute(String cmd) {
         Session session = initSession(host, user, password);
         Channel channel = initChannel(cmd, session);
         InputStream in = channel.getInputStream();
         channel.connect();
         log.info("Соединение установлено...");
         String dataFromChannel = getDataFromChannel(channel, in);
-        lines = new ArrayList<>(Arrays.asList(dataFromChannel.split("\n")));
         channel.disconnect();
         session.disconnect();
-        return lines;
+        return dataFromChannel;
     }
 
     private String getDataFromChannel(Channel channel, InputStream in)

@@ -41,6 +41,14 @@ public class Configure {
             properties.setProperty("testIt", "false");
             if(Objects.nonNull(System.getProperty("moon")))
                 properties.setProperty("webdriver.remote.url", System.getProperty("moon"));
+            if(Objects.nonNull(System.getProperty("dev.user")))
+                properties.setProperty("dev.user", System.getProperty("dev.user"));
+            if(Objects.nonNull(System.getProperty("dev.password")))
+                properties.setProperty("dev.password", System.getProperty("dev.password"));
+            if(Objects.nonNull(System.getProperty("test.user")))
+                properties.setProperty("test.user", System.getProperty("test.user"));
+            if(Objects.nonNull(System.getProperty("test.password")))
+                properties.setProperty("test.password", System.getProperty("test.password"));
             loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
             loadProperties(RESOURCE_PATH + "/config/application.properties");
             if (System.getProperty("env") == null) {

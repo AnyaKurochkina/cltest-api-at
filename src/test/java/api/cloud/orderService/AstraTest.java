@@ -8,9 +8,7 @@ import models.cloud.orderService.products.Astra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import api.Tests;
 
@@ -81,6 +79,15 @@ public class AstraTest extends Tests {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.stopHard();
             astra.start();
+        }
+    }
+
+    @TmsLink("1090927")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    void checkCreate(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.executeCheckUseSsh();
         }
     }
 

@@ -35,6 +35,7 @@ import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
@@ -129,6 +130,10 @@ public abstract class IProduct extends Entity {
         save();
     }
 
+    protected String getAccessGroup(){
+        return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+    }
+
     @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
     protected String getIdGeoDistribution(String name, String ... tags) {
         StringJoiner tagsJoiner = new StringJoiner(",");
@@ -143,6 +148,19 @@ public abstract class IProduct extends Entity {
         ((IProduct) entity).addLinkProduct();
         ((IProduct) entity).checkPreconditionStatusProduct();
         return entity;
+    }
+
+    protected void checkUseSsh(){}
+
+    @SneakyThrows
+    public void executeCheckUseSsh() {
+        try {
+            checkUseSsh();
+        } catch (Throwable e){
+            if(e.toString().contains("timeout: socket is not established"))
+                connectVmException("Ошибка подключения к " + getProductName() + " " + e);
+            else throw e;
+        }
     }
 
     public void addLinkProduct() {
