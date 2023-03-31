@@ -85,6 +85,7 @@ public class SshClient {
         UserInfo userInfo = new SshUserInfo();
         session.setUserInfo(userInfo);
         session.setConfig("StrictHostKeyChecking", "no");
+        session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
         session.connect(CONNECTION_TIMEOUT);
         return session;
     }
