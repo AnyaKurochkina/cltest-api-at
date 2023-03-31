@@ -157,7 +157,7 @@ public abstract class IProduct extends Entity {
         try {
             checkUseSsh();
         } catch (Throwable e){
-            if(e.toString().contains("timeout: socket is not established"))
+            if(e.toString().contains("Connection refused"))
                 connectVmException("Ошибка подключения к " + getProductName() + " " + e);
             else throw e;
         }
