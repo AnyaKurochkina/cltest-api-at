@@ -84,7 +84,7 @@ public class AstraTest extends Tests {
 
     @TmsLink("1090927")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания {0}")
+    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
     void checkCreate(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.executeCheckUseSsh();
