@@ -18,7 +18,7 @@ import static com.codeborne.selenide.Selenide.$x;
 public class NewOrderPage {
 
     private final Button orderBtn = Button.byText("Заказать");
-    private final SelenideElement loadOrderPricePerDay = $x("//*[@data-testid='new-order-details-price' and contains(.,',')]");
+    private final SelenideElement prebillingCostElement = $x("//*[@data-testid='new-order-details-price' and contains(.,',')]");
     private final SelenideElement opMemory = $x("//div[contains(text(),'Оперативная память')]");
     private final SelenideElement hardDrive = $x("//div[contains(text(),'Жесткий диск')]");
     private final SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
@@ -62,6 +62,7 @@ public class NewOrderPage {
 
     @Step("Проверка отображения деталей заказа")
     public void checkOrderDetails() {
+        prebillingCostElement.shouldBe(Condition.visible);
         if (getCalculationDetails().exists()) {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }

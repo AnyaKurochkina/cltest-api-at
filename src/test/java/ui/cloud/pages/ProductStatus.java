@@ -20,7 +20,8 @@ public class ProductStatus {
     String status;
 
     final public static ProductStatus CREATING = new ProductStatus("Разворачивается");
-    final public static ProductStatus PENDING = new ProductStatus("Изменение");
+    final public static ProductStatus CHANGING = new ProductStatus("Изменение");
+    final public static ProductStatus PENDING = new ProductStatus("В процессе");
     final public static ProductStatus SUCCESS = new ProductStatus("В порядке");
     final public static ProductStatus DELETING = new ProductStatus("Удаляется");
     final public static ProductStatus ERROR = new ProductStatus("Ошибка");
@@ -51,10 +52,11 @@ public class ProductStatus {
     }
 
     public boolean isNeedWaiting() {
-        return CREATING.equals(this) || PENDING.equals(this) || DELETING.equals(this);
+        return CREATING.equals(this) || CHANGING.equals(this) || PENDING.equals(this) || DELETING.equals(this);
     }
 
     public boolean isStatus() {
-        return CREATING.equals(this) || PENDING.equals(this) || DELETING.equals(this) || SUCCESS.equals(this) || ERROR.equals(this);
+        return CREATING.equals(this) || CHANGING.equals(this) || PENDING.equals(this) || DELETING.equals(this)
+                || SUCCESS.equals(this) || ERROR.equals(this);
     }
 }
