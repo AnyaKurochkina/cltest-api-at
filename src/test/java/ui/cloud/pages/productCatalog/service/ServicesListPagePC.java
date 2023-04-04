@@ -18,6 +18,7 @@ import java.util.Arrays;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ServicesListPagePC extends BaseListPage {
 
@@ -36,7 +37,6 @@ public class ServicesListPagePC extends BaseListPage {
     private final SelenideElement nameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement cancelButton = $x("//div[text()='Отменить']/parent::button");
-    private final SelenideElement noDataFound = $x("//td[text()='Нет данных для отображения']");
     private final Select statusDropDown = Select.byLabel("Статус");
 
     @Step("Проверка заголовков списка сервисов")
@@ -165,7 +165,7 @@ public class ServicesListPagePC extends BaseListPage {
     @Step("Проверка, что сервисы не найдены при поиске по '{value}'")
     public ServicesListPagePC checkServiceNotFound(String value) {
         search(value);
-        noDataFound.shouldBe(Condition.visible);
+        assertTrue(new Table(columnName).isEmpty());
         return this;
     }
 

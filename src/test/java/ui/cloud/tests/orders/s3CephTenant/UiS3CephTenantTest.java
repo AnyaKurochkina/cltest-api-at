@@ -27,7 +27,8 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_s3_ceph_tenant")})
 public class UiS3CephTenantTest extends UiProductTest {
 
-    S3Ceph product = S3Ceph.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/object_storage/orders/0469c17f-1b54-42a4-adce-09b96ecc2f49/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    S3Ceph product;
+    //= S3Ceph.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/object_storage/orders/0469c17f-1b54-42a4-adce-09b96ecc2f49/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -163,6 +164,4 @@ public class UiS3CephTenantTest extends UiProductTest {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
         s3CepthPages.runActionWithCheckCost(CompareType.LESS, () -> s3CepthPages.deleteTenant());
     }
-
-
  }

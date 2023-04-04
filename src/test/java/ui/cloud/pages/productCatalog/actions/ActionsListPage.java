@@ -42,14 +42,14 @@ public class ActionsListPage extends BaseListPage {
      * @param value знаение для поиска в колонке "Код действия"
      * @return true если действие существует, false если действие не существует.
      */
-    @Step("Проверка существования действия {value}")
-    public boolean isActionExist(String value) {
+    @Step("Проверка отображения действия '{value}' в списке")
+    public boolean isActionDisplayed(String value) {
         Table table = new Table(NAME_COLUMN);
-        while (nextPageButton.isEnabled()) {
+        while (nextPageButtonV2.getButton().isEnabled()) {
             if (table.isColumnValueEquals(NAME_COLUMN, value)) {
                 return true;
             } else {
-                nextPageButton.scrollIntoView(TypifiedElement.scrollCenter).click();
+                nextPageV2();
             }
         }
         return false;
@@ -79,7 +79,7 @@ public class ActionsListPage extends BaseListPage {
 
     @Step("Открытие формы действия по строке {number}")
     public ActionPage openActionFormByRowNumber(int number) {
-        new Table(NAME_COLUMN).getValueByColumnInRow(number, NAME_COLUMN).click();
+        new Table(NAME_COLUMN).getRow(number).get().click();
         TestUtils.wait(2000);
         return new ActionPage();
     }
@@ -96,8 +96,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Переход на следующую страницу списка действий")
     public ActionsListPage goToNextPageActionList() {
         String firstActionName = new Table("Наименование").getFirstValueByColumn("Наименование");
-        TestUtils.scrollToTheBottom();
-        nextPageButton.click();
+        nextPageV2();
         String secondActionName = new Table("Наименование").getFirstValueByColumn("Наименование");
         assertNotEquals(firstActionName, secondActionName);
         return this;
@@ -106,7 +105,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Проверяем, что строка отличается визуально")
     public ActionsListPage checkActionIsHighlighted(int rowNumber) {
         Table actionList = new Table(NAME_COLUMN);
-        Assertions.assertTrue(actionList.getRowByIndex(rowNumber)
+        Assertions.assertTrue(actionList.getRow(rowNumber).get().$x("td")
                 .getCssValue("color").contains("196, 202, 212"));
         return this;
     }
@@ -114,7 +113,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Проверка заголовков списка действий")
     public ActionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(NAME_COLUMN),
-                "Наименование", NAME_COLUMN, "Дата создания", "Тип", "Провайдер, , ");
+                "Наименование", NAME_COLUMN, "Дата создания", "Тип", "Провайдер", "", "");
         return this;
     }
 

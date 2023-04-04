@@ -21,13 +21,15 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+
 @Epic("UI Продукты")
 @Feature("Redis (Astra)")
 @Tags({@Tag("ui"), @Tag("ui_redis_astra")})
 public class UiRedisAstraTest extends UiProductTest {
 
     Redis product;
-    // = Redis.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/365e253d-bd94-4462-a282-5b3d44f1c9c6/main?context=proj-iv550odo9a&type=project&org=vtb");
+    //= Redis.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/37be3184-396f-4d3d-94aa-534cea51a43d/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -41,7 +43,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI RedisAstra. Заказ")
     void orderRedisAstra() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -56,8 +58,7 @@ public class UiRedisAstraTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -72,7 +73,7 @@ public class UiRedisAstraTest extends UiProductTest {
             throw e;
         }
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        Assertions.assertEquals(preBillingProductPrice, redisPage.getCostOrder(), 0.01);
+        checkOrderCost(prebillingCost, redisPage.getOrderCost());
     }
 
     @Test

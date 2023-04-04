@@ -16,10 +16,7 @@ public class ImagesListTest extends BaseTest {
     public void viewImagesListTest() {
         new ControlPanelIndexPage().goToImagesListPage()
                 .checkImagesListHeaders()
-                .goToNextPage()
-                .checkPageNumber(2)
-                .setRecordsPerPage(25)
-                .setRecordsPerPage(50);
+                .checkPagination();
     }
 
     @Test

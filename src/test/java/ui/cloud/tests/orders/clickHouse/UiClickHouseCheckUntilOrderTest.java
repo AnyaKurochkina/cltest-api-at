@@ -12,7 +12,10 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.*;
+import ui.cloud.pages.ClickHouseOrderPage;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 
@@ -47,18 +50,18 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
         orderPage.checkOrderDisabled();
 
         //Проверка Детали заказа
-        orderPage.getOsVersion().select(product.getOsVersion());
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getNameUser().setValue("at_user");
         orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
         orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-        orderPage.getSegment().selectByValue(product.getSegment());
-        orderPage.getPlatform().selectByValue(product.getPlatform());
-        orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
+        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getPlatformSelect().set(product.getPlatform());
+        orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().select(accessGroup.getPrefixName());
-        orderPage.getGroup2().select(accessGroup.getPrefixName());
-        orderPage.getGroup3().select(accessGroup.getPrefixName());
-        orderPage.getGroup4().select(accessGroup.getPrefixName());
+        orderPage.getGroup().set(accessGroup.getPrefixName());
+        orderPage.getGroup2().set(accessGroup.getPrefixName());
+        orderPage.getGroup3().set(accessGroup.getPrefixName());
+        orderPage.getGroup4().set(accessGroup.getPrefixName());
 
         new ClickHouseOrderPage().checkOrderDetails();
     }

@@ -1,7 +1,7 @@
 package ui.cloud.tests.orders.windows;
 
 
-import com.codeborne.selenide.Condition;
+import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -11,15 +11,12 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
 import ui.cloud.pages.NewOrderPage;
 import ui.cloud.pages.WindowsOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
-
-import static com.codeborne.selenide.Selenide.$;
 
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
