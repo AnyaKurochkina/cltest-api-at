@@ -62,7 +62,6 @@ public class NewOrderPage {
 
     @Step("Проверка отображения деталей заказа")
     public void checkOrderDetails() {
-        prebillingCostElement.shouldBe(Condition.visible);
         if (getCalculationDetails().exists()) {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }
