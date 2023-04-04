@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Ubuntu;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -90,6 +91,15 @@ public class UbuntuTest extends Tests {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.stopHard();
             ubuntu.start();
+        }
+    }
+
+    @TmsLink("1090961")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    void checkCreate(Ubuntu product) {
+        try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
+            ubuntu.executeCheckUseSsh();
         }
     }
 

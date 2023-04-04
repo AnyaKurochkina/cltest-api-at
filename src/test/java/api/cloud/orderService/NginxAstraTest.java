@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Nginx;
+import models.cloud.orderService.products.WildFly;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -93,6 +94,15 @@ public class NginxAstraTest extends Tests {
     void updateCerts(Nginx product){
         try(Nginx nginx = product.createObjectExclusiveAccess()){
             nginx.updateCerts();
+        }
+    }
+
+    @TmsLink("847277")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    void checkCreate(Nginx product) {
+        try (Nginx nginx = product.createObjectExclusiveAccess()) {
+            nginx.executeCheckUseSsh();
         }
     }
 

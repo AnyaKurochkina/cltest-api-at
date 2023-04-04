@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.ElasticsearchOpensearchCluster;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -79,6 +80,15 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
     void addKibana(ElasticsearchOpensearchCluster product) {
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
             elastic.addKibana();
+        }
+    }
+
+    @TmsLink("1456719")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    void checkCreate(ElasticsearchOpensearchCluster product) {
+        try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
+            elastic.executeCheckUseSsh();
         }
     }
 

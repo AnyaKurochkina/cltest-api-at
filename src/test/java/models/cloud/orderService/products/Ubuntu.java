@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,13 +10,13 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
+
+import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -27,11 +28,13 @@ public class Ubuntu extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
+    String role;
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/ubuntu_general_application.json";
         productName = "Ubuntu Linux";
+        role = isDev() ? "superuser" : "user";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
@@ -57,7 +60,6 @@ public class Ubuntu extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -66,7 +68,8 @@ public class Ubuntu extends IProduct {
                 .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].role", role)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .set("$.order.attrs.on_support", !isDev())
@@ -110,5 +113,14 @@ public class Ubuntu extends IProduct {
     @Override
     protected void delete() {
         delete("delete_vm");
+    }
+
+    @Override
+    public void checkUseSsh() {
+        String accessGroup = getAccessGroup();
+        String ip = (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
+        SshClient ssh = new SshClient(ip, envType());
+        assertContains(ssh.execute("sudo realm list"), accessGroup);
+        assertContains(ssh.execute("sudo ls cd /etc/sudoers.d"), String.format("group_%s_%s", role, accessGroup));
     }
 }

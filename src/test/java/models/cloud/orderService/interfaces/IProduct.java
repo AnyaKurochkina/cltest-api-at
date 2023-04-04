@@ -65,7 +65,7 @@ public abstract class IProduct extends Entity {
     public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s'}";
     public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.data.config.containsKey='acls'}.data.config.acls.findAll{it.topic_names && it.client_role=='%s'}.any{it.topic_names.any{value -> value=='%s'}}";
     public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.data.config.transaction_acls.any{it.transaction_id=='%s'}";
-
+    public static final String VM_IP_PATH = "product_data.find{it.type=='vm'}.ip";
     public static final String CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     public static final String EXPAND_MOUNT_POINT = "Расширить";
     public static final String RESTART = "Перезагрузить";

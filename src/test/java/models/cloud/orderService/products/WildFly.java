@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -11,10 +12,11 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static core.utils.AssertUtils.assertContains;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -28,6 +30,7 @@ public class WildFly extends IProduct {
     @ToString.Include
     String wildFlyVersion;
     Flavor flavor;
+    String role;
 
     @Override
     @Step("Заказ продукта")
@@ -42,6 +45,7 @@ public class WildFly extends IProduct {
             productName = "WildFly Astra";
         }
         initProduct();
+        role = isDev() ? "superuser" : "user";
         if (flavor == null)
             flavor = getMinFlavor();
         if (osVersion == null)
@@ -62,7 +66,7 @@ public class WildFly extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -74,6 +78,7 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.wildfly_version", getWildFlyVersion())
                 .set("$.order.attrs.access_group[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].role", role)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", /*isTest()*/getSupport())
                 .set("$.order.label", getLabel())
@@ -173,4 +178,10 @@ public class WildFly extends IProduct {
         delete("delete_two_layer");
     }
 
+    @Override
+    public void checkUseSsh() {
+        String ip = (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
+        SshClient ssh = new SshClient(ip, envType());
+        assertContains(ssh.execute("sudo systemctl status wildfly | grep active"), "Active: active (exited)");
+    }
 }

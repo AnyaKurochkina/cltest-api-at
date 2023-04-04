@@ -14,9 +14,9 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
+
+import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -34,7 +34,7 @@ public class Astra extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/astra_general_application.json";
         productName = "Astra Linux";
-        role = "superuser";
+        role = isDev() ? "superuser" : "user";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -110,10 +110,10 @@ public class Astra extends IProduct {
     @Override
     public void checkUseSsh() {
         String accessGroup = getAccessGroup();
-        String ip = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.ip");
+        String ip = (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
         SshClient ssh = new SshClient(ip, envType());
-        Assertions.assertTrue(ssh.execute("sudo realm list").contains(accessGroup));
-        Assertions.assertTrue(ssh.execute("sudo ls cd /etc/sudoers.d").contains(String.format("group_%s_%s", role, accessGroup)));
+        assertContains(ssh.execute("sudo realm list"), accessGroup);
+        assertContains(ssh.execute("sudo ls cd /etc/sudoers.d"), String.format("group_%s_%s", role, accessGroup));
     }
 
 }

@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.WildFly;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -171,6 +172,15 @@ public class WildFlyAstraTest extends Tests {
             String group = PortalBackSteps.getRandomAccessGroup(wildFly.getProjectId(), wildFly.getDomain(), "compute");
             wildFly.addGroup(group, "Deployer");
             wildFly.deleteGroup(group, "Deployer");
+        }
+    }
+
+    @TmsLink("908268")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка создания {0}")
+    void checkCreate(WildFly product) {
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.executeCheckUseSsh();
         }
     }
 
