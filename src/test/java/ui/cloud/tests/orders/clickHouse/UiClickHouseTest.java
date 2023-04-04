@@ -27,12 +27,11 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public class UiClickHouseTest extends UiProductTest {
 
     ClickHouse product;
-    // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/5b040449-ef22-4bae-a2e0-6ccabf485afd/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    //= ClickHouse.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/3a0db258-a6fb-4cb5-8d4b-055857be1265/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameAD = "at_ad_user";
     String nameFull = "qa_order_service_admin";
     String nameLocalAD = "at_local_user";
-
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -53,18 +52,18 @@ public class UiClickHouseTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
-            orderPage.getOsVersion().select(product.getOsVersion());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
             orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-            orderPage.getSegment().selectByValue(product.getSegment());
-            orderPage.getPlatform().selectByValue(product.getPlatform());
-            orderPage.getConfigure().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
-            orderPage.getGroup().select(accessGroup);
-            orderPage.getGroup2().select(accessGroup);
-            orderPage.getGroup3().select(accessGroup);
-            orderPage.getGroup4().select(accessGroup);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
+            orderPage.getGroup().set(accessGroup);
+            orderPage.getGroup2().set(accessGroup);
+            orderPage.getGroup3().set(accessGroup);
+            orderPage.getGroup4().set(accessGroup);
+            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -79,7 +78,7 @@ public class UiClickHouseTest extends UiProductTest {
             throw e;
         }
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        Assertions.assertEquals(preBillingProductPrice, clickHousePage.getCostOrder(), 0.01);
+        Assertions.assertEquals(preBillingProductPrice, clickHousePage.getOrderCost(), 0.01);
     }
 
     @Test

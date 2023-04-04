@@ -18,6 +18,8 @@ import ui.extesions.UiProductTest;
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
+import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+
 @Epic("UI Продукты")
 @Feature("ClickHouse Cluster")
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
@@ -26,8 +28,8 @@ public class UiClickHouseClusterTest extends UiProductTest {
     ClickHouseCluster product;
     //= ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/f3b84ec8-f9ab-4b01-b2b7-bd383a65fd8c/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
-    String nameAD= "at_ad_user";
-    String nameLocalAD= "at_local_user";
+    String nameAD = "at_ad_user";
+    String nameLocalAD = "at_local_user";
     String nameGroup = "cloud-zorg-dev-group";
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
 
@@ -43,7 +45,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI ClickHouse Cluster. Заказ")
     void orderClickHouseCluster() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -61,8 +63,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
             orderPage.getGroup2().set(accessGroup);
             orderPage.getGroup3().set(accessGroup);
             orderPage.getGroup4().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -77,7 +78,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
             throw e;
         }
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        Assertions.assertEquals(preBillingProductPrice, clickHouseClusterPage.getCostOrder(), 0.01);
+        checkOrderCost(prebillingCost, clickHouseClusterPage);
     }
 
 
@@ -157,6 +158,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteLocalAccount(nameLocalAD));
     }
+
     @Test
     @Order(11)
     @TmsLink("1152780")
@@ -172,7 +174,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @DisplayName("UI ClickHouse Cluster. Группы. Добавить пользовательскую группу")
     void addGroupAD() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS,() -> clickHouseClusterPage.addGroupAD(nameGroup));
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAD(nameGroup));
     }
 
     @Test
@@ -181,7 +183,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @DisplayName("UI ClickHouse Cluster. Группы. Удалить пользовательскую группу")
     void deleteGroupAD() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS,() -> clickHouseClusterPage.deleteGroupAD(nameGroup));
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteGroupAD(nameGroup));
     }
 
     @Test
@@ -190,8 +192,9 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @DisplayName("UI ClickHouse Cluster. Группы. Добавить группу администраторов")
     void addGroupAdmin() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-            clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS,() -> clickHouseClusterPage.addGroupAdmin(nameGroup));
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAdmin(nameGroup));
     }
+
     @Test
     @Order(14)
     @TmsLink("1152794")

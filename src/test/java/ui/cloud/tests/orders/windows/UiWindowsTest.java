@@ -51,14 +51,13 @@ public class UiWindowsTest extends UiProductTest {
                     .expandProductsList()
                     .selectProduct(product.getProductName());
             WindowsOrderPage orderPage = new WindowsOrderPage();
-            //  orderPage.getOsVersion().select(product.getOsVersion());
+            //orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getRoleServer().set(product.getRole());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -73,7 +72,7 @@ public class UiWindowsTest extends UiProductTest {
             throw e;
         }
         WindowsPage winPage = new WindowsPage(product);
-        Assertions.assertEquals(preBillingProductPrice, winPage.getCostOrder(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        Assertions.assertEquals(preBillingProductPrice, winPage.getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
     }
 
     @Test

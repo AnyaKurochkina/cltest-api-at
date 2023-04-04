@@ -11,16 +11,19 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPageControlPanel;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
+import ui.extesions.ConfigExtension;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 @Feature("Просмотр аудита в Control panel")
+@ExtendWith(ConfigExtension.class)
 public class AuditTest extends Tests {
 
     private final String graphsObject = "graphs";

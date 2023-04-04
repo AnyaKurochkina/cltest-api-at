@@ -6,7 +6,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
@@ -58,8 +57,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -74,7 +72,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             throw e;
         }
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
+        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getOrderCost(), 0.01);
     }
 
 

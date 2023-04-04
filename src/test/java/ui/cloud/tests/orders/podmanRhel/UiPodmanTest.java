@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
@@ -29,7 +30,8 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_podman")})
 public class UiPodmanTest extends UiProductTest {
 
-    Podman product;// = Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/913eaeee-04d1-40ca-b653-9593c3bf63fa/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Podman product;
+    //= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/ea2c2d34-9e4e-45d3-aebf-4b62fe25550e/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -43,7 +45,7 @@ public class UiPodmanTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI Podman. Заказ")
     void orderPodman() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -55,8 +57,7 @@ public class UiPodmanTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -71,7 +72,7 @@ public class UiPodmanTest extends UiProductTest {
             throw e;
         }
         PodmanPage podmanPage = new PodmanPage(product);
-        Assertions.assertEquals(preBillingProductPrice, podmanPage.getCostOrder(), 0.01);
+        checkOrderCost(prebillingCost, podmanPage);
     }
 
     @Test

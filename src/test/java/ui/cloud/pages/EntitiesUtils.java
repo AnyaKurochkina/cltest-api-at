@@ -39,7 +39,7 @@ public class EntitiesUtils {
 
     public static void updatePreBillingPrice() {
         if (NewOrderPage.getCalculationDetails().exists()) {
-            preBillingPrice.set(getPreBillingCostAction($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
+            preBillingPrice.set(getCostValue($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
         } else preBillingPrice.set(null);
     }
 
@@ -58,7 +58,8 @@ public class EntitiesUtils {
         }
     }
 
-    public static double getPreBillingCostAction(SelenideElement element) {
+    public static double getCostValue(SelenideElement element) {
+        element.shouldBe(Condition.visible);
         return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?[\\d\\s]{1,},\\d{2})", element.getText()))
                 .replace(',', '.').replaceAll(" ", ""));
     }
@@ -92,5 +93,10 @@ public class EntitiesUtils {
         updatePreBillingPrice();
         Button.byText("Заказать").click();
         Alert.red(errorMessage);
+    }
+
+    public static void checkOrderCost(double prebillingCost, IProductPage orderPage) {
+        Waiting.find(() -> Math.abs(prebillingCost - orderPage.getOrderCost()) <= 0.01, Duration.ofSeconds(60),
+                StringUtils.format("Стоимость заказа '{}' отличается от предбиллинга '{}'", orderPage.getOrderCost(), prebillingCost));
     }
 }

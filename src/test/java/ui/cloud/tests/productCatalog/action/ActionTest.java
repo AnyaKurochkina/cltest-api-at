@@ -83,7 +83,7 @@ public class ActionTest extends BaseTest {
                 .fillAndSave(name, "create_action_test_ui", "test",
                         ItemStatus.ON, OrderStatus.DAMAGED, ActionType.ON, "configPath", "configKey",
                         "valueOfData", graph.getTitle(), EventType.VM, EventProvider.VSPHERE)
-                .isActionExist(name), "Созданное действие не найдено в списке действий.");
+                .isActionDisplayed(name), "Созданное действие не найдено в списке действий.");
         deleteActionByName(name);
     }
 
@@ -102,7 +102,7 @@ public class ActionTest extends BaseTest {
         assertTrue(new IndexPage().goToActionsListPage()
                 .copyAction(name)
                 .backToActionsList()
-                .isActionExist(cloneName));
+                .isActionDisplayed(cloneName));
         deleteActionByName(cloneName);
     }
 

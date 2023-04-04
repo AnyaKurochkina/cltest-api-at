@@ -3,6 +3,7 @@ package ui.cloud.tests.orders.astraLinux;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -20,6 +21,10 @@ import ui.extesions.UiProductTest;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+
 @Epic("UI Продукты")
 @Feature("Astra Linux")
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
@@ -40,7 +45,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI AstraLinux. Заказ")
     void orderScyllaDB() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -52,8 +57,7 @@ public class UiAstraLinuxTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -68,7 +72,7 @@ public class UiAstraLinuxTest extends UiProductTest {
             throw e;
         }
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        Assertions.assertEquals(preBillingProductPrice, astraLinuxPage.getCostOrder(), 0.01);
+        checkOrderCost(prebillingCost, astraLinuxPage);
     }
 
     @Test
@@ -153,6 +157,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.MORE, astraLinuxPage::changeConfiguration);
     }
+
     @Test
     @Order(12)
     @TmsLink("1164676")

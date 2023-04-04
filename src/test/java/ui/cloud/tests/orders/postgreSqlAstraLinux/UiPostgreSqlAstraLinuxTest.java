@@ -60,8 +60,8 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
+            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -76,7 +76,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             throw e;
         }
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getCostOrder(), 0.01);
+        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getOrderCost(), 0.01);
     }
 
     @Test

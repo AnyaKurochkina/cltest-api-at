@@ -22,6 +22,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+
 @Epic("UI Продукты")
 @Feature("Ubuntu Linux")
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
@@ -42,7 +44,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI UbuntuLinux. Заказ")
     void orderScyllaDB() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -55,8 +57,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getRoleSelect().set("user");
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -71,8 +72,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             throw e;
         }
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
-        Waiting.sleep(1000);
-        Assertions.assertEquals(preBillingProductPrice, ubuntuLinuxPage.getCostOrder(), 0.01);
+        checkOrderCost(prebillingCost, ubuntuLinuxPage);
     }
 
     @Test
