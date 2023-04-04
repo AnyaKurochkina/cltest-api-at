@@ -1,7 +1,6 @@
 package ui.cloud.tests.orders.podmanRhel;
 
 import api.Tests;
-import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -13,8 +12,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
-import ui.cloud.pages.PodmanOrderPage;
 import ui.cloud.pages.NewOrderPage;
+import ui.cloud.pages.PodmanOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 

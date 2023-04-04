@@ -131,6 +131,12 @@ public class BaseListPage {
         return this;
     }
 
+    @Step("Переход на следующую страницу списка")
+    public BaseListPage nextPageV2() {
+        nextPageButtonV2.getButton().scrollIntoView(true).click();
+        return this;
+    }
+
     @Step("Переход на последнюю страницу списка")
     public BaseListPage lastPage() {
         lastPageButton.scrollIntoView(true).click();

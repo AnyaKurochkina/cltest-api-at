@@ -26,7 +26,8 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
 public class UiScyllaDbClusterAstraTest extends UiProductTest{
 
-    ScyllaDbCluster product;//=ScyllaDbCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/0075ee05-c5a1-4518-8f54-d0983c1b34da/main?context=proj-iv550odo9a&type=project&org=vtb");
+    ScyllaDbCluster product;
+    //=ScyllaDbCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/ca4a3e5b-17f9-4d19-9c40-9fc3bae634af/main?context=proj-pkvckn08w9&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 
@@ -55,8 +56,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getLoadOrderPricePerDay().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getPreBillingCostAction(orderPage.getLoadOrderPricePerDay());
+            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -71,7 +71,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
             throw e;
         }
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-        Assertions.assertEquals(preBillingProductPrice, scyllaPage.getCostOrder(), 0.01);
+        Assertions.assertEquals(preBillingProductPrice, scyllaPage.getOrderCost(), 0.01);
     }
 
 

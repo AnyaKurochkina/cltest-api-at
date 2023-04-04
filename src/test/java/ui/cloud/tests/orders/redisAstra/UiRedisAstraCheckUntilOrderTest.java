@@ -1,5 +1,6 @@
 package ui.cloud.tests.orders.redisAstra;
 
+import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
@@ -8,8 +9,10 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import api.Tests;
-import ui.cloud.pages.*;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.NewOrderPage;
+import ui.cloud.pages.RedisAstraOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 

@@ -1,7 +1,6 @@
 package ui.cloud.tests.orders.ubuntuLinux;
 
 import api.Tests;
-import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;

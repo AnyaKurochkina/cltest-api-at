@@ -10,10 +10,9 @@ import org.openqa.selenium.Keys;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Alert;
-import ui.elements.InputFile;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -22,9 +21,8 @@ public class GraphsListPage extends BaseListPage {
 
     private static final String nameColumn = "Код графа";
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
-    private final SelenideElement createNewGraphButton = $x("//div[@data-testid = 'graph-list-add-button']//button");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
-    private final SelenideElement inputNameField = $x("//*[@name ='name']");
+    private final Input nameInput = Input.byName("name");
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
     private final Select typeDropDown = Select.byLabel("Тип");
@@ -43,9 +41,9 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Создание графа '{graph.name}'")
     public GraphPage createGraph(models.cloud.productCatalog.graph.Graph graph) {
-        createNewGraphButton.click();
+        addNewObjectButton.click();
         inputTitleField.setValue(graph.getTitle());
-        inputNameField.setValue(graph.getName());
+        nameInput.setValue(graph.getName());
         typeDropDown.set(graph.getType());
         inputDescriptionField.setValue(graph.getDescription());
         inputAuthorField.setValue(graph.getAuthor());
@@ -56,7 +54,7 @@ public class GraphsListPage extends BaseListPage {
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
         new BaseListPage().copy(nameColumn, name);
-        Alert.green("Граф успешно скопирован");
+        Alert.green("Копирование выполнено успешно");
         backButton.click();
         return this;
     }
@@ -107,9 +105,9 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Проверка валидации некорректных параметров при создании графа")
     public GraphsListPage checkCreateGraphDisabled(String title, String name, String type, String description, String author) {
-        createNewGraphButton.shouldBe(Condition.visible).click();
+        addNewObjectButton.click();
         inputTitleField.setValue(title);
-        inputNameField.setValue(name);
+        nameInput.setValue(name);
         typeDropDown.set(type);
         inputDescriptionField.setValue(description);
         inputAuthorField.setValue(author);
@@ -147,14 +145,11 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Проверка валидации недопустимых значений в коде графа")
     public GraphsListPage checkGraphNameValidation(String[] names) {
-        createNewGraphButton.shouldBe(Condition.visible).click();
+        addNewObjectButton.click();
         for (String name : names) {
-            inputNameField.sendKeys(Keys.chord(Keys.CONTROL, "a", Keys.DELETE));
-            inputNameField.setValue(name);
-            TestUtils.wait(1000);
-            if (!graphNameValidationHint.exists()) {
-                inputNameField.sendKeys("t");
-            }
+            nameInput.setValue(name);
+            Waiting.findWithAction(() -> graphNameValidationHint.isDisplayed(),
+                    () -> nameInput.getInput().sendKeys("t"), Duration.ofSeconds(3));
             graphNameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();
@@ -202,7 +197,7 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Переход на последнюю страницу списка")
     public GraphsListPage lastPage() {
-        super.lastPage();
+        super.lastPageV2();
         return this;
     }
 

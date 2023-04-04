@@ -20,7 +20,6 @@ public class ProductsListPage extends BaseListPage {
     private static final String nameColumn = "Код продукта";
     private final Select categorySelect = Select.byLabel("Категория");
     private final Select statusSelect = Select.byLabel("Статус");
-    private final SelenideElement importButton = searchInput.getInput().$x("./following::button[2]");
 
     @Step("Проверка заголовков списка продуктов")
     public ProductsListPage checkHeaders() {

@@ -33,9 +33,9 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Log4j2
 @Getter
 public abstract class IProductPage {
-    protected final SelenideElement preBillingPriceAction = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
-    private final SelenideElement currentPriceOrder = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
-    protected Double preBillingCostAction;
+    protected final SelenideElement prebillingCostElement = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
+    private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
+    protected Double prebillingCostValue;
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
     protected Tab generalInfoTab = Tab.byText("Общая информация");
     protected Tab historyTab = Tab.byText("История действий");
@@ -130,7 +130,7 @@ public abstract class IProductPage {
         Menu.byElement(button).select(action);
         Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
-            preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);
+            prebillingCostValue = EntitiesUtils.getCostValue(prebillingCostElement);
         dlgActions.getDialog().$x("descendant::button[.='Подтвердить']")
                 .shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (params.isCheckAlert())
@@ -155,7 +155,7 @@ public abstract class IProductPage {
         Menu.byElement(button).select(action);
         executable.execute();
         if (params.isCheckPreBilling())
-            preBillingCostAction = EntitiesUtils.getPreBillingCostAction(preBillingPriceAction);
+            prebillingCostValue = EntitiesUtils.getCostValue(prebillingCostElement);
         if (params.isClickCancel())
             textButton = "Отмена";
         SelenideElement runButton = $x("//div[@role='dialog']//button[.='{}']", textButton);
@@ -230,25 +230,25 @@ public abstract class IProductPage {
     public void runActionWithCheckCost(CompareType type, Executable executable) {
         TypifiedElement.refresh();
         waitChangeStatus();
-        double currentCost = getCostOrder();
+        double currentCost = getOrderCost();
         executable.execute();
-        if (preBillingCostAction == null)
+        if (prebillingCostValue == null)
             return;
         TypifiedElement.refresh();
-        currentPriceOrder.shouldBe(Condition.matchText(doubleToString(preBillingCostAction)), Duration.ofMinutes(3));
-        Waiting.find(() -> preBillingCostAction.equals(getCostOrder()), Duration.ofMinutes(3),
+        currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(3));
+        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(3),
                 "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
-        if (currentCost == preBillingCostAction && preBillingCostAction == 0)
+        if (currentCost == prebillingCostValue && prebillingCostValue == 0)
             return;
         if (type == CompareType.MORE)
-            Assertions.assertTrue(preBillingCostAction > currentCost, String.format("%f <= %f", preBillingCostAction, currentCost));
+            Assertions.assertTrue(prebillingCostValue > currentCost, String.format("%f <= %f", prebillingCostValue, currentCost));
         else if (type == CompareType.LESS)
-            Assertions.assertTrue(preBillingCostAction < currentCost, String.format("%f >= %f", preBillingCostAction, currentCost));
+            Assertions.assertTrue(prebillingCostValue < currentCost, String.format("%f >= %f", prebillingCostValue, currentCost));
         else if (type == CompareType.EQUALS)
-            Assertions.assertEquals(preBillingCostAction, currentCost, 0.01d);
+            Assertions.assertEquals(prebillingCostValue, currentCost, 0.01d);
         else if (type == CompareType.ZERO) {
-            Assertions.assertEquals(0.0d, preBillingCostAction, 0.001d);
-            Assertions.assertEquals(0.0d, getCostOrder(), 0.001d);
+            Assertions.assertEquals(0.0d, prebillingCostValue, 0.001d);
+            Assertions.assertEquals(0.0d, getOrderCost(), 0.001d);
         }
     }
 
@@ -264,8 +264,8 @@ public abstract class IProductPage {
     }
 
     @Step("Получение стоимости заказа")
-    public double getCostOrder() {
-        double cost = EntitiesUtils.getPreBillingCostAction(currentPriceOrder.shouldBe(Condition.visible, Duration.ofMinutes(3)));
+    public double getOrderCost() {
+        double cost = EntitiesUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(3)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }
