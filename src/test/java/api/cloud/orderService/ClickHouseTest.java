@@ -10,6 +10,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -44,6 +45,7 @@ public class ClickHouseTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetPasswordOwner(ClickHouse product) {
+        Assumptions.assumeTrue("dev".equalsIgnoreCase(product.envType()), "Тест включен только для dev среды");
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.resetPasswordOwner();
         }
