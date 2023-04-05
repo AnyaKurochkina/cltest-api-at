@@ -8,6 +8,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.cloud.pages.productCatalog.AuditPage;
+import ui.cloud.pages.productCatalog.ContextSettingsPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
@@ -36,6 +37,7 @@ public class IndexPage {
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
     private final SelenideElement portalAuditLink = $x("//a[@href='/analytics/audit']");
     private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
+    private final SelenideElement contextSettingsLink = $x("//a[@href='/meccano/context_settings']");
     private final Select sectionSelect = Select.byXpath("//select/parent::div");
 
     public ProductsPage clickOrderMore() {
@@ -107,5 +109,11 @@ public class IndexPage {
         portalAuditLink.click();
         Waiting.sleep(500);
         return new AuditPage();
+    }
+
+    @Step("Переход на страницу 'Настройки контекста'")
+    public ContextSettingsPage goToContextSettingsPage() {
+        contextSettingsLink.click();
+        return new ContextSettingsPage();
     }
 }
