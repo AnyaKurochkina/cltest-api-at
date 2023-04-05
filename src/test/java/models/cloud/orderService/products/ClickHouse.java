@@ -38,6 +38,7 @@ public class ClickHouse extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     String clickhousePassword;
+    String clickhouseUser;
     String clickhouseBb;
     String chCustomerPassword;
     String chVersion;
@@ -71,6 +72,8 @@ public class ClickHouse extends IProduct {
             flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
+        if (clickhouseUser == null)
+            clickhouseUser = "clickhouse_user";
         if (clickhousePassword == null)
             clickhousePassword = "vrItfk0k8sf8ICbwsMs7nB3";
         if (chCustomerPassword == null)
@@ -109,7 +112,7 @@ public class ClickHouse extends IProduct {
 
     public void resetPasswordOwner() {
         String password = "uAhHmuyQnT2kCvTpOPgw9JIab0OwNvyj";
-        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", "", password)), this.getProjectId());
+        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", clickhouseUser, password)), this.getProjectId());
         clickhousePassword = password;
         save();
     }
@@ -257,7 +260,7 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
-//                .set("$.order.attrs.clickhouse_users", clickhouseUser)
+                .set("$.order.attrs.clickhouse_users", clickhouseUser)
                 .set("$.order.attrs.clickhouse_password", clickhousePassword)
                 .set("$.order.attrs.on_support", !isDev())
                 .set("$.order.label", getLabel())
@@ -269,7 +272,7 @@ public class ClickHouse extends IProduct {
     @SneakyThrows
     public void checkConnectDb() {
         try {
-            checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", "", clickhousePassword,
+            checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
                     ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
                             .replaceFirst("/play", "")
                             .replaceFirst("https:", "clickhouse:"));
