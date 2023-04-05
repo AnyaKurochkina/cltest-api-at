@@ -25,7 +25,6 @@
           "file_system": "xfs"
         }
       ],
-      "clickhouse_users": "user",
       "clickhouse_db": "dbname",
       "ad_integration": true,
       "ch_customer_password": "XcMYBatz2KNlctnmRYitgcSNQxQejZKV4I71lJGu8t",
