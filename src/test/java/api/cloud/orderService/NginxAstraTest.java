@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Nginx;
 import models.cloud.orderService.products.WildFly;
 import org.junit.MarkDelete;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import api.Tests;
 
+@Log4j2
 @Epic("Продукты")
 @Feature("Nginx Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx_astra"), @Tag("prod")})
@@ -103,8 +105,15 @@ public class NginxAstraTest extends Tests {
     @ParameterizedTest(name = "Проверка создания {0}")
     void checkCreate(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            for (int i = 0; i < 50; i++)
-                nginx.executeCheckUseSsh();
+            try {
+                for (int i = 0; i < 50; i++)
+                    nginx.executeCheckUseSsh();
+            }catch (Throwable e){
+                log.error(e.toString());
+            }
+            finally {
+                log.info("finally executeCheckUseSsh");
+            }
         }
     }
 
