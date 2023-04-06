@@ -116,7 +116,8 @@ public class ServicePage extends BasePage {
     @Step("Удаление сервиса")
     public void deleteService() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        new DeleteDialog().checkText("ВНИМАНИЕ! запланированные запуски будут отмененыКоличество запланированных запусков: 0")
+                .inputValidIdAndDelete("Удаление выполнено успешно");
     }
 
     @Step("Задание значения в поле 'Описание'")

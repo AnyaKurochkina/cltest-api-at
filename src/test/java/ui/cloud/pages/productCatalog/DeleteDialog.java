@@ -53,4 +53,10 @@ public class DeleteDialog extends Dialog {
         deleteButton.shouldBe(Condition.enabled).click();
         Alert.green(alertText);
     }
+
+    @Step("Проверка текста предупреждения перед удалением")
+    public DeleteDialog checkText(String text) {
+        getDialog().$x(".//div[contains(.,'" + text + "')]").shouldBe(Condition.visible);
+        return this;
+    }
 }
