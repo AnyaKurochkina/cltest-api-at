@@ -50,7 +50,7 @@ public class UiGitlabTest extends UiProductTest {
                     .click();
             GitlabPage gitlabPages = new GitlabPage(product);
             gitlabPages.waitChangeStatus(Duration.ofMinutes(25));
-            gitlabPages.checkLastAction("Развертывание");
+            gitlabPages.checkLastAction("В процессе");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

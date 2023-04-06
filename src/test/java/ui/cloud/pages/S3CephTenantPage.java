@@ -32,6 +32,7 @@ public class S3CephTenantPage extends IProductPage {
     private static final String HEADER_SORT = "Сортировка";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_LIST_POLICY = "Список политик";
+    private static final String HEADER_RIGHTS = "Права";
 
 
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
@@ -357,7 +358,18 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setSelectValue("Права","Полные");
         });
         btnAccessPolicy.click();
-        //Assertions.assertTrue(new Table(HEADER_NAME_USER).isColumnValueEquals(HEADER_NAME_USER, name), "Ошибка создания");
+        Assertions.assertTrue(new Table(HEADER_NAME_USER).isColumnValueEquals(HEADER_NAME_USER, name), "Ошибка создания");
+    }
+
+    public void changeAccessPolicy() {
+        btnAccessPolicy.click();
+        runActionWithParameters(getBtnAction("",3), "Изменить политику", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Изменить политику");
+            dlgActions.setSelectValue(HEADER_RIGHTS,"Настраиваемые");
+
+        });
+        btnAccessPolicy.click();
     }
 
     public void deleteUser() {
@@ -374,6 +386,7 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);}
+
 
     //Таблица ролей
     public class RoleTable extends Table {

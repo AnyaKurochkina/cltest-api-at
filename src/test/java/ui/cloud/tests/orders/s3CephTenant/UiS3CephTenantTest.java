@@ -56,7 +56,7 @@ public class UiS3CephTenantTest extends UiProductTest {
                     .click();
             S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
             s3CepthPages.waitChangeStatus(Duration.ofMinutes(25));
-            s3CepthPages.checkLastAction("Развертывание");
+            s3CepthPages.checkLastAction("В процессе");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
@@ -145,6 +145,14 @@ public class UiS3CephTenantTest extends UiProductTest {
     void addAccessPolicy() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
         s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addAccessPolicy("user"));
+    }
+    @Test
+    @Order(10)
+    @TmsLink("891777")
+    @DisplayName("UI S3CephTenant. Изменить политику")
+    void changeAccessPolicy() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.changeAccessPolicy());
     }
 
     @Test

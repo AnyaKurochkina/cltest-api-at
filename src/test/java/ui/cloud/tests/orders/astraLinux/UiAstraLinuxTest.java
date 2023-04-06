@@ -66,7 +66,7 @@ public class UiAstraLinuxTest extends UiProductTest {
                     .click();
             AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
             astraLinuxPage.waitChangeStatus(Duration.ofMinutes(25));
-            astraLinuxPage.checkLastAction("Развертывание");
+            astraLinuxPage.checkLastAction("В процессе");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

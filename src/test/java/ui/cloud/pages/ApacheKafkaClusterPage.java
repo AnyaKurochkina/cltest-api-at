@@ -151,7 +151,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateKernelVtb() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновление ядра Kafka до версии 2.8.1", "Подтвердить", () -> {
-            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю.").setChecked(true);
+           // CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю.").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }

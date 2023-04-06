@@ -70,7 +70,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
                     .click();
             PostgreSqlAstraPage pSqlPages = new PostgreSqlAstraPage(product);
             pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
-            pSqlPages.checkLastAction("Развертывание");
+            pSqlPages.checkLastAction("В процессе");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

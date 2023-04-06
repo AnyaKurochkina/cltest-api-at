@@ -30,8 +30,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_podman")})
 public class UiPodmanTest extends UiProductTest {
 
-    Podman product;
-    //= Podman.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/containers/orders/ea2c2d34-9e4e-45d3-aebf-4b62fe25550e/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Podman product;// = Podman.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/containers/orders/9c0628a1-2553-4ac3-ab22-07a8a9c71457/main?context=proj-lww1vo6okh&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -50,6 +49,8 @@ public class UiPodmanTest extends UiProductTest {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .selectCategory("Контейнеры")
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             PodmanOrderPage orderPage = new PodmanOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
@@ -60,13 +61,12 @@ public class UiPodmanTest extends UiProductTest {
             prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
+                    .getRowElementByColumnValue("Продукт", orderPage.getLabelValue())
                     .hover()
                     .click();
             PodmanPage podmanPage = new PodmanPage(product);
             podmanPage.waitChangeStatus(Duration.ofMinutes(25));
-            podmanPage.checkLastAction("Развертывание");
+            podmanPage.checkLastAction("В процессе");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

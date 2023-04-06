@@ -51,7 +51,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             ScyllaDbClusterOrderPage orderPage = new ScyllaDbClusterOrderPage();
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            //orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -65,7 +65,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
                     .click();
             ScyllaDbClusterPage scyllaPages = new ScyllaDbClusterPage(product);
             scyllaPages.waitChangeStatus(Duration.ofMinutes(25));
-            scyllaPages.checkLastAction("Развертывание");
+            scyllaPages.checkLastAction("В процессе");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

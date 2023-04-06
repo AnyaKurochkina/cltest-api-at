@@ -66,7 +66,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
                     .click();
             UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
             ubuntuLinuxPage.waitChangeStatus(Duration.ofMinutes(25));
-            ubuntuLinuxPage.checkLastAction("Развертывание");
+            ubuntuLinuxPage.checkLastAction("В процессе");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
