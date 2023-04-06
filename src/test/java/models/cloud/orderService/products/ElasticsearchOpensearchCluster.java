@@ -103,6 +103,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
+                .set("$.default_nic.net_segment", getSegment())
+                .set("$.data_center", getDataCentre())
                 .set("$.kibana_password", kibanaPassword)
                 .set("$.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .remove("$.ad_logon_grants", !isDev())
