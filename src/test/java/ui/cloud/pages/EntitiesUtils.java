@@ -95,8 +95,8 @@ public class EntitiesUtils {
         Alert.red(errorMessage);
     }
 
-    public static void checkOrderCost(double prebillingCost, double currentCost) {
-        Waiting.find(() -> Math.abs(prebillingCost - currentCost) <= 0.01, Duration.ofSeconds(60),
-                StringUtils.format("Стоимость заказа '{}' отличается от предбиллинга '{}'", currentCost, prebillingCost));
+    public static void checkOrderCost(double prebillingCost, IProductPage orderPage) {
+        Waiting.find(() -> Math.abs(prebillingCost - orderPage.getOrderCost()) <= 0.01, Duration.ofSeconds(60),
+                StringUtils.format("Стоимость заказа '{}' отличается от предбиллинга '{}'", orderPage.getOrderCost(), prebillingCost));
     }
 }

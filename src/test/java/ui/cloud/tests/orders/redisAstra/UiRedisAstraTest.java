@@ -73,7 +73,7 @@ public class UiRedisAstraTest extends UiProductTest {
             throw e;
         }
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        checkOrderCost(prebillingCost, redisPage.getOrderCost());
+        checkOrderCost(prebillingCost, redisPage);
     }
 
     @Test

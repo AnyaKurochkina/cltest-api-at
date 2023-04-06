@@ -72,7 +72,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             throw e;
         }
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
-        checkOrderCost(prebillingCost, ubuntuLinuxPage.getOrderCost());
+        checkOrderCost(prebillingCost, ubuntuLinuxPage);
     }
 
     @Test

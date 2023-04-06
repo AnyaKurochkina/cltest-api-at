@@ -78,7 +78,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
             throw e;
         }
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        checkOrderCost(prebillingCost, clickHouseClusterPage.getOrderCost());
+        checkOrderCost(prebillingCost, clickHouseClusterPage);
     }
 
 

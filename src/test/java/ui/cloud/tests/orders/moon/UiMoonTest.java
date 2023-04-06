@@ -13,6 +13,8 @@ import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
+import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+
 @Tags({@Tag("ui_moon")})
 @Log4j2
 public class UiMoonTest extends UiProductTest {
@@ -30,7 +32,7 @@ public class UiMoonTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI Moon. Заказ")
     void orderMoon() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             new IndexPage()
                     .clickOrderMore()
@@ -38,7 +40,7 @@ public class UiMoonTest extends UiProductTest {
             MoonOrderPage orderPage = new MoonOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getProjectName().setValue(new Generex("moon-[a-z]{5,15}").random());
-            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
+            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт",
@@ -54,7 +56,7 @@ public class UiMoonTest extends UiProductTest {
             throw e;
         }
         MoonPage moonPage = new MoonPage(product);
-        Assertions.assertEquals(preBillingProductPrice, moonPage.getOrderCost(), 0.01);
+        checkOrderCost(prebillingCost, moonPage);
     }
 
     @Test
