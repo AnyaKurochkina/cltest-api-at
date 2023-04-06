@@ -25,7 +25,8 @@ public class NginxAstraTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(Nginx product) {
         //noinspection EmptyTryBlock
-        try (Nginx nginx = product.createObjectExclusiveAccess()) {}
+        try (Nginx nginx = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("846597")
@@ -69,7 +70,7 @@ public class NginxAstraTest extends Tests {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
 //            nginx.stopHard();
 //            try {
-                nginx.resize(nginx.getMaxFlavor());
+            nginx.resize(nginx.getMaxFlavor());
 //            } finally {
 //                nginx.start();
 //            }
@@ -77,7 +78,7 @@ public class NginxAstraTest extends Tests {
     }
 
     @Disabled
-    @TmsLinks({@TmsLink("846595"),@TmsLink("846598")})
+    @TmsLinks({@TmsLink("846595"), @TmsLink("846598")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
@@ -91,8 +92,8 @@ public class NginxAstraTest extends Tests {
     @TmsLink("1127039")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
-    void updateCerts(Nginx product){
-        try(Nginx nginx = product.createObjectExclusiveAccess()){
+    void updateCerts(Nginx product) {
+        try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.updateCerts();
         }
     }
@@ -102,7 +103,8 @@ public class NginxAstraTest extends Tests {
     @ParameterizedTest(name = "Проверка создания {0}")
     void checkCreate(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.executeCheckUseSsh();
+            for (int i = 0; i < 50; i++)
+                nginx.executeCheckUseSsh();
         }
     }
 
