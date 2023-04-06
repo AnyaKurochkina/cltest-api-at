@@ -72,7 +72,7 @@ public class UiPodmanTest extends UiProductTest {
             throw e;
         }
         PodmanPage podmanPage = new PodmanPage(product);
-        checkOrderCost(prebillingCost, podmanPage.getOrderCost());
+        checkOrderCost(prebillingCost, podmanPage);
     }
 
     @Test

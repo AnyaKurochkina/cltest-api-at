@@ -72,7 +72,7 @@ public class UiAstraLinuxTest extends UiProductTest {
             throw e;
         }
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        checkOrderCost(prebillingCost, astraLinuxPage.getOrderCost());
+        checkOrderCost(prebillingCost, astraLinuxPage);
     }
 
     @Test
