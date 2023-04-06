@@ -105,15 +105,7 @@ public class NginxAstraTest extends Tests {
     @ParameterizedTest(name = "Проверка создания {0}")
     void checkCreate(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            try {
-                for (int i = 0; i < 50; i++)
-                    nginx.executeCheckUseSsh();
-            }catch (Throwable e){
-                log.error(e.toString());
-            }
-            finally {
-                log.info("finally executeCheckUseSsh");
-            }
+            nginx.executeCheckUseSsh();
         }
     }
 
