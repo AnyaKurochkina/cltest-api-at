@@ -59,7 +59,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         baseUrl = URL;
         isRemote();
         Configuration.browserSize = "1920x1080";
-        Configuration.startMaximized = true;
+        Configuration.startMaximized = Boolean.parseBoolean(Configure.getAppProp("webdriver.maximized", "false"));
         Configuration.pageLoadTimeout = 60000;
         Configuration.timeout = 45000;
         Configuration.driverManagerEnabled = false;
