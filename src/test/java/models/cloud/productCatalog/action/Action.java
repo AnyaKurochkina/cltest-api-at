@@ -110,6 +110,8 @@ public class Action extends Entity {
     private Object contextRestrictions;
     @JsonProperty("is_safe")
     private Boolean isSafe;
+    @JsonProperty("is_delayable")
+    private Boolean isDelayable;
     @JsonProperty("version_fields")
     private List<String> versionFields;
 
@@ -137,6 +139,7 @@ public class Action extends Entity {
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
+                .setIfNullRemove("$.is_delayable", isDelayable)
                 .set("$.priority", priority)
                 .set("$.extra_data", extraData)
                 .set("$.restricted_groups", restrictedGroups)
