@@ -17,7 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 
 @JsonRootName(value = "order_restriction")
-@EqualsAndHashCode(exclude = {"id", "createdAt", "updatedAt"})
+@EqualsAndHashCode(exclude = "updatedAt")
 @ToString
 public class ProductOrderRestriction {
 

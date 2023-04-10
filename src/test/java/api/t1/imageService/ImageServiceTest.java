@@ -9,7 +9,6 @@ import io.qameta.allure.TmsLink;
 import models.t1.imageService.Image;
 import models.t1.imageService.ImageGroup;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ import static steps.t1.imageService.ImageServiceSteps.*;
 public class ImageServiceTest extends Tests {
 
     @Test
-    @Disabled
     @TmsLink("1151854")
     @DisplayName("Получение списка ImageGroups c флагом need_all=false")
     public void getImageGroupsListTest() {
