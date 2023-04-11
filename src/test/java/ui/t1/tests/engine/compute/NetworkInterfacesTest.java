@@ -10,7 +10,6 @@ import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
-import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.tests.engine.AbstractComputeTest;
 

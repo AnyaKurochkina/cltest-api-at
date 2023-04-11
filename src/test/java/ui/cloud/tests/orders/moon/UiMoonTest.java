@@ -1,6 +1,5 @@
 package ui.cloud.tests.orders.moon;
 
-import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.TmsLink;
@@ -9,11 +8,12 @@ import models.cloud.orderService.products.Moon;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
-import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Tags({@Tag("ui_moon")})
 @Log4j2
@@ -40,7 +40,7 @@ public class UiMoonTest extends UiProductTest {
             MoonOrderPage orderPage = new MoonOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getProjectName().setValue(new Generex("moon-[a-z]{5,15}").random());
-            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт",

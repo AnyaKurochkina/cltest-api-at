@@ -4,8 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.EntitiesUtils;
-import ui.cloud.pages.ProductStatus;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.ProductStatus;
 import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -27,7 +27,7 @@ public class IServicePage {
     public void run() {
         btnRun.shouldBe(activeCnd).click();
         Alert.green("Успешно создано действие " + serviceName);
-        EntitiesUtils.waitChangeStatus(new Runs(), Duration.ofSeconds(30));
+        OrderUtils.waitChangeStatus(new Runs(), Duration.ofSeconds(30));
         Assertions.assertEquals(ProductStatus.SUCCESS, new Runs().getStatus());
     }
 

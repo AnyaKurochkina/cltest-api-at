@@ -15,6 +15,7 @@ import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -31,7 +32,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product = PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/0e164140-328f-4274-a3cf-444bed97135d/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    PostgresSQLCluster product;// = PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/7f937b68-122d-48ab-85c1-9076d568c3f0/main?context=proj-ln4zg69jek&type=project&org=vtb");
     String nameDb = "at_db";
     String limit = "20";
     String shortNameUserDB = "at_user";
@@ -65,8 +66,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
-            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
-            EntitiesUtils.clickOrder();
+            preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowElementByColumnValue("Продукт",
                             orderPage.getLabelValue())
@@ -284,7 +285,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Добавление/удаление группы доступа")
     void deleteGroup() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.deleteGroup("superuser");
+        pSqlPage.deleteGroup("user");
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }

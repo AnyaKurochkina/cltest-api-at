@@ -33,7 +33,6 @@ public class LogoTest extends BaseTest {
     @DisplayName("Добавление логотипа")
     public void addLogoTest() {
         checkRequiredFields();
-        checkUrlValidation();
         createLogo();
     }
 

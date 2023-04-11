@@ -2,33 +2,26 @@ package ui.cloud.tests.orders.s3CephTenant;
 
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Redis;
 import models.cloud.orderService.products.S3Ceph;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
-import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
 
 @Epic("UI Продукты")
 @Feature("S3CephTenant")
 @Tags({@Tag("ui"), @Tag("ui_s3_ceph_tenant")})
 public class UiS3CephTenantTest extends UiProductTest {
 
-    S3Ceph product;
-    //= S3Ceph.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/object_storage/orders/0469c17f-1b54-42a4-adce-09b96ecc2f49/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    S3Ceph product;//= S3Ceph.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/object_storage/orders/6c71058d-e761-4253-bbc3-91663a272f60/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -48,7 +41,7 @@ public class UiS3CephTenantTest extends UiProductTest {
                     .selectProduct(product.getProductName());
               S3CephTenantOrderPage orderPage = new S3CephTenantOrderPage();
               orderPage.getSegmentSelect().set(product.getSegment());
-            EntitiesUtils.clickOrder();
+            OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")
@@ -113,6 +106,33 @@ public class UiS3CephTenantTest extends UiProductTest {
 
     @Test
     @Order(7)
+    @TmsLink("")
+    @DisplayName("UI S3CephTenant. Добавить правило Corse")
+    void addRuleCorse() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addRuleCorse("ruleCorse","15 sec","15"));
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("")
+    @DisplayName("UI S3CephTenant. Изменить правило Corse")
+    void changeRuleCorse() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.changeRuleCorse("10 sec","10"));
+    }
+
+    @Test
+    @Order(9)
+    @TmsLink("")
+    @DisplayName("UI S3CephTenant. Удалить правило Corse")
+    void deleteRuleCorse() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, s3CepthPages::deleteRuleCorse);
+    }
+
+    @Test
+    @Order(10)
     @TmsLink("1240649")
     @DisplayName("UI S3CephTenant. Удалить правило жизненного цикла")
     void deleteRuLifeCycle() {
@@ -121,7 +141,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     }
 
     @Test
-    @Order(8)
+    @Order(11)
     @TmsLink("891772")
     @DisplayName("UI S3CephTenant. Добавить пользователя")
     void addUser() {
@@ -130,7 +150,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     }
 
     @Test
-    @Order(9)
+    @Order(12)
     @TmsLink("891774")
     @DisplayName("UI S3CephTenant. Удалить пользователя")
     void deleteUser() {
@@ -139,7 +159,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     }
 
     @Test
-    @Order(10)
+    @Order(13)
     @TmsLink("891775")
     @DisplayName("UI S3CephTenant. Добавить политику")
     void addAccessPolicy() {
@@ -148,7 +168,16 @@ public class UiS3CephTenantTest extends UiProductTest {
     }
 
     @Test
-    @Order(11)
+    @Order(14)
+    @TmsLink("891777")
+    @DisplayName("UI S3CephTenant. Изменить политику")
+    void changeAccessPolicy() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.changeAccessPolicy());
+    }
+
+    @Test
+    @Order(15)
     @TmsLink("891770")
     @DisplayName("UI S3CephTenant. Удалить бакет")
     void deleteBucket() {

@@ -2,7 +2,7 @@ package ui.t1.pages.cloudEngine.compute;
 
 import core.utils.Waiting;
 import lombok.Getter;
-import ui.cloud.pages.EntitiesUtils;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
 
@@ -129,8 +129,8 @@ public class VmCreate {
     }
 
     public VmCreate clickOrder() {
-        EntitiesUtils.clickOrder();
-        EntitiesUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
+        OrderUtils.clickOrder();
+        OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.STATUS)
                 .contains("Включено"), Duration.ofMinutes(2)));
