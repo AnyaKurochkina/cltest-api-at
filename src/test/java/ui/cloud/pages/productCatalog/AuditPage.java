@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
@@ -64,7 +65,6 @@ public class AuditPage extends BasePage {
     @Step("Проверка отсутствия пользователя ")
     public AuditPage checkUserNotFound(String userName) {
         Table table = new Table("Учетная запись");
-        Waiting.find(() -> table.getHeadersCollection().last().isDisplayed(), Duration.ofSeconds(3));
         Assertions.assertFalse(table.isColumnValueEquals("Учетная запись", userName));
         return this;
     }
@@ -139,6 +139,12 @@ public class AuditPage extends BasePage {
     public AuditPage checkRecordsNotFound() {
         Waiting.sleep(1000);
         Assertions.assertTrue(new Table("Учетная запись").isEmpty());
+        return this;
+    }
+
+    @Step("Проверка отсутствия записей в аудите")
+    public AuditPage checkRecordsNotFoundV2() {
+        $x("//td[text()='Нет данных для отображения']").shouldBe(Condition.visible);
         return this;
     }
 

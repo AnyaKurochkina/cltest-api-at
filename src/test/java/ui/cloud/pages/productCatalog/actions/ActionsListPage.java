@@ -43,15 +43,13 @@ public class ActionsListPage extends BaseListPage {
      * @param name значение для поиска в колонке "Код действия"
      * @return true если действие существует, false если действие не существует.
      */
-    @Step("Проверка отображения действия '{value}' в списке")
+    @Step("Проверка отображения действия '{name}' в списке")
     public boolean isActionDisplayed(String name) {
         Table table = new Table(NAME_COLUMN);
+        if (table.isColumnValueEquals(NAME_COLUMN, name)) return true;
         while (nextPageButtonV2.getButton().isEnabled()) {
-            if (table.isColumnValueEquals(NAME_COLUMN, name)) {
-                return true;
-            } else {
-                nextPageV2();
-            }
+            nextPageV2();
+            if (table.isColumnValueEquals(NAME_COLUMN, name)) return true;
         }
         return false;
     }
