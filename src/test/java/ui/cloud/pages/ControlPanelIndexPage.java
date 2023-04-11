@@ -1,82 +1,71 @@
 package ui.cloud.pages;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.ContextSettingsPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
+import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
-import ui.cloud.pages.services.ServicesListPage;
 import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static api.Tests.activeCnd;
-import static api.Tests.clickableCnd;
 
 @Getter
-public class IndexPage {
-    final SelenideElement linkServicesList = StringUtils.$x("//a[.='Список сервисов']");
-    private final SelenideElement orderMoreBtn = $x("//button[contains(., 'Заказать еще')]");
-    private final SelenideElement btnProducts = Selenide.$x("//div[not(@hidden)]/a[@href='/vm/orders' and text()='Продукты']");
-    private final SelenideElement graphs = $x("//*[@href='/meccano/graphs']");
-    private final SelenideElement directions = $x("//*[@href='/meccano/org_direction']");
-    private final SelenideElement actions = $x("//*[@href='/meccano/actions']");
-    private final SelenideElement templates = $x("//a[@href='/meccano/templates']");
-    private final SelenideElement orderTemplates = $x("//a[@href='/meccano/order-templates']");
+public class ControlPanelIndexPage {
+
+    private final SelenideElement graphsLink = $x("//*[@href='/meccano/graphs']");
+    private final SelenideElement directionsLink = $x("//*[@href='/meccano/org_direction']");
+    private final SelenideElement actionsLink = $x("//*[@href='/meccano/actions']");
+    private final SelenideElement forbiddenActionsLink = $x("//*[@href='/meccano/forbidden_actions']");
+    private final SelenideElement templatesLink = $x("//a[@href='/meccano/templates']");
+    private final SelenideElement orderTemplatesLink = $x("//a[@href='/meccano/order-templates']");
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
-    private final SelenideElement portalAuditLink = $x("//a[@href='/analytics/audit']");
-
-    public ProductsPage clickOrderMore() {
-        orderMoreBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
-        return new ProductsPage();
-    }
+    private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
+    private final SelenideElement contextSettingsLink = $x("//a[@href='/meccano/context_settings']");
+    private final Select sectionSelect = Select.byXpath("//select/parent::div");
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
-        graphs.click();
+        graphsLink.click();
         return new GraphsListPage();
     }
 
     @Step("Переход на страницу Конструктор.Направления")
     public OrgDirectionsListPage goToOrgDirectionsPage() {
-        directions.scrollTo();
-        directions.click();
+        directionsLink.click();
         return new OrgDirectionsListPage();
     }
 
     @Step("Переход на страницу Конструктор.Действия")
     public ActionsListPage goToActionsListPage() {
-        actions.scrollTo();
-        actions.click();
+        actionsLink.click();
         return new ActionsListPage();
     }
 
-    @Step("Переход на страницу 'Список сервисов'")
-    public ServicesListPage goToServicesListPage() {
-        linkServicesList.shouldBe(activeCnd).shouldBe(clickableCnd).hover().click();
-        return new ServicesListPage();
+    @Step("Переход на страницу Конструктор.Запрещенные действия")
+    public ForbiddenActionsListPage goToForbiddenActionsListPage() {
+        forbiddenActionsLink.click();
+        return new ForbiddenActionsListPage();
     }
 
     @Step("Переход на страницу Конструктор.Шаблоны узлов")
     public TemplatesListPage goToTemplatesPage() {
-        templates.click();
+        templatesLink.click();
         return new TemplatesListPage();
     }
 
     @Step("Переход на страницу Конструктор.Шаблоны отображения")
     public OrderTemplatesListPage goToOrderTemplatesPage() {
-        orderTemplates.click();
+        orderTemplatesLink.click();
         return new OrderTemplatesListPage();
     }
 
@@ -92,10 +81,18 @@ public class IndexPage {
         return new ProductsListPage();
     }
 
-    @Step("Переход на страницу Аналитика.Аудит")
-    public AuditPage goToPortalAuditPage() {
-        portalAuditLink.shouldBe(Condition.visible).click();
+    @Step("Переход на страницу Утилиты.Аудит")
+    public AuditPage goToAuditPage() {
+        Waiting.sleep(500);
+        sectionSelect.set("Утилиты");
+        auditLink.click();
         Waiting.sleep(500);
         return new AuditPage();
+    }
+
+    @Step("Переход на страницу 'Настройки контекста'")
+    public ContextSettingsPage goToContextSettingsPage() {
+        contextSettingsLink.click();
+        return new ContextSettingsPage();
     }
 }

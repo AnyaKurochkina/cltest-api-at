@@ -136,13 +136,6 @@ public class OrderTemplatesListPage extends BaseListPage {
         return this;
     }
 
-    @Step("Поиск шаблона по значению 'value'")
-    private OrderTemplatesListPage search(String value) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
-        return this;
-    }
-
     @Step("Удаление шаблона '{name}'")
     public OrderTemplatesListPage deleteTemplate(String name) {
         search(name);

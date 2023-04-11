@@ -103,7 +103,7 @@ public class PortalAuditTest extends Tests {
                         projectsObject, okCode, okStatus)
                 .setUserFilter("test_user")
                 .applyAdditionalFilters()
-                .checkUserNotFound(pcAdmin.getEmail())
+                .checkRecordsNotFoundV2()
                 .setUserFilter(pcAdmin.getEmail())
                 .setStatusCodeFilter(okCode)
                 .applyAdditionalFilters()
