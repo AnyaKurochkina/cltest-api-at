@@ -1,4 +1,4 @@
-package ui.cloud.pages;
+package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
