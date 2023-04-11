@@ -67,7 +67,7 @@ public class UiRedisAstraTest extends UiProductTest {
                     .click();
             RedisAstraPage redisPage = new RedisAstraPage(product);
             redisPage.waitChangeStatus(Duration.ofMinutes(25));
-            redisPage.checkLastAction("В процессе");
+            redisPage.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

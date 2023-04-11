@@ -50,7 +50,7 @@ public class UiMoonTest extends UiProductTest {
                     .click();
             MoonPage moonPages = new MoonPage(product);
             moonPages.waitChangeStatus(Duration.ofMinutes(25));
-            moonPages.checkLastAction("В процессе");
+            moonPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

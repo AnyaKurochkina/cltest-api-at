@@ -72,7 +72,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
                     .click();
             ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
             clickHouseClusterPage.waitChangeStatus(Duration.ofMinutes(25));
-            clickHouseClusterPage.checkLastAction("В процессе");
+            clickHouseClusterPage.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

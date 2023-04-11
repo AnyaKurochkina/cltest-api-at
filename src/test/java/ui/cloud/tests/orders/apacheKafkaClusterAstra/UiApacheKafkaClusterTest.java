@@ -66,7 +66,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
                     .click();
             ApacheKafkaClusterPage pSqlPages = new ApacheKafkaClusterPage(product);
             pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
-            pSqlPages.checkLastAction("В процессе");
+            pSqlPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;

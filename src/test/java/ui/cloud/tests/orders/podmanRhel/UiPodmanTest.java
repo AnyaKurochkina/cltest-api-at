@@ -66,7 +66,7 @@ public class UiPodmanTest extends UiProductTest {
                     .click();
             PodmanPage podmanPage = new PodmanPage(product);
             podmanPage.waitChangeStatus(Duration.ofMinutes(25));
-            podmanPage.checkLastAction("В процессе");
+            podmanPage.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
