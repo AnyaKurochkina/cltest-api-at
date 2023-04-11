@@ -61,7 +61,8 @@ public class UiPodmanTest extends UiProductTest {
             prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
-                    .getRowElementByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
                     .hover()
                     .click();
             PodmanPage podmanPage = new PodmanPage(product);
@@ -94,7 +95,7 @@ public class UiPodmanTest extends UiProductTest {
     void expandDisk() {
         PodmanPage podmanPage = new PodmanPage(product);
         podmanPage.runActionWithCheckCost(CompareType.MORE, () -> podmanPage
-                .enlargeDisk("/app", "20", new Table("Роли узла").getRowByIndex(0)));
+                .enlargeDisk("/app", "20", new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
@@ -104,7 +105,7 @@ public class UiPodmanTest extends UiProductTest {
     void vmActCheckConfig() {
         PodmanPage podmanPage = new PodmanPage(product);
         podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
-                .checkConfiguration(new Table("Роли узла").getRowByIndex(0)));
+                .checkConfiguration(new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
