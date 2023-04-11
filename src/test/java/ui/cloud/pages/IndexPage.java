@@ -7,8 +7,8 @@ import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import ui.cloud.pages.orders.ProductsPage;
 import ui.cloud.pages.productCatalog.AuditPage;
-import ui.cloud.pages.productCatalog.ContextSettingsPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
@@ -17,7 +17,6 @@ import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.cloud.pages.services.ServicesListPage;
-import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static api.Tests.activeCnd;

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
@@ -24,7 +25,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Epic("UI Продукты")
 @Feature("Windows")
@@ -59,8 +60,8 @@ public class UiWindowsTest extends UiProductTest {
             orderPage.getRoleServer().set(product.getRole());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
-            EntitiesUtils.clickOrder();
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")

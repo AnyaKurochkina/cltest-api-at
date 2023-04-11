@@ -3,7 +3,7 @@ package ui.t1.pages.cloudEngine.vpc;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
-import ui.cloud.pages.EntitiesUtils;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.t1.pages.cloudEngine.Column;
 import ui.elements.DataTable;
 import ui.elements.Select;
@@ -17,8 +17,8 @@ public class PublicIpList {
     public String addIp(String availabilityZone) {
         new IpTable().clickAdd();
         Select.byLabel("Зона доступности").set(availabilityZone);
-        EntitiesUtils.clickOrder();
-        EntitiesUtils.waitCreate(() -> {
+        OrderUtils.clickOrder();
+        OrderUtils.waitCreate(() -> {
             IpTable table = new IpTable();
             if(table.rowSize() > 0) {
                 String oldIp = table.getFirstValueByColumn(Column.IP_ADDRESS);

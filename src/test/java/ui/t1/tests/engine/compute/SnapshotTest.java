@@ -9,10 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
-import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
 import ui.t1.pages.cloudEngine.Column;
-import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.*;
@@ -21,7 +18,6 @@ import ui.t1.tests.engine.AbstractComputeTest;
 import java.util.Objects;
 
 import static core.utils.AssertUtils.assertHeaders;
-import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Снимки")
