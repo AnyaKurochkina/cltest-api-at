@@ -30,7 +30,7 @@ import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product = Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/cc5093ba-83b4-47b4-b5b0-1bcfa7952009/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    Windows product;// = Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/cc5093ba-83b4-47b4-b5b0-1bcfa7952009/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
