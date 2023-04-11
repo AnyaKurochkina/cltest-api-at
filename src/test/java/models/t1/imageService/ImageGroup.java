@@ -35,6 +35,8 @@ public class ImageGroup extends Entity {
     private String logoId;
     @JsonProperty("synced_at")
     private String syncedAt;
+    @JsonProperty("updated_at")
+    private String updated_at;
 
     @Override
     public Entity init() {
