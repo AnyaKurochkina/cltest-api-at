@@ -24,12 +24,15 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
 public class GraphNodesPage extends GraphPage {
 
     private final SelenideElement addNodeButton = $x("(//div[@class='react-flow']/" +
             "div[contains(@class,'LayoutButtonsStyled')]//*[name()='svg'])[1]");
+    private final SelenideElement copyNodeFromGraphButton = $x("(//div[@class='react-flow']/" +
+            "div[contains(@class,'LayoutButtonsStyled')]//*[name()='svg'])[3]");
     private final SelenideElement editNodeButton = $x("(//div[@class='react-flow']//" +
             "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[1]");
     private final SelenideElement copyNodeButton = $x("(//div[@class='react-flow']//" +
@@ -65,6 +68,8 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement nameNonUniqueHint = $x("//div[text()='Узел с данным названием уже существует']");
     private final Select templateVersionSelect = Select.byXpath("(//label[text()='Версия'])[1]/following::div[select]");
     private final Select subgraphVersionSelect = Select.byXpath("(//label[text()='Версия'])[2]/following::div[select]");
+    private final Select nodeSelect = Select.byLabel("Узел");
+    private final Select graphVersionSelectV2 = Select.byLabel("Версия");
     private final SelenideElement mainTab = $x("//button[text()='Основное']");
     private final SelenideElement additionalTab = $x("//button[text()='Дополнительное']");
     private final SelenideElement paramsTab = $x("//button[text()='Параметры']");
@@ -74,6 +79,7 @@ public class GraphNodesPage extends GraphPage {
     private final SearchSelect subgraphSelect = SearchSelect.byLabel("Подграф");
     private final SearchSelect templateSelect = SearchSelect.byLabel("Шаблон");
     private final Button fullScreenButton = Button.byAriaLabel("fullscreen");
+    private final Button addButton = Button.byText("Добавить");
     private final Select logLevelSelect = Select.byXpath("//label[.='Уровень логирования']/following::div[1]");
     private final SelenideElement logLevelTooltipIcon = $x("//div[text()='Уровень логирования']/following::*[name()='svg'][1]");
     private final SelenideElement inputHint = $x("//label[text()='Input']/following-sibling::p");
@@ -302,6 +308,7 @@ public class GraphNodesPage extends GraphPage {
     }
 
     private void selectNodeInGraph(GraphItem node) {
+        fitViewButton.getButton().scrollIntoView(scrollCenter).click();
         if (node.getNumber().equals("")) node.setNumber(1);
         $x("//div[@class='react-flow']//div[text()='{}']", node.getDescription()).scrollIntoView(false).click();
     }

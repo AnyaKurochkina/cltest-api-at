@@ -12,6 +12,7 @@ import ui.elements.Button;
 import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.Table;
+import ui.t1.pages.productCatalog.image.ImagesListPage;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -171,5 +172,24 @@ public class BaseListPage {
             Assertions.assertEquals(numberString, recordsPerPageSelectV2.getElement().$x(".//span").getText());
         }
         return this;
+    }
+
+    @Step("Проверка пагинации списка объектов")
+    public BaseListPage checkPagination() {
+        String allRecords = $x("//div[contains(text(),'записей из')]").getText();
+        int allRecordsCount = Integer.valueOf(allRecords.substring(allRecords.lastIndexOf(" ") + 1));
+        if (allRecordsCount > 10) {
+            nextPageButtonV2.click();
+            checkPageNumber(2);
+        }
+        setRecordsPerPage(25);
+        setRecordsPerPage(50);
+        return this;
+    }
+
+    @Step("Задание в строке поиска значения '{value}'")
+    protected void search(String value) {
+        searchInput.setValue(value);
+        Waiting.sleep(1000);
     }
 }

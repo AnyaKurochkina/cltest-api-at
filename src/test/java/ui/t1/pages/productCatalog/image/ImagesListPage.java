@@ -87,17 +87,4 @@ public class ImagesListPage extends BaseListPage {
         closeInfoButton.click();
         return this;
     }
-
-    @Step("Проверка пагинации списка образов")
-    public ImagesListPage checkPagination() {
-        String allRecords = $x("//div[contains(text(),'записей из')]").getText();
-        int allRecordsCount = Integer.valueOf(allRecords.substring(allRecords.lastIndexOf(" ") + 1));
-        if (allRecordsCount > 10) {
-            nextPageButtonV2.click();
-            super.checkPageNumber(2);
-        }
-        setRecordsPerPage(25);
-        setRecordsPerPage(50);
-        return this;
-    }
 }

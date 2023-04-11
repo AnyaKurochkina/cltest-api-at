@@ -51,18 +51,16 @@ public class ProductOrderRestrictionTest extends Tests {
                 .assertStatus(200)
                 .extractAs(ProductOrderRestriction.class);
         assertEquals(product.getName(), createdOrderRestriction.getProductName());
-        assertEquals(product.getProductId(), createdOrderRestriction.getProductId());
+        assertEquals(productId, createdOrderRestriction.getProductId());
         List<ProductOrderRestriction> list = getProductOrderRestrictionById(productId).jsonPath()
                 .getList("list", ProductOrderRestriction.class);
         assertEquals(1, list.size());
-        assertEquals(orderRestriction, list.get(0));
-        assertEquals(productId, createdOrderRestriction.getProductId());
+        assertEquals(createdOrderRestriction, list.get(0));
         createdOrderRestriction.setEnvironments(Arrays.asList("DEV", "LT"));
         createdOrderRestriction.setWeight(54);
-        ProductOrderRestriction updatedRestriction = updateProductOrderRestrictionById(productId, createdOrderRestriction.getId(), createdOrderRestriction.toJson())
-                .extractAs(ProductOrderRestriction.class);
-        assertEquals(createdOrderRestriction.getEnvironments(), updatedRestriction.getEnvironments());
-        assertEquals(createdOrderRestriction.getWeight(), updatedRestriction.getWeight());
+        ProductOrderRestriction updatedRestriction = updateProductOrderRestrictionById(productId, createdOrderRestriction.getId(),
+                createdOrderRestriction.toJson());
+        assertEquals(createdOrderRestriction, updatedRestriction);
         deleteProductOrderRestrictionById(productId, createdOrderRestriction.getId());
         List<ProductOrderRestriction> listAfterDeleted = getProductOrderRestrictionById(productId).jsonPath()
                 .getList("list", ProductOrderRestriction.class);
@@ -97,14 +95,12 @@ public class ProductOrderRestrictionTest extends Tests {
         List<ProductOrderRestriction> list = getProductOrderRestrictionByName(productName).jsonPath()
                 .getList("list", ProductOrderRestriction.class);
         assertEquals(1, list.size());
-        assertEquals(orderRestriction, list.get(0));
-        assertEquals(product.getProductId(), createdOrderRestriction.getProductId());
+        assertEquals(createdOrderRestriction, list.get(0));
         createdOrderRestriction.setEnvironments(Arrays.asList("DEV", "LT"));
         createdOrderRestriction.setWeight(48);
-        ProductOrderRestriction updatedRestriction = updateProductOrderRestrictionByName(productName, createdOrderRestriction.getId(), createdOrderRestriction.toJson())
-                .extractAs(ProductOrderRestriction.class);
-        assertEquals(createdOrderRestriction.getEnvironments(), updatedRestriction.getEnvironments());
-        assertEquals(createdOrderRestriction.getWeight(), updatedRestriction.getWeight());
+        ProductOrderRestriction updatedRestriction = updateProductOrderRestrictionByName(productName, createdOrderRestriction.getId(),
+                createdOrderRestriction.toJson());
+        assertEquals(createdOrderRestriction, updatedRestriction);
         deleteProductOrderRestrictionByName(productName, createdOrderRestriction.getId());
         List<ProductOrderRestriction> listAfterDeleted = getProductOrderRestrictionByName(productName).jsonPath()
                 .getList("list", ProductOrderRestriction.class);
