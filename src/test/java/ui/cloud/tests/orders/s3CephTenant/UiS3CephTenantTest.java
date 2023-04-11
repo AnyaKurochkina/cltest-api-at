@@ -2,25 +2,19 @@ package ui.cloud.tests.orders.s3CephTenant;
 
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Redis;
 import models.cloud.orderService.products.S3Ceph;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
-import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
 
 @Epic("UI Продукты")
 @Feature("S3CephTenant")
@@ -47,7 +41,7 @@ public class UiS3CephTenantTest extends UiProductTest {
                     .selectProduct(product.getProductName());
               S3CephTenantOrderPage orderPage = new S3CephTenantOrderPage();
               orderPage.getSegmentSelect().set(product.getSegment());
-            EntitiesUtils.clickOrder();
+            OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")

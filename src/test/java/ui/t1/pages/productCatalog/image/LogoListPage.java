@@ -32,6 +32,8 @@ public class LogoListPage extends BaseListPage {
             = nameInput.getInput().$x("following::div[text()='Поле обязательно для заполнения']");
     private final SelenideElement distroRequiredFieldText
             = distroInput.getInput().$x("following::div[text()='Поле обязательно для заполнения']");
+    private final SelenideElement urlRequiredFieldText
+            = urlInput.getInput().$x("following::div[text()='Поле обязательно для заполнения']");
     private final SelenideElement urlIncorrectFormatText
             = urlInput.getInput().$x("following::div[text()='Введите валидный url адрес логотипа']");
 
@@ -77,7 +79,7 @@ public class LogoListPage extends BaseListPage {
             nameRequiredFieldText.shouldBe(Condition.visible);
         }
         if (logo.getLogo().isEmpty()) {
-            urlIncorrectFormatText.shouldBe(Condition.visible);
+            urlRequiredFieldText.shouldBe(Condition.visible);
         }
         if (logo.getOsDistro().isEmpty()) {
             distroRequiredFieldText.shouldBe(Condition.visible);

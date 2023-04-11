@@ -4,7 +4,7 @@ import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import ui.cloud.pages.EntitiesUtils;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
 
@@ -75,7 +75,7 @@ public class Network {
             Dialog dialog = Dialog.byTitle("Добавить подсеть");
             dialog.clickButton("Добавить");
             dialog.getDialog().shouldNotBe(Condition.visible);
-            EntitiesUtils.waitCreate(() ->
+            OrderUtils.waitCreate(() ->
                     Waiting.findWithRefresh(() -> SubnetListInfo.getSubnet(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1)));
             return this;
         }

@@ -7,9 +7,9 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
 import steps.stateService.StateServiceSteps;
-import ui.cloud.pages.EntitiesUtils;
-import ui.cloud.pages.IProductPage;
-import ui.cloud.pages.ProductStatus;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.IProductPage;
+import ui.cloud.pages.orders.ProductStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
@@ -40,12 +40,12 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     @SuppressWarnings("unchecked")
     public C checkCreate(){
-        if(Objects.isNull(EntitiesUtils.getPreBillingPrice()))
+        if(Objects.isNull(OrderUtils.getPreBillingPrice()))
             Waiting.sleep(30000);
         checkLastAction("Развертывание");
         btnGeneralInfo.click();
-        if(Objects.nonNull(EntitiesUtils.getPreBillingPrice()))
-            Assertions.assertEquals(EntitiesUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        if(Objects.nonNull(OrderUtils.getPreBillingPrice()))
+            Assertions.assertEquals(OrderUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
         return (C) this;
     }
 
@@ -78,7 +78,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     public void checkErrorByStatus(ProductStatus status) {
         if (status.equals(ProductStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: \nИтоговый статус: %s . \nОшибка: %s", status,
-                    StateServiceSteps.getLastErrorByProjectId(EntitiesUtils.getCurrentProjectId())));
+                    StateServiceSteps.getLastErrorByProjectId(OrderUtils.getCurrentProjectId())));
         } else log.info("Статус действия {}", status);
     }
 

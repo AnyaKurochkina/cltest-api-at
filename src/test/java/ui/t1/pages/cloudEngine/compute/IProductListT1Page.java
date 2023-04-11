@@ -3,7 +3,7 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.EntitiesUtils;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
 import ui.elements.TypifiedElement;
@@ -19,7 +19,7 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     public void waitChangeStatus() {
         productLink = WebDriverRunner.getWebDriver().getCurrentUrl();
         new IndexPage().goToHistory();
-        EntitiesUtils.waitCreate(() ->
+        OrderUtils.waitCreate(() ->
                 Waiting.findWithRefresh(() -> !ComputeHistory.getLastActionStatus().getText().equals("В процессе"), Duration.ofMinutes(1)));
     }
 

@@ -7,7 +7,7 @@ import ui.elements.Input;
 import ui.elements.Slider;
 
 import static com.codeborne.selenide.Selenide.$;
-import static ui.cloud.pages.EntitiesUtils.clickOrder;
+import static ui.cloud.pages.orders.OrderUtils.clickOrder;
 
 public class DataCentreCreatePage {
     SelenideElement pageTitle = $(By.xpath("//*[text()='Создание виртуального дата-центра VMware']"));

@@ -12,13 +12,14 @@ import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Epic("UI Продукты")
 @Feature("ClickHouse Cluster")
@@ -63,8 +64,8 @@ public class UiClickHouseClusterTest extends UiProductTest {
             orderPage.getGroup2().set(accessGroup);
             orderPage.getGroup3().set(accessGroup);
             orderPage.getGroup4().set(accessGroup);
-            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
-            EntitiesUtils.clickOrder();
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")

@@ -8,6 +8,9 @@ import models.cloud.orderService.products.GitLab;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.GitlabOrderPage;
+import ui.cloud.pages.orders.GitlabPage;
+import ui.cloud.pages.orders.OrdersPage;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
