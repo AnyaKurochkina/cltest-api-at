@@ -3,7 +3,6 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -162,7 +160,7 @@ public class AuditPage extends BasePage {
         copyDataButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
         Assertions.assertTrue(StringUtils.getClipBoardText().contains(this.contextId.getText()));
         copyAddressButton.click();
-        Assertions.assertTrue(StringUtils.getClipBoardText().equals(address.getText()));
+        Assertions.assertEquals(StringUtils.getClipBoardText(), address.getText());
         if (!request.$x(".//i").exists()) {
             copyRequestButton.click();
             Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
