@@ -12,8 +12,8 @@ import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
-import ui.cloud.pages.NewOrderPage;
-import ui.cloud.pages.PostgreSqlClusterAstraOrderPage;
+import ui.cloud.pages.orders.NewOrderPage;
+import ui.cloud.pages.orders.PostgreSqlClusterAstraOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 
