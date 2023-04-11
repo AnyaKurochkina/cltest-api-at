@@ -40,8 +40,8 @@ public class S3CephTenantPage extends IProductPage {
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement btnAccessPolicy = $x("//button[.='Политики доступа']");
-    SelenideElement btnRule = $x("//button[.='Правила жизненного цикла']");
-    SelenideElement btnRuleCorse = $x("//button[.='Правила CORS']");
+    Button btnRule=Button.byText("Правила жизненного цикла");
+    Button btnRuleCorse=Button.byText("Правила CORS");
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
