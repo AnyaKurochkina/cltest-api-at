@@ -2,6 +2,7 @@ package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
 import core.helper.JsonTemplate;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,6 +22,7 @@ import steps.portalBack.PortalBackSteps;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.utils.AssertUtils.assertContains;
 import static models.cloud.orderService.products.PostgreSQL.DB_CONN_LIMIT;
 
 
@@ -41,7 +43,8 @@ public class PostgresSQLCluster extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
-    private String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+    private String adminPassword;
+    private String role;
 
     @Override
     @Step("Заказ продукта")
@@ -54,6 +57,9 @@ public class PostgresSQLCluster extends IProduct {
         jsonTemplate = "/orders/postgressql_cluster.json";
         if (productName == null)
             productName = "PostgreSQL Cluster Astra Linux";
+        role = isDev() ? "superuser" : "user";
+        if (adminPassword == null)
+            adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -75,7 +81,6 @@ public class PostgresSQLCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         JsonTemplate template = JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain());
@@ -89,7 +94,8 @@ public class PostgresSQLCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].role", role)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.on_backup", envType().contains("prod"))
@@ -197,4 +203,14 @@ public class PostgresSQLCluster extends IProduct {
     protected void delete() {
         delete("delete_postgresql_cluster");
     }
+
+    public void checkUseSsh(String ip, String dbName) {
+        SshClient ssh = new SshClient(ip, envType());
+        String cmd = "psql \"host=localhost dbname=" + dbName +
+                " user=" + dbName + "_admin password=" + adminPassword +
+                "\" -c \"\\pset pager off\" -c \"CREATE TABLE test1 (name varchar(30), surname varchar(30));\" -c \"\\z bdname.test1\"";
+        assertContains(ssh.execute(cmd), dbName + "_user=arwd/" + dbName + "_admin",
+                dbName + "_reader=r/" + dbName + "_admin", dbName + "_admin=arwdDxt/" + dbName + "_admin");
+    }
+
 }

@@ -114,13 +114,4 @@ public class Ubuntu extends IProduct {
     protected void delete() {
         delete("delete_vm");
     }
-
-    @Override
-    public void checkUseSsh() {
-        String accessGroup = getAccessGroup();
-        String ip = (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
-        SshClient ssh = new SshClient(ip, envType());
-        assertContains(ssh.execute("sudo realm list"), accessGroup);
-        assertContains(ssh.execute("sudo ls cd /etc/sudoers.d"), String.format("group_%s_%s", role, accessGroup));
-    }
 }

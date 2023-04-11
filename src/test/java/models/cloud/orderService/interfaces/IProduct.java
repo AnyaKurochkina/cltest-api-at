@@ -8,6 +8,7 @@ import core.helper.Configure;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
@@ -29,6 +30,8 @@ import models.cloud.productCatalog.product.Product;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
@@ -47,6 +50,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.OrderServiceURL;
+import static core.utils.AssertUtils.assertContains;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static steps.productCatalog.GraphSteps.getGraphByIdAndEnv;
 import static steps.productCatalog.ProductSteps.getProductByCloudAdmin;
@@ -130,16 +134,16 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    protected String getAccessGroup(){
+    protected String getAccessGroup() {
         return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
     }
 
     @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
-    protected String getIdGeoDistribution(String name, String ... tags) {
+    protected String getIdGeoDistribution(String name, String... tags) {
         StringJoiner tagsJoiner = new StringJoiner(",");
         Arrays.stream(tags).forEach(tagsJoiner::add);
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tagsJoiner))
-                .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found "+ name);
+                .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
     }
 
     @Override
@@ -150,17 +154,30 @@ public abstract class IProduct extends Entity {
         return entity;
     }
 
-    protected void checkUseSsh(){}
-
-    @SneakyThrows
-    public void executeCheckUseSsh() {
-        try {
-            checkUseSsh();
-        } catch (Throwable e){
-            if(e.toString().contains("Connection refused"))
-                connectVmException("Ошибка подключения к " + getProductName() + " " + e);
-            else throw e;
+    public void checkCertsBySsh() {
+        if (Configure.ENV.equalsIgnoreCase("prod")) {
+            String[] certs = {"VTB Dev Environment Root CA"};
+            if (envType().contains("test"))
+                certs = new String[]{"VTB Test Environment Root CA"};
+            else if (envType().contains("prod"))
+                certs = new String[]{"VTB Group Root CA", "VTB Group VTB24 CA 8", "VTB Group INET CA 4"};
+            assertContains(executeSsh("openssl storeutl -text -noout -certs /etc/ssl/certs/ca-certificates.crt | grep VTB"), certs);
         }
+    }
+
+    public void checkUserGroupBySsh() {
+        String accessGroup = getAccessGroup();
+        assertContains(executeSsh("sudo realm list"), accessGroup);
+        assertContains(executeSsh("sudo ls cd /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
+    }
+
+    public String executeSsh(SshClient client, String cmd) {
+        Assumptions.assumeTrue("dev".equalsIgnoreCase(envType()), "Тест включен только для dev среды");
+        return client.execute(cmd);
+    }
+
+    public String executeSsh(String cmd) {
+        return executeSsh(new SshClient((String) OrderServiceSteps.getProductsField(this, VM_IP_PATH), envType()), cmd);
     }
 
     public void addLinkProduct() {

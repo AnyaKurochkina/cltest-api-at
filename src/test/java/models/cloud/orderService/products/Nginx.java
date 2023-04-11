@@ -119,11 +119,4 @@ public class Nginx extends IProduct {
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
-
-    @Override
-    public void checkUseSsh() {
-        String ip = (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
-        SshClient ssh = new SshClient(ip, envType());
-        assertContains(ssh.execute("sudo systemctl status nginx | grep active"), "Active: active (running)");
-    }
 }

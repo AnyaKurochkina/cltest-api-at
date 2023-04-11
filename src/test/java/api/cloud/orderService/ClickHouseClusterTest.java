@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -13,7 +14,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("ClickHouseCluster Cluster")
@@ -25,7 +27,8 @@ public class ClickHouseClusterTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(ClickHouseCluster product) {
         //noinspection EmptyTryBlock
-        try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {}
+        try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("1161955")
@@ -39,7 +42,7 @@ public class ClickHouseClusterTest extends Tests {
     }
 
     @Tag("actions")
-    @TmsLinks({@TmsLink("1161958"),@TmsLink("1161966")})
+    @TmsLinks({@TmsLink("1161958"), @TmsLink("1161966")})
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "ТУЗ локальные, создание/удаление локальной УЗ {0}")
     void createUserAccount(ClickHouseCluster product) {
@@ -50,7 +53,7 @@ public class ClickHouseClusterTest extends Tests {
     }
 
     @Tag("actions")
-    @TmsLinks({@TmsLink("1161962"),@TmsLink("1161959")})
+    @TmsLinks({@TmsLink("1161962"), @TmsLink("1161959")})
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "ТУЗ AD, добавление/удаление {0}")
     void addUserAd(ClickHouseCluster product) {
@@ -61,7 +64,7 @@ public class ClickHouseClusterTest extends Tests {
     }
 
     @Tag("actions")
-    @TmsLinks({@TmsLink("1161961"),@TmsLink("1161963")})
+    @TmsLinks({@TmsLink("1161961"), @TmsLink("1161963")})
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Группы пользователей AD, добавление/удаление {0}")
     void addGroupAd(ClickHouseCluster product) {
@@ -73,7 +76,7 @@ public class ClickHouseClusterTest extends Tests {
     }
 
     @Tag("actions")
-    @TmsLinks({@TmsLink("1161967"),@TmsLink("1161957")})
+    @TmsLinks({@TmsLink("1161967"), @TmsLink("1161957")})
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Группы прикладных администраторов AD, добавление/удаление {0}")
     void addGroupAdmin(ClickHouseCluster product) {
@@ -129,7 +132,7 @@ public class ClickHouseClusterTest extends Tests {
     }
 
     @Disabled
-    @TmsLinks({@TmsLink("1161964"),@TmsLink("1161952")})
+    @TmsLinks({@TmsLink("1161964"), @TmsLink("1161952")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
@@ -137,6 +140,15 @@ public class ClickHouseClusterTest extends Tests {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.stopHard();
             cluster.start();
+        }
+    }
+
+    @TmsLink("1212279")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка создания ВМ {0}")
+    void checkCreate(ClickHouseCluster product) {
+        try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
+            assertContains(cluster.executeSsh("sudo id"), "root");
         }
     }
 

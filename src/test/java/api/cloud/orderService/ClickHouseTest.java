@@ -1,11 +1,11 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouse;
-import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -15,7 +15,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("ClickHouse")
@@ -149,6 +150,15 @@ public class ClickHouseTest extends Tests {
             AccessGroup accessGroup = AccessGroup.builder().projectName(clickHouse.getProjectId()).build().createObject();
             clickHouse.deleteGroupAdmin(accessGroup.getPrefixName());
             clickHouse.addGroupAdmin(accessGroup.getPrefixName());
+        }
+    }
+
+    @TmsLink("330446")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка создания ВМ {0}")
+    void checkCreate(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            assertContains(clickHouse.executeSsh("sudo id"), "root");
         }
     }
 
