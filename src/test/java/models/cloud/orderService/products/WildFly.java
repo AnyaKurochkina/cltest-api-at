@@ -177,11 +177,4 @@ public class WildFly extends IProduct {
     protected void delete() {
         delete("delete_two_layer");
     }
-
-    @Override
-    public void checkUseSsh() {
-        String ip = (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
-        SshClient ssh = new SshClient(ip, envType());
-        assertContains(ssh.execute("sudo systemctl status wildfly | grep active"), "Active: active (exited)");
-    }
 }

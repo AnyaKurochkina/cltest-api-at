@@ -31,8 +31,8 @@ public class BaseListPage {
     protected static final SelenideElement importButton = $x("//a[.='Импорт']");
     protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
-    private static final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
-    private static final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
+    private static final SelenideElement copyAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Создать копию']");
+    private static final SelenideElement deleteAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Удалить']");
     protected final Button nextPageButtonV2 = Button.byAriaLabel("Следующая страница, выбрать");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
     protected final Button createButton = Button.byText("Создать");

@@ -1,12 +1,12 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Nginx;
-import models.cloud.orderService.products.WildFly;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -14,7 +14,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Log4j2
 @Epic("Продукты")
@@ -102,10 +103,10 @@ public class NginxAstraTest extends Tests {
 
     @TmsLink("847277")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания {0}")
+    @ParameterizedTest(name = "AD Проверка создания {0}")
     void checkCreate(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
-            nginx.executeCheckUseSsh();
+            assertContains(nginx.executeSsh("sudo systemctl status nginx | grep active"), "Active: active (running)");
         }
     }
 

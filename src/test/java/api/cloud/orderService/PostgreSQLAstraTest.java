@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
+import steps.orderService.OrderServiceSteps;
+
+import static models.cloud.orderService.interfaces.IProduct.VM_IP_PATH;
 
 @Epic("Продукты")
 @Feature("PostgreSQL Astra")
@@ -27,7 +30,8 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgreSQL product) {
         //noinspection EmptyTryBlock
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {}
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("1057048")
@@ -154,7 +158,7 @@ public class PostgreSQLAstraTest extends Tests {
     }
 
     @Disabled
-    @TmsLinks({@TmsLink("1057045"),@TmsLink("1057053")})
+    @TmsLinks({@TmsLink("1057045"), @TmsLink("1057053")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
@@ -185,7 +189,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
-    @TmsLinks({@TmsLink("1116377"),@TmsLink("1116378")})
+    @TmsLinks({@TmsLink("1116377"), @TmsLink("1116378"), @TmsLink("1104181")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Назначить/Убрать предел подключений {0}")
@@ -195,6 +199,17 @@ public class PostgreSQLAstraTest extends Tests {
             postgreSQL.createNonProd(dbName, adminPassword);
             postgreSQL.setConnLimit(dbName, 20);
             postgreSQL.removeConnLimit(dbName);
+        }
+    }
+
+    @TmsLink("994970")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    void checkUserPermissions(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createNonProd(dbName, adminPassword);
+            String ip = (String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip");
+            postgreSQL.checkUseSsh(ip, dbName, adminPassword);
         }
     }
 

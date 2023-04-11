@@ -1,6 +1,8 @@
 package models.cloud.orderService.products;
 
+import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,6 +23,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.utils.AssertUtils.assertContains;
 import static models.cloud.orderService.products.ClickHouseCluster.*;
 
 
@@ -267,7 +270,6 @@ public class ClickHouse extends IProduct {
                 .build();
 
     }
-
 
     @SneakyThrows
     public void checkConnectDb() {

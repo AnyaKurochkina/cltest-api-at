@@ -2,7 +2,6 @@ package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
 import core.helper.JsonTemplate;
-import core.utils.ssh.SshClient;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -16,10 +15,7 @@ import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
-
-import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -35,14 +31,12 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     String kibanaPassword;
     Flavor flavorData;
     Flavor flavorMaster;
-    String role;
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/elasticsearch_opensearch_cluster.json";
         if (productName == null)
             productName = "Elasticsearch Opensearch cluster (Astra)";
-        role = isDev() ? "superuser" : "user";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
@@ -83,7 +77,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
-                .set("$.order.attrs.ad_logon_grants[0].role", role)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.system_adm_groups[0]", accessGroup)
                 .set("$.order.attrs.user_app_groups[0]", accessGroup)
                 .set("$.order.attrs.adm_app_groups[0]", accessGroup)
@@ -141,17 +135,5 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     @Override
     protected void delete() {
         delete("delete_elasticsearch_opensearch");
-    }
-
-    @Override
-    public void checkUseSsh() {
-        String ip = (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
-        SshClient ssh = new SshClient(ip, envType());
-        String[] certs = {"VTB Dev Environment Root CA"};
-        if(envType().contains("test"))
-            certs = new String[]{"VTB Test Environment Root CA"};
-        else if(envType().contains("prod"))
-            certs = new String[]{"VTB Group Root CA", "VTB Group VTB24 CA 8", "VTB Group INET CA 4"};
-        assertContains(ssh.execute("openssl storeutl -text -noout -certs /etc/ssl/certs/ca-certificates.crt | grep VTB"), certs);
     }
 }

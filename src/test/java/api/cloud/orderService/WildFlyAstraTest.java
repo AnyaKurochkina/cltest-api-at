@@ -1,10 +1,10 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.WildFly;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -13,8 +13,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
 import steps.portalBack.PortalBackSteps;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("WildFly (Astra)")
@@ -177,10 +178,10 @@ public class WildFlyAstraTest extends Tests {
 
     @TmsLink("908268")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания {0}")
+    @ParameterizedTest(name = "AD Проверка создания {0}")
     void checkCreate(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.executeCheckUseSsh();
+            assertContains(wildFly.executeSsh("sudo systemctl status wildfly | grep active"), "Active: active (exited)");
         }
     }
 
