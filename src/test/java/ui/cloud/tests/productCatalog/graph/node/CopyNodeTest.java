@@ -1,5 +1,8 @@
 package ui.cloud.tests.productCatalog.graph.node;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.WebDriverRunner;
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.graph.Graph;
@@ -11,9 +14,12 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
+import ui.elements.Button;
 
 import java.util.HashMap;
 import java.util.UUID;
+
+import static core.helper.StringUtils.$x;
 
 @Feature("Копирование узла графа")
 public class CopyNodeTest extends GraphBaseTest {
@@ -93,5 +99,47 @@ public class CopyNodeTest extends GraphBaseTest {
         node.setDescription(nodeDescription + "_clone");
         new GraphNodesPage()
                 .checkNodeAttributes(node);
+    }
+
+    @Test
+    @TmsLink("1349326")
+    @DisplayName("Копирование узла из другого графа")
+    public void copyNodeFromGraph() {
+        WebDriverRunner.getWebDriver().manage().window().maximize();
+        String nodeName = UUID.randomUUID().toString();
+        GraphItem node = GraphItem.builder()
+                .templateId(template.getId())
+                .name(nodeName)
+                .description(nodeDescription)
+                .input(new HashMap<String, String>() {{
+                    put("input_param", "");
+                }})
+                .output(new HashMap<String, Object>() {{
+                    put("output_param", "");
+                }})
+                .number(1)
+                .timeout(100)
+                .build();
+        patchGraphWithGraphItem(graph, node);
+        String graph2Name = UUID.randomUUID().toString();
+        createGraph(graph2Name, "AT UI Graph (copy node test)");
+        new IndexPage().goToGraphsPage()
+                .openGraphPage(graph2Name)
+                .goToNodesTab()
+                .getCopyNodeFromGraphButton()
+                .click();
+        GraphNodesPage page = new GraphNodesPage();
+        page.getGraphSelect().setContains(graph.getName());
+        Waiting.sleep(1000);
+        page.getGraphVersionSelectV2().set("1.0.1");
+        page.getNodeSelect().setContains(node.getName());
+        $x("//form//span[text()='{}']", node.getDescription()).shouldBe(Condition.visible);
+        Button.byText("Input").click();
+        $x("//form//span[text()='\"{}\"']", "input_param").shouldBe(Condition.visible);
+        page.getAddButton().click();
+        node.setName(node.getName() + "_clone");
+        page.checkNodeAttributes(node);
+        page.saveGraphWithPatchVersion();
+        deleteGraphByApi(graph2Name);
     }
 }

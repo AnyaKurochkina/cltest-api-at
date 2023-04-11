@@ -6,25 +6,25 @@ import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.ContextSettingsPage;
 import ui.cloud.tests.productCatalog.BaseTest;
 
 public class ContextSettingsTest extends BaseTest {
 
-    private String defaultDevProject = "proj-sandbox-dev";
-    private String defaultTestProject = "proj-sandbox-ift";
-    private String defaultProdProject = "proj-sandbox-prom";
-    private Project devProject = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
+    private final String defaultDevProject = "proj-sandbox-dev";
+    private final String defaultTestProject = "proj-sandbox-ift";
+    private final String defaultProdProject = "proj-sandbox-prom";
+    private final Project devProject = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
             .build().createObject();
-    private Project testProject = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("TEST"))
+    private final Project testProject = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("TEST"))
             .build().createObject();
 
     @Test
     @TmsLink("1257138")
     @DisplayName("Восстановить проекты по умолчанию")
     public void restoreDefaultProjects() {
-        ContextSettingsPage page = new IndexPage().goToContextSettingsPage();
+        ContextSettingsPage page = new ControlPanelIndexPage().goToContextSettingsPage();
         page.getDevProjectInput().setValue(devProject.getId());
         page.getTestProjectInput().setValue(testProject.getId());
         page.save();
