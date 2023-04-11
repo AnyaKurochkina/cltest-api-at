@@ -89,6 +89,9 @@
             "is_safe": {
               "type": "boolean"
             },
+            "is_delayable": {
+              "type": "boolean"
+            },
             "icon_store_id": {
               "type": ["string", "null"]
             },

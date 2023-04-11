@@ -114,8 +114,6 @@ public class Action extends Entity {
     private Boolean isDelayable;
     @JsonProperty("version_fields")
     private List<String> versionFields;
-    @JsonProperty("is_delayable")
-    private Boolean isDelayable;
 
     @Override
     public Entity init() {
