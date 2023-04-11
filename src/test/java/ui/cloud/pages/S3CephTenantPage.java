@@ -27,17 +27,21 @@ public class S3CephTenantPage extends IProductPage {
     private static final String HEADER_PREFIX = "Префикс";
     private static final String HEADER_NAME = "Имя";
     private static final String HEADER_NAME_RULE = "Имя правила";
+    private static final String HEADER_METHOD = "methods";
+    private static final String HEADER_MAX_AGE = "max_age_seconds";
     private static final String STATUS = "Статус";
     private static final String HEADER_NAME_USER = "Имя пользователя";
     private static final String HEADER_SORT = "Сортировка";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_LIST_POLICY = "Список политик";
+    private static final String HEADER_RIGHTS = "Права";
 
 
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement btnAccessPolicy = $x("//button[.='Политики доступа']");
-    SelenideElement btnRule = $x("//button[.='Правила жизненного цикла']");
+    Button btnRule=Button.byText("Правила жизненного цикла");
+    Button btnRuleCorse=Button.byText("Правила CORS");
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
@@ -265,7 +269,7 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setInputValue("Макс. объем, ГБ", size);
         });
         btnGeneralInfo.click();
-        Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, "de-plux-bucket"), "Ошибка создания");
+        Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, Input.byLabel("Имя").getInput().getValue()), "Ошибка создания");
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
@@ -316,12 +320,54 @@ public class S3CephTenantPage extends IProductPage {
         {
             Dialog dlgActions = Dialog.byTitle("Изменить правило жизненного цикла");
             dlgActions.setInputValue("Кол-во дней", size);
-            dlgActions.setInputValue(HEADER_PREFIX, prefix);
+
         },ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
         getRoleNode().click();
         btnRule.click();
-        Assertions.assertTrue(new Table(HEADER_PREFIX).isColumnValueEquals(HEADER_PREFIX, prefix), "Ошибка изменения правила ");
+        Assertions.assertTrue(new Table(HEADER_PREFIX).isColumnValueEquals("Кол-во дней", size), "Ошибка изменения правила ");
+    }
+    public void addRuleCorse(String rule,String minute,String maxAge) {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().click();
+        btnRuleCorse.click();
+        runActionWithParameters(getBtnAction("",3), "Добавить cors", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Добавить cors");
+            Input.byXpath("descendant::div/input").setValue("ruleCorse");
+            CheckBox.byLabel("GET").setChecked(true);
+            RadioGroup.byLabel("Access Control Max Age").select(minute);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        getRoleNode().click();
+        btnRuleCorse.click();
+        Assertions.assertTrue(new Table(HEADER_METHOD).isColumnValueEquals(HEADER_MAX_AGE, maxAge), "Ошибка изменения правила ");
+    }
+
+    public void changeRuleCorse(String sec,String maxAge) {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().click();
+        btnRuleCorse.click();
+        runActionWithParameters(getBtnAction("",4), "Изменить правило CORS", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Изменить правило CORS");
+            CheckBox.byLabel("PUT").setChecked(true);
+            RadioGroup.byLabel("Access Control Max Age").select(sec);
+        },ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        getRoleNode().click();
+        btnRuleCorse.click();
+        Assertions.assertTrue(new Table(HEADER_METHOD).isColumnValueEquals(HEADER_MAX_AGE, maxAge), "Ошибка изменения правила ");
+    }
+    public void deleteRuleCorse() {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().click();
+        btnRuleCorse.click();
+        runActionWithoutParameters(getBtnAction("",4), "Удалить правило CORS",ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        getRoleNode().click();
+        btnRuleCorse.click();
+        Assertions.assertTrue(new Table(HEADER_METHOD).isEmpty(), "Ошибка изменения правила ");
     }
 
     public void deleteRuLifeCycle() {
@@ -332,7 +378,7 @@ public class S3CephTenantPage extends IProductPage {
         btnGeneralInfo.click();
         getRoleNode().click();
         btnRule.click();
-        Assertions.assertTrue(new Table(HEADER_PREFIX).isEmpty(), "Ошибка изменения правила ");
+        Assertions.assertTrue(new Table(HEADER_PREFIX).isEmpty(), "Ошибка удаления правила ");
     }
 
     public void addUser(String name) {
@@ -357,7 +403,18 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setSelectValue("Права","Полные");
         });
         btnAccessPolicy.click();
-        //Assertions.assertTrue(new Table(HEADER_NAME_USER).isColumnValueEquals(HEADER_NAME_USER, name), "Ошибка создания");
+        Assertions.assertTrue(new Table(HEADER_NAME_USER).isColumnValueEquals(HEADER_NAME_USER, name), "Ошибка создания");
+    }
+
+    public void changeAccessPolicy() {
+        btnAccessPolicy.click();
+        runActionWithParameters(getBtnAction("",3), "Изменить политику", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Изменить политику");
+            dlgActions.setSelectValue(HEADER_RIGHTS,"Настраиваемые");
+
+        });
+        btnAccessPolicy.click();
     }
 
     public void deleteUser() {
@@ -374,6 +431,7 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);}
+
 
     //Таблица ролей
     public class RoleTable extends Table {
