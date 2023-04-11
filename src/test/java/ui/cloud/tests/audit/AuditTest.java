@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.LoginPageControlPanel;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
@@ -57,7 +57,7 @@ public class AuditTest extends Tests {
     @TmsLink("1189306")
     @DisplayName("Просмотр аудита за период")
     public void checkFilterByDate() {
-        AuditPage page = new IndexPage().goToAuditPage();
+        AuditPage page = new ControlPanelIndexPage().goToAuditPage();
         Assertions.assertEquals("последний 1 час", page.getPeriodSelect().getValue());
         page.getBeginDateInput().getInput().shouldBe(Condition.disabled);
         page.getEndDateInput().getInput().shouldBe(Condition.disabled);
@@ -76,7 +76,7 @@ public class AuditTest extends Tests {
     @TmsLink("1189307")
     @DisplayName("Сортировка таблицы аудита")
     public void checkAuditTable() {
-        new IndexPage().goToAuditPage()
+        new ControlPanelIndexPage().goToAuditPage()
                 .checkHeaders()
                 .checkSortingByDate();
     }
@@ -85,7 +85,7 @@ public class AuditTest extends Tests {
     @TmsLink("1189310")
     @DisplayName("Фильтрация таблицы аудита")
     public void checkFilters() {
-        new IndexPage().goToAuditPage()
+        new ControlPanelIndexPage().goToAuditPage()
                 .setOperationTypeFilterAndApply("create")
                 .setServiceFilterAndApply("product-catalog")
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), createType,
@@ -106,7 +106,7 @@ public class AuditTest extends Tests {
     @TmsLink("1189305")
     @DisplayName("Просмотр записи аудита")
     public void checkAuditRecordDetails() {
-        new IndexPage().goToAuditPage()
+        new ControlPanelIndexPage().goToAuditPage()
                 .setObjectIdFilter(graph.getGraphId())
                 .applyAdditionalFilters()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), pcAdmin.getUsername(), createType, graphsObject,

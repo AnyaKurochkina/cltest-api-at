@@ -24,6 +24,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+
 @Epic("UI Продукты")
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
@@ -42,7 +44,7 @@ public class UiWindowsTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -57,7 +59,7 @@ public class UiWindowsTest extends UiProductTest {
             orderPage.getRoleServer().set(product.getRole());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
+            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
             EntitiesUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -72,7 +74,7 @@ public class UiWindowsTest extends UiProductTest {
             throw e;
         }
         WindowsPage winPage = new WindowsPage(product);
-        Assertions.assertEquals(preBillingProductPrice, winPage.getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        checkOrderCost(prebillingCost, winPage);
     }
 
     @Test

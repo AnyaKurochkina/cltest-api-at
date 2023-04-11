@@ -43,13 +43,6 @@ public class TemplatesListPage extends BaseListPage {
         return this;
     }
 
-    @Step("Поиск шаблона по значению 'value'")
-    private TemplatesListPage search(String value) {
-        searchInput.setValue(value);
-        Waiting.sleep(1000);
-        return this;
-    }
-
     @Step("Проверка, что шаблоны не найдены при поиске по '{value}'")
     public TemplatesListPage checkTemplateNotFound(String value) {
         search(value);

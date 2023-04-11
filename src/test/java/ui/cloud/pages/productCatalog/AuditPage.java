@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -64,7 +63,6 @@ public class AuditPage extends BasePage {
     @Step("Проверка отсутствия пользователя ")
     public AuditPage checkUserNotFound(String userName) {
         Table table = new Table("Учетная запись");
-        Waiting.find(() -> table.getHeadersCollection().last().isDisplayed(), Duration.ofSeconds(3));
         Assertions.assertFalse(table.isColumnValueEquals("Учетная запись", userName));
         return this;
     }
@@ -142,6 +140,12 @@ public class AuditPage extends BasePage {
         return this;
     }
 
+    @Step("Проверка отсутствия записей в аудите")
+    public AuditPage checkRecordsNotFoundV2() {
+        $x("//td[text()='Нет данных для отображения']").shouldBe(Condition.visible);
+        return this;
+    }
+
     @Step("Включение отображения запроса и ответа")
     public AuditPage showRequestAndResponse() {
         showRequest.getElement().scrollIntoView(false);
@@ -156,7 +160,7 @@ public class AuditPage extends BasePage {
         copyDataButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
         Assertions.assertTrue(StringUtils.getClipBoardText().contains(this.contextId.getText()));
         copyAddressButton.click();
-        Assertions.assertTrue(StringUtils.getClipBoardText().equals(address.getText()));
+        Assertions.assertEquals(StringUtils.getClipBoardText(), address.getText());
         if (!request.$x(".//i").exists()) {
             copyRequestButton.click();
             Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));

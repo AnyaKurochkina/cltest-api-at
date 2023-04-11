@@ -146,13 +146,6 @@ public class ServicesListPagePC extends BaseListPage {
         return this;
     }
 
-    @Step("Поиск сервиса по значению 'value'")
-    private ServicesListPagePC search(String value) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
-        return this;
-    }
-
     @Step("Удаление сервиса '{name}'")
     public ServicesListPagePC deleteService(String name) {
         search(name);
