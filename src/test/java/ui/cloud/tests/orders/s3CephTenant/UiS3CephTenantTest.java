@@ -27,7 +27,7 @@ import java.util.Collections;
 @Tags({@Tag("ui"), @Tag("ui_s3_ceph_tenant")})
 public class UiS3CephTenantTest extends UiProductTest {
 
-    S3Ceph product= S3Ceph.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/object_storage/orders/6c71058d-e761-4253-bbc3-91663a272f60/main?context=proj-iv550odo9a&type=project&org=vtb");
+    S3Ceph product;//= S3Ceph.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/object_storage/orders/6c71058d-e761-4253-bbc3-91663a272f60/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -134,7 +134,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     @DisplayName("UI S3CephTenant. Удалить правило Corse")
     void deleteRuleCorse() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
-        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.deleteRuleCorse());
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, s3CepthPages::deleteRuleCorse);
     }
 
     @Test
