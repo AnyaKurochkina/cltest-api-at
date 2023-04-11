@@ -12,7 +12,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.ClickHouseClusterOrderPage;
+import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
 import ui.extesions.ConfigExtension;

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
@@ -24,11 +25,13 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
+
 @Epic("UI Продукты")
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product;// = Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/bef89e26-d094-4bc1-82f7-a0bdb6092c76/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Windows product;// = Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/cc5093ba-83b4-47b4-b5b0-1bcfa7952009/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -42,7 +45,7 @@ public class UiWindowsTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI Windows. Заказ")
     void orderWindows() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -57,8 +60,8 @@ public class UiWindowsTest extends UiProductTest {
             orderPage.getRoleServer().set(product.getRole());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
-            EntitiesUtils.clickOrder();
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")
@@ -72,7 +75,7 @@ public class UiWindowsTest extends UiProductTest {
             throw e;
         }
         WindowsPage winPage = new WindowsPage(product);
-        Assertions.assertEquals(preBillingProductPrice, winPage.getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        checkOrderCost(prebillingCost, winPage);
     }
 
     @Test

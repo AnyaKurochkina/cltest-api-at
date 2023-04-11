@@ -13,8 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.LoginPage;
-import ui.cloud.pages.NewOrderPage;
-import ui.cloud.pages.WindowsOrderPage;
+import ui.cloud.pages.orders.NewOrderPage;
+import ui.cloud.pages.orders.WindowsOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 

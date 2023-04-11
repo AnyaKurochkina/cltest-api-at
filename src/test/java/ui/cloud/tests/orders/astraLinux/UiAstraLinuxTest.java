@@ -3,7 +3,6 @@ package ui.cloud.tests.orders.astraLinux;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
-import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -14,6 +13,7 @@ import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -23,7 +23,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ui.cloud.pages.EntitiesUtils.checkOrderCost;
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Epic("UI Продукты")
 @Feature("Astra Linux")
@@ -57,7 +57,7 @@ public class UiAstraLinuxTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            prebillingCost = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())

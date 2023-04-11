@@ -54,13 +54,6 @@ public class ProductsListPage extends BaseListPage {
         return new ProductPage().checkNameValidation(names);
     }
 
-    @Step("Задание в строке поиска значения 'value'")
-    private ProductsListPage search(String value) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
-        return this;
-    }
-
     @Step("Поиск и открытие страницы продукта '{name}'")
     public ProductPage findAndOpenProductPage(String name) {
         search(name);

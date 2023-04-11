@@ -2,7 +2,6 @@ package ui.cloud.tests.productCatalog.action;
 
 import core.enums.Role;
 import core.helper.JsonHelper;
-import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.authorizer.GlobalUser;
@@ -14,7 +13,6 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
@@ -24,7 +22,6 @@ import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
-import ui.cloud.tests.productCatalog.BaseTest;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -38,34 +35,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.*;
 
-@DisabledIfEnv("prod")
-public class ActionTest extends BaseTest {
-
-    private final String TITLE = "AT UI Action";
-
-    @Test
-    @DisplayName("Просмотр списка действий, сортировка")
-    @TmsLink("505701")
-    public void viewActionsListTest() {
-        new IndexPage()
-                .goToActionsListPage()
-                .checkHeaders()
-                .checkSorting();
-    }
-
-    @Test
-    @DisplayName("Поиск действия")
-    @TmsLink("1425598")
-    public void searchActionTest() {
-        String name = UUID.randomUUID().toString();
-        Action action = createActionByApi(name);
-        new IndexPage()
-                .goToActionsListPage()
-                .findActionByValue(name, action)
-                .findActionByValue(TITLE, action)
-                .findActionByValue(name.substring(1).toUpperCase(), action)
-                .findActionByValue(TITLE.substring(1).toLowerCase(), action);
-    }
+public class ActionTest extends ActionBaseTest {
 
     @Test
     @TmsLink("505750")
@@ -348,20 +318,6 @@ public class ActionTest extends BaseTest {
                 .checkCurrentVersionInDiff("1.0.0")
                 .compareWithVersion("1.0.0")
                 .compareWithVersion("1.0.1");
-    }
-
-    @Step("Создание действия '{name}'")
-    private Action createActionByApi(String name) {
-        return Action.builder()
-                .name(name)
-                .title(TITLE)
-                .number(0)
-                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
-                        .event_type(EventType.VM.getValue())
-                        .event_provider(EventProvider.VSPHERE.getValue())
-                        .build()))
-                .build()
-                .createObject();
     }
 
     @Test

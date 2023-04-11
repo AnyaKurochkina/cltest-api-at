@@ -13,12 +13,14 @@ import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
@@ -45,7 +47,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI ClickHouse. Заказ")
     void orderClickHouse() {
-        double preBillingProductPrice;
+        double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -63,8 +65,8 @@ public class UiClickHouseTest extends UiProductTest {
             orderPage.getGroup2().set(accessGroup);
             orderPage.getGroup3().set(accessGroup);
             orderPage.getGroup4().set(accessGroup);
-            preBillingProductPrice = EntitiesUtils.getCostValue(orderPage.getPrebillingCostElement());
-            EntitiesUtils.clickOrder();
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
                     .getElementByColumn("Продукт")
@@ -78,7 +80,7 @@ public class UiClickHouseTest extends UiProductTest {
             throw e;
         }
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        Assertions.assertEquals(preBillingProductPrice, clickHousePage.getOrderCost(), 0.01);
+        checkOrderCost(prebillingCost, clickHousePage);
     }
 
     @Test

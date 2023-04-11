@@ -16,7 +16,7 @@ import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
-import static ui.cloud.pages.IProductPage.getBtnAction;
+import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 
 
 @Getter
