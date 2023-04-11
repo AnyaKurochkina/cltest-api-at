@@ -19,6 +19,7 @@
         <allure-maven-version>2.10.0</allure-maven-version>
         <rest-assured-version>4.4.0</rest-assured-version>
         <junit.version>5.8.0-M1</junit.version>
+        <repository>http://nexus.corp.dev.vtb/repository/maven-public/</repository>
     </properties>
 
     <repositories>
@@ -28,13 +29,13 @@
             </snapshots>
             <id>central</id>
             <name>libs-release</name>
-            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+            <url>${repository}</url>
         </repository>
         <repository>
             <snapshots/>
             <id>snapshots</id>
             <name>libs-snapshot</name>
-            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+            <url>${repository}</url>
         </repository>
     </repositories>
     <pluginRepositories>
@@ -44,13 +45,13 @@
             </snapshots>
             <id>central</id>
             <name>plugins-release</name>
-            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+            <url>${repository}</url>
         </pluginRepository>
         <pluginRepository>
             <snapshots/>
             <id>snapshots</id>
             <name>plugins-snapshot</name>
-            <url>http://nexus.corp.dev.vtb/repository/maven-public/</url>
+            <url>${repository}</url>
         </pluginRepository>
     </pluginRepositories>
 
