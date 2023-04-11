@@ -8,6 +8,7 @@ import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
 import models.cloud.productCatalog.product.Product;
+import models.cloud.productCatalog.product.ProductOrderRestriction;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -136,12 +137,14 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Обновление order_restrictions продукта по Id")
-    public static Response updateProductOrderRestrictionById(String objectId, String restrictionId, JSONObject json) {
+    public static ProductOrderRestriction updateProductOrderRestrictionById(String objectId, String restrictionId, JSONObject json) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .patch(productUrl + objectId + "/order_restrictions/?order_restriction_id={}", restrictionId)
-                .assertStatus(200);
+                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
+                .assertStatus(200)
+                .extractAs(ProductOrderRestriction.class);
     }
 
     @Step("Создание order_restrictions продукта по Id")
@@ -178,12 +181,14 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Обновление order_restrictions продукта по имени")
-    public static Response updateProductOrderRestrictionByName(String name, String restrictionId, JSONObject json) {
+    public static ProductOrderRestriction updateProductOrderRestrictionByName(String name, String restrictionId, JSONObject json) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .patch(productUrlV2 + name + "/order_restrictions/?order_restriction_id={}", restrictionId)
-                .assertStatus(200);
+                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
+                .assertStatus(200)
+                .extractAs(ProductOrderRestriction.class);
     }
 
     @Step("Удаление order_restrictions продукта по имени")
