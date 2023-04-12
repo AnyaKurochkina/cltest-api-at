@@ -26,7 +26,6 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
     private final Select typeDropDown = Select.byLabel("Тип");
-    private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement graphNameValidationHint = $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::div");
@@ -80,8 +79,7 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Удаление графа '{name}'")
     public GraphsListPage deleteGraph(String name) {
-        openActionMenu(nameColumn, name);
-        deleteAction.click();
+        delete(nameColumn, name);
         new DeleteDialog().inputValidIdAndDelete();
         return this;
     }

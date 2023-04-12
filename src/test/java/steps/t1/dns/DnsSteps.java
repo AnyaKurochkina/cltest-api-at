@@ -13,12 +13,11 @@ import steps.Steps;
 import java.util.List;
 
 import static core.enums.Role.CLOUD_ADMIN;
-import static core.helper.Configure.DNSService;
-import static core.helper.Configure.PowerDns;
+import static core.helper.Configure.*;
 
 public class DnsSteps extends Steps {
     private static final String apiUrl = "/api/v1/";
-    private static final String apiKey = "6e3bc9a0fa7eaebf282ad2e5";
+    private static final String apiKey = getAppProp("powerdnsToken");
 
     @Step("Создание приватной zone")
     public static DnsZone createPrivateZone(JSONObject object, String projectId) {
