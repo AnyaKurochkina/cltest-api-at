@@ -2,7 +2,6 @@ package core.utils.ssh;
 
 import com.jcraft.jsch.*;
 import core.helper.Configure;
-import core.utils.Waiting;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
@@ -39,10 +38,9 @@ public class SshClient {
     public String execute(String cmd) {
         Session session = initSession(host, user, password);
         Channel channel = initChannel(cmd, session);
-        InputStream in = channel.getInputStream();
         channel.connect();
         log.info("Соединение установлено...");
-        String dataFromChannel = read(in);
+        String dataFromChannel = read(channel.getInputStream());
         channel.disconnect();
         session.disconnect();
         return dataFromChannel;
@@ -52,7 +50,6 @@ public class SshClient {
         StringBuilder result = new StringBuilder();
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
         String line;
-        Waiting.sleep(2000);
         while ((line = bufferedReader.readLine()) != null)
             result.append(line).append('\n');
         return result.toString();
