@@ -70,4 +70,5 @@ public class PowerDnsZone {
 
 	@JsonProperty("account")
 	private String account;
+	private String catalog;
 }

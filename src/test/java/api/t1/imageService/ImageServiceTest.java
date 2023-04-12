@@ -36,7 +36,7 @@ public class ImageServiceTest extends Tests {
                 .build()
                 .createObject();
         Waiting.sleep(15000);
-        assertTrue(isImageGroupExist(imageGroup.getName(), false), String.format("Группы с именем %s нет в списке", imageGroup.getName()));
+        assertFalse(isImageGroupExist(imageGroup.getName(), false), String.format("Группы с именем %s нет в списке", imageGroup.getName()));
     }
 
     @Test
@@ -93,8 +93,12 @@ public class ImageServiceTest extends Tests {
     @TmsLink("1152154")
     @DisplayName("Удаление ImageGroups")
     public void deleteImageGroupTest() {
+        String groupName = "delete_image_groups_test_api";
+        if (isImageGroupExist(groupName, true)) {
+            deleteImageGroupByName(groupName);
+        }
         JSONObject jsonObject = ImageGroup.builder()
-                .name("delete_image_groups_test_api")
+                .name(groupName)
                 .tags(Collections.singletonList("os:delete_test"))
                 .distro("fedora")
                 .build()

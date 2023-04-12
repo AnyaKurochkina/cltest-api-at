@@ -1,6 +1,7 @@
 package api.t1.dns;
 
 import api.Tests;
+import core.helper.DateValidator;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Objects;
 
@@ -196,5 +198,21 @@ public class PublicDnsTest extends Tests {
         Objects.requireNonNull(createdRrset).setRecordName("r.update." + domainName);
         partialUpdateRrset(projectId, zoneId, Objects.requireNonNull(createdRrset).getId(), createdRrset.toJson());
         assertTrue(isRrsetExist(updatedName, zoneId, projectId));
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Проверка формата даты создания и обновления")
+    public void checkDateFormatPublicZoneTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
+        DnsZone zone = DnsZone.builder()
+                .name("check_format_date_public_zone_test_api")
+                .domainName(domainName)
+                .type("public")
+                .build();
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        DateValidator validator = new DateValidator(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
+        assertTrue(validator.isValid(dnsZone.getCreated_at()), "Формат даты не соответствует yyyy-MM-dd'T'HH:mm:ss'Z'");
+        assertTrue(validator.isValid(dnsZone.getUpdated_at()), "Формат даты не соответствует yyyy-MM-dd'T'HH:mm:ss'Z'");
     }
 }

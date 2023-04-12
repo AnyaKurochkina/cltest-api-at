@@ -20,8 +20,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Getter
 public class ActionsListPage extends BaseListPage {
     private static final String NAME_COLUMN = "Код действия";
-    private final SelenideElement copyAction = $x("//li[text() = 'Создать копию']");
-    private final SelenideElement deleteAction = $x("//li[text() = 'Удалить']");
     private final SearchSelect typeSelect = SearchSelect.byLabel("Тип");
     private final SearchSelect providerSelect = SearchSelect.byLabel("Провайдер");
 
@@ -56,16 +54,14 @@ public class ActionsListPage extends BaseListPage {
 
     @Step("Копирование действия {name}")
     public ActionPage copyAction(String name) {
-        openActionMenu(NAME_COLUMN, name);
-        copyAction.click();
+        copy(NAME_COLUMN, name);
         Alert.green("Копирование выполнено успешно");
         return new ActionPage();
     }
 
     @Step("Удаление действия {name}")
     public DeleteDialog deleteAction(String name) {
-        openActionMenu(NAME_COLUMN, name);
-        deleteAction.click();
+        delete(NAME_COLUMN, name);
         return new DeleteDialog();
     }
 
