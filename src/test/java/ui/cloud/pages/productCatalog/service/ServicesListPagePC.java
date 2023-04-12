@@ -150,7 +150,8 @@ public class ServicesListPagePC extends BaseListPage {
     public ServicesListPagePC deleteService(String name) {
         search(name);
         BaseListPage.delete(columnName, name);
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        new DeleteDialog().inputValidIdAndDelete("Отложенные запуски отменены успешно");
+        Alert.green("Удаление выполнено успешно");
         Assertions.assertTrue(new Table(columnName).isEmpty());
         return this;
     }

@@ -76,7 +76,7 @@ public class VisualTemplateTest extends Tests {
                 .createObject();
         String errorMessage = deleteVisualTemplateById(visualTemplates.getId())
                 .assertStatus(403).extractAs(ErrorMessage.class).getMessage();
-        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
+        partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertEquals(errorText, errorMessage);
     }
 
@@ -94,8 +94,8 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        Assertions.assertTrue(steps.isExists(name));
-        Assertions.assertFalse(steps.isExists("no_exist_template_test"));
+        Assertions.assertTrue(isVisualTemplateExists(name));
+        Assertions.assertFalse(isVisualTemplateExists("no_exist_template_test"));
     }
 
     @DisplayName("Проверка сортировки по дате создания в шаблонах визуализации")
@@ -186,7 +186,7 @@ public class VisualTemplateTest extends Tests {
         boolean isActive = steps.getJsonPath(cloneId).get("is_active");
         assertFalse(isActive);
         deleteVisualTemplateByName(cloneName);
-        Assertions.assertFalse(steps.isExists(cloneName));
+        Assertions.assertFalse(isVisualTemplateExists(cloneName));
         steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
     }
 
@@ -209,7 +209,7 @@ public class VisualTemplateTest extends Tests {
     @DisplayName("Частичное обновление шаблона визуализации по Id")
     @TmsLink("643668")
     @Test
-    public void partialUpdateVisualTemplate() {
+    public void partialUpdateVisualTemplateTest() {
         String name = "partial_update_item_visual_template_test_api";
         ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
@@ -221,7 +221,7 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         String expectedDescription = "UpdateDescription";
-        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject()
+        partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject()
                 .put("description", expectedDescription)).assertStatus(200);
         ItemVisualTemplate getResponse = getVisualTemplateById(visualTemplates.getId());
         String actualDescription = getResponse.getDescription();
@@ -260,7 +260,7 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .init().toJson();
-        steps.partialUpdateObject(visualTemplates.getId(), json);
+        partialUpdateVisualTemplate(visualTemplates.getId(), json);
         ItemVisualTemplate getResponse = getVisualTemplateById(visualTemplates.getId());
         assertEquals(defaultItem, getResponse.getDefaultItem());
     }
@@ -441,7 +441,7 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         ItemVisualTemplate visualTemplate = getItemVisualTemplateByTypeProvider(visualTemplates.getEventType().get(0), visualTemplates.getEventProvider().get(0));
-        steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
+        partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertNull(visualTemplate.getDefaultItem());
     }
 }
