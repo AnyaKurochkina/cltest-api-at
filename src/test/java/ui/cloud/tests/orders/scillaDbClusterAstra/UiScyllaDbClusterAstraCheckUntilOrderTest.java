@@ -2,7 +2,6 @@ package ui.cloud.tests.orders.scillaDbClusterAstra;
 
 
 import api.Tests;
-import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -13,6 +12,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
+import ui.cloud.pages.orders.NewOrderPage;
+import ui.cloud.pages.orders.ScyllaDbClusterOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 

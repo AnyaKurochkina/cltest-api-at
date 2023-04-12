@@ -3,7 +3,7 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import lombok.Getter;
-import ui.cloud.pages.EntitiesUtils;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Input;
 import ui.elements.Select;
@@ -61,8 +61,8 @@ public class DiskCreate {
 
     public DiskCreate clickOrder(){
         Waiting.sleep(2000);
-        EntitiesUtils.clickOrder();
-        EntitiesUtils.waitCreate(() -> new DiskList.DiskTable()
+        OrderUtils.clickOrder();
+        OrderUtils.waitCreate(() -> new DiskList.DiskTable()
                 .getRowByColumnValue(Column.NAME, name).getElementByColumn("Дата создания")
                 .shouldNot(Condition.exactText(""), Duration.ofSeconds(90)));
         return this;

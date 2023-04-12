@@ -31,14 +31,14 @@ public class ControlPanelIndexPage {
 
     @Step("Переход на страницу Образы.Маркетинговая информация")
     public MarketingInfoListPage goToMarketingInfoListPage() {
-        imagesLink.click();
+        imagesLink.scrollIntoView(true).click();
         marketingInfoLink.click();
         return new MarketingInfoListPage();
     }
 
     @Step("Переход на страницу Образы.Логотипы")
     public LogoListPage goToLogoListPage() {
-        imagesLink.click();
+        imagesLink.scrollIntoView(true).click();
         logosLink.click();
         return new LogoListPage();
     }

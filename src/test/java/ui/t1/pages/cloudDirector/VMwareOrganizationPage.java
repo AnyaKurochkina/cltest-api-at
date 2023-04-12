@@ -5,8 +5,8 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.EntitiesUtils;
-import ui.cloud.pages.ProductStatus;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.ProductStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -78,7 +78,7 @@ public class VMwareOrganizationPage {
 
     @Step("Ожидание смены статуса")
     public VMwareOrganizationPage waitChangeStatus() {
-        EntitiesUtils.waitChangeStatus(new DataCentreTable(), Duration.ofMinutes(8));
+        OrderUtils.waitChangeStatus(new DataCentreTable(), Duration.ofMinutes(8));
         return this;
     }
 
