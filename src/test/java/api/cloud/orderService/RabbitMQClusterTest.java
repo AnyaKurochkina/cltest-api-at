@@ -146,11 +146,11 @@ public class RabbitMQClusterTest extends Tests {
     void checkCreate(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser("sshUser");
-            assertContains(rabbit.executeSsh("rabbitmqctl list_users"), "sshUser");
+            assertContains(rabbit.executeSsh("rabbitmqctl list_users | grep ''"), "sshUser");
             rabbit.addVhost(Collections.singletonList("sshVhostAccess"));
-            assertContains(rabbit.executeSsh("rabbitmqctl list_vhosts"), "sshVhostAccess");
+            assertContains(rabbit.executeSsh("rabbitmqctl list_vhosts | grep ''"), "sshVhostAccess");
             rabbit.addVhostAccess("sshVhostUser", Collections.singletonList("READ"), "sshVhostAccess");
-            assertContains(rabbit.executeSsh("rabbitmqctl list_permissions"), "sshVhostUser");
+            assertContains(rabbit.executeSsh("rabbitmqctl list_permissions | grep ''"), "sshVhostUser");
         }
     }
 
