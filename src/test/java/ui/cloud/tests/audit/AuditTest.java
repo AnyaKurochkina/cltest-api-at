@@ -92,7 +92,7 @@ public class AuditTest extends Tests {
                         graphsObject, createdCode, createdStatus)
                 .setUserFilter("test_user")
                 .applyAdditionalFilters()
-                .checkUserNotFound(pcAdmin.getEmail())
+                .checkRecordsNotFoundV2()
                 .setUserFilter(pcAdmin.getEmail())
                 .setStatusCodeFilter(createdCode)
                 .setObjectType(graphsObject)

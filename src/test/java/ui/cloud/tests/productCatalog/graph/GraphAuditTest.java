@@ -55,7 +55,7 @@ public class GraphAuditTest extends GraphBaseTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
         new AuditPage().setFilterByDate(LocalDateTime.now().plusDays(1).format(formatter),
                         LocalDateTime.now().plusDays(2).format(formatter))
-                .checkRecordsNotFound()
+                .checkRecordsNotFoundV2()
                 .selectPeriod("день")
                 .checkRecordWithOperationTypeFound("modify");
     }
@@ -63,15 +63,15 @@ public class GraphAuditTest extends GraphBaseTest {
     @Step("Проверка фильтрации по дополнительным фильтрам")
     private void checkAdditionalFilters() {
         new AuditPage().setOperationTypeFilterAndApply("delete")
-                .checkRecordsNotFound()
+                .checkRecordsNotFoundV2()
                 .clearAdditionalFilters()
                 .setUserFilter("test_user")
                 .applyAdditionalFilters()
-                .checkRecordsNotFound()
+                .checkRecordsNotFoundV2()
                 .clearAdditionalFilters()
                 .setStatusCodeFilter("500")
                 .applyAdditionalFilters()
-                .checkRecordsNotFound()
+                .checkRecordsNotFoundV2()
                 .clearAdditionalFilters()
                 .setOperationTypeFilterAndApply("create")
                 .setUserFilter(user.getUsername())

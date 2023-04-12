@@ -37,7 +37,10 @@ public enum Role {
     VIEWER("roles/viewer"),
 
     @SerializedName("superviewer")
-    SUPERVIEWER("superviewer");
+    SUPERVIEWER("superviewer"),
+
+    @SerializedName("superadmin")
+    SUPERADMIN("superadmin");
 
     private final String name;
 
