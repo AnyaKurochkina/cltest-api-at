@@ -1,5 +1,6 @@
 package api.t1.imageService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -20,7 +21,7 @@ import static steps.t1.imageService.ImageServiceSteps.*;
 @Tag("image_service")
 @Epic("Сервис образов")
 @Feature("image")
-public class ImageTest {
+public class ImageTest extends Tests {
 
     @Test
     @TmsLink("1258589")

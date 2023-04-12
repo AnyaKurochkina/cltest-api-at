@@ -130,14 +130,6 @@ public class ProductCatalogSteps {
                 .assertStatus(200).jsonPath().get("exists");
     }
 
-    @Step("Импорт объекта продуктового каталога")
-    public void importObject(String pathName) {
-        new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(productName + "obj_import/", "file", new File(pathName))
-                .assertStatus(200);
-    }
-
     @Step("Получение объекта продуктового каталога по Id")
     public GetImpl getById(String objectId, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)

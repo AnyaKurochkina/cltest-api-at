@@ -28,5 +28,6 @@
   "extra_data": {},
   "version": "",
   "is_safe": null,
+  "is_delayable": false,
   "default_item": {}
 }
