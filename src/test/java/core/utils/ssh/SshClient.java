@@ -5,15 +5,16 @@ import core.helper.Configure;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Objects;
 
 @Log4j2
 public class SshClient {
     private static final int SSH_PORT = 22;
     private static final int CONNECTION_TIMEOUT = 10000;
-    private static final int BUFFER_SIZE = 1024;
     private final String host;
     private final String user;
     private final String password;
@@ -30,7 +31,6 @@ public class SshClient {
                 "Не задан параметр " + env + ".user");
         this.password = Objects.requireNonNull(Configure.getAppProp(env + ".password"),
                 "Не задан параметр " + env + ".password");
-        ;
     }
 
 
@@ -41,30 +41,18 @@ public class SshClient {
         InputStream in = channel.getInputStream();
         channel.connect();
         log.info("Соединение установлено...");
-        String dataFromChannel = getDataFromChannel(channel, in);
+        String dataFromChannel = read(in);
         channel.disconnect();
         session.disconnect();
         return dataFromChannel;
     }
 
-    private String getDataFromChannel(Channel channel, InputStream in)
-            throws IOException {
+    private String read(InputStream in) throws IOException {
         StringBuilder result = new StringBuilder();
-        byte[] tmp = new byte[BUFFER_SIZE];
-        while (true) {
-            while (in.available() > 0) {
-                int i = in.read(tmp, 0, BUFFER_SIZE);
-                if (i < 0) {
-                    break;
-                }
-                result.append(new String(tmp, 0, i));
-            }
-            if (channel.isClosed()) {
-                int exitStatus = channel.getExitStatus();
-                log.info("exit-status: {}", exitStatus);
-                break;
-            }
-        }
+        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+        String line;
+        while ((line = bufferedReader.readLine()) != null)
+            result.append(line).append('\n');
         return result.toString();
     }
 
