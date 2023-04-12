@@ -2,13 +2,11 @@ package core.utils.ssh;
 
 import com.jcraft.jsch.*;
 import core.helper.Configure;
+import core.utils.Waiting;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.Objects;
 
 @Log4j2
@@ -18,6 +16,7 @@ public class SshClient {
     private final String host;
     private final String user;
     private final String password;
+    private final ByteArrayOutputStream out = new ByteArrayOutputStream();
 
     public SshClient(String host, String user, String password) {
         this.host = host;
@@ -33,37 +32,25 @@ public class SshClient {
                 "Не задан параметр " + env + ".password");
     }
 
-
     @SneakyThrows
     public String execute(String cmd) {
         Session session = initSession(host, user, password);
         Channel channel = initChannel(cmd, session);
         channel.connect();
-        log.info("Соединение установлено...");
-        String dataFromChannel = read(channel.getInputStream());
-        channel.disconnect();
-        session.disconnect();
-        return dataFromChannel;
-    }
-
-    private String read(InputStream in) throws IOException {
-        StringBuilder result = new StringBuilder();
-        BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
-        String line;
-        while ((line = bufferedReader.readLine()) != null)
-            result.append(line).append('\n');
-        return result.toString();
+        //Пришлось делать общий OutputStream на setOutputStream и setErrStream
+        //Для корректного чтения
+        Waiting.sleep(2000);
+        return out.toString();
     }
 
     private Channel initChannel(String commands, Session session) throws JSchException {
         Channel channel = session.openChannel("exec");
         ChannelExec channelExec = (ChannelExec) channel;
         channelExec.setCommand(commands);
-        channelExec.setInputStream(null);
-        channelExec.setErrStream(System.err);
+        channelExec.setOutputStream(out);
+        channelExec.setErrStream(out);
         return channel;
     }
-
 
     private Session initSession(String host, String username, String password) throws JSchException {
         JSch jsch = new JSch();
