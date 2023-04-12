@@ -149,7 +149,7 @@ public class RabbitMQClusterTest extends Tests {
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_users"), "sshUser");
             rabbit.addVhost(Collections.singletonList("sshVhostAccess"));
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_vhosts"), "sshVhostAccess");
-            rabbit.addVhostAccess("sshVhostUser", Collections.singletonList("READ"), "sshVhostAccess");
+            rabbit.addVhostAccess("sshUser", Collections.singletonList("READ"), "sshVhostAccess");
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_permissions"), "sshVhostUser");
         }
     }
