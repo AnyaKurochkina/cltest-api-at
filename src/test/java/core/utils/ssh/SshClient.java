@@ -37,9 +37,9 @@ public class SshClient {
         Session session = initSession(host, user, password);
         Channel channel = initChannel(cmd, session);
         channel.connect();
-        //Пришлось делать общий OutputStream на setOutputStream и setErrStream
-        //Для корректного чтения
-        Waiting.sleep(2000);
+        while(true)
+            if(channel.isClosed())
+                break;
         return out.toString();
     }
 
