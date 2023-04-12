@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.jinja2.GetJinja2List;
 import models.cloud.productCatalog.jinja2.Jinja2;
 import steps.Steps;
@@ -65,5 +66,14 @@ public class Jinja2Steps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(jinjaUrl + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);
+    }
+
+    @Step("Получение Meta данных списка jinja2 продуктового каталога")
+    public static Meta getMetaJinja2List() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(jinjaUrl)
+                .assertStatus(200)
+                .extractAs(GetJinja2List.class).getMeta();
     }
 }
