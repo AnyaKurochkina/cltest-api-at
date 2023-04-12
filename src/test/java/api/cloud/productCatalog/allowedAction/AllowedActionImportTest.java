@@ -9,11 +9,13 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
+import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.getActionById;
 import static steps.productCatalog.AllowedActionSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
 import static steps.productCatalog.ProductSteps.importProduct;
@@ -78,12 +80,13 @@ public class AllowedActionImportTest extends Tests {
     public void importExistAllowedActionTest() {
         String allowedActionName = "import_exist_allowed_action_test_api";
         AllowedAction allowedAction = createAllowedAction(allowedActionName);
+        Action action = getActionById(allowedAction.getActionId());
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/existAllowedActionImport.json";
         DataFileHelper.write(filePath, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
         ImportObject importObject = importAllowedAction(filePath);
         DataFileHelper.delete(filePath);
         assertEquals("success", importObject.getStatus());
-        assertEquals( String.format("Обновлен объект %s %s:%d", importObject.getModelName(), allowedAction.getName(), allowedAction.getId()),
+        assertEquals( String.format("Обновлен объект %s %s:%d", importObject.getModelName(), action.getName(), allowedAction.getId()),
                 importObject.getMessages().get(0));
     }
 
