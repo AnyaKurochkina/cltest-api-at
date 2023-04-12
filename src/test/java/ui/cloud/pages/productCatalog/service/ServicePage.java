@@ -33,8 +33,8 @@ public class ServicePage extends BasePage {
     private final Input tagValueInput = Input.byPlaceholder("Введите значение");
     private final SelenideElement addTagValueButton = $x("//div[@role='dialog']//input/..//button");
     private final SelenideElement addTagDialogSaveButton = $x("//div[@role='dialog']//button[div[text()='Сохранить']]");
-    private final SelenideElement editTagMenuAction = $x("//div[@role='list'][not(@aria-hidden)]//li[contains(text(),'Редактировать')]");
-    private final SelenideElement deleteTagMenuAction = $x("//div[@role='list'][not(@aria-hidden)]//li[contains(text(),'Удалить')]");
+    private final SelenideElement editTagMenuAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Редактировать']");
+    private final SelenideElement deleteTagMenuAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Удалить']");
     private final SelenideElement deleteTagSubmitButton = $x("//form//button[@type='submit']");
     private final String tagTitleColumn = "Наименование";
     private final String noDataFound = "Нет данных для отображения";
@@ -117,7 +117,8 @@ public class ServicePage extends BasePage {
     public void deleteService() {
         deleteButton.click();
         new DeleteDialog().checkText("ВНИМАНИЕ! запланированные запуски будут отмененыКоличество запланированных запусков: 0")
-                .inputValidIdAndDelete("Удаление выполнено успешно");
+                .inputValidIdAndDelete("Отложенные запуски отменены успешно");
+        Alert.green("Удаление выполнено успешно");
     }
 
     @Step("Задание значения в поле 'Описание'")
