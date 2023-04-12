@@ -30,4 +30,11 @@ public class CompactTemplate {
     private Object domain;
     private Object description;
     private Object networks;
+    @JsonProperty("mac_address")
+    private Object macAddress;
+    private Object ip;
+    private Object image;
+    private Object link;
+    @JsonProperty("created_at")
+    private Object createdAt;
 }
