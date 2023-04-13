@@ -15,7 +15,6 @@ import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -59,7 +58,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:data:" + envType() + ":" + getEnv().toLowerCase()).get(0);
         flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:master:" + envType() + ":" + getEnv().toLowerCase()).get(0);
 //        flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
@@ -78,6 +77,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.system_adm_groups[0]", accessGroup)
                 .set("$.order.attrs.user_app_groups[0]", accessGroup)
                 .set("$.order.attrs.adm_app_groups[0]", accessGroup)
@@ -97,6 +97,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
+                .set("$.default_nic.net_segment", getSegment())
+                .set("$.data_center", getDataCentre())
                 .set("$.kibana_password", kibanaPassword)
                 .set("$.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
                 .remove("$.ad_logon_grants", !isDev())

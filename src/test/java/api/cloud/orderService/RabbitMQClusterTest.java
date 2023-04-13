@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import com.mifmif.common.regex.Generex;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -13,7 +14,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,6 +21,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("RabbitMQCluster")
@@ -100,7 +102,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
-    @TmsLinks({@TmsLink("707975"),@TmsLink("707972")})
+    @TmsLinks({@TmsLink("707975"), @TmsLink("707972")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание/Удаление vhosts {0}")
@@ -113,7 +115,7 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
-    @TmsLinks({@TmsLink("707976"),@TmsLink("707978")})
+    @TmsLinks({@TmsLink("707976"), @TmsLink("707978")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавление/Удаление прав на vhost {0}")
@@ -127,7 +129,7 @@ public class RabbitMQClusterTest extends Tests {
     }
 
     @Disabled
-    @TmsLinks({@TmsLink("377642"),@TmsLink("377643")})
+    @TmsLinks({@TmsLink("377642"), @TmsLink("377643")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
@@ -135,6 +137,20 @@ public class RabbitMQClusterTest extends Tests {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.stopHard();
             rabbit.start();
+        }
+    }
+
+    @TmsLink("1060328")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка создания {0}")
+    void checkCreate(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            rabbit.rabbitmqCreateUser("sshUser");
+            assertContains(rabbit.executeSsh("sudo rabbitmqctl list_users"), "sshUser");
+            rabbit.addVhost(Collections.singletonList("sshVhostAccess"));
+            assertContains(rabbit.executeSsh("sudo rabbitmqctl list_vhosts"), "sshVhostAccess");
+            rabbit.addVhostAccess("sshUser", Collections.singletonList("READ"), "sshVhostAccess");
+            assertContains(rabbit.executeSsh("sudo rabbitmqctl list_permissions"), "sshUser");
         }
     }
 

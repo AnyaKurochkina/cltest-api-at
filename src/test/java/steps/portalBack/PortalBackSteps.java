@@ -101,4 +101,15 @@ public class PortalBackSteps extends Steps {
                     .projectName(projectId).domain(domain).codePurpose(type).build().createObject()).getPrefixName();
         return accessGroup;
     }
+
+    @Step("Получение группы доступа по описанию")
+    public static String getAccessGroupByDesc(String projectId, String desc) {
+        String accessGroup = new Http(PortalBackURL)
+                .setRole(Role.ACCESS_GROUP_ADMIN)
+                .get("/v1/projects/{}/access_groups?page=1&per_page=25", projectId)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list.find{it.description == '" + desc + "'}.name");
+        return Objects.requireNonNull(accessGroup);
+    }
 }

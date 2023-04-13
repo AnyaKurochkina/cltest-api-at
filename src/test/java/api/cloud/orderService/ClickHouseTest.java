@@ -1,20 +1,22 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouse;
-import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("ClickHouse")
@@ -44,6 +46,7 @@ public class ClickHouseTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetPasswordOwner(ClickHouse product) {
+        Assumptions.assumeTrue("dev".equalsIgnoreCase(product.envType()), "Тест включен только для dev среды");
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.resetPasswordOwner();
         }
@@ -110,7 +113,7 @@ public class ClickHouseTest extends Tests {
     @ParameterizedTest(name = "ТУЗ локальные, создание/удаление локальной УЗ {0}")
     void createUserAccount(ClickHouse product) {
         try (ClickHouse cluster = product.createObjectExclusiveAccess()) {
-            cluster.createUserAccount("test", "qBZ7hUOija_gSSyOEt7rA-.nk-x.R4UzdJvrv8y1JJk.lpp");
+            cluster.createUserAccount("test", "helv1gONd1kINnQe7XsAzqiPPtyq50E0LAA2NX");
             cluster.deleteUserAccount("test");
         }
     }
@@ -147,6 +150,15 @@ public class ClickHouseTest extends Tests {
             AccessGroup accessGroup = AccessGroup.builder().projectName(clickHouse.getProjectId()).build().createObject();
             clickHouse.deleteGroupAdmin(accessGroup.getPrefixName());
             clickHouse.addGroupAdmin(accessGroup.getPrefixName());
+        }
+    }
+
+    @TmsLink("330446")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка создания ВМ {0}")
+    void checkCreate(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            assertContains(clickHouse.executeSsh("sudo id"), "root");
         }
     }
 

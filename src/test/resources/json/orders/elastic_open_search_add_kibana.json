@@ -7,6 +7,12 @@
     "name": "c2m4"
   },
   "ad_integration": true,
+  "extra_nics": [
+  ],
+  "data_center": "5",
+  "default_nic": {
+    "net_segment": "test-srv-perf"
+  },
   "kibana_extra_mounts": [
     {
       "path": "/app/kibana",

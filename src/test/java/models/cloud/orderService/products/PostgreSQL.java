@@ -1,12 +1,13 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Db;
@@ -19,6 +20,8 @@ import steps.portalBack.PortalBackSteps;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static core.utils.AssertUtils.assertContains;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -61,13 +64,13 @@ public class PostgreSQL extends IProduct {
             osVersion = getRandomOsVersion();
         if (postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
@@ -75,13 +78,13 @@ public class PostgreSQL extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
@@ -131,6 +134,9 @@ public class PostgreSQL extends IProduct {
     public void setConnLimit(String dbName, int count) {
         OrderServiceSteps.executeAction("set_conn_limit", this, new JSONObject().put("db_name", dbName).put("conn_limit", count), this.getProjectId());
         Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
+        if (isDev())
+            Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s(.*)\\n\\(",
+                    executeSsh("psql -c \"select datconnlimit from pg_database where datname='dbname';\"")));
     }
 
     public void removeConnLimit(String dbName) {
@@ -156,7 +162,7 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-    public String getIp(){
+    public String getIp() {
         return ((String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='vm'}.data.config.default_v4_address"));
     }
 
@@ -182,7 +188,7 @@ public class PostgreSQL extends IProduct {
     public void removeDbmsUser(String username, String dbName) {
         OrderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
-                this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
+                        this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
         users.remove(new DbUser(dbName, username));
         log.info("users = " + users);
@@ -197,6 +203,7 @@ public class PostgreSQL extends IProduct {
         Assertions.assertEquals(flavor.data.memory, memoryAfter);
     }
 
+    @SneakyThrows
     public void checkConnection(String dbName, String password) {
         checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
@@ -220,6 +227,15 @@ public class PostgreSQL extends IProduct {
     public void updateMaxConnections(String loadProfile, int maxConnections) {
         OrderServiceSteps.executeAction("postgresql_update_max_connections", this,
                 new JSONObject(String.format("{\"load_profile\":\"%s\", max_connections: %d}", loadProfile, maxConnections)), this.getProjectId());
+    }
+
+    public void checkUseSsh(String ip, String dbName, String adminPassword) {
+        SshClient ssh = new SshClient(ip, envType());
+        String cmd = "psql \"host=localhost dbname=" + dbName +
+                " user=" + dbName + "_admin password=" + adminPassword +
+                "\" -c \"\\pset pager off\" -c \"CREATE TABLE test1 (name varchar(30), surname varchar(30));\" -c \"\\z " + dbName + ".test1\"";
+        assertContains(ssh.execute(cmd), dbName + "_user=arwd/" + dbName + "_admin",
+                dbName + "_reader=r/" + dbName + "_admin", dbName + "_admin=arwdDxt/" + dbName + "_admin");
     }
 }
 

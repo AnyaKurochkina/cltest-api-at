@@ -11,7 +11,7 @@ import ui.elements.Table;
 public class Vm extends IProductT1Page<Vm> {
 
     public Disk selectDisk(String disk) {
-        new Disk.DiskInfo().getRowByColumnValue(Column.NAME, disk).get().shouldBe(Condition.visible).click();
+        new Disk.DiskInfo().getRowByColumnValue(Column.NAME, disk).getElementByColumn(Column.NAME).shouldBe(Condition.visible).click();
         return new Disk();
     }
 
