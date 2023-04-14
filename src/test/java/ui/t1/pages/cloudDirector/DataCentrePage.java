@@ -7,12 +7,14 @@ import ui.elements.Button;
 import ui.elements.Dialog;
 import ui.elements.Slider;
 import ui.elements.Table;
+import ui.models.StorageProfile;
 import ui.t1.pages.IProductT1Page;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ui.elements.Table.getTableByColumnNameContains;
 
 public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
@@ -20,6 +22,8 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
 
     private final SelenideElement totalRam = $x("//span[text() = 'RAM, ГБ']//preceding-sibling::div//span[2]");
     private final SelenideElement totalCPU = $x("//span[text() = 'CPU, ядра']//preceding-sibling::div//span[2]");
+
+    private final SelenideElement VMwareOrgPage = $x("//*[text() = 'VMware организация']");
 
     private final Button generalInformation = Button.byText("Общая информация");
 
@@ -38,6 +42,22 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         Waiting.sleep(5000);
         generalInformation.click();
         assertEquals(ipQty, new IpTable().getRows().size());
+    }
+
+    public void addProfile(StorageProfile profile) {
+        runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
+            Button.byText("Добавить профиль оборудования").click();
+            getTableByColumnNameContains("Профиль оборудования *").getRowByColumnValue("Профиль оборудования", profile.getName())
+                    .get().$x("//textarea[@name = 'limit']").setValue(profile.getLimit());
+            getTableByColumnNameContains("Профиль оборудования").getRowByColumnValue("Профиль оборудования", profile.getName())
+                            .get().$x("//input[@type = 'radio']").click();
+        });
+        Waiting.sleep(5000);
+        generalInformation.click();
+        assertEquals(profile.getLimit(), new StorageProfileTable().getRowByColumnValue("Профиль оборудования", profile.getName())
+                .getValueByColumn("Лимит, Гб"));
+        assertEquals("Да", new StorageProfileTable().getRowByColumnValue("Профиль оборудования", profile.getName())
+                .getValueByColumn("Используется по умолчанию"));
     }
     @Step("Освобождение IP адресов")
     public void removeIpAddresses() {
@@ -62,10 +82,23 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         assertEquals(String.valueOf(ram), totalRam.getText());
     }
 
+    @Step("Переход на страницу VMware организация")
+    public VMwareOrganizationPage goToVMwareOrgPage() {
+        VMwareOrgPage.click();
+        return new VMwareOrganizationPage();
+    }
+
     private static class IpTable extends Table {
 
         public IpTable() {
             super("IP-адрес", 2);
+        }
+    }
+
+    private static class StorageProfileTable extends Table {
+
+        public StorageProfileTable() {
+            super("Лимит, Гб");
         }
     }
 }

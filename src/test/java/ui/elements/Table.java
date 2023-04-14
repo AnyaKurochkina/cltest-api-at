@@ -76,6 +76,10 @@ public class Table implements TypifiedElement {
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
     }
 
+    public static Table getTableByColumnNameContains(String columnName) {
+        return new Table($x("//table[thead/tr/th[contains(., '"+ columnName + "')]]"));
+    }
+
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public Row getRowByColumnValue(String column, String value) {
         Row row;
