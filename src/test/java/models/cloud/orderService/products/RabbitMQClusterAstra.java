@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -9,7 +10,6 @@ import models.Entity;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import models.cloud.subModels.Vhost;
 import org.json.JSONObject;
@@ -18,10 +18,9 @@ import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
+import static core.utils.AssertUtils.assertContains;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -69,7 +68,7 @@ public class RabbitMQClusterAstra extends IProduct {
     public JSONObject toJson() {
         Organization org = Organization.builder().build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -91,7 +90,7 @@ public class RabbitMQClusterAstra extends IProduct {
 
     //Создать пользователя RabbitMQ
     public void rabbitmqCreateUser(String user) {
-        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\", password: \"%s\", rabbitmq_user_password: true}]}", user, user)), this.getProjectId());
+        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\"}]}", user)), this.getProjectId());
         Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь " + user);
     }
 

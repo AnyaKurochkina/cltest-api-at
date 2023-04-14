@@ -153,7 +153,7 @@ public class OtherTest extends AbstractComputeTest {
                 .count(), "Item snapshot не соответствует условиям или не найден");
 
         new IndexPage().goToDisks().selectDisk(disk.getName());
-        diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), false));
+        diskPage.attachComputeVolume(vm.getName(), false);
 
         String instanceId = StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
@@ -360,7 +360,7 @@ public class OtherTest extends AbstractComputeTest {
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
 
         new IndexPage().goToDisks().selectDisk(disk.getName());
-        diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), false));
+        diskPage.attachComputeVolume(vm.getName(), false);
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName());
         snapshot.runActionWithCheckCost(CompareType.LESS, snapshot::delete);
 

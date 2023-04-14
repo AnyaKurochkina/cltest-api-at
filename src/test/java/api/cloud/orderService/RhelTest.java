@@ -40,18 +40,6 @@ public class RhelTest extends Tests {
         }
     }
 
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания {0}")
-    @Disabled
-    void checkCreate(Rhel product) {
-        try (Rhel rhel = product.createObjectExclusiveAccess()) {
-            AccessGroup accessGroup = AccessGroup.builder().projectName(rhel.getProjectId()).build().createObject();
-            Assertions.assertTrue(accessGroup.getUsers().size() > 0, String.format("Нет пользователей в группе %s", accessGroup.getPrefixName()));
-            rhel.checkCreateUseSsh(accessGroup.getUsers().get(0));
-        }
-    }
-
     @TmsLink("377707")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

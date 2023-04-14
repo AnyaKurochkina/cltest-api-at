@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,7 +13,8 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("Podman Astra")
@@ -24,7 +26,8 @@ public class PodmanAstraTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(Podman product) {
         //noinspection EmptyTryBlock
-        try (Podman podman = product.createObjectExclusiveAccess()) {}
+        try (Podman podman = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("820507")
@@ -75,7 +78,7 @@ public class PodmanAstraTest extends Tests {
 //    }
 
     @Disabled
-    @TmsLinks({@TmsLink("820505"),@TmsLink("820503")})
+    @TmsLinks({@TmsLink("820505"), @TmsLink("820503")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
@@ -83,6 +86,26 @@ public class PodmanAstraTest extends Tests {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.stopHard();
             podman.start();
+        }
+    }
+
+    @TmsLink("851394")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка создания {0}")
+    void checkCreate(Podman product) {
+        try (Podman podman = product.createObjectExclusiveAccess()) {
+            podman.checkCertsBySsh();
+            assertContains(podman.executeSsh("podman ps -a"),
+                    "CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES");
+        }
+    }
+
+    @TmsLink("1091842")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    void checkUserGroup(Podman product) {
+        try (Podman podman = product.createObjectExclusiveAccess()) {
+            podman.checkUserGroupBySsh();
         }
     }
 

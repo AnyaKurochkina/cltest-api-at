@@ -8,6 +8,7 @@ import core.helper.Configure;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
 import io.restassured.path.json.JsonPath;
@@ -29,12 +30,15 @@ import models.cloud.productCatalog.product.Product;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Assumptions;
+import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
+import steps.portalBack.PortalBackSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import steps.references.ReferencesStep;
 import steps.tarifficator.CostSteps;
@@ -46,6 +50,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.OrderServiceURL;
+import static core.utils.AssertUtils.assertContains;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static steps.productCatalog.GraphSteps.getGraphByIdAndEnv;
 import static steps.productCatalog.ProductSteps.getProductByCloudAdmin;
@@ -64,7 +69,7 @@ public abstract class IProduct extends Entity {
     public static final String KAFKA_CLUSTER_TOPIC = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s'}";
     public static final String KAFKA_CLUSTER_ACL_TOPICS = "data.find{it.data.config.containsKey='acls'}.data.config.acls.findAll{it.topic_names && it.client_role=='%s'}.any{it.topic_names.any{value -> value=='%s'}}";
     public static final String KAFKA_CLUSTER_ACL_TRANSACTIONS = "data.find{it.type=='cluster'}.data.config.transaction_acls.any{it.transaction_id=='%s'}";
-
+    public static final String VM_IP_PATH = "product_data.find{it.type=='vm'}.ip";
     public static final String CONNECTION_URL = "data.find{it.data.config.containsKey('connection_url')}.data.config.connection_url";
     public static final String EXPAND_MOUNT_POINT = "Расширить";
     public static final String RESTART = "Перезагрузить";
@@ -129,12 +134,16 @@ public abstract class IProduct extends Entity {
         save();
     }
 
+    protected String getAccessGroup() {
+        return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+    }
+
     @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
-    protected String getIdGeoDistribution(String name, String ... tags) {
+    protected String getIdGeoDistribution(String name, String... tags) {
         StringJoiner tagsJoiner = new StringJoiner(",");
         Arrays.stream(tags).forEach(tagsJoiner::add);
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tagsJoiner))
-                .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found "+ name);
+                .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
     }
 
     @Override
@@ -143,6 +152,32 @@ public abstract class IProduct extends Entity {
         ((IProduct) entity).addLinkProduct();
         ((IProduct) entity).checkPreconditionStatusProduct();
         return entity;
+    }
+
+    public void checkCertsBySsh() {
+        if (Configure.ENV.equalsIgnoreCase("prod")) {
+            String[] certs = {"VTB Dev Environment Root CA"};
+            if (envType().contains("test"))
+                certs = new String[]{"VTB Test Environment Root CA"};
+            else if (envType().contains("prod"))
+                certs = new String[]{"VTB Group Root CA", "VTB Group VTB24 CA 8", "VTB Group INET CA 4"};
+            assertContains(executeSsh("openssl storeutl -text -noout -certs /etc/ssl/certs/ca-certificates.crt | grep VTB"), certs);
+        }
+    }
+
+    public void checkUserGroupBySsh() {
+        String accessGroup = getAccessGroup();
+        assertContains(executeSsh("sudo realm list"), accessGroup);
+        assertContains(executeSsh("sudo ls cd /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
+    }
+
+    public String executeSsh(SshClient client, String cmd) {
+        Assumptions.assumeTrue("dev".equalsIgnoreCase(envType()), "Тест включен только для dev среды");
+        return client.execute(cmd);
+    }
+
+    public String executeSsh(String cmd) {
+        return executeSsh(new SshClient((String) OrderServiceSteps.getProductsField(this, VM_IP_PATH), envType()), cmd);
     }
 
     public void addLinkProduct() {
@@ -214,18 +249,17 @@ public abstract class IProduct extends Entity {
         }
     }
 
-    @SneakyThrows
-    protected void checkConnectDb(String dbName, String user, String password, String url) {
+
+    protected void checkConnectDb(String dbName, String user, String password, String url) throws ConnectException {
         String connectUrl = "jdbc:" + url + "/" + dbName;
         Connection connection = null;
         try {
             connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
+            connection.close();
         } catch (Exception e) {
             connectVmException("Ошибка подключения к " + getProductName() + " по url " + connectUrl + " : " + e);
         }
-        assert connection != null;
-        connection.close();
         log.debug("Успешное подключение к " + getProductName());
     }
 

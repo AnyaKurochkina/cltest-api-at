@@ -1,9 +1,11 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Nginx;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -12,8 +14,10 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
 
+import static core.utils.AssertUtils.assertContains;
+
+@Log4j2
 @Epic("Продукты")
 @Feature("Nginx Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("nginx_astra"), @Tag("prod")})
@@ -24,7 +28,8 @@ public class NginxAstraTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(Nginx product) {
         //noinspection EmptyTryBlock
-        try (Nginx nginx = product.createObjectExclusiveAccess()) {}
+        try (Nginx nginx = product.createObjectExclusiveAccess()) {
+        }
     }
 
     @TmsLink("846597")
@@ -68,7 +73,7 @@ public class NginxAstraTest extends Tests {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
 //            nginx.stopHard();
 //            try {
-                nginx.resize(nginx.getMaxFlavor());
+            nginx.resize(nginx.getMaxFlavor());
 //            } finally {
 //                nginx.start();
 //            }
@@ -76,7 +81,7 @@ public class NginxAstraTest extends Tests {
     }
 
     @Disabled
-    @TmsLinks({@TmsLink("846595"),@TmsLink("846598")})
+    @TmsLinks({@TmsLink("846595"), @TmsLink("846598")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
@@ -90,9 +95,18 @@ public class NginxAstraTest extends Tests {
     @TmsLink("1127039")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
-    void updateCerts(Nginx product){
-        try(Nginx nginx = product.createObjectExclusiveAccess()){
+    void updateCerts(Nginx product) {
+        try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.updateCerts();
+        }
+    }
+
+    @TmsLink("847277")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка создания {0}")
+    void checkCreate(Nginx product) {
+        try (Nginx nginx = product.createObjectExclusiveAccess()) {
+            assertContains(nginx.executeSsh("sudo systemctl status nginx | grep active"), "Active: active (running)");
         }
     }
 

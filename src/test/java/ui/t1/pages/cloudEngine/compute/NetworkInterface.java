@@ -9,7 +9,7 @@ import ui.t1.pages.cloudEngine.vpc.PublicIp;
 public class NetworkInterface extends IProductT1Page<NetworkInterface> {
 
     public PublicIp selectIp(String ip) {
-        getIpRow(ip).get().shouldBe(Condition.visible).click();
+        getIpRow(ip).getElementByColumnIndex(0).shouldBe(Condition.visible).click();
         return new PublicIp();
     }
 
