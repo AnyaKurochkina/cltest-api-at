@@ -58,7 +58,7 @@ public class UiWindowsTest extends UiProductTest {
             //orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getRoleServer().setContains("Autotests)");
+            orderPage.getRoleServer().setContains("Autotests");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
