@@ -23,6 +23,7 @@ import static steps.productCatalog.ForbiddenActionSteps.*;
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"jsonTemplate", "productName"}, callSuper = false)

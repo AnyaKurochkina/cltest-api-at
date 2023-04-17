@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
 
 @Feature("Редактирование сервиса")
@@ -16,7 +16,7 @@ public class EditServiceTest extends ServiceBaseTest {
     public void editServiceTest() {
         service.setDescription("new description");
         service.setGraphVersion("Последняя");
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(service.getName())
                 .setAttributes(service)
                 .saveWithPatchVersion();
@@ -29,7 +29,7 @@ public class EditServiceTest extends ServiceBaseTest {
     @DisplayName("Проверка сохранения версии")
     public void saveWithManualVersionTest() {
         String currentServiceVersion = "1.0.1";
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
                 .setGraphVersion("Последняя")
                 .saveWithPatchVersion()
@@ -45,7 +45,7 @@ public class EditServiceTest extends ServiceBaseTest {
     @TmsLink("602549")
     @DisplayName("Проверка изменений и лимита патч-версий")
     public void checkPatchVersionLimit() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
                 .checkVersion("1.0.0")
                 .setExtraData("{\"test_value\":1}")
@@ -69,7 +69,7 @@ public class EditServiceTest extends ServiceBaseTest {
     @TmsLink("602552")
     @DisplayName("Проверка изменений и лимита версий, указанных вручную")
     public void checkManualVersionLimit() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
                 .checkVersion("1.0.0")
                 .setExtraData("{\"test_value\":1}")
@@ -93,7 +93,7 @@ public class EditServiceTest extends ServiceBaseTest {
     @TmsLink("631151")
     @DisplayName("Удаление иконки")
     public void deleteIconTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(service.getName())
                 .deleteIcon();
     }
@@ -102,7 +102,7 @@ public class EditServiceTest extends ServiceBaseTest {
     @TmsLink("1071896")
     @DisplayName("Баннер при несохраненных изменениях")
     public void checkUnsavedChangesAlert() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
                 .checkUnsavedChangesAlertAccept(service)
                 .checkUnsavedChangesAlertDismiss();

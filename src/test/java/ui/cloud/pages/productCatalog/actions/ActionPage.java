@@ -197,7 +197,7 @@ public class ActionPage extends BasePage {
         }
         $x("//div[text() = '" + eventType.getValue() + "']").click();
         eventProviderDropDown.set(eventProvider.getValue());
-        table.getRow(0).get().$x(".//button[.//*[text() = 'Сохранить']]").click();
+        table.getRow(0).get().$x(".//button[.='Сохранить']").click();
         locationInOrderTab.click();
         dataConfigPath.setValue(configPath);
         dataConfigKey.setValue(configKey);

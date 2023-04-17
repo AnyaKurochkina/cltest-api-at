@@ -8,6 +8,7 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -415,7 +416,7 @@ public class ServicePage extends BasePage {
         titleInput.setValue(newValue);
         mainPageLink.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToServicesListPagePC().openServicePage(service.getName());
+        new ControlPanelIndexPage().goToServicesListPagePC().openServicePage(service.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
         return this;
     }

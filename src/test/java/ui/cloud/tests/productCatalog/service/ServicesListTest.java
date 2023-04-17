@@ -5,7 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 
 @Feature("Действия со списком сервисов")
@@ -15,7 +15,7 @@ public class ServicesListTest extends ServiceBaseTest {
     @TmsLink("504604")
     @DisplayName("Проверка заголовков списка, сортировка")
     public void checkHeadersAndSorting() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .checkHeaders()
                 .checkSortingByTitle()
                 .checkSortingByName()
@@ -27,7 +27,7 @@ public class ServicesListTest extends ServiceBaseTest {
     @TmsLink("1240134")
     @DisplayName("Поиск в списке сервисов")
     public void searchServiceTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findServiceByValue(NAME, service)
                 .findServiceByValue(TITLE, service)
                 .findServiceByValue(NAME.substring(1).toUpperCase(), service)
@@ -39,7 +39,7 @@ public class ServicesListTest extends ServiceBaseTest {
     @TmsLink("770468")
     @DisplayName("Фильтрация списка сервисов")
     public void filterOrderTemplatesTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .setStatusFilter("Опубликован")
                 .applyFilters()
                 .checkServiceIsNotDisplayed(service)
@@ -56,7 +56,7 @@ public class ServicesListTest extends ServiceBaseTest {
     @TmsLink("808412")
     @DisplayName("Проверка подсветки ранее открытого сервиса")
     public void returnToListFromServicePageTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
                 .goToServicesList()
                 .checkServiceIsHighlighted(NAME);

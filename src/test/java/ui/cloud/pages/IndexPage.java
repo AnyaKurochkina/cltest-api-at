@@ -32,7 +32,6 @@ public class IndexPage {
     private final SelenideElement actions = $x("//*[@href='/meccano/actions']");
     private final SelenideElement templates = $x("//a[@href='/meccano/templates']");
     private final SelenideElement orderTemplates = $x("//a[@href='/meccano/order-templates']");
-    private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
     private final SelenideElement portalAuditLink = $x("//a[@href='/analytics/audit']");
 
@@ -77,12 +76,6 @@ public class IndexPage {
     public OrderTemplatesListPage goToOrderTemplatesPage() {
         orderTemplates.click();
         return new OrderTemplatesListPage();
-    }
-
-    @Step("Переход на страницу Конструктор.Сервисы")
-    public ServicesListPagePC goToServicesListPagePC() {
-        servicesLink.click();
-        return new ServicesListPagePC();
     }
 
     @Step("Переход на страницу Конструктор.Продукты")

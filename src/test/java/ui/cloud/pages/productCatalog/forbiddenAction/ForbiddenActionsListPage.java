@@ -5,9 +5,12 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
+import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -82,6 +85,12 @@ public class ForbiddenActionsListPage extends BaseListPage {
         search(name);
         new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
         Waiting.sleep(1000);
+        return new ForbiddenActionPage();
+    }
+
+    @Step("Открытие страницы создания запрещенного действия")
+    public ForbiddenActionPage addNewForbbidenAction() {
+        addNewObjectButton.click();
         return new ForbiddenActionPage();
     }
 }
