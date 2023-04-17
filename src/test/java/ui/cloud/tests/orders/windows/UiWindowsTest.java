@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -235,6 +236,7 @@ public class UiWindowsTest extends UiProductTest {
 
     @Test
     @Order(17)
+    @EnabledIfEnv("prod")
     @TmsLink("1171958")
     @DisplayName("UI Windows. Мониторинг ОС")
     void monitoringOs() {

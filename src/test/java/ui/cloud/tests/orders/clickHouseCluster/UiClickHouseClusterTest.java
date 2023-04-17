@@ -8,6 +8,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -228,6 +229,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
 
     @Test
     @Order(22)
+    @EnabledIfEnv("prod")
     @TmsLink("1296753")
     @DisplayName("UI ClickHouse Cluster. Мониторинг ОС")
     void monitoringOs() {
