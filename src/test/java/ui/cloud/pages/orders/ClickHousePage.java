@@ -10,6 +10,9 @@ import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Table;
 
+import java.util.Collections;
+import java.util.List;
+
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
@@ -30,7 +33,7 @@ public class ClickHousePage extends IProductPage {
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement btnGroups = $x("//button[.='Группы']");
-    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+
 
     public ClickHousePage(ClickHouse product) {
         super(product);
@@ -124,7 +127,7 @@ public class ClickHousePage extends IProductPage {
             Alert.green("Значение скопировано");
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(name).exists(), "Ошибка создания УЗ");
+        Assertions.assertTrue(new Table("",2).isColumnValueContains("",name), "Ошибка создания УЗ");
     }
 
     public void resetPasswordLA(String name) {
@@ -149,7 +152,7 @@ public class ClickHousePage extends IProductPage {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(name, "Удалить локальную УЗ");
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(getBtnAction(name).exists(), "Ошибка удаления УЗ");
+        Assertions.assertFalse(new Table("",2).isColumnValueContains("",name), "Ошибка удаления УЗ");
     }
 
     public void addAccountAD(String name) {
@@ -159,7 +162,7 @@ public class ClickHousePage extends IProductPage {
             dlg.setInputValue("Имя пользователя", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(name).exists(), "Ошибка создания УЗ АД");
+        Assertions.assertTrue(new Table("",3).isColumnValueContains("",name), "Ошибка создания TУЗ АД");
     }
 
     public void resetPasswordAD(String name) {
@@ -178,7 +181,7 @@ public class ClickHousePage extends IProductPage {
             dlg.setInputValue("Пользователь БД", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(getBtnAction(name).exists(), "Ошибка удаления УЗ АД");
+        Assertions.assertFalse(new Table("",3).isColumnValueContains("",name), "Ошибка удаления TУЗ АД");
     }
 
     public void addGroupAD(String nameGroup) {
@@ -188,7 +191,7 @@ public class ClickHousePage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
+        Assertions.assertTrue(new Table("").isColumnValueContains("",nameGroup), "Ошибка создания AD");
     }
 
     public void addGroupAdmin(String nameGroup) {
@@ -198,21 +201,23 @@ public class ClickHousePage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
+        Assertions.assertTrue(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления AD");
+
     }
 
-    public void deleteGroupAD() {
+
+    public void deleteGroupAD(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
-        runActionWithoutParameters(accessGroup.getPrefixName(), "Удалить пользовательскую группу");
+        runActionWithoutParameters(nameGroup, "Удалить пользовательскую группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table(HEADER_GROUP_COLUMN).isEmpty(), "Ошибка удаления AD");
+        Assertions.assertFalse(new Table("").isColumnValueContains("",nameGroup), "Ошибка удаления AD");
     }
 
-    public void deleteGroupAdmin() {
+    public void deleteGroupAdmin(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
-        runActionWithoutParameters(accessGroup.getPrefixName(), "Удалить админ группу");
+        runActionWithoutParameters(nameGroup, "Удалить админ группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table(HEADER_GROUP_COLUMN, 2).isEmpty(), "Ошибка удаления админ группы");
+        Assertions.assertFalse(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления админ группы");
     }
 
     public void resetPasswordUserDb() {
