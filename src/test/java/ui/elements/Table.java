@@ -17,6 +17,7 @@ import org.openqa.selenium.WebElement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
 
@@ -76,6 +77,10 @@ public class Table implements TypifiedElement {
         throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
     }
 
+    public static Table getTableByColumnNameContains(String columnName) {
+        return new Table($x("//table[thead/tr/th[contains(., '"+ columnName + "')]]"));
+    }
+
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
     public Row getRowByColumnValue(String column, String value) {
         Row row;
@@ -90,6 +95,25 @@ public class Table implements TypifiedElement {
     public Row getRowByColumnIndex(int index, String value) {
         for (int i = 0; i < rows.size(); i++) {
             if (rows.get(i).$$x("td").get(index).hover().getText().equals(value))
+                return new Row(i);
+        }
+        throw new NotFoundException();
+    }
+
+    @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
+    public Row getRowByColumnInputValue(String column, String value) {
+        Row row;
+        try {
+            row = getRowByColumnIndexInputValue(getHeaderIndex(column), value);
+        } catch (NotFoundException e) {
+            throw new NotFoundException("Не найдена строка по колонке " + column + " и значению " + value);
+        }
+        return row;
+    }
+
+    public Row getRowByColumnIndexInputValue(int index, String value) {
+        for (int i = 0; i < rows.size(); i++) {
+            if (Objects.equals(rows.get(i).$$x("td").get(index).hover().getValue(), value))
                 return new Row(i);
         }
         throw new NotFoundException();
