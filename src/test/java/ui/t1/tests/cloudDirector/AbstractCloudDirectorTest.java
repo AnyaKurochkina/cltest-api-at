@@ -31,9 +31,9 @@ public abstract class AbstractCloudDirectorTest extends Tests {
 
     public AbstractCloudDirectorTest() {
         project = Project.builder().isForOrders(true).build().createObject();
-        name = UUID.randomUUID().toString().substring(25);
+        name = UUID.randomUUID().toString().substring(25) + "-at-ui";
         vmWareOrganization = createVMwareOrganization(name, project.getId());
-        dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase();
+        dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "-at-ui";
     }
 
     @BeforeEach

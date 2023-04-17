@@ -9,6 +9,7 @@ import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.action.GetActionList;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
@@ -67,6 +68,14 @@ public class ActionSteps extends Steps {
     public static Action createAction(String name) {
         return Action.builder()
                 .name(name)
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание действия")
+    public static Action createAction() {
+        return Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
                 .build()
                 .createObject();
     }
