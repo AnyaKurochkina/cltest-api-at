@@ -96,6 +96,5 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         assertTrue(new VMwareOrganizationPage()
                 .showDeletedDataCentres(true)
                 .isDataCentreExist(dataCentreName));
-
     }
 }

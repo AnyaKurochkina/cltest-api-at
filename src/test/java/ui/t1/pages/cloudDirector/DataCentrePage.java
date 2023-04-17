@@ -14,7 +14,6 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static ui.elements.Table.getTableByColumnNameContains;
 
 public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
@@ -47,10 +46,9 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public void addProfile(StorageProfile profile) {
         runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
             Button.byText("Добавить профиль оборудования").click();
-            getTableByColumnNameContains("Профиль оборудования *").getRowByColumnValue("Профиль оборудования", profile.getName())
-                    .get().$x("//textarea[@name = 'limit']").setValue(profile.getLimit());
-            getTableByColumnNameContains("Профиль оборудования").getRowByColumnValue("Профиль оборудования", profile.getName())
-                            .get().$x("//input[@type = 'radio']").click();
+            $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//textarea").setValue(profile.getLimit());
+            $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//input[@type = 'radio']")
+                    .click();
         });
         Waiting.sleep(5000);
         generalInformation.click();
