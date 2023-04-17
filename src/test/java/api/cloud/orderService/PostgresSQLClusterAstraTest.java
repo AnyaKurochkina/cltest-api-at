@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -13,7 +14,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
+import steps.orderService.OrderServiceSteps;
+
+import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("PostgresSQL Cluster Astra")
@@ -173,6 +176,26 @@ public class PostgresSQLClusterAstraTest extends Tests {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             postgres.stopHard();
             postgres.start();
+        }
+    }
+
+    @TmsLink("851767")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка прав у ролей пользователя {0}")
+    void checkCreate(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb(dbName);
+            String ip = (String) OrderServiceSteps.getProductsField(postgres, "product_data.find{it.hostname.contains('-pgc')}.ip");
+            postgres.checkUseSsh(ip, dbName);
+        }
+    }
+
+    @TmsLink("851804")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Просмотр активного хоста {0}")
+    void checkActiveHost(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            assertContains(postgres.executeSsh("sudo patronictl -c /etc/patroni/patroni.yml list"), "Leader");
         }
     }
 

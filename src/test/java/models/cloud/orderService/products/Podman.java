@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -9,13 +10,14 @@ import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
+
+import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)

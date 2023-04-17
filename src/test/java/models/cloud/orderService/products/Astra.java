@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,7 +15,8 @@ import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
+
+import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -32,17 +34,17 @@ public class Astra extends IProduct {
         jsonTemplate = "/orders/astra_general_application.json";
         productName = "Astra Linux";
         initProduct();
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre== null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
@@ -56,17 +58,16 @@ public class Astra extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
-                .set("$.order.attrs.ad_logon_grants[0].role", "user")
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
@@ -90,7 +91,7 @@ public class Astra extends IProduct {
         restart("reset_vm");
     }
 
-    public void expandMountPoint(){
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 

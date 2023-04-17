@@ -199,7 +199,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("tcp-public-" + balancer.getEnv())
+                    .globalname("g-tcp-public-" + balancer.getEnv())
                     .frontend(frontend)
                     .build());
         }
@@ -213,7 +213,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("http-public-" + balancer.getEnv())
+                    .globalname("g-http-public-" + balancer.getEnv())
                     .frontend(frontend)
                     .healthCheckParams(Gslb.HealthCheckParams.builder()
                             .urlPath("/")

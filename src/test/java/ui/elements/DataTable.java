@@ -27,7 +27,7 @@ public class DataTable extends Table {
     }
 
     public void clickAdd() {
-        btnAdd.shouldBe(activeCnd).shouldBe(clickableCnd).click();
+        Button.byElement(btnAdd).click();
     }
 
     public List<String> getColumnValuesList(String column) {

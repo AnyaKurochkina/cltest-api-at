@@ -25,8 +25,15 @@ public class AssertUtils {
     public static void assertEqualsList(List<String> l1, List<String> l2) {
         List<String> differences = new ArrayList<>(l1);
         differences.removeAll(l2);
-        if(!differences.isEmpty()){
+        if (!differences.isEmpty()) {
             fail(String.format("Not equals:\n%s\n%s", Arrays.toString(l1.toArray()), Arrays.toString(l2.toArray())));
         }
+    }
+
+    public static void assertContains(String text, String... strings) {
+        for (String str : strings)
+            if (!text.contains(str)) {
+                fail(String.format("The text '%s' not found in '%s'", str, text));
+            }
     }
 }

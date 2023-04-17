@@ -1,6 +1,7 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -8,7 +9,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -17,6 +17,8 @@ import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -28,6 +30,7 @@ public class Nginx extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
+    String role;
 
     @Override
     @Step("Заказ продукта")
@@ -40,6 +43,7 @@ public class Nginx extends IProduct {
         jsonTemplate = "/orders/nginx.json";
         if(productName == null)
             productName = "Nginx Astra";
+        role = isDev() ? "superuser" : "user";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
@@ -59,7 +63,6 @@ public class Nginx extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -67,7 +70,8 @@ public class Nginx extends IProduct {
                 .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].role", role)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", /*isTest()*/getSupport())

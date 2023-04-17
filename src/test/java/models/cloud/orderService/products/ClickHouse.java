@@ -1,6 +1,8 @@
 package models.cloud.orderService.products;
 
+import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -21,6 +23,7 @@ import java.net.ConnectException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.utils.AssertUtils.assertContains;
 import static models.cloud.orderService.products.ClickHouseCluster.*;
 
 
@@ -73,7 +76,7 @@ public class ClickHouse extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (clickhouseUser == null)
-            clickhouseUser = "username_created";
+            clickhouseUser = "clickhouse_user";
         if (clickhousePassword == null)
             clickhousePassword = "vrItfk0k8sf8ICbwsMs7nB3";
         if (chCustomerPassword == null)
@@ -111,7 +114,7 @@ public class ClickHouse extends IProduct {
     }
 
     public void resetPasswordOwner() {
-        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        String password = "uAhHmuyQnT2kCvTpOPgw9JIab0OwNvyj";
         OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", clickhouseUser, password)), this.getProjectId());
         clickhousePassword = password;
         save();
@@ -243,7 +246,7 @@ public class ClickHouse extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -268,13 +271,17 @@ public class ClickHouse extends IProduct {
 
     }
 
-
+    @SneakyThrows
     public void checkConnectDb() {
-        Assertions.assertThrows(ConnectException.class, () ->
-        checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
-                ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
-                        .replaceFirst("/play", "")
-                        .replaceFirst("https:", "clickhouse:")), "UNKNOWN_DATABASE");
+        try {
+            checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", clickhouseUser, clickhousePassword,
+                    ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
+                            .replaceFirst("/play", "")
+                            .replaceFirst("https:", "clickhouse:"));
+        } catch (ConnectException e){
+            if(!e.getMessage().contains("(UNKNOWN_DATABASE)"))
+                throw e;
+        }
     }
 
 }

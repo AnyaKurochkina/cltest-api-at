@@ -118,10 +118,4 @@ public class Rhel extends IProduct {
         delete("delete_vm");
     }
 
-    public void checkCreateUseSsh(String userName) {
-        GlobalUser globalUser = GlobalUser.builder().username(userName).build().createObject();
-        String host = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.type=='vm'}.hostname");
-        SshClient ssh = new SshClient(host, globalUser.getUsername(), globalUser.getPassword());
-        ssh.connectAndExecuteListCommand("ls");
-    }
 }

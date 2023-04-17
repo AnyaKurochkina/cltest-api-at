@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,7 +13,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
 
 @Epic("Продукты")
 @Feature("Astra")
@@ -81,6 +81,24 @@ public class AstraTest extends Tests {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.stopHard();
             astra.start();
+        }
+    }
+
+    @TmsLink("1090927")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    void checkCreate(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.checkUserGroupBySsh();
+        }
+    }
+
+    @TmsLink("382910")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "AD Проверка создания {0}")
+    void checkCreateAd(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.checkCertsBySsh();
         }
     }
 

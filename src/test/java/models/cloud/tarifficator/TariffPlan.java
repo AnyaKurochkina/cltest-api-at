@@ -39,6 +39,7 @@ public class TariffPlan extends Entity {
     String title;
     Boolean updateOrders;
     Date updatedAt;
+    Boolean activationErrorsCount;
 
     @SneakyThrows
     public JSONObject toJson() {
