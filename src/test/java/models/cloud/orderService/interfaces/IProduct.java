@@ -91,9 +91,10 @@ public abstract class IProduct extends Entity {
 
     protected String jsonTemplate;
 
-    @Getter
     @Setter
-    transient String link, error;
+    transient String link;
+    @Setter @Getter
+    transient String error;
 
     @Getter
     private ProductStatus status;
@@ -116,6 +117,11 @@ public abstract class IProduct extends Entity {
     protected String productId;
     @Getter
     protected String productCatalogName;
+
+    public String getLink() {
+        log.debug("Get Link: {}", link);
+        return link;
+    }
 
     public String getDataCentre() {
         return Objects.requireNonNull(dataCentre, "Поле dataCentre пустое");
