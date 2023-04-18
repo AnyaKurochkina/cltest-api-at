@@ -5,21 +5,10 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
-import models.cloud.feedService.eventType.EventType;
 import models.cloud.productCatalog.action.Action;
-import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
-import models.cloud.productCatalog.graph.Graph;
-import models.cloud.productCatalog.product.Categories;
-import models.cloud.productCatalog.product.Product;
-import models.cloud.productCatalog.service.Service;
-import org.json.JSONObject;
-import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.product.ProductPage;
-import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -27,6 +16,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.switchTo;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.getActionById;
 
 public class ForbiddenActionPage extends BasePage {
@@ -46,6 +36,7 @@ public class ForbiddenActionPage extends BasePage {
     private final SelenideElement paramsRequiredAlert =
             Selenide.$x("//div[@role='alert']//div[text()='Необходимо добавить минимум одну запись']");
     private final Button addButton = Button.byText("Добавить");
+    private final Tab mainTab = Tab.byText("Основное");
     private final Tab paramsTab = Tab.byText("Параметры");
 
     public ForbiddenActionPage() {
@@ -68,7 +59,7 @@ public class ForbiddenActionPage extends BasePage {
             nameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();
-        return new ForbiddenActionsListPage() ;
+        return new ForbiddenActionsListPage();
     }
 
     @Step("Проверка валидации обязательных параметров при создании запрещенного действия")
@@ -96,6 +87,7 @@ public class ForbiddenActionPage extends BasePage {
         return new ForbiddenActionsListPage();
     }
 
+    @Step("Добавление типа/провайдера")
     private void addTypeProvider(String type, String provider) {
         addButton.click();
         Waiting.sleep(3000);
@@ -105,6 +97,13 @@ public class ForbiddenActionPage extends BasePage {
         typeSelect.set(type);
         providerSelect.set(provider);
         table.getRow(0).get().$x(".//button[.='Сохранить']").click();
+    }
+
+    @Step("Очистка таблицы типов/провайдеров")
+    private void clearTypeProvider() {
+        Table table = new Table("Тип");
+        table.getRow(0).get().$$x(".//button").get(1).click();
+        new DeleteDialog().submitAndDelete();
     }
 
     @Step("Проверка валидации неуникального имени запрещенного действия '{forbiddenAction.name}'")
@@ -128,8 +127,25 @@ public class ForbiddenActionPage extends BasePage {
                 () -> titleRequiredFieldHint.shouldNotBe(Condition.visible),
                 () -> actionRequiredFieldHint.shouldNotBe(Condition.visible));
         paramsTab.switchTo();
+        Table table = new Table("Тип");
+        if (!table.isEmpty()) clearTypeProvider();
         addTypeProvider(forbiddenAction.getEventTypeProvider().get(0).getEvent_type(),
                 forbiddenAction.getEventTypeProvider().get(0).getEvent_provider());
+        return this;
+    }
+
+    @Step("Проверка атрибутов запрещенного действия '{forbiddenAction.name}'")
+    public ForbiddenActionPage checkAttributes(ForbiddenAction forbiddenAction) {
+        mainTab.switchTo();
+        nameInput.getInput().shouldHave(Condition.exactValue(forbiddenAction.getName()));
+        titleInput.getInput().shouldHave(Condition.exactValue(forbiddenAction.getTitle()));
+        Action action = getActionById(forbiddenAction.getActionId());
+        assertTrue(actionSelect.getValue().contains(action.getName()));
+        descriptionTextArea.getElement().shouldHave(Condition.exactValue(forbiddenAction.getDescription()));
+        paramsTab.switchTo();
+        Table table = new Table("Тип");
+        table.getRowByColumnValue("Тип", forbiddenAction.getEventTypeProvider().get(0).getEvent_type());
+        table.getRowByColumnValue("Провайдер", forbiddenAction.getEventTypeProvider().get(0).getEvent_provider());
         return this;
     }
 }

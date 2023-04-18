@@ -1,10 +1,12 @@
 package ui.cloud.tests.productCatalog.forbiddenAction;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 
+@Feature("Удаление запрещенного действия")
 public class DeleteForbiddenActionTest extends ForbiddenActionBaseTest {
 
     @Test

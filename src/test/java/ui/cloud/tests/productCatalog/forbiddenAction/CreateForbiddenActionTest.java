@@ -12,8 +12,8 @@ import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionPage;
 import ui.elements.Alert;
 
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.UUID;
 
 @Feature("Создание запрещенного действия")
 public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
@@ -36,7 +36,7 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
                 .checkRequiredParams(forbiddenAction);
     }
 
-    @Step("Создание сервиса с неуникальным кодом")
+    @Step("Создание запрещенного действия с неуникальным кодом")
     private void createWithNonUniqueName() {
         forbiddenAction.setName(NAME);
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
@@ -58,11 +58,13 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
                 .event_type(EventType.BM.getValue())
                 .event_provider(EventProvider.HCP.getValue())
                 .build()));
+        forbiddenAction.setActionId(createAction(UUID.randomUUID().toString(), graph.getGraphId()).getActionId());
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
                 .addNewForbbidenAction()
                 .setAttributes(forbiddenAction);
         ForbiddenActionPage page = new ForbiddenActionPage();
         page.getSaveButton().click();
         Alert.green("Запрещенное действие успешно создано");
+        page.checkAttributes(forbiddenAction);
     }
 }

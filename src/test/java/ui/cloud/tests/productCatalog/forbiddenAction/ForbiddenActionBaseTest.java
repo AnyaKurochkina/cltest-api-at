@@ -12,7 +12,6 @@ import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ForbiddenActionSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -25,6 +24,7 @@ public class ForbiddenActionBaseTest extends BaseTest {
     protected final String DESCRIPTION = "Description";
     protected ForbiddenAction forbiddenAction;
     protected Action action;
+    protected Graph graph;
 
     @BeforeEach
     public void setUp() {
@@ -32,19 +32,13 @@ public class ForbiddenActionBaseTest extends BaseTest {
     }
 
     protected void createForbiddenAction(String name) {
-        Graph graph = Graph.builder()
+        graph = Graph.builder()
                 .name(UUID.randomUUID().toString())
                 .title("AT UI Graph")
                 .build()
                 .createObject();
 
-        action = Action.builder()
-                .name(UUID.randomUUID().toString())
-                .title("AT UI Action")
-                .graphId(graph.getGraphId())
-                .number(0)
-                .build()
-                .createObject();
+        action = createAction(UUID.randomUUID().toString(), graph.getGraphId());
 
         forbiddenAction = ForbiddenAction.builder()
                 .name(name)
@@ -61,5 +55,15 @@ public class ForbiddenActionBaseTest extends BaseTest {
 
     protected void deleteForbiddenAction(String name) {
         ForbiddenActionSteps.deleteForbiddenActionByName(name);
+    }
+
+    protected Action createAction(String name, String graphId) {
+        return Action.builder()
+                .name(name)
+                .title("AT UI Action")
+                .graphId(graphId)
+                .number(0)
+                .build()
+                .createObject();
     }
 }

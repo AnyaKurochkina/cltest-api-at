@@ -5,12 +5,11 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
-import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
-import ui.cloud.tests.productCatalog.TestUtils;
+import ui.elements.Alert;
+import ui.elements.InputFile;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -92,5 +91,14 @@ public class ForbiddenActionsListPage extends BaseListPage {
     public ForbiddenActionPage addNewForbbidenAction() {
         addNewObjectButton.click();
         return new ForbiddenActionPage();
+    }
+
+    @Step("Импорт запрещенного действия из файла '{path}'")
+    public ForbiddenActionsListPage importForbiddenAction(String path) {
+        importButton.click();
+        new InputFile(path).importFileAndSubmit();
+        Alert.green("Импорт выполнен успешно");
+        closeButton.click();
+        return this;
     }
 }
