@@ -68,7 +68,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
                     .hover()
                     .click();
             ScyllaDbClusterPage scyllaPages = new ScyllaDbClusterPage(product);
-            scyllaPages.waitChangeStatus(Duration.ofMinutes(25));
+            scyllaPages.waitChangeStatus(Duration.ofMinutes(30));
             scyllaPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());

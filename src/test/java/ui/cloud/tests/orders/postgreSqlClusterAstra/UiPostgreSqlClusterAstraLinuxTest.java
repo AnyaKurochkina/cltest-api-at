@@ -75,7 +75,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
                     .hover()
                     .click();
             PostgreSqlClusterAstraPage pSqlPages = new PostgreSqlClusterAstraPage(product);
-            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
+            pSqlPages.waitChangeStatus(Duration.ofMinutes(30));
             pSqlPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
