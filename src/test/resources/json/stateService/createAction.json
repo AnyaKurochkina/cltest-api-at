@@ -1,0 +1,15 @@
+{
+  "order_ids": [
+    "00000001-0001-0001-0001-000000000002"
+  ],
+  "action_id": "000843ca-0e7a-44de-9b40-6fbad2057b39",
+  "graph_id": "b9027824-0b66-40bb-8d42-7a4ad981c343",
+  "type": "billing",
+  "subtype": "folder",
+  "status": "changed",
+  "create_dt": "2023-04-14T11:24:36.534062",
+  "data": {
+    "folder" : "/organization/vtb/folder/folder/fold-f/project/proj-f/",
+    "account_id" : "00000001-0001-0001-0001-000000000001"
+  }
+}

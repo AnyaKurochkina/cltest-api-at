@@ -8,8 +8,13 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.CompareType;
 import ui.extesions.InterceptTestExtension;
+import ui.models.StorageProfile;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
+import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
@@ -65,13 +70,31 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     }
 
     @Test
+    @Order(6)
+    @TmsLink("692723")
+    @DisplayName("VMware. Управление дисковой подсистемой VDC. Добавление профиля")
+    public void addProfileTest() {
+        StorageProfile profile = new StorageProfile("SP-High", "11");
+        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
+                .goToOrganization(vmWareOrganization.getName())
+                .selectDataCentre(dataCentreName);
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addProfile(profile));
+    }
+
+    @Test
     @Order(100)
-    @TmsLink("158903")
+    @TmsLinks({@TmsLink("158903"), @TmsLink("158904")})
     @DisplayName("VMware. Удаление VDC")
     public void deleteDataCentre() {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
+        assertFalse(dataCentrePage
+                .goToVMwareOrgPage()
+                .isDataCentreExist(dataCentreName));
+        assertTrue(new VMwareOrganizationPage()
+                .showDeletedDataCentres(true)
+                .isDataCentreExist(dataCentreName));
     }
 }

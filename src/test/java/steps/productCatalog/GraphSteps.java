@@ -9,6 +9,7 @@ import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.graph.GetGraphList;
 import models.cloud.productCatalog.graph.Graph;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -109,6 +110,14 @@ public class GraphSteps extends Steps {
     public static Graph createGraph(String name) {
         return Graph.builder()
                 .name(name)
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание графа")
+    public static Graph createGraph() {
+        return Graph.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
                 .build()
                 .createObject();
     }

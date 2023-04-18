@@ -76,6 +76,18 @@ public class VMwareOrganizationPage {
         return new DataCentrePage();
     }
 
+    @Step("Проверка существования дата центра в таблице с именем {name}")
+    public boolean isDataCentreExist(String name) {
+        Waiting.sleep(500);
+        return new DataCentreTable().isColumnValueEquals("Название", name);
+    }
+
+    @Step("Показывать удаленные дата центры {isDisplay}")
+    public VMwareOrganizationPage showDeletedDataCentres(boolean isDisplay) {
+        Switch.byText("Показывать удаленные").setEnabled(isDisplay);
+        return this;
+    }
+
     @Step("Ожидание смены статуса")
     public VMwareOrganizationPage waitChangeStatus() {
         OrderUtils.waitChangeStatus(new DataCentreTable(), Duration.ofMinutes(8));
