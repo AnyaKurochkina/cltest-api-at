@@ -43,6 +43,16 @@ public class StateServiceSteps extends Steps {
                 .post("/api/v1/projects/{}/events/bulk-add-event/", projectId);
     }
 
+    @Step("Создание Item")
+    public static Item createItem(String projectId, JSONObject json) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .body(json)
+                .post("/api/v1/projects/{}/items/", projectId)
+                .assertStatus(201)
+                .extractAs(Item.class);
+    }
+
     public static String getErrorFromStateService(String orderId) {
         String traceback = null;
         try {

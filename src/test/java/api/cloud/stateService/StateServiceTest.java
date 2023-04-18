@@ -92,7 +92,7 @@ public class StateServiceTest extends Tests {
                 .set("$.create_dt", currentTimeInFormat())
                 .build();
         String expectedFolder = json.getJSONObject("data").get("folder").toString();
-        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createEvent.json")
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
                 .set("$.order_id", uuid)
                 .set("$.graph_id", graph.getGraphId())
                 .set("$.action_id", action.getActionId())

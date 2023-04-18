@@ -1,15 +1,11 @@
 {
-  "order_id": "00000001-0001-0001-0001-000000000002",
-  "action_id": "000843ca-0e7a-44de-9b40-6fbad2057b39",
-  "graph_id": "b9027824-0b66-40bb-8d42-7a4ad981c343",
-  "events": [
-    {
-      "type": "app",
-      "subtype": "state",
-      "status": "change_order",
-      "data": {
-      },
-      "item_id": "00000001-0001-0001-0001-000000000002"
-    }
-  ]
+  "order_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "action_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "graph_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "type": "string",
+  "subtype": "string",
+  "status": "string",
+  "data": {},
+  "item_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  "update_data": {}
 }
