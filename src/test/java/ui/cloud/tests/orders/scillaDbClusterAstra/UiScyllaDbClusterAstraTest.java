@@ -23,6 +23,8 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
+
 @Epic("UI Продукты")
 @Feature("ScyllaDbClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
@@ -72,8 +74,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
             product.setError(e.toString());
             throw e;
         }
-        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-        Assertions.assertEquals(preBillingProductPrice, scyllaPage.getOrderCost(), 0.01);
+        checkOrderCost(preBillingProductPrice, new ScyllaDbClusterPage(product));
     }
 
 

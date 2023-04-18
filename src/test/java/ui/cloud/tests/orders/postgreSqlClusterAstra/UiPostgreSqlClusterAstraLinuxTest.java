@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static core.helper.StringUtils.$x;
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
@@ -80,8 +81,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             product.setError(e.toString());
             throw e;
         }
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getOrderCost(), 0.01);
+        checkOrderCost(preBillingProductPrice, new PostgreSqlClusterAstraPage(product));
     }
 
 
