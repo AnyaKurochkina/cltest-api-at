@@ -62,7 +62,7 @@ public final class StringUtils {
     }
 
     public static String getStackTraceThrowable(Throwable e) {
-        List<String> regexList = Collections.singletonList(".at (api|ui)\\..*\\n([\\w\\W]*)");
+        List<String> regexList = Collections.singletonList("\\.(tests)\\..*\\n([\\w\\W]*)");
         String stackTrace = ExceptionUtils.getStackTrace(e);
         for (@Language("regexp") String regex : regexList) {
             Matcher matcher = Pattern.compile(regex).matcher(stackTrace);
