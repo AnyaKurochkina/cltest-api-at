@@ -32,6 +32,7 @@ public class StateServiceSteps extends Steps {
         String traceback = null;
         try {
             traceback = new Http(Configure.getAppProp("url.stateService"))
+                    .setWithoutToken()
                     .get("/api/v1/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
