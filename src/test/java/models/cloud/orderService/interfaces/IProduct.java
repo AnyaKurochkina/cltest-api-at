@@ -177,8 +177,8 @@ public abstract class IProduct extends Entity {
 
     public void checkUserGroupBySsh() {
         String accessGroup = getAccessGroup();
-        assertContains(executeSsh("sudo -S realm list"), accessGroup);
-        assertContains(executeSsh("sudo -S ls /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
+        assertContains(executeSsh("sudo -u root realm list"), accessGroup);
+        assertContains(executeSsh("sudo -u root ls /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
     }
 
     public String executeSsh(SshClient client, String cmd) {
