@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 
 import java.io.*;
+import java.time.Duration;
 import java.util.Objects;
 
 @Log4j2
@@ -37,9 +38,8 @@ public class SshClient {
         Session session = initSession(host, user, password);
         Channel channel = initChannel(cmd, session);
         channel.connect();
-        while(true)
-            if(channel.isClosed())
-                break;
+        if (!Waiting.sleep(channel::isClosed, Duration.ofMinutes(1)))
+            log.debug("SSH Соединение будет закрыто принудительно");
         return out.toString();
     }
 
