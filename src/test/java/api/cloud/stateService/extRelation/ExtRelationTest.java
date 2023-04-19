@@ -36,9 +36,6 @@ public class ExtRelationTest extends Tests {
     private static Graph graph;
     private static final List<Integer> relationsIdsForDelete = new ArrayList<>();
     private static final String projects = "projects";
-    private static Item primaryItem;
-    private static Item secondaryItem;
-    private static Item primaryItem2;
 
     @BeforeAll
     public static void init() {
@@ -50,8 +47,15 @@ public class ExtRelationTest extends Tests {
         graph = createGraph();
     }
 
-    @BeforeEach
-    public void createTestData() {
+    @AfterAll
+    public static void deleteTestData() {
+        relationsIdsForDelete.forEach(x -> deleteExtRelation(projects, project.getId(), x));
+    }
+
+    @DisplayName("Создание ExtRelation с параметром is_exclusive=false")
+    @TmsLink("1600594")
+    @Test
+    public void createExtRelationWithExclusiveFalseTest() {
         String orderId = UUID.randomUUID().toString();
         String itemId = UUID.randomUUID().toString();
         JSONObject json = Item.builder()
@@ -81,20 +85,9 @@ public class ExtRelationTest extends Tests {
                 .subtype("build")
                 .build()
                 .toJson();
-        primaryItem = createItem(project.getId(), json);
-        secondaryItem = createItem(project.getId(), secondaryJson);
-        primaryItem2 = createItem(project.getId(), json2);
-    }
-
-    @AfterAll
-    public static void deleteTestData() {
-        relationsIdsForDelete.forEach(x -> deleteExtRelation(projects, project.getId(), x));
-    }
-
-    @DisplayName("Создание ExtRelation с параметром is_exclusive=false")
-    @TmsLink("")
-    @Test
-    public void createExtRelationWithExclusiveFalseTest() {
+        Item primaryItem = createItem(project.getId(), json);
+        Item secondaryItem = createItem(project.getId(), secondaryJson);
+        Item primaryItem2 = createItem(project.getId(), json2);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         relationsIdsForDelete.add(extRelation.getId());
@@ -110,9 +103,41 @@ public class ExtRelationTest extends Tests {
     }
 
     @DisplayName("Создание ExtRelation с параметром is_exclusive=true")
-    @TmsLink("")
+    @TmsLink("1600596")
     @Test
     public void createExtRelationWithExclusiveTrueTest() {
+        String orderId = UUID.randomUUID().toString();
+        String itemId = UUID.randomUUID().toString();
+        JSONObject json = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(orderId)
+                .itemId(itemId)
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        JSONObject secondaryJson = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(UUID.randomUUID().toString())
+                .itemId(UUID.randomUUID().toString())
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        JSONObject json2 = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(UUID.randomUUID().toString())
+                .itemId(UUID.randomUUID().toString())
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        Item primaryItem = createItem(project.getId(), json);
+        Item secondaryItem = createItem(project.getId(), secondaryJson);
+        Item primaryItem2 = createItem(project.getId(), json2);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 true);
         relationsIdsForDelete.add(extRelation.getId());
@@ -126,10 +151,32 @@ public class ExtRelationTest extends Tests {
         assertEquals("['Данный Item не может использоваться эксклюзивно, т.к. он уже используется как secondary']", error);
     }
 
-    @DisplayName("Создание ExtRelation с параметром is_exclusive=true")
-    @TmsLink("")
+    @DisplayName("Удаление ExtRelation с помощью изменения состояния item")
+    @TmsLink("1600598")
     @Test
     public void deleteExtRelationWhenItemStateChangedTest() {
+        String orderId = UUID.randomUUID().toString();
+        String itemId = UUID.randomUUID().toString();
+        JSONObject json = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(orderId)
+                .itemId(itemId)
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        JSONObject secondaryJson = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(UUID.randomUUID().toString())
+                .itemId(UUID.randomUUID().toString())
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        Item primaryItem = createItem(project.getId(), json);
+        Item secondaryItem = createItem(project.getId(), secondaryJson);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         assertTrue(isRelationExistById(projects, project.getId(), extRelation.getId()), String.format("Relation c id - %d не существует", extRelation.getId()));
