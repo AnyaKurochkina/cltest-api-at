@@ -112,7 +112,7 @@ public class ClickHouseClusterPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction("at_local_user").exists(), "Ошибка создания УЗ");
+        Assertions.assertTrue(new Table("",2).isColumnValueContains("",name), "Ошибка создания УЗ");
     }
 
     public void resetPasswordLA(String name) {
@@ -127,12 +127,9 @@ public class ClickHouseClusterPage extends IProductPage {
 
     public void deleteLocalAccount(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
-        runActionWithParameters(name, "Удалить локальную УЗ", "Подтвердить", () -> {
-            Dialog dlg = Dialog.byTitle("Удалить локальную УЗ");
-            dlg.setInputValue("Пользователь БД", name);
-        });
+        runActionWithoutParameters(name, "Удалить локальную УЗ");
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(getBtnAction(name).exists(), "Ошибка удаления УЗ");
+        Assertions.assertFalse(new Table("",2).isColumnValueContains("",name), "Ошибка удаления УЗ");
     }
 
     public void addAccountAD(String name) {
@@ -142,7 +139,7 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setInputValue("Имя пользователя", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction("at_ad_user").exists(), "Ошибка создания УЗ АД");
+        Assertions.assertTrue(new Table("",3).isColumnValueContains("",name), "Ошибка создания TУЗ АД");
     }
 
     public void resetPasswordAD(String name) {
@@ -161,7 +158,7 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setInputValue("Пользователь БД", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(getBtnAction(name).exists(), "Ошибка удаления УЗ АД");
+        Assertions.assertFalse(new Table("",3).isColumnValueContains("",name), "Ошибка удаления TУЗ АД");
     }
 
     public void addGroupAD(String nameGroup) {
@@ -171,7 +168,7 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
+        Assertions.assertTrue(new Table("").isColumnValueContains("",nameGroup), "Ошибка создания AD");
     }
 
     public void addGroupAdmin(String nameGroup) {
@@ -181,24 +178,21 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка создания AD");
+        Assertions.assertTrue(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления AD");
     }
 
     public void deleteGroupAD(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
-        runActionWithParameters(nameGroup, "Удалить пользовательскую группу", "Подтвердить", () -> {
-            Dialog dlg = Dialog.byTitle("Удалить пользовательскую группу");
-            dlg.setInputValue("Название группы", nameGroup);
-        });
+        runActionWithoutParameters(nameGroup, "Удалить пользовательскую группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления AD");
+        Assertions.assertFalse(new Table("").isColumnValueContains("",nameGroup), "Ошибка удаления AD");
     }
 
     public void deleteGroupAdmin(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(nameGroup, "Удалить админ группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
+        Assertions.assertFalse(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления админ группы");
     }
 
     public class VirtualMachineTable extends VirtualMachine {

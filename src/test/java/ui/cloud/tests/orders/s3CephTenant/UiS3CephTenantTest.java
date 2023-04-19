@@ -149,17 +149,9 @@ public class UiS3CephTenantTest extends UiProductTest {
         s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addUser("user"));
     }
 
-    @Test
-    @Order(12)
-    @TmsLink("891774")
-    @DisplayName("UI S3CephTenant. Удалить пользователя")
-    void deleteUser() {
-        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
-        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.deleteUser());
-    }
 
     @Test
-    @Order(13)
+    @Order(12)
     @TmsLink("891775")
     @DisplayName("UI S3CephTenant. Добавить политику")
     void addAccessPolicy() {
@@ -168,7 +160,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     }
 
     @Test
-    @Order(14)
+    @Order(13)
     @TmsLink("891777")
     @DisplayName("UI S3CephTenant. Изменить политику")
     void changeAccessPolicy() {
@@ -177,12 +169,21 @@ public class UiS3CephTenantTest extends UiProductTest {
     }
 
     @Test
-    @Order(15)
+    @Order(14)
     @TmsLink("891770")
     @DisplayName("UI S3CephTenant. Удалить бакет")
     void deleteBucket() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
         s3CepthPages.runActionWithCheckCost(CompareType.LESS, () -> s3CepthPages.deleteBucket());
+    }
+
+    @Test
+    @Order(15)
+    @TmsLink("891774")
+    @DisplayName("UI S3CephTenant. Удалить пользователя")
+    void deleteUser() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.deleteUser());
     }
 
     @Test
