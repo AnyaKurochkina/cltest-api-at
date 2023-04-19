@@ -223,6 +223,14 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка items по фильтру {filter}")
+    public static Response getItemsListByFilter(String contextId, String filter) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/items/?{}", contextId, filter)
+                .assertStatus(200);
+    }
+
     @Step("Получение item по id={id} и фильтру {filter}")
     public static Item getItemByIdAndFilter(String id, String filter) {
         return new Http(StateServiceURL)
