@@ -195,7 +195,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "AD Просмотр активного хоста {0}")
     void checkActiveHost(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            assertContains(postgres.executeSsh("sudo patronictl -c /etc/patroni/patroni.yml list"), "Leader");
+            assertContains(postgres.executeSsh("sudo -S patronictl -c /etc/patroni/patroni.yml list"), "Leader");
         }
     }
 
