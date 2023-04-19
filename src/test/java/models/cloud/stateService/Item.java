@@ -1,9 +1,11 @@
 package models.cloud.stateService;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import core.helper.JsonHelper;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.productCatalog.action.Action;
+import org.json.JSONObject;
 
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -45,5 +47,21 @@ public class Item {
     private String folder;
     @JsonProperty("maintance_mode")
     private Boolean maintanceMode;
+    @JsonProperty("update_data")
+    private Object updateData;
+
+    public JSONObject toJson() {
+        return JsonHelper.getJsonTemplate("stateService/createItem.json")
+                .set("$.order_id", orderId)
+                .set("$.action_id", actionId)
+                .set("$.graph_id", graphId)
+                .set("$.type", type)
+                .setIfNullRemove("$.subtype", subtype)
+                .setIfNullRemove("$.status", status)
+                .set("$.data", data)
+                .set("$.item_id", itemId)
+                .set("$.update_data", updateData)
+                .build();
+    }
 
 }

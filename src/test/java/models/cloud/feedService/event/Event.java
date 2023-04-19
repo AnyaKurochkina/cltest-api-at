@@ -73,7 +73,7 @@ public class Event extends Entity {
     @Override
     public Entity init() {
         feedService = "/api/v1/events-feed/events/";
-        jsonTemplate = "feedService/createEvent.json";
+        jsonTemplate = "feedService/createBulkAddEvent.json";
         return this;
     }
 
