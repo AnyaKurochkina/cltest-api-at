@@ -205,11 +205,10 @@ public class PostgresSQLCluster extends IProduct {
     }
 
     public void checkUseSsh(String ip, String dbName) {
-        SshClient ssh = new SshClient(ip, envType());
         String cmd = "psql \"host=localhost dbname=" + dbName +
                 " user=" + dbName + "_admin password=" + adminPassword +
                 "\" -c \"\\pset pager off\" -c \"CREATE TABLE test1 (name varchar(30), surname varchar(30));\" -c \"\\z " + dbName + ".test1\"";
-        assertContains(ssh.execute(cmd), dbName + "_user=arwd/" + dbName + "_admin",
+        assertContains(executeSsh(cmd), dbName + "_user=arwd/" + dbName + "_admin",
                 dbName + "_reader=r/" + dbName + "_admin", dbName + "_admin=arwdDxt/" + dbName + "_admin");
     }
 
