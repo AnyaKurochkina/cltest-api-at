@@ -1,13 +1,18 @@
 package api.cloud.stateService;
 
 import api.Tests;
+import core.helper.JsonHelper;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
+import models.cloud.stateService.extRelations.ExtRelation;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -16,11 +21,18 @@ import steps.orderService.OrderServiceSteps;
 import steps.stateService.StateServiceSteps;
 
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static core.helper.DateValidator.currentTimeInFormat;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.createAction;
+import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.stateService.ExtRelationsStep.createExtRelation;
+import static steps.stateService.ExtRelationsStep.deleteExtRelation;
 import static steps.stateService.StateServiceSteps.*;
 
 @Tag("state_service")
@@ -174,6 +186,65 @@ public class StateServiceListTest extends Tests {
             assertTrue((createdRowDt.isAfter(startDt) || createdRowDt.isEqual(startDt)) && createdRowDt.isBefore(endDt),
                     String.format("Дата %s itema не входит в заданный промежуток.", createdRowDt));
         }
+    }
+
+    @Test
+    @DisplayName("Получение списка Items с параметром with_ext_relation=true")
+    @TmsLink("1600823")
+    public void getItemsListWithExtRelationTrueTest() {
+        Action action = createAction();
+        Graph graph = createGraph();
+        Project project = Project.builder().isForOrders(true).build().createObject();
+        String orderId = UUID.randomUUID().toString();
+        String itemId = UUID.randomUUID().toString();
+        JSONObject json = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(orderId)
+                .itemId(itemId)
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        JSONObject secondaryJson = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(UUID.randomUUID().toString())
+                .itemId(UUID.randomUUID().toString())
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        JSONObject json2 = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(UUID.randomUUID().toString())
+                .itemId(UUID.randomUUID().toString())
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        Item primaryItem = createItem(project.getId(), json);
+        Item secondaryItem = createItem(project.getId(), secondaryJson);
+        Item primaryItem2 = createItem(project.getId(), json2);
+        ExtRelation extRelation = createExtRelation("projects", project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
+                false);
+        ExtRelation extRelation2 = createExtRelation("projects", project.getId(), primaryItem2.getItemId(), primaryItem.getItemId(),
+                false);
+        String newFolder = String.format("/organization/vtb/folder/folder/fold-test/project/%s/", project.getId());
+        JSONObject newAction = JsonHelper.getJsonTemplate("stateService/createAction.json")
+                .set("$.order_ids", Collections.singletonList(orderId))
+                .set("$.graph_id", graph.getGraphId())
+                .set("$.action_id", action.getActionId())
+                .set("$.data.folder", newFolder)
+                .set("$.create_dt", currentTimeInFormat())
+                .build();
+        createBulkAddAction(project.getId(), newAction);
+        Response response = getItemsListByFilter(project.getId(), String.format("order_id=%s&with_ext_relations=true", orderId));
+        assertEquals(secondaryItem.getItemId(), response.jsonPath().getString("list[0].data.ext_relations.secondary[0]"));
+        assertEquals(primaryItem2.getItemId(), response.jsonPath().getString("list[0].data.ext_relations.primary[0]"));
+        deleteExtRelation("projects", project.getId(), extRelation.getId());
+        deleteExtRelation("projects", project.getId(), extRelation2.getId());
     }
 
 }
