@@ -7,6 +7,7 @@ import lombok.Getter;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.ContextSettingsPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
+import ui.cloud.pages.productCatalog.allowedAction.AllowedActionsListPage;
 import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
@@ -25,6 +26,7 @@ public class ControlPanelIndexPage {
     private final SelenideElement directionsLink = $x("//*[@href='/meccano/org_direction']");
     private final SelenideElement actionsLink = $x("//*[@href='/meccano/actions']");
     private final SelenideElement forbiddenActionsLink = $x("//*[@href='/meccano/forbidden_actions']");
+    private final SelenideElement allowedActionsLink = $x("//*[@href='/meccano/allowed_actions']");
     private final SelenideElement templatesLink = $x("//a[@href='/meccano/templates']");
     private final SelenideElement orderTemplatesLink = $x("//a[@href='/meccano/order-templates']");
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
@@ -55,6 +57,12 @@ public class ControlPanelIndexPage {
     public ForbiddenActionsListPage goToForbiddenActionsListPage() {
         forbiddenActionsLink.click();
         return new ForbiddenActionsListPage();
+    }
+
+    @Step("Переход на страницу Конструктор.Разрешенные действия")
+    public AllowedActionsListPage goToAllowedActionsListPage() {
+        allowedActionsLink.click();
+        return new AllowedActionsListPage();
     }
 
     @Step("Переход на страницу Конструктор.Шаблоны узлов")

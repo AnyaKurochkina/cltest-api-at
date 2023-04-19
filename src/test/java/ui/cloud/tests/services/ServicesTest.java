@@ -34,7 +34,7 @@ public class ServicesTest extends Tests {
 
     @Test
     @TmsLink("706965")
-    @DisplayName("Сервисы. Запуск Smoke TEST")
+    @DisplayName("Сервисы. Проверка работы компонентов графов. (Параллельная)")
     void runSmokeTest() {
         SmokeTestPage smokeTestPage = new SmokeTestPage();
         new IndexPage().goToServicesListPage().selectProduct(smokeTestPage.getServiceName());
@@ -44,7 +44,7 @@ public class ServicesTest extends Tests {
 
     @Test
     @TmsLink("842450")
-    @DisplayName("Сервисы. Запуск Smoke TEST linear")
+    @DisplayName("Сервисы. Проверка работы компонентов графов. (Последовательная)")
     void runSmokeTestLinear() {
         SmokeLinearTestPage smokeLinearTestPage = new SmokeLinearTestPage();
         new IndexPage().goToServicesListPage().selectProduct(smokeLinearTestPage.getServiceName());

@@ -5,24 +5,15 @@
     "context_restrictions": [],
     "event_type_provider": [
       {
-        "event_type": "app",
+        "event_type": "bm",
         "event_provider": "moon"
       }
     ],
-    "name": "import_allowed_action_api_test",
-    "title": "import_allowed_action_api_test",
+    "name": "at_api_import_allowed_action",
+    "title": "at_api_import_allowed_action",
     "description": "api_test",
-    "config_restriction": null,
     "item_restriction": null,
-    "environment_type_restriction": [],
-    "action_id": "1bc6b12c-f47d-4a05-af3e-577407664b45",
-    "action": "1bc6b12c-f47d-4a05-af3e-577407664b45",
-    "event_type": [
-      "app"
-    ],
-    "event_provider": [
-      "moon"
-    ]
+    "action": "1bc6b12c-f47d-4a05-af3e-577407664b45"
   },
   "rel_foreign_models": {
     "action": {
@@ -77,8 +68,8 @@
             "event_provider": "vsphere"
           }
         ],
-        "name": "qa-test-action",
-        "title": "qa-test-action",
+        "name": "at_api_import_action_for_allowed_action",
+        "title": "at_api_import_action_for_allowed_action",
         "description": "",
         "number": 11,
         "is_safe": false,
@@ -117,9 +108,9 @@
             "lock_order_on_error": false,
             "damage_order_on_error": false,
             "current_version": "",
-            "name": "test-graph-action",
-            "title": "test-graph-action",
-            "description": "test-graph-action-edited",
+            "name": "at_api_import_graph_for_action",
+            "title": "at_api_import_graph_for_action",
+            "description": "",
             "type": "action",
             "allowed_developers": [],
             "restricted_developers": [],
