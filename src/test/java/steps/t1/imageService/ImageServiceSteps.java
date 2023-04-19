@@ -3,10 +3,7 @@ package steps.t1.imageService;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import models.t1.imageService.Image;
-import models.t1.imageService.ImageGroup;
-import models.t1.imageService.Logo;
-import models.t1.imageService.Marketing;
+import models.t1.imageService.*;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -29,6 +26,16 @@ public class ImageServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getList("", ImageGroup.class);
+    }
+
+    @Step("Получение списка categories")
+    public static List<Categories> getCategoriesList() {
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .get(apiUrl + "/categories")
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", Categories.class);
     }
 
     @Step("Получение версии сервиса")
@@ -138,6 +145,15 @@ public class ImageServiceSteps extends Steps {
                 .extractAs(Marketing.class);
     }
 
+    @Step("Получение Category по id {id}")
+    public static Categories getCategoryById(String id) {
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .get(apiUrl + "/categories/{}", id)
+                .assertStatus(200)
+                .extractAs(Categories.class);
+    }
+
     @Step("Получение marketing по name {name}")
     public static Marketing getMarketingByName(String name) {
         List<Marketing> marketingList = getMarketingList();
@@ -202,6 +218,14 @@ public class ImageServiceSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Удаление Categories по id {id}")
+    public static void deleteCategoryById(String id) {
+        new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .delete(apiUrl + "/categories/{}", id)
+                .assertStatus(200);
+    }
+
     @Step("Удаление logo по id {id}")
     public static Response getDeleteLogoByIdResponse(String id) {
         return new Http(ImageService)
@@ -224,6 +248,16 @@ public class ImageServiceSteps extends Steps {
                 .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch(apiUrl + "/logo/{}", id)
+                .assertStatus(200);
+    }
+
+    @Step("Обновление category по id {id}")
+    public static void updateCategoryById(String id, String name) {
+        JSONObject body = new JSONObject().put("name", name);
+        new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .body(body)
+                .patch(apiUrl + "/categories/{}", id)
                 .assertStatus(200);
     }
 
@@ -262,12 +296,32 @@ public class ImageServiceSteps extends Steps {
                 .extractAs(ImageGroup.class);
     }
 
+    @Step("Создание categories")
+    public static Categories createCategories(String name) {
+        JSONObject object = new JSONObject().put("name", name);
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .body(object)
+                .post(apiUrl + "/categories")
+                .assertStatus(200)
+                .extractAs(Categories.class);
+    }
+
+    @Step("Создание categories")
+    public static Response createCategoriesResponse(String name) {
+        JSONObject object = new JSONObject().put("name", name);
+        return new Http(ImageService)
+                .setRole(CLOUD_ADMIN)
+                .body(object)
+                .post(apiUrl + "/categories");
+    }
+
     @Step("Создание marketing")
     public static Marketing createMarketing(JSONObject object) {
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
-                .post(apiUrl+ "/marketing")
+                .post(apiUrl + "/marketing")
                 .assertStatus(200)
                 .compareWithJsonSchema("jsonSchema/createMarketingInfoSchema.json")
                 .extractAs(Marketing.class);
@@ -322,5 +376,10 @@ public class ImageServiceSteps extends Steps {
             }
         }
         return false;
+    }
+
+    @Step("Проверка существования categories c id {id}")
+    public static boolean isCategoryExist(String id) {
+        return getCategoriesList().stream().anyMatch(x -> x.getId().equals(id));
     }
 }
