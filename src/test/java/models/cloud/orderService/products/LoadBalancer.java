@@ -9,6 +9,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
@@ -74,6 +75,7 @@ public class LoadBalancer extends IProduct {
 
     @Override
     public JSONObject toJson() {
+        Organization org = Organization.builder().build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
         String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
@@ -90,6 +92,7 @@ public class LoadBalancer extends IProduct {
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
+                .set("$.order.attrs.layout", getIdGeoDistribution("balancer-1", envType().toUpperCase(), "balancer", org.getName()))
                 .set("$.order.attrs.on_support", getSupport())
                 .build();
     }
