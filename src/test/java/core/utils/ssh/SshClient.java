@@ -41,7 +41,7 @@ public class SshClient {
         if (!Waiting.sleep(channel::isClosed, Duration.ofMinutes(1)))
             log.debug("SSH Соединение будет закрыто принудительно");
         String res = out.toString();
-        if(res.contains("It usually boils down to these three things"))
+        if(res.contains("It usually boils down to these three things") && !cmd.equals("whoami"))
             log.debug(execute("whoami"));
         return res;
     }
