@@ -1,0 +1,46 @@
+image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
+
+stages:
+    - test
+
+variables:
+ MAVEN_OPTS_1: "-Drepository=https://repo1.maven.org/maven2/"
+ MAVEN_OPTS_2: "-Dtest=VirtualMachineTest#vmList -Denv=t1ift -Dsecret=123456"
+ MAVEN_OPTS_3: "-Dmaven.repo.local=.m2/repository"
+
+test:
+  stage: test
+  before_script:
+    - apt-get update
+    - apt-get install -y  openssh-client openssh-server openssh-sftp-server openssl locales
+    #- locale-gen POSIX #ru_RU.UTF-8
+    #-  update-locale
+    - locale    
+  script:
+    - mvn compile $MAVEN_OPTS_1 $MAVEN_OPTS_3
+    - mkdir -p .m2/repository/cassandra/jdbc-driver/1.4/
+    - sshpass -p "QpwoVB%^1029" scp -r -o StrictHostKeyChecking=no qa-admin@10.13.20.10:/home/qa-admin/.m2/ .m2
+    - cp src/main/resources/lib/cassandra-jdbc-driver-1.4.jar .m2/repository/cassandra/jdbc-driver/1.4/
+    - mvn $MAVEN_OPTS_1 $MAVEN_OPTS_3 -X install:install-file -Dfile=.m2/repository/cassandra/jdbc-driver/1.4/cassandra-jdbc-driver-1.4.jar -DgroupId=cassandra -DartifactId=jdbc-driver -Dversion=1.4 -Dpackaging=jar
+    - mvn clean test $MAVEN_OPTS_1 $MAVEN_OPTS_2 $MAVEN_OPTS_3
+    - sshpass -p "QpwoVB%^1029" scp -r -o StrictHostKeyChecking=no .m2/* qa-admin@10.13.20.10:~/.m2/
+    - tar zcfv logs.tgz logs/
+    - echo "next job"
+    - mkdir -p target/site/allure-maven-plugin/history
+    - sshpass -p "QpwoVB%^1029" scp -r -o StrictHostKeyChecking=no qa-admin@10.13.20.10:~/reports/allure-maven-plugin/history target/allure-results
+    - ls -la target/allure-results
+    - ls -la target/site/allure-maven-plugin/history
+    - mvn $MAVEN_OPTS_1 $MAVEN_OPTS_3 allure:report
+    - ls -la target/allure-results
+    #- tar zcfv allure-maven-plugin.tgz target/site/allure-maven-plugin
+    #- sshpass -p "QpwoVB%^1029" scp -o StrictHostKeyChecking=no allure-maven-plugin.tgz qa-admin@10.13.20.10:~/reports
+    - sshpass -p "QpwoVB%^1029" scp -r -o StrictHostKeyChecking=no target/site/allure-maven-plugin qa-admin@10.13.20.10:~/reports
+  after_script:
+  artifacts:
+   # when: always
+    #name: "report"
+    paths:
+    - logs.tgz 
+    #- allure-maven-plugin.tgz
+    expire_in: 10 minutes
+  allow_failure: true
