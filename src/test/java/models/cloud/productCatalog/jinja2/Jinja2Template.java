@@ -21,11 +21,12 @@ import static steps.productCatalog.Jinja2Steps.isJinja2Exists;
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = "productName", callSuper = false)
 @ToString(exclude = "productName")
-public class Jinja2 extends Entity implements IProductCatalog {
+public class Jinja2Template extends Entity implements IProductCatalog {
 
     @JsonProperty("jinja2_template")
     private String jinja2Template;
@@ -52,23 +53,24 @@ public class Jinja2 extends Entity implements IProductCatalog {
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
-                .set("$.jinja2Template", jinja2Template)
+                .set("$.jinja2_template", jinja2Template)
+                .set("$.jinja2_data", jinja2Data)
                 .build();
     }
 
     @Override
-    @Step("Создание jinja2")
+    @Step("Создание шаблона Jinja2")
     protected void create() {
         ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, "productCatalog/jinja2/createJinja.json");
         if (isJinja2Exists(name)) {
             productCatalogSteps.deleteByName(name, GetJinjaListResponse.class);
         }
-        Jinja2 jinja2 = new Http(Configure.ProductCatalogURL)
+        Jinja2Template jinja2 = new Http(Configure.ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(productName)
                 .assertStatus(201)
-                .extractAs(Jinja2.class);
+                .extractAs(Jinja2Template.class);
         StringUtils.copyAvailableFields(jinja2, this);
         Assertions.assertNotNull(id, "Jinja с именем: " + name + ", не создался");
     }

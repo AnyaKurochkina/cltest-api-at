@@ -7,7 +7,7 @@ import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
 import models.cloud.productCatalog.ExportData;
 import models.cloud.productCatalog.ExportEntity;
-import models.cloud.productCatalog.jinja2.Jinja2;
+import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -26,8 +26,8 @@ import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 @Feature("Jinja2")
 @DisabledIfEnv("prod")
 public class JinjaExportTest extends Tests {
-    private static Jinja2 simpleJinja;
-    private static Jinja2 simpleJinja2;
+    private static Jinja2Template simpleJinja;
+    private static Jinja2Template simpleJinja2;
 
     @BeforeAll
     public static void setUp() {
@@ -50,7 +50,7 @@ public class JinjaExportTest extends Tests {
     @TmsLink("660113")
     @Test
     public void exportJinja2Test() {
-        Jinja2 jinja = createJinja("export_jinja1_test_api");
+        Jinja2Template jinja = createJinja("export_jinja1_test_api");
         exportJinjaById(jinja.getId());
     }
 }

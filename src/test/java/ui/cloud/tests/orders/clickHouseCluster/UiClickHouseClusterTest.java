@@ -10,6 +10,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -28,7 +29,8 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product = ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/50b52931-3f9f-4bd4-9868-373baa186cdf/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ClickHouseCluster product;
+    //=ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/50b52931-3f9f-4bd4-9868-373baa186cdf/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     String nameAD = "at_ad_user";
     String nameLocalAD = "at_local_user";
@@ -98,6 +100,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
+    @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("1138093")
     @DisplayName("UI ClickHouse Cluster. Перезагрузить по питанию")

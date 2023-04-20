@@ -3,8 +3,7 @@ package api.cloud.productCatalog.jinja;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.action.Action;
-import models.cloud.productCatalog.jinja2.Jinja2;
+import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -28,7 +27,7 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void copyJinjaByIdWithOutToken() {
         String jinjaName = "copy_with_out_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -40,7 +39,7 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void getJinjaByIdWithOutToken() {
         String jinjaName = "get_by_id_with_out_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -52,7 +51,7 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void updateJinjaByIdWithOutToken() {
         String jinjaName = "update_with_out_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -65,7 +64,7 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void createJinjaWithNonUniqueName() {
         String jinjaName = "update_with_out_jinja_test_api";
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -76,31 +75,31 @@ public class JinjaNegativeTest extends Tests {
     @TmsLink("660126")
     @Test
     public void createJinjaWithInvalidCharacters() {
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name("NameWithUppercase")
                 .build()
                 .negativeCreateRequest(400);
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name("nameWithUppercaseInMiddle")
                 .build()
                 .negativeCreateRequest(400);
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name("имя")
                 .build()
                 .negativeCreateRequest(400);
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name("Имя")
                 .build()
                 .negativeCreateRequest(400);
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name("a&b&c")
                 .build()
                 .negativeCreateRequest(400);
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name("")
                 .build()
                 .negativeCreateRequest(400);
-        Jinja2.builder()
+        Jinja2Template.builder()
                 .name(" ")
                 .build()
                 .negativeCreateRequest(400);
@@ -111,7 +110,7 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void deleteJinjaWithOutToken() {
         String jinjaName = "delete_with_out_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();

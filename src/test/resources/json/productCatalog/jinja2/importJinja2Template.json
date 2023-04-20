@@ -1,0 +1,17 @@
+{
+  "model_name": "Jinja2Template",
+  "Jinja2Template": {
+    "title": "at_api_import_jinja2_template",
+    "name": "at_api_import_jinja2_template",
+    "description": "import test",
+    "jinja2_template": "{%- set full_policy_name = ('kv-' + project_name + '-' + policy_name) -%}\n {{ full_policy_name }}",
+    "jinja2_data": {
+      "policy_name": "my_policy",
+      "project_name": "proj22"
+    }
+  },
+  "rel_foreign_models": {},
+  "dump_version": 5.0,
+  "dump_date": "2023-04-18 19:30:55",
+  "is_pinned_versions": false
+}

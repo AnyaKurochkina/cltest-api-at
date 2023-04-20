@@ -10,6 +10,7 @@ import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.allowedAction.AllowedActionsListPage;
 import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionsListPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
+import ui.cloud.pages.productCatalog.jinja2Template.Jinja2TemplatesListPage;
 import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 import ui.cloud.pages.productCatalog.product.ProductsListPage;
@@ -28,6 +29,7 @@ public class ControlPanelIndexPage {
     private final SelenideElement forbiddenActionsLink = $x("//*[@href='/meccano/forbidden_actions']");
     private final SelenideElement allowedActionsLink = $x("//*[@href='/meccano/allowed_actions']");
     private final SelenideElement templatesLink = $x("//a[@href='/meccano/templates']");
+    private final SelenideElement jinja2TemplatesLink = $x("//a[@href='/meccano/jinja2-templates']");
     private final SelenideElement orderTemplatesLink = $x("//a[@href='/meccano/order-templates']");
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
@@ -53,13 +55,13 @@ public class ControlPanelIndexPage {
         return new ActionsListPage();
     }
 
-    @Step("Переход на страницу Конструктор.Запрещенные действия")
+    @Step("Переход на страницу Конструктор. Запрещенные действия")
     public ForbiddenActionsListPage goToForbiddenActionsListPage() {
         forbiddenActionsLink.click();
         return new ForbiddenActionsListPage();
     }
 
-    @Step("Переход на страницу Конструктор.Разрешенные действия")
+    @Step("Переход на страницу Конструктор. Разрешенные действия")
     public AllowedActionsListPage goToAllowedActionsListPage() {
         allowedActionsLink.click();
         return new AllowedActionsListPage();
@@ -69,6 +71,12 @@ public class ControlPanelIndexPage {
     public TemplatesListPage goToTemplatesPage() {
         templatesLink.click();
         return new TemplatesListPage();
+    }
+
+    @Step("Переход на страницу Конструктор. Шаблоны Jinja2")
+    public Jinja2TemplatesListPage goToJinja2TemplatesListPage() {
+        jinja2TemplatesLink.click();
+        return new Jinja2TemplatesListPage();
     }
 
     @Step("Переход на страницу Конструктор.Шаблоны отображения")
