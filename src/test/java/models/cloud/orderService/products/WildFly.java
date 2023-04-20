@@ -30,7 +30,6 @@ public class WildFly extends IProduct {
     @ToString.Include
     String wildFlyVersion;
     Flavor flavor;
-    String role;
 
     @Override
     @Step("Заказ продукта")
@@ -45,7 +44,6 @@ public class WildFly extends IProduct {
             productName = "WildFly Astra";
         }
         initProduct();
-        role = isDev() ? "superuser" : "user";
         if (flavor == null)
             flavor = getMinFlavor();
         if (osVersion == null)
@@ -78,7 +76,7 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.wildfly_version", getWildFlyVersion())
                 .set("$.order.attrs.access_group[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
-                .set("$.order.attrs.ad_logon_grants[0].role", role)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", /*isTest()*/getSupport())
                 .set("$.order.label", getLabel())

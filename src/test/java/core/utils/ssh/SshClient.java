@@ -40,10 +40,7 @@ public class SshClient {
         channel.connect();
         if (!Waiting.sleep(channel::isClosed, Duration.ofMinutes(1)))
             log.debug("SSH Соединение будет закрыто принудительно");
-        String res = out.toString();
-        if(res.contains("It usually boils down to these three things") && !cmd.equals("whoami"))
-            log.debug(execute("whoami"));
-        return res;
+        return out.toString();
     }
 
     private Channel initChannel(String commands, Session session) throws JSchException {

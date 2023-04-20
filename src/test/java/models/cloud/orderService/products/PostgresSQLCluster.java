@@ -44,7 +44,6 @@ public class PostgresSQLCluster extends IProduct {
     public List<DbUser> users = new ArrayList<>();
     Flavor flavor;
     private String adminPassword;
-    private String role;
 
     @Override
     @Step("Заказ продукта")
@@ -57,7 +56,6 @@ public class PostgresSQLCluster extends IProduct {
         jsonTemplate = "/orders/postgressql_cluster.json";
         if (productName == null)
             productName = "PostgreSQL Cluster Astra Linux";
-        role = isDev() ? "superuser" : "user";
         if (adminPassword == null)
             adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         initProduct();
@@ -95,7 +93,7 @@ public class PostgresSQLCluster extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.postgresql_version", postgresqlVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
-                .set("$.order.attrs.ad_logon_grants[0].role", role)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.on_backup", envType().contains("prod"))
