@@ -6,6 +6,7 @@ import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
@@ -14,6 +15,8 @@ import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
 import static core.utils.AssertUtils.assertHeaders;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Сетевые интерфейсы")
@@ -29,6 +32,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
 
     @Test
     @TmsLinks({@TmsLink("1280488"), @TmsLink("1249430")})
+    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Подключить/Отключить публичный IP")
     void attachIp() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
@@ -52,6 +56,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1280489")
+    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Изменить группы безопасности")
     void changeSecurityGroup() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
@@ -72,6 +77,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1508998")
+    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Изменить подсеть")
     void changeSubnet() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()

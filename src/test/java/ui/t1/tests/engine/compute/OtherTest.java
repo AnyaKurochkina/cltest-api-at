@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.parallel.ResourceLock;
 import org.openqa.selenium.NotFoundException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
@@ -21,6 +22,8 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.List;
 import java.util.Objects;
+
+import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 @Feature("Дополнительные")
 @ExtendWith(BeforeAllExtension.class)
@@ -342,6 +345,7 @@ public class OtherTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1507767")
+    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Создать вм. Создать диск. Создать снимок. Подключить диск. Удалить снимок. Отключить диск. Изменить подсеть")
     void scenario1() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
