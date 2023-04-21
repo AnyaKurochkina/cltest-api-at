@@ -38,7 +38,7 @@ public class BulkAddEventTest extends Tests {
         String uuid = UUID.randomUUID().toString();
         Action action = createAction("bulk_add_event_api_test");
         Graph graph = createGraph("bulk_add_event_graph_api_test");
-        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createEvent.json")
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
                 .set("$.order_id", uuid)
                 .set("$.graph_id", graph.getGraphId())
                 .set("$.action_id", action.getActionId())
@@ -61,7 +61,7 @@ public class BulkAddEventTest extends Tests {
         Action action = createAction();
         Graph graph = createGraph();
         String subtype = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createEvent.json")
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
                 .set("$.order_id", uuid)
                 .set("$.graph_id", graph.getGraphId())
                 .set("$.action_id", action.getActionId())
