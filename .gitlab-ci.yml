@@ -18,6 +18,7 @@ test:
     #- update-locale
     #- LANG=C.UTF-8
     #- LANGUAGE=
+    - locale -a
     - LC_CTYPE="C.UTF-8"
     - LC_NUMERIC="C.UTF-8"
     - LC_TIME="C.UTF-8"
