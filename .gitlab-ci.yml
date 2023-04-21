@@ -8,7 +8,6 @@ variables:
  MAVEN_OPTS_1: "-Drepository=https://repo1.maven.org/maven2/"
  MAVEN_OPTS_2: "-Dtest=VirtualMachineTest#vmList -Denv=t1ift -Dsecret=123456"
  MAVEN_OPTS_3: "-Dmaven.repo.local=.m2/repository"
- Locale_1: "LANG=C.utf-8"
 
 test:
   stage: test
@@ -21,6 +20,8 @@ test:
     #- LANGUAGE=
     - locale -a
     #- LC_ALL=
+    - export LC_ALL = C.utf-8
+    - export LANG = C.utf-8
     - locale 
   script:
     - mvn compile $MAVEN_OPTS_1 $MAVEN_OPTS_3
