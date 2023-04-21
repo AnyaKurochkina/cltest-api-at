@@ -20,8 +20,8 @@ test:
     #- LANGUAGE=
     - locale -a
     #- LC_ALL=
-    - export LC_ALL = C.utf-8
-    - export LANG = C.utf-8
+    #- export LC_ALL = C.utf8
+    - export LANG=C.utf8
     - locale 
   script:
     - mvn compile $MAVEN_OPTS_1 $MAVEN_OPTS_3
