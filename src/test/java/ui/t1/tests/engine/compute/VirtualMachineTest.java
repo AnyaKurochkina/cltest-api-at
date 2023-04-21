@@ -39,7 +39,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины")
     void vmList() {
         new IndexPage().goToVirtualMachine();
-        assertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
+        assertHeaders(new VmList.VmTable(), "ERROR", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
     }
 
     @Test
