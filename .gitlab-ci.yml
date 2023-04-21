@@ -14,15 +14,8 @@ test:
   before_script:
     - apt-get update
     - apt-get install -y  openssh-client openssh-server openssh-sftp-server openssl locales
-    #- locale-gen POSIX #ru_RU.UTF-8
-    #- update-locale
-    #- LANG=C.UTF-8
-    #- LANGUAGE=
-    - locale -a
-    #- LC_ALL=
-    #- export LC_ALL = C.utf8
     - export LANG=C.utf8
-    - locale 
+  allow_failure: true
   script:
     - mvn compile $MAVEN_OPTS_1 $MAVEN_OPTS_3
     - mkdir -p .m2/repository/cassandra/jdbc-driver/1.4/
@@ -30,6 +23,7 @@ test:
     - cp src/main/resources/lib/cassandra-jdbc-driver-1.4.jar .m2/repository/cassandra/jdbc-driver/1.4/
     - mvn $MAVEN_OPTS_1 $MAVEN_OPTS_3 -X install:install-file -Dfile=.m2/repository/cassandra/jdbc-driver/1.4/cassandra-jdbc-driver-1.4.jar -DgroupId=cassandra -DartifactId=jdbc-driver -Dversion=1.4 -Dpackaging=jar
     - mvn clean test $MAVEN_OPTS_1 $MAVEN_OPTS_2 $MAVEN_OPTS_3
+  after_script:
     - sshpass -p "QpwoVB%^1029" scp -r -o StrictHostKeyChecking=no .m2/* qa-admin@10.13.20.10:~/.m2/
     - tar zcfv logs.tgz logs/
     - echo "next job"
@@ -42,7 +36,6 @@ test:
     #- tar zcfv allure-maven-plugin.tgz target/site/allure-maven-plugin
     #- sshpass -p "QpwoVB%^1029" scp -o StrictHostKeyChecking=no allure-maven-plugin.tgz qa-admin@10.13.20.10:~/reports
     - sshpass -p "QpwoVB%^1029" scp -r -o StrictHostKeyChecking=no target/site/allure-maven-plugin qa-admin@10.13.20.10:~/reports
-  after_script:
   artifacts:
    # when: always
     #name: "report"
@@ -50,4 +43,3 @@ test:
     - logs.tgz 
     #- allure-maven-plugin.tgz
     expire_in: 10 minutes
-  allow_failure: true
