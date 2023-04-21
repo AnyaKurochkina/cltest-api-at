@@ -1,5 +1,5 @@
-#image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
-image: maven:3.3.9-jdk-8
+image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
+#image: maven:3.3.9-jdk-8
 
 stages:
     - test
@@ -8,13 +8,13 @@ variables:
  MAVEN_OPTS_1: "-Drepository=https://repo1.maven.org/maven2/"
  MAVEN_OPTS_2: "-Dtest=VirtualMachineTest#vmList -Denv=t1ift -Dsecret=123456"
  MAVEN_OPTS_3: "-Dmaven.repo.local=.m2/repository"
+ Locale_1: "LANG=C.utf-8"
 
 test:
   stage: test
   before_script:
     - apt-get update
-    - apt-get install -y  openssh-client openssh-server openssh-sftp-server openssl 
-    #locales
+    - apt-get install -y  openssh-client openssh-server openssh-sftp-server openssl locales
     #- locale-gen POSIX #ru_RU.UTF-8
     #- update-locale
     #- LANG=C.UTF-8
