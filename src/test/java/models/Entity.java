@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
-import core.helper.http.Http;
+import core.helper.http.StatusResponseException;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -106,7 +106,7 @@ public abstract class Entity implements AutoCloseable {
             init();
             create();
 
-        } catch (Http.StatusResponseException e) {
+        } catch (StatusResponseException e) {
             if (e.getStatus() != expectedStatus)
                 throw e;
             return;
@@ -117,7 +117,7 @@ public abstract class Entity implements AutoCloseable {
     public void negativeDeleteRequest(int expectedStatus) {
         try {
             delete();
-        } catch (Http.StatusResponseException e) {
+        } catch (StatusResponseException e) {
             if (e.getStatus() != expectedStatus)
                 throw e;
         }

@@ -5,11 +5,15 @@ import io.restassured.path.json.JsonPath;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
+import core.helper.Page;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 
+import java.util.List;
 import java.util.Objects;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
+
 @EqualsAndHashCode
 public class Response {
     final int status;
@@ -30,7 +34,7 @@ public class Response {
     public Response assertStatus(int s) {
         String headers = response.getHeaders().toString();
         if (s != status())
-            throw new Http.StatusResponseException(String.format("\nexpected:<%d>\nbut was:<%d>\nMethod: %s\nRole: %s\nToken: %s\nHeaders: \n%s\nRequest: %s\n%s\nResponse: %s\n", s, status(), http.method, http.role, http.token, headers, http.host + http.path, http.body, responseMessage), status);
+            throw new StatusResponseException(s, status(), http.method, Objects.isNull(http.role) ? "None" : http.role.toString(), http.token, headers, http.host + http.path, http.body, responseMessage);
         return this;
     }
 
@@ -59,9 +63,9 @@ public class Response {
     }
 
     public Response compareWithJsonSchema(String path) {
-         response.then().assertThat()
+        response.then().assertThat()
                 .body(matchesJsonSchemaInClasspath(path));
-         return this;
+        return this;
     }
 
     @SneakyThrows
@@ -69,6 +73,22 @@ public class Response {
         JSONObject jsonObject = new JSONObject(responseMessage);
         ObjectMapper objectMapper = new ObjectMapper();
         return objectMapper.convertValue(jsonObject.toMap(), clazz);
+    }
+
+    @SneakyThrows
+    @SuppressWarnings(value = {"unchecked", "rawtypes"})
+    public <T extends Page<?>> T extractAllPages(Class<T> clazz) {
+        int i = 1;
+        T page = extractAs(clazz);
+        List items = page.getList();
+        while (page.getMeta().getTotalCount() > items.size()) {
+            http.path = http.path.replaceAll("page=(\\d+)", "page=" + (++i));
+            page = http.filterRequest().extractAs(clazz);
+            items.addAll(page.getList());
+        }
+        page.setList(items);
+        Assertions.assertEquals(page.getMeta().getTotalCount(), items.size(), "Размер списка не равен TotalCount");
+        return page;
     }
 
     public String toString() {
