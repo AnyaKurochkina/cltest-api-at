@@ -1,5 +1,5 @@
-image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
-#image: maven:3.3.9-jdk-8
+#image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
+image: maven:3.3.9-jdk-8
 
 stages:
     - test
@@ -13,24 +13,13 @@ test:
   stage: test
   before_script:
     - apt-get update
-    - apt-get install -y  openssh-client openssh-server openssh-sftp-server openssl locales
+    - apt-get install -y  openssh-client openssh-server openssh-sftp-server openssl 
+    #locales
     #- locale-gen POSIX #ru_RU.UTF-8
     #- update-locale
     #- LANG=C.UTF-8
     #- LANGUAGE=
     - locale -a
-    - LC_CTYPE="C.utf-8"
-    - LC_NUMERIC="C.utf-8"
-    - LC_TIME="C.utf-8"
-    - LC_COLLATE="C.utf-8"
-    - LC_MONETARY="C.utf-8"
-    - LC_MESSAGES="C.utf-8"
-    - LC_PAPER="C.utf-8"
-    - LC_NAME="C.utf-8"
-    - LC_ADDRESS="C.utf-8"
-    - LC_TELEPHONE="C.utf-8"
-    - LC_MEASUREMENT="C.utf-8"
-    - LC_IDENTIFICATION="C.utf-8"
     #- LC_ALL=
     - locale 
   script:
