@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
 import java.util.HashMap;
@@ -51,7 +51,7 @@ public class NodesListTest extends GraphBaseTest {
                 .timeout(1)
                 .build();
         patchGraphWithGraphItem(graph, node);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .findNode(node.getInput().keySet().toArray()[0].toString(), node)
@@ -76,7 +76,7 @@ public class NodesListTest extends GraphBaseTest {
                 .number(1)
                 .build();
         patchGraphWithGraphItem(graph, node);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .findNode(node.getName().toUpperCase(), node)

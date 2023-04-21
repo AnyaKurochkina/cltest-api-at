@@ -5,7 +5,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 
 import java.time.LocalDateTime;
@@ -17,7 +17,7 @@ public class ViewProductTest extends ProductBaseTest {
     @TmsLink("852949")
     @DisplayName("Просмотр JSON продукта")
     public void viewJSONTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .checkJSONcontains(product.getProductId());
     }
@@ -26,7 +26,7 @@ public class ViewProductTest extends ProductBaseTest {
     @TmsLink("1205980")
     @DisplayName("Сравнение версий продукта")
     public void compareVersionsTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .setAuthor("QA")
                 .saveWithPatchVersion()
@@ -46,7 +46,7 @@ public class ViewProductTest extends ProductBaseTest {
     public void viewProductAuditTest() {
         GlobalUser user = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", "products", "201", "создан");

@@ -11,7 +11,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.elements.Button;
@@ -62,7 +62,7 @@ public class CopyNodeTest extends GraphBaseTest {
                 .count("1")
                 .build();
         patchGraphWithGraphItem(graph, node);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .copyNodeAndSave(node);
@@ -91,7 +91,7 @@ public class CopyNodeTest extends GraphBaseTest {
                 .timeout(100)
                 .build();
         patchGraphWithGraphItem(graph, node);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .copyNodeAndSave(node);
@@ -123,7 +123,7 @@ public class CopyNodeTest extends GraphBaseTest {
         patchGraphWithGraphItem(graph, node);
         String graph2Name = UUID.randomUUID().toString();
         createGraph(graph2Name, "AT UI Graph (copy node test)");
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .openGraphPage(graph2Name)
                 .goToNodesTab()
                 .getCopyNodeFromGraphButton()

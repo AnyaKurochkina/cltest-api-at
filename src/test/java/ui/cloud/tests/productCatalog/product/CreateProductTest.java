@@ -7,7 +7,7 @@ import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 import java.util.UUID;
 
@@ -28,26 +28,26 @@ public class CreateProductTest extends ProductBaseTest {
     public void checkRequiredFields() {
         Product product = Product.builder().name(NAME + "_").title(TITLE).graphId(graph.getGraphId())
                 .category(Categories.VM.getValue()).categoryV2(Categories.COMPUTE).author("AT UI").build();
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .checkRequiredFields(product);
     }
 
     @Step("Создание продукта с неуникальным кодом")
     public void createProductWithNonUniqueName() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .checkNonUniqueNameValidation(Product.builder().name(NAME).title(TITLE).build());
     }
 
     @Step("Создание продукта с недопустимым кодом")
     public void checkProductNameValidation() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .checkNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 
     @Step("Создание продукта")
     public void createProduct() {
         product.setName(UUID.randomUUID().toString());
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .createProduct(product)
                 .checkAttributes(product);
         deleteProductByApi(product.getName());

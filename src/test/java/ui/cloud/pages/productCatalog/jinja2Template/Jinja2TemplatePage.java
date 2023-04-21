@@ -137,7 +137,7 @@ public class Jinja2TemplatePage extends BasePage {
         templatesListLink.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -157,7 +157,7 @@ public class Jinja2TemplatePage extends BasePage {
         new Jinja2TemplatesListPage().openJinja2TemplatePage(jinja2Template.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(jinja2Template.getTitle()));
         descriptionInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
         new ControlPanelIndexPage().goToJinja2TemplatesListPage().findAndOpenJinja2TemplatePage(jinja2Template.getName());
         descriptionInput.getInput().shouldHave(Condition.exactValue(jinja2Template.getDescription()));

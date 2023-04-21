@@ -9,7 +9,6 @@ import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -388,7 +387,7 @@ public class ServicePage extends BasePage {
         backButton.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -414,7 +413,7 @@ public class ServicePage extends BasePage {
         new ServicesListPagePC().openServicePage(service.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
         titleInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
         new ControlPanelIndexPage().goToServicesListPagePC().openServicePage(service.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));

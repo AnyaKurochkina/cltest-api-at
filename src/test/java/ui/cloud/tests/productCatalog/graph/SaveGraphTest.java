@@ -5,7 +5,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 @Feature("Сохранение графа")
 public class SaveGraphTest extends GraphBaseTest {
@@ -14,7 +14,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLink("487709")
     @DisplayName("Сохранение графа с указанием версии вручную")
     public void saveGraphWithManualVersion() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .setAuthor("QA-1")
@@ -26,7 +26,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLink("529313")
     @DisplayName("Сохранение графа с указанием некорректной версии")
     public void saveGraphWithIncorrectVersion() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .setAuthor("QA-1")
@@ -42,7 +42,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLinks({@TmsLink("487621"), @TmsLink("600394")})
     @DisplayName("Проверка изменений и лимита патч-версий")
     public void checkPatchVersionLimit() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .setAuthor("QA-1")
@@ -66,7 +66,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLink("600752")
     @DisplayName("Проверка изменений и лимита версий, указанных вручную")
     public void checkManualVersionLimit() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkGraphVersion("1.0.0")
                 .setAuthor("QA-1")
@@ -90,7 +90,7 @@ public class SaveGraphTest extends GraphBaseTest {
     @TmsLink("1073764")
     @DisplayName("Баннер при несохраненных изменениях")
     public void checkUnsavedChangesAlert() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkUnsavedChangesAlertAccept(graph)
                 .checkUnsavedChangesAlertDismiss();

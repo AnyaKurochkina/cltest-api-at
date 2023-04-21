@@ -5,7 +5,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.template.TemplatePage;
 
 @Feature("Редактирование шаблона")
@@ -17,7 +17,7 @@ public class EditTemplateTest extends TemplateBaseTest {
     public void editTemplateTest() {
         template.setDescription("New description");
         template.setTitle("New title");
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .setAttributes(template)
                 .saveWithoutPatchVersion();
@@ -29,7 +29,7 @@ public class EditTemplateTest extends TemplateBaseTest {
     @DisplayName("Проверка сохранения версии")
     public void saveWithManualVersionTest() {
         String currentVersion = "1.0.1";
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .setRunQueue("test_1")
                 .saveWithPatchVersion()
@@ -45,7 +45,7 @@ public class EditTemplateTest extends TemplateBaseTest {
     @TmsLink("602641")
     @DisplayName("Проверка изменений и лимита патч-версий")
     public void checkPatchVersionLimit() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .checkTemplateVersion("1.0.0")
                 .setRunQueue("test_1")
@@ -69,7 +69,7 @@ public class EditTemplateTest extends TemplateBaseTest {
     @TmsLink("602884")
     @DisplayName("Проверка изменений и лимита версий, указанных вручную")
     public void checkManualVersionLimit() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .checkTemplateVersion("1.0.0")
                 .setRunQueue("test_1")
@@ -93,7 +93,7 @@ public class EditTemplateTest extends TemplateBaseTest {
     @TmsLink("1186452")
     @DisplayName("Баннер при возврате с формы с несохраненными данными")
     public void checkUnsavedChangesAlert() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .checkUnsavedChangesAlertAccept(template)
                 .checkUnsavedChangesAlertDismiss();

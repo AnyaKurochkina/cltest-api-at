@@ -4,28 +4,29 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 @Feature("Действия со списком шаблонов отображения")
 public class OrderTemplatesListTests extends OrderTemplateBaseTest {
 
     @Test
     @TmsLink("646721")
-    @DisplayName("Проверка заголовков списка, сортировка")
+    @DisplayName("Проверка заголовков списка, сортировка, пагинация")
     public void checkHeadersAndSorting() {
-        new IndexPage().goToOrderTemplatesPage()
+        new ControlPanelIndexPage().goToOrderTemplatesPage()
                 .checkHeaders()
                 .checkSortingByTitle()
                 .checkSortingByName()
                 .checkSortingByCreateDate()
-                .checkSortingByState();
+                .checkSortingByState()
+                .checkPagination();
     }
 
     @Test
     @TmsLink("1206221")
     @DisplayName("Поиск в списке шаблонов")
     public void searchOrderTemplateTest() {
-        new IndexPage().goToOrderTemplatesPage()
+        new ControlPanelIndexPage().goToOrderTemplatesPage()
                 .findTemplateByValue(NAME, orderTemplate)
                 .findTemplateByValue(TITLE, orderTemplate)
                 .findTemplateByValue(NAME.substring(1).toUpperCase(), orderTemplate)
@@ -36,7 +37,7 @@ public class OrderTemplatesListTests extends OrderTemplateBaseTest {
     @TmsLink("770483")
     @DisplayName("Фильтрация списка шаблонов")
     public void filterOrderTemplatesTest() {
-        new IndexPage().goToOrderTemplatesPage()
+        new ControlPanelIndexPage().goToOrderTemplatesPage()
                 .setTypeFilter("vm")
                 .setProviderFilter("vsphere")
                 .setStateFilter("Выключено")

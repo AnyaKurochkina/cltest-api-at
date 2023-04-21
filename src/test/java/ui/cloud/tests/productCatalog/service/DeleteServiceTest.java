@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.LoginPageControlPanel;
+import ui.cloud.pages.ControlPanelLoginPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 
 @Feature("Удаление сервиса")
@@ -16,7 +16,7 @@ public class DeleteServiceTest extends ServiceBaseTest {
     @Override
     @BeforeEach
     public void init() {
-        new LoginPageControlPanel().signIn(Role.SUPERADMIN);
+        new ControlPanelLoginPage().signIn(Role.SUPERADMIN);
     }
 
     @Test

@@ -10,7 +10,7 @@ import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
@@ -272,7 +272,7 @@ public class ActionPage extends BasePage {
         backButton.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -298,9 +298,9 @@ public class ActionPage extends BasePage {
         new ActionsListPage().openActionForm(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         titleInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToActionsListPage().openActionForm(action.getName());
+        new ControlPanelIndexPage().goToActionsListPage().openActionForm(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         return this;
     }

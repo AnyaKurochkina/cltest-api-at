@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
 
@@ -15,7 +15,7 @@ public class CompareVersionsTest extends GraphBaseTest {
     @TmsLink("503532")
     @DisplayName("Сравнение версий графа")
     public void compareVersionsTest() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .setAuthor("QA-1")
                 .saveGraphWithPatchVersion()

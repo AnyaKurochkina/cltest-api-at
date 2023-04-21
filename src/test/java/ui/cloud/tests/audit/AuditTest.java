@@ -13,7 +13,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.LoginPageControlPanel;
+import ui.cloud.pages.ControlPanelLoginPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.extesions.ConfigExtension;
@@ -50,7 +50,7 @@ public class AuditTest extends Tests {
                 .build()
                 .createObject();
 
-        new LoginPageControlPanel().signIn(superviewer.getRole());
+        new ControlPanelLoginPage().signIn(superviewer.getRole());
     }
 
     @Test

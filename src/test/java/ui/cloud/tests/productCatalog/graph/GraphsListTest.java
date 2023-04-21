@@ -5,7 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 
 @Feature("Просмотр списка графов")
@@ -15,7 +15,7 @@ public class GraphsListTest extends GraphBaseTest {
     @TmsLink("486416")
     @DisplayName("Проверка заголовков списка, сортировка")
     public void checkGraphsListSorting() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .checkGraphsListHeaders()
                 .checkSortingByTitle()
                 .checkSortingByName()
@@ -26,7 +26,7 @@ public class GraphsListTest extends GraphBaseTest {
     @TmsLink("962859")
     @DisplayName("Поиск в списке графов")
     public void searchGraphTest() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .findGraphByValue(TITLE, graph)
                 .findGraphByValue(NAME.substring(1).toUpperCase(), graph)
@@ -37,7 +37,7 @@ public class GraphsListTest extends GraphBaseTest {
     @TmsLink("807492")
     @DisplayName("Возврат в список со страницы графа")
     public void returnFromGraphPageTest() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .sortByCreateDate()
                 .lastPage()
                 .openGraphPage(NAME)

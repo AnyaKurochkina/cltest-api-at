@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
@@ -41,7 +42,7 @@ public class OrgDirectionTest extends BaseTest {
         if (isOrgDirectionExists(DIRECTION_NAME)) {
             deleteOrgDirectionById(getOrgDirectionByName(DIRECTION_NAME).getId());
         }
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .createDirection()
                 .fillAndSave(DIRECTION_TITLE, DIRECTION_NAME, DIRECTION_DESCRIPTION)
@@ -63,7 +64,7 @@ public class OrgDirectionTest extends BaseTest {
                 .description(description)
                 .build()
                 .createObject();
-        assertTrue(new IndexPage()
+        assertTrue(new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .openOrgDirectionPage(name)
                 .editNameField(updName)
@@ -83,7 +84,7 @@ public class OrgDirectionTest extends BaseTest {
                 .description(description)
                 .build()
                 .createObject();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .findDirectionByName(name)
                 .deleteActionMenu(name)
@@ -105,7 +106,7 @@ public class OrgDirectionTest extends BaseTest {
                 .description(description)
                 .build()
                 .createObject();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .openOrgDirectionPage(name)
                 .deleteDirection()
@@ -131,7 +132,7 @@ public class OrgDirectionTest extends BaseTest {
                 .directionId(org.getId())
                 .build()
                 .createObject();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .openOrgDirectionPage(name)
                 .deleteDirection()
@@ -157,7 +158,7 @@ public class OrgDirectionTest extends BaseTest {
                 .description(description)
                 .build()
                 .createObject();
-        assertTrue(new IndexPage()
+        assertTrue(new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .findDirectionByName(name)
                 .copyActionMenu(name)
@@ -171,7 +172,7 @@ public class OrgDirectionTest extends BaseTest {
     public void importDirection() {
         String data = JsonHelper.getStringFromFile("/productCatalog/orgDirection/importOrgDirection.json");
         String importName = new JsonPath(data).get("OrgDirection.name");
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .uploadFile("src/test/resources/json/productCatalog/orgDirection/importOrgDirection.json")
                 .findDirectionByName(importName);
@@ -188,7 +189,7 @@ public class OrgDirectionTest extends BaseTest {
     @DisplayName("Просмотр списка направлений, сортировка")
     @TmsLink("486331")
     public void viewDirectionsListTest() {
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .checkHeaders()
                 .checkSorting();
@@ -200,7 +201,7 @@ public class OrgDirectionTest extends BaseTest {
     public void searchDirectionsTest() {
         String name = UUID.randomUUID().toString();
         OrgDirection orgDirection = createOrgDirectionByApi(name);
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToOrgDirectionsPage()
                 .findDirectionByValue(name, orgDirection)
                 .findDirectionByValue(DIRECTION_TITLE, orgDirection)
@@ -214,7 +215,7 @@ public class OrgDirectionTest extends BaseTest {
     public void deleteIconTest() {
         String name = UUID.randomUUID().toString();
         createOrgDirectionByApi(name);
-        new IndexPage().goToOrgDirectionsPage()
+        new ControlPanelIndexPage().goToOrgDirectionsPage()
                 .openOrgDirectionPage(name)
                 .deleteIcon();
     }

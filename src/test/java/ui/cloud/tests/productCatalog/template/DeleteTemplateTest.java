@@ -8,7 +8,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
@@ -17,6 +17,7 @@ import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.elements.Alert;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
@@ -34,7 +35,7 @@ public class DeleteTemplateTest extends TemplateBaseTest {
     @TmsLink("504788")
     @DisplayName("Удаление шаблона из списка")
     public void deleteTemplateFromList() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .deleteTemplate(NAME)
                 .checkTemplateNotFound(NAME);
     }
@@ -43,7 +44,7 @@ public class DeleteTemplateTest extends TemplateBaseTest {
     @TmsLink("504726")
     @DisplayName("Удаление со страницы шаблона")
     public void deleteTemplateFromPage() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .openDeleteDialog()
                 .inputInvalidId("test")
@@ -73,9 +74,9 @@ public class DeleteTemplateTest extends TemplateBaseTest {
                 .templateId(template.getId())
                 .build()
                 .toJson();
-        JSONObject graphJSON = new JSONObject().put("graph", Arrays.asList(graphItem));
+        JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));
         partialUpdateGraph(graph.getGraphId(), graphJSON);
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template);
         BaseListPage.delete(nameColumn, template.getName());
         new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);

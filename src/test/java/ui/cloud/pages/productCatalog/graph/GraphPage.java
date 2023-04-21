@@ -8,7 +8,7 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -192,7 +192,7 @@ public class GraphPage extends BasePage {
         backButton.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -218,9 +218,9 @@ public class GraphPage extends BasePage {
         new GraphsListPage().openGraphPage(graph.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         titleInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToGraphsPage().openGraphPage(graph.getName());
+        new ControlPanelIndexPage().goToGraphsPage().openGraphPage(graph.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(graph.getTitle()));
         return this;
     }

@@ -7,7 +7,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
 
@@ -34,7 +34,7 @@ public class GraphAuditTest extends GraphBaseTest {
     private void checkAuditRecord() {
         user = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", graphsObject, "201", "создан")

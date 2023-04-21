@@ -6,7 +6,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 import java.util.UUID;
 
@@ -25,27 +25,27 @@ public class CreateOrderTemplateTest extends OrderTemplateBaseTest {
 
     @Step("Создание шаблона без заполнения обязательных полей")
     public void createTemplateWithoutRequiredParameters() {
-        new IndexPage().goToOrderTemplatesPage()
+        new ControlPanelIndexPage().goToOrderTemplatesPage()
                 .checkCreateTemplateDisabled(ItemVisualTemplate.builder().name("").title(TITLE).build())
                 .checkCreateTemplateDisabled(ItemVisualTemplate.builder().name(NAME).title("").build());
     }
 
     @Step("Создание шаблона с неуникальным кодом")
     public void createTemplateWithNonUniqueName() {
-        new IndexPage().goToOrderTemplatesPage()
+        new ControlPanelIndexPage().goToOrderTemplatesPage()
                 .checkNonUniqueNameValidation(ItemVisualTemplate.builder().name(NAME).title(TITLE).build());
     }
 
     @Step("Создание шаблона с недопустимым кодом")
     public void checkTemplateNameValidation() {
-        new IndexPage().goToOrderTemplatesPage()
+        new ControlPanelIndexPage().goToOrderTemplatesPage()
                 .checkNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 
     @Step("Создание шаблона отображения")
     public void createTemplate() {
         orderTemplate.setName(UUID.randomUUID().toString());
-        new IndexPage().goToOrderTemplatesPage()
+        new ControlPanelIndexPage().goToOrderTemplatesPage()
                 .createOrderTemplate(orderTemplate)
                 .checkAttributes(orderTemplate);
         deleteOrderTemplate(orderTemplate.getName());

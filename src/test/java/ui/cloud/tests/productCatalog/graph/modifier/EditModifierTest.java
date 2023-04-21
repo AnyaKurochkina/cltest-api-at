@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphModifiersPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.models.GraphModifier;
@@ -20,7 +20,7 @@ public class EditModifierTest extends GraphBaseTest {
         String modifierData = "\"devTitle\"";
         modifier.setPath("title");
         modifier.setModifierData(modifierData);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")

@@ -6,7 +6,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.template.Template;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 import java.util.UUID;
 
@@ -27,7 +27,7 @@ public class CreateTemplateTest extends TemplateBaseTest {
     @Step("Создание шаблона узлов")
     public void createTemplate() {
         template.setName(UUID.randomUUID().toString());
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .createTemplate(template)
                 .checkAttributes(template)
                 .deleteTemplate();
@@ -35,7 +35,7 @@ public class CreateTemplateTest extends TemplateBaseTest {
 
     @Step("Создание шаблона без заполнения обязательных полей")
     public void createTemplateWithoutRequiredParameters() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .checkCreateTemplateDisabled(Template.builder().name("").title(TITLE).run(QUEUE_NAME).rollback(QUEUE_NAME)
                         .type(TYPE).build())
                 .checkCreateTemplateDisabled(Template.builder().name(name).title("").run(QUEUE_NAME).rollback(QUEUE_NAME)
@@ -46,13 +46,13 @@ public class CreateTemplateTest extends TemplateBaseTest {
 
     @Step("Создание шаблона с неуникальным кодом графа")
     public void createTemplateWithNonUniqueName() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .checkNonUniqueNameValidation(template);
     }
 
     @Step("Создание шаблона с недопустимым кодом")
     public void checkTemplateNameValidation() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .checkTemplateNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 }
