@@ -19,18 +19,18 @@ test:
     #- LANG=C.UTF-8
     #- LANGUAGE=
     - locale -a
-    - LC_CTYPE="C.UTF-8"
-    - LC_NUMERIC="C.UTF-8"
-    - LC_TIME="C.UTF-8"
-    - LC_COLLATE="C.UTF-8"
-    - LC_MONETARY="C.UTF-8"
-    - LC_MESSAGES="C.UTF-8"
-    - LC_PAPER="C.UTF-8"
-    - LC_NAME="C.UTF-8"
-    - LC_ADDRESS="C.UTF-8"
-    - LC_TELEPHONE="C.UTF-8"
-    - LC_MEASUREMENT="C.UTF-8"
-    - LC_IDENTIFICATION="C.UTF-8"
+    - LC_CTYPE="C.utf-8"
+    - LC_NUMERIC="C.utf-8"
+    - LC_TIME="C.utf-8"
+    - LC_COLLATE="C.utf-8"
+    - LC_MONETARY="C.utf-8"
+    - LC_MESSAGES="C.utf-8"
+    - LC_PAPER="C.utf-8"
+    - LC_NAME="C.utf-8"
+    - LC_ADDRESS="C.utf-8"
+    - LC_TELEPHONE="C.utf-8"
+    - LC_MEASUREMENT="C.utf-8"
+    - LC_IDENTIFICATION="C.utf-8"
     #- LC_ALL=
     - locale 
   script:
