@@ -24,9 +24,9 @@ public class CreateJinja2TemplateTest extends Jinja2TemplateBaseTest {
     @TmsLink("710122")
     @DisplayName("Создание шаблона Jinja2")
     public void createJinja2TemplateTest() {
-        /*checkNameValidation();
+        checkNameValidation();
         createWithoutRequiredParameters();
-        createWithNonUniqueName();*/
+        createWithNonUniqueName();
         createJinja2Template();
     }
 

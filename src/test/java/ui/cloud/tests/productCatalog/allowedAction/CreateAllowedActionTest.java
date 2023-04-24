@@ -21,11 +21,11 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
     @Test
     @TmsLink("1247489")
     @DisplayName("Создание разрешенного действия")
-    public void createForbiddenActionTest() {
+    public void createAllowedActionTest() {
         checkNameValidation();
         createWithoutRequiredParameters();
         createWithNonUniqueName();
-        createForbiddenAction();
+        createAllowedAction();
     }
 
     @Step("Создание разрешенного действия без заполнения обязательных полей")
@@ -52,7 +52,7 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
     }
 
     @Step("Создание разрешенного действия")
-    private void createForbiddenAction() {
+    private void createAllowedAction() {
         allowedAction.setName(NAME + "_");
         allowedAction.setEventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                 .event_type(EventType.BM.getValue())

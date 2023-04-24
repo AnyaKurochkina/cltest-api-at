@@ -17,7 +17,7 @@ public class EditAllowedActionTest extends AllowedActionBaseTest {
     @Test
     @TmsLink("1247490")
     @DisplayName("Редактирование разрешенного действия")
-    public void editForbiddenAction() {
+    public void editAllowedAction() {
         allowedAction.setDescription("New description");
         allowedAction.setEventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                 .event_type(EventType.ACL.getValue())

@@ -24,7 +24,7 @@ public class ActionsListPage extends BaseListPage {
     private final SearchSelect providerSelect = SearchSelect.byLabel("Провайдер");
 
     public ActionsListPage() {
-        SelenideElement actionPageTitle = $x("//div[text() = 'Действия']");
+        SelenideElement actionPageTitle = $x("//div[text() = 'Действия'][@type]");
         actionPageTitle.shouldBe(Condition.visible);
     }
 

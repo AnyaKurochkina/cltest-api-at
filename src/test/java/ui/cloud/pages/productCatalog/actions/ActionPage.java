@@ -22,6 +22,7 @@ import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 public class ActionPage extends BasePage {
     private static final String saveActionAlertText = "Действие успешно изменено";
@@ -153,7 +154,7 @@ public class ActionPage extends BasePage {
 
     @Step("Переход на список действий и отмена оповещения о несохранненных данных")
     public ActionPage backByActionsLinkAndAlertCancel() {
-        actionsListLink.scrollIntoView(TypifiedElement.scrollCenter);
+        actionsListLink.scrollIntoView(scrollCenter);
         actionsListLink.click();
         String alertMsg = switchTo().alert().getText();
         assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
@@ -164,7 +165,7 @@ public class ActionPage extends BasePage {
 
     @Step("Удаление иконки")
     public ActionPage deleteIcon() {
-        deleteIconButton.click();
+        deleteIconButton.scrollIntoView(scrollCenter).click();
         addIconLabel.shouldBe(Condition.visible);
         return this;
     }

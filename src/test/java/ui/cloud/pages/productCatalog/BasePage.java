@@ -22,7 +22,7 @@ public class BasePage {
     protected final Button cancelButton = Button.byText("Отмена");
     protected final Button deleteButton = Button.byText("Удалить");
     protected final Button backButton = Button.byText("Назад");
-    protected final SelenideElement deleteIconButton = $x("//img/following::*[name()='svg'][1]");
+    protected final SelenideElement deleteIconButton = $x("//form//img/following::*[name()='svg'][1]");
     protected final SelenideElement addIconLabel = $x("//label[text()='Добавить иконку']");
     protected final SearchSelect graphSelect = SearchSelect.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
