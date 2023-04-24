@@ -13,7 +13,8 @@ import ui.cloud.pages.productCatalog.allowedAction.AllowedActionPage;
 import ui.elements.Alert;
 
 import java.util.Collections;
-import java.util.UUID;
+
+import static steps.productCatalog.ActionSteps.createAction;
 
 @Feature("Создание разрешенного действия")
 public class CreateAllowedActionTest extends AllowedActionBaseTest {
@@ -58,7 +59,7 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
                 .event_type(EventType.BM.getValue())
                 .event_provider(EventProvider.HCP.getValue())
                 .build()));
-        allowedAction.setActionId(createAction(UUID.randomUUID().toString(), graph.getGraphId()).getActionId());
+        allowedAction.setActionId(createAction().getActionId());
         new ControlPanelIndexPage().goToAllowedActionsListPage()
                 .addNewAllowedAction()
                 .setAttributes(allowedAction);

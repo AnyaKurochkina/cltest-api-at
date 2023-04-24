@@ -38,6 +38,15 @@ public class ForbiddenActionSteps extends Steps {
     }
 
     @Step("Создание запрещенного действия")
+    public static ForbiddenAction createForbiddenAction(String name, String title) {
+        return ForbiddenAction.builder()
+                .name(name)
+                .title(title)
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание запрещенного действия")
     public static Response createForbiddenAction(JSONObject body) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)

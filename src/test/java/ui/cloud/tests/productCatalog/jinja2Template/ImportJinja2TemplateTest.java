@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 
+import static steps.productCatalog.Jinja2Steps.deleteJinjaByName;
 import static steps.productCatalog.Jinja2Steps.isJinja2Exists;
 
 @Feature("Импорт из файла шаблона Jinja2")
@@ -27,7 +28,7 @@ public class ImportJinja2TemplateTest extends Jinja2TemplateBaseTest {
         String data = JsonHelper.getStringFromFile("/productCatalog/jinja2/importJinja2Template.json");
         JsonPath json = new JsonPath(data);
         String name = json.getString("Jinja2Template.name");
-        if (isJinja2Exists(name)) deleteJinja2Template(name);
+        if (isJinja2Exists(name)) deleteJinjaByName(name);
         new ControlPanelIndexPage()
                 .goToJinja2TemplatesListPage()
                 .importJinja2Template("src/test/resources/json/productCatalog/jinja2/importJinja2Template.json")

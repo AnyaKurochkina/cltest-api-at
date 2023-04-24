@@ -26,8 +26,7 @@ public class ForbiddenActionsListTest extends ForbiddenActionBaseTest {
         assertHeaders(new Table(nameColumn),
                 "Наименование", nameColumn, "Дата создания", "Тип", "Провайдер", "Описание", "", "");
         ForbiddenActionsListPage page = new ForbiddenActionsListPage();
-        page.checkSorting()
-                .checkPagination();
+        page.checkSorting().checkPagination();
     }
 
     @Test

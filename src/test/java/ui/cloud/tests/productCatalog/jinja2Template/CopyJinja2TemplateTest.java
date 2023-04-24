@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.jinja2Template.Jinja2TemplatePage;
 
+import static steps.productCatalog.Jinja2Steps.deleteJinjaByName;
+
 @Feature("Создание шаблона Jinja2")
 public class CopyJinja2TemplateTest extends Jinja2TemplateBaseTest {
 
@@ -19,6 +21,6 @@ public class CopyJinja2TemplateTest extends Jinja2TemplateBaseTest {
                 .copy(jinja2Template);
         jinja2Template.setName(cloneName);
         new Jinja2TemplatePage().checkAttributes(jinja2Template);
-        deleteJinja2Template(cloneName);
+        deleteJinjaByName(cloneName);
     }
 }

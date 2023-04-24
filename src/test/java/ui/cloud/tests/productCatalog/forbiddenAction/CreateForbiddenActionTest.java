@@ -13,7 +13,8 @@ import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionPage;
 import ui.elements.Alert;
 
 import java.util.Collections;
-import java.util.UUID;
+
+import static steps.productCatalog.ActionSteps.createAction;
 
 @Feature("Создание запрещенного действия")
 public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
@@ -58,7 +59,7 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
                 .event_type(EventType.BM.getValue())
                 .event_provider(EventProvider.HCP.getValue())
                 .build()));
-        forbiddenAction.setActionId(createAction(UUID.randomUUID().toString(), graph.getGraphId()).getActionId());
+        forbiddenAction.setActionId(createAction().getActionId());
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
                 .addNewForbbidenAction()
                 .setAttributes(forbiddenAction);

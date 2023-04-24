@@ -13,6 +13,7 @@ import ui.elements.Alert;
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.Jinja2Steps.deleteJinjaByName;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Feature("Создание шаблона Jinja2")
@@ -67,6 +68,6 @@ public class CreateJinja2TemplateTest extends Jinja2TemplateBaseTest {
         page.getCreateButton().click();
         Alert.green("Шаблон успешно создан");
         page.checkAttributes(jinja2Template);
-        deleteJinja2Template(jinja2Template.getName());
+        deleteJinjaByName(jinja2Template.getName());
     }
 }

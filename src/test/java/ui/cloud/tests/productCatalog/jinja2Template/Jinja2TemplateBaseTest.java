@@ -7,7 +7,6 @@ import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
-import steps.productCatalog.Jinja2Steps;
 import ui.cloud.tests.productCatalog.BaseTest;
 
 import java.util.UUID;
@@ -45,9 +44,5 @@ public class Jinja2TemplateBaseTest extends BaseTest {
                 .jinja2Data(new JSONObject(data))
                 .build()
                 .createObject();
-    }
-
-    protected void deleteJinja2Template(String name) {
-        Jinja2Steps.deleteJinjaByName(name);
     }
 }
