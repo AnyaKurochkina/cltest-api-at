@@ -1,9 +1,7 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -36,7 +34,7 @@ public class IndexPage {
 
     public ProductsPage clickOrderMore() {
         allResourcesMenuItem.click();
-        createOrderButton.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
+        createOrderButton.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return new ProductsPage();
     }
 
