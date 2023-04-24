@@ -68,7 +68,7 @@ public class ClickHousePage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new ClickHousePage.VirtualMachineTable("Питание").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new ClickHousePage.VirtualMachineTable("Статус").checkPowerStatus(ClickHousePage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {

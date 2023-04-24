@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Astra;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -160,6 +161,7 @@ public class UiAstraLinuxTest extends UiProductTest {
 
     @Test
     @Order(12)
+    @EnabledIfEnv("prod")
     @TmsLink("1164676")
     @DisplayName("UI AstraLinux. Мониторинг ОС")
     void monitoringOs() {

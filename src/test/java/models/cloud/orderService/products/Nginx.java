@@ -30,7 +30,6 @@ public class Nginx extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
-    String role;
 
     @Override
     @Step("Заказ продукта")
@@ -43,7 +42,6 @@ public class Nginx extends IProduct {
         jsonTemplate = "/orders/nginx.json";
         if(productName == null)
             productName = "Nginx Astra";
-        role = isDev() ? "superuser" : "user";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
@@ -71,7 +69,7 @@ public class Nginx extends IProduct {
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
-                .set("$.order.attrs.ad_logon_grants[0].role", role)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", /*isTest()*/getSupport())

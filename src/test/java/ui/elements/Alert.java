@@ -79,7 +79,7 @@ public class Alert implements TypifiedElement {
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }
-        } catch (ElementNotFound ignored) {}
+        } catch (Throwable ignored) {}
     }
 
     public enum Color {

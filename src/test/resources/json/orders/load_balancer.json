@@ -10,6 +10,9 @@
         "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
         "memory": 4
       },
+      "boot_disk": {
+        "size": 30
+      },
       "password": "W1clvyliiSCyE0gs",
       "platform": "vSphere",
       "on_support": true,
@@ -26,7 +29,8 @@
         }
       ],
       "ad_integration": true,
-      "balancer_node_number": 1,
+      "geo_distribution": true,
+      "layout": "",
       "ad_logon_grants": [
         {
           "role": "superuser",

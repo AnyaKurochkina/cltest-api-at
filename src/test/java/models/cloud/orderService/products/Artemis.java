@@ -162,8 +162,8 @@ public class Artemis extends IProduct {
         GlobalUser user = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
-                .get("/api/v1/actions/?order_id={}", orderId)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/actions/?order_id={}", projectId, orderId)
                 .assertStatus(200)
                 .getResponse().then().assertThat()
                 .rootPath("list.find{it.status.contains('send_mail:completed')}.data")

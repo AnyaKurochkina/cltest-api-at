@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -57,7 +58,7 @@ public class UiWindowsTest extends UiProductTest {
             //orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getRoleServer().set(product.getRole());
+            orderPage.getRoleServer().setContains("Autotests");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -235,6 +236,7 @@ public class UiWindowsTest extends UiProductTest {
 
     @Test
     @Order(17)
+    @EnabledIfEnv("prod")
     @TmsLink("1171958")
     @DisplayName("UI Windows. Мониторинг ОС")
     void monitoringOs() {

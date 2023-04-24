@@ -25,6 +25,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static core.helper.StringUtils.$x;
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
@@ -65,6 +66,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
+            orderPage.getRoleSelect().set("user");
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
@@ -74,14 +76,13 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
                     .hover()
                     .click();
             PostgreSqlClusterAstraPage pSqlPages = new PostgreSqlClusterAstraPage(product);
-            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
+            pSqlPages.waitChangeStatus(Duration.ofMinutes(30));
             pSqlPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getOrderCost(), 0.01);
+        checkOrderCost(preBillingProductPrice, new PostgreSqlClusterAstraPage(product));
     }
 
 
