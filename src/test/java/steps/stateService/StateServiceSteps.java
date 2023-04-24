@@ -223,6 +223,15 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка items со всеми child")
+    public static Response getItemsListWithAllChild(String filter, String value) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/all_children_list/?{}={}", filter, value)
+                .assertStatus(200);
+
+    }
+
     @Step("Получение списка items по фильтру {filter}")
     public static Response getItemsListByFilter(String contextId, String filter) {
         return new Http(StateServiceURL)
