@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.template.TemplatePage;
 
 @Feature("Копирование шаблона")
@@ -15,7 +15,7 @@ public class CopyTemplateTest extends TemplateBaseTest {
     @DisplayName("Копирование шаблона")
     public void copyTemplateTest() {
         String copyName = NAME + "-clone";
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template)
                 .copy(template.getName());
         template.setName(copyName);

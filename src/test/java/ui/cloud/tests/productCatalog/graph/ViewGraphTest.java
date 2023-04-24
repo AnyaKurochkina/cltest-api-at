@@ -16,10 +16,11 @@ import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
@@ -31,7 +32,7 @@ public class ViewGraphTest extends GraphBaseTest {
     @TmsLink("489318")
     @DisplayName("Просмотр JSON графа")
     public void viewJSON() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkJSONcontains(graph.getGraphId());
     }
@@ -56,7 +57,7 @@ public class ViewGraphTest extends GraphBaseTest {
                 .number(51)
                 .build()
                 .createObject();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkUsageTableHeaders()
                 .checkUsageInProduct(product)
@@ -76,13 +77,13 @@ public class ViewGraphTest extends GraphBaseTest {
                 .graphId(graph.getGraphId())
                 .graphVersion("1.0.0")
                 .number(0)
-                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
                 .build()
                 .createObject();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkUsageInAction(action)
                 .goToActionByUsageLink(action)
@@ -109,7 +110,7 @@ public class ViewGraphTest extends GraphBaseTest {
                 .graphVersion("1.0.0")
                 .build()
                 .createObject();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkUsageInService(service)
                 .goToServiceByUsageLink(service)
@@ -136,10 +137,10 @@ public class ViewGraphTest extends GraphBaseTest {
                 .subgraphId(graph.getGraphId())
                 .build()
                 .toJson();
-        JSONObject graphJSON = new JSONObject().put("graph", Arrays.asList(graphItem));
+        JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));
         partialUpdateGraph(superGraph.getGraphId(), graphJSON);
         superGraph.setVersion("1.0.1");
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkUsageInGraph(superGraph)
                 .goToGraphByUsageLink(superGraph)

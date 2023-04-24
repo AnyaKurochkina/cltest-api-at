@@ -5,7 +5,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.product.Categories;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.product.ProductsListPage;
 
 public class ProductsListTest extends ProductBaseTest {
@@ -14,7 +14,7 @@ public class ProductsListTest extends ProductBaseTest {
     @TmsLink("507341")
     @DisplayName("Просмотр списка, сортировка")
     public void viewListTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .checkHeaders()
                 .checkSorting();
     }
@@ -23,7 +23,7 @@ public class ProductsListTest extends ProductBaseTest {
     @TmsLink("1419142")
     @DisplayName("Поиск в списке продуктов")
     public void searchProductTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findProductByValue(NAME, product)
                 .findProductByValue(TITLE, product)
                 .findProductByValue(NAME.substring(1).toUpperCase(), product)
@@ -34,7 +34,7 @@ public class ProductsListTest extends ProductBaseTest {
     @TmsLink("769598")
     @DisplayName("Фильтрация списка продуктов")
     public void filterProductsTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .setCategoryFilter(Categories.CONTAINER.getValue())
                 .applyFilters()
                 .checkProductIsNotDisplayed(product)
@@ -57,7 +57,7 @@ public class ProductsListTest extends ProductBaseTest {
     @TmsLink("807411")
     @DisplayName("Возврат в список со страницы продукта")
     public void returnToListFromProductPageTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .goToProductsList()
                 .checkProductIsHighlighted(NAME);

@@ -19,5 +19,5 @@ public class GetJinja2List {
 	private Meta meta;
 
 	@JsonProperty("list")
-	private List<Jinja2> list;
+	private List<Jinja2Template> list;
 }

@@ -22,7 +22,7 @@ public class OrderTemplateBaseTest extends BaseTest {
             .type(new Type("type"))
             .status(new Status("status"))
             .build();
-    private static final FullTemplate fullTemplate = FullTemplate.builder().type("tab").value(Arrays.asList("testValue")).build();
+    private static final FullTemplate fullTemplate = FullTemplate.builder().type("tab").value(Collections.singletonList("testValue")).build();
     final String NAME = UUID.randomUUID().toString();
     ItemVisualTemplate orderTemplate;
 

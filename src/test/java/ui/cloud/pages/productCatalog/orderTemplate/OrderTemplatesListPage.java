@@ -10,8 +10,11 @@ import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -125,11 +128,8 @@ public class OrderTemplatesListPage extends BaseListPage {
         addNewObjectButton.click();
         for (String name : names) {
             nameInput.setValue(name);
-            TestUtils.wait(500);
-            if (!nameValidationHint.exists()) {
-                TestUtils.wait(500);
-                nameInput.getInput().sendKeys("t");
-            }
+            Waiting.findWithAction(() -> nameValidationHint.isDisplayed(),
+                    () -> nameInput.getInput().sendKeys("t"), Duration.ofSeconds(3));
             nameValidationHint.shouldBe(Condition.visible);
         }
         cancelButton.click();

@@ -6,7 +6,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 import java.util.UUID;
 
@@ -25,20 +25,20 @@ public class CreateServiceTest extends ServiceBaseTest {
 
     @Step("Создание сервиса без заполнения обязательных полей")
     public void createServiceWithoutRequiredParameters() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .checkCreateServiceDisabled(Service.builder().name("").title(TITLE).build())
                 .checkCreateServiceDisabled(Service.builder().name(NAME).title("").build());
     }
 
     @Step("Создание сервиса с неуникальным кодом")
     public void createServiceWithNonUniqueName() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .checkNonUniqueNameValidation(Service.builder().name(NAME).title(TITLE).build());
     }
 
     @Step("Создание сервиса с недопустимым кодом")
     public void checkServiceNameValidation() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .checkNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 
@@ -46,7 +46,7 @@ public class CreateServiceTest extends ServiceBaseTest {
     public void createServiceWithoutGraph() {
         service.setGraphId(null);
         service.setName(UUID.randomUUID().toString());
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .createService(service)
                 .checkAttributes(service);
         deleteService(service.getName());
@@ -58,7 +58,7 @@ public class CreateServiceTest extends ServiceBaseTest {
     public void createServiceWithGraphTest() {
         service.setName(UUID.randomUUID().toString());
         service.setGraphVersion("Последняя");
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .createService(service)
                 .checkAttributes(service)
                 .deleteService();

@@ -9,7 +9,7 @@ import httpModels.productCatalog.jinja2.getJinjaResponse.GetJinjaResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.jinja2.Jinja2;
+import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -37,11 +37,11 @@ public class JinjaTest extends Tests {
     @TmsLink("660055")
     @Test
     public void createJinja() {
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name("create_jinja_test_api")
                 .build()
                 .createObject();
-        Jinja2 jinjaById = getJinja2ById(jinja2.getId());
+        Jinja2Template jinjaById = getJinja2ById(jinja2.getId());
         assertEquals(jinja2, jinjaById);
     }
 
@@ -76,7 +76,7 @@ public class JinjaTest extends Tests {
     @Test
     public void checkJinjaExists() {
         String jinjaName = "exist_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -89,7 +89,7 @@ public class JinjaTest extends Tests {
     @Test
     public void checkAccessWithPublicToken() {
         String jinjaName = "check_access_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -108,7 +108,7 @@ public class JinjaTest extends Tests {
     @Test
     public void getJinjaById() {
         String jinjaName = "get_by_id_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -125,7 +125,7 @@ public class JinjaTest extends Tests {
     @Test
     public void copyJinjaById() {
         String jinjaName = "copy_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -141,7 +141,7 @@ public class JinjaTest extends Tests {
     @Test
     public void partialUpdateJinja() {
         String jinjaName = "partial_update_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -167,7 +167,7 @@ public class JinjaTest extends Tests {
         if(steps.isExists(updateName)) {
             steps.deleteByName(updateName, GetJinjaListResponse.class);
         }
-        Jinja2 jinjaObject = Jinja2.builder()
+        Jinja2Template jinjaObject = Jinja2Template.builder()
                 .name("test_object")
                 .build()
                 .createObject();
@@ -192,7 +192,7 @@ public class JinjaTest extends Tests {
     @TmsLink("660151")
     public void deleteJinja() {
         String jinjaName = "delete_jinja_test_api";
-        Jinja2 jinja2 = Jinja2.builder()
+        Jinja2Template jinja2 = Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
                 .createObject();
@@ -205,7 +205,7 @@ public class JinjaTest extends Tests {
     @TmsLink("975380")
     public void dumpToGitlabJinja() {
         String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
-        Jinja2 jinja = Jinja2.builder()
+        Jinja2Template jinja = Jinja2Template.builder()
                 .name(jinjaName)
                 .title(jinjaName)
                 .build()
@@ -222,7 +222,7 @@ public class JinjaTest extends Tests {
     @TmsLink("1028947")
     public void loadFromGitlabJinja() {
         String jinjaName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = Jinja2.builder()
+        JSONObject jsonObject = Jinja2Template.builder()
                 .name(jinjaName)
                 .title(jinjaName)
                 .build()

@@ -21,7 +21,7 @@ public class OrgDirectionsListPage extends BaseListPage {
     private final String nameColumn = "Код направления";
 
     public OrgDirectionsListPage() {
-        SelenideElement directionPageTitle = $x("//div[text() = 'Направления']");
+        SelenideElement directionPageTitle = $x("//div[text() = 'Направления'][@type]");
         directionPageTitle.shouldBe(Condition.visible);
     }
 

@@ -1,8 +1,12 @@
 {
   "name": "string",
-  "title": "string",
-  "description": "string",
+  "title": "AT API Forbidden Action",
+  "description": "Description",
   "event_type_provider": [
+    {
+      "event_type": "bm",
+      "event_provider": "s3"
+    }
   ],
   "direction": "parent_to_child",
   "is_all_levels": true,

@@ -4,7 +4,7 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.jinja2.Jinja2;
+import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -28,7 +28,7 @@ public class JinjaListTest extends Tests {
     @TmsLink("660061")
     @Test
     public void getJinjaList() {
-        List<Jinja2> list = getJinja2List();
+        List<Jinja2Template> list = getJinja2List();
         assertTrue(isSorted(list), "Список не отсортирован.");
     }
 

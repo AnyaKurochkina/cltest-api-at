@@ -11,7 +11,7 @@ import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.GraphSteps;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 import static steps.productCatalog.ProductSteps.isProductExists;
 
@@ -27,7 +27,7 @@ public class ImportProductTest extends ProductBaseTest {
         String name = json.getString("Product.name");
         if (isProductExists(name)) deleteProductByApi(name);
         Graph graph = GraphSteps.getGraphByNameFilter(json.getString("rel_foreign_models.graph.Graph.name"));
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToProductsListPage()
                 .importProduct("src/test/resources/json/productCatalog/products/importProduct.json")
                 .findAndOpenProductPage(name)

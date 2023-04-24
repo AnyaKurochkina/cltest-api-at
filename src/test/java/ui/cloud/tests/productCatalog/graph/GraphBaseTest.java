@@ -13,10 +13,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.BaseTest;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.TemplateSteps.deleteTemplateById;
@@ -77,7 +74,7 @@ public class GraphBaseTest extends BaseTest {
                 .rollback("")
                 .input(input)
                 .output(output)
-                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
+                .printedOutput(Collections.singletonList(new HashMap<String, String>() {{
                     put("type", "text");
                 }}))
                 .printedOutputCanBeOverridden(true)
@@ -98,7 +95,7 @@ public class GraphBaseTest extends BaseTest {
     }
 
     protected void patchGraphWithGraphItem(Graph graph, GraphItem graphItem) {
-        JSONObject graphItemsJSON = new JSONObject().put("graph", Arrays.asList(graphItem.toJson()));
+        JSONObject graphItemsJSON = new JSONObject().put("graph", Collections.singletonList(graphItem.toJson()));
         partialUpdateGraph(graph.getGraphId(), graphItemsJSON);
     }
 }

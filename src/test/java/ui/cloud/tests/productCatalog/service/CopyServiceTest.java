@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
 
 @Feature("Копирование сервиса")
@@ -14,7 +14,7 @@ public class CopyServiceTest extends ServiceBaseTest {
     @DisplayName("Копирование сервиса")
     public void copyServiceTest() {
         String copyName = NAME + "-clone";
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findServiceByValue(NAME, service)
                 .copyService(service);
         service.setName(copyName);

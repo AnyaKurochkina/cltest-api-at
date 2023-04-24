@@ -16,6 +16,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
@@ -48,7 +49,7 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .createObject();
         String name = "create_action_test_ui";
-        assertTrue(new IndexPage().goToActionsListPage()
+        assertTrue(new ControlPanelIndexPage().goToActionsListPage()
                 .createAction()
                 .fillAndSave(name, "create_action_test_ui", "test",
                         ItemStatus.ON, OrderStatus.DAMAGED, ActionType.ON, "configPath", "configKey",
@@ -69,7 +70,7 @@ public class ActionTest extends ActionBaseTest {
                 .number(0)
                 .build()
                 .createObject();
-        assertTrue(new IndexPage().goToActionsListPage()
+        assertTrue(new ControlPanelIndexPage().goToActionsListPage()
                 .copyAction(name)
                 .backToActionsList()
                 .isActionDisplayed(cloneName));
@@ -91,7 +92,7 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .init().toJson();
         ActionSteps.createAction(json);
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .deleteFromActionForm()
                 .inputInvalidId("invalid")
@@ -114,7 +115,7 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .init().toJson();
         ActionSteps.createAction(json);
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .deleteAction(name)
                 .inputInvalidId("invalid")
                 .inputValidIdAndDelete();
@@ -138,7 +139,7 @@ public class ActionTest extends ActionBaseTest {
                 .createObject();
         partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1));
         String version = getActionById(action.getActionId()).getVersion();
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .setPriority(2)
                 .checkSaveWithInvalidVersion("1.0.1", version)
@@ -163,7 +164,7 @@ public class ActionTest extends ActionBaseTest {
                         .build()))
                 .build()
                 .createObject();
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .changeGraphVersion("1.0.0")
                 .saveWithNextPatchVersion()
@@ -191,7 +192,7 @@ public class ActionTest extends ActionBaseTest {
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        assertFalse(new IndexPage().goToActionsListPage()
+        assertFalse(new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .deleteIcon()
                 .saveWithoutPatchVersion()
@@ -213,7 +214,7 @@ public class ActionTest extends ActionBaseTest {
         }
         List<Integer> versionArr = json.get("Action.version_arr");
         String version = versionArr.stream().map(Objects::toString).collect(Collectors.joining("."));
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToActionsListPage()
                 .importAction("src/test/resources/json/productCatalog/actions/importAction.json")
                 .openActionForm(name)
@@ -225,7 +226,7 @@ public class ActionTest extends ActionBaseTest {
     @TmsLink("807603")
     @DisplayName("Возврат в список со страницы действия")
     public void returnToActionListFromActionPage() {
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToActionsListPage()
                 .goToNextPageActionList()
                 .openActionFormByRowNumber(2)
@@ -242,7 +243,7 @@ public class ActionTest extends ActionBaseTest {
     public void bannerWhenCloseFormAndNotSaveCancel() {
         String name = UUID.randomUUID().toString();
         Action action = createActionByApi(name);
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .checkUnsavedChangesAlertAccept(action)
                 .checkUnsavedChangesAlertDismiss();
@@ -254,7 +255,7 @@ public class ActionTest extends ActionBaseTest {
     public void checkPatchVersionLimit() {
         String name = UUID.randomUUID().toString();
         createActionByApi(name);
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .checkVersion("1.0.0")
                 .setPriority(1)
@@ -280,7 +281,7 @@ public class ActionTest extends ActionBaseTest {
     public void checkManualVersionLimit() {
         String name = UUID.randomUUID().toString();
         createActionByApi(name);
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .checkVersion("1.0.0")
                 .setPriority(1)
@@ -306,7 +307,7 @@ public class ActionTest extends ActionBaseTest {
     public void compareVersionsTest() {
         String name = UUID.randomUUID().toString();
         createActionByApi(name);
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .setPriority(1)
                 .saveWithPatchVersion()
@@ -326,7 +327,7 @@ public class ActionTest extends ActionBaseTest {
     public void viewJSONTest() {
         String name = UUID.randomUUID().toString();
         Action action = createActionByApi(name);
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .checkJSONcontains(action.getActionId());
     }
@@ -339,7 +340,7 @@ public class ActionTest extends ActionBaseTest {
         createActionByApi(name);
         GlobalUser user = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", "actions", "201", "создан");
@@ -367,7 +368,7 @@ public class ActionTest extends ActionBaseTest {
                 .author("AT UI")
                 .build()
                 .createObject();
-        new IndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(actionName)
                 .setGraph(actionGraph.getName())
                 .checkGraphNotFound(creatingGraph.getName());

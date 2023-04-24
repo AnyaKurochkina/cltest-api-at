@@ -13,7 +13,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.elements.Tooltip;
@@ -65,7 +65,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .subgraphVersion("Последняя")
                 .number(1)
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
@@ -96,7 +96,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .isSequential(true)
                 .damageOrderOnError(true)
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
@@ -113,7 +113,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .number(1)
                 .timeout(1)
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .checkAddNodeSubgraphDisabled(node);
@@ -124,7 +124,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .number(1)
                 .timeout(1)
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .checkAddNodeSubgraphDisabled(node);
@@ -140,7 +140,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .number(0)
                 .timeout(0)
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .checkAddNodeSubgraphDisabled(node);
@@ -154,7 +154,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .subgraphId(subgraph.getGraphId())
                 .subgraphVersion("Последняя")
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node)
@@ -173,7 +173,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .timeout(100)
                 .number(1)
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node);
@@ -193,14 +193,14 @@ public class AddNodeTest extends GraphBaseTest {
     @TmsLink("883403")
     @DisplayName("Добавление узла с разрешённым переопределением уровня логирования")
     public void addNodeWithAllowedLogLevelOverride() {
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("log_can_be_overridden", true));
         GraphItem node = GraphItem.builder()
                 .name("1")
                 .description("1")
                 .number(1)
                 .build();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
@@ -230,7 +230,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .description("1")
                 .number(1)
                 .build();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
@@ -242,8 +242,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         page.getLogLevelTooltipIcon().hover();
-        assertTrue(new Tooltip().getElement().getText().equals("Поле можно редактировать только для узла с параметром " +
-                "\"Название очереди для старта задачи\" = \"internal\" и включенным переопределением уровня логирования"));
+        assertEquals("Поле можно редактировать только для узла с параметром " +
+                "\"Название очереди для старта задачи\" = \"internal\" и включенным переопределением уровня логирования", new Tooltip().getElement().getText());
         Waiting.find(() -> page.getLogLevelSelect().getValue().equals(LogLevel.SHORT.getDisplayName()), Duration.ofSeconds(3));
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
@@ -257,14 +257,14 @@ public class AddNodeTest extends GraphBaseTest {
     @TmsLink("1035648")
     @DisplayName("Добавление узла с запрещённым переопределением Input, Output, Printed output")
     public void addNodeWithForbiddenParamsOverride() {
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("printed_output_can_be_overridden", false));
         GraphItem node = GraphItem.builder()
                 .name("1")
                 .description("1")
                 .number(1)
                 .build();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
@@ -276,9 +276,9 @@ public class AddNodeTest extends GraphBaseTest {
         page.getParamsTab().click();
         Waiting.sleep(1500);
         page.getInputTextArea().setValue("{\"override_param_1\":\"1\"}");
-        assertTrue(page.getInputHint().getText().equals("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)"));
+        assertEquals("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)", page.getInputHint().getText());
         page.getOutputTextArea().setValue("{\"override_param_2\":\"1\"}");
-        assertTrue(page.getOutputHint().getText().equals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)"));
+        assertEquals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)", page.getOutputHint().getText());
         $x("//label[text()='Printed output (Переопределение Printed output запрещено в шаблоне)']")
                 .shouldBe(Condition.visible);
         assertEquals("{}", page.getPrintedOutputTextArea().getWhitespacesRemovedValue());
@@ -290,7 +290,7 @@ public class AddNodeTest extends GraphBaseTest {
     public void addNodeWithAllowedParamsOverride() {
         String inputValue = "{\"override_param_1\":\"1\"}";
         String outputValue = "{\"override_param_2\":\"1\"}";
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("additional_input", true)
                 .put("additional_output", true));
         GraphItem node = GraphItem.builder()
@@ -298,7 +298,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .description("1")
                 .number(1)
                 .build();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()

@@ -1,9 +1,13 @@
 {
   "context_restrictions": [],
   "name": "string",
-  "title": "string",
+  "title": "AT API Allowed Action",
   "description": "api_at_test",
   "event_type_provider": [
+    {
+      "event_type": "bm",
+      "event_provider": "s3"
+    }
   ],
   "config_restriction": "",
   "item_restriction": "",

@@ -9,47 +9,30 @@
         "event_provider": "s3"
       }
     ],
-    "name": "import_forbidden_action_test_api",
-    "title": "import_forbidden_action_test_api",
+    "name": "at_api_import_forbidden_action",
+    "title": "at_api_import_forbidden_action",
     "description": "",
     "config_restriction": null,
     "item_restriction": null,
     "environment_type_restriction": [],
     "direction": "parent_to_child",
-    "action_id": "6c37de87-69ad-45d8-91e3-2530da25a9ac",
-    "action": "6c37de87-69ad-45d8-91e3-2530da25a9ac",
-    "event_type": [
-      "bm"
-    ],
-    "event_provider": [
-      "s3"
-    ]
+    "action": "6c37de87-69ad-45d8-91e3-2530da25a9ac"
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
         "id": "6c37de87-69ad-45d8-91e3-2530da25a9ac",
-        "name": "qa_action_del_gmv",
+        "name": "at_api_import_action_for_forbidden_action",
         "type": "",
-        "title": "delete",
+        "title": "at_api_import_action_for_forbidden_action",
         "graph_id": "b3340224-3580-4bc2-aa75-5a50b1b258ca",
         "multiple": false,
         "priority": 0,
-        "event_type": [
-          "vm",
-          "vm",
-          "vm"
-        ],
         "extra_data": {},
         "description": "",
         "allowed_paths": [],
         "graph_version": "",
-        "event_provider": [
-          "vcloud",
-          "nutanix",
-          "openstack"
-        ],
         "data_config_key": null,
         "data_config_path": null,
         "item_restriction": null,
@@ -79,10 +62,6 @@
           {
             "event_type": "vm",
             "event_provider": "nutanix"
-          },
-          {
-            "event_type": "vm",
-            "event_provider": "openstack"
           }
         ],
         "number": 50,
@@ -101,7 +80,7 @@
         "graph": {
           "model_name": "Graph",
           "Graph": {
-            "author": "Dmitriy Pyryakov",
+            "author": "AT API",
             "output": {},
             "ui_schema": null,
             "json_schema": null,
@@ -118,8 +97,8 @@
             "lock_order_on_error": false,
             "damage_order_on_error": false,
             "current_version": "",
-            "name": "qa_graph_del_gmv",
-            "title": "delete",
+            "name": "at_api_import_graph_for_action",
+            "title": "at_api_import_graph_for_action",
             "description": "",
             "type": "action",
             "allowed_developers": [],

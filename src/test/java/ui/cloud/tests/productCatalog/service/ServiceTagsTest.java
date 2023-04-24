@@ -3,7 +3,7 @@ package ui.cloud.tests.productCatalog.service;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
 
 public class ServiceTagsTest extends ServiceBaseTest {
@@ -14,7 +14,7 @@ public class ServiceTagsTest extends ServiceBaseTest {
     @TmsLink("644729")
     @DisplayName("Добавление тегов для фильтра")
     public void addTagsTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME);
         addTag(tagName, new String[]{"10.226.3.74", "10.226.3.75"});
         addExcludeTag(excludeTagName, new String[]{"windows", "linux"});
@@ -24,7 +24,7 @@ public class ServiceTagsTest extends ServiceBaseTest {
     @TmsLink("643299")
     @DisplayName("Редактирование тегов для фильтра")
     public void editTagsTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME);
         addTag(tagName, new String[]{"10.226.3.74", "10.226.3.75"});
         editTag(tagName, new String[]{"10.226.3.76"});
@@ -36,7 +36,7 @@ public class ServiceTagsTest extends ServiceBaseTest {
     @TmsLink("644929")
     @DisplayName("Удаление тегов для фильтра")
     public void deleteTagsTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME);
         addTag(tagName, new String[]{"10.226.3.74", "10.226.3.75"});
         deleteTag(tagName);

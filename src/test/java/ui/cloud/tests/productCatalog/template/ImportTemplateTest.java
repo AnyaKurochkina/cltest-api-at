@@ -8,7 +8,7 @@ import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 import static steps.productCatalog.TemplateSteps.isTemplateExists;
 
@@ -24,7 +24,7 @@ public class ImportTemplateTest extends TemplateBaseTest {
         JsonPath json = new JsonPath(data);
         String name = json.get("Template.name");
         if (isTemplateExists(name)) deleteTemplate(name);
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToTemplatesPage()
                 .importTemplate("src/test/resources/json/productCatalog/templates/importTemplate.json")
                 .findAndOpenTemplatePage(name)

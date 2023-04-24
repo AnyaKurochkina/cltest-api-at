@@ -92,6 +92,15 @@ public class AllowedActionSteps extends Steps {
                 .createObject();
     }
 
+    @Step("Создание разрешенного действия")
+    public static AllowedAction createAllowedAction(String name, String title) {
+        return AllowedAction.builder()
+                .name(name)
+                .title(title)
+                .build()
+                .createObject();
+    }
+
     @Step("Получение списка разрешенных действий")
     public static List<AllowedAction> getAllowedActionList() {
         return new Http(ProductCatalogURL)

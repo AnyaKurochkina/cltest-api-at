@@ -9,7 +9,7 @@ import models.cloud.productCatalog.template.Template;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -277,7 +277,7 @@ public class TemplatePage extends BasePage {
         backButton.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -302,9 +302,9 @@ public class TemplatePage extends BasePage {
         new TemplatesListPage().openTemplatePage(template.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
         titleInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToTemplatesPage().openTemplatePage(template.getName());
+        new ControlPanelIndexPage().goToTemplatesPage().openTemplatePage(template.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
         return this;
     }

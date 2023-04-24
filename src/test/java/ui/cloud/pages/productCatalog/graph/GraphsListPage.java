@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class GraphsListPage extends BaseListPage {
 
     private static final String nameColumn = "Код графа";
-    private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы']");
+    private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы'][@type]");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
     private final Input nameInput = Input.byName("name");
     private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
@@ -52,7 +52,7 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
-        new BaseListPage().copy(nameColumn, name);
+        copy(nameColumn, name);
         Alert.green("Копирование выполнено успешно");
         backButton.click();
         return this;
@@ -146,7 +146,7 @@ public class GraphsListPage extends BaseListPage {
         addNewObjectButton.click();
         for (String name : names) {
             nameInput.setValue(name);
-            Waiting.findWithAction(() -> graphNameValidationHint.isDisplayed(),
+            Waiting.findWithAction(graphNameValidationHint::isDisplayed,
                     () -> nameInput.getInput().sendKeys("t"), Duration.ofSeconds(3));
             graphNameValidationHint.shouldBe(Condition.visible);
         }

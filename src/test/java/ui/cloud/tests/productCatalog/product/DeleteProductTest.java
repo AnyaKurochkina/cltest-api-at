@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 @Feature("Удаление продукта")
 public class DeleteProductTest extends ProductBaseTest {
@@ -13,7 +13,7 @@ public class DeleteProductTest extends ProductBaseTest {
     @TmsLink("507458")
     @DisplayName("Удаление продукта из списка")
     public void deleteProductFromListTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .delete(NAME);
     }
 
@@ -21,7 +21,7 @@ public class DeleteProductTest extends ProductBaseTest {
     @TmsLink("508483")
     @DisplayName("Удаление продукта со страницы")
     public void deleteProductFromPageTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .delete();
     }
@@ -30,7 +30,7 @@ public class DeleteProductTest extends ProductBaseTest {
     @TmsLink("766473")
     @DisplayName("Недоступность удаления открытого продукта")
     public void deleteOpenProductTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .checkDeleteOpenProduct();
     }

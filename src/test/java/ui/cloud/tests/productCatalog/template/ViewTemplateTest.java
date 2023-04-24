@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 
 @Feature("Просмотр шаблона узлов")
@@ -14,7 +14,7 @@ public class ViewTemplateTest extends TemplateBaseTest {
     @TmsLink("1206042")
     @DisplayName("Сравнение версий шаблона")
     public void compareVersionsTest() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .setRunQueue("test_1")
                 .saveWithPatchVersion()

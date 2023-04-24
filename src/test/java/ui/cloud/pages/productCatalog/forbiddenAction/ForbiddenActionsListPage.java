@@ -8,6 +8,8 @@ import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.elements.Alert;
+import ui.elements.InputFile;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -18,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ForbiddenActionsListPage extends BaseListPage {
 
     private final String nameColumn = "Код запрещенного действия";
-    private final SearchSelect typeSelect = SearchSelect.byLabel("Тип item");
+    private final SearchSelect typeSelect = SearchSelect.byLabel("Тип");
     private final SearchSelect providerSelect = SearchSelect.byLabel("Провайдер");
 
     public ForbiddenActionsListPage() {
@@ -83,5 +85,20 @@ public class ForbiddenActionsListPage extends BaseListPage {
         new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
         Waiting.sleep(1000);
         return new ForbiddenActionPage();
+    }
+
+    @Step("Открытие страницы создания запрещенного действия")
+    public ForbiddenActionPage addNewForbbidenAction() {
+        addNewObjectButton.click();
+        return new ForbiddenActionPage();
+    }
+
+    @Step("Импорт запрещенного действия из файла '{path}'")
+    public ForbiddenActionsListPage importForbiddenAction(String path) {
+        importButton.click();
+        new InputFile(path).importFileAndSubmit();
+        Alert.green("Импорт выполнен успешно");
+        closeButton.click();
+        return this;
     }
 }
