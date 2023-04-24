@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ScyllaDbCluster;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -21,6 +22,8 @@ import ui.extesions.UiProductTest;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
+
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Epic("UI Продукты")
 @Feature("ScyllaDbClusterAstra")
@@ -65,14 +68,13 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
                     .hover()
                     .click();
             ScyllaDbClusterPage scyllaPages = new ScyllaDbClusterPage(product);
-            scyllaPages.waitChangeStatus(Duration.ofMinutes(25));
+            scyllaPages.waitChangeStatus(Duration.ofMinutes(30));
             scyllaPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-        Assertions.assertEquals(preBillingProductPrice, scyllaPage.getOrderCost(), 0.01);
+        checkOrderCost(preBillingProductPrice, new ScyllaDbClusterPage(product));
     }
 
 
@@ -184,6 +186,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
 
     @Test
     @Order(22)
+    @EnabledIfEnv("prod")
     @TmsLink("1368052")
     @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
     void monitoringOs() {

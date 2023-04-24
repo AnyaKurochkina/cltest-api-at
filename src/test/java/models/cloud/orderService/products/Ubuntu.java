@@ -28,13 +28,11 @@ public class Ubuntu extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
-    String role;
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/ubuntu_general_application.json";
         productName = "Ubuntu Linux";
-        role = isDev() ? "superuser" : "user";
         initProduct();
         if(flavor == null)
             flavor = getMinFlavor();
@@ -69,7 +67,7 @@ public class Ubuntu extends IProduct {
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
-                .set("$.order.attrs.ad_logon_grants[0].role", role)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .set("$.order.attrs.on_support", !isDev())

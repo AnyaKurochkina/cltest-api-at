@@ -18,7 +18,8 @@ import java.util.function.Supplier;
 @Log4j2
 public class Waiting {
 
-    private Waiting() {}
+    private Waiting() {
+    }
 
     /**
      * Заснуть на таймаут
@@ -31,6 +32,15 @@ public class Waiting {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static boolean sleep(Supplier<Boolean> b, Duration duration) {
+        Instant start = Instant.now();
+        while (duration.compareTo(Duration.between(start, Instant.now())) > 0) {
+            if (b.get()) return true;
+            sleep(300);
+        }
+        return false;
     }
 
     public static void find(Supplier<Boolean> b, Duration duration) {

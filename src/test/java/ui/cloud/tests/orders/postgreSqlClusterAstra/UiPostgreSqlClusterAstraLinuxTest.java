@@ -14,9 +14,7 @@ import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.CompareType;
-import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.*;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -35,8 +33,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product;
-    //=PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/ef21c712-f303-4b2b-ad32-2ad497e7cb18/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgresSQLCluster product;// = PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/7f937b68-122d-48ab-85c1-9076d568c3f0/main?context=proj-ln4zg69jek&type=project&org=vtb");
     String nameDb = "at_db";
     String limit = "20";
     String shortNameUserDB = "at_user";
@@ -55,7 +52,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Заказ")
     void orderPostgreSqlCluster() {
-        double prebillingCost;
+        double preBillingProductPrice;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -69,8 +66,9 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
+            orderPage.getRoleSelect().set("user");
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
-            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowElementByColumnValue("Продукт",
@@ -78,14 +76,13 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
                     .hover()
                     .click();
             PostgreSqlClusterAstraPage pSqlPages = new PostgreSqlClusterAstraPage(product);
-            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
+            pSqlPages.waitChangeStatus(Duration.ofMinutes(30));
             pSqlPages.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        checkOrderCost(prebillingCost, pSqlPage);
+        checkOrderCost(preBillingProductPrice, new PostgreSqlClusterAstraPage(product));
     }
 
 
@@ -159,7 +156,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(12)
     @TmsLink("851716")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Добавить БД")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Создание БД")
     void createDb() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
@@ -255,7 +252,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(21)
     @TmsLink("851796")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить БД")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удаление БД")
     void removeDb() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));

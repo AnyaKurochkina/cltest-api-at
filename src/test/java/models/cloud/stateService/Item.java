@@ -49,6 +49,8 @@ public class Item {
     private Boolean maintanceMode;
     @JsonProperty("update_data")
     private Object updateData;
+    @JsonProperty("children_list")
+    private List<Object> childrenList;
 
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("stateService/createItem.json")

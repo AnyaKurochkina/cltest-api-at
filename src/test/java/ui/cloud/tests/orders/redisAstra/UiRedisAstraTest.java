@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Redis;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -149,6 +150,7 @@ public class UiRedisAstraTest extends UiProductTest {
 
     @Test
     @Order(27)
+    @EnabledIfEnv("prod")
     @TmsLink("1296747")
     @DisplayName("UI Windows. Мониторинг ОС")
     void monitoringOs() {

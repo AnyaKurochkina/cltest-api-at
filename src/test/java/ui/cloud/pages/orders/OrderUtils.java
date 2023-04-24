@@ -67,6 +67,8 @@ public class OrderUtils {
     @Step("Ожидание выполнения действия с продуктом")
     public static void waitChangeStatus(Table table, Duration duration) {
         table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
+                .shouldBe(CollectionCondition.sizeNotEqual(0))
+                .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
                         new ProductStatus(e).isNeedWaiting()), duration);
         Waiting.sleep(1000);

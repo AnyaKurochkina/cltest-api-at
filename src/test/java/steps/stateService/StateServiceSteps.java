@@ -56,8 +56,8 @@ public class StateServiceSteps extends Steps {
     public static String getErrorFromStateService(String orderId) {
         String traceback = null;
         try {
-            traceback = new Http(StateServiceURL)
-                    .setRole(Role.CLOUD_ADMIN)
+            traceback = new Http(Configure.getAppProp("url.stateService"))
+                    .setWithoutToken()
                     .get("/api/v1/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
@@ -221,6 +221,15 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
                 .getList();
+    }
+
+    @Step("Получение списка items со всеми child")
+    public static Response getItemsListWithAllChild(String filter, String value) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/all_children_list/?{}={}", filter, value)
+                .assertStatus(200);
+
     }
 
     @Step("Получение списка items по фильтру {filter}")

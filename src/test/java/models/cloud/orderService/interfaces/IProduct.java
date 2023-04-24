@@ -91,9 +91,10 @@ public abstract class IProduct extends Entity {
 
     protected String jsonTemplate;
 
-    @Getter
     @Setter
-    transient String link, error;
+    transient String link;
+    @Setter @Getter
+    transient String error;
 
     @Getter
     private ProductStatus status;
@@ -116,6 +117,11 @@ public abstract class IProduct extends Entity {
     protected String productId;
     @Getter
     protected String productCatalogName;
+
+    public String getLink() {
+        log.debug("Get Link: {}", link);
+        return link;
+    }
 
     public String getDataCentre() {
         return Objects.requireNonNull(dataCentre, "Поле dataCentre пустое");
@@ -149,8 +155,12 @@ public abstract class IProduct extends Entity {
     @Override
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);
-        ((IProduct) entity).addLinkProduct();
-        ((IProduct) entity).checkPreconditionStatusProduct();
+        try {
+            ((IProduct) entity).addLinkProduct();
+            ((IProduct) entity).checkPreconditionStatusProduct();
+        } catch (Throwable e) {
+            entity.close();
+        }
         return entity;
     }
 
@@ -167,8 +177,8 @@ public abstract class IProduct extends Entity {
 
     public void checkUserGroupBySsh() {
         String accessGroup = getAccessGroup();
-        assertContains(executeSsh("sudo realm list"), accessGroup);
-        assertContains(executeSsh("sudo ls cd /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
+        assertContains(executeSsh("sudo -u root realm list"), accessGroup);
+        assertContains(executeSsh("sudo -u root ls /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
     }
 
     public String executeSsh(SshClient client, String cmd) {

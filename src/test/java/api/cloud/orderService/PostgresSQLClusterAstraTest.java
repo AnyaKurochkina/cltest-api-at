@@ -1,6 +1,7 @@
 package api.cloud.orderService;
 
 import api.Tests;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -195,7 +196,9 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "AD Просмотр активного хоста {0}")
     void checkActiveHost(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            assertContains(postgres.executeSsh("sudo patronictl -c /etc/patroni/patroni.yml list"), "Leader");
+            String ip = (String) OrderServiceSteps.getProductsField(postgres, "product_data.find{it.hostname.contains('-pgc')}.ip");
+            assertContains(postgres.executeSsh(new SshClient(ip, postgres.envType()),
+                    "sudo patronictl -c /etc/patroni/patroni.yml list"), "Leader");
         }
     }
 

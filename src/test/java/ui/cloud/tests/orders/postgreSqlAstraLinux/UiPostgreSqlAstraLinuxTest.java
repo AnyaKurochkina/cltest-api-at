@@ -13,9 +13,7 @@ import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.CompareType;
-import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.*;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -52,7 +50,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Order(1)
     @DisplayName("UI PostgreSQLAstra. Заказ")
     void orderPostgreSQL() {
-        double prebillingCost;
+        double preBillingProductPrice;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
@@ -65,7 +63,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
-            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -79,8 +77,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             product.setError(e.toString());
             throw e;
         }
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        checkOrderCost(prebillingCost, pSqlPage);
+        checkOrderCost(preBillingProductPrice, new PostgreSqlAstraPage(product));
     }
 
     @Test

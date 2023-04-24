@@ -1,0 +1,24 @@
+stages:
+  - test
+
+variables:
+#MAVEN_OPTS_1: "-Dmaven.repo.remote=http://www.ibiblio.org/maven/"
+#MAVEN_OPTS_2: "-Dmaven.repo.local=/root/.m2"
+
+
+test:
+  stage: test
+  # image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
+  #image: maven:3.3.9-jdk-8
+  before_script:
+  # - apt-get -y update
+  #- apt-get -y install locales
+  script:
+    - locale
+    - echo "тест"
+
+
+    #- mvn -Drepository=https://repo1.maven.org/maven2/ compile
+    #- mvn $MAVEN_OPTS_1 $MAVEN_OPTS_2 compile
+    #- ls -la
+
