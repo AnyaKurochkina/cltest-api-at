@@ -12,11 +12,11 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.BeforeAll;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.LoginPage;
 import ui.elements.TypifiedElement;
 import ui.extesions.ConfigExtension;
-import ui.t1.pages.IndexPage;
 import ui.t1.pages.IProductT1Page;
+import ui.t1.pages.IndexPage;
+import ui.t1.pages.LoginT1Page;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 
 import java.util.ArrayList;
@@ -41,14 +41,14 @@ public abstract class AbstractComputeTest extends Tests {
 
     public AbstractComputeTest() {
         project = Project.builder().isForOrders(true).build().createObject();
-        if(Configure.ENV.equals("t1ift"))
+        if (Configure.ENV.equals("t1ift"))
             availabilityZone = "ru-central1-c";
     }
 
     @BeforeEach
     @Title("Авторизация на портале")
     public void beforeEach() {
-        new LoginPage(project.getId())
+        new LoginT1Page(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
     }
 

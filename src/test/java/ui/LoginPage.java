@@ -1,4 +1,4 @@
-package ui.cloud.pages;
+package ui;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
@@ -12,11 +12,10 @@ import java.util.Objects;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
 
-public class LoginPage {
-
-    SelenideElement usernameInput = $x("//input[@id='username']");
-    SelenideElement passwordInput = $x("//input[@id='password']");
-    SelenideElement submitBtn = $x("//button[@type='submit']");
+public abstract class LoginPage {
+    protected SelenideElement usernameInput = $x("//input[@id='username']");
+    protected SelenideElement passwordInput = $x("//input[@id='password']");
+    protected SelenideElement submitBtn = $x("//button[@type='submit']");
 
     public LoginPage(String project) {
         Organization org = Organization.builder().build().createObject();
@@ -28,17 +27,15 @@ public class LoginPage {
         open("");
     }
 
-    private IndexPage signIn(String user, String password){
+    private void signIn(String user, String password) {
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
         TypifiedElement.checkProject();
-        return new IndexPage();
     }
 
-    public IndexPage signIn(Role role){
+    protected void signInRole(Role role) {
         GlobalUser user = GlobalUser.builder().role(role).build().createObject();
-        return signIn(Objects.requireNonNull(user.getUsername()), user.getPassword());
+        signIn(Objects.requireNonNull(user.getUsername()), user.getPassword());
     }
-
 }
