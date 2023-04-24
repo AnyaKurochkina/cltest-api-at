@@ -1,17 +1,28 @@
 package api.cloud.stateService;
 
+import api.Tests;
+import core.helper.JsonHelper;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.authorizer.Project;
+import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
+import models.cloud.stateService.Item;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
+import java.util.Collections;
+import java.util.UUID;
+
+import static core.helper.DateValidator.currentTimeInFormat;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.createAction;
+import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.stateService.StateServiceSteps.*;
 
 @Tag("state_service")
@@ -64,5 +75,44 @@ public class StateServiceTest extends Tests {
     public void getItemWithFolderTrueTest() {
         String id = getItemsList().get(0).getItemId();
         assertFalse(getItemByIdAndFilter(id, "with_folder=true").getFolder().isEmpty(), "Значение поля folder пустое");
+    }
+
+    @DisplayName("Проверка обновления LastFolder")
+    @TmsLink("1597282")
+    @Test
+    public void createBulkTest() {
+        Project project = Project.builder().isForOrders(true).build().createObject();
+        String uuid = UUID.randomUUID().toString();
+        Action action = createAction();
+        Graph graph = createGraph();
+        JSONObject json = JsonHelper.getJsonTemplate("stateService/createAction.json")
+                .set("$.order_ids", Collections.singletonList(uuid))
+                .set("$.graph_id", graph.getGraphId())
+                .set("$.action_id", action.getActionId())
+                .set("$.create_dt", currentTimeInFormat())
+                .build();
+        String expectedFolder = json.getJSONObject("data").get("folder").toString();
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
+                .set("$.order_id", uuid)
+                .set("$.graph_id", graph.getGraphId())
+                .set("$.action_id", action.getActionId())
+                .set("$.events[0].item_id", uuid)
+                .build();
+        createBulkAddAction(project.getId(), json);
+        createBulkAddEvent(project.getId(), json2);
+        Item item = getItemsWithActionsByFilter("order_id", uuid).get(0);
+        assertEquals(expectedFolder, item.getFolder());
+        String newFolder = "/organization/vtb/folder/folder/fold-test/project/proj-test/";
+        JSONObject newAction = JsonHelper.getJsonTemplate("stateService/createAction.json")
+                .set("$.order_ids", Collections.singletonList(uuid))
+                .set("$.graph_id", graph.getGraphId())
+                .set("$.action_id", action.getActionId())
+                .set("$.data.folder", newFolder)
+                .set("$.create_dt", currentTimeInFormat())
+                .build();
+        createBulkAddAction(project.getId(), newAction);
+        Item newItem = getItemsWithActionsByFilter("order_id", uuid).get(0);
+        assertEquals(newFolder, newItem.getFolder());
+
     }
 }

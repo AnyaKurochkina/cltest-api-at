@@ -39,7 +39,7 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
     void createVMwareOrganizationTest() {
         String orgName = new IndexPage()
                 .goToCloudDirector()
-                .create(UUID.randomUUID().toString().substring(25));
+                .create(UUID.randomUUID().toString().substring(25) + "-at-ui");
         deleteVMwareOrganization(project.getId(), orgName);
     }
 
@@ -49,7 +49,7 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
     void deleteVMwareOrganizationTest() {
         String orgName = new IndexPage()
                 .goToCloudDirector()
-                .create(UUID.randomUUID().toString().substring(25));
+                .create(UUID.randomUUID().toString().substring(25) + "-at-ui");
         try {
             new CloudDirectorPage().delete(orgName);
         } catch (Exception e) {

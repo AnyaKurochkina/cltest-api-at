@@ -10,8 +10,7 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
-import models.cloud.stateService.GetItemList;
-import models.cloud.stateService.Item;
+import models.cloud.stateService.*;
 import org.json.JSONObject;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
@@ -27,6 +26,32 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @Log4j2
 public class StateServiceSteps extends Steps {
+
+    @Step("Создание BulkAddAction")
+    public static Response createBulkAddAction(String projectId, JSONObject json) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .body(json)
+                .post("/api/v1/projects/{}/actions/bulk-add-action/", projectId);
+    }
+
+    @Step("Создание BulkAddEvent")
+    public static Response createBulkAddEvent(String projectId, JSONObject json) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .body(json)
+                .post("/api/v1/projects/{}/events/bulk-add-event/", projectId);
+    }
+
+    @Step("Создание Item")
+    public static Item createItem(String projectId, JSONObject json) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .body(json)
+                .post("/api/v1/projects/{}/items/", projectId)
+                .assertStatus(201)
+                .extractAs(Item.class);
+    }
 
     public static String getErrorFromStateService(String orderId) {
         String traceback = null;
@@ -104,6 +129,16 @@ public class StateServiceSteps extends Steps {
         return new Http(StateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/?with_actions=true&{}={}", projectId, filter, value)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение списка items with folder и по фильтру {filter}")
+    public static List<Item> getItemsWithActionsByFilter(String filter, String value) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/?{}={}&with_folder=true", filter, value)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
                 .getList();
@@ -188,6 +223,23 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка items со всеми child")
+    public static Response getItemsListWithAllChild(String filter, String value) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/all_children_list/?{}={}", filter, value)
+                .assertStatus(200);
+
+    }
+
+    @Step("Получение списка items по фильтру {filter}")
+    public static Response getItemsListByFilter(String contextId, String filter) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/items/?{}", contextId, filter)
+                .assertStatus(200);
+    }
+
     @Step("Получение item по id={id} и фильтру {filter}")
     public static Item getItemByIdAndFilter(String id, String filter) {
         return new Http(StateServiceURL)
@@ -264,6 +316,24 @@ public class StateServiceSteps extends Steps {
     }
 
 
+    public static List<ActionStateService> getActionListByFilter(String filter, String value) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/actions/?{}={}", filter, value)
+                .assertStatus(200)
+                .extractAs(GetActionStateServiceList.class)
+                .getList();
+    }
+
+    public static List<EventStateService> getEventListByFilter(String filter, String value) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/events/?{}={}", filter, value)
+                .assertStatus(200)
+                .extractAs(GetEventStateServiceList.class)
+                .getList();
+    }
+
     @Data
     @JsonInclude(JsonInclude.Include.NON_NULL)
     public static class ShortItem {
@@ -277,8 +347,4 @@ public class StateServiceSteps extends Steps {
         private String floatingIpAddress;
         private String itemId;
     }
-
-
-
-
 }
