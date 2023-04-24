@@ -12,6 +12,7 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import models.cloud.stateService.extRelations.ExtRelation;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -186,6 +187,54 @@ public class StateServiceListTest extends Tests {
             assertTrue((createdRowDt.isAfter(startDt) || createdRowDt.isEqual(startDt)) && createdRowDt.isBefore(endDt),
                     String.format("Дата %s itema не входит в заданный промежуток.", createdRowDt));
         }
+    }
+
+    @Test
+    @DisplayName("Получение списка item со всеми child")
+    @TmsLink("1614846")
+    public void getItemLisWithAllChildrenTest() {
+        Graph graph = createGraph(RandomStringUtils.randomAlphabetic(6).toLowerCase());
+        Action action = createAction(RandomStringUtils.randomAlphabetic(6).toLowerCase());
+        String orderId = UUID.randomUUID().toString();
+        String itemId = UUID.randomUUID().toString();
+        JSONObject eventJson = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(orderId)
+                .itemId(itemId)
+                .type("paas")
+                .subtype("build")
+                .build()
+                .toJson();
+        createEventStateService(eventJson);
+        String itemId3 = UUID.randomUUID().toString();
+        JSONObject json1 = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(orderId)
+                .itemId(itemId3)
+                .type("paas")
+                .subtype("parent")
+                .status(itemId)
+                .build()
+                .toJson();
+        createEventStateService(json1);
+        String itemId2 = UUID.randomUUID().toString();
+        JSONObject childJson = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(orderId)
+                .itemId(itemId2)
+                .type("paas")
+                .subtype("parent")
+                .status(itemId3)
+                .build()
+                .toJson();
+        createEventStateService(childJson);
+        String parent1 = getItemsListWithAllChild("item_id", itemId).jsonPath().getString("list[0].children_list[0].data.parent");
+        String parent2 = getItemsListWithAllChild("item_id", itemId).jsonPath().getString("list[0].children_list[0].children_list[0].data.parent");
+        assertEquals(parent1, itemId);
+        assertEquals(parent2, itemId3);
     }
 
     @Test
