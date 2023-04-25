@@ -15,7 +15,7 @@ import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginCloudPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -41,7 +41,7 @@ public class UiClickHouseTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(product.getProjectId())
+        new LoginCloudPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

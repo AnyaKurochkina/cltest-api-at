@@ -10,7 +10,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginCloudPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.RedisAstraOrderPage;
 import ui.extesions.ConfigExtension;
@@ -29,7 +29,7 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(product.getProjectId())
+        new LoginCloudPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

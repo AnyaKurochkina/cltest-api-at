@@ -29,7 +29,7 @@ class UiAstraLinuxCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(product.getProjectId())
+        new LoginCloudPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
