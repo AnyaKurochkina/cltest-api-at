@@ -1,6 +1,5 @@
 package ui.cloud.pages;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -24,98 +23,92 @@ import static com.codeborne.selenide.Selenide.$x;
 @Getter
 public class ControlPanelIndexPage {
 
-    private final SelenideElement mainPageMenuItem = $x("//div[text()='Главная']");
-    private final SelenideElement graphsMenuItem = $x("//div[text()='Графы']");
-    private final SelenideElement directionsMenuItem = $x("//div[text()='Направления']");
-    private final SelenideElement actionsMenuItem = $x("//div[text()='Действия']");
-    private final SelenideElement forbiddenActionsMenuItem = $x("//div[text()='Запрещенные действия']");
-    private final SelenideElement allowedActionsMenuItem = $x("//div[text()='Разрешенные действия']");
-    private final SelenideElement templatesMenuItem = $x("//div[text()='Шаблоны узлов']");
-    private final SelenideElement jinja2TemplatesMenuItem = $x("//div[text()='Шаблоны Jinja2']");
-    private final SelenideElement orderTemplatesMenuItem = $x("//div[text()='Шаблоны отображения']");
-    private final SelenideElement servicesMenuItem = $x("//div[text()='Сервисы']");
-    private final SelenideElement productsMenuItem = $x("//div[text()='Продукты']");
-    private final SelenideElement utilsMenuItem = $x("//div[text()='Утилиты']");
-    private final SelenideElement auditMenuItem = $x("//div[text()='Аудит']");
-    private final SelenideElement contextSettingsMenuItem = $x("//div[text()='Настройки контекста']");
-    private final SelenideElement mainLogo = $x("//img");
+    private final SelenideElement graphsLink = $x("//*[@href='/meccano/graphs']");
+    private final SelenideElement directionsLink = $x("//*[@href='/meccano/org_direction']");
+    private final SelenideElement actionsLink = $x("//*[@href='/meccano/actions']");
+    private final SelenideElement forbiddenActionsLink = $x("//*[@href='/meccano/forbidden_actions']");
+    private final SelenideElement allowedActionsLink = $x("//*[@href='/meccano/allowed_actions']");
+    private final SelenideElement templatesLink = $x("//a[@href='/meccano/templates']");
+    private final SelenideElement jinja2TemplatesLink = $x("//a[@href='/meccano/jinja2-templates']");
+    private final SelenideElement orderTemplatesLink = $x("//a[@href='/meccano/order-templates']");
+    private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
+    private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
+    private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
+    private final SelenideElement contextSettingsLink = $x("//a[@href='/meccano/context_settings']");
+    private final Select sectionSelect = Select.byXpath("//select/parent::div");
 
-    public ControlPanelIndexPage() {
-        mainLogo.hover();
-        mainPageMenuItem.shouldBe(Condition.visible);
-    }
-
-    @Step("Переход на страницу Конструктор. Графы")
+    @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
-        graphsMenuItem.click();
+        graphsLink.click();
         return new GraphsListPage();
     }
 
     @Step("Переход на страницу Конструктор. Направления")
     public OrgDirectionsListPage goToOrgDirectionsPage() {
-        directionsMenuItem.click();
+        directionsLink.click();
         return new OrgDirectionsListPage();
     }
 
     @Step("Переход на страницу Конструктор. Действия")
     public ActionsListPage goToActionsListPage() {
-        actionsMenuItem.click();
+        actionsLink.click();
         return new ActionsListPage();
     }
 
     @Step("Переход на страницу Конструктор. Запрещенные действия")
     public ForbiddenActionsListPage goToForbiddenActionsListPage() {
-        forbiddenActionsMenuItem.click();
+        forbiddenActionsLink.click();
         return new ForbiddenActionsListPage();
     }
 
     @Step("Переход на страницу Конструктор. Разрешенные действия")
     public AllowedActionsListPage goToAllowedActionsListPage() {
-        allowedActionsMenuItem.click();
+        allowedActionsLink.click();
         return new AllowedActionsListPage();
     }
 
-    @Step("Переход на страницу Конструктор. Шаблоны узлов")
+    @Step("Переход на страницу Конструктор.Шаблоны узлов")
     public TemplatesListPage goToTemplatesPage() {
-        templatesMenuItem.click();
+        templatesLink.click();
         return new TemplatesListPage();
     }
 
     @Step("Переход на страницу Конструктор. Шаблоны Jinja2")
     public Jinja2TemplatesListPage goToJinja2TemplatesListPage() {
-        jinja2TemplatesMenuItem.click();
+        jinja2TemplatesLink.click();
         return new Jinja2TemplatesListPage();
     }
 
     @Step("Переход на страницу Конструктор. Шаблоны отображения")
     public OrderTemplatesListPage goToOrderTemplatesPage() {
-        orderTemplatesMenuItem.click();
+        orderTemplatesLink.click();
         return new OrderTemplatesListPage();
     }
 
     @Step("Переход на страницу Конструктор. Сервисы")
     public ServicesListPagePC goToServicesListPagePC() {
-        servicesMenuItem.click();
+        servicesLink.click();
         return new ServicesListPagePC();
     }
 
     @Step("Переход на страницу Конструктор. Продукты")
     public ProductsListPage goToProductsListPage() {
-        productsMenuItem.click();
+        productsLink.click();
         return new ProductsListPage();
     }
 
     @Step("Переход на страницу Утилиты. Аудит")
     public AuditPage goToAuditPage() {
-        utilsMenuItem.click();
-        auditMenuItem.click();
+        Waiting.sleep(500);
+        sectionSelect.set("Утилиты");
+        auditLink.click();
         Waiting.sleep(500);
         return new AuditPage();
     }
 
     @Step("Переход на страницу 'Настройки контекста'")
     public ContextSettingsPage goToContextSettingsPage() {
-        contextSettingsMenuItem.click();
+        contextSettingsLink.click();
         return new ContextSettingsPage();
     }
 }
