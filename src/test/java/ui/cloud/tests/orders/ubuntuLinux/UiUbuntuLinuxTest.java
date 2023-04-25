@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Ubuntu;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -150,6 +151,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Order(12)
+    @EnabledIfEnv("prod")
     @TmsLink("1296749")
     @DisplayName("UI UbuntuLinux. Мониторинг ОС")
     void checkMonitoringOs() {

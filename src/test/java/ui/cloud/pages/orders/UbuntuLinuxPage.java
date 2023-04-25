@@ -55,13 +55,6 @@ public class UbuntuLinuxPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
 
-    @Step("Проверка вкладки Мониторинг")
-    public void checkMonitoringOs() {
-        Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
-        btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        new MonitoringOsPage(product).check();
-    }
-
     public void changeConfiguration() {
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();

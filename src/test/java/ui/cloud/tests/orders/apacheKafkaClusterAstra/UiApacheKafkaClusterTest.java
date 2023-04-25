@@ -20,6 +20,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
+import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
@@ -72,8 +73,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             product.setError(e.toString());
             throw e;
         }
-        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-        Assertions.assertEquals(preBillingProductPrice, pSqlPage.getOrderCost(), 0.01);
+        checkOrderCost(preBillingProductPrice, new ApacheKafkaClusterPage(product));
     }
 
 

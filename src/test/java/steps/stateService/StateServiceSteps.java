@@ -56,8 +56,8 @@ public class StateServiceSteps extends Steps {
     public static String getErrorFromStateService(String orderId) {
         String traceback = null;
         try {
-            traceback = new Http(StateServiceURL)
-                    .setRole(Role.CLOUD_ADMIN)
+            traceback = new Http(Configure.getAppProp("url.stateService"))
+                    .setWithoutToken()
                     .get("/api/v1/actions/?order_id={}", orderId)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
         } catch (JsonPathException e) {
