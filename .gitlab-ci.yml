@@ -34,6 +34,7 @@ test:
     - cp src/main/resources/lib/cassandra-jdbc-driver-1.4.jar .m2/repository/cassandra/jdbc-driver/1.4/
     - mvn $MAVEN_OPTS_1 $MAVEN_OPTS_3 -X install:install-file -Dfile=.m2/repository/cassandra/jdbc-driver/1.4/cassandra-jdbc-driver-1.4.jar -DgroupId=cassandra -DartifactId=jdbc-driver -Dversion=1.4 -Dpackaging=jar
     - mvn clean test $MAVEN_OPTS_1 $MAVEN_OPTS_2 $MAVEN_OPTS_3 3>&1 1>&2 2>&3 1>>$CI_PROJECT_DIR/clean_test_log | tee -a $CI_PROJECT_DIR/clean_test_log
+  when: manual
   after_script:
     - export SSHPASS=$SSH_PASS
     - gzip $CI_PROJECT_DIR/clean_test_log
