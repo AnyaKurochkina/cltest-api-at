@@ -10,6 +10,8 @@ import core.helper.StringUtils;
 import core.helper.http.Http;
 import lombok.*;
 import models.Entity;
+import models.cloud.tagService.v1.FilterResultItemV1;
+import models.cloud.tagService.v1.FilterResultV1;
 import models.cloud.tagService.v2.FilterResultV2;
 import models.cloud.tagService.v2.FilterResultItemV2;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
@@ -58,7 +60,12 @@ public class Inventory extends Entity {
         StringUtils.copyAvailableFields(inventory, this);
     }
 
-    public FilterResultItemV2 inventoryListItem(FilterResultV2 filterResult) {
+    public FilterResultItemV2 inventoryListItemV2(FilterResultV2 filterResult) {
+        return filterResult.getList().stream().filter(i -> i.getInventory().equals(id)).findFirst()
+                .orElseThrow(() -> new ResourceNotFoundException("Не найден item с id " + id));
+    }
+
+    public FilterResultItemV1 inventoryListItemV1(FilterResultV1 filterResult) {
         return filterResult.getList().stream().filter(i -> i.getInventory().equals(id)).findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Не найден item с id " + id));
     }

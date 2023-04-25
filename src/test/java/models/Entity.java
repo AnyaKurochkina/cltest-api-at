@@ -41,7 +41,7 @@ public abstract class Entity implements AutoCloseable {
     }
 
     @SneakyThrows
-    protected JSONObject serialize(Object object) {
+    public static JSONObject serialize(Object object) {
         return new JSONObject(new ObjectMapper().writeValueAsString(object));
     }
 

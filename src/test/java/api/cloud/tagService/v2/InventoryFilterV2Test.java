@@ -323,8 +323,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .build();
         FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(2, filterResult.getList().size(), "Неверное кол-во inventories");
-        Assertions.assertAll("Нет inventory в списке", () -> iList.get(0).inventoryListItem(filterResult),
-                () -> iList.get(2).inventoryListItem(filterResult));
+        Assertions.assertAll("Нет inventory в списке", () -> iList.get(0).inventoryListItemV2(filterResult),
+                () -> iList.get(2).inventoryListItemV2(filterResult));
     }
 
     @Test
