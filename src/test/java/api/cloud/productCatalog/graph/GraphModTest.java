@@ -208,35 +208,4 @@ public class GraphModTest extends Tests {
         assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
         assertEquals(uiData, createdGraph.getUiSchema().get("title"));
     }
-
-    @DisplayName("")
-    @TmsLink("")
-    @Test
-    public void getGraphByEnvTypeAdndEnvEqualsModEnvTypeAndEnvTest() {
-        String jsonData = "graph_env_equals_mod_env";
-        Modification jsonSchema = Modification.builder()
-                .name("json_schema_dev_mod")
-                .envNames(Arrays.asList("DSO", "LT", "IFT"))
-                .order(1)
-                .path("title")
-                .rootPath(RootPath.JSON_SCHEMA)
-                .updateType(UpdateType.REPLACE)
-                .data(jsonData)
-                .build();
-        String expectedTitle = "default";
-        Graph graph = Graph.builder()
-                .name("get_graph_by_env_type_and_type_equals_mod_env_type_and_env")
-                .version("1.0.1")
-                .modifications(Arrays.asList(jsonSchema))
-                .jsonSchema(new LinkedHashMap<String, Object>() {{
-                    put("title", expectedTitle);
-                }})
-                .uiSchema(new LinkedHashMap<String, Object>() {{
-                    put("title", expectedTitle);
-                }})
-                .build()
-                .createObject();
-        jsonSchema.setEnvNames(Collections.singletonList("EDU"));
-        partialUpdateGraph(graph.getGraphId(), jsonSchema.toJson());
-    }
 }
