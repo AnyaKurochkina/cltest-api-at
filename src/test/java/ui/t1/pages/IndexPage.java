@@ -18,7 +18,6 @@ import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 
-
 @Getter
 public class IndexPage {
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
