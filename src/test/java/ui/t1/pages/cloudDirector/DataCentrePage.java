@@ -52,9 +52,9 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         });
         Waiting.sleep(5000);
         generalInformation.click();
-        assertEquals(profile.getLimit(), new StorageProfileTable().getRowByColumnValue("Профиль оборудования", profile.getName())
+        assertEquals(profile.getLimit(), new StorageProfileTable().getRowByColumnValue("Имя", profile.getName())
                 .getValueByColumn("Лимит, Гб"));
-        assertEquals("Да", new StorageProfileTable().getRowByColumnValue("Профиль оборудования", profile.getName())
+        assertEquals("Да", new StorageProfileTable().getRowByColumnValue("Имя", profile.getName())
                 .getValueByColumn("Используется по умолчанию"));
     }
     @Step("Освобождение IP адресов")

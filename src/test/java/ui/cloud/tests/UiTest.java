@@ -10,7 +10,7 @@ import models.cloud.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import api.Tests;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginCloudPage;
 import ui.extesions.ConfigExtension;
 
 import java.awt.*;
@@ -34,7 +34,7 @@ public class UiTest extends Tests {
 
     @Test
     void name() {
-        new LoginPage().signIn(Role.CLOUD_ADMIN);
+        new LoginCloudPage().signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
         Selenide.open("https://prod-portal-front.cloud.vtb.ru/compute/orders/85b89f80-e889-490a-8cea-e144e6fe664d/monitoring?context=proj-1oob0zjo5h&type=project&org=vtb");
 //        Table.getTableByColumnName("Дата запуска");
@@ -50,7 +50,7 @@ public class UiTest extends Tests {
 
     @Test
     void nameT1() {
-        new LoginPage()
+        new LoginCloudPage()
                 .signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
         Selenide.open("https://ift1-portal-front.apps.cloud.k8s.test.01.vmw.t1.loc/new-order/9695e599-5481-4d88-97e9-16cd4c56ff91/?isHideChip=true&context=proj-votmndlfyh&type=project&org=ift");

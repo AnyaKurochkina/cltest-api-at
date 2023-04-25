@@ -14,7 +14,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.orders.ClickHouseOrderPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginCloudPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
@@ -33,7 +33,7 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(product.getProjectId())
+        new LoginCloudPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
