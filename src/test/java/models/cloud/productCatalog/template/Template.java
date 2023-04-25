@@ -123,7 +123,8 @@ public class Template extends Entity implements IProductCatalog {
     @Step("Создание шаблона")
     protected void create() {
         if (isTemplateExists(name)) {
-            List<GetUsedTemplateList> list = getNodeListUsedTemplate(id).jsonPath().getList("", GetUsedTemplateList.class);
+            Template template = getTemplateByName(name);
+            List<GetUsedTemplateList> list = getNodeListUsedTemplate(template.getId()).jsonPath().getList("", GetUsedTemplateList.class);
             if (!list.isEmpty()) {
                 list.forEach(x -> deleteGraphById(x.getId()));
             }
