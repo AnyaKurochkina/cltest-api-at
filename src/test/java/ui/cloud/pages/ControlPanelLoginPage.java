@@ -18,16 +18,15 @@ public class ControlPanelLoginPage {
         open(getAppProp("url.control-panel"));
     }
 
-    private ControlPanelIndexPage signIn(String user, String password){
+    private void signIn(String user, String password){
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
-        return new ControlPanelIndexPage();
     }
 
-    public ControlPanelIndexPage signIn(Role role){
+    public void signIn(Role role){
         GlobalUser user = GlobalUser.builder().role(role).build().createObject();
-        return signIn(user.getUsername(), user.getPassword());
+        signIn(user.getUsername(), user.getPassword());
     }
 
 }
