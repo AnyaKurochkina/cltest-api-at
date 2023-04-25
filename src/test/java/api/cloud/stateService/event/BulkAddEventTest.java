@@ -73,7 +73,7 @@ public class BulkAddEventTest extends Tests {
                 .jsonPath()
                 .getList("", String.class)
                 .get(0);
-        String expectedErrorMsg = String.format("'%s' is not one of ['acls', 'build', 'state', 'config', 'parent', 'env_type', 'provider', 'host_groups', 'config_audit', 'ext_relation', 'src_order_id', 'inventory_status']\n" +
+        String expectedErrorMsg = String.format("'%s' is not one of ['acls', 'build', 'state', 'config', 'parent', 'env_type', 'provider', 'inventory', 'host_groups', 'config_audit', 'src_order_id']\n" +
                         "\n" +
                         "Failed validating 'enum' in schema['properties']['subtype']:\n" +
                         "    {'enum': ['acls',\n" +
@@ -83,16 +83,16 @@ public class BulkAddEventTest extends Tests {
                         "              'parent',\n" +
                         "              'env_type',\n" +
                         "              'provider',\n" +
+                        "              'inventory',\n" +
                         "              'host_groups',\n" +
                         "              'config_audit',\n" +
-                        "              'ext_relation',\n" +
-                        "              'src_order_id',\n" +
-                        "              'inventory_status'],\n" +
+                        "              'src_order_id'],\n" +
                         "     'type': 'string'}\n" +
                         "\n" +
                         "On instance['subtype']:\n" +
                         "    '%s'",
                 subtype, subtype);
         assertEquals(expectedErrorMsg, error);
+
     }
 }
