@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.ContextPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginCloudPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.extesions.ConfigExtension;
@@ -62,7 +62,7 @@ public class PortalAuditTest extends Tests {
         graphCopy = getGraphByNameFilter(graph.getName() + "-clone");
         deleteGraphByIdInContext(graphCopy.getGraphId(), project.getId());
 
-        new LoginPage(project.getId()).signIn(cloudAdmin.getRole());
+        new LoginCloudPage(project.getId()).signIn(cloudAdmin.getRole());
     }
 
     @Test
