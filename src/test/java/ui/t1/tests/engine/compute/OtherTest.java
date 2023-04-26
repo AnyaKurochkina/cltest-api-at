@@ -1,6 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import core.utils.Waiting;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -26,6 +27,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 @Feature("Дополнительные")
+@Epic("Cloud Compute")
 @ExtendWith(BeforeAllExtension.class)
 public class OtherTest extends AbstractComputeTest {
 

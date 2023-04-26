@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.vpc;
 
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
@@ -17,6 +18,7 @@ import static core.utils.AssertUtils.assertHeaders;
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Сети")
+@Epic("Cloud Compute")
 public class NetworkTest extends AbstractComputeTest {
     String name = getRandomName();
 

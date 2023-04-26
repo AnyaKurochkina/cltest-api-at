@@ -1,7 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
@@ -11,11 +11,11 @@ import steps.authorizer.AuthorizerSteps;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.tests.engine.AbstractComputeTest;
 
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Epic("Cloud Compute")
 @Feature("Cloud Engine")
 public class EngineTest extends AbstractComputeTest {
 

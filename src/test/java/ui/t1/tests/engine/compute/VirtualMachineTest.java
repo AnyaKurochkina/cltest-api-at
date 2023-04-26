@@ -2,6 +2,7 @@ package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.SelenideElement;
 import com.mifmif.common.regex.Generex;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -32,6 +33,7 @@ import static core.utils.AssertUtils.assertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Виртуальные машины")
+@Epic("Cloud Compute")
 public class VirtualMachineTest extends AbstractComputeTest {
 
     @Test
