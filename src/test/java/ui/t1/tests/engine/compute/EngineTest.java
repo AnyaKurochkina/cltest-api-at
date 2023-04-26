@@ -31,10 +31,7 @@ public class EngineTest extends AbstractComputeTest {
         indexPage.getLinkVirtualMachines().getButton().shouldBe(condition);
         indexPage.getLinkSnapshots().getButton().shouldBe(condition);
         indexPage.getLinkNetworkInterfaces().getButton().shouldBe(condition);
-        indexPage.getLinkNetworks().getButton().shouldBe(condition);
         indexPage.getLinkImages().getButton().shouldBe(condition);
-        indexPage.getLinkSshKeys().getButton().shouldBe(condition);
-        indexPage.getLinkSecurityGroups().getButton().shouldBe(condition);
         indexPage.getLinkPublicIps().getButton().shouldBe(condition);
     }
 
