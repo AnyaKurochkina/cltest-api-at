@@ -68,7 +68,7 @@ public class ProductPage extends BasePage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.sleep(4000);
+        Waiting.sleep(5000);
         Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));

@@ -11,6 +11,8 @@ import ui.cloud.pages.ControlPanelIndexPage;
 
 import java.util.UUID;
 
+import static steps.productCatalog.ProductSteps.deleteProductByName;
+
 @Feature("Создание продукта")
 public class CreateProductTest extends ProductBaseTest {
 
@@ -50,6 +52,6 @@ public class CreateProductTest extends ProductBaseTest {
         new ControlPanelIndexPage().goToProductsListPage()
                 .createProduct(product)
                 .checkAttributes(product);
-        deleteProductByApi(product.getName());
+        deleteProductByName(product.getName());
     }
 }

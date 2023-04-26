@@ -11,7 +11,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.extesions.ConfigExtension;
-import ui.t1.pages.LoginT1Page;
+import ui.t1.pages.T1LoginPage;
 
 import java.util.UUID;
 
@@ -39,7 +39,7 @@ public abstract class AbstractCloudDirectorTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     public void beforeEach() {
-        new LoginT1Page(project.getId())
+        new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
     }
 

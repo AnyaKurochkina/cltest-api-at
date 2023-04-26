@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.service;
 
-import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
 import io.qameta.allure.Epic;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.icon.Icon;
@@ -66,9 +65,5 @@ public class ServiceBaseTest extends BaseTest {
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-    }
-
-    void deleteService(String name) {
-        steps.deleteByName(name, GetServiceListResponse.class);
     }
 }

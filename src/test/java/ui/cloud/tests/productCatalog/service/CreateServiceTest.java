@@ -10,6 +10,8 @@ import ui.cloud.pages.ControlPanelIndexPage;
 
 import java.util.UUID;
 
+import static steps.productCatalog.ServiceSteps.deleteServiceByName;
+
 @Feature("Создание сервиса")
 public class CreateServiceTest extends ServiceBaseTest {
 
@@ -49,7 +51,7 @@ public class CreateServiceTest extends ServiceBaseTest {
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .createService(service)
                 .checkAttributes(service);
-        deleteService(service.getName());
+        deleteServiceByName(service.getName());
     }
 
     @Test
@@ -60,7 +62,7 @@ public class CreateServiceTest extends ServiceBaseTest {
         service.setGraphVersion("Последняя");
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .createService(service)
-                .checkAttributes(service)
-                .deleteService();
+                .checkAttributes(service);
+        deleteServiceByName(service.getName());
     }
 }

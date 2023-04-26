@@ -30,7 +30,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

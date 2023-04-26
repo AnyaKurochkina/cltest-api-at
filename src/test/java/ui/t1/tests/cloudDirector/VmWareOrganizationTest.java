@@ -10,7 +10,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import steps.authorizer.AuthorizerSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.LoginT1Page;
+import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 
 import java.util.UUID;
@@ -68,6 +68,6 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
         testProject = Project.builder().projectName("Проект для теста VMWare тарифы услуг").folderName(parentFolder)
                 .build()
                 .createObjectPrivateAccess();
-        new LoginT1Page(testProject.getId());
+        new T1LoginPage(testProject.getId());
     }
 }
