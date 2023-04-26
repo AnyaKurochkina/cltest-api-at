@@ -57,7 +57,7 @@
   {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
     "id": "sa_proj-pkvckn08w9-1u",
-    "secret": "f1f0533ce9761f0a2cabf35ec59c386a",
+    "secret": "264e60c838ca8a02f5fa6be835b01a32",
     "isDeleted": false,
     "projectId": "proj-pkvckn08w9",
     "role": "roles/order-service.admin",
