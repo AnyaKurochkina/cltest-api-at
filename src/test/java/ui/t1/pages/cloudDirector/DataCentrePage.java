@@ -14,6 +14,7 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
@@ -57,6 +58,17 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         assertEquals("Да", new StorageProfileTable().getRowByColumnValue("Имя", profile.getName())
                 .getValueByColumn("Используется по умолчанию"));
     }
+
+    public void deleteProfile(StorageProfile profile) {
+        runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
+            $x("(//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//button)[2]")
+                    .click();
+        });
+        Waiting.sleep(5000);
+        generalInformation.click();
+        assertFalse(new StorageProfileTable().isColumnValueContains("Имя", profile.getName()));
+    }
+
     @Step("Освобождение IP адресов")
     public void removeIpAddresses() {
         int count = new IpTable().getRows().size();

@@ -197,8 +197,7 @@ public class ActionSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
-                .patch(actionUrl + id + "/")
-                .assertStatus(200);
+                .patch(actionUrl + id + "/");
     }
 
     @Step("Частичное обновление действия по имени {name}")

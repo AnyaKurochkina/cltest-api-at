@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static steps.productCatalog.GraphSteps.deleteGraphById;
 import static steps.productCatalog.TemplateSteps.*;
 
 @Log4j2
@@ -122,6 +123,11 @@ public class Template extends Entity implements IProductCatalog {
     @Step("Создание шаблона")
     protected void create() {
         if (isTemplateExists(name)) {
+            Template template = getTemplateByName(name);
+            List<GetUsedTemplateList> list = getNodeListUsedTemplate(template.getId()).jsonPath().getList("", GetUsedTemplateList.class);
+            if (!list.isEmpty()) {
+                list.forEach(x -> deleteGraphById(x.getId()));
+            }
             deleteTemplateById(getTemplateByName(name).getId());
         }
         Template createTemplate = createTemplate(toJson()).assertStatus(201).extractAs(Template.class);
