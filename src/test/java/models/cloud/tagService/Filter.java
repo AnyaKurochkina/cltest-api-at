@@ -1,25 +1,19 @@
 package models.cloud.tagService;
 
+import core.helper.http.QueryBuilder;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import models.cloud.keyCloak.UserInfo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Data
 @Builder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Filter {
-    Integer page;
-    Integer perPage;
     List<String> inventoryPks;
     Tag tags;
     Tag excludingTags;
@@ -28,9 +22,11 @@ public class Filter {
     Boolean contextPathIsnull;
     Boolean allowEmptyTagFilter;
     List<String> dataSources;
+    @Singular
     Map<String, InventoryAttrs> inventoryFilters;
     List<String> inventoryTypes;
     List<String> roles;
+    UserInfo impersonate;
 
     @Data @Builder @AllArgsConstructor @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -50,23 +46,70 @@ public class Filter {
             return this;
         }
 
-        @Data @AllArgsConstructor
+        @Data
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public static class TagFilter {
+            String lookup;
             String key;
-            List<String> value;
+            Object value;
+
+            public TagFilter(String key, List<String> value) {
+                this.key = key;
+                this.value = value;
+            }
+
+            public TagFilter(String key, String value) {
+                this.key = key;
+                this.value = Collections.singletonList(value);
+            }
+
+            public TagFilter(String key, String value, String lookup) {
+                this.lookup = lookup;
+                this.key = key;
+                this.value = value;
+            }
         }
     }
 
-    @Data @Builder @AllArgsConstructor
+    @Data @AllArgsConstructor
     public static class InventoryAttrs {
         List<InventoryFilter> filters;
 
         @Data @Builder @AllArgsConstructor
+        @JsonInclude(JsonInclude.Include.NON_NULL)
         public static class InventoryFilter {
             String id;
             String key;
             String lookup;
             String value;
+        }
+    }
+
+
+    @Getter
+    public static class Query extends QueryBuilder {
+        String ordering;
+
+        private Query() {}
+
+        public static Builder builder() {
+            return new Query().new Builder();
+        }
+
+        public class Builder {
+            StringJoiner str = new StringJoiner(",");
+            public Builder addOrder(String order) {
+                str.add(order);
+                return this;
+            }
+            public Builder addOrderDesc(String order) {
+                str.add("-" + order);
+                return this;
+            }
+            public Query build() {
+                ordering = str.toString();
+                return Query.this;
+            }
         }
     }
 }
