@@ -39,7 +39,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @Title("Авторизация на портале")
     void beforeEach() {
         //product.setProductName("ScyllaDB Cluster RHEL"); //Для Rhel версии
-        new LoginPage(product.getProjectId())
+        new LoginCloudPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

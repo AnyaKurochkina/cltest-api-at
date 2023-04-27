@@ -6,7 +6,7 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.jinja2.GetJinja2List;
-import models.cloud.productCatalog.jinja2.Jinja2;
+import models.cloud.productCatalog.jinja2.Jinja2Template;
 import steps.Steps;
 
 import java.util.List;
@@ -18,7 +18,7 @@ public class Jinja2Steps extends Steps {
     private static final String jinjaUrl2 = "/api/v2/jinja2_templates/";
 
     @Step("Получение списка jinja2")
-    public static List<Jinja2> getJinja2List() {
+    public static List<Jinja2Template> getJinja2List() {
         //Todo сравнение с jsonshema
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -29,11 +29,11 @@ public class Jinja2Steps extends Steps {
     }
 
     @Step("Получение jinja2 по Id")
-    public static Jinja2 getJinja2ById(String objectId) {
+    public static Jinja2Template getJinja2ById(String objectId) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(jinjaUrl + objectId + "/")
-                .extractAs(Jinja2.class);
+                .extractAs(Jinja2Template.class);
     }
 
     @Step("Проверка существования jinja2 по имени")
@@ -52,9 +52,9 @@ public class Jinja2Steps extends Steps {
                 .assertStatus(204);
     }
 
-    @Step("Создание jinja2")
-    public static Jinja2 createJinja(String name) {
-        return Jinja2.builder()
+    @Step("Создание шаблона Jinja2")
+    public static Jinja2Template createJinja(String name) {
+        return Jinja2Template.builder()
                 .name(name)
                 .build()
                 .createObject();

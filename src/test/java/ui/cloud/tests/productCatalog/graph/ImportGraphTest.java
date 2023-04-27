@@ -7,7 +7,7 @@ import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 
 import static steps.productCatalog.GraphSteps.isGraphExists;
 
@@ -22,7 +22,7 @@ public class ImportGraphTest extends GraphBaseTest {
         JsonPath json = new JsonPath(data);
         String name = json.getString("Graph.name");
         if (isGraphExists(name)) deleteGraphByApi(name);
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .importGraph("src/test/resources/json/productCatalog/graphs/importGraph.json")
                 .findAndOpenGraphPage(name)

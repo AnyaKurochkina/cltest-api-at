@@ -11,10 +11,9 @@ import models.cloud.productCatalog.product.Product;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -305,7 +304,7 @@ public class ProductPage extends BasePage {
         backButton.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -331,9 +330,9 @@ public class ProductPage extends BasePage {
         new ProductsListPage().openProductPage(product.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
         titleInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToProductsListPage().openProductPage(product.getName());
+        new ControlPanelIndexPage().goToProductsListPage().openProductPage(product.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
         return this;
     }

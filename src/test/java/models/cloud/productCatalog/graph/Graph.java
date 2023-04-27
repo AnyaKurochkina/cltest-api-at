@@ -121,8 +121,8 @@ public class Graph extends Entity implements IProductCatalog {
                 .set("$.restricted_developers", restrictedDevelopers)
                 .setIfNullRemove("$.modifications", mod)
                 .setIfNullRemove("$.json_schema", jsonSchema)
-                .setIfNullRemove("$.ui_schema", jsonSchema)
-                .setIfNullRemove("$.static_data", jsonSchema)
+                .setIfNullRemove("$.ui_schema", uiSchema)
+                .setIfNullRemove("$.static_data", staticData)
                 .setIfNullRemove("$.default_item", defaultItem)
                 .build();
     }

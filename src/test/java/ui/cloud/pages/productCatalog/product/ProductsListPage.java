@@ -87,7 +87,7 @@ public class ProductsListPage extends BaseListPage {
 
     @Step("Копирование продукта '{product.name}'")
     public ProductsListPage copy(Product product) {
-        new BaseListPage().copy(nameColumn, product.getName());
+        copy(nameColumn, product.getName());
         Alert.green("Копирование выполнено успешно");
         return this;
     }

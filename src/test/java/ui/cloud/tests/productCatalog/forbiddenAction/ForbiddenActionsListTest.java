@@ -1,5 +1,6 @@
 package ui.cloud.tests.productCatalog.forbiddenAction;
 
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.enums.EventProvider;
 import org.junit.jupiter.api.DisplayName;
@@ -11,6 +12,7 @@ import ui.elements.Table;
 import static core.utils.AssertUtils.assertHeaders;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Feature("Список запрещенных действий")
 public class ForbiddenActionsListTest extends ForbiddenActionBaseTest {
 
     private final String nameColumn = "Код запрещенного действия";
@@ -24,8 +26,7 @@ public class ForbiddenActionsListTest extends ForbiddenActionBaseTest {
         assertHeaders(new Table(nameColumn),
                 "Наименование", nameColumn, "Дата создания", "Тип", "Провайдер", "Описание", "", "");
         ForbiddenActionsListPage page = new ForbiddenActionsListPage();
-        page.checkSorting()
-                .checkPagination();
+        page.checkSorting().checkPagination();
     }
 
     @Test

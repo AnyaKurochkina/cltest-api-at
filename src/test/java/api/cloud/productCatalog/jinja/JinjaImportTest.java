@@ -6,7 +6,7 @@ import core.helper.DataFileHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.jinja2.Jinja2;
+import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -35,8 +35,8 @@ public class JinjaImportTest extends Tests {
         if (isJinja2Exists(jinjaName2)) {
             deleteJinjaByName(jinjaName2);
         }
-        Jinja2 jinja = createJinja(jinjaName);
-        Jinja2 jinja2 = createJinja(jinjaName2);
+        Jinja2Template jinja = createJinja(jinjaName);
+        Jinja2Template jinja2 = createJinja(jinjaName2);
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/multiJinja.json";
         String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/multiJinja2.json";
         DataFileHelper.write(filePath, exportJinjaById(jinja.getId()).toString());

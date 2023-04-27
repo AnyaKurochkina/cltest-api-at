@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
 
 @Feature("Редактирование продукта")
@@ -14,7 +14,7 @@ public class EditProductTest extends ProductBaseTest {
     @TmsLink("602293")
     @DisplayName("Проверка изменений и лимита патч-версий")
     public void checkPatchVersionLimit() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .checkVersion("1.0.0")
                 .setAuthor("QA-1")
@@ -39,7 +39,7 @@ public class EditProductTest extends ProductBaseTest {
     @TmsLink("602328")
     @DisplayName("Проверка изменений и лимита версий, указанных вручную")
     public void checkManualVersionLimit() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .checkVersion("1.0.0")
                 .setAuthor("QA-1")
@@ -64,7 +64,7 @@ public class EditProductTest extends ProductBaseTest {
     @TmsLink("631132")
     @DisplayName("Удаление иконки")
     public void deleteIconTest() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(product.getName())
                 .deleteIcon();
     }
@@ -75,7 +75,7 @@ public class EditProductTest extends ProductBaseTest {
     public void editProductTest() {
         product.setDescription("New description");
         product.setGraphVersion("Последняя");
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(product.getName())
                 .setAttributes(product)
                 .saveWithPatchVersion();
@@ -88,7 +88,7 @@ public class EditProductTest extends ProductBaseTest {
     @DisplayName("Проверка сохранения версии")
     public void saveWithManualVersionTest() {
         String currentServiceVersion = "1.0.1";
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .setGraphVersion("Последняя")
                 .saveWithPatchVersion()
@@ -104,7 +104,7 @@ public class EditProductTest extends ProductBaseTest {
     @TmsLink("1071825")
     @DisplayName("Баннер при несохраненных изменениях")
     public void checkUnsavedChangesAlert() {
-        new IndexPage().goToProductsListPage()
+        new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
                 .checkUnsavedChangesAlertAccept(product)
                 .checkUnsavedChangesAlertDismiss();

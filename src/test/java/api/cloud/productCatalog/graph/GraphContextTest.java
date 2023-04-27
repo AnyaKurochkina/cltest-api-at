@@ -167,4 +167,54 @@ public class GraphContextTest extends Tests {
         assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
         assertEquals(expectedTitle, createdGraph.getUiSchema().get("title"));
     }
+
+
+    @Test
+    @TmsLink("1292180")
+    @DisplayName("Добавление модификатора с типом delete")
+    public void addDeleteTypeModifier() {
+        Modification jsonSchemaMod = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envs(Collections.singletonList(Env.DEV))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.DELETE)
+                .build();
+        Modification uiSchemaMod = Modification.builder()
+                .name("ui_schema_dev_mod")
+                .envs(Collections.singletonList(Env.DEV))
+                .order(2)
+                .path("ui:order")
+                .rootPath(RootPath.UI_SCHEMA)
+                .updateType(UpdateType.DELETE)
+                .build();
+        Modification staticDataMod = Modification.builder()
+                .name("static_data_dev_mod")
+                .envs(Collections.singletonList(Env.DEV))
+                .order(3)
+                .path("domain")
+                .rootPath(RootPath.STATIC_DATA)
+                .updateType(UpdateType.DELETE)
+                .build();
+        Graph graph = Graph.builder()
+                .name("at_api_get_graph_with_delete_modifiers")
+                .version("1.0.0")
+                .modifications(Arrays.asList(jsonSchemaMod, uiSchemaMod, staticDataMod))
+                .jsonSchema(new LinkedHashMap<String, Object>() {{
+                    put("title", "default");
+                }})
+                .uiSchema(new LinkedHashMap<String, Object>() {{
+                    put("ui:order", "default");
+                }})
+                .staticData(new LinkedHashMap<String, Object>() {{
+                    put("domain", "default");
+                }})
+                .build()
+                .createObject();
+        Graph createdGraph = getGraphByIdContext(project.getId(), graph.getGraphId());
+        assertEquals(0, createdGraph.getJsonSchema().size());
+        assertEquals(0, createdGraph.getUiSchema().size());
+        assertEquals(0, createdGraph.getStaticData().size());
+    }
 }

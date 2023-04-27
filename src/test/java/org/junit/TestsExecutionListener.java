@@ -58,12 +58,15 @@ public class TestsExecutionListener implements TestExecutionListener {
 
         baseUrl = URL;
         isRemote();
-        Configuration.startMaximized = Boolean.parseBoolean(Configure.getAppProp("webdriver.maximized", "false"));
+        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true")))
+            Configuration.startMaximized = true;
+        else
+            Configuration.startMaximized = Boolean.parseBoolean(Configure.getAppProp("webdriver.maximized", "false"));
         Configuration.pageLoadTimeout = 60000;
         Configuration.timeout = 45000;
         Configuration.driverManagerEnabled = false;
         Configuration.browser = "chrome";
-        Map<String, Object> prefs=new HashMap<>();
+        Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap());
 
         ChromeOptions options = new ChromeOptions();
@@ -77,7 +80,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
-        options.setExperimentalOption("prefs",prefs);
+        options.setExperimentalOption("prefs", prefs);
 
         synchronized (TestsExecutionListener.class) {
             Configuration.browserCapabilities.setCapability(ChromeOptions.CAPABILITY, options);
@@ -90,12 +93,12 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
     }
 
-    private static Map<String,Object> getClipBoardSettingsMap() throws JsonProcessingException {
-        Map<String,Object> map = new HashMap<>();
-        map.put("last_modified",String.valueOf(System.currentTimeMillis()));
+    private static Map<String, Object> getClipBoardSettingsMap() throws JsonProcessingException {
+        Map<String, Object> map = new HashMap<>();
+        map.put("last_modified", String.valueOf(System.currentTimeMillis()));
         map.put("setting", 1);
-        Map<String,Object> cbPreference = new HashMap<>();
-        cbPreference.put("[*.],*",map);
+        Map<String, Object> cbPreference = new HashMap<>();
+        cbPreference.put("[*.],*", map);
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValueAsString(cbPreference);
         return cbPreference;

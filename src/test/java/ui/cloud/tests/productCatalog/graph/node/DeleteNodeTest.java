@@ -8,7 +8,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
 @Feature("Удаление узла графа")
@@ -41,7 +41,7 @@ public class DeleteNodeTest extends GraphBaseTest {
                 .number(1)
                 .build();
         patchGraphWithGraphItem(graph, node);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .deleteNodeAndSave(node)

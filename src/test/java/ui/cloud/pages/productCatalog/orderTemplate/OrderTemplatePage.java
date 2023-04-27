@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -108,7 +108,7 @@ public class OrderTemplatePage extends BasePage {
         orderTemplatesLink.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -128,9 +128,9 @@ public class OrderTemplatePage extends BasePage {
         new OrderTemplatesListPage().openTemplatePage(template.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
         titleInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToOrderTemplatesPage().openTemplatePage(template.getName());
+        new ControlPanelIndexPage().goToOrderTemplatesPage().openTemplatePage(template.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(template.getTitle()));
         return this;
     }

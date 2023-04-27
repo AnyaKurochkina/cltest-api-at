@@ -50,7 +50,7 @@ public class ImageServiceSteps extends Steps {
     public static String getHealthStatusImageService() {
         return new Http(ProductCatalogURL)
                 .setRole(CLOUD_ADMIN)
-                .get("/api/v1/health/")
+                .get("/api/v1/healthcheck")
                 .assertStatus(200)
                 .jsonPath()
                 .getString("status");

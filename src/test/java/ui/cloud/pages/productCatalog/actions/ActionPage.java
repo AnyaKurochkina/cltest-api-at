@@ -10,7 +10,7 @@ import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
@@ -22,6 +22,7 @@ import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 public class ActionPage extends BasePage {
     private static final String saveActionAlertText = "Действие успешно изменено";
@@ -153,7 +154,7 @@ public class ActionPage extends BasePage {
 
     @Step("Переход на список действий и отмена оповещения о несохранненных данных")
     public ActionPage backByActionsLinkAndAlertCancel() {
-        actionsListLink.scrollIntoView(TypifiedElement.scrollCenter);
+        actionsListLink.scrollIntoView(scrollCenter);
         actionsListLink.click();
         String alertMsg = switchTo().alert().getText();
         assertEquals("Внесенные изменения не сохранятся. Покинуть страницу?", alertMsg);
@@ -164,7 +165,7 @@ public class ActionPage extends BasePage {
 
     @Step("Удаление иконки")
     public ActionPage deleteIcon() {
-        deleteIconButton.click();
+        deleteIconButton.scrollIntoView(scrollCenter).click();
         addIconLabel.shouldBe(Condition.visible);
         return this;
     }
@@ -197,7 +198,7 @@ public class ActionPage extends BasePage {
         }
         $x("//div[text() = '" + eventType.getValue() + "']").click();
         eventProviderDropDown.set(eventProvider.getValue());
-        table.getRow(0).get().$x(".//button[.//*[text() = 'Сохранить']]").click();
+        table.getRow(0).get().$x(".//button[.='Сохранить']").click();
         locationInOrderTab.click();
         dataConfigPath.setValue(configPath);
         dataConfigKey.setValue(configKey);
@@ -272,7 +273,7 @@ public class ActionPage extends BasePage {
         backButton.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
-        mainPageLink.click();
+        mainPage.click();
         dismissAlert(unsavedChangesAlertText);
         titleInput.getInput().shouldHave(Condition.exactValue(newValue));
         return this;
@@ -298,9 +299,9 @@ public class ActionPage extends BasePage {
         new ActionsListPage().openActionForm(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         titleInput.setValue(newValue);
-        mainPageLink.click();
+        mainPage.click();
         acceptAlert(unsavedChangesAlertText);
-        new IndexPage().goToActionsListPage().openActionForm(action.getName());
+        new ControlPanelIndexPage().goToActionsListPage().openActionForm(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         return this;
     }

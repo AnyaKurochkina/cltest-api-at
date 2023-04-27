@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import api.Tests;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginCloudPage;
 import ui.cloud.pages.services.SmokeLinearTestPage;
 import ui.cloud.pages.services.SmokeTestPage;
 import ui.extesions.ConfigExtension;
@@ -28,13 +28,13 @@ public class ServicesTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(project.getId())
+        new LoginCloudPage(project.getId())
                 .signIn(Role.DAY2_SERVICE_MANAGER);
     }
 
     @Test
     @TmsLink("706965")
-    @DisplayName("Сервисы. Запуск Smoke TEST")
+    @DisplayName("Сервисы. Проверка работы компонентов графов. (Параллельная)")
     void runSmokeTest() {
         SmokeTestPage smokeTestPage = new SmokeTestPage();
         new IndexPage().goToServicesListPage().selectProduct(smokeTestPage.getServiceName());
@@ -44,7 +44,7 @@ public class ServicesTest extends Tests {
 
     @Test
     @TmsLink("842450")
-    @DisplayName("Сервисы. Запуск Smoke TEST linear")
+    @DisplayName("Сервисы. Проверка работы компонентов графов. (Последовательная)")
     void runSmokeTestLinear() {
         SmokeLinearTestPage smokeLinearTestPage = new SmokeLinearTestPage();
         new IndexPage().goToServicesListPage().selectProduct(smokeLinearTestPage.getServiceName());

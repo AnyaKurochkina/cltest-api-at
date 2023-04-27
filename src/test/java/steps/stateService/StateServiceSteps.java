@@ -91,7 +91,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка item_id и order_id")
     public static Response getItemIdOrderIdList() {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/items/order_id/")
                 .assertStatus(200);
     }
@@ -100,7 +100,7 @@ public class StateServiceSteps extends Steps {
     public static Response getItemIdOrderIdListByItemsIds(String... itemIds) {
         String ids = String.join(",", itemIds);
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/items/order_id/?item_id__in=" + ids);
     }
 
@@ -117,7 +117,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items у которых parent {isExist}")
     public static List<Item> getItemsWithParentExist(boolean isExist) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/items/?parent_exists={}", isExist)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -127,7 +127,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items with actions по контексту и по фильтру {filter}")
     public static List<Item> getItemsWithActionsByFilter(String projectId, String filter, String value) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/projects/{}/items/?with_actions=true&{}={}", projectId, filter, value)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -137,7 +137,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items with folder и по фильтру {filter}")
     public static List<Item> getItemsWithActionsByFilter(String filter, String value) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.SUPERADMIN)
                 .get("/api/v1/items/?{}={}&with_folder=true", filter, value)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -147,7 +147,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items по значению ключа {key} в data.config")
     public static List<Item> getItemsByDataConfigKey(String key, String value) {
         List<Item> result = new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/items/?data__config__{}={}", key, value)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -186,7 +186,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items с параметром with_parent_item=true")
     public static List<Item> getItemsWithParentItem() {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/items/?with_parent_item=true")
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -206,7 +206,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items")
     public static List<Item> getItemsList() {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/items/")
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -216,11 +216,21 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items по фильтру {filter}")
     public static List<Item> getItemsListByFilter(String filter) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/items/?{}", filter)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
                 .getList();
+    }
+
+    @Step("Получение списка items со всеми child")
+    public static Response getItemsListWithAllChild(String filter, String value) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+            //    .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/all_children_list/?{}={}", filter, value)
+                .assertStatus(200);
+
     }
 
     @Step("Получение списка items по фильтру {filter}")
@@ -234,7 +244,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение item по id={id} и фильтру {filter}")
     public static Item getItemByIdAndFilter(String id, String filter) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.SUPERADMIN)
                 .get("/api/v1/items/{}/?{}", id, filter)
                 .assertStatus(200)
                 .extractAs(Item.class);
@@ -309,7 +319,7 @@ public class StateServiceSteps extends Steps {
 
     public static List<ActionStateService> getActionListByFilter(String filter, String value) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/actions/?{}={}", filter, value)
                 .assertStatus(200)
                 .extractAs(GetActionStateServiceList.class)
@@ -318,7 +328,7 @@ public class StateServiceSteps extends Steps {
 
     public static List<EventStateService> getEventListByFilter(String filter, String value) {
         return new Http(StateServiceURL)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/events/?{}={}", filter, value)
                 .assertStatus(200)
                 .extractAs(GetEventStateServiceList.class)

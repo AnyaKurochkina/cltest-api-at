@@ -1,6 +1,6 @@
 {
   "name": "api_test",
-  "title": "api_test",
+  "title": "AT API Action",
   "description": "desc",
   "icon_store_id": "",
   "priority": 0,
@@ -16,7 +16,12 @@
   "available_without_money": false,
   "auto_removing_if_failed": false,
   "skip_on_prebilling": false,
-  "event_type_provider": [],
+  "event_type_provider": [
+    {
+      "event_type": "bm",
+      "event_provider": "s3"
+    }
+  ],
   "item_restriction": null,
   "graph_id": "",
   "graph_version": "",

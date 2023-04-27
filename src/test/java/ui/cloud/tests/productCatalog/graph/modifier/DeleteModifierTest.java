@@ -10,7 +10,7 @@ import models.cloud.productCatalog.graph.UpdateType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
 import java.util.Arrays;
@@ -38,7 +38,7 @@ public class DeleteModifierTest extends GraphBaseTest {
                 .type("creating")
                 .description(DESCRIPTION)
                 .author(AUTHOR)
-                .modifications(Arrays.asList(modifier))
+                .modifications(Collections.singletonList(modifier))
                 .build()
                 .createObject();
     }
@@ -47,7 +47,7 @@ public class DeleteModifierTest extends GraphBaseTest {
     @TmsLink("688694")
     @DisplayName("Удаление модификатора")
     public void deleteModifier() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")

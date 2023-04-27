@@ -6,6 +6,7 @@ import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 
@@ -19,7 +20,7 @@ public class ActionsListTest extends ActionBaseTest {
     @DisplayName("Просмотр списка действий, сортировка")
     @TmsLink("505701")
     public void viewActionsListTest() {
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToActionsListPage()
                 .checkHeaders()
                 .checkSorting();
@@ -31,7 +32,7 @@ public class ActionsListTest extends ActionBaseTest {
     public void searchActionTest() {
         String name = UUID.randomUUID().toString();
         Action action = createActionByApi(name);
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToActionsListPage()
                 .findActionByValue(name, action)
                 .findActionByValue(TITLE, action)
@@ -45,7 +46,7 @@ public class ActionsListTest extends ActionBaseTest {
     public void filterActions() {
         String name = UUID.randomUUID().toString();
         Action action = createActionByApi(name);
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToActionsListPage()
                 .getTypeSelect()
                 .set(EventType.CLUSTER.getValue());

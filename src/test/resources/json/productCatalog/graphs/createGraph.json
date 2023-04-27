@@ -1,7 +1,7 @@
 {
-  "author": "Morozov Ilya",
+  "author": "AT API",
   "name": "AtTestGraph",
-  "title": "AtTestGraph",
+  "title": "AT API Graph",
   "modifications" : [],
   "description": "for at tests",
   "graph": [],

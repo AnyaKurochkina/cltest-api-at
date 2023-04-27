@@ -12,13 +12,14 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.elements.Alert;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -65,7 +66,7 @@ public class EditNodeTest extends GraphBaseTest {
                 .number(1)
                 .build();
         patchGraphWithGraphItem(graph, node);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .editSubgraphNode(node, "1.0.0", "edit")
@@ -84,7 +85,7 @@ public class EditNodeTest extends GraphBaseTest {
                 .timeout(100)
                 .number(1)
                 .build();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .addNodeAndSave(node);
@@ -110,18 +111,18 @@ public class EditNodeTest extends GraphBaseTest {
                 .description("1")
                 .templateId(template.getId())
                 .templateVersion("")
-                .printedOutput(Arrays.asList(new HashMap<String, String>() {{
+                .printedOutput(Collections.singletonList(new HashMap<String, String>() {{
                     put("type", "text");
                 }}))
                 .number(1)
                 .build();
         graphSteps.partialUpdateObject(graph.getGraphId(), new JSONObject()
-                .put("graph", Arrays.asList(node.toJson())));
-        new IndexPage()
+                .put("graph", Collections.singletonList(node.toJson())));
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab();
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("printed_output_can_be_overridden", false));
         GraphNodesPage page = new GraphNodesPage();
         page.getSaveButton().click();
@@ -140,7 +141,7 @@ public class EditNodeTest extends GraphBaseTest {
     @TmsLink("1035865")
     @DisplayName("Выключение переопределения Input в используемом шаблоне узла")
     public void saveNodeWithForbiddenInputOverride() {
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("additional_input", true));
         GraphItem node = GraphItem.builder()
                 .name("1")
@@ -153,12 +154,12 @@ public class EditNodeTest extends GraphBaseTest {
                 }})
                 .build();
         graphSteps.partialUpdateObject(graph.getGraphId(), new JSONObject()
-                .put("graph", Arrays.asList(node.toJson())));
-        new IndexPage()
+                .put("graph", Collections.singletonList(node.toJson())));
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab();
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("additional_input", false));
         GraphNodesPage page = new GraphNodesPage();
         page.getSaveButton().click();
@@ -185,7 +186,7 @@ public class EditNodeTest extends GraphBaseTest {
     @TmsLink("1539903")
     @DisplayName("Выключение переопределения Output в используемом шаблоне узла")
     public void saveNodeWithForbiddenOutputOverride() {
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("additional_output", true));
         GraphItem node = GraphItem.builder()
                 .name("1")
@@ -198,12 +199,12 @@ public class EditNodeTest extends GraphBaseTest {
                 }})
                 .build();
         graphSteps.partialUpdateObject(graph.getGraphId(), new JSONObject()
-                .put("graph", Arrays.asList(node.toJson())));
-        new IndexPage()
+                .put("graph", Collections.singletonList(node.toJson())));
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab();
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("additional_output", false));
         GraphNodesPage page = new GraphNodesPage();
         page.getSaveButton().click();
@@ -232,10 +233,10 @@ public class EditNodeTest extends GraphBaseTest {
     public void editNodeWithForbiddenParamsOverride() {
         String inputValue = "{\"override_param_1\":\"1\"}";
         String outputValue = "{\"override_param_2\":\"1\"}";
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("additional_input", true)
                 .put("additional_output", true));
-        templateSteps.partialUpdateObject(template.getId() + "", new JSONObject()
+        templateSteps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("additional_input", false)
                 .put("additional_output", false)
                 .put("printed_output_can_be_overridden", false));
@@ -245,7 +246,7 @@ public class EditNodeTest extends GraphBaseTest {
                 .description("1")
                 .number(1)
                 .build();
-        new IndexPage()
+        new ControlPanelIndexPage()
                 .goToGraphsPage()
                 .openGraphPage(NAME)
                 .goToNodesTab()
@@ -269,12 +270,9 @@ public class EditNodeTest extends GraphBaseTest {
                     page.getMainTab().click();
                     page.getParamsTab().click();
                 }, Duration.ofSeconds(3));
-        assertTrue(page.getInputHint().getText()
-                .equals("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)"));
-        assertTrue(page.getOutputHint().getText()
-                .equals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)"));
-        assertTrue(page.getPrintedOutputHint().getText()
-                .equals("Переопределение запрещено в шаблоне. Очистите поле или включите переопределение Printed output в шаблоне узлов"));
+        assertEquals("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)", page.getInputHint().getText());
+        assertEquals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)", page.getOutputHint().getText());
+        assertEquals("Переопределение запрещено в шаблоне. Очистите поле или включите переопределение Printed output в шаблоне узлов", page.getPrintedOutputHint().getText());
         page.getMainTab().click();
         page.getTemplateSelect().setContains(template2.getName());
         page.getParamsTab().click();

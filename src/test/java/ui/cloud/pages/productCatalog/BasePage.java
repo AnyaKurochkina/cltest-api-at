@@ -22,7 +22,7 @@ public class BasePage {
     protected final Button cancelButton = Button.byText("Отмена");
     protected final Button deleteButton = Button.byText("Удалить");
     protected final Button backButton = Button.byText("Назад");
-    protected final SelenideElement deleteIconButton = $x("//img/following::*[name()='svg'][1]");
+    protected final SelenideElement deleteIconButton = $x("//form//img/following::*[name()='svg'][1]");
     protected final SelenideElement addIconLabel = $x("//label[text()='Добавить иконку']");
     protected final SearchSelect graphSelect = SearchSelect.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
@@ -31,7 +31,7 @@ public class BasePage {
     protected final Button closeJSONView = Button.byAriaLabel("close");
     protected final Input nameInput = Input.byName("name");
     protected final Input titleInput = Input.byName("title");
-    protected final SelenideElement mainPageLink = $x("//a[@href='/meccano/home']");
+    protected final SelenideElement mainPage = $x("//a[@href='/meccano/home']");
     protected final String unsavedChangesAlertText = "Внесенные изменения не сохранятся. Покинуть страницу?";
 
     @Step("Сохранение объекта без изменения версии")

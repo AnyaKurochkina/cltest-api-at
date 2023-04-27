@@ -6,8 +6,8 @@ import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPageControlPanel;
+import ui.cloud.pages.ControlPanelIndexPage;
+import ui.cloud.pages.ControlPanelLoginPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 
 @Feature("Удаление сервиса")
@@ -16,14 +16,14 @@ public class DeleteServiceTest extends ServiceBaseTest {
     @Override
     @BeforeEach
     public void init() {
-        new LoginPageControlPanel().signIn(Role.SUPERADMIN);
+        new ControlPanelLoginPage().signIn(Role.SUPERADMIN);
     }
 
     @Test
     @TmsLink("504829")
     @DisplayName("Удаление сервиса из списка")
     public void deleteServiceFromList() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .deleteService(NAME)
                 .checkServiceNotFound(NAME);
     }
@@ -32,7 +32,7 @@ public class DeleteServiceTest extends ServiceBaseTest {
     @TmsLink("508545")
     @DisplayName("Удаление со страницы сервиса")
     public void deleteServiceFromPage() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
                 .deleteService();
         new ServicesListPagePC()
@@ -43,7 +43,7 @@ public class DeleteServiceTest extends ServiceBaseTest {
     @TmsLink("766478")
     @DisplayName("Недоступность удаления опубликованного сервиса")
     public void deletePublishedServiceTest() {
-        new IndexPage().goToServicesListPagePC()
+        new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
                 .checkDeletePublishedService();
     }

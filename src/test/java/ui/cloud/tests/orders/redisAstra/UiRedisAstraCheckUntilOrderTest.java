@@ -10,7 +10,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginPage;
+import ui.cloud.pages.LoginCloudPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.RedisAstraOrderPage;
 import ui.extesions.ConfigExtension;
@@ -26,11 +26,10 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
     Redis product;
     // =Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
-
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(product.getProjectId())
+        new LoginCloudPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

@@ -11,11 +11,12 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
@@ -32,7 +33,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     @TmsLink("1114449")
     @DisplayName("Удаление графа из списка")
     public void deleteGraphFromList() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .deleteGraph(NAME)
                 .checkGraphNotFound(NAME);
@@ -42,7 +43,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     @TmsLink("540702")
     @DisplayName("Удаление графа со страницы графа")
     public void deleteGraphFromPage() {
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .openDeleteDialog()
                 .inputInvalidId("test")
@@ -71,7 +72,7 @@ public class DeleteGraphTest extends GraphBaseTest {
                 .number(51)
                 .build()
                 .createObject();
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
                 .checkDeleteUsedGraphUnavailable();
@@ -97,10 +98,10 @@ public class DeleteGraphTest extends GraphBaseTest {
                 .subgraphId(graph.getGraphId())
                 .build()
                 .toJson();
-        JSONObject graphJSON = new JSONObject().put("graph", Arrays.asList(graphItem));
+        JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));
         partialUpdateGraph(superGraph.getGraphId(), graphJSON);
         superGraph.setVersion("1.0.1");
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findGraphByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
                 .checkDeleteUsedGraphUnavailable();

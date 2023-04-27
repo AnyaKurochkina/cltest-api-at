@@ -4,7 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.graph.GraphModifiersPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.models.GraphModifier;
@@ -21,7 +21,7 @@ public class AddModifierTest extends GraphBaseTest {
         modifier.setPath("title");
         modifier.setModifierData(modifierData);
         modifier.setModifierDataSubstring(modifierData);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
@@ -48,7 +48,7 @@ public class AddModifierTest extends GraphBaseTest {
         modifier2.setModifierData(modifierData);
         modifier2.setModifierDataSubstring(modifierData);
         modifier2.setNumber("2");
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
@@ -71,7 +71,7 @@ public class AddModifierTest extends GraphBaseTest {
         modifier.setModifierData(modifierData);
         String modifierDataSubstring = modifierData.substring(1, modifierData.indexOf(":"));
         modifier.setModifierDataSubstring(modifierDataSubstring);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToOrderParamsTab()
                 .setJSONSchemaAndSave("{\"title\":\"defaultTitle\"}")
@@ -91,7 +91,7 @@ public class AddModifierTest extends GraphBaseTest {
         modifier.setPath("quantity");
         modifier.setModifierData(modifierData);
         modifier.setModifierDataSubstring(modifierData);
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .setStaticData("{\"quantity\": 2}")
@@ -106,7 +106,7 @@ public class AddModifierTest extends GraphBaseTest {
     @DisplayName("Добавление модификатора с некорректными параметрами")
     public void createModifierWithIncorrectParameters() {
         GraphModifier modifier = new GraphModifier("test-modifier");
-        new IndexPage().goToGraphsPage()
+        new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToModifiersTab()
                 .addModifierAndSave(modifier);

@@ -5,7 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 
 @Feature("Просмотр списка шаблонов узлов")
@@ -15,7 +15,7 @@ public class TemplatesListTest extends TemplateBaseTest {
     @TmsLink("486731")
     @DisplayName("Проверка заголовков списка, сортировка")
     public void checkHeadersAndSorting() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .checkHeaders()
                 .checkSortingByTitle()
                 .checkSortingByName()
@@ -26,7 +26,7 @@ public class TemplatesListTest extends TemplateBaseTest {
     @TmsLink("1116098")
     @DisplayName("Поиск в списке шаблонов")
     public void searchTemplateTest() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template)
                 .findTemplateByValue(TITLE, template)
                 .findTemplateByValue(NAME.substring(1).toUpperCase(), template)
@@ -37,7 +37,7 @@ public class TemplatesListTest extends TemplateBaseTest {
     @TmsLink("1116686")
     @DisplayName("Подсветка ранее открытого шаблона узлов")
     public void returnFromTemplatePageTest() {
-        new IndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .goToTemplatesList()
                 .checkTemplateIsHighlighted(NAME);

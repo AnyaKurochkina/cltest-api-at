@@ -43,7 +43,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginPage(product.getProjectId())
+        new LoginCloudPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -156,7 +156,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(12)
     @TmsLink("851716")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Создание БД")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Добавить БД")
     void createDb() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
@@ -252,7 +252,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(21)
     @TmsLink("851796")
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удаление БД")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить БД")
     void removeDb() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
