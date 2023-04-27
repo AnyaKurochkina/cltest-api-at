@@ -1,9 +1,6 @@
 package core.utils;
 
-import core.helper.http.StatusResponseException;
-import lombok.SneakyThrows;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.function.Executable;
 import ui.elements.Table;
 
 import java.util.ArrayList;
@@ -38,15 +35,5 @@ public class AssertUtils {
             if (!text.contains(str)) {
                 fail(String.format("The text '%s' not found in '%s'", str, text));
             }
-    }
-
-
-    @SneakyThrows
-    public static void assertHttpRequest(Executable executable) {
-        try {
-            executable.execute();
-        } catch (StatusResponseException e) {
-            e.printStackTrace();
-        }
     }
 }
