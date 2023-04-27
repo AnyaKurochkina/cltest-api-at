@@ -5,13 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
-import core.helper.http.Http;
+import core.helper.http.StatusResponseException;
+import io.qameta.allure.Epics;
+import io.qameta.allure.LabelAnnotation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
+
+import java.lang.annotation.*;
 
 @NoArgsConstructor
 @SuperBuilder
@@ -106,7 +110,7 @@ public abstract class Entity implements AutoCloseable {
             init();
             create();
 
-        } catch (Http.StatusResponseException e) {
+        } catch (StatusResponseException e) {
             if (e.getStatus() != expectedStatus)
                 throw e;
             return;
@@ -117,7 +121,7 @@ public abstract class Entity implements AutoCloseable {
     public void negativeDeleteRequest(int expectedStatus) {
         try {
             delete();
-        } catch (Http.StatusResponseException e) {
+        } catch (StatusResponseException e) {
             if (e.getStatus() != expectedStatus)
                 throw e;
         }
@@ -125,6 +129,12 @@ public abstract class Entity implements AutoCloseable {
 
     public <T extends Entity> T createObjectExclusiveAccess() {
         return createObject(true, true);
+    }
+
+    @Documented
+    @Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    protected @interface Ignore {
     }
 
 }

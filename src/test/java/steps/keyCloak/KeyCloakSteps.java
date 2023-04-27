@@ -86,6 +86,14 @@ public class KeyCloakSteps {
                 .get("access_token");
     }
 
+    public static UserInfo getUserInfo(Role role) {
+        return new Http(URL)
+                .setRole(role)
+                .get("auth/realms/Portal/protocol/openid-connect/userinfo")
+                .assertStatus(200)
+                .extractAs(UserInfo.class);
+    }
+
     public static synchronized String getServiceToken() {
         Service service = Service.builder().build().createObject();
         ServiceToken sToken = ServiceToken.builder().build().createObject();
