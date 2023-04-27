@@ -83,7 +83,7 @@ public class Response {
         List items = page.getList();
         while (page.getMeta().getTotalCount() > items.size()) {
             http.path = http.path.replaceAll("page=(\\d+)", "page=" + (++i));
-            page = http.filterRequest().extractAs(clazz);
+            page = http.setSourceToken("").filterRequest().assertStatus(200).extractAs(clazz);
             items.addAll(page.getList());
         }
         page.setList(items);

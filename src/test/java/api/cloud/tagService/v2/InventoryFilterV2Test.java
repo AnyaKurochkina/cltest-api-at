@@ -3,6 +3,9 @@ package api.cloud.tagService.v2;
 import api.cloud.tagService.AbstractInventoryTest;
 import core.enums.Role;
 import core.helper.http.AssertResponse;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.tagService.*;
 import models.cloud.tagService.v2.FilterResultV2;
@@ -21,11 +24,13 @@ import java.util.stream.Collectors;
 import static models.cloud.tagService.Inventory.DEFAULT_TYPE;
 import static models.cloud.tagService.TagServiceSteps.*;
 
+@Epic("Сервис тегов")
+@Feature("Фильтр Inventory V2")
 public class InventoryFilterV2Test extends AbstractInventoryTest {
 
-
     @Test
-    @DisplayName("Inventory. Фильтр. По тегу operator = AND")
+    @TmsLink("1623645")
+    @DisplayName("Inventory. Фильтр V2. По тегу operator = AND")
     void findInventoriesByTagOperatorAnd() {
         List<Tag> tList = generateTags(3);
         List<Inventory> iList = generateInventories(2);
@@ -46,7 +51,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. По тегу operator = OR")
+    @TmsLink("1623663")
+    @DisplayName("Inventory. Фильтр V2. По тегу operator = OR")
     void findInventoriesByTagOperatorOR() {
         List<Tag> tList = generateTags(3);
         List<Inventory> iList = generateInventories(4);
@@ -75,7 +81,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. excluding_tags. operator = AND")
+    @TmsLink("1623665")
+    @DisplayName("Inventory. Фильтр V2. excluding_tags. operator = AND")
     void findInventoriesByTagExcludingTagsOperatorAnd() {
         List<Tag> tList = generateTags(3);
         List<Inventory> iList = generateInventories(4);
@@ -103,7 +110,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. excluding_tags. operator = OR")
+    @TmsLink("1623666")
+    @DisplayName("Inventory. Фильтр V2. excluding_tags. operator = OR")
     void findInventoriesByTagExcludingTagsOperatorOR() {
         //Генерируем списки тегов и инвентори
         List<Tag> tList = generateTags(3);
@@ -134,7 +142,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. Сортировка по ordering")
+    @TmsLink("1623668")
+    @DisplayName("Inventory. Фильтр V2. Сортировка по ordering")
     void findInventoriesByTagOrdering() {
         List<Tag> tList = generateTags(3);
         List<Inventory> iList = generateInventories(5);
@@ -165,7 +174,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр по impersonate")
+    @TmsLink("1623680")
+    @DisplayName("Inventory. Фильтр V2 по impersonate")
     void findInventoriesByTagImpersonate() {
         String tagValue = "impersonate";
         List<Tag> tList = generateTags(2);
@@ -197,7 +207,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр по context_path_isnull")
+    @TmsLink("1623685")
+    @DisplayName("Inventory. Фильтр V2 по context_path_isnull")
     void findInventoriesByContextPathIsnull() {
         Filter filterWidthNullPath = Filter.builder()
                 .contextPathIsnull(true)
@@ -212,7 +223,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. allow_empty_tag_filter")
+    @TmsLink("1623686")
+    @DisplayName("Inventory. Фильтр V2. allow_empty_tag_filter")
     void findInventoriesByAllowEmptyTagFilter() {
         Filter filter = Filter.builder()
                 .allowEmptyTagFilter(false)
@@ -223,7 +235,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. data_sources")
+    @TmsLink("1623688")
+    @DisplayName("Inventory. Фильтр V2. data_sources")
     void findInventoriesByDataSources() {
         String tagValue = "data_sources";
         String dataSourceFirst = "base_cloud_attrs";
@@ -253,7 +266,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. inventory_types")
+    @TmsLink("1623689")
+    @DisplayName("Inventory. Фильтр V2. inventory_types")
     void findInventoriesByInventoryTypes() {
         String tagValue = "inventory_types";
         String otherType = "cloud_base_item";
@@ -283,7 +297,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. inventory_pks")
+    @TmsLink("1623692")
+    @DisplayName("Inventory. Фильтр V2. inventory_pks")
     void findInventoriesByInventoryPks() {
         List<Inventory> iList = generateInventories(2);
 
@@ -298,7 +313,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр по roles")
+    @TmsLink("1623693")
+    @DisplayName("Inventory. Фильтр V2 по roles")
     void findInventoriesByRoles() {
         String tagValue = "roles";
         List<Tag> tList = generateTags(2);
@@ -328,7 +344,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр по required_tags")
+    @TmsLink("1623695")
+    @DisplayName("Inventory. Фильтр V2 по required_tags")
     void findInventoriesByRequiredTags() {
         String tagValue = "required_tags";
         List<Tag> tList = generateTags(3);

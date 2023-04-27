@@ -1,5 +1,6 @@
 package api.cloud.tagService;
 
+import api.Tests;
 import com.mifmif.common.regex.Generex;
 import models.cloud.authorizer.Project;
 import models.cloud.tagService.Context;
@@ -9,8 +10,8 @@ import models.cloud.tagService.Tag;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AbstractInventoryTest {
-
+@org.junit.jupiter.api.Tag("tag_service")
+public class AbstractInventoryTest extends Tests {
     protected Project project = Project.builder().isForOrders(true).build().createObject();
     protected Context context = Context.byId(project.getId());
 

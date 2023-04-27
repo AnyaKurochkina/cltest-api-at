@@ -2,6 +2,9 @@ package api.cloud.tagService.v2;
 
 import api.cloud.tagService.AbstractInventoryTest;
 import core.utils.Waiting;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.cloud.tagService.*;
 import models.cloud.tagService.v2.FilterResultV2;
 import models.cloud.tagService.v2.InventoryTagsV2;
@@ -16,11 +19,14 @@ import java.util.List;
 import static models.cloud.tagService.TagServiceSteps.inventoryFilterV2;
 import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 
+@Epic("Сервис тегов")
+@Feature("Фильтр Inventory V2")
 public class InventoryFilterByDateV2Test extends AbstractInventoryTest {
 
     //GTE(">="), GT(">"), LT("<"), LTE("<=");
     @Test
-    @DisplayName("Inventory. Фильтр. created_at = lt & gte")
+    @TmsLink("1623725")
+    @DisplayName("Inventory. Фильтр V2. created_at = lt & gte")
     void findInventoriesByCreatedAtLtAndGte() {
         List<Tag> tList = generateTags(2);
         Inventory inventoryFirst = generateInventories(1).get(0);
@@ -59,7 +65,8 @@ public class InventoryFilterByDateV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. created_at = lte & gt")
+    @TmsLink("1623739")
+    @DisplayName("Inventory. Фильтр V2. created_at = lte & gt")
     void findInventoriesByCreatedAtLteAndGt() {
         List<Tag> tList = generateTags(2);
         Inventory inventoryFirst = generateInventories(1).get(0);
@@ -98,7 +105,8 @@ public class InventoryFilterByDateV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. updated_at = lt & gte")
+    @TmsLink("1623741")
+    @DisplayName("Inventory. Фильтр V2. updated_at = lt & gte")
     void findInventoriesByUpdatedAtLtAndGte() {
         List<Tag> tList = generateTags(2);
         Inventory inventoryFirst = generateInventories(1).get(0);
@@ -137,7 +145,8 @@ public class InventoryFilterByDateV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @DisplayName("Inventory. Фильтр. updated_at = lte & gt")
+    @TmsLink("1623742")
+    @DisplayName("Inventory. Фильтр V2. updated_at = lte & gt")
     void findInventoriesByUpdatedAtLteAndGt() {
         List<Tag> tList = generateTags(2);
         Inventory inventoryFirst = generateInventories(1).get(0);

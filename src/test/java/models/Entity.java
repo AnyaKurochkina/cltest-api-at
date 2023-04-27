@@ -6,12 +6,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
 import core.helper.http.StatusResponseException;
+import io.qameta.allure.Epics;
+import io.qameta.allure.LabelAnnotation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
 import org.json.JSONObject;
+
+import java.lang.annotation.*;
 
 @NoArgsConstructor
 @SuperBuilder
@@ -125,6 +129,12 @@ public abstract class Entity implements AutoCloseable {
 
     public <T extends Entity> T createObjectExclusiveAccess() {
         return createObject(true, true);
+    }
+
+    @Documented
+    @Target(ElementType.FIELD)
+    @Retention(RetentionPolicy.RUNTIME)
+    protected @interface Ignore {
     }
 
 }

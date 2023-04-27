@@ -2,6 +2,9 @@ package api.cloud.tagService.v1;
 
 import api.cloud.tagService.AbstractInventoryTest;
 import core.utils.Waiting;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.cloud.tagService.Filter;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.Tag;
@@ -20,10 +23,13 @@ import java.util.List;
 import static models.cloud.tagService.TagServiceSteps.inventoryTagsV1;
 import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 
+@Epic("Сервис тегов")
+@Feature("Фильтр Inventory V1")
 public class InventoryFilterByDateV1Test extends AbstractInventoryTest {
 
     //GTE(">="), GT(">"), LT("<"), LTE("<=");
     @Test
+    @TmsLink("1623788")
     @DisplayName("Inventory. Фильтр V1. created_at = lt & gte")
     void findInventoriesByCreatedAtLtAndGte() {
         List<Tag> tList = generateTags(2);
@@ -63,6 +69,7 @@ public class InventoryFilterByDateV1Test extends AbstractInventoryTest {
     }
 
     @Test
+    @TmsLink("1623777")
     @DisplayName("Inventory. Фильтр V1. created_at = lte & gt")
     void findInventoriesByCreatedAtLteAndGt() {
         List<Tag> tList = generateTags(2);
@@ -102,6 +109,7 @@ public class InventoryFilterByDateV1Test extends AbstractInventoryTest {
     }
 
     @Test
+    @TmsLink("1623790")
     @DisplayName("Inventory. Фильтр V1. updated_at = lt & gte")
     void findInventoriesByUpdatedAtLtAndGte() {
         List<Tag> tList = generateTags(2);
@@ -141,6 +149,7 @@ public class InventoryFilterByDateV1Test extends AbstractInventoryTest {
     }
 
     @Test
+    @TmsLink("1623782")
     @DisplayName("Inventory. Фильтр V1. updated_at = lte & gt")
     void findInventoriesByUpdatedAtLteAndGt() {
         List<Tag> tList = generateTags(2);
