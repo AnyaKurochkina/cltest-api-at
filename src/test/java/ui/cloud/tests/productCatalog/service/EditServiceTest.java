@@ -2,10 +2,13 @@ package ui.cloud.tests.productCatalog.service;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
+
+import static steps.productCatalog.ServiceSteps.partialUpdateServiceById;
 
 @Feature("Редактирование сервиса")
 public class EditServiceTest extends ServiceBaseTest {
@@ -16,12 +19,14 @@ public class EditServiceTest extends ServiceBaseTest {
     public void editServiceTest() {
         service.setDescription("new description");
         service.setGraphVersion("Последняя");
+        service.setIsPublished(true);
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(service.getName())
                 .setAttributes(service)
                 .saveWithPatchVersion();
         service.setVersion("1.0.1");
         new ServicePage().checkAttributes(service);
+        partialUpdateServiceById(service.getId(), new JSONObject().put("is_published", false));
     }
 
     @Test

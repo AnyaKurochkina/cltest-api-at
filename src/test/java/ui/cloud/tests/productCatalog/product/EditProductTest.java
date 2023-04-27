@@ -75,6 +75,7 @@ public class EditProductTest extends ProductBaseTest {
     public void editProductTest() {
         product.setDescription("New description");
         product.setGraphVersion("Последняя");
+        product.setIsOpen(true);
         new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(product.getName())
                 .setAttributes(product)

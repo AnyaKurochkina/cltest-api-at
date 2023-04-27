@@ -1,7 +1,6 @@
 package ui.cloud.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import core.utils.Waiting;
@@ -22,6 +21,7 @@ public class IndexPage {
     private final SelenideElement orderMoreBtn = $x("//button[contains(., 'Заказать еще')]");
     private final SelenideElement portalAuditLink = $x("//a[@href='/analytics/audit']");
 
+    @Step("Переход в маркетплейс продуктов")
     public ProductsPage clickOrderMore() {
         orderMoreBtn.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return new ProductsPage();
