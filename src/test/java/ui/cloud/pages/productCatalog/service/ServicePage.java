@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
@@ -19,6 +20,7 @@ import static com.codeborne.selenide.Selenide.back;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ui.elements.TypifiedElement.scrollCenter;
 
+@Getter
 public class ServicePage extends BasePage {
 
     private final SelenideElement serviceListLink = $x("//a[text()='Список сервисов' and not(@href)]");

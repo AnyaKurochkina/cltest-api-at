@@ -5,6 +5,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Product;
@@ -22,6 +23,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.back;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Getter
 public class ProductPage extends BasePage {
 
     private final SelenideElement productsListLink = $x("//a[text()='Список продуктов']");

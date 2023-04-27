@@ -1,11 +1,19 @@
 package ui.cloud.tests.productCatalog.product;
 
+import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.Optional;
+
+import static steps.productCatalog.ProductSteps.partialUpdateProductByName;
 
 @Feature("Редактирование продукта")
 public class EditProductTest extends ProductBaseTest {
@@ -58,6 +66,25 @@ public class EditProductTest extends ProductBaseTest {
                 .saveWithManualVersion("999.999.999")
                 .goToMainTab()
                 .checkVersionLimit();
+    }
+
+    @Test
+    @TmsLink("1064198")
+    @DisplayName("Загрузка иконки")
+    public void addIcon() {
+        partialUpdateProductByName(product.getName(), new JSONObject().put("icon_store_id", JSONObject.NULL)
+                .put("icon_url", JSONObject.NULL));
+        new ControlPanelIndexPage()
+                .goToProductsListPage()
+                .findAndOpenProductPage(product.getName());
+        ProductPage page = new ProductPage();
+        page.getIconInput().getInput().uploadFile(new File("src/test/resources/json/productCatalog/products/importProduct.json"));
+        page.getIncorrectIconFormatHint().shouldBe(Condition.visible);
+        page.getIconInput().getInput().uploadFile(new File("src/test/resources/icons/largeImage.jpg"));
+        page.getIconTooLargeHint().shouldBe(Condition.visible);
+        page.getIconInput().getInput().uploadFile(new File("src/test/resources/icons/svgIcon.svg"));
+        page.saveWithoutPatchVersion(page.getSaveProductAlertText());
+        page.getDeleteIconButton().shouldBe(Condition.visible);
     }
 
     @Test

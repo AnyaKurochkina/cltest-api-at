@@ -1,5 +1,6 @@
 package ui.cloud.tests.productCatalog.service;
 
+import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.json.JSONObject;
@@ -8,7 +9,10 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
 
+import java.io.File;
+
 import static steps.productCatalog.ServiceSteps.partialUpdateServiceById;
+import static steps.productCatalog.ServiceSteps.partialUpdateServiceByName;
 
 @Feature("Редактирование сервиса")
 public class EditServiceTest extends ServiceBaseTest {
@@ -92,6 +96,25 @@ public class EditServiceTest extends ServiceBaseTest {
                 .setExtraData("{\"test_value\":5}")
                 .saveWithManualVersion("999.999.999")
                 .checkVersionLimit();
+    }
+
+    @Test
+    @TmsLink("1130051")
+    @DisplayName("Загрузка иконки")
+    public void addIcon() {
+        partialUpdateServiceByName(service.getName(), new JSONObject().put("icon_store_id", JSONObject.NULL)
+                .put("icon_url", JSONObject.NULL));
+        new ControlPanelIndexPage()
+                .goToServicesListPagePC()
+                .findAndOpenServicePage(service.getName());
+        ServicePage page = new ServicePage();
+        page.getIconInput().getInput().uploadFile(new File("src/test/resources/json/productCatalog/products/importProduct.json"));
+        page.getIncorrectIconFormatHint().shouldBe(Condition.visible);
+        page.getIconInput().getInput().uploadFile(new File("src/test/resources/icons/largeImage.jpg"));
+        page.getIconTooLargeHint().shouldBe(Condition.visible);
+        page.getIconInput().getInput().uploadFile(new File("src/test/resources/icons/svgIcon.svg"));
+        page.saveWithoutPatchVersion(page.getSaveServiceAlertText());
+        page.getDeleteIconButton().shouldBe(Condition.visible);
     }
 
     @Test
