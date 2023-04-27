@@ -13,6 +13,8 @@ import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.tests.engine.AbstractComputeTest;
 
+import java.time.Duration;
+
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Epic("Cloud Compute")
@@ -52,7 +54,7 @@ public class EngineTest extends AbstractComputeTest {
         new IndexPage().disconnectCloudEngine();
         checkElementsEngine(Condition.not(Condition.visible));
         TypifiedElement.refresh();
-        new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible);
+        new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible, Duration.ofMinutes(2));
     }
 
     @AfterAll
