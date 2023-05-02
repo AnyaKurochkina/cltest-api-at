@@ -193,7 +193,8 @@ public class ProductCatalogSteps {
     public void deleteObjectByIdWithOutToken(String id) {
         new Http(ProductCatalogURL)
                 .setWithoutToken()
-                .delete(productName + id + "/").assertStatus(401);
+                .delete(productName + id + "/")
+                .assertStatus(401);
     }
 
     @Step("Поиск ID объекта продуктового каталога по имени с использованием multiSearch")
@@ -242,7 +243,6 @@ public class ProductCatalogSteps {
                 .patch(productName + id + "/");
     }
 
-    //todo "Получить сообщение, сравнить с ответом"
     @Step("Частичное обновление продукта без токена")
     public void partialUpdateObjectWithOutToken(String id, JSONObject object) {
         new Http(ProductCatalogURL)

@@ -89,10 +89,6 @@ public class Graph extends Entity implements IProductCatalog {
     @JsonProperty("default_item")
     private Object defaultItem;
 
-    @Builder.Default
-    protected transient ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps("/api/v1/graphs/",
-            "productCatalog/graphs/createGraph.json");
-
     @Override
     public Entity init() {
         return this;
@@ -179,7 +175,7 @@ public class Graph extends Entity implements IProductCatalog {
                         break;
                 }
             }
-            productCatalogSteps.getDeleteObjectResponse(id).assertStatus(204);
+            deleteGraphById(id);
         }
     }
 }
