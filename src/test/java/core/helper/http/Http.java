@@ -221,7 +221,7 @@ public class Http {
 
     @SneakyThrows
     @SuppressWarnings("deprecation")
-    private Response filterRequest() {
+    Response filterRequest() {
         Assertions.assertTrue(host.length() > 0, "Не задан host");
         int status = 0;
 //        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
@@ -271,7 +271,7 @@ public class Http {
             List<String> values;
             for (String key : getParamsUrl(params)) {
                 values = URLEncodedUtils.parse(params, StandardCharsets.UTF_8).stream().filter(s -> s.getName().equals(key)).map(NameValuePair::getValue).collect(Collectors.toList());
-                specification.params(key, values);
+                specification.queryParam(key, values);
             }
 
             String pathWithoutParameters = path.replaceFirst("\\?.*", "");
@@ -318,16 +318,6 @@ public class Http {
         if (isLogged)
             log.debug(String.format("RESPONSE (%d) (%s): %s\n\n", Objects.requireNonNull(response).getStatusCode(), response.getHeader("x-request-id"), response.getBody().asPrettyString()));
         return new Response(response, this);
-    }
-
-    public static class StatusResponseException extends AssertionError {
-        @Getter
-        int status;
-
-        public StatusResponseException(String errorMessage, int status) {
-            super(errorMessage);
-            this.status = status;
-        }
     }
 
     @SneakyThrows

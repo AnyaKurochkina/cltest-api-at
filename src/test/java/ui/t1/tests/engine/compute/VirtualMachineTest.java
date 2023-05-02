@@ -69,7 +69,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @TmsLink("1248392")
     @DisplayName("Cloud Compute. Виртуальные машины. Создание Образ Fedora")
     void createAltPlatform() {
-        new IndexPage().goToVirtualMachine().addVm()
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(new SelectBox.Image("Fedora", "36"))
                 .setName(getRandomName())
@@ -77,7 +77,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-//        new VmList().selectCompute(vm.getName()).checkCreate().delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).checkCreate().delete();
     }
 
     @Test
@@ -122,6 +122,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 }).count(), "Должен быть один item с новим orderId, size и parent=null");
 
         new IndexPage().goToDisks().selectDisk(name).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).checkCreate().delete();
     }
 
     @Test

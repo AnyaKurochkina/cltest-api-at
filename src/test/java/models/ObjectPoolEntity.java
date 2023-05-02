@@ -2,6 +2,7 @@ package models;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.gson.Gson;
 import core.enums.ObjectStatus;
 import core.exception.CreateEntityException;
@@ -13,10 +14,12 @@ import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.ThreadInfo;
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.stream.Collectors;
 
 import static core.helper.StringUtils.getStackTrace;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ;
@@ -60,6 +63,10 @@ public class ObjectPoolEntity {
         String that = new Gson().toJson(o, o.getClass());
         JsonNode jsonNodeThis = mapper.readTree(entity);
         JsonNode jsonNodeThat = mapper.readTree(that);
+        List<Field> ignoredFields = Arrays.stream(o.getClass().getDeclaredFields())
+                .filter(field -> field.isAnnotationPresent(Entity.Ignore.class))
+                .collect(Collectors.toList());
+        ignoredFields.forEach(field -> ((ObjectNode)jsonNodeThat).remove(field.getName()));
         removeEmptyNode(jsonNodeThis);
         removeEmptyNode(jsonNodeThat);
         removeNode(removeSystemNode(jsonNodeThis), removeSystemNode(jsonNodeThat));
