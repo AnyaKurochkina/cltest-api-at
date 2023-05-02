@@ -26,7 +26,6 @@ public class CloudDirectorPage {
 
     @Step("Создание VMware организации с именем {name}")
     public String create(String name) {
-      //  createButton.click();
         new VmWareOrganizationList().clickAdd();
         String organizationName = PREFIX + name;
         Dialog dialog = Dialog.byTitle("Создать VMware организацию");
@@ -62,6 +61,11 @@ public class CloudDirectorPage {
     public VMwareOrganizationPage goToOrganization(String name) {
         new VmWareOrganizationList().getRowByColumnValue(VmWareOrganizationList.ORGANIZATION_NAME, name).get().click();
         return new VMwareOrganizationPage();
+    }
+
+    public boolean isOrganizationExist(String name) {
+        new VmWareOrganizationList().isColumnValueEquals("Название организации", name);
+        return true;
     }
 
     private static class VmWareOrganizationList extends DataTable {
