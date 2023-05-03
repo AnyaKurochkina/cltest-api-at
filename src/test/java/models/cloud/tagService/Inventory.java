@@ -2,8 +2,6 @@ package models.cloud.tagService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.StringUtils;
@@ -12,8 +10,8 @@ import lombok.*;
 import models.Entity;
 import models.cloud.tagService.v1.FilterResultItemV1;
 import models.cloud.tagService.v1.FilterResultV1;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.FilterResultV2;
-import models.cloud.tagService.v2.FilterResultItemV2;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.json.JSONObject;
 import steps.resourceManager.ResourceManagerSteps;
@@ -60,7 +58,7 @@ public class Inventory extends Entity {
         StringUtils.copyAvailableFields(inventory, this);
     }
 
-    public FilterResultItemV2 inventoryListItemV2(FilterResultV2 filterResult) {
+    public FilterResultV2 inventoryListItemV2(FilterResultV2Page filterResult) {
         return filterResult.getList().stream().filter(i -> i.getInventory().equals(id)).findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Не найден item с id " + id));
     }

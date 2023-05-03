@@ -8,8 +8,8 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.tagService.*;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.FilterResultV2;
-import models.cloud.tagService.v2.FilterResultItemV2;
 import models.cloud.tagService.v2.InventoryTagsV2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -45,7 +45,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), Collections.singletonList("value_1")))
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), Collections.singletonList("value_2"))))
                 .build();
-        FilterResultV2 filterResult = inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(iList.get(0).getId(), filterResult.getList().get(0).getInventory(), "Нейден неверный inventory");
     }
@@ -71,7 +71,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), Collections.singletonList("value_2")))
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), Arrays.asList("value_2", "value_5"))))
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(3, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertAll("Не найден inventory",
                 () -> Assertions.assertTrue(filterResult.stream().anyMatch(e -> e.getInventory().equals(iList.get(0).getId())), "inventory"),
@@ -104,7 +104,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .tags(new Filter.Tag().addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), Collections.singletonList("value_1"))))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(filterResult.getList().get(0).getInventory(), iList.get(0).getId(), "Неверный inventory");
     }
@@ -136,7 +136,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), Collections.singletonList("value_1"))))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(filterResult.getList().get(0).getInventory(), iList.get(3).getId(), "Неверный inventory");
     }
@@ -167,9 +167,9 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .addOrderDesc(tList.get(2).getKey())
                 .build();
 
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter, query);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter, query);
 
-        Assertions.assertEquals(filterResult.stream().map(FilterResultItemV2::getInventory).collect(Collectors.toList()),
+        Assertions.assertEquals(filterResult.stream().map(FilterResultV2::getInventory).collect(Collectors.toList()),
                 Arrays.asList(iList.get(2).getId(), iList.get(3).getId(), iList.get(0).getId(), iList.get(1).getId(), iList.get(4).getId()), "Неверный список inventory");
     }
 
@@ -202,7 +202,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .impersonate(KeyCloakSteps.getUserInfo(Role.CLOUD_ADMIN))
                 .tags(new Filter.Tag().addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), tagValue)))
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(4, filterResult.getList().size(), "Неверное кол-во inventories");
     }
 
@@ -257,8 +257,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .dataSources(Arrays.asList(dataSourceSecond, dataSourceFirst))
                 .build();
 
-        FilterResultV2 firstResult = TagServiceSteps.inventoryFilterV2(context, filterFirst);
-        FilterResultV2 secondResult = TagServiceSteps.inventoryFilterV2(context, filterSecond);
+        FilterResultV2Page firstResult = TagServiceSteps.inventoryFilterV2(context, filterFirst);
+        FilterResultV2Page secondResult = TagServiceSteps.inventoryFilterV2(context, filterSecond);
         Assertions.assertAll("Неверное количество иневентори",
                 () -> Assertions.assertEquals(1, firstResult.getMeta().getTotalCount()),
                 () -> Assertions.assertEquals(2, secondResult.getMeta().getTotalCount()));
@@ -288,8 +288,8 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .inventoryTypes(Arrays.asList(DEFAULT_TYPE, otherType))
                 .build();
 
-        FilterResultV2 firstResult = TagServiceSteps.inventoryFilterV2(context, filterFirst);
-        FilterResultV2 secondResult = TagServiceSteps.inventoryFilterV2(context, filterSecond);
+        FilterResultV2Page firstResult = TagServiceSteps.inventoryFilterV2(context, filterFirst);
+        FilterResultV2Page secondResult = TagServiceSteps.inventoryFilterV2(context, filterSecond);
         Assertions.assertAll("Неверное количество иневентори",
                 () -> Assertions.assertEquals(1, firstResult.getMeta().getTotalCount()),
                 () -> Assertions.assertEquals(2, secondResult.getMeta().getTotalCount()));
@@ -307,7 +307,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .inventoryPks(Collections.singletonList(iList.get(0).getId()))
                 .build();
 
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(filterResult.getList().get(0).getInventory(), iList.get(0).getId(), "Неверный inventory");
     }
@@ -337,7 +337,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .roles(Collections.singletonList("qa-admin1"))
                 .tags(new Filter.Tag().addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), tagValue)))
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(2, filterResult.getList().size(), "Неверное кол-во inventories");
         Assertions.assertAll("Нет inventory в списке", () -> iList.get(0).inventoryListItemV2(filterResult),
                 () -> iList.get(2).inventoryListItemV2(filterResult));
@@ -360,7 +360,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .requiredTags(Collections.singletonList(tList.get(0).getKey()))
                 .tags(new Filter.Tag().addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), tagValue)))
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(filterResult.getList().get(0).getInventory(), iList.get(0).getId(), "Неверные inventory");
     }
 }
