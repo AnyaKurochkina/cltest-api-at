@@ -2,7 +2,6 @@ package api.cloud.productCatalog.orgDirection;
 
 import api.Tests;
 import core.helper.http.Response;
-import httpModels.productCatalog.GetImpl;
 import httpModels.productCatalog.ItemImpl;
 import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
 import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
@@ -24,6 +23,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.OrgDirectionSteps.*;
 
 @Tag("product_catalog")
 @Tag("org_direction")
@@ -40,12 +40,8 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void createOrgDirection() {
         String orgName = "org_direction_at_test-:2022.";
-        OrgDirection orgDirection = OrgDirection.builder()
-                .name(orgName)
-                .title("title_org_direction_at_test-:2022.")
-                .build()
-                .createObject();
-        GetImpl getOrgDirection = steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
+        OrgDirection orgDirection = createOrgDirectionByName(orgName);
+        OrgDirection getOrgDirection = getOrgDirectionById(orgDirection.getId());
         assertEquals(orgName, getOrgDirection.getName());
     }
 
@@ -64,7 +60,7 @@ public class OrgDirectionTest extends Tests {
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetOrgDirectionResponse actualOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
+        OrgDirection actualOrgDirection = getOrgDirectionById(orgDirection.getId());
         assertFalse(actualOrgDirection.getIconStoreId().isEmpty());
         assertFalse(actualOrgDirection.getIconUrl().isEmpty());
     }
@@ -90,8 +86,8 @@ public class OrgDirectionTest extends Tests {
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetOrgDirectionResponse actualFirstOrgDirection = (GetOrgDirectionResponse) steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
-        GetOrgDirectionResponse actualSecondOrgDirection = (GetOrgDirectionResponse) steps.getById(secondOrgDirection.getId(), GetOrgDirectionResponse.class);
+        OrgDirection actualFirstOrgDirection = getOrgDirectionById(orgDirection.getId());
+        OrgDirection actualSecondOrgDirection = getOrgDirectionById(secondOrgDirection.getId());
         assertEquals(actualFirstOrgDirection.getIconUrl(), actualSecondOrgDirection.getIconUrl());
         assertEquals(actualFirstOrgDirection.getIconStoreId(), actualSecondOrgDirection.getIconStoreId());
     }
@@ -106,21 +102,17 @@ public class OrgDirectionTest extends Tests {
                 .title("title_org_direction_at_test-:2022.")
                 .build()
                 .createObject();
-        Assertions.assertTrue(steps.isExists(orgName));
-        Assertions.assertFalse(steps.isExists("NoExistsAction"));
+        Assertions.assertTrue(isOrgDirectionExists(orgName));
+        Assertions.assertFalse(isOrgDirectionExists("NoExistsAction"));
     }
 
     @DisplayName("Получение направления по Id")
     @TmsLink("643313")
     @Test
-    public void getOrgDirectionById() {
+    public void getOrgDirectionByIdTest() {
         String orgName = "get_by_id_org_direction_test_api";
-        OrgDirection orgDirection = OrgDirection.builder()
-                .name(orgName)
-                .title("title_org_direction_at_test-:2022.")
-                .build()
-                .createObject();
-        GetImpl productCatalogGet = steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class);
+        OrgDirection orgDirection = createOrgDirectionByName(orgName);
+        OrgDirection productCatalogGet = getOrgDirectionById(orgDirection.getId());
         Assertions.assertEquals(productCatalogGet.getName(), orgName);
     }
 
@@ -129,14 +121,10 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void updateOrgDirection() {
         String orgName = "update_org_direction_test_api";
-        OrgDirection orgDirection = OrgDirection.builder()
-                .name(orgName)
-                .title("title_org_direction_at_test-:2022.")
-                .build()
-                .createObject();
+        OrgDirection orgDirection = createOrgDirectionByName(orgName);
         String expected = "Update description";
-        steps.partialUpdateObject(orgDirection.getId(), new JSONObject().put("description", expected));
-        String actual = steps.getById(orgDirection.getId(), GetOrgDirectionResponse.class).getDescription();
+        partialUpdateOrgDirection(orgDirection.getId(), new JSONObject().put("description", expected));
+        String actual = getOrgDirectionById(orgDirection.getId()).getDescription();
         Assertions.assertEquals(expected, actual);
     }
 
@@ -145,16 +133,12 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void copyOrgDirectionById() {
         String orgName = "copy_by_id_org_direction_test_api";
-        OrgDirection orgDirection = OrgDirection.builder()
-                .name(orgName)
-                .title("title_org_direction_at_test-:2022.")
-                .build()
-                .createObject();
+        OrgDirection orgDirection = getOrgDirectionByName(orgName);
         String cloneName = orgName + "-clone";
-        steps.copyById(orgDirection.getId());
-        Assertions.assertTrue(steps.isExists(cloneName));
-        steps.deleteByName(cloneName, GetOrgDirectionListResponse.class);
-        Assertions.assertFalse(steps.isExists(cloneName));
+        copyOrgDirection(orgDirection.getId());
+        Assertions.assertTrue(isOrgDirectionExists(cloneName));
+        deleteOrgDirectionByName(cloneName);
+        Assertions.assertFalse(isOrgDirectionExists(cloneName));
     }
 
     @DisplayName("Проверка сортировки по дате создания в направлениях")

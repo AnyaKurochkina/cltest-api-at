@@ -1,16 +1,22 @@
 package api.cloud.productCatalog.jinja;
 
+import api.Tests;
+import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.Jinja2Steps.*;
 
 @Tag("product_catalog")
 @Tag("Jinja")
@@ -19,19 +25,14 @@ import api.Tests;
 @DisabledIfEnv("prod")
 public class JinjaNegativeTest extends Tests {
 
-    String template = "productCatalog/jinja2/createJinja.json";
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/jinja2_templates/", template);
-
     @DisplayName("Негативный тест на копирование jinja по Id без токена")
     @TmsLink("660110")
     @Test
     public void copyJinjaByIdWithOutToken() {
         String jinjaName = "copy_with_out_jinja_test_api";
-        Jinja2Template jinja2 = Jinja2Template.builder()
-                .name(jinjaName)
-                .build()
-                .createObject();
-        steps.copyByIdWithOutToken(jinja2.getId());
+        Jinja2Template jinja2 = createJinja(jinjaName);
+        String errorMessage = copyJinja2ByIdWithOutToken(jinja2.getId()).jsonPath().getString("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 
     @DisplayName("Негативный тест на получение jinja по Id без токена")
@@ -39,11 +40,9 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void getJinjaByIdWithOutToken() {
         String jinjaName = "get_by_id_with_out_jinja_test_api";
-        Jinja2Template jinja2 = Jinja2Template.builder()
-                .name(jinjaName)
-                .build()
-                .createObject();
-        steps.getByIdWithOutToken(jinja2.getId());
+        Jinja2Template jinja2 = createJinja(jinjaName);
+        String errorMessage = getJinja2ByIdWithOutToken(jinja2.getId()).jsonPath().getString("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 
     @DisplayName("Негативный тест на обновление jinja по Id без токена")
@@ -51,12 +50,10 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void updateJinjaByIdWithOutToken() {
         String jinjaName = "update_with_out_jinja_test_api";
-        Jinja2Template jinja2 = Jinja2Template.builder()
-                .name(jinjaName)
-                .build()
-                .createObject();
-        steps.partialUpdateObjectWithOutToken(jinja2.getId(),
-                new JSONObject().put("description", "UpdateDescription"));
+        Jinja2Template jinja2 = createJinja(jinjaName);
+        String errorMessage = partialUpdateJinja2WithOutToken(jinja2.getId(),
+                new JSONObject().put("description", "UpdateDescription")).jsonPath().getString("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание jinja с неуникальным именем")
@@ -64,45 +61,47 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void createJinjaWithNonUniqueName() {
         String jinjaName = "update_with_out_jinja_test_api";
-        Jinja2Template.builder()
+        createJinja(jinjaName);
+        String errorMessage = createJinja(Role.PRODUCT_CATALOG_ADMIN, Jinja2Template.builder()
                 .name(jinjaName)
                 .build()
-                .createObject();
-        steps.createProductObject(steps.createJsonObject(jinjaName)).assertStatus(400);
+                .toJson())
+                .assertStatus(400)
+                .extractAs(ErrorMessage.class)
+                .getMessage();
+        assertEquals("jinja2 template с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание jinja с недопустимыми символами в имени")
     @TmsLink("660126")
-    @Test
-    public void createJinjaWithInvalidCharacters() {
-        Jinja2Template.builder()
-                .name("NameWithUppercase")
+    @ParameterizedTest
+    @ValueSource(strings = {"NameWithUppercase", "nameWithUppercaseInMiddle", "имя", "Имя", "a&b&c"})
+    public void createJinjaWithInvalidCharacters(String name) {
+        JSONObject jsonObject = Jinja2Template.builder()
+                .name(name)
                 .build()
-                .negativeCreateRequest(400);
-        Jinja2Template.builder()
-                .name("nameWithUppercaseInMiddle")
+                .toJson();
+        String errorMessage = createJinjaResponse(jsonObject)
+                .assertStatus(400)
+                .extractAs(ErrorMessage.class)
+                .getMessage();
+        assertEquals(String.format("Нельзя создать экземпляр (Jinja2Template) с именем (%s)", name), errorMessage);
+    }
+
+    @DisplayName("Негативный тест на создание jinja с пустым полем name")
+    @TmsLink("1620525")
+    @ParameterizedTest
+    @ValueSource(strings = {"", " "})
+    public void createJinjaWithEmptyNameTest(String name) {
+        JSONObject jsonObject = Jinja2Template.builder()
+                .name(name)
                 .build()
-                .negativeCreateRequest(400);
-        Jinja2Template.builder()
-                .name("имя")
-                .build()
-                .negativeCreateRequest(400);
-        Jinja2Template.builder()
-                .name("Имя")
-                .build()
-                .negativeCreateRequest(400);
-        Jinja2Template.builder()
-                .name("a&b&c")
-                .build()
-                .negativeCreateRequest(400);
-        Jinja2Template.builder()
-                .name("")
-                .build()
-                .negativeCreateRequest(400);
-        Jinja2Template.builder()
-                .name(" ")
-                .build()
-                .negativeCreateRequest(400);
+                .toJson();
+        String errorMessage = createJinjaResponse(jsonObject)
+                .assertStatus(400)
+                .extractAs(ErrorMessage.class)
+                .getMessage();
+        assertEquals("Это поле не может быть пустым.", errorMessage);
     }
 
     @DisplayName("Негативный тест на удаление jinja без токена")
@@ -110,10 +109,8 @@ public class JinjaNegativeTest extends Tests {
     @Test
     public void deleteJinjaWithOutToken() {
         String jinjaName = "delete_with_out_jinja_test_api";
-        Jinja2Template jinja2 = Jinja2Template.builder()
-                .name(jinjaName)
-                .build()
-                .createObject();
-        steps.deleteObjectByIdWithOutToken(jinja2.getId());
+        Jinja2Template jinja2 = createJinja(jinjaName);
+        String errorMessage = deleteJinja2ByIdWithOutToken(jinja2.getId()).jsonPath().getString("error.message");
+        assertEquals("Unauthorized", errorMessage);
     }
 }
