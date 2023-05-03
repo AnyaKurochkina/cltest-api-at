@@ -30,6 +30,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
+        //product.setProductName("ScyllaDB Cluster RHEL"); //Для RHEL версии
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -41,6 +42,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
+                .expandProductsList()
                 .selectProduct(product.getProductName());
         ScyllaDbClusterOrderPage orderPage = new ScyllaDbClusterOrderPage();
 
