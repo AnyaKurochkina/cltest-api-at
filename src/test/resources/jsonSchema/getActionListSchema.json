@@ -119,6 +119,7 @@
             "restricted_developers",
             "icon_url",
             "is_safe",
+            "is_delayable",
             "icon_store_id",
             "context_restrictions"
           ]
