@@ -35,11 +35,11 @@ import static steps.keyCloak.KeyCloakSteps.getNewUserToken;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ProductCatalogSteps {
-    String entityName;
+    String productName;
     String templatePath;
 
-    public ProductCatalogSteps(String entityName) {
-        this.entityName = entityName;
+    public ProductCatalogSteps(String productName) {
+        this.productName = productName;
     }
 
     @Step("Импорт нескольких {entityName}")
@@ -91,7 +91,7 @@ public class ProductCatalogSteps {
     public Response dumpToBitbucket(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(entityName + id + "/dump_to_bitbucket/")
+                .post(productName + id + "/dump_to_bitbucket/")
                 .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
                 .assertStatus(201);
     }
@@ -101,7 +101,7 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
-                .post(entityName + "load_from_bitbucket/")
+                .post(productName + "load_from_bitbucket/")
                 .assertStatus(200);
     }
 
@@ -109,7 +109,7 @@ public class ProductCatalogSteps {
     public MetaImpl getMeta(Class<?> clazz) {
         return ((GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName)
+                .get(productName)
                 .assertStatus(200)
                 .extractAs(clazz)).getMeta();
     }
@@ -119,14 +119,14 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
-                .post(entityName);
+                .post(productName);
     }
 
     @Step("Проверка существования объекта продуктового каталога по имени")
     public boolean isExists(String name) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + "exists/?name=" + name)
+                .get(productName + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
     }
 
@@ -134,7 +134,7 @@ public class ProductCatalogSteps {
     public GetImpl getById(String objectId, Class<?> clazz) {
         return (GetImpl) new Http(ProductCatalogURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
-                .get(entityName + objectId + "/")
+                .get(productName + objectId + "/")
                 .extractAs(clazz);
     }
 
@@ -142,14 +142,14 @@ public class ProductCatalogSteps {
     public void getByIdWithOutToken(String objectId) {
         new Http(ProductCatalogURL).setWithoutToken()
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + objectId + "/").assertStatus(401);
+                .get(productName + objectId + "/").assertStatus(401);
     }
 
     @Step("Копирование объекта продуктового каталога по Id")
     public void copyById(String objectId) {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(entityName + objectId + "/copy/")
+                .post(productName + objectId + "/copy/")
                 .assertStatus(200);
     }
 
@@ -158,7 +158,7 @@ public class ProductCatalogSteps {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .setWithoutToken()
-                .post(entityName + objectId + "/copy/")
+                .post(productName + objectId + "/copy/")
                 .assertStatus(401);
     }
 
@@ -166,7 +166,7 @@ public class ProductCatalogSteps {
     public void exportById(String objectId) {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + objectId + "/obj_export/")
+                .get(productName + objectId + "/obj_export/")
                 .assertStatus(200);
     }
 
@@ -180,7 +180,7 @@ public class ProductCatalogSteps {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
-                .put(entityName + objectId + "/")
+                .put(productName + objectId + "/")
                 .assertStatus(200);
     }
 
@@ -193,7 +193,8 @@ public class ProductCatalogSteps {
     public void deleteObjectByIdWithOutToken(String id) {
         new Http(ProductCatalogURL)
                 .setWithoutToken()
-                .delete(entityName + id + "/").assertStatus(401);
+                .delete(productName + id + "/")
+                .assertStatus(401);
     }
 
     @Step("Поиск ID объекта продуктового каталога по имени с использованием multiSearch")
@@ -201,7 +202,7 @@ public class ProductCatalogSteps {
         String objectId = null;
         List<ItemImpl> list = ((GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + "?include=total_count&page=1&per_page=50&multisearch=" + name)
+                .get(productName + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(clazz)).getItemsList();
         for (ItemImpl item : list) {
             if (item.getName().equals(name)) {
@@ -220,7 +221,7 @@ public class ProductCatalogSteps {
         String productNameWithEncode = URLEncoder.encode(title, StandardCharsets.UTF_8.name());
         return Objects.requireNonNull(new Http(ProductCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
-                .get("{}?multisearch={}&{}", entityName, productNameWithEncode, parameters)
+                .get("{}?multisearch={}&{}", productName, productNameWithEncode, parameters)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("list.find{it.title.toLowerCase()=='" + title.toLowerCase() + "'}.id"), "ID продукта: " + title + " не найден");
@@ -239,30 +240,29 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
-                .patch(entityName + id + "/");
+                .patch(productName + id + "/");
     }
 
-    //todo "Получить сообщение, сравнить с ответом"
     @Step("Частичное обновление продукта без токена")
     public void partialUpdateObjectWithOutToken(String id, JSONObject object) {
         new Http(ProductCatalogURL)
                 .setWithoutToken()
                 .body(object)
-                .patch(entityName + id + "/")
+                .patch(productName + id + "/")
                 .assertStatus(401);
     }
 
     public Response getDeleteObjectResponse(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(entityName + id + "/");
+                .delete(productName + id + "/");
     }
 
     @Step("Получение списка объектов продуктового каталога по фильтру")
-    public List<ItemImpl> getObjectsList(Class<?> clazz, String filter) {
+    public List<ItemImpl> getProductObjectList(Class<?> clazz, String filter) {
         return ((GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + filter)
+                .get(productName + filter)
                 .assertStatus(200)
                 .extractAs(clazz)).getItemsList();
     }
@@ -270,7 +270,7 @@ public class ProductCatalogSteps {
     public JsonPath getJsonPath(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + id + "/")
+                .get(productName + id + "/")
                 .assertStatus(200).jsonPath();
     }
 
@@ -278,7 +278,7 @@ public class ProductCatalogSteps {
     public GetListImpl getObjectByTitle(String title, Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + "?title=" + title)
+                .get(productName + "?title=" + title)
                 .assertStatus(200)
                 .extractAs(clazz);
     }
@@ -287,7 +287,7 @@ public class ProductCatalogSteps {
     public GetListImpl orderingByCreateData(Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + "?ordering=create_dt")
+                .get(productName + "?ordering=create_dt")
                 .assertStatus(200)
                 .extractAs(clazz);
     }
@@ -296,7 +296,7 @@ public class ProductCatalogSteps {
     public GetListImpl orderingByUpDateData(Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + "?ordering=update_dt")
+                .get(productName + "?ordering=update_dt")
                 .assertStatus(200)
                 .extractAs(clazz);
     }
@@ -305,7 +305,7 @@ public class ProductCatalogSteps {
     public GetListImpl orderingByStatus(Class<?> clazz) {
         return (GetListImpl) new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(entityName + "?ordering=status")
+                .get(productName + "?ordering=status")
                 .assertStatus(200)
                 .extractAs(clazz);
     }
@@ -314,7 +314,7 @@ public class ProductCatalogSteps {
     public Response getObjectByNameWithPublicToken(String name) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
-                .get(entityName + "?name=" + name);
+                .get(productName + "?name=" + name);
     }
 
     @Step("Создание объекта продуктового каталога с публичным токеном")
@@ -322,7 +322,7 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .body(body)
-                .post(entityName);
+                .post(productName);
     }
 
     @Step("Обновление объекта продуктового каталога с публичным токеном")
@@ -330,14 +330,14 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .body(object)
-                .patch(entityName + id + "/");
+                .patch(productName + id + "/");
     }
 
     @Step("Удаление объекта продуктового каталога с публичным токеном")
     public Response deleteObjectWithPublicToken(String id) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
-                .delete(entityName + id + "/");
+                .delete(productName + id + "/");
     }
 
     @Step("Обновление всего объекта продуктового каталога по Id с публичным токеном")
@@ -345,7 +345,7 @@ public class ProductCatalogSteps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .body(body)
-                .put(entityName + objectId + "/");
+                .put(productName + objectId + "/");
     }
 
     @Step("Проверка сортировки списка")
