@@ -69,12 +69,12 @@ public class TagServiceSteps {
                 .extractAs(InventoryV2Page.class);
     }
 
-    public static InventoryTagListV2 inventoryTagListV2(Context context, String inventory) {
+    public static InventoryTagListV2Page inventoryTagListV2(Context context, String inventory) {
         return new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .get("/v2/{}/{}/inventories/{}/inventory-tags/", context.getType(), context.getId(), inventory)
                 .assertStatus(200)
-                .extractAs(InventoryTagListV2Page.class).getList().get(0);
+                .extractAs(InventoryTagListV2Page.class);
     }
 
     public static void inventoryTagsV1(Context context, InventoryTagsV1 inventoryTags) {

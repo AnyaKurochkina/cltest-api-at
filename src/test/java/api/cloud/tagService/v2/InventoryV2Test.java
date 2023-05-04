@@ -1,13 +1,16 @@
 package api.cloud.tagService.v2;
 
 import api.cloud.tagService.AbstractInventoryTest;
+import core.helper.http.AssertResponse;
 import core.helper.http.QueryBuilder;
+import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.cloud.tagService.*;
 import models.cloud.tagService.v1.InventoryTagsV1;
+import models.cloud.tagService.v2.InventoryTagListV2Page;
 import models.cloud.tagService.v2.InventoryV2Page;
 import models.cloud.tagService.v2.InventoryTagListV2;
 import org.junit.jupiter.api.Assertions;
@@ -58,11 +61,34 @@ public class InventoryV2Test extends AbstractInventoryTest {
     @DisplayName("Inventory V2. GET inventory-tags")
     void inventoryTagsList() {
         String tagValue = "inventoryTagsList";
-        Tag tag = generateTags(1).get(0);
+        List<Tag> tags = generateTags(2);
         Inventory inventory = generateInventories(1).get(0);
-        inventoryTagsV1(context, InventoryTagsV1.builder().tag(tag.getId()).inventory(inventory.getId()).value(tagValue).build());
-        InventoryTagListV2 inventoryTagList =  TagServiceSteps.inventoryTagListV2(context, inventory.getId());
+        inventoryTagsV1(context, InventoryTagsV1.builder().tag(tags.get(0).getId()).inventory(inventory.getId()).value(tagValue).build());
+        inventoryTagsV1(context, InventoryTagsV1.builder().tag(tags.get(1).getId()).inventory(inventory.getId()).value(tagValue).build());
+        InventoryTagListV2Page inventoryTagList =  TagServiceSteps.inventoryTagListV2(context, inventory.getId());
+        Assertions.assertAll("Проверка inventoryTagList",
+                () -> Assertions.assertEquals(2, inventoryTagList.getMeta().getTotalCount()),
+                () -> Assertions.assertEquals(2, inventoryTagList.stream().map(e -> e.getInventory().getId().equals(inventory.getId())).count()),
+                () -> Assertions.assertTrue(inventoryTagList.stream().anyMatch(e -> e.getTag().equals(tags.get(0)))),
+                () -> Assertions.assertTrue(inventoryTagList.stream().anyMatch(e -> e.getTag().equals(tags.get(1)))));
     }
 
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Delete")
+    void inventoriesDelete() {
+        Inventory inventory = generateInventories(1).get(0);
+        inventory.delete();
+        AssertResponse.run(() -> TagServiceSteps.inventoryTagListV2(context, inventory.getId())).status(404);
+    }
 
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Replace ContextPatch")
+    void inventoryReplaceContextPatch() {
+        Inventory inventory = generateInventories(1).get(0);
+        Project project = Project.builder().projectName("API. inventoryReplaceContextPatch").build().createObject();
+        Context context = Context.byId(project.getId());
+        AssertResponse.run(() -> TagServiceSteps.inventoryTagListV2(context, inventory.getId())).status(404);
+    }
 }

@@ -69,7 +69,7 @@ public class Inventory extends Entity {
     }
 
     @Override
-    protected void delete() {
+    public void delete() {
         new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())

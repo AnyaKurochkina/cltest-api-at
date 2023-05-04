@@ -13,12 +13,18 @@ import java.util.List;
 
 @Data
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class InventoryTagListV2 {
     String id;
     Inventory inventory;
     Tag tag;
     String value;
     String author;
-    Object authorInfo;
+    AuthorInfo authorInfo;
+
+    @Data
+    public static class AuthorInfo {
+        String email;
+        String lastName;
+        String firstName;
+    }
 }
