@@ -124,7 +124,6 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 }).count(), "Должен быть один item с новим orderId, size и parent=null");
 
         new IndexPage().goToDisks().selectDisk(name).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).checkCreate().delete();
     }
 
     @Test
