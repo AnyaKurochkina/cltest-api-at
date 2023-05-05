@@ -227,7 +227,6 @@ public class StateServiceSteps extends Steps {
     public static Response getItemsListWithAllChild(String filter, String value) {
         return new Http(StateServiceURL)
                 .withServiceToken()
-            //    .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/all_children_list/?{}={}", filter, value)
                 .assertStatus(200);
 

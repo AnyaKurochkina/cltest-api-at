@@ -7,6 +7,7 @@ import io.qameta.allure.Step;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.jinja2.GetJinja2List;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
+import org.json.JSONObject;
 import steps.Steps;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public class Jinja2Steps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(jinjaUrl)
-               // .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
+                // .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetJinja2List.class).getList();
     }
@@ -52,12 +53,46 @@ public class Jinja2Steps extends Steps {
                 .assertStatus(204);
     }
 
+    @Step("Удаление jinja2 по id {id}")
+    public static void deleteJinjaById(String id) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(jinjaUrl + id + "/")
+                .assertStatus(204);
+    }
+
     @Step("Создание шаблона Jinja2")
     public static Jinja2Template createJinja(String name) {
         return Jinja2Template.builder()
                 .name(name)
                 .build()
                 .createObject();
+    }
+
+    @Step("Создание шаблона Jinja2")
+    public static Jinja2Template createJinja(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(jinjaUrl)
+                .assertStatus(201)
+                .extractAs(Jinja2Template.class);
+    }
+
+    @Step("Создание шаблона Jinja2")
+    public static Response createJinjaResponse(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(jinjaUrl);
+    }
+
+    @Step("Создание шаблона Jinja2")
+    public static Response createJinja(Role role, JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(role)
+                .body(body)
+                .post(jinjaUrl);
     }
 
     @Step("Экспорт jinja2 по Id")
@@ -75,5 +110,131 @@ public class Jinja2Steps extends Steps {
                 .get(jinjaUrl)
                 .assertStatus(200)
                 .extractAs(GetJinja2List.class).getMeta();
+    }
+
+    @Step("Сортировка jinja2 по дате создания")
+    public static GetJinja2List orderingJinja2ByCreateData() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(jinjaUrl + "?ordering=create_dt")
+                .assertStatus(200)
+                .extractAs(GetJinja2List.class);
+    }
+
+    @Step("Сортировка jinja2 по дате обновления")
+    public static GetJinja2List orderingJinja2ByUpDateData() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(jinjaUrl + "?ordering=update_dt")
+                .assertStatus(200)
+                .extractAs(GetJinja2List.class);
+    }
+
+    @Step("Получение jinja2 по имени с публичным токеном")
+    public static Response getJinja2ByNameWithPublicToken(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+                .get(jinjaUrl + "?name=" + name);
+    }
+
+    @Step("Обновление jinja2 с публичным токеном")
+    public static Response partialUpdateJinja2WithPublicToken(Role role, String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(role)
+                .body(object)
+                .patch(jinjaUrl + id + "/");
+    }
+
+    @Step("Частичное обновление jinja2")
+    public static Response partialUpdateJinja2(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(jinjaUrl + id + "/");
+    }
+
+    @Step("Обновление всего jinja2 по Id")
+    public static void putJinja2ById(String objectId, JSONObject body) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .put(jinjaUrl + objectId + "/")
+                .assertStatus(200);
+    }
+
+    @Step("Обновление всего jinja2 по Id с публичным токеном")
+    public static Response putJinja2ByIdWithPublicToken(Role role, String objectId, JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(role)
+                .body(body)
+                .put(jinjaUrl + objectId + "/");
+    }
+
+    @Step("Удаление jinja2 с публичным токеном")
+    public static Response deleteJinja2WithPublicToken(Role role, String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(role)
+                .delete(jinjaUrl + id + "/");
+    }
+
+    @Step("Копирование jinja2 по Id")
+    public static void copyJinja2ById(String objectId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(jinjaUrl + objectId + "/copy/")
+                .assertStatus(200);
+    }
+
+    @Step("Копирование jinja2 по Id без ключа")
+    public static Response copyJinja2ByIdWithOutToken(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setWithoutToken()
+                .post(jinjaUrl + objectId + "/copy/")
+                .assertStatus(401);
+    }
+
+    @Step("Получение jinja2 по Id без токена")
+    public static Response getJinja2ByIdWithOutToken(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(jinjaUrl + objectId + "/")
+                .assertStatus(401);
+    }
+
+    @Step("Удаление jinja2 по Id без токена")
+    public static Response deleteJinja2ByIdWithOutToken(String id) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .delete(jinjaUrl + id + "/")
+                .assertStatus(401);
+    }
+
+    @Step("Частичное обновление jinja2 без токена")
+    public static Response partialUpdateJinja2WithOutToken(String id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setWithoutToken()
+                .body(object)
+                .patch(jinjaUrl + id + "/")
+                .assertStatus(401);
+    }
+
+    @Step("Загрузка jinja2 в Gitlab")
+    public static Response dumpJinja2ToBitbucket(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(jinjaUrl + id + "/dump_to_bitbucket/")
+                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
+                .assertStatus(201);
+    }
+
+    @Step("Выгрузка jinja2 из Gitlab")
+    public static Response loadJinja2FromBitbucket(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(jinjaUrl + "load_from_bitbucket/")
+                .assertStatus(200);
     }
 }

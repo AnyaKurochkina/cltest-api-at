@@ -2,6 +2,7 @@ package api.cloud.roles;
 
 import core.enums.Role;
 import core.helper.http.Http;
+import core.helper.http.StatusResponseException;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import models.cloud.authorizer.Project;
@@ -33,7 +34,7 @@ public class OrderAdminTest extends Tests {
         Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
         AccessGroup.builder().projectName(project.getId()).build().negativeCreateRequest(403);
         accessGroup.negativeDeleteRequest(403);
-        Assertions.assertEquals(Assertions.assertThrows(Http.StatusResponseException.class,
+        Assertions.assertEquals(Assertions.assertThrows(StatusResponseException.class,
                 () -> accessGroup.editGroup("new description")).getStatus() , 403);
 
     }
