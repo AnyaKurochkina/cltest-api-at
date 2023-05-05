@@ -1,0 +1,11 @@
+{
+  "sync_folder": "sync_repos",
+  "repos": {
+    "sync_git_repos": {
+      "force_push": true,
+      "from_repo_url": "https://bitbucket.region.vtb.ru/scm/puos/cltest-api-at.git",
+      "to_repo_url": "ssh://git@git.service.t1-cloud.ru:7999/clportal/cltest/cltest-api-at.git",
+      "delete_after_sync": true
+    }
+  }
+}
