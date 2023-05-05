@@ -260,7 +260,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -274,7 +274,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             groups.forEach(groupsElement::set);
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -285,7 +285,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }

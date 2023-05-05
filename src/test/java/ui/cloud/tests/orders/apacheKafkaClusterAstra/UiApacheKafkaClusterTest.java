@@ -32,8 +32,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    ApacheKafkaCluster product;
-    // =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/acfaf6b1-028c-4c88-bcd8-b314e1bfccee/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/application_integration/orders/78813e69-9532-425b-b5af-95c07a7d9f30/history?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -277,6 +276,25 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createAclIdempotent("1"));
     }
+
+    @Test
+    @Order(24)
+    @TmsLink("")
+    @DisplayName("UI ApacheKafkaCluster.Пакетное создание квот Kafka")
+    void createQuotas() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createQuotas("131074"));
+    }
+
+    @Test
+    @Order(25)
+    @TmsLink("")
+    @DisplayName("UI ApacheKafkaCluster.Пакетное удаление квот Kafka")
+    void deleteQuotas() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.deleteQuotas("131072"));
+    }
+
 
     @Test
     @Order(23)

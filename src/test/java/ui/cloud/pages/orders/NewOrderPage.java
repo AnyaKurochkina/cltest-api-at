@@ -35,6 +35,7 @@ public class NewOrderPage {
     protected Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
     protected Select roleSelect = Select.byLabel("Роль");
     protected Select groupSelect = Select.byLabel("Группы");
+    protected Select groupSelect2 = Select.byLabel("Группа управления WildFly");
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public static SelenideElement getCalculationDetails() {

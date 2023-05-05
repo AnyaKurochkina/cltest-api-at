@@ -25,6 +25,7 @@ public class S3CephTenantPage extends IProductPage {
     private static final String BLOCK_USERS = "Список пользователей";
     private static final String BLOCK_DB_USERS = "Пользователи";
     private static final String HEADER_PREFIX = "Префикс";
+    private static final String HEADER_COMPONENTS = "Компоненты";
     private static final String HEADER_NAME = "Имя";
     private static final String HEADER_NAME_RULE = "Имя правила";
     private static final String HEADER_METHOD = "methods";
@@ -269,7 +270,8 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setInputValue("Макс. объем, ГБ", size);
         });
         btnGeneralInfo.click();
-        Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, Input.byLabel("Имя").getInput().getValue()), "Ошибка создания");
+        Assertions.assertTrue(getTableByHeader(HEADER_COMPONENTS).isColumnValueContains(HEADER_NAME,name), "Ошибка создания бакета");
+        //Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, Input.byLabel("Имя").getInput().getValue()), "Ошибка создания");
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
