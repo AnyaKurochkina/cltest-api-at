@@ -25,6 +25,7 @@ public class S3CephTenantPage extends IProductPage {
     private static final String BLOCK_USERS = "Список пользователей";
     private static final String BLOCK_DB_USERS = "Пользователи";
     private static final String HEADER_PREFIX = "Префикс";
+    private static final String HEADER_COMPONENTS = "Компоненты";
     private static final String HEADER_NAME = "Имя";
     private static final String HEADER_NAME_RULE = "Имя правила";
     private static final String HEADER_METHOD = "methods";
@@ -70,13 +71,6 @@ public class S3CephTenantPage extends IProductPage {
         runActionWithoutParameters(BLOCK_INFO, "Выключить");
         checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
-
-//    public void checkConfiguration() {
-//        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-//        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-//        new Table("Роли узла").getRowByIndex(0).scrollIntoView(scrollCenter).click();
-//        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
-//    }
 
     public void resetPassword() {
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -169,16 +163,6 @@ public class S3CephTenantPage extends IProductPage {
         }
     }
 
-//    public void removeDb(String name) {
-//        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
-//        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-//        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-//            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-//            runActionWithoutParameters(name, "Удалить БД");
-//            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-//            Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
-//        }
-//    }
     public void enlargeDisk(String name, String size, SelenideElement node) {
 
         currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
@@ -204,16 +188,6 @@ public class S3CephTenantPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
     }
-
-//    public void deleteUserDb(String nameUser) {
-//        btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-//        if (new Table(HEADER_NAME).isColumnValueContains("", nameUser)) {
-//            runActionWithParameters(BLOCK_DB_AT_USER, "Удалить пользователя", "Подтвердить", () -> {
-//            });
-//            btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-//            Assertions.assertFalse(new Table(HEADER_NAME).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
-//        }
-//    }
 
     public SelenideElement getRoleNode() {
         return new Table("Версионирование").getRow(0).get();
@@ -269,7 +243,7 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setInputValue("Макс. объем, ГБ", size);
         });
         btnGeneralInfo.click();
-        Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, Input.byLabel("Имя").getInput().getValue()), "Ошибка создания");
+        Assertions.assertTrue(getTableByHeader(HEADER_COMPONENTS).isColumnValueContains(HEADER_NAME,name), "Ошибка создания бакета");
         new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
