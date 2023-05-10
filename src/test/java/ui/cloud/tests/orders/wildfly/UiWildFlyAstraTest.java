@@ -59,7 +59,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getGroupSelect2().set(accessGroup);
+            orderPage.getGroupWildFly().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()

@@ -35,7 +35,7 @@ public class WildFlyAstraPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String STATUS = "Статус";
-    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
+
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
@@ -66,7 +66,7 @@ public class WildFlyAstraPage extends IProductPage {
     public void checkConfiguration() {
         checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
@@ -173,11 +173,11 @@ public class WildFlyAstraPage extends IProductPage {
             Select.byLabel("Группы").set(nameGroup);
         }, ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains("",nameGroup), "Ошибка создания AD");
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     @Step("Изменить состав групп у роли {role} на {groups}")
@@ -189,10 +189,10 @@ public class WildFlyAstraPage extends IProductPage {
             groups.forEach(groupsElement::set);
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new WildFlyAstraPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     @Step("Удалить группу доступа с ролью {role}")
@@ -201,7 +201,7 @@ public class WildFlyAstraPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new WildFlyAstraPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         //Assertions.assertFalse(getBtnAction(nameGroup.), "Ошибка удаления админ группы");
     }

@@ -32,7 +32,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product;// = Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/cc66d20c-9b2e-42ad-90a5-f85d14e9d391/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Windows product; // = Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/cc66d20c-9b2e-42ad-90a5-f85d14e9d391/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

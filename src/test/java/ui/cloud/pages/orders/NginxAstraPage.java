@@ -28,7 +28,7 @@ public class NginxAstraPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String STATUS = "Статус";
-    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
+
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");

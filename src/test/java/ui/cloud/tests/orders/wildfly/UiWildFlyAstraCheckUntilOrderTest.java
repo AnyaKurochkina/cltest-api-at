@@ -50,19 +50,13 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.checkOrderDisabled();
 
-//        //Проверка поля Кол-во
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "0", "10");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "100", "30");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "N", "1");
-//        orderPage.autoChangeableFieldCheck(orderPage.getCountInput(), "", "1");
-
         //Проверка Детали заказа
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         orderPage.getGroupSelect().set(accessGroup.getPrefixName());
-        orderPage.getGroupSelect2().set(accessGroup.getPrefixName());
+        orderPage.getGroupWildFly().set(accessGroup.getPrefixName());
         new WildFlyAstraOrderPage().checkOrderDetails();
     }
 }
