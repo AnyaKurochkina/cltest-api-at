@@ -1,0 +1,11 @@
+{
+  "quotas": [
+    {
+      "quota_type": "default",
+      "producer_byte_rate": 131072,
+      "client_cns": [
+        null
+      ]
+    }
+  ]
+}

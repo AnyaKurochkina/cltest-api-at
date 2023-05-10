@@ -233,6 +233,18 @@ public class ApacheKafkaAstraClusterTest extends Tests {
         }
     }
 
+    @TmsLinks({@TmsLink(""),@TmsLink("")})
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Пакетное создание/удаление квот Kafka {0}")
+    void addAndRemoveQuota(ApacheKafkaCluster product) {
+        int quota = 131072;
+        try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            kafka.addDefaultQuota(quota);
+            kafka.deleteDefaultQuota(quota);
+        }
+    }
+
     @TmsLink("1095239")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
