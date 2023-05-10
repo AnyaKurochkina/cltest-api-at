@@ -26,7 +26,7 @@ public class ActionAvailableWithCostReductionTest extends Tests {
     @Test
     public void checkAvailableWithCostReductionDefaultValueTest() {
         Action action = createAction("action_available_with_cost_reduction_default_value_test_api");
-        assertEquals(false, action.getIsDelayable());
+        assertEquals(false, action.getAvailableWithCostReduction());
     }
 
     @DisplayName("Проверка значения поля available_with_cost_reduction")
