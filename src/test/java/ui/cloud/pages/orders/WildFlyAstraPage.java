@@ -177,27 +177,4 @@ public class WildFlyAstraPage extends IProductPage {
 
     }
 
-    //Таблица ролей
-    public class RoleTable extends Table {
-        public RoleTable() {
-            super("Группы");
-        }
-
-        @Override
-        protected void open() {
-            btnGeneralInfo.click();
-        }
-
-        private SelenideElement getRoleMenuElement(String name) {
-            return getRoleRow(name).$("button");
-        }
-
-        private SelenideElement getRoleRow(String name) {
-            return getRowByColumnValue("", name).get();
-        }
-
-        private String getGroupsRole(String name) {
-            return getRowByColumnValue("", name).getValueByColumn("Группы");
-        }
-    }
 }
