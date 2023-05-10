@@ -1,10 +1,8 @@
 package ui.t1.pages.S3Storage.LifeCycle;
 
 import io.qameta.allure.Step;
-import ui.elements.Button;
-import ui.elements.CheckBox;
-import ui.elements.Input;
-import ui.elements.Select;
+import org.junit.jupiter.api.Assertions;
+import ui.elements.*;
 
 public class LifeCycleModal {
 
@@ -30,9 +28,9 @@ public class LifeCycleModal {
     }
 
     public enum LifeCycleConditionTriggers {
-        DAYSAMMOUNT("Expiration"),
-        EXACTDATE("NoncurrentVersionExpiration"),
-        EXPIREDJBJECTDELETEMARKER("AbortCompleteMultipartUpload");
+        DAYSAMMOUNT("Количество дней"),
+        EXACTDATE("Точная дата"),
+        EXPIREDJBJECTDELETEMARKER("Expired object delete marker");
 
         private final String condition;
 
@@ -59,6 +57,13 @@ public class LifeCycleModal {
         return this;
     }
 
+    @Step("Проверка префикса правила {prefix}")
+    public LifeCycleModal checkPrefix(String prefix)
+    {
+        Assertions.assertEquals(prefix, Input.byName("prefix").getValue());
+        return this;
+    }
+
     @Step("Добавление правила жизненного цикла {ruleType}")
     public LifeCycleModal setRuleType(LifeCycleRuleTypes ruleType)
     {
@@ -73,10 +78,24 @@ public class LifeCycleModal {
         return this;
     }
 
+    @Step("Проверка дней правила {days}")
+    public LifeCycleModal checkDays(String days)
+    {
+        Assertions.assertEquals(days, Input.byName("days").getValue());
+        return this;
+    }
+
+    @Step("Закрытие модального окна ЖЦ")
+    public LifeCycleLayer closeLifeCycleModal()
+    {
+        Button.byText("Закрыть").click();
+        return new LifeCycleLayer();
+    }
+
     @Step("Установка триггера ЖЦ")
     public LifeCycleModal setConditionalTrigger(LifeCycleConditionTriggers trigger)
     {
-        CheckBox.byLabel(trigger.getCondition()).setChecked(true);
+        Radio.byValue(trigger.getCondition()).checked();
         return this;
     }
 
@@ -84,6 +103,15 @@ public class LifeCycleModal {
     public LifeCycleLayer createLifeCycle()
     {
         Button.byText("Создать").click();
+        Alert.green("Правило жизненного цикла успешно создано");
+        return new LifeCycleLayer("Жизненный цикл");
+    }
+
+    @Step("Создать ЖЦ")
+    public LifeCycleLayer updateLifeCycle()
+    {
+        Button.byText("Обновить").click();
+        Alert.green("Правило жизненного цикла успешно обновлено");
         return new LifeCycleLayer("Жизненный цикл");
     }
 
