@@ -12,6 +12,8 @@ public class CreateBucketForm {
         clickVersionity(isVersioned);
     }
 
+    private Boolean isVers = false;
+
     @Step("Установка имени бакета '{name}'")
     private void setBucketName(String name){
         Input.byName("name").setValue(name);
@@ -20,13 +22,17 @@ public class CreateBucketForm {
     @Step("Установка версиониования бакета")
     private void clickVersionity(Boolean isVersioned){
         Switch.byText("Версионирование").setEnabled(isVersioned);
+        this.isVers = isVersioned;
 //        CheckBox.byLabel("Версионирование").setChecked(isVersioned);
     }
 
     @Step("Создание бакета")
     public CloudStorageS3 createBucket(){
         Button.byText("Создать").click();
-        Waiting.sleep(5000);
+//        Waiting.sleep(5000);
+        Alert.green("Бакет успешно добавлен");
+        if (this.isVers)
+            Alert.green("Версионирование включено");
         return new CloudStorageS3();
     }
 

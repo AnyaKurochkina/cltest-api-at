@@ -7,6 +7,9 @@ import ui.elements.*;
 import ui.t1.pages.S3Storage.AbstractLayerS3;
 import ui.t1.pages.S3Storage.LifeCycle.LifeCycleModal;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 public class AccessRulesModal extends AbstractLayerS3<AccessRulesModal> {
 
     public enum AccessRulesTypes {

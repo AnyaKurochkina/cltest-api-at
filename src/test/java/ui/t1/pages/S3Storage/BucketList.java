@@ -20,7 +20,7 @@ public class BucketList {
                   .click();
     }
 
-    @Step("Проверка наличия бакета '{bucketName}' в списке")
+    @Step("Проверка наличия бакета '{bucketName}' в списке - '{isExists}'")
     public void checkBucket(String bucketName, Boolean isExists){
         DataTable bucketList = new DataTable(fBucketName);
         if (isExists)

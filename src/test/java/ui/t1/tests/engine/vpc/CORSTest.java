@@ -4,8 +4,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.CORS.CORSModal.Method;
 import ui.t1.pages.S3Storage.CORS.CORSModal.AccessControls;
@@ -36,7 +34,8 @@ public class CORSTest extends AbstractStorageTest {
                 .setExposeHeaders("EHeader",true)
                 .setAccessControl(AccessControls.ONEMIN)
                 .createCORS()
-                .deleteCORS("http://1");;
+                .checkCORSExists("http://1", true);
+
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -60,7 +59,9 @@ public class CORSTest extends AbstractStorageTest {
                 .setCORSOrigins("http://1",true)
                 .setAllowedMethods(Methods)
                 .createCORS()
-                .deleteCORS("http://1");
+                .checkCORSExists("http://1", true)
+                .deleteCORS("http://1")
+                .checkCORSExists("http://1", false);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -87,10 +88,13 @@ public class CORSTest extends AbstractStorageTest {
                 .setCORSOrigins("http://1",true)
                 .setAllowedMethods(Methods)
                 .createCORS()
+                .checkCORSExists("http://1", true)
                 .editCORS("http://1")
                 .setCORSOrigins("http://2",true)
                 .setAllowedMethods(MethodsNew)
                 .renewCORS()
+                .checkCORSExists("http://1", false)
+                .checkCORSExists("http://2", true)
                 .editCORS("http://2")
                 .checkCORSOrigins("http://2")
                 .checkAllowedMethods("HEAD, PUT")

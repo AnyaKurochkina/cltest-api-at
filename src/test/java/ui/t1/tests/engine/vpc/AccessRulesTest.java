@@ -28,7 +28,8 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .addAccessRule()
                 .setUser("ilkaboomboom@rambler.ru")
                 .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
-                .createAccessRule();
+                .createAccessRule()
+                .checkRule("ilkaboomboom@rambler.ru", true);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -37,7 +38,7 @@ public class AccessRulesTest extends AbstractStorageTest {
     @Test
     @Order(2)
     @TmsLink("520571")
-    @DisplayName("Правила доступа. Удалить правило доступа ")
+    @DisplayName("Правила доступа. Редактировать правило доступа ")
     void editAccessRule() {
 
         new IndexPage().goToS3CloudStoragePage()
@@ -49,6 +50,7 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .setUser("ilkaboomboom@rambler.ru")
                 .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .createAccessRule()
+                .checkRule("ilkaboomboom@rambler.ru", true)
                 .editAccessRule("ilkaboomboom@rambler.ru")
                 .setRules(false, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
@@ -79,7 +81,8 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .setUser("ilkaboomboom@rambler.ru")
                 .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .createAccessRule()
-                .deleteAccessRule("ilkaboomboom@rambler.ru");
+                .deleteAccessRule("ilkaboomboom@rambler.ru")
+                .checkRule("ilkaboomboom@rambler.ru", false);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);

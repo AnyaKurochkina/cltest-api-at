@@ -4,8 +4,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.LifeCycle.LifeCycleModal.LifeCycleRuleTypes;
 import ui.t1.pages.S3Storage.LifeCycle.LifeCycleModal.LifeCycleConditionTriggers;
@@ -34,7 +32,8 @@ public class LifeCycleTest extends AbstractStorageTest {
                 .setRuleType(LifeCycleRuleTypes.EXPIRATION)
                 .setDays("30")
                 .setConditionalTrigger(LifeCycleConditionTriggers.DAYSAMMOUNT)
-                .createLifeCycle();
+                .createLifeCycle()
+                .checkLifeCycleExists("Name", true);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -60,7 +59,9 @@ public class LifeCycleTest extends AbstractStorageTest {
                 .setDays("30")
                 .setConditionalTrigger(LifeCycleConditionTriggers.DAYSAMMOUNT)
                 .createLifeCycle()
-                .deleteLifeCycle("Name");
+                .checkLifeCycleExists("Name", true)
+                .deleteLifeCycle("Name")
+                .checkLifeCycleExists("Name", false);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -93,7 +94,8 @@ public class LifeCycleTest extends AbstractStorageTest {
                 .editLifeCycle("Name")
                 .checkPrefix("Prefix2")
                 .checkDays("20")
-                .closeLifeCycleModal();
+                .closeLifeCycleModal()
+                .checkLifeCycleExists("Name", true);
 
 
         new IndexPage().goToS3CloudStoragePage()
