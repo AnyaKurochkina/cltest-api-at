@@ -21,7 +21,7 @@ import java.time.Duration;
 @Tags({@Tag("ui"), @Tag("ui_s3_ceph_tenant")})
 public class UiS3CephTenantTest extends UiProductTest {
 
-    S3Ceph product;//= S3Ceph.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/object_storage/orders/6c71058d-e761-4253-bbc3-91663a272f60/main?context=proj-iv550odo9a&type=project&org=vtb");
+    S3Ceph product;// = S3Ceph.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/object_storage/orders/0c8f067e-8b4e-4ab3-b469-69694702c34c/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -106,7 +106,7 @@ public class UiS3CephTenantTest extends UiProductTest {
 
     @Test
     @Order(7)
-    @TmsLink("")
+    @TmsLink("1619410")
     @DisplayName("UI S3CephTenant. Добавить правило Corse")
     void addRuleCorse() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
@@ -115,7 +115,7 @@ public class UiS3CephTenantTest extends UiProductTest {
 
     @Test
     @Order(8)
-    @TmsLink("")
+    @TmsLink("1619407")
     @DisplayName("UI S3CephTenant. Изменить правило Corse")
     void changeRuleCorse() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
@@ -124,7 +124,7 @@ public class UiS3CephTenantTest extends UiProductTest {
 
     @Test
     @Order(9)
-    @TmsLink("")
+    @TmsLink("1619425")
     @DisplayName("UI S3CephTenant. Удалить правило Corse")
     void deleteRuleCorse() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
