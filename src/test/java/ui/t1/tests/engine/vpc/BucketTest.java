@@ -12,7 +12,6 @@ import ui.t1.tests.engine.AbstractStorageTest;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты")
 public class BucketTest extends AbstractStorageTest {
-    String name = getRandomBucketName();
 
     @Test
     @Order(1)

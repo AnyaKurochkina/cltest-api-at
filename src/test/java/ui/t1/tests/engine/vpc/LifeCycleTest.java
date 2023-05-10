@@ -15,7 +15,6 @@ import ui.t1.tests.engine.AbstractStorageTest;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты. ЖЦ")
 public class LifeCycleTest extends AbstractStorageTest {
-    String name = getRandomBucketName();
 
     @Test
     @Order(1)

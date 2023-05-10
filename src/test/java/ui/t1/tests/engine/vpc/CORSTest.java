@@ -15,8 +15,6 @@ import ui.t1.tests.engine.AbstractStorageTest;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты. CORS")
 public class CORSTest extends AbstractStorageTest {
-    String name = getRandomBucketName();
-
 
     @Test
     @Order(1)
