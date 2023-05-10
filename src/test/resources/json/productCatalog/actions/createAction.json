@@ -34,5 +34,6 @@
   "version": "",
   "is_safe": null,
   "is_delayable": false,
+  "available_with_cost_reduction": false,
   "default_item": {}
 }
