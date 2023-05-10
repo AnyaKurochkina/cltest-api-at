@@ -12,7 +12,6 @@ import ui.t1.pages.S3Storage.CORS.CORSModal.AccessControls;
 import ui.t1.tests.engine.AbstractStorageTest;
 
 @BlockTests
-@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты. CORS")
 public class CORSTest extends AbstractStorageTest {

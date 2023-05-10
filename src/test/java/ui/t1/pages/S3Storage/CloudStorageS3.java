@@ -23,9 +23,15 @@ public class CloudStorageS3 {
         return new BucketPage();
     }
 
+    public CloudStorageS3 checkBucketExistence(String bucketName, Boolean isExists){
+        bList.checkBucket(bucketName, isExists);
+        return this;
+    }
+
     @Step("Открытие страницы удаления бакета '{bucketName}'")
-    public void deleteBucket(String bucketName){
+    public CloudStorageS3 deleteBucket(String bucketName){
         DeleteBucketForm delForm = bList.DeleteBucket(bucketName);
         delForm.deleteBucket(bucketName);
+        return this;
     }
 }

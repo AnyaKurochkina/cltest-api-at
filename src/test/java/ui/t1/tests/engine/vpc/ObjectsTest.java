@@ -13,7 +13,6 @@ import ui.t1.pages.S3Storage.CORS.CORSModal.Method;
 import ui.t1.tests.engine.AbstractStorageTest;
 
 @BlockTests
-@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты. CORS")
 public class ObjectsTest extends AbstractStorageTest {

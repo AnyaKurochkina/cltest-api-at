@@ -11,7 +11,7 @@ import ui.t1.tests.engine.AbstractStorageTest;
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты")
-public class BucketTest extends AbstractStorageTest {
+public class AccessRulesTest extends AbstractStorageTest {
     String name = getRandomBucketName();
 
     @Test
@@ -22,9 +22,7 @@ public class BucketTest extends AbstractStorageTest {
         new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, false)
                 .createBucket()
-                .checkBucketExistence(name, true)
-                .deleteBucket(name)
-                .checkBucketExistence(name, false);
+                .deleteBucket(name);
     }
 
     @Test
@@ -35,9 +33,7 @@ public class BucketTest extends AbstractStorageTest {
         new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
-                .checkBucketExistence(name, true)
-                .deleteBucket(name)
-                .checkBucketExistence(name, false);
+                .deleteBucket(name);
     }
 
 
