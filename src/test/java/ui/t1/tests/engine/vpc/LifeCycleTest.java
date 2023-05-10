@@ -19,7 +19,7 @@ public class LifeCycleTest extends AbstractStorageTest {
 
     @Test
     @Order(1)
-    @TmsLink("1281945")
+    @TmsLink("1412118")
     @DisplayName("Бакет. ЖЦ. Добавить")
     void addLifeCycle() {
 
@@ -44,7 +44,7 @@ public class LifeCycleTest extends AbstractStorageTest {
 
     @Test
     @Order(2)
-    @TmsLink("1281947")
+    @TmsLink("1412141")
     @DisplayName("Бакет. ЖЦ. Удалить")
     void deleteLifeCycle() {
 

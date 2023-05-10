@@ -41,6 +41,9 @@ public class CheckBox implements TypifiedElement {
     public void setChecked(boolean checked) {
         if (getChecked() != checked)
             element.parent().shouldBe(clickableCnd).click();
-        Assertions.assertEquals(checked, getChecked());
+        if (checked)
+            element.$x("..//input").shouldBe(Condition.checked);
+        else
+            element.$x("..//input").shouldNotBe(Condition.checked);
     }
 }

@@ -2,39 +2,85 @@ package ui.t1.tests.engine.vpc;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.S3Storage.AccessRules.AccessRulesModal.AccessRulesTypes;
 import ui.t1.tests.engine.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Feature("Бакеты")
+@Feature("Бакеты. Правила доступа")
 public class AccessRulesTest extends AbstractStorageTest {
     String name = getRandomBucketName();
 
     @Test
     @Order(1)
-    @TmsLinks({@TmsLink("542274"), @TmsLink("542728")})
-    @DisplayName("Бакет. Добавить бакет без версионирования")
-    void addBucketWithoutVer() {
+    @TmsLink("520548")
+    @DisplayName("Правила доступа. Добавить правило доступа ")
+    void addAccessRule() {
+
         new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, false)
                 .createBucket()
+                .openBucket(name)
+                .gotoAccessRulesLayer()
+                .addAccessRule()
+                .setUser("ilkaboomboom@rambler.ru")
+                .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
+                .createAccessRule();
+
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
     }
 
     @Test
     @Order(2)
-    @TmsLink("542254")
-    @DisplayName("Бакет. Добавить бакет с версионированием")
-    void addBucketWithVer() {
+    @TmsLink("520571")
+    @DisplayName("Правила доступа. Удалить правило доступа ")
+    void editAccessRule() {
+
         new IndexPage().goToS3CloudStoragePage()
-                .addBucket(name, true)
+                .addBucket(name, false)
                 .createBucket()
+                .openBucket(name)
+                .gotoAccessRulesLayer()
+                .addAccessRule()
+                .setUser("ilkaboomboom@rambler.ru")
+                .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
+                .createAccessRule()
+                .editAccessRule("ilkaboomboom@rambler.ru")
+                .setRules(false, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
+                .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
+                .saveAccessRule()
+                .editAccessRule("ilkaboomboom@rambler.ru")
+                .checkRule(false, AccessRulesTypes.WRITE)
+                .checkRule(false, AccessRulesTypes.READACL)
+                .checkRule(true, AccessRulesTypes.READ)
+                .checkRule(true, AccessRulesTypes.WRITEACL);
+
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
     }
 
+    @Test
+    @Order(3)
+    @TmsLink("520574")
+    @DisplayName("Правила доступа. Удалить правило доступа ")
+    void deleteAccessRule() {
 
+        new IndexPage().goToS3CloudStoragePage()
+                .addBucket(name, false)
+                .createBucket()
+                .openBucket(name)
+                .gotoAccessRulesLayer()
+                .addAccessRule()
+                .setUser("ilkaboomboom@rambler.ru")
+                .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
+                .createAccessRule()
+                .deleteAccessRule("ilkaboomboom@rambler.ru");
+
+        new IndexPage().goToS3CloudStoragePage()
+                .deleteBucket(name);
+    }
 }

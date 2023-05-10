@@ -23,9 +23,9 @@ public class BucketPage {
         return new LifeCycleLayer();
     }
 
-    @Step("Переход на вкладку 'Права доступа' в бакете")
+    @Step("Переход на вкладку 'Правила доступа' в бакете")
     public AccessRulesLayer gotoAccessRulesLayer(){
-        Tab.byText("Права доступа").switchTo();
+        Tab.byText("Правила доступа").switchTo();
         return new AccessRulesLayer();
     }
 
