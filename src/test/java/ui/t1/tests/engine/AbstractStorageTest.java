@@ -22,6 +22,7 @@ import java.util.Locale;
 public abstract class AbstractStorageTest extends Tests {
     protected Project project;
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
+    protected String name;
 
     public AbstractStorageTest() {
         project = Project.builder().isForOrders(true).build().createObject();
@@ -32,6 +33,7 @@ public abstract class AbstractStorageTest extends Tests {
     public void beforeEach() {
         new LoginCloudPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
+        name = getRandomBucketName();
     }
 
     protected String getRandomBucketName() {

@@ -12,7 +12,7 @@ import ui.t1.tests.engine.AbstractStorageTest;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты. Правила доступа")
 public class AccessRulesTest extends AbstractStorageTest {
-    String name = getRandomBucketName();
+
 
     @Test
     @Order(1)
@@ -57,7 +57,8 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .checkRule(false, AccessRulesTypes.WRITE)
                 .checkRule(false, AccessRulesTypes.READACL)
                 .checkRule(true, AccessRulesTypes.READ)
-                .checkRule(true, AccessRulesTypes.WRITEACL);
+                .checkRule(true, AccessRulesTypes.WRITEACL)
+                .closeAccessRule();
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);

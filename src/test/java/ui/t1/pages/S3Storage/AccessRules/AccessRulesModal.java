@@ -63,4 +63,9 @@ public class AccessRulesModal extends AbstractLayerS3<AccessRulesModal> {
         return new AccessRulesLayer();
     }
 
+    public AccessRulesLayer closeAccessRule(){
+        Button.byText("Закрыть").click();
+        return new AccessRulesLayer();
+    }
+
 }
