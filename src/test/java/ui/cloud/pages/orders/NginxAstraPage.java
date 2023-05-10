@@ -3,16 +3,14 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Nginx;
-import models.cloud.orderService.products.WildFly;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.tests.ActionParameters;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
 import ui.elements.Select;
 import ui.elements.Table;
 
-import java.util.List;
+
 
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
@@ -20,15 +18,9 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 public class NginxAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
-    private static final String BLOCK_CERTIFICATE = "Сертификат WildFly";
     private static final String BLOCK_VM = "Виртуальная машина";
-    private static final String BLOCK_GROUP = "Список групп";
-    private static final String HEADER_NAME_GROUP = "Имя группы";
-    private static final String HEADER_GROUP  = "Группы";
-    private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String STATUS = "Статус";
-
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");

@@ -433,7 +433,7 @@ public abstract class IProductPage {
         }
 
         public void checkPowerStatus(String status) {
-            //      Assertions.assertEquals(status, getPowerStatus(), "Статус питания не соотвествует ожидаемому");
+            Assertions.assertEquals(status, getPowerStatus(), "Статус питания не соотвествует ожидаемому");
         }
     }
 }

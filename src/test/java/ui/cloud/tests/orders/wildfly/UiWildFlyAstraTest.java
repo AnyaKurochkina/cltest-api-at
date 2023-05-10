@@ -14,18 +14,13 @@ import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
-
-
-
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
-
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
-
 import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Epic("UI Продукты")
@@ -125,7 +120,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::startService);
     }
 
-
     @Test
     @Order(7)
     @TmsLink("1353235")
@@ -167,9 +161,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser",Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
-
-
-
 
     @Test
     @Order(11)
