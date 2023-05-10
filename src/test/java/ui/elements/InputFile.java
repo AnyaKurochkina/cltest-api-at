@@ -8,7 +8,7 @@ import static com.codeborne.selenide.Selenide.$x;
 
 public class InputFile {
     private final SelenideElement fileInput = $x("//input[@type='file']");
-    private final Button importButton = Button.byText("Импорт");
+    private Button importButton;
     private final String path;
 
     public InputFile(String path) {
@@ -17,6 +17,7 @@ public class InputFile {
 
     public void importFileAndSubmit() {
         fileInput.uploadFile(new File(path));
+        this.importButton = Button.byText("Импорт");
         importButton.click();
     }
 
