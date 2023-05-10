@@ -278,7 +278,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(24)
+    @Order(23)
     @TmsLink("")
     @DisplayName("UI ApacheKafkaCluster.Пакетное создание квот Kafka")
     void createQuotas() {
@@ -287,7 +287,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(25)
+    @Order(24)
     @TmsLink("")
     @DisplayName("UI ApacheKafkaCluster.Пакетное удаление квот Kafka")
     void deleteQuotas() {
@@ -297,7 +297,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 
 
     @Test
-    @Order(23)
+    @Order(25)
     @TmsLink("982961")
     @DisplayName("UI ApacheKafkaCluster.Удаление идемпотентных ACL Kafka")
     void dellAclIdempotent() {
@@ -306,7 +306,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(24)
+    @Order(26)
     @TmsLink("852012")
     @DisplayName("UI ApacheKafkaCluster.Проверить конфигурацию")
     void checkConfiguration() {
@@ -315,7 +315,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(25)
+    @Order(27)
     @TmsLink("1216972")
     @EnabledIfEnv("prod")
     @DisplayName("UI ApacheKafkaCluster. Мониторинг ОС")
