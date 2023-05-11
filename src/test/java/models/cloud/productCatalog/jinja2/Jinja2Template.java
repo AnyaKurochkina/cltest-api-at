@@ -2,21 +2,16 @@ package models.cloud.productCatalog.jinja2;
 
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import core.helper.http.Http;
-import httpModels.productCatalog.jinja2.getJinjaListResponse.GetJinjaListResponse;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ProductCatalogSteps;
 
-import static steps.productCatalog.Jinja2Steps.isJinja2Exists;
+import static steps.productCatalog.Jinja2Steps.*;
 
 @Log4j2
 @Builder
@@ -24,8 +19,8 @@ import static steps.productCatalog.Jinja2Steps.isJinja2Exists;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "productName", callSuper = false)
-@ToString(exclude = "productName")
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Jinja2Template extends Entity implements IProductCatalog {
 
     @JsonProperty("jinja2_template")
@@ -40,7 +35,6 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     private String createDt;
     @JsonProperty("update_dt")
     private String updateDt;
-    private final String productName = "/api/v1/jinja2_templates/";
 
     @Override
     public Entity init() {
@@ -61,16 +55,10 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     @Override
     @Step("Создание шаблона Jinja2")
     protected void create() {
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, "productCatalog/jinja2/createJinja.json");
         if (isJinja2Exists(name)) {
-            productCatalogSteps.deleteByName(name, GetJinjaListResponse.class);
+            deleteJinjaByName(name);
         }
-        Jinja2Template jinja2 = new Http(Configure.ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post(productName)
-                .assertStatus(201)
-                .extractAs(Jinja2Template.class);
+        Jinja2Template jinja2 = createJinja(toJson());
         StringUtils.copyAvailableFields(jinja2, this);
         Assertions.assertNotNull(id, "Jinja с именем: " + name + ", не создался");
     }
@@ -78,11 +66,7 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     @Override
     @Step("Удаление jinja2")
     protected void delete() {
-        new Http(Configure.ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(productName + id + "/")
-                .assertStatus(204);
-        ProductCatalogSteps productCatalogSteps = new ProductCatalogSteps(productName, "productCatalog/jinja2/createJinja.json");
-        Assertions.assertFalse(productCatalogSteps.isExists(name));
+        deleteJinjaById(id);
+        Assertions.assertFalse(isJinja2Exists(name));
     }
 }

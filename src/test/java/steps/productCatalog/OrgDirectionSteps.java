@@ -123,4 +123,20 @@ public class OrgDirectionSteps extends Steps {
                 .get(orgDirUrl + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);
     }
+
+    @Step("Частичное обновление направления")
+    public static void partialUpdateOrgDirection(String id, JSONObject object) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(orgDirUrl + id + "/");
+    }
+
+    @Step("Копирование направления по Id")
+    public static void copyOrgDirection(String objectId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(orgDirUrl + objectId + "/copy/")
+                .assertStatus(200);
+    }
 }

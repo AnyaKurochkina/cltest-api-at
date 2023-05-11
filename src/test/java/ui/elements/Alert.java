@@ -32,7 +32,7 @@ public class Alert implements TypifiedElement {
     private SelenideElement getElement() {
         if (Objects.nonNull(element))
             return element;
-        return $x("//div[@role='alert' and string-length(.)>1]");
+        return $x("//div[@role='alert' and string-length(.)>1][button]");
     }
 
     public static Alert green(String text, Object... args) {

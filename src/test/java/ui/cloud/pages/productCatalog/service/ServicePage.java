@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
@@ -16,7 +17,10 @@ import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.back;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ui.elements.TypifiedElement.scrollCenter;
 
+@Getter
 public class ServicePage extends BasePage {
 
     private final SelenideElement serviceListLink = $x("//a[text()='Список сервисов' and not(@href)]");
@@ -38,7 +42,7 @@ public class ServicePage extends BasePage {
     private final SelenideElement deleteTagSubmitButton = $x("//form//button[@type='submit']");
     private final String tagTitleColumn = "Наименование";
     private final String noDataFound = "Нет данных для отображения";
-    private final Switch isPublished = Switch.byText("Опубликован");
+    private final Switch isPublishedSwitch = Switch.byText("Опубликован");
 
     public ServicePage() {
         serviceListLink.shouldBe(Condition.visible);
@@ -51,12 +55,13 @@ public class ServicePage extends BasePage {
         nameInput.getInput().shouldHave(Condition.exactValue(service.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
         descriptionInput.getElement().shouldHave(Condition.exactValue(service.getDescription()));
+        assertEquals(service.getIsPublished(), isPublishedSwitch.isEnabled());
         if (service.getGraphId() != null) {
             Graph graph = GraphSteps.getGraphById(service.getGraphId());
             goToGraphTab();
             TestUtils.wait(2000);
             Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
-            Assertions.assertEquals(service.getGraphVersion(), graphVersionSelect.getValue());
+            assertEquals(service.getGraphVersion(), graphVersionSelect.getValue());
         }
         return this;
     }
@@ -66,6 +71,8 @@ public class ServicePage extends BasePage {
         nameInput.setValue(service.getName());
         titleInput.setValue(service.getTitle());
         descriptionInput.setValue(service.getDescription());
+        isPublishedSwitch.getLabel().scrollIntoView(scrollCenter);
+        isPublishedSwitch.setEnabled(service.getIsPublished());
         goToGraphTab();
         Waiting.sleep(2500);
         graphVersionSelect.set(service.getGraphVersion());
@@ -281,14 +288,14 @@ public class ServicePage extends BasePage {
     @Step("Проверка, что таблица тегов пустая")
     public ServicePage checkTagsTableIsEmpty() {
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
-        Assertions.assertEquals(noDataFound, table.getRowByIndex(0).getText());
+        assertEquals(noDataFound, table.getRowByIndex(0).getText());
         return this;
     }
 
     @Step("Проверка, что таблица исключающих тегов пустая")
     public ServicePage checkExcludeTagsTableIsEmpty() {
         Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
-        Assertions.assertEquals(noDataFound, table.getRowByIndex(0).getText());
+        assertEquals(noDataFound, table.getRowByIndex(0).getText());
         return this;
     }
 
@@ -362,12 +369,12 @@ public class ServicePage extends BasePage {
 
     @Step("Проверка недоступности удаления опубликованного сервиса")
     public void checkDeletePublishedService() {
-        isPublished.getLabel().scrollIntoView(true);
-        isPublished.setEnabled(true);
+        isPublishedSwitch.getLabel().scrollIntoView(true);
+        isPublishedSwitch.setEnabled(true);
         deleteButton.getButton().hover();
-        Assertions.assertEquals("Недоступно для опубликованного сервиса", new Tooltip().toString());
+        assertEquals("Недоступно для опубликованного сервиса", new Tooltip().toString());
         deleteButton.getButton().shouldBe(Condition.disabled);
-        isPublished.setEnabled(false);
+        isPublishedSwitch.setEnabled(false);
         deleteButton.getButton().hover();
         Assertions.assertFalse(Tooltip.isVisible());
         deleteButton.getButton().shouldBe(Condition.enabled);

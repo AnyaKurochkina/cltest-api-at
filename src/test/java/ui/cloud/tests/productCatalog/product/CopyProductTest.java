@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
 
+import static steps.productCatalog.ProductSteps.deleteProductByName;
+
 @Feature("Копирование продукта")
 public class CopyProductTest extends ProductBaseTest {
     @Test
@@ -20,6 +22,6 @@ public class CopyProductTest extends ProductBaseTest {
         product.setName(copyName);
         new ProductPage()
                 .checkAttributes(product);
-        deleteProductByApi(copyName);
+        deleteProductByName(copyName);
     }
 }

@@ -112,6 +112,8 @@ public class Action extends Entity {
     private Boolean isSafe;
     @JsonProperty("is_delayable")
     private Boolean isDelayable;
+    @JsonProperty("available_with_cost_reduction")
+    private Boolean availableWithCostReduction;
     @JsonProperty("version_fields")
     private List<String> versionFields;
 
@@ -147,6 +149,7 @@ public class Action extends Entity {
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.event_type_provider", eventTypeProvider)
+                .setIfNullRemove("$.available_with_cost_reduction", availableWithCostReduction)
                 .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)
                 .build();

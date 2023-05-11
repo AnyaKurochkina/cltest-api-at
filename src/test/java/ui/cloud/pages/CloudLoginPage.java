@@ -1,15 +1,15 @@
-package ui.t1.pages;
+package ui.cloud.pages;
 
 import core.enums.Role;
 import ui.LoginPage;
 
-public class LoginT1Page extends LoginPage {
+public class CloudLoginPage extends LoginPage {
 
-    public LoginT1Page() {
+    public CloudLoginPage() {
         super();
     }
 
-    public LoginT1Page(String project) {
+    public CloudLoginPage(String project) {
         super(project);
     }
 
@@ -17,4 +17,5 @@ public class LoginT1Page extends LoginPage {
         signInRole(role);
         return new IndexPage();
     }
+
 }

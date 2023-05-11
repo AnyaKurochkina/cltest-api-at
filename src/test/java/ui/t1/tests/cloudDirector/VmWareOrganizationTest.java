@@ -10,11 +10,12 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import steps.authorizer.AuthorizerSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.LoginT1Page;
+import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.portalBack.VdcOrganizationSteps.deleteVMwareOrganization;
 
 @ExtendWith(ConfigExtension.class)
@@ -44,6 +45,21 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
     }
 
     @Test
+    @TmsLink("1620819")
+    @DisplayName("VMware. Освобождение имени организации при удалении.")
+    void createVMwareOrganizationWithSameNameAfterDeleteTest() {
+        String name = UUID.randomUUID().toString().substring(25) + "-at-ui";
+        String orgName = new IndexPage()
+                .goToCloudDirector()
+                .create(name);
+        deleteVMwareOrganization(project.getId(), orgName);
+        CloudDirectorPage cloudDirectorPage = new CloudDirectorPage();
+        cloudDirectorPage.create(name);
+        assertTrue(cloudDirectorPage.isOrganizationExist(orgName));
+        deleteVMwareOrganization(project.getId(), orgName);
+    }
+
+    @Test
     @TmsLink("147521")
     @DisplayName("VMware. Удаление организации.")
     void deleteVMwareOrganizationTest() {
@@ -68,6 +84,6 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
         testProject = Project.builder().projectName("Проект для теста VMWare тарифы услуг").folderName(parentFolder)
                 .build()
                 .createObjectPrivateAccess();
-        new LoginT1Page(testProject.getId());
+        new T1LoginPage(testProject.getId());
     }
 }

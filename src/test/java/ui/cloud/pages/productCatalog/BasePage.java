@@ -24,6 +24,11 @@ public class BasePage {
     protected final Button backButton = Button.byText("Назад");
     protected final SelenideElement deleteIconButton = $x("//form//img/following::*[name()='svg'][1]");
     protected final SelenideElement addIconLabel = $x("//label[text()='Добавить иконку']");
+    private final Input iconInput = Input.byXpath("//input[@type='file'][@accept='image/*']");
+    private final SelenideElement incorrectIconFormatHint = iconInput.getInput()
+            .$x("following::div[text()='Формат файла не поддерживается. Поддерживаемые форматы: png, jpeg, svg']");
+    private final SelenideElement iconTooLargeHint = iconInput.getInput()
+            .$x("following::div[text()='Размер не должен превышать 100 КБ']");
     protected final SearchSelect graphSelect = SearchSelect.byLabel("Граф");
     protected final Select graphVersionSelect = Select.byLabel("Значение");
     protected final Button viewJSONButton = Button.byText("JSON");

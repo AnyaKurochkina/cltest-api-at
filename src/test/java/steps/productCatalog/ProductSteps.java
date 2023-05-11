@@ -94,6 +94,16 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Создание продукта")
+    public static Product createProduct(String name, String title) {
+        return Product.builder()
+                .name(name)
+                .title(title)
+                .version("1.0.0")
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание продукта")
     public static Response getCreateProductResponse(JSONObject body) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
