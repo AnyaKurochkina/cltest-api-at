@@ -133,7 +133,7 @@ public class OrgDirectionTest extends Tests {
     @Test
     public void copyOrgDirectionById() {
         String orgName = "copy_by_id_org_direction_test_api";
-        OrgDirection orgDirection = getOrgDirectionByName(orgName);
+        OrgDirection orgDirection = createOrgDirectionByName(orgName);
         String cloneName = orgName + "-clone";
         copyOrgDirection(orgDirection.getId());
         Assertions.assertTrue(isOrgDirectionExists(cloneName));

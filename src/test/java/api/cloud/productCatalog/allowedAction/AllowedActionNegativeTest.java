@@ -44,6 +44,6 @@ public class AllowedActionNegativeTest extends Tests {
                 .init()
                 .toJson();
         String msg = createAllowedAction(json).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Поля action должны производить массив с уникальными значениями.", msg);
+        assertEquals("\"non_field_errors\": Поля action должны производить массив с уникальными значениями.", msg);
     }
 }
