@@ -11,8 +11,9 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginCloudPage;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.WindowsOrderPage;
 import ui.extesions.ConfigExtension;
@@ -31,7 +32,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -39,6 +40,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @TmsLink("975914")
     @DisplayName("UI Windows. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -59,8 +61,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getRoleServer().set(product.getRole());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        orderPage.getGroupSelect().set(accessGroup);
         new WindowsOrderPage().checkOrderDetails();
     }
 

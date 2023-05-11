@@ -5,6 +5,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Product;
@@ -20,7 +21,9 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.back;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Getter
 public class ProductPage extends BasePage {
 
     private final SelenideElement productsListLink = $x("//a[text()='Список продуктов']");
@@ -36,7 +39,7 @@ public class ProductPage extends BasePage {
     private final Select onRequestSelect = Select.byLabel("Продукт по запросу");
     private final Select paymentSelect = Select.byLabel("Выбор оплаты");
     private final Switch inGeneralListSwitch = Switch.byText("В общем списке маркетплейса");
-    private final Switch isOpen = Switch.byText("Открытый");
+    private final Switch isOpenSwitch = Switch.byText("Открытый");
     private final SelenideElement nameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement nonUniqueNameValidationHint =
@@ -65,10 +68,11 @@ public class ProductPage extends BasePage {
         nameInput.setValue(product.getName());
         descriptionInput.setValue(product.getDescription());
         info.setValue(new JSONObject(product.getInfo()).toString());
+        isOpenSwitch.setEnabled(product.getIsOpen());
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.sleep(4000);
+        Waiting.sleep(5000);
         Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
@@ -93,24 +97,25 @@ public class ProductPage extends BasePage {
         nameInput.getInput().shouldHave(Condition.exactValue(product.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
         descriptionInput.getInput().shouldHave(Condition.exactValue(product.getDescription()));
-        Assertions.assertEquals(new JSONObject(product.getInfo()).toString(),
+        assertEquals(new JSONObject(product.getInfo()).toString(),
                 info.getWhitespacesRemovedValue());
+        assertEquals(product.getIsOpen(), isOpenSwitch.isEnabled());
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(3),
                 "Название графа не содержит " + graph.getName());
-        Assertions.assertEquals(product.getGraphVersion(), graphVersionSelect.getValue());
+        assertEquals(product.getGraphVersion(), graphVersionSelect.getValue());
         goToAdditionalParamsTab();
-        Assertions.assertEquals(product.getCategory(), categorySelect.getValue());
-        Assertions.assertEquals(product.getCategoryV2().getValue(), categoryV2Select.getValue());
+        assertEquals(product.getCategory(), categorySelect.getValue());
+        assertEquals(product.getCategoryV2().getValue(), categoryV2Select.getValue());
         authorInput.getInput().shouldHave(Condition.exactValue(product.getAuthor()));
         maxCountInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getMaxCount())));
-        Assertions.assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getDisplayName(),
+        assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getDisplayName(),
                 onRequestSelect.getValue());
-        Assertions.assertEquals(product.getPayment().getDisplayName(), paymentSelect.getValue());
-        Assertions.assertEquals(product.getInGeneralList(), inGeneralListSwitch.isEnabled());
+        assertEquals(product.getPayment().getDisplayName(), paymentSelect.getValue());
+        assertEquals(product.getInGeneralList(), inGeneralListSwitch.isEnabled());
         numberInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getNumber())));
-        Assertions.assertEquals(new JSONObject(product.getExtraData()).toString(),
+        assertEquals(new JSONObject(product.getExtraData()).toString(),
                 extraData.getWhitespacesRemovedValue());
         return this;
     }
@@ -267,12 +272,12 @@ public class ProductPage extends BasePage {
 
     @Step("Проверка недоступности удаления открытого продукта")
     public void checkDeleteOpenProduct() {
-        isOpen.getLabel().scrollIntoView(true);
-        isOpen.setEnabled(true);
+        isOpenSwitch.getLabel().scrollIntoView(true);
+        isOpenSwitch.setEnabled(true);
         deleteButton.getButton().hover();
-        Assertions.assertEquals("Недоступно для открытого продукта", new Tooltip().toString());
+        assertEquals("Недоступно для открытого продукта", new Tooltip().toString());
         deleteButton.getButton().shouldBe(Condition.disabled);
-        isOpen.setEnabled(false);
+        isOpenSwitch.setEnabled(false);
         deleteButton.getButton().hover();
         Assertions.assertFalse(Tooltip.isVisible());
         deleteButton.getButton().shouldBe(Condition.enabled);

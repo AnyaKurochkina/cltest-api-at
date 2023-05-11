@@ -16,8 +16,6 @@ import ui.cloud.tests.productCatalog.BaseTest;
 import java.util.HashMap;
 import java.util.UUID;
 
-import static steps.productCatalog.ProductSteps.deleteProductByName;
-
 @Epic("Конструктор.Продукты")
 public class ProductBaseTest extends BaseTest {
 
@@ -76,9 +74,5 @@ public class ProductBaseTest extends BaseTest {
                 }})
                 .build()
                 .createObject();
-    }
-
-    void deleteProductByApi(String name) {
-        deleteProductByName(name);
     }
 }

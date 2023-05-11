@@ -81,7 +81,7 @@ public class ServiceListTest extends Tests {
                 .isPublished(true)
                 .build()
                 .createObject();
-        List<ItemImpl> serviceList = steps.getProductObjectList(GetServiceListResponse.class, "?is_published=true");
+        List<ItemImpl> serviceList = steps.getObjectsList(GetServiceListResponse.class, "?is_published=true");
         steps.partialUpdateObject(service.getId(), new JSONObject().put("is_published", false));
         for (ItemImpl item : serviceList) {
             ListItem listItem = (ListItem) item;

@@ -37,7 +37,7 @@ public class UiWindowsTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -148,7 +148,6 @@ public class UiWindowsTest extends UiProductTest {
     @TmsLink("233926")
     @DisplayName("UI Windows. Расширить диск")
     void expandDisk() {
-        Assumptions.assumeFalse("OpenStack".equals(product.getPlatform()), "Тест отключен для платформы OpenStack");
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.addDisk("N", "15"));
         winPage.runActionWithCheckCost(CompareType.MORE, () -> winPage.expandDisk("N", "20"));

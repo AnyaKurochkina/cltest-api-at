@@ -225,7 +225,7 @@ public abstract class IProductPage {
 
     @Step("Проверка на содержание необходимых столбцов на вкладке История действий")
     public void checkHeadersHistory() {
-        Assertions.assertEquals(Arrays.asList("Наименование", "Инициатор", "Дата создания", "Дата запуска", "Продолжительность, сек",
+        Assertions.assertEquals(Arrays.asList("Наименование", "Инициатор", "Дата создания", "Дата запуска", "Продолжительность",
                 "Статус", "Просмотр"), new History().getHeaders());
     }
 

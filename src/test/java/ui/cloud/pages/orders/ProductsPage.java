@@ -5,6 +5,7 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import ui.elements.Button;
 import ui.elements.Select;
 
@@ -13,6 +14,7 @@ import java.time.Duration;
 import static api.Tests.clickableCnd;
 import static com.codeborne.selenide.Selenide.$$x;
 
+@Getter
 public class ProductsPage {
     private final Select categorySelect = Select.byLabel("Категория");
     private final Button applyButton = Button.byText("Применить");
@@ -41,5 +43,11 @@ public class ProductsPage {
             button.hover().shouldBe(clickableCnd).click();
         }
         return this;
+    }
+
+    @Step("Проверка, что отображается продукт '{title}'")
+    public boolean isProductDisplayed(String title) {
+        expandProductsList();
+        return products.find(Condition.exactText(title)).isDisplayed();
     }
 }

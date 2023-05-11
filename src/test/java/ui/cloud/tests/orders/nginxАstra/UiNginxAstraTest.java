@@ -8,16 +8,14 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Nginx;
-import models.cloud.orderService.products.WildFly;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginCloudPage;
-
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -39,7 +37,7 @@ public class UiNginxAstraTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -117,8 +115,8 @@ public class UiNginxAstraTest extends UiProductTest {
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.updateGroupInNode("superuser",Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.deleteGroupInNode("superuser",accessGroupOne.getPrefixName()));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.updateGroupInNode("superuser", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.deleteGroupInNode("superuser", accessGroupOne.getPrefixName()));
     }
 
 

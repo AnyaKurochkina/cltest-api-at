@@ -5,16 +5,13 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.WildFly;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginCloudPage;
-
-import ui.cloud.pages.orders.AstraLinuxOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.WildFlyAstraOrderPage;
 import ui.extesions.ConfigExtension;
@@ -33,7 +30,7 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

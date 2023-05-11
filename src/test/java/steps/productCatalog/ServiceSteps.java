@@ -46,6 +46,15 @@ public class ServiceSteps extends Steps {
                 .createObject();
     }
 
+    @Step("Создание сервиса")
+    public static Service createService(String name, String title) {
+        return Service.builder()
+                .name(name)
+                .title(title)
+                .build()
+                .createObject();
+    }
+
     @Step("Частичное обновление сервиса по id")
     public static Response partialUpdateServiceById(String id, JSONObject object) {
         return new Http(ProductCatalogURL)

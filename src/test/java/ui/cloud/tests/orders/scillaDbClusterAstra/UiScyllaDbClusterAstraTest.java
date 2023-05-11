@@ -38,8 +38,8 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        //product.setProductName("ScyllaDB Cluster RHEL"); //Для Rhel версии
-        new LoginCloudPage(product.getProjectId())
+        //product.setProductName("ScyllaDB Cluster RHEL"); //Для RHEL версии
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -53,6 +53,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             ScyllaDbClusterOrderPage orderPage = new ScyllaDbClusterOrderPage();
             //orderPage.getOsVersionSelect().set(product.getOsVersion());

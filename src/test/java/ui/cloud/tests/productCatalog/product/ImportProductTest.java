@@ -13,6 +13,7 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
 
+import static steps.productCatalog.ProductSteps.deleteProductByName;
 import static steps.productCatalog.ProductSteps.isProductExists;
 
 @Feature("Импорт из файла")
@@ -25,7 +26,7 @@ public class ImportProductTest extends ProductBaseTest {
         String data = JsonHelper.getStringFromFile("/productCatalog/products/importProduct.json");
         JsonPath json = new JsonPath(data);
         String name = json.getString("Product.name");
-        if (isProductExists(name)) deleteProductByApi(name);
+        if (isProductExists(name)) deleteProductByName(name);
         Graph graph = GraphSteps.getGraphByNameFilter(json.getString("rel_foreign_models.graph.Graph.name"));
         new ControlPanelIndexPage()
                 .goToProductsListPage()
@@ -44,6 +45,6 @@ public class ImportProductTest extends ProductBaseTest {
                         .inGeneralList(json.getBoolean("Product.in_general_list"))
                         .number(json.getInt("Product.number"))
                         .build());
-        deleteProductByApi(name);
+        deleteProductByName(name);
     }
 }
