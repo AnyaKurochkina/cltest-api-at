@@ -24,7 +24,6 @@ import java.util.List;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
-@Epic("Cloud Compute")
 @Tags({@Tag("t1_ui_cloud_compute")})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractComputeTest extends Tests {

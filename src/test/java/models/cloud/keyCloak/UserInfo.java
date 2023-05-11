@@ -15,4 +15,5 @@ public class UserInfo {
     String familyName;
     String givenName;
     String middleName;
+    String locale;
 }

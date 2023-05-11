@@ -3,6 +3,7 @@ package ui.t1.pages;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.WebElement;
@@ -129,7 +130,9 @@ public class IndexPage {
 
     @Step("Отключить Cloud Engine")
     public void disconnectCloudEngine() {
-        Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
+        SelenideElement btnAction = getBtnAction("T1 Cloud Engine");
+        Menu.byElement(btnAction).select("Отключить услугу");
         Button.byText("Отключить").click();
+        btnAction.shouldNotBe(Condition.exist);
     }
 }

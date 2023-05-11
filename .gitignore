@@ -7,6 +7,7 @@
 .log
 .iml
 .allure
+.sync_repos
 
 #log
 *.log

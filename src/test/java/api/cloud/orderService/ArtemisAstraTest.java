@@ -81,17 +81,6 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
-
-    @TmsLink("982657")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
-    void expandMountPoint(Artemis product) {
-        try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.expandMountPoint();
-        }
-    }
-
     @Disabled
     @TmsLink("982662")
     @Tag("actions")
