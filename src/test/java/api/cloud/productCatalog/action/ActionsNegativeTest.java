@@ -108,7 +108,7 @@ public class ActionsNegativeTest extends Tests {
                 .build()
                 .createObject();
         String errorMessage = createAction(action.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("action с таким name уже существует.", errorMessage);
+        assertEquals("\"name\": action с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на обновление действия по Id без токена")
@@ -139,7 +139,7 @@ public class ActionsNegativeTest extends Tests {
                 .set("$.graph_version_pattern", "1.")
                 .build())
                 .assertStatus(400);
-        assertEquals("You can't use both 'version' and 'version pattern' at same time in the ActionVersionSerializer",
+        assertEquals("\"non_field_errors\": You can't use both 'version' and 'version pattern' at same time in the ActionVersionSerializer",
                 response.extractAs(ErrorMessage.class).getMessage());
     }
 

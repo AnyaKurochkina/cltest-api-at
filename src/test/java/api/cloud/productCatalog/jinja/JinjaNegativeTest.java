@@ -69,7 +69,7 @@ public class JinjaNegativeTest extends Tests {
                 .assertStatus(400)
                 .extractAs(ErrorMessage.class)
                 .getMessage();
-        assertEquals("jinja2 template с таким name уже существует.", errorMessage);
+        assertEquals("\"name\": jinja2 template с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание jinja с недопустимыми символами в имени")
@@ -101,7 +101,7 @@ public class JinjaNegativeTest extends Tests {
                 .assertStatus(400)
                 .extractAs(ErrorMessage.class)
                 .getMessage();
-        assertEquals("Это поле не может быть пустым.", errorMessage);
+        assertEquals("\"name\": Это поле не может быть пустым.", errorMessage);
     }
 
     @DisplayName("Негативный тест на удаление jinja без токена")

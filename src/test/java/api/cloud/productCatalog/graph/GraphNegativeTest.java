@@ -71,7 +71,7 @@ public class GraphNegativeTest extends Tests {
     public void createGraphWithSameName() {
         Graph graph = createGraph("create_graph_with_exist_name_test_api");
         String message = createGraph(graph.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("graph с таким name уже существует.", message);
+        assertEquals("\"name\": graph с таким name уже существует.", message);
     }
 
     @DisplayName("Негативный тест на удаление графа без токена")
@@ -88,7 +88,7 @@ public class GraphNegativeTest extends Tests {
     @Test
     public void getGraphsByNotExistId() {
         String message = getGraphListById("not-exist-id").extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Введите правильный UUID.", message);
+        assertEquals("\"id\": Введите правильный UUID.", message);
     }
 
     @DisplayName("Негативный тест на создание графа с неуникальным значением поля envs в модификациях")

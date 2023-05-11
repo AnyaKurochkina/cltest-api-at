@@ -185,7 +185,6 @@ public class GraphUsedListTest extends Tests {
                 .put("max_count", 2));
         String productVersion = getProductById(product.getProductId()).getVersion();
 
-
         Service service = Service.builder()
                 .name("service_for_last_object_used_graph_test_api")
                 .title("service_title")

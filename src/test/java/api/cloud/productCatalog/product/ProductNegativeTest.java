@@ -68,7 +68,7 @@ public class ProductNegativeTest extends Tests {
     public void createProductWithSameName() {
         Product product = createProductByName("create_product_with_same_name_test_api");
         String errorMessage = getCreateProductResponse(product.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("product с таким name уже существует.", errorMessage);
+        assertEquals("\"name\": product с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание продукта с недопустимыми символами в имени")
@@ -138,7 +138,7 @@ public class ProductNegativeTest extends Tests {
         Product product = createProductByName("set_invalid_value_payment_product_test_api");
         String message = partialUpdateProduct(product.getProductId(), new JSONObject().put("payment", "test"))
                 .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Значения test нет среди допустимых вариантов.", message);
+        assertEquals("\"payment\": Значения test нет среди допустимых вариантов.", message);
     }
 
     @DisplayName("Негативный тест на создание продукта cо значением number меньше min значения")
@@ -155,7 +155,7 @@ public class ProductNegativeTest extends Tests {
                 .init()
                 .toJson();
         String message = getCreateProductResponse(product).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Убедитесь, что это значение больше либо равно 0.", message);
+        assertEquals("\"number\": Убедитесь, что это значение больше либо равно 0.", message);
     }
 
     @DisplayName("Негативный тест создание продукта с недопустимым значением поля on_request")
@@ -171,6 +171,6 @@ public class ProductNegativeTest extends Tests {
                 .init()
                 .toJson();
         String errMessage = getCreateProductResponse(product).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Значения %s нет среди допустимых вариантов.", OnRequest.TEST.getValue()), errMessage);
+        assertEquals(String.format("\"on_request\": Значения %s нет среди допустимых вариантов.", OnRequest.TEST.getValue()), errMessage);
     }
 }
