@@ -32,8 +32,16 @@ public class CreateBucketForm {
         return new CloudStorageS3();
     }
 
+    @Step("Создание бакета")
+    public CreateBucketForm createSameBucket(){
+        Button.byText("Создать").click();
+        Alert.red("Бакет с таким именем уже существует");
+        return this;
+    }
+
     @Step("Закрытие формы создания бакета")
-    public void closeBucketForm(){
+    public CloudStorageS3 closeBucketForm(){
         Button.byText("Закрыть").click();
+        return new CloudStorageS3();
     }
 }

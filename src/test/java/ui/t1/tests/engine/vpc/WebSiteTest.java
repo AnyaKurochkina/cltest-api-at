@@ -11,7 +11,7 @@ import ui.t1.tests.engine.AbstractStorageTest;
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Бакеты. Объекты")
-public class ObjectsTest extends AbstractStorageTest {
+public class WebSiteTest extends AbstractStorageTest {
 
     @Test
     @Order(1)

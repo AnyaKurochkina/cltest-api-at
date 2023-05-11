@@ -39,5 +39,25 @@ public class BucketTest extends AbstractStorageTest {
                 .checkBucketExistence(name, false);
     }
 
-
+    @Test
+    @Order(3)
+    @TmsLink("675620")
+    @DisplayName("Бакет. Проверка уникальности имени бакета")
+    void checkSameBuckets() {
+        String newName = getRandomBucketName();
+        new IndexPage().goToS3CloudStoragePage()
+                .addBucket(name, true)
+                .createBucket()
+                .checkBucketExistence(name, true)
+                .addBucket(name, true)
+                .createSameBucket()
+                .closeBucketForm()
+                .addBucket(newName, true)
+                .createBucket()
+                .checkBucketExistence(newName, true)
+                .deleteBucket(name)
+                .deleteBucket(newName)
+                .checkBucketExistence(name, false)
+                .checkBucketExistence(newName, false);
+    }
 }
