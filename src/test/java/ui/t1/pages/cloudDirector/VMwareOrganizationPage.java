@@ -15,9 +15,11 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ui.cloud.tests.productCatalog.TestUtils.scrollToTheTop;
 
 public class VMwareOrganizationPage {
     SelenideElement roleDropDown = $x("//*[@id ='mui-component-select-role_id']");
+    SelenideElement cloudDirectorPage = $x("//a[text() = 'Список VMware организаций']");
     Button usersTab;
     Button dataCentreTab;
 
@@ -32,6 +34,13 @@ public class VMwareOrganizationPage {
     public VMwareOrganizationPage goToUsers() {
         usersTab.click();
         return this;
+    }
+
+    @Step("Переход на страницу Список VMware организаций")
+    public CloudDirectorPage goToCloudDirectorPage() {
+        scrollToTheTop();
+        cloudDirectorPage.click();
+        return new CloudDirectorPage();
     }
 
     @Step("Создание пользователя")
