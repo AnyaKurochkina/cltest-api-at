@@ -40,8 +40,9 @@ public class ObjectsModal extends AbstractLayerS3<ObjectsModal> {
     }
 
     @Step("Загрузка объектов '{path}'")
-    public ObjectsLayer addObjects(String... pathes)
+    public ObjectsLayer addObjects(AccessLevel access, String... pathes)
     {
+        Select.byLabel("Доступ").set(access.getAccess());
         for  (String path:pathes)
             new InputFile(path).importFile();
         Button.byText("Загрузить").click();

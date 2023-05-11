@@ -1,5 +1,6 @@
 package ui.t1.pages.S3Storage;
 
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.elements.Button;
 import ui.t1.pages.S3Storage.AccessRules.AccessRulesLayer;
@@ -23,6 +24,7 @@ public class AbstractLayerS3<PageObjectClass> {
 
     public PageObjectClass gotoLayer(Class<PageObjectClass> pageObjectClass){
         this.namedLayer.click();
+//        Waiting.sleep(10000);
         return page(pageObjectClass);
     }
 
@@ -47,7 +49,7 @@ public class AbstractLayerS3<PageObjectClass> {
     }
 
     @Step("Переход на вкладку 'Веб-сайт' в бакете")
-    public WebSiteLayer gotoAccessWebSiteLayer(){
+    public WebSiteLayer gotoWebSiteLayerr(){
         return new WebSiteLayer("Веб-сайт").gotoLayer(WebSiteLayer.class);
     }
 

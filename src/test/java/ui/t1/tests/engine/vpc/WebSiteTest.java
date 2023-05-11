@@ -10,23 +10,34 @@ import ui.t1.tests.engine.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Feature("Бакеты. Объекты")
+@Feature("Бакеты. Веб-сайт")
 public class WebSiteTest extends AbstractStorageTest {
 
     @Test
     @Order(1)
-    @TmsLink("994567")
-    @DisplayName("Объекты. Загрузить объект")
-    void uploadObject() {
+    @TmsLink("542103")
+    @DisplayName("Веб-сайт. Включение режима + Конечная точка")
+    void websiteEndpoint() {
 
         new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
                 .openBucket(name)
+
                 .gotoObjectsLayer()
+
                 .uploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
-                .checkObjectExists("333.png", true);
+                .addObject("src/test/resources/s3files/index.html", AccessLevel.READFORALL)
+                .checkObjectExists("index.html", true)
+
+                .uploadObject()
+                .addObject("src/test/resources/s3files/error.html", AccessLevel.READFORALL)
+                .checkObjectExists("error.html", true)
+                .gotoWebSiteLayerr()
+
+                .setWebSiteMode(true);
+        //TODO:
+        //Добавить проверку на работоспособность ссылки(скорее всего послать api запрос) + узнать, как чекнуть серты
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -34,134 +45,42 @@ public class WebSiteTest extends AbstractStorageTest {
 
     @Test
     @Order(2)
-    @TmsLink("520456")
-    @DisplayName("Объекты. Получить ссылку на объект")
-    void getObjectLnk() {
+    @TmsLink("542094")
+    @DisplayName("Веб-сайт. Редактирование")
+    void websiteEditing() {
 
         new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
                 .openBucket(name)
+
                 .gotoObjectsLayer()
+
                 .uploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
-                .checkObjectExists("333.png", true)
-                .getObjectLink("333.png");
+                .addObjects( AccessLevel.READFORALL,
+                        "src/test/resources/s3files/index.html",
+                        "src/test/resources/s3files/index1.html",
+                        "src/test/resources/s3files/error.html",
+                        "src/test/resources/s3files/error1.html")
+                .checkObjectExists("index.html", true)
+                .checkObjectExists("index1.html", true)
+                .checkObjectExists("error.html", true)
+                .checkObjectExists("error1.html", true)
+
+                .gotoWebSiteLayerr()
+
+                .setWebSiteMode(true)
+                .openWebSiteSettings()
+                .setIndexName("index1.html")
+                .setErrorName("error1.html")
+                .saveEdit();
+        //TODO:
+        //Добавить проверку на работоспособность ссылки(скорее всего послать api запрос) + узнать, как чекнуть серты
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
     }
 
-    @Test
-    @Order(3)
-    @TmsLink("520445")
-    @DisplayName("Объекты. Переименовать объект")
-    void renameObject() {
-
-        new IndexPage().goToS3CloudStoragePage()
-                .addBucket(name, true)
-                .createBucket()
-                .openBucket(name)
-                .gotoObjectsLayer()
-                .uploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
-                .checkObjectExists("333.png", true)
-                .updateObjectName("333.png", "334.png")
-                .checkObjectExists("333.png", false)
-                .checkObjectExists("334.png", true);
-
-        new IndexPage().goToS3CloudStoragePage()
-                .deleteBucket(name);
-    }
-
-    @Test
-    @Order(4)
-    @TmsLink("520489")
-    @DisplayName("Объекты. Восстановить удаленные объекты в бакете с версионированием")
-    void restoreVersObject() {
-
-        new IndexPage().goToS3CloudStoragePage()
-                .addBucket(name, true)
-                .createBucket()
-                .openBucket(name)
-                .gotoObjectsLayer()
-                .uploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
-                .checkObjectExists("333.png", true)
-                .deleteObject("333.png")
-                .checkObjectExists("333.png", false)
-                .showHideDeleted(true)
-                .checkObjectExists("333.png", true)
-                .restoreObject("333.png")
-                .showHideDeleted(false)
-                .checkObjectExists("333.png", true);
-
-        new IndexPage().goToS3CloudStoragePage()
-                .deleteBucket(name);
-    }
-
-    @Test
-    @Order(5)
-    @TmsLink("675556")
-    @DisplayName("Объекты. Восстановить удаленные объекты в бакете без версионирования")
-    void restoreUnVersObject() {
-
-        new IndexPage().goToS3CloudStoragePage()
-                .addBucket(name, false)
-                .createBucket()
-                .openBucket(name)
-                .gotoObjectsLayer()
-                .uploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
-                .checkObjectExists("333.png", true)
-                .deleteObject("333.png")
-                .checkObjectExists("333.png", false)
-                .showHideDeleted(true)
-                .checkObjectExists("333.png", false);
-
-        new IndexPage().goToS3CloudStoragePage()
-                .deleteBucket(name);
-    }
-
-    @Test
-    @Order(6)
-    @TmsLink("520533")
-    @DisplayName("Объекты. Открыть доступ")
-    void openObjectPublicAccess() {
-
-        new IndexPage().goToS3CloudStoragePage()
-                .addBucket(name, false)
-                .createBucket()
-                .openBucket(name)
-                .gotoObjectsLayer()
-                .uploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
-                .checkObjectExists("333.png", true)
-                .openObjectAccess("333.png");
-
-        new IndexPage().goToS3CloudStoragePage()
-                .deleteBucket(name);
-    }
-
-//    @Test
-//    @Order(2)
-//    @TmsLink("994567")
-//    @DisplayName("Объекты. Удалить несколько объектов")
-//    void deleteObject() {
-//
-//        new IndexPage().goToS3CloudStoragePage()
-//                .addBucket(name, true)
-//                .createBucket()
-//                .openBucket(name)
-//                .gotoObjectsLayer()
-//                .uploadObject()
-//                .addObjects("src/test/resources/s3files/333.png", "src/test/resources/s3files/444.png")
-//                .deleteObjects("333.png", "444.png");
-//
-//        new IndexPage().goToS3CloudStoragePage()
-//                .deleteBucket(name);
-//
-//    }
 
 }
 

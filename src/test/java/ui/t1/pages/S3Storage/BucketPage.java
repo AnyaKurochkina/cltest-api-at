@@ -36,7 +36,7 @@ public class BucketPage {
     }
 
     @Step("Переход на вкладку 'Веб-сайт' в бакете")
-    public WebSiteLayer gotoAccessWebSiteLayer(){
+    public WebSiteLayer gotoWebSiteLayer(){
         Tab.byText("Веб-сайт").switchTo();
         return new WebSiteLayer();
     }

@@ -36,7 +36,7 @@ public class Switch implements TypifiedElement{
     public void setEnabled(boolean enabled){
         if(isEnabled() != enabled)
             label.hover().shouldBe(clickableCnd).click();
-        Waiting.sleep(200);
+        Waiting.sleep(1500);
         Assertions.assertEquals(enabled, isEnabled());
     }
 
