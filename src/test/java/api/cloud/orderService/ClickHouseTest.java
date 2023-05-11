@@ -162,6 +162,25 @@ public class ClickHouseTest extends Tests {
         }
     }
 
+    @TmsLink("1653898")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить информацию о сертификатах {0}")
+    void updateCertsInfo(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            clickHouse.certsInfo();
+        }
+    }
+
+    @Disabled
+    @TmsLink("1653899")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    void updateCerts(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            clickHouse.certsInfo();
+        }
+    }
+
     @TmsLink("377794")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
