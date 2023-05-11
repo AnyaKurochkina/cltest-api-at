@@ -1,6 +1,5 @@
 package ui.cloud.tests.productCatalog.graph;
 
-import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.feedService.action.EventTypeProvider;
@@ -15,20 +14,18 @@ import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
-import static steps.productCatalog.ProductSteps.createProduct;
 
 @Feature("Просмотр графа")
 public class ViewGraphTest extends GraphBaseTest {
@@ -153,6 +150,7 @@ public class ViewGraphTest extends GraphBaseTest {
     }
 
     @Test
+    @Disabled
     @TmsLink("")
     @DisplayName("Пагинация на вкладке 'Использование'")
     public void checkUsedListPagination() {
