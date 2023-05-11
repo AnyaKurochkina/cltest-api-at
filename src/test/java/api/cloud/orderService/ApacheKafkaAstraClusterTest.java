@@ -233,7 +233,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
         }
     }
 
-    @TmsLinks({@TmsLink(""),@TmsLink("")})
+    @TmsLinks({@TmsLink("1652046"),@TmsLink("1652048")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Пакетное создание/удаление квот Kafka {0}")

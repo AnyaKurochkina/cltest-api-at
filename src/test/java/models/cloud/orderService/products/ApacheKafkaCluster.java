@@ -229,7 +229,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void upgrade281() {
-        if(kafkaVersion.equals(KAFKA_VERSION_LATEST)) {
+        if(!kafkaVersion.equals(KAFKA_VERSION_LATEST)) {
             OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}").put("accept", true), this.projectId);
             Assertions.assertEquals(KAFKA_VERSION_LATEST, OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
             kafkaVersion = KAFKA_VERSION_LATEST;
