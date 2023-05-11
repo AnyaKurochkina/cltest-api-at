@@ -152,6 +152,16 @@ public class ClickHouseClusterTest extends Tests {
         }
     }
 
+    @TmsLink("1654650")
+    @Tag("newtest")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить информацию о сертификатах {0}")
+    void updateCertsInfo(ClickHouseCluster product) {
+        try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
+            cluster.certsInfo();
+        }
+    }
+
     @TmsLink("1161953")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")

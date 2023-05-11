@@ -176,6 +176,10 @@ public class ClickHouseCluster extends IProduct {
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
     }
 
+    public void certsInfo() {
+        OrderServiceSteps.executeAction("clickhouse_cluster_certs_info", this, null, this.getProjectId());
+    }
+
     public void addGroupAdmin(String user) {
         JSONObject object = new JSONObject("{\n" +
                 "  \"ad_integration\": true,\n" +
