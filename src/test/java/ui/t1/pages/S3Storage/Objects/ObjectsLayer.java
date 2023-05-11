@@ -4,11 +4,14 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.elements.*;
 import ui.t1.pages.S3Storage.AbstractLayerS3;
+import ui.t1.pages.S3Storage.CORS.CORSLayer;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static core.helper.StringUtils.$x;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
 
@@ -42,7 +45,7 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
                 .$x(".//button")).select("Удалить");
 
         Dialog.byTitle("Удалить объекты?").clickButton("Удалить");
-        Alert.green("Объект успешно удалён");
+        Alert.green("Объект успешно удален");
         return this;
     }
 
@@ -77,7 +80,7 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
         return this;
     }
 
-    @Step("Удаление объекта с именем '{name}'")
+    @Step("Получение ссылки на объект '{name}'")
     public ObjectsLayer getObjectLink(String name){
         objectList = new DataTable(fObjectColumn);
 
@@ -86,6 +89,65 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
                 .$x(".//button")).select("Получить ссылку");
 
         Alert.green("Ссылка на объект успешно скопирована");
+        return this;
+    }
+
+    @Step("Изменение имени объекта '{name}' на '{newName}'")
+    public ObjectsLayer updateObjectName(String name, String newName){
+        objectList = new DataTable(fObjectColumn);
+
+        Menu.byElement(objectList.getRowByColumnValue(fObjectColumn, name)
+                .getElementByColumnIndex(delIdx)
+                .$x(".//button")).select("Переименовать");
+
+        Dialog.byTitle("Переименование объекта")
+                .setInputValue("Новое название", newName)
+                .clickButton("Сохранить");
+
+        Alert.green("Объект успешно обновлен");
+        return this;
+    }
+
+    @Step("Проверка наличия объекта '{objectName}' в списке - '{isExists}'")
+    public ObjectsLayer checkObjectExists(String objectName, Boolean isExists){
+        objectList = new DataTable(fObjectColumn);
+        if (isExists)
+            assertTrue(objectList.isColumnValueEquals(fObjectColumn, objectName));
+        else
+            assertFalse(objectList.isColumnValueEquals(fObjectColumn, objectName));
+        return this;
+    }
+
+    @Step("Восстановление объекта '{objectName}'")
+    public ObjectsLayer restoreObject(String objectName){
+        objectList = new DataTable(fObjectColumn);
+
+        objectList.getRowByColumnValue(fObjectColumn, objectName)
+                .getElementByColumnIndex(delIdx)
+                .$x("(.//button)[1]").click();
+
+        Alert.green("Объект успешно восстановлен");
+        return this;
+    }
+
+    @Step("Открытие доступа к объекту '{objectName}'")
+    public ObjectsLayer openObjectAccess(String objectName){
+        objectList = new DataTable(fObjectColumn);
+
+        Menu.byElement(objectList.getRowByColumnValue(fObjectColumn, objectName)
+                .getElementByColumnIndex(delIdx)
+                .$x(".//button")).select("Открыть доступ");
+
+        Dialog.byTitle("Открыть публичный доступ")
+                .clickButton("Открыть публичный доступ");
+
+        Alert.green("Публичный доступ успешно открыт");
+        return this;
+    }
+
+    @Step("Установка версиониования бакета")
+    public ObjectsLayer showHideDeleted(Boolean isVisible){
+        Switch.byText("Показать удаленные").setEnabled(isVisible);
         return this;
     }
 }

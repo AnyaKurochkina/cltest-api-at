@@ -3,7 +3,6 @@ package ui.t1.pages.S3Storage.Objects;
 import io.qameta.allure.Step;
 import ui.elements.*;
 import ui.t1.pages.S3Storage.AbstractLayerS3;
-import ui.t1.pages.S3Storage.CORS.CORSLayer;
 
 public class ObjectsModal extends AbstractLayerS3<ObjectsModal> {
 

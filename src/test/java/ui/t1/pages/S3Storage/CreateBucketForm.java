@@ -1,7 +1,5 @@
 package ui.t1.pages.S3Storage;
 
-import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.elements.*;
 
@@ -23,13 +21,11 @@ public class CreateBucketForm {
     private void clickVersionity(Boolean isVersioned){
         Switch.byText("Версионирование").setEnabled(isVersioned);
         this.isVers = isVersioned;
-//        CheckBox.byLabel("Версионирование").setChecked(isVersioned);
     }
 
     @Step("Создание бакета")
     public CloudStorageS3 createBucket(){
         Button.byText("Создать").click();
-//        Waiting.sleep(5000);
         Alert.green("Бакет успешно добавлен");
         if (this.isVers)
             Alert.green("Версионирование включено");
