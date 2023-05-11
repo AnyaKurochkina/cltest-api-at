@@ -36,7 +36,7 @@ public class ForbiddenActionExportTest extends Tests {
 
     @SneakyThrows
     @DisplayName("Экспорт нескольких запрещенных действий")
-    @TmsLink("")
+    @TmsLink("1518530")
     @Test
     public void exportForbiddenActionsTest() {
         ExportEntity e = new ExportEntity(simpleForbiddenAction.getId());
@@ -45,7 +45,7 @@ public class ForbiddenActionExportTest extends Tests {
     }
 
     @DisplayName("Экспорт запрещенного действия по Id")
-    @TmsLink("")
+    @TmsLink("1518531")
     @Test
     public void exportForbiddenActionByIdTest() {
         String forbiddenActionName = "forbidden_action_export_test_api";
