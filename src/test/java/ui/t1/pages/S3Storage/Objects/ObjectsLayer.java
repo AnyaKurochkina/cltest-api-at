@@ -14,6 +14,7 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
 
     private Table objectList;
     private final Integer delIdx = 5;
+    private final String fObjectColumn = "Название";
     private final Integer checkIdx = 0;
 
     public ObjectsLayer(String name)
@@ -34,9 +35,9 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
 
     @Step("Удаление объекта с именем '{name}'")
     public ObjectsLayer deleteObject(String name){
-        objectList = new DataTable("Название");
+        objectList = new DataTable(fObjectColumn);
 
-        Menu.byElement(objectList.getRowByColumnValue("Название", name)
+        Menu.byElement(objectList.getRowByColumnValue(fObjectColumn, name)
                 .getElementByColumnIndex(delIdx)
                 .$x(".//button")).select("Удалить");
 
@@ -57,8 +58,8 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
         for(String name:names)
         {
             rowsToCheck.add(
-                    objectList.getRowByColumnValue("Название", name)
-                            .getElementByColumn("Название").$x(".//input"));
+                    objectList.getRowByColumnValue(fObjectColumn, name)
+                            .getElementByColumn(fObjectColumn).$x(".//input"));
         }
 
         for(SelenideElement row:rowsToCheck) {
@@ -73,6 +74,18 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
         Button.byText("Удалить").click();
         Dialog.byTitle("Удалить объекты?").clickButton("Удалить");
 //        Alert.green("Объект успешно удалён");
+        return this;
+    }
+
+    @Step("Удаление объекта с именем '{name}'")
+    public ObjectsLayer getObjectLink(String name){
+        objectList = new DataTable(fObjectColumn);
+
+        Menu.byElement(objectList.getRowByColumnValue(fObjectColumn, name)
+                .getElementByColumnIndex(delIdx)
+                .$x(".//button")).select("Получить ссылку");
+
+        Alert.green("Ссылка на объект успешно скопирована");
         return this;
     }
 }
