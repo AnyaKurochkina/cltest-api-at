@@ -81,7 +81,7 @@ public class ProductCatalogSteps {
     public static String getHealthStatusProductCatalog() {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/health/")
+                .get("/api/healthcheck")
                 .assertStatus(200)
                 .jsonPath()
                 .getString("status");
