@@ -71,6 +71,7 @@ public class ForbiddenActionsListPage extends BaseListPage {
     @Step("Проверка отображения запрещенного действия '{name}' в списке")
     public boolean isForbiddenActionDisplayed(String name) {
         Table table = new Table(nameColumn);
+        if (table.isEmpty()) return false;
         if (table.isColumnValueEquals(nameColumn, name)) return true;
         while (nextPageButtonV2.getButton().isEnabled()) {
             nextPageV2();

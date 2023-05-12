@@ -18,14 +18,12 @@ import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.elements.Alert;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.UUID;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Feature("Редактирование узла графа")
 public class EditNodeTest extends GraphBaseTest {
