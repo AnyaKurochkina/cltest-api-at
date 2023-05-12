@@ -49,10 +49,10 @@ public class BaseListPage {
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
-        Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.scrollIntoView(false).click();
+        Table table = new Table(header);
         Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         String firstValue = table.getValueByColumnInFirstRow(header).getText();
@@ -77,10 +77,10 @@ public class BaseListPage {
 
     @Step("Проверка сортировки по дате по столбцу '{header}' c форматом '{formatter}'")
     public static void checkSortingByDateField(String header, DateTimeFormatter formatter) {
-        Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.click();
+        Table table = new Table(header);
         Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         String firstDateString = table.getValueByColumnInFirstRow(header).getText();

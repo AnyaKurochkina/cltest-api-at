@@ -23,7 +23,6 @@ import java.util.HashMap;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
@@ -211,7 +210,7 @@ public class AddNodeTest extends GraphBaseTest {
         page.getTemplateSelect().setContains(TEMPLATE_NAME);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.enabled);
-        assertEquals(LogLevel.EMPTY.getDisplayName(), page.getLogLevelSelect().getValue());
+        assertEquals(LogLevel.SHORT.getDisplayName(), page.getLogLevelSelect().getValue());
         page.getLogLevelSelect().set(LogLevel.FULL.getDisplayName());
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
@@ -243,7 +242,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         page.getLogLevelTooltipIcon().hover();
         assertEquals("Поле можно редактировать только для узла с параметром " +
-                "\"Название очереди для старта задачи\" = \"internal\" и включенным переопределением уровня логирования", new Tooltip().getElement().getText());
+                        "\"Название очереди для старта задачи\" = \"internal\" и включенным переопределением уровня логирования",
+                new Tooltip().getElement().getText());
         Waiting.find(() -> page.getLogLevelSelect().getValue().equals(LogLevel.SHORT.getDisplayName()), Duration.ofSeconds(3));
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
@@ -314,7 +314,7 @@ public class AddNodeTest extends GraphBaseTest {
         page.getOutputTextArea().setValue(outputValue);
         page.getOutputHint().shouldNotBe(Condition.visible);
         $x("//label[text()='Printed output ']").shouldBe(Condition.visible);
-        page.getPrintedOutputTextArea().clear();
+        page.getPrintedOutputTextArea().setValue("{}");
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
         page.openEditDialog(node);
