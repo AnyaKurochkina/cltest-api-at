@@ -19,6 +19,7 @@ import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GraphPage extends BasePage {
     protected final String saveGraphAlertText = "Граф успешно сохранен";
@@ -46,7 +47,7 @@ public class GraphPage extends BasePage {
 
     @Step("Проверка, что отображаемая версия графа равна '{version}'")
     public GraphPage checkGraphVersion(String version) {
-        graphVersion.shouldBe(Condition.visible).shouldHave(Condition.exactText(version));
+        assertEquals(version, versionDropDown.getValue());
         return new GraphPage();
     }
 
