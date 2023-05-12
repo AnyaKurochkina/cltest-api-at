@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.vpc;
 
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
@@ -27,6 +28,28 @@ public class ObjectsTest extends AbstractStorageTest {
                 .uploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
                 .checkObjectExists("333.png", true);
+
+        new IndexPage().goToS3CloudStoragePage()
+                .deleteBucket(name);
+    }
+
+    @Test
+    @Order(7)
+    @TmsLink("520411")
+    @DisplayName("Объекты. Скачать объект")
+    void downloadObject() {
+
+        new IndexPage().goToS3CloudStoragePage()
+                .addBucket(name, true)
+                .createBucket()
+                .openBucket(name)
+                .gotoObjectsLayer()
+                .uploadObject()
+                .addObject("src/test/resources/s3files/333.png", AccessLevel.OWNERONLY)
+                .updateObjectName("333.png", "334.png")
+                .checkObjectExists("334.png", true)
+                .downloadObject("334.png");
+        Waiting.sleep(7000);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);

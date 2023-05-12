@@ -145,9 +145,20 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
         return this;
     }
 
-    @Step("Установка версиониования бакета")
+    @Step("Установка режима отображения удалённых объектов")
     public ObjectsLayer showHideDeleted(Boolean isVisible){
         Switch.byText("Показать удаленные").setEnabled(isVisible);
+        return this;
+    }
+
+    @Step("Открытие доступа к объекту '{objectName}'")
+    public ObjectsLayer downloadObject(String objectName){
+        objectList = new DataTable(fObjectColumn);
+
+        Menu.byElement(objectList.getRowByColumnValue(fObjectColumn, objectName)
+                .getElementByColumnIndex(delIdx)
+                .$x(".//button")).select("Скачать");
+
         return this;
     }
 }
