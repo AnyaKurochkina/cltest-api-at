@@ -73,6 +73,7 @@ public class AllowedActionsListPage extends BaseListPage {
     @Step("Проверка отображения разрешенного действия '{name}' в списке")
     public boolean isAllowedActionDisplayed(String name) {
         Table table = new Table(nameColumn);
+        if (table.isEmpty()) return false;
         if (table.isColumnValueEquals(nameColumn, name)) return true;
         while (nextPageButtonV2.getButton().isEnabled()) {
             nextPageV2();

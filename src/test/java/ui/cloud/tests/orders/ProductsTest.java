@@ -3,6 +3,7 @@ package ui.cloud.tests.orders;
 import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -117,9 +118,9 @@ public class ProductsTest extends Tests {
     @Test
     @TmsLinks({@TmsLink("513987"), @TmsLink("1291555")})
     @DisplayName("Ограничение продукта по ролям keycloak")
-    //Для учётки должна быть добавлена роль "superadmin-product_catalog" в Keycloak
+        //Для учётки должна быть добавлена роль "superadmin-product_catalog" в Keycloak
     void checkProductRestrictionByKeycloakRole() {
-        String name = "at_ui_check_product_role_restriction";
+        String name = "at_ui_check_product_kk_role_restriction";
         String keycloakRole = "superadmin-product_catalog";
         createProduct(name, name);
         partialUpdateProductByName(name, new JSONObject().put("is_open", "true").put("in_general_list", "true")

@@ -10,6 +10,7 @@ import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionsListPage;
 import ui.elements.Table;
 
 import static core.utils.AssertUtils.assertHeaders;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Feature("Список запрещенных действий")
@@ -60,6 +61,6 @@ public class ForbiddenActionsListTest extends ForbiddenActionBaseTest {
         assertTrue(page.isForbiddenActionDisplayed(forbiddenAction.getName()));
         page.getProviderSelect().set(EventProvider.OPENSTACK.getValue());
         page.getApplyFiltersButton().click();
-        assertTrue(page.isForbiddenActionDisplayed(forbiddenAction.getName()));
+        assertFalse(page.isForbiddenActionDisplayed(forbiddenAction.getName()));
     }
 }

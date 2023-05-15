@@ -39,13 +39,13 @@ public class GraphNodesPage extends GraphPage {
             "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[2]");
     private final SelenideElement deleteNodeButton = $x("(//div[@class='react-flow']//" +
             "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[3]");
-    private final SelenideElement nodeName = $x("//form//input[@name = 'name']");
-    private final Input nodeDescription = Input.byXpath("//form//input[@name = 'description']");
-    private final SelenideElement formAddNodeButton = $x("//form//div[text() = 'Добавить']//parent::button");
-    private final SelenideElement formSaveNodeButton = $x("//form//div[text() = 'Сохранить']//parent::button");
-    private final SelenideElement formCancelButton = $x("//form//div[text() = 'Отмена']//ancestor::button");
-    private final TextArea inputTextArea = TextArea.byXPath("//form//label[text()='Input']/following::textarea[1]");
-    private final TextArea outputTextArea = TextArea.byXPath("//form//label[text()='Output']/following::textarea[1]");
+    private final Input nodeName = Input.byXpath("//div[@role='dialog']//input[@name = 'name']");
+    private final Input nodeDescription = Input.byXpath("//div[@role='dialog']//input[@name = 'description']");
+    private final Button formAddNodeButton = Button.byXpath("//div[@role='dialog']//button[.='Добавить']");
+    private final Button formSaveNodeButton = Button.byXpath("//div[@role='dialog']//button[.='Сохранить']");
+    private final Button formCancelButton = Button.byXpath("//div[@role='dialog']//button[.='Отмена']");
+    private final TextArea inputTextArea = TextArea.byXPath("//div[@role='dialog']//label[text()='Input']/following::textarea[1]");
+    private final TextArea outputTextArea = TextArea.byXPath("//div[@role='dialog']//label[text()='Output']/following::textarea[1]");
     private final TextArea printedOutputTextArea = TextArea.byLabelContains("Printed output");
     private final Input numberInput = Input.byName("number");
     private final Input timeoutInput = Input.byName("timeout");
@@ -57,7 +57,7 @@ public class GraphNodesPage extends GraphPage {
     private final SwitchV2 holdSwitch = SwitchV2.byInputName("hold");
     private final SwitchV2 isSequentialSwitch = SwitchV2.byInputName("is_sequential");
     private final SwitchV2 damageOrderOnErrorSwitch =
-            SwitchV2.byXPath("//form//input[@name='damage_order_on_error']/ancestor::span[contains(@class, 'switchBase')]");
+            SwitchV2.byXPath("//div[@role='dialog']//input[@name='damage_order_on_error']/ancestor::span[contains(@class, 'switchBase')]");
     private final SelenideElement nameRequiredFieldHint =
             $x("//label[contains(text(),'Название')]/ancestor::div[2]//div[text()='Поле обязательно для заполнения']");
     private final SelenideElement descriptionRequiredFieldHint =
@@ -174,7 +174,7 @@ public class GraphNodesPage extends GraphPage {
         fitViewButton.click();
         selectNodeInGraph(node);
         copyNodeButton.click();
-        nodeName.shouldHave(Condition.exactValue(node.getName() + "_clone"));
+        nodeName.getInput().shouldHave(Condition.exactValue(node.getName() + "_clone"));
         Waiting.sleep(500);
         formAddNodeButton.click();
         saveGraphWithPatchVersion();
@@ -212,7 +212,7 @@ public class GraphNodesPage extends GraphPage {
         if (node.getTimeout().equals(0)) {
             incorrectTimeoutHint.shouldBe(Condition.visible);
         }
-        formAddNodeButton.shouldBe(Condition.disabled);
+        formAddNodeButton.getButton().shouldBe(Condition.disabled);
         formCancelButton.click();
         return this;
     }
@@ -237,7 +237,7 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         editNodeButton.click();
         Waiting.sleep(1000);
-        nodeName.shouldHave(Condition.exactValue(node.getName()));
+        nodeName.getInput().shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.getInput().shouldHave(Condition.exactValue(node.getDescription()));
         if (!StringUtils.isNullOrEmpty(node.getSubgraphId())) {
             Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
@@ -257,8 +257,8 @@ public class GraphNodesPage extends GraphPage {
                 outputTextArea.getWhitespacesRemovedValue());
         assertEquals(node.getPrintedOutput().toString(), printedOutputTextArea.getWhitespacesRemovedValue());
         additionalTab.click();
-        numberInput.getInput().shouldHave(Condition.exactValue(node.getNumber() + ""));
-        timeoutInput.getInput().shouldHave(Condition.exactValue(node.getTimeout() + ""));
+        numberInput.getInput().shouldHave(Condition.exactValue(String.valueOf(node.getNumber())));
+        timeoutInput.getInput().shouldHave(Condition.exactValue(String.valueOf(node.getTimeout())));
         countInput.getInput().shouldHave(Condition.exactValue(node.getCount()));
         conditionInput.getInput().shouldHave(Condition.exactValue(node.getCondition()));
         assertEquals(node.getOnPrebilling(), onPrebillingSwitch.isEnabled());
