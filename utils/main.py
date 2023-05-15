@@ -13,7 +13,7 @@ config = configparser.ConfigParser()
 config.read('config.ini')
 
 port = int(config.get('DEFAULT', 'port'))
-project_path = config.get('DEFAULT', 'project_path')
+project_path = os.path.abspath(config.get('DEFAULT', 'project_path'))
 token = config.get('DEFAULT', 'token')
 
 run = False
