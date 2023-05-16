@@ -115,6 +115,15 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Создание графа")
+    public static Graph createGraph(String name, String title) {
+        return Graph.builder()
+                .name(name)
+                .title(title)
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание графа")
     public static Graph createGraph() {
         return Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())

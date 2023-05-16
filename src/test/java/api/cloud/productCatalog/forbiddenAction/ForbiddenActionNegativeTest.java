@@ -46,6 +46,6 @@ public class ForbiddenActionNegativeTest extends Tests {
                 .init()
                 .toJson();
         String msg = createForbiddenAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Поля action, direction должны производить массив с уникальными значениями.", msg);
+        assertEquals("\"non_field_errors\": Поля action, direction должны производить массив с уникальными значениями.", msg);
     }
 }

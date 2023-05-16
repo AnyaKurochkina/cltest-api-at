@@ -167,7 +167,7 @@ public class ActionsTest extends Tests {
         Action getAction = getActionByFilter(action.getActionId(), "with_version_fields=true");
         List<String> versionFields = Arrays.asList("graph_id", "graph_version", "graph_version_pattern", "priority", "data_config_path", "data_config_key",
                 "data_config_fields", "item_restriction", "available_without_money",
-                "auto_removing_if_failed", "skip_on_prebilling", "multiple", "location_restriction", "extra_data");
+                "auto_removing_if_failed", "skip_on_prebilling", "multiple", "location_restriction", "extra_data", "available_with_cost_reduction");
         assertEquals(versionFields, getAction.getVersionFields());
     }
 

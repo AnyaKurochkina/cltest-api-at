@@ -121,7 +121,7 @@ public class PodmanPage extends IProductPage {
         generalInfoTab.switchTo();
         node.scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new PodmanPage.RoleTable().getRoleRow(role));
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     public void issueClientCertificate(String nameCertificate) {

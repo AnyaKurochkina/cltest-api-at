@@ -34,12 +34,14 @@ public class ApacheKafkaClusterPage extends IProductPage {
     private static final String HEADER_ACL_ID_TRANSACTION = "Идентификатор транзакции или маска";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_ACL_IDEMPOTENT = "CN сертификата клиента";
+    private static final String HEADER_QUOTAS = "Размер квоты producer (байт/с)";
 
 
     SelenideElement btnTopics = $x("//button[.='Топики']");
     SelenideElement btnAclTopics = $x("//button[.='ACL на топики']");
     SelenideElement btnAclTrans = $x("//button[.='ACL на транзакции']");
     SelenideElement btnIdempAcl = $x("//button[.='Идемпотентные ACL']");
+    SelenideElement btnQuotas = $x("//button[.='Квоты']");
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement btnAdd = $x("//button[contains(@class, 'array-item-add')]");
@@ -68,7 +70,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
 
     public void checkConfiguration() {
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         new Table("Роли узла").getRowByIndex(0).scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).checkAlert(false).build());
     }
@@ -169,16 +171,15 @@ public class ApacheKafkaClusterPage extends IProductPage {
     }
 
     public void enlargeDisk(String name, String size, @NotNull SelenideElement node) {
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_CLUSTER, "Увеличить дисковое пространство", "Подтвердить",
                 () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
-        //expandDisk(name, size, node);
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Double.parseDouble(firstSizeDisk) +
                 Double.parseDouble(size));
@@ -200,9 +201,6 @@ public class ApacheKafkaClusterPage extends IProductPage {
                     btnAdd.shouldBe(Condition.enabled).click();
                 Select.byLabel("Топик", i + 1).set(names.get(i));
                 Select.byLabel("Тип очистки").set("compact");
-                //dlg.setDropDownValue("Топики", names.get(i));
-//                if(i==1)
-//                Select.byLabel("Изменяемый параметр топика",4).set("compact");
             }
         });
         btnTopics.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -301,7 +299,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 }
                 if (acl.type == Acl.Type.ALL_TRANSACTION) {
                     radioGroup.select("Все транзакции");
-                    DropDown.byLabel("Префикс", -1).select(acl.mask);
+                    Select.byLabel("Префикс", -1).set(acl.mask);
                 }
             }
         });//,ActionParameters.builder().checkAlert(false).build()
@@ -323,7 +321,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 if (i != 0)
                     btnAdd.shouldBe(Condition.enabled).click();
                 Acl acl = acls.get(i);
-                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(acl.certificate);
+                Select.byLabel("Common Name сертификата клиента", i + 1).set(acl.certificate);
                 RadioGroup radioGroup = RadioGroup.byLabel("Введите идентификатор транзакции", i + 1);
                 if (acl.type == Acl.Type.BY_MASK)
                     Input.byLabel("Введите префикс идентификатора транзакции", -1).setValue(acl.mask);
@@ -333,7 +331,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 }
                 if (acl.type == Acl.Type.ALL_TRANSACTION) {
                     radioGroup.select("Все транзакции");
-                    DropDown.byLabel("Префикс", -1).select(acl.mask);
+                    Select.byLabel("Префикс", -1).set(acl.mask);
                 }
 
             }
@@ -357,13 +355,13 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 if (i != 0)
                     btnAdd.shouldBe(Condition.enabled).click();
                 Acl topicAcl = aclTopic.get(i);
-                DropDown.byLabel("Common Name сертификата клиента", i + 1).select(topicAcl.certificate);
+                Select.byLabel("Common Name сертификата клиента", i + 1).set(topicAcl.certificate);
                 RadioGroup radioGroup = RadioGroup.byLabel("Выберите топик", i + 1);
                 if (topicAcl.type == Acl.Type.BY_MASK)
                     Input.byLabel("Маска имени топика", -1).setValue(topicAcl.mask);
                 if (topicAcl.type == Acl.Type.BY_NAME) {
                     radioGroup.select("По имени");
-                    DropDown.byLabel("Топики", -1).select(topicAcl.mask);
+                    Select.byLabel("Топики", -1).set(topicAcl.mask);
                 }
                 if (topicAcl.type == Acl.Type.ALL_TOPIC) {
                     radioGroup.select("Все топики");
@@ -387,6 +385,30 @@ public class ApacheKafkaClusterPage extends IProductPage {
         }
     }
 
+    public void createQuotas(String name) {
+     btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (!(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueContains(HEADER_ACL_IDEMPOTENT, name))) {
+            runActionWithParameters("Квоты", "Пакетное создание квот Kafka", "Подтвердить", () -> {
+                RadioGroup.byLabel("Выберите квоту").select("По умолчанию (все клиенты)");
+                Input.byLabel("Размер квоты producer *").setValue(name);
+            });
+            btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            Assertions.assertEquals(name, new Table(HEADER_ACL_IDEMPOTENT).getRowByColumnValue(HEADER_QUOTAS, name).getValueByColumn(HEADER_QUOTAS),
+                    "Ошибка cоздания квоты");
+        }
+    }
+
+    public void deleteQuotas(String name) {
+     btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            runActionWithParameters("Квоты", "Пакетное удаление квот Kafka", "Подтвердить", () -> {
+                RadioGroup.byLabel("Выберите квоту").select("По умолчанию (все клиенты)");
+            });
+            btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnIdempAcl.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Assertions.assertFalse(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueEquals("", name), "Ошибка удаления квоты");
+
+    }
+
     public void dellAclIdempotent(String nameT1) {
         btnIdempAcl.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueContains(HEADER_ACL_IDEMPOTENT, nameT1))) {
@@ -405,7 +427,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 .clickOrderMore()
                 .selectProduct("Apache Kafka Cluster Astra");
         new ApacheKafkaClusterOrderPage().getNameCluster().setValue(nameCluster);
-        //    new Alert().checkColor(Alert.Color.RED).checkText("Значение поля не уникально").close();
+        new Alert().check(Alert.Color.RED,"Значение поля не уникально").close();
     }
 
 

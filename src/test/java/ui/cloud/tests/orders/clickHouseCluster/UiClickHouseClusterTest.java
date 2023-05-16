@@ -16,7 +16,7 @@ import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.LoginCloudPage;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
 import ui.cloud.pages.orders.ClickHouseClusterPage;
 import ui.cloud.pages.orders.OrderUtils;
@@ -44,7 +44,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

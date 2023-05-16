@@ -23,7 +23,6 @@ public class Button implements TypifiedElement {
         return new Button(button);
     }
 
-    @Step("Получение Button по тексту {text}")
     public static Button byText(String text) {
         return byText(text, 1);
     }

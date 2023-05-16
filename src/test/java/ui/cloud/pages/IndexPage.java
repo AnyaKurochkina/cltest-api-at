@@ -1,7 +1,5 @@
 package ui.cloud.pages;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import core.utils.Waiting;
@@ -18,10 +16,11 @@ import static com.codeborne.selenide.Selenide.$x;
 @Getter
 public class IndexPage {
 
-    final SelenideElement linkServicesList = StringUtils.$x("//a[.='Список сервисов']");
+    private final SelenideElement linkServicesList = StringUtils.$x("//a[.='Список сервисов']");
     private final SelenideElement orderMoreBtn = $x("//button[contains(., 'Заказать еще')]");
     private final SelenideElement portalAuditLink = $x("//a[@href='/analytics/audit']");
 
+    @Step("Переход на страницу заказа продуктов")
     public ProductsPage clickOrderMore() {
         orderMoreBtn.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return new ProductsPage();
@@ -35,7 +34,7 @@ public class IndexPage {
 
     @Step("Переход на страницу Аналитика.Аудит")
     public AuditPage goToPortalAuditPage() {
-        portalAuditLink.shouldBe(Condition.visible).click();
+        portalAuditLink.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Waiting.sleep(500);
         return new AuditPage();
     }

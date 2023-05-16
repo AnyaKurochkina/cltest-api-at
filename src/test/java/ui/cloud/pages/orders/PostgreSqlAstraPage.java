@@ -40,7 +40,7 @@ public class PostgreSqlAstraPage extends IProductPage {
     SelenideElement ram = $x("(//h5)[2]");
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+
 
     public PostgreSqlAstraPage(PostgreSQL product) {
         super(product);
@@ -112,11 +112,6 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_APP, "Обновить минорную версию СУБД", "Подтвердить", () -> {
             CheckBox.byLabel("Я подтверждаю, что уведомлен, что в процессе выполнения действия может быть временная недоступность сервера").setChecked(true);
         });
-        runActionWithoutParameters(BLOCK_APP, "Обновить минорную версию СУБД");
-        CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
-        btnGeneralInfo.click();
-//        Assertions.assertEquals(value, max_connections.getText(), "Максимальное количество подключений " +
-//                "не соответствует установленному значению ");
     }
 
     public void stopHard() {
@@ -260,7 +255,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -274,7 +269,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             groups.forEach(groupsElement::set);
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
@@ -285,7 +280,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }

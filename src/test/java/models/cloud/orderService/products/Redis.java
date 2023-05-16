@@ -123,6 +123,12 @@ public class Redis extends IProduct {
         save();
     }
 
+    public void changeNotifyKeyspaceEvents(String attr) {
+        OrderServiceSteps.executeAction("change_redis_param_notify", this,
+                new JSONObject().put("notify_keyspace_events", attr), this.getProjectId());
+    }
+
+
     public void restart() {
         restart("reset_two_layer");
     }

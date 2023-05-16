@@ -102,6 +102,16 @@ public class RedisAstraTest extends Tests {
         }
     }
 
+    @TmsLink("1654563")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить парметр notify-keyspace-events {0}")
+    void changeNotifyKeyspaceEvents(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.changeNotifyKeyspaceEvents("KEA");
+        }
+    }
+
     @TmsLink("795819")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")

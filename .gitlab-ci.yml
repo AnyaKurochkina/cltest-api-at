@@ -1,5 +1,6 @@
-image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
-#image: maven:3.3.9-jdk-8
+#image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/lab_tests:94d34a6e-25"
+#image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/ubuntu_java_mvn_ssh:0b734ebe-1"
+image: "git-registry.service.t1-cloud.ru/cloud/registry-snapshot/portal/ubuntu-java-mvn-ssh:d39003fb-3" #checked for vulnrblts
 
 stages:
   - test
@@ -14,23 +15,27 @@ variables:
   GROUPS:
     value: ""
     description: "-Dgroups="
-  MAVEN_OPTS_1: "-Drepository=https://repo1.maven.org/maven2/"
-  MAVEN_OPTS_2: "-Dtest=$TEST -Denv=$ENV $JAVA_PASS_TESTS -Dgroups=$GROUPS"
+  THREAD_COUNT:
+    value: "4"
+    description: "-Djunit.jupiter.execution.parallel.config.fixed.parallelism=$THREAD_COUNT"
+  MAVEN_OPTS_1:
+    value: ""
+    description: "if you need to bring new libs off the web fill in ALL OF THIS -Drepository=https://repo1.maven.org/maven2/"
+  MAVEN_OPTS_2: "-Dtest=$TEST -Denv=$ENV $JAVA_PASS_TESTS -Dgroups=$GROUPS -Djunit.jupiter.execution.parallel.config.fixed.parallelism=$THREAD_COUNT"
   MAVEN_OPTS_3: "-Dmaven.repo.local=.m2/repository"
   SSH_OPT: StrictHostKeyChecking=no
 
 test:
   stage: test
   before_script:
-    - apt-get update
-    - apt-get install -y  openssh-client openssh-server openssh-sftp-server openssl locales
     - export LANG=C.utf8
     - export SSHPASS="$SSH_PASS"
   allow_failure: true
   script:
-    - mvn compile $MAVEN_OPTS_1 $MAVEN_OPTS_3
     - mkdir -p .m2/repository/cassandra/jdbc-driver/1.4/
-    - sshpass -e scp -r -o $SSH_OPT qa-admin@10.13.20.10:/home/qa-admin/.m2/ .m2
+    - sshpass -e scp -r -o $SSH_OPT qa-admin@10.13.20.10:/home/qa-admin/.m2/* .m2
+    #- ls -la .m2/repository/ > m2_after_first_scp_from_nginx
+    - mvn compile $MAVEN_OPTS_1 $MAVEN_OPTS_3
     - cp src/main/resources/lib/cassandra-jdbc-driver-1.4.jar .m2/repository/cassandra/jdbc-driver/1.4/
     - mvn $MAVEN_OPTS_1 $MAVEN_OPTS_3 -X install:install-file -Dfile=.m2/repository/cassandra/jdbc-driver/1.4/cassandra-jdbc-driver-1.4.jar -DgroupId=cassandra -DartifactId=jdbc-driver -Dversion=1.4 -Dpackaging=jar
     - mvn clean test $MAVEN_OPTS_1 $MAVEN_OPTS_2 $MAVEN_OPTS_3 3>&1 1>&2 2>&3 1>>$CI_PROJECT_DIR/clean_test_log | tee -a $CI_PROJECT_DIR/clean_test_log
@@ -39,24 +44,24 @@ test:
     - gzip $CI_PROJECT_DIR/clean_test_log
     - mkdir -p target/site/allure-maven-plugin/history
     - sshpass -e scp -r -o $SSH_OPT qa-admin@10.13.20.10:~/reports/allure-maven-plugin/history target/allure-results
-    #  - ls -la target/allure-results
-    #  - ls -la target/site/allure-maven-plugin/history
     - mvn $MAVEN_OPTS_1 $MAVEN_OPTS_3 allure:report
+    #- ls -la .m2/repository/ > m2_sent_to_nginx_after_allure_report
     - sshpass -e scp -r -o $SSH_OPT .m2/* qa-admin@10.13.20.10:~/.m2/
     - sshpass -e scp -r -o $SSH_OPT target/site/allure-maven-plugin qa-admin@10.13.20.10:~/reports
-    #  - ls -la $CI_PROJECT_DIR
     - tar zcfv logs.tgz $CI_PROJECT_DIR/logs/
     - export CURR_DATE=`date +"%Y-%m-%d_%T" | sed -r 's/:/_/g'`
-    #  - echo $CURR_DATE
     - sshpass -e ssh -o $SSH_OPT qa-admin@10.13.20.10 "mkdir -p ~/reports/logs/$CURR_DATE/"
     - sshpass -e scp -o $SSH_OPT $CI_PROJECT_DIR/clean_test_log.gz qa-admin@10.13.20.10:~/reports/logs/$CURR_DATE/
     - sshpass -e scp -o $SSH_OPT $CI_PROJECT_DIR/logs.tgz qa-admin@10.13.20.10:~/reports/logs/$CURR_DATE/
     - sshpass -e scp -r -o $SSH_OPT target/site/allure-maven-plugin/ qa-admin@10.13.20.10:~/reports/logs/$CURR_DATE
-    #artifacts:
-    # paths:
-    #- $CI_PROJECT_DIR/clean_test_log.gz
-    #- $CI_PROJECT_DIR/logs.tgz
-    #expire_in: 60 minutes
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
       when: never
+    - when: on_success
+#  artifacts:
+#    when: always
+#    paths:
+#    - m2_after_first_scp_from_nginx
+#    - m2_sent_to_nginx_after_allure_report
+#    expire_in: 1 h
+

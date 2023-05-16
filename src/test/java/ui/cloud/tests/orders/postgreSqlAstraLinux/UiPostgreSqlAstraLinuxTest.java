@@ -31,8 +31,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;
-    // = PostgreSQL.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/e97aaf5e-4940-4c25-8340-e73d589fcd07/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    PostgreSQL product; // = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/25148ad5-9b01-4e0d-93c1-593d0d8f96a7/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
@@ -41,7 +40,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 

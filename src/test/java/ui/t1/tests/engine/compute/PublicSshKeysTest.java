@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
@@ -13,6 +14,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Публичные SSH ключи")
+@Epic("Cloud Compute")
 public class PublicSshKeysTest extends AbstractComputeTest {
     String name = getRandomName();
 

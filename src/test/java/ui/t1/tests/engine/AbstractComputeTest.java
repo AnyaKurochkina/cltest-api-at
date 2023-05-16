@@ -16,7 +16,7 @@ import ui.elements.TypifiedElement;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.LoginT1Page;
+import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 
 import java.util.ArrayList;
@@ -24,7 +24,6 @@ import java.util.List;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
-@Epic("Cloud Compute")
 @Tags({@Tag("t1_ui_cloud_compute")})
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractComputeTest extends Tests {
@@ -48,7 +47,7 @@ public abstract class AbstractComputeTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     public void beforeEach() {
-        new LoginT1Page(project.getId())
+        new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
     }
 

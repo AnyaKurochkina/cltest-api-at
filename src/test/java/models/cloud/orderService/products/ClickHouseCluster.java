@@ -108,7 +108,7 @@ public class ClickHouseCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         Flavor flavorCh = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:clickhouse:dev:dev").get(0);
         Flavor flavorZk = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:zookeeper:dev:dev").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
@@ -174,6 +174,10 @@ public class ClickHouseCluster extends IProduct {
     public void deleteGroupAdmin(String user) {
         OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_app_admin_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
+    public void certsInfo() {
+        OrderServiceSteps.executeAction("clickhouse_cluster_certs_info", this, null, this.getProjectId());
     }
 
     public void addGroupAdmin(String user) {
