@@ -283,12 +283,12 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @DisplayName("UI ApacheKafkaCluster.Пакетное создание квот Kafka")
     void createQuotas() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createQuotas("131074"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createQuotas("131072"));
     }
 
     @Test
     @Order(24)
-    @TmsLink("1429077")
+    @TmsLink("1549051")
     @DisplayName("UI ApacheKafkaCluster.Пакетное удаление квот Kafka")
     void deleteQuotas() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
