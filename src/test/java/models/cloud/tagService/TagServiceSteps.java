@@ -4,15 +4,16 @@ import core.enums.Role;
 import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.http.QueryBuilder;
-import models.cloud.tagService.v1.FilterResultV1;
-import models.cloud.tagService.v1.InventoryTagsV1;
+import models.cloud.tagService.v1.*;
 import models.cloud.tagService.v2.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static models.Entity.serialize;
-import static models.cloud.tagService.TagServiceAPI.*;
+import static api.routes.TagServiceAPI.*;
 
 
 public class TagServiceSteps {
@@ -79,6 +80,29 @@ public class TagServiceSteps {
                 .api(v1TagsUniqueValues, context.getType(), context.getId(), id)
                 .jsonPath()
                 .getList("list", String.class);
+    }
+
+    public static void tagsInventoryTagsDeleteV1(Context context, String tagId, List<Inventory> inventories) {
+        new Http(Configure.TagService)
+                .setRole(Role.TAG_SERVICE_ADMIN)
+                .body(new JSONObject().put("inventories",new JSONArray(inventories
+                        .stream().map(Inventory::getId).collect(Collectors.toList()))))
+                .api(v1TagsInventoryTagsDelete, context.getType(), context.getId(), tagId);
+    }
+
+    public static TagsInventoriesV1 tagsInventoriesV1(Context context, String tagId) {
+        return new Http(Configure.TagService)
+                .setRole(Role.TAG_SERVICE_ADMIN)
+                .api(v1TagsInventories, context.getType(), context.getId(), tagId)
+                .extractAllPages(TagsInventoriesV1.class);
+    }
+
+    public static CreateOrUpdateInventoryTags tagsInventoryTagsUpdateV1(Context context, String tagId, CreateOrUpdateLinksWithInventoriesRequest request) {
+        return new Http(Configure.TagService)
+                .setRole(Role.TAG_SERVICE_ADMIN)
+                .body(serialize(request))
+                .api(v1TagsInventoryTagsUpdate, context.getType(), context.getId(), tagId)
+                .extractAs(CreateOrUpdateInventoryTags.class);
     }
 
     public static List<PutInventoryRequest.PutInventory> updateInventoriesV2(PutInventoryRequest request) {

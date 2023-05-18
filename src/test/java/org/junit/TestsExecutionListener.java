@@ -12,7 +12,7 @@ import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
 import core.helper.http.Api;
-import core.helper.http.Routes;
+import api.routes.Routes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;

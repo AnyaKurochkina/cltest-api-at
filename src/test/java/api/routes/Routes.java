@@ -1,4 +1,4 @@
-package core.helper.http;
+package api.routes;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

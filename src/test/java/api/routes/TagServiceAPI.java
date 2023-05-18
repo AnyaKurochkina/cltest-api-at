@@ -1,7 +1,6 @@
-package models.cloud.tagService;
+package api.routes;
 
 import core.helper.http.Api;
-import core.helper.http.Routes;
 
 public class TagServiceAPI implements Routes {
     @Route(method = Method.GET, path = "/v1/clear-cache/", status = 200)

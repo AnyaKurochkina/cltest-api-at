@@ -8,7 +8,7 @@ import core.helper.StringUtils;
 import core.helper.http.Http;
 import lombok.*;
 import models.Entity;
-import models.cloud.tagService.v1.FilterResultItemV1;
+import models.cloud.tagService.v1.FilterResultV1Item;
 import models.cloud.tagService.v1.FilterResultV1;
 import models.cloud.tagService.v2.FilterResultV2;
 import models.cloud.tagService.v2.FilterResultV2Page;
@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static models.cloud.tagService.TagServiceAPI.*;
+import static api.routes.TagServiceAPI.*;
 
 @Builder @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -66,7 +66,7 @@ public class Inventory extends Entity {
                 .orElseThrow(() -> new ResourceNotFoundException("Не найден item с id " + id));
     }
 
-    public FilterResultItemV1 inventoryListItemV1(FilterResultV1 filterResult) {
+    public FilterResultV1Item inventoryListItemV1(FilterResultV1 filterResult) {
         return filterResult.getList().stream().filter(i -> i.getInventory().equals(id)).findFirst()
                 .orElseThrow(() -> new ResourceNotFoundException("Не найден item с id " + id));
     }

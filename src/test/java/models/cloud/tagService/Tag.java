@@ -14,8 +14,8 @@ import org.json.JSONObject;
 import java.util.Objects;
 import java.util.Optional;
 
-import static models.cloud.tagService.TagServiceAPI.v1TagsCreate;
-import static models.cloud.tagService.TagServiceAPI.v1TagsDelete;
+import static api.routes.TagServiceAPI.v1TagsCreate;
+import static api.routes.TagServiceAPI.v1TagsDelete;
 
 @Builder @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
