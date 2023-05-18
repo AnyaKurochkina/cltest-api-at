@@ -153,17 +153,4 @@ public class InventoryV2Test extends AbstractInventoryTest {
         FilterResultV1 filterResult = TagServiceSteps.inventoryFilterV1(context, filter);
         Assertions.assertEquals(1, filterResult.getList().get(0).getTags().size());
     }
-
-    @Test
-    @TmsLink("1665584")
-    @DisplayName("Inventory V1. Получение уникальных значений для тега")
-    void getTagsUniqueValuesV1() {
-        Tag tag = generateTags(1).get(0);
-        List<Inventory> iList = generateInventories(3);
-        inventoryTagsV1(context, InventoryTagsV1.builder().tag(tag.getId()).inventory(iList.get(0).getId()).value("value_1").build());
-        inventoryTagsV1(context, InventoryTagsV1.builder().tag(tag.getId()).inventory(iList.get(1).getId()).value("value_2").build());
-        inventoryTagsV1(context, InventoryTagsV1.builder().tag(tag.getId()).inventory(iList.get(2).getId()).value("value_1").build());
-        List<String> values = TagServiceSteps.getTagsUniqueValuesV1(context, tag.getId());
-        AssertUtils.assertEqualsList(Arrays.asList("value_1", "value_2"), values);
-    }
 }
