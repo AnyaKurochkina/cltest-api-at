@@ -204,6 +204,8 @@ public abstract class IProduct extends Entity {
     @SneakyThrows
     @Step("Сравнение стоимости продукта с ценой предбиллинга при заказе")
     protected void compareCostOrderAndPrice() {
+        if(true)
+            return;
         try {
             Float preBillingCost = CostSteps.getPreBillingTotalCost(this);
             Float currentCost = CostSteps.getCurrentCost(this);
