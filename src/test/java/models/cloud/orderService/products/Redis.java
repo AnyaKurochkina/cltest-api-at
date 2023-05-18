@@ -124,7 +124,7 @@ public class Redis extends IProduct {
     }
 
     public void changeNotifyKeyspaceEvents(String attr) {
-        OrderServiceSteps.executeAction("clickhouse_cluster_certs_info", this,
+        OrderServiceSteps.executeAction("change_redis_param_notify", this,
                 new JSONObject().put("notify_keyspace_events", attr), this.getProjectId());
     }
 
