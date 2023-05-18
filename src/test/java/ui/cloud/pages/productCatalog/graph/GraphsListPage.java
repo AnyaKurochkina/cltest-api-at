@@ -22,9 +22,9 @@ public class GraphsListPage extends BaseListPage {
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы'][@type]");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
     private final Input nameInput = Input.byName("name");
-    private final SelenideElement inputDescriptionField = $x("//input[@name='description']");
+    private final TextArea descriptionTextArea = TextArea.byName("description");
     private final SelenideElement inputAuthorField = $x("//*[@name ='author']");
-    private final Select typeDropDown = Select.byLabel("Тип");
+    private final RadioGroup typeRadioGroup = RadioGroup.byFieldsetLabel("Тип");
     private final SelenideElement clearSearchButton = $x("//*[@placeholder='Поиск']/../button");
     private final SelenideElement graphNameValidationHint = $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement titleRequiredFieldHint = $x("//input[@name='title']/parent::div/following-sibling::div");
@@ -38,14 +38,9 @@ public class GraphsListPage extends BaseListPage {
     }
 
     @Step("Создание графа '{graph.name}'")
-    public GraphPage createGraph(models.cloud.productCatalog.graph.Graph graph) {
+    public GraphPage createGraph(Graph graph) {
         addNewObjectButton.click();
-        inputTitleField.setValue(graph.getTitle());
-        nameInput.setValue(graph.getName());
-        typeDropDown.set(graph.getType());
-        inputDescriptionField.setValue(graph.getDescription());
-        inputAuthorField.setValue(graph.getAuthor());
-        createButton.click();
+        new GraphPage().setAttributes(graph).getSaveButton().click();
         return new GraphPage();
     }
 
@@ -105,8 +100,8 @@ public class GraphsListPage extends BaseListPage {
         addNewObjectButton.click();
         inputTitleField.setValue(title);
         nameInput.setValue(name);
-        typeDropDown.set(type);
-        inputDescriptionField.setValue(description);
+        typeRadioGroup.select(type);
+        descriptionTextArea.setValue(description);
         inputAuthorField.setValue(author);
         if (title.isEmpty()) {
             titleRequiredFieldHint.shouldBe(Condition.visible);
@@ -117,8 +112,8 @@ public class GraphsListPage extends BaseListPage {
         if (author.isEmpty()) {
             authorRequiredFieldHint.shouldBe(Condition.visible);
         }
-        createButton.getButton().shouldBe(Condition.disabled);
-        cancelButton.click();
+        saveButton.getButton().shouldBe(Condition.disabled);
+        backButton.click();
         return new GraphsListPage();
     }
 
@@ -149,7 +144,7 @@ public class GraphsListPage extends BaseListPage {
                     () -> nameInput.getInput().sendKeys("t"), Duration.ofSeconds(3));
             graphNameValidationHint.shouldBe(Condition.visible);
         }
-        cancelButton.click();
+        backButton.click();
         return this;
     }
 
