@@ -86,6 +86,10 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement outputHint = $x("//label[text()='Output']/following-sibling::p");
     private final SelenideElement printedOutputHint = $x("//label[text()='Printed output ']/following::p");
 
+    public GraphNodesPage() {
+        WebDriverRunner.getWebDriver().manage().window().maximize();
+    }
+
     @Step("Добавление узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage addNodeAndSave(GraphItem node) {
         //Сериализация, чтобы подтянулись значения из JSON шаблона
@@ -126,7 +130,6 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Редактирование узла '{node.name}' с подграфом")
     public GraphNodesPage editSubgraphNode(GraphItem node, String version, String description) {
-        WebDriverRunner.getWebDriver().manage().window().maximize();
         generalInfoTab.getElement().scrollIntoView(true);
         fitViewButton.click();
         selectNodeInGraph(node);
@@ -143,7 +146,6 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Редактирование узла '{node.name}' с шаблоном")
     public GraphNodesPage editTemplateNode(GraphItem node, String version, String description) {
-        WebDriverRunner.getWebDriver().manage().window().maximize();
         generalInfoTab.getElement().scrollIntoView(true);
         fitViewButton.click();
         selectNodeInGraph(node);
@@ -169,7 +171,6 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Копирование узла графа '{node.name}' и сохранение графа")
     public GraphNodesPage copyNodeAndSave(GraphItem node) {
-        WebDriverRunner.getWebDriver().manage().window().maximize();
         generalInfoTab.getElement().scrollIntoView(true);
         fitViewButton.click();
         selectNodeInGraph(node);

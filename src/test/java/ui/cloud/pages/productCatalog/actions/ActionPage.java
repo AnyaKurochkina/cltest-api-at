@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.actions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.enums.EventProvider;
@@ -19,6 +20,8 @@ import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -59,7 +62,7 @@ public class ActionPage extends BasePage {
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(action.getDescription()));
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(action.getGraphId());
-        Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
         Assertions.assertEquals(action.getGraphVersion(), graphVersionSelect.getValue());
         return this;
     }
