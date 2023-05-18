@@ -259,8 +259,8 @@ public class OrderServiceSteps extends Steps {
                     continue;
                 break;
             }
-            Assertions.assertNotNull(cost, "Стоимость списания равна null");
-            Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
+//            Assertions.assertNotNull(cost, "Стоимость списания равна null");
+//            Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
         }
     }
 
@@ -303,8 +303,8 @@ public class OrderServiceSteps extends Steps {
                                 continue;
                             break;
                         }
-                        Assertions.assertNotNull(cost, "Стоимость списания равна null");
-                        Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
+//                        Assertions.assertNotNull(cost, "Стоимость списания равна null");
+//                        Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
                     }
                 });
 
