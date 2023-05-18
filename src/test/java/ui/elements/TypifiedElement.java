@@ -1,14 +1,13 @@
 package ui.elements;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Driver;
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
 import core.utils.Waiting;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
 
+import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 
 public interface TypifiedElement {
@@ -35,9 +34,49 @@ public interface TypifiedElement {
         checkProject();
     }
 
-    //  *[contains(text(), '₽/сут.')]    button[.='Действия']
+    /**
+     * Получить ближайший по DOM элемент с xpathSearchElement к элементу xpathNearElement
+     * *[contains(text(), '₽/сут.')]    button[.='Действия']
+     * @param xpathSearchElement xpath искомого element
+     * @param xpathNearElement xpath близкого к искомому element элемента
+     * @return искомый element
+     */
     static SelenideElement getNearElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
         return $x(String.format("(//%s/ancestor-or-self::*[count(.//%s) = 1])[last()]//%s", xpathNearElement, xpathSearchElement, xpathSearchElement));
+    }
+
+    /**
+     * Получить ближайший по расстоянию элемент с xpathSearchElement к элементу xpathNearElement
+     * @param xpathSearchElement xpath искомого element
+     * @param xpathNearElement xpath близкого к искомому element элемента
+     * @return искомый element
+     */
+    static WebElement findNearestElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
+            SelenideElement elementE1 = $x(xpathNearElement);
+            ElementsCollection elementsE2 = $$x(xpathSearchElement);
+            if (elementsE2.isEmpty()) {
+                throw new NoSuchElementException("No elements matching xpathSearchElement found");
+            }
+            WebElement nearestElement = null;
+            double minDistance = Double.MAX_VALUE;
+            for (WebElement element : elementsE2) {
+                double distance = calculateDistance(element, elementE1);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    nearestElement = element;
+                }
+            }
+            if (nearestElement == null)
+                throw new NoSuchElementException("No nearest element found");
+            return nearestElement;
+    }
+
+    static double calculateDistance(WebElement element1, WebElement element2) {
+        int x1 = element1.getLocation().getX();
+        int y1 = element1.getLocation().getY();
+        int x2 = element2.getLocation().getX();
+        int y2 = element2.getLocation().getY();
+        return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
     }
 
     static String getIndex(int index) {

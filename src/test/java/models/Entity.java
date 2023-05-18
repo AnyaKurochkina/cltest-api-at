@@ -6,8 +6,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
 import core.helper.http.StatusResponseException;
-import io.qameta.allure.Epics;
-import io.qameta.allure.LabelAnnotation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

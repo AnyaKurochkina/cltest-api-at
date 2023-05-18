@@ -10,13 +10,17 @@ import lombok.*;
 import models.Entity;
 import models.cloud.tagService.v1.FilterResultItemV1;
 import models.cloud.tagService.v1.FilterResultV1;
-import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.FilterResultV2;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.json.JSONObject;
-import steps.resourceManager.ResourceManagerSteps;
 
-import java.util.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+import static models.cloud.tagService.TagServiceAPI.*;
 
 @Builder @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
@@ -36,7 +40,7 @@ public class Inventory extends Entity {
     @Override
     public Entity init() {
         Objects.requireNonNull(context, "Не задан контекст");
-        contextPath = Optional.ofNullable(contextPath).orElse(ResourceManagerSteps.getProjectPath(context.getType(), context.getId()) + "/");
+        contextPath = Optional.ofNullable(contextPath).orElse(context.getContextPath());
         id = Optional.ofNullable(id).orElse(UUID.randomUUID().toString());
         objectType = Optional.ofNullable(objectType).orElse(DEFAULT_TYPE);
         return this;
@@ -52,8 +56,7 @@ public class Inventory extends Entity {
         Inventory inventory = new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
-                .post("/v2/{}/{}/inventories/", context.getType(), context.getId())
-                .assertStatus(201)
+                .api(v2InventoriesCreate, context.getType(), context.getId())
                 .extractAs(Inventory.class);
         StringUtils.copyAvailableFields(inventory, this);
     }
@@ -73,8 +76,7 @@ public class Inventory extends Entity {
         new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
-                .delete("/v2/{}/{}/inventories/{}/", context.getType(), context.getId(), id)
-                .assertStatus(204);
+                .api(v2InventoriesDelete, context.getType(), context.getId(), id);
     }
 
     public void updateAcl(List<String> securityPrincipals, List<String> managers) {
@@ -84,8 +86,6 @@ public class Inventory extends Entity {
         new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(req)
-                .put("/v1/inventory-acl/{}/", id)
-                .assertStatus(200);
+                .api(v1InventoryAclUpdate, id);
     }
-
 }
