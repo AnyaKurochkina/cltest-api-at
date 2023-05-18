@@ -236,6 +236,7 @@ public class S3CephTenantPage extends IProductPage {
     }
 
     public void addBucket(String name,String size) {
+        new S3CephTenantPage.VirtualMachineTable(STATUS).checkPowerStatus(S3CephTenantPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_INFO, "Добавить бакет", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Добавить бакет");

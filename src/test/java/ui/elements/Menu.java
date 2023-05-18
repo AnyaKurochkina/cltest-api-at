@@ -29,7 +29,7 @@ public class Menu implements TypifiedElement {
     }
 
     private SelenideElement getItem(String item) {
-        return $$x("//ul/li[.='{}']", item).filter(Condition.visible).first();
+        return $$x("//ul//li[.='{}']", item).filter(Condition.visible).first();
     }
 
     private class ClickAndRunMenu extends Condition {
