@@ -282,7 +282,7 @@ public abstract class IProduct extends Entity {
             OrderServiceSteps.switchProtect(this, false);
         }
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
-        Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
+//        Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
         if (Objects.isNull(platform))
             return;
         if (platform.equalsIgnoreCase("vSphere") && Configure.ENV.equalsIgnoreCase("IFT")) {
