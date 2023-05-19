@@ -45,7 +45,7 @@ public class Alert implements TypifiedElement {
 
     public void waitClose() {
         try {
-            if(element.exists())
+            if (element.exists())
                 element.shouldNot(Condition.visible);
         } catch (Throwable ignored) {
         }
@@ -56,7 +56,8 @@ public class Alert implements TypifiedElement {
             Button button = Button.byElement(getElement().$x("button[.='']"));
             button.click();
             waitClose();
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
         return this;
     }
 
@@ -66,11 +67,18 @@ public class Alert implements TypifiedElement {
         element = getElement().shouldBe(Condition.visible);
         final String elementText = element.getText();
         Assertions.assertTrue(elementText.toLowerCase().contains(message.toLowerCase()),
-                        String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));
+                String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));
         Assertions.assertEquals(color.getValue(), fromString(element.getCssValue("border-bottom-color")).asHex(),
                 "Неверный цвет Alert");
         return this;
     }
+
+    @Step("Проверка на отсутствие красных алертов")
+    public static void  checkNoRedAlerts() {
+        SelenideElement element = new Alert().getElement();
+        Assertions.assertFalse(element.exists() && fromString(element.getCssValue("border-bottom-color")).asHex().equals(Color.RED));
+    }
+
 
     @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
@@ -79,7 +87,8 @@ public class Alert implements TypifiedElement {
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }
-        } catch (Throwable ignored) {}
+        } catch (Throwable ignored) {
+        }
     }
 
     public enum Color {
