@@ -76,7 +76,7 @@ public class Alert implements TypifiedElement {
     @Step("Проверка на отсутствие красных алертов")
     public static void  checkNoRedAlerts() {
         SelenideElement element = new Alert().getElement();
-        Assertions.assertFalse(element.exists() && fromString(element.getCssValue("border-bottom-color")).asHex().equals(Color.RED));
+        if (element.exists()) Assertions.assertFalse(fromString(element.getCssValue("border-bottom-color")).asHex().equals(Color.RED));
     }
 
 
