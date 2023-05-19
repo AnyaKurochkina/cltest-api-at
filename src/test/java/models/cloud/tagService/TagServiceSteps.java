@@ -97,6 +97,14 @@ public class TagServiceSteps {
                 .extractAllPages(TagsInventoriesV1.class);
     }
 
+    public static Tag v1TagsPartialUpdate(Tag tag, String tagId) {
+        return new Http(Configure.TagService)
+                .setRole(Role.TAG_SERVICE_ADMIN)
+                .body(serialize(tag))
+                .api(v1TagsPartialUpdate, tag.getContext().getType(), tag.getContext().getId(), tagId)
+                .extractAs(Tag.class);
+    }
+
     public static CreateOrUpdateInventoryTags tagsInventoryTagsUpdateV1(Context context, String tagId, CreateOrUpdateLinksWithInventoriesRequest request) {
         return new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)

@@ -5,6 +5,7 @@ import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.tagService.Context;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.Tag;
 import models.cloud.tagService.TagServiceSteps;
@@ -14,6 +15,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.authorizer.AuthorizerSteps;
 
 import java.util.Arrays;
 import java.util.List;
@@ -84,5 +86,17 @@ public class InventoryV1Test extends AbstractInventoryTest {
                 .addUpdatedDataSet(new CreateOrUpdateInventoryTags.InventoryTagWithoutTagInfo(iList.get(0).getId(), tag.getId(), "value_2"))
                 .build();
         Assertions.assertEquals(createOrUpdateInventoryTagsExpected, createOrUpdateInventoryTags);
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Tag V1. Редактирование тега")
+    void v1TagsPartialUpdate() {
+        List<Tag> tags = generateTags(2);
+//        tag.setContextPath(context.getContextPath());
+        Tag request = Tag.builder().context(context).value("value_1").parent(tags.get(1).getId()).build();
+//        tag.setKey("key_1");
+//        tag.setTagType("int");
+        Assertions.assertEquals(tags.get(0), TagServiceSteps.v1TagsPartialUpdate(request, tags.get(0).getId()));
     }
 }
