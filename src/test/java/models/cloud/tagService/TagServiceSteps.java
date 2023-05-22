@@ -105,6 +105,21 @@ public class TagServiceSteps {
                 .extractAs(Tag.class);
     }
 
+    public static Tag v1TagsUpdate(Tag tag, String tagId) {
+        return new Http(Configure.TagService)
+                .setRole(Role.TAG_SERVICE_ADMIN)
+                .body(serialize(tag))
+                .api(v1TagsUpdate, tag.getContext().getType(), tag.getContext().getId(), tagId)
+                .extractAs(Tag.class);
+    }
+
+    public static Tag v1TagsRead(Context context, String id) {
+        return new Http(Configure.TagService)
+                .setRole(Role.TAG_SERVICE_ADMIN)
+                .api(v1TagsUpdate, context.getType(), context.getId(), id)
+                .extractAs(Tag.class);
+    }
+
     public static CreateOrUpdateInventoryTags tagsInventoryTagsUpdateV1(Context context, String tagId, CreateOrUpdateLinksWithInventoriesRequest request) {
         return new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)

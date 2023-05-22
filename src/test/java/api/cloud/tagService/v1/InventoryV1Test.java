@@ -88,15 +88,31 @@ public class InventoryV1Test extends AbstractInventoryTest {
         Assertions.assertEquals(createOrUpdateInventoryTagsExpected, createOrUpdateInventoryTags);
     }
 
+
+    //TODO: Доделать когда будет фикс
     @Test
     @TmsLink("")
-    @DisplayName("Tag V1. Редактирование тега")
+    @DisplayName("Tag V1. Редактирование тега PATH")
     void v1TagsPartialUpdate() {
         List<Tag> tags = generateTags(2);
-//        tag.setContextPath(context.getContextPath());
         Tag request = Tag.builder().context(context).value("value_1").parent(tags.get(1).getId()).build();
-//        tag.setKey("key_1");
-//        tag.setTagType("int");
-        Assertions.assertEquals(tags.get(0), TagServiceSteps.v1TagsPartialUpdate(request, tags.get(0).getId()));
+        tags.get(0).setValue("value_1");
+        tags.get(0).setParent(tags.get(1).getId());
+        Assertions.assertAll("Проверка полученного tag",
+                () -> Assertions.assertEquals(tags.get(0), TagServiceSteps.v1TagsUpdate(request, tags.get(0).getId())),
+                () -> Assertions.assertEquals(tags.get(0), TagServiceSteps.v1TagsRead(context, tags.get(0).getId())));
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Tag V1. Редактирование тега PUT")
+    void v1TagsUpdate() {
+        List<Tag> tags = generateTags(2);
+        Tag request = Tag.builder().context(context).value("value_1").parent(tags.get(1).getId()).build();
+        tags.get(0).setValue("value_1");
+        tags.get(0).setParent(tags.get(1).getId());
+        Assertions.assertAll("Проверка полученного tag",
+                () -> Assertions.assertEquals(tags.get(0), TagServiceSteps.v1TagsUpdate(request, tags.get(0).getId())),
+                () -> Assertions.assertEquals(tags.get(0), TagServiceSteps.v1TagsRead(context, tags.get(0).getId())));
     }
 }
