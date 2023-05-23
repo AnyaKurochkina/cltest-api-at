@@ -31,7 +31,7 @@ public class Menu implements TypifiedElement {
 
     private SelenideElement getItem(String item) {
         return $$x("//li[.='{}']", item)
-                .shouldBe(CollectionCondition.anyMatch("", WebElement::isDisplayed))
+                .shouldBe(CollectionCondition.anyMatch("Поиск элемента меню " + item, WebElement::isDisplayed))
                 .filter(Condition.visible)
                 .first();
     }
