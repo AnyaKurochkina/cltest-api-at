@@ -94,6 +94,8 @@ public class Product extends Entity {
     @JsonProperty("version_fields")
     private List<String> versionFields;
     private Object envs;
+    @JsonProperty("tag_list")
+    private List<Object> tagList;
 
     @Override
     public Entity init() {
