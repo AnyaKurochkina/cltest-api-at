@@ -1,6 +1,7 @@
 package ui.elements;
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import org.openqa.selenium.WebElement;
@@ -30,7 +31,9 @@ public class Menu implements TypifiedElement {
 
     private SelenideElement getItem(String item) {
         return $$x("//li[.='{}']", item)
-                .shouldBe(CollectionCondition.anyMatch("", WebElement::isDisplayed)).first();
+                .shouldBe(CollectionCondition.anyMatch("", WebElement::isDisplayed))
+                .filter(Condition.visible)
+                .first();
     }
 
     private void waitItem(String item) {
