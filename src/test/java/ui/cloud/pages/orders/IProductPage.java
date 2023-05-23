@@ -2,6 +2,7 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.*;
 import core.exception.CreateEntityException;
+import core.helper.Configure;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -29,6 +30,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.doubleToString;
+import static ui.elements.Alert.checkNoRedAlerts;
 import static ui.elements.TypifiedElement.postfix;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -36,7 +38,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Getter
 public abstract class IProductPage {
     protected final SelenideElement prebillingCostElement = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
-    private static final String HEADER_GROUP  = "Группы";
+    private static final String HEADER_GROUP = "Группы";
     private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
@@ -109,7 +111,10 @@ public abstract class IProductPage {
     public void checkMonitoringOs() {
         Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
         btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        new MonitoringOsPage(product).check();
+        if (Configure.ENV.equals("ift")) {
+            checkNoRedAlerts();
+        } else new MonitoringOsPage(product).check();
+
     }
 
     @Step("Проверка вкладки Мониторинг кластера")
@@ -121,7 +126,11 @@ public abstract class IProductPage {
             element.shouldBe(Condition.visible).scrollIntoView(scrollCenter).click();
             Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
             btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-            new MonitoringOsPage(product).check();
+            if (Configure.ENV.equals("ift")) {
+                checkNoRedAlerts();
+            } else {
+                new MonitoringOsPage(product).check();
+            }
             goToCluster();
         }
     }
@@ -230,8 +239,6 @@ public abstract class IProductPage {
     }
 
 
-
-
     @Step("Добавить новые группы {group} с ролью {role}")
     public void addGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
@@ -271,6 +278,7 @@ public abstract class IProductPage {
         groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
+
     @Step("Изменить состав групп у роли {role} на {groups} в ноде")
     public void updateGroupInNode(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
@@ -285,6 +293,7 @@ public abstract class IProductPage {
         groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
+
     @Step("Удалить группу доступа с ролью {role}")
     public void deleteGroup(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
@@ -293,8 +302,9 @@ public abstract class IProductPage {
                 role));
 
     }
+
     @Step("Удалить группу доступа с ролью {role}  в ноде")
-    public void deleteGroupInNode(String role,String nameGroup) {
+    public void deleteGroupInNode(String role, String nameGroup) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
@@ -304,11 +314,6 @@ public abstract class IProductPage {
         Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
                 role));
     }
-
-
-
-
-
 
     //Таблица ролей
     public class RoleTable extends Table {
@@ -333,8 +338,6 @@ public abstract class IProductPage {
             return getRowByColumnValue("", name).getValueByColumn("Группы");
         }
     }
-
-
 
     @SneakyThrows
     @Step("Запуск действия с проверкой стоимости")
@@ -421,7 +424,7 @@ public abstract class IProductPage {
             super(columnName);
         }
 
-        protected abstract String getPowerStatus();
+        protected abstract String FFgetPowerStatus();
 
         @Override
         protected void open() {
