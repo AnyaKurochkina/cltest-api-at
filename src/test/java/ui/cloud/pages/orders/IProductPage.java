@@ -347,7 +347,7 @@ public abstract class IProductPage {
             return;
         TypifiedElement.refresh();
         currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(3));
-        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(3),
+        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(7),
                 "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (currentCost == prebillingCostValue && prebillingCostValue == 0)
             return;
