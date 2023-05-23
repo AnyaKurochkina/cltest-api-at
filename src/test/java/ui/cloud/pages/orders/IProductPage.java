@@ -424,7 +424,7 @@ public abstract class IProductPage {
             super(columnName);
         }
 
-        protected abstract String FFgetPowerStatus();
+        protected abstract String getPowerStatus();
 
         @Override
         protected void open() {
