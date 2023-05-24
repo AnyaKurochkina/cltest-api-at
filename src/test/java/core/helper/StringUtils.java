@@ -56,6 +56,10 @@ public final class StringUtils {
         }
     }
 
+    public static int count(String str, String target) {
+        return (str.length() - str.replace(target, "").length()) / target.length();
+    }
+
     public static String getClipBoardText() {
         Selenide.executeJavaScript("async function getCBContents() { try { window.cb = await navigator.clipboard.readText(); console.log(\"Pasted content: \", window.cb); } catch (err) { console.error(\"Failed to read clipboard contents: \", err); window.cb = \"Error : \" + err; } } getCBContents();");
         return Objects.requireNonNull(Selenide.executeJavaScript("return window.cb;"));

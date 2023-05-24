@@ -11,7 +11,7 @@ import java.util.List;
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class FilterResultItemV1 {
+public class FilterResultV1Item {
     String inventory;
     String contextPath;
     List<Tag> tags;
