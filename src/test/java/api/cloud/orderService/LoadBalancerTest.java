@@ -287,7 +287,7 @@ public class LoadBalancerTest extends Tests {
     }
 
     @TmsLink("1676788")
-    @Tag("actions3")
+    @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Откат конфигурации {0}")
     void revertConfig(LoadBalancer product) {
