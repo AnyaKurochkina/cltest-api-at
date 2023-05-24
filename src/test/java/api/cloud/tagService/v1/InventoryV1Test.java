@@ -41,7 +41,7 @@ public class InventoryV1Test extends AbstractInventoryTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1676840")
     @DisplayName("Tag V1. Удаление связей тег-объект инфраструктуры")
     void tagsInventoryTagsDeleteV1() {
         Tag tag = generateTags(1).get(0);
@@ -54,7 +54,7 @@ public class InventoryV1Test extends AbstractInventoryTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1676843")
     @DisplayName("Tag V1. Получение объектов инфраструктуры для тега")
     void tagsInventoriesV1() {
         Tag tag = generateTags(1).get(0);
@@ -68,7 +68,7 @@ public class InventoryV1Test extends AbstractInventoryTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1676844")
     @DisplayName("Tag V1. Работа со связями тег-объект инфраструктуры")
     void tagsInventoryTagsUpdateV1() {
         Tag tag = generateTags(1).get(0);
@@ -88,10 +88,8 @@ public class InventoryV1Test extends AbstractInventoryTest {
         Assertions.assertEquals(createOrUpdateInventoryTagsExpected, createOrUpdateInventoryTags);
     }
 
-
-    //TODO: Доделать когда будет фикс
     @Test
-    @TmsLink("")
+    @TmsLink("1676845")
     @DisplayName("Tag V1. Редактирование тега PATH")
     void v1TagsPartialUpdate() {
         List<Tag> tags = generateTags(2);
@@ -104,7 +102,7 @@ public class InventoryV1Test extends AbstractInventoryTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1676846")
     @DisplayName("Tag V1. Редактирование тега PUT")
     void v1TagsUpdate() {
         List<Tag> tags = generateTags(2);
