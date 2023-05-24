@@ -14,6 +14,7 @@ import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
+import ui.t1.pages.supportCenter.Notifications;
 
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
@@ -22,6 +23,10 @@ import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 
 @Getter
 public class IndexPage {
+    Button linkResources = Button.byXpath("//a[.='Ресурсы']");
+    Button linkTools = Button.byXpath("//a[.='Инструменты']");
+    Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
+    Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
@@ -134,5 +139,14 @@ public class IndexPage {
         Menu.byElement(btnAction).select("Отключить услугу");
         Button.byText("Отключить").click();
         btnAction.shouldNotBe(Condition.exist);
+        Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
+        Button.byText("Отключить").click();
+    }
+
+    @Step("Переход в Центр уведомлений")
+    public Notifications goToNotificationCenter(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        return new Notifications();
     }
 }
