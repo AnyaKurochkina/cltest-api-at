@@ -33,7 +33,7 @@ public class KeyCloakSteps {
                 .setContentType("application/x-www-form-urlencoded")
                 .setWithoutToken()
                 .disableAttachmentLog()
-                .body(String.format("client_id=portal-front&grant_type=password&username=%s&password=%s",
+                .body(String.format("scope=openid email profile&client_id=portal-front&grant_type=password&username=%s&password=%s",
                         Objects.requireNonNull(globalUser.getUsername()),
                         URLEncoder.encode(Objects.requireNonNull(globalUser.getPassword()), "UTF-8")))
                 .post("auth/realms/Portal/protocol/openid-connect/token")
