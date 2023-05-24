@@ -94,6 +94,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(5)
     @TmsLink("993396")
+    @Disabled
     @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
     void restart() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);

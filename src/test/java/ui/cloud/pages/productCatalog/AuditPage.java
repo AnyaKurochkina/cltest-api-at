@@ -15,6 +15,7 @@ import ui.elements.*;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
 public class AuditPage extends BasePage {
@@ -98,7 +99,7 @@ public class AuditPage extends BasePage {
     @Step("Проверка детальных сведений первой записи в таблице аудита")
     public AuditPage checkFirstRecordDetails(String contextId, String address, String request, String response) {
         Table table = new Table("Учетная запись");
-        table.getRow(0).get().scrollIntoView(TypifiedElement.scrollCenter).click();
+        table.getRow(0).get().scrollIntoView(scrollCenter).click();
         this.contextId.shouldHave(Condition.exactText(contextId));
         this.address.shouldHave(Condition.text(address));
         if (showRequest.getChecked() && !request.equals(NO_VALUE)) {
@@ -157,7 +158,7 @@ public class AuditPage extends BasePage {
     @Step("Проверка копирования в буфер обмена")
     public AuditPage checkCopyToClipboard(String value, String contextId) {
         openRecordByContextId(contextId);
-        copyDataButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
+        copyDataButton.getButton().scrollIntoView(scrollCenter).click();
         Assertions.assertTrue(StringUtils.getClipBoardText().contains(this.contextId.getText()));
         copyAddressButton.click();
         Assertions.assertEquals(StringUtils.getClipBoardText(), address.getText());
@@ -173,7 +174,7 @@ public class AuditPage extends BasePage {
     @Step("Проверка отображения '{value}' в полноэкранном режиме ответа")
     public AuditPage checkResponseFullViewContains(String value, String contextId) {
         openRecordByContextId(contextId);
-        showFullView.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
+        showFullView.getButton().scrollIntoView(scrollCenter).click();
         Waiting.sleep(500);
         Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed(),
                 "Ответ не содержит " + value);
@@ -236,7 +237,7 @@ public class AuditPage extends BasePage {
     @Step("Раскрытие дополнительных фильтров")
     private void showAdditionalFilters() {
         if (!operationTypeSelect.getElement().isDisplayed()) {
-            additionalFilters.scrollIntoView(false).click();
+            additionalFilters.scrollIntoView(scrollCenter).click();
         }
     }
 
@@ -297,7 +298,7 @@ public class AuditPage extends BasePage {
         Table table = new Table("Учетная запись");
         for (SelenideElement row : table.getRows()) {
             if (this.contextId.exists() && this.contextId.getText().equals(contextId)) break;
-            row.scrollIntoView(TypifiedElement.scrollCenter).click();
+            row.scrollIntoView(scrollCenter).click();
         }
     }
 }

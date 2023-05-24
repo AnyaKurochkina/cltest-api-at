@@ -314,7 +314,7 @@ public class AddNodeTest extends GraphBaseTest {
         page.getOutputTextArea().setValue(outputValue);
         page.getOutputHint().shouldNotBe(Condition.visible);
         $x("//label[text()='Printed output ']").shouldBe(Condition.visible);
-        page.getPrintedOutputTextArea().setValue("{}");
+        page.getPrintedOutputTextArea().clear();
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
         page.openEditDialog(node);

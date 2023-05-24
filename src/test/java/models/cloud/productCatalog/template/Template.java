@@ -89,6 +89,8 @@ public class Template extends Entity implements IProductCatalog {
     private String updateDt;
     @JsonProperty("current_version")
     private String currentVersion;
+    @JsonProperty("tag_list")
+    private List<Object> tagList;
 
     @Override
     public Entity init() {
