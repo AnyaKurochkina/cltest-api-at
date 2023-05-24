@@ -37,10 +37,10 @@ public class Menu implements TypifiedElement {
                 .filter(Condition.visible)
                 .first();
         String disabled = element.getAttribute("aria-disabled");
-        if (Objects.nonNull(disabled))
-            if (disabled.equals("true"))
+        if(Objects.nonNull(disabled))
+            if(disabled.equals("true"))
                 throw new ElementClickInterceptedException(String.format("Элемент '%s' disabled", item));
-        return element;
+            return element;
     }
 
     private void waitItem(String item) {

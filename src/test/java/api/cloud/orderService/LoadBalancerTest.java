@@ -286,6 +286,23 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
+    @TmsLink("1676788")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Откат конфигурации {0}")
+    void revertConfig(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Backend backend = Backend.builder()
+                    .servers(serversTcp)
+                    .backendName("revert_config")
+                    .advancedCheck(true)
+                    .checkUri("/status")
+                    .build();
+            balancer.revertConfig(backend);
+
+        }
+    }
+
     @TmsLink("1286267")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
