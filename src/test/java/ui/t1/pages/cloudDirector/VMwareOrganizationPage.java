@@ -67,7 +67,7 @@ public class VMwareOrganizationPage {
         new DataCentreTable().clickAdd();
         new DataCentreCreatePage()
                 .setDataCentreName(name)
-                .setDataCentreProfile("SP-High")
+                .setDataCentreProfile("High")
                 .orderDataCentreWithSameName();
     }
 

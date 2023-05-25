@@ -3,7 +3,6 @@ package ui.t1.pages.cloudDirector;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.Slider;
