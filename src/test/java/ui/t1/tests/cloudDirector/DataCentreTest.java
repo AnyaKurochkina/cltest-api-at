@@ -101,7 +101,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         if (Configure.ENV.equals("t1prod")) {
             name = "Veeam-InstantVMRecovery";
         } else {
-            name = "SP-High";
+            name = "SP-Standart";
         }
         StorageProfile profile = new StorageProfile(name, "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()

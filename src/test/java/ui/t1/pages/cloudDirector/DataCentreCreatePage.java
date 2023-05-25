@@ -3,6 +3,7 @@ package ui.t1.pages.cloudDirector;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
+import ui.elements.DropDown;
 import ui.elements.Input;
 import ui.elements.Slider;
 
@@ -28,6 +29,11 @@ public class DataCentreCreatePage {
 
     public DataCentreCreatePage setRam(String ram) {
         Slider.byLabel("Оперативная память (RAM), Gb").setValue(ram);
+        return this;
+    }
+
+    public DataCentreCreatePage setDataCentreProfile(String profile) {
+        DropDown.byXpath("//tbody//button[@title='Open']").select(profile);
         return this;
     }
 

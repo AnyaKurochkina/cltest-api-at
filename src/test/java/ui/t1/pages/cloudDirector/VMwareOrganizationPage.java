@@ -58,6 +58,7 @@ public class VMwareOrganizationPage {
                 .setDataCentreName(name)
                 .setCpu("2")
                 .setRam("4")
+                .setDataCentreProfile("SP-High")
                 .orderDataCentre();
     }
 
@@ -66,6 +67,7 @@ public class VMwareOrganizationPage {
         new DataCentreTable().clickAdd();
         new DataCentreCreatePage()
                 .setDataCentreName(name)
+                .setDataCentreProfile("SP-High")
                 .orderDataCentreWithSameName();
     }
 
