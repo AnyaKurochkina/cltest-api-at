@@ -58,7 +58,7 @@ public class VMwareOrganizationPage {
                 .setDataCentreName(name)
                 .setCpu("2")
                 .setRam("4")
-                .setDataCentreProfile("SP-High")
+                .setDataCentreProfile("High")
                 .orderDataCentre();
     }
 

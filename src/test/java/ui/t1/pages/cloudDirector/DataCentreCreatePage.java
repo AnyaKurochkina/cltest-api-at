@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import ui.elements.DropDown;
 import ui.elements.Input;
+import ui.elements.Select;
 import ui.elements.Slider;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -33,7 +34,7 @@ public class DataCentreCreatePage {
     }
 
     public DataCentreCreatePage setDataCentreProfile(String profile) {
-        DropDown.byXpath("//tbody//button[@title='Open']").select(profile);
+        Select.byXpath("//tbody//button[@title='Open']").setContains(profile);
         return this;
     }
 

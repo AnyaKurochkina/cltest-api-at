@@ -44,7 +44,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public void addProfile(StorageProfile profile) {
         runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
             Button.byText("Добавить профиль оборудования").click();
-            DropDown.byXpath("(//tbody//button[@title='Open'])[2]").select(profile.getName());
+            Select.byXpath("(//tbody//button[@title='Open'])[2]").set(profile.getName());
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//textarea").setValue(profile.getLimit());
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//input[@type = 'radio']")
                     .click();
