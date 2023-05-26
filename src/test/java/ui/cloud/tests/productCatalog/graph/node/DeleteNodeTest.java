@@ -32,7 +32,7 @@ public class DeleteNodeTest extends GraphBaseTest {
 
     @Test
     @TmsLink("490447")
-    @DisplayName("Удаление узла графа")
+    @DisplayName("Удалить узел графа")
     public void deleteGraphNode() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
@@ -45,6 +45,24 @@ public class DeleteNodeTest extends GraphBaseTest {
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
                 .deleteNodeAndSave(node)
+                .checkNodeNotFound(node);
+    }
+
+    @Test
+    @TmsLink("1680535")
+    @DisplayName("Удалить выбранный узел графа")
+    public void deleteSelectedGraphNode() {
+        GraphItem node = GraphItem.builder()
+                .name(SUBGRAPH_NAME)
+                .description(nodeDescription)
+                .subgraphId(subgraph.getGraphId())
+                .number(1)
+                .build();
+        patchGraphWithGraphItem(graph, node);
+        new ControlPanelIndexPage().goToGraphsPage()
+                .findAndOpenGraphPage(NAME)
+                .goToNodesTab()
+                .deleteSelectedNodeAndSave(node)
                 .checkNodeNotFound(node);
     }
 }
