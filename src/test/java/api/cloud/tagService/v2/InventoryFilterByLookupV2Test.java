@@ -5,7 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.tagService.*;
-import models.cloud.tagService.v2.FilterResultV2;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.InventoryTagsV2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -39,7 +39,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "value", "exact")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Нейден неверный inventory");
     }
@@ -62,7 +62,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "value", "iexact")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
     }
 
@@ -84,7 +84,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "value", "icontains")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
     }
 
@@ -106,7 +106,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "val", "startswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Нейден неверный inventory");
     }
@@ -129,7 +129,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "val", "istartswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
     }
 
@@ -151,7 +151,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "lue", "endswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Нейден неверный inventory");
     }
@@ -174,7 +174,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "lue", "iendswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
     }
 
@@ -196,7 +196,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "[a-z]$", "regex")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Нейден неверный inventory");
     }
@@ -219,7 +219,7 @@ public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "[a-z]$", "iregex")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2 filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованых inventories");
     }
 }

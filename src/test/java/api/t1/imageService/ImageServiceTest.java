@@ -144,6 +144,6 @@ public class ImageServiceTest extends Tests {
     @TmsLink("1327717")
     @Test
     public void healthImageServiceTest() {
-        assertEquals("ok", getHealthStatusImageService());
+        assertEquals("OK", getHealthStatusImageService());
     }
 }

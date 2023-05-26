@@ -55,6 +55,7 @@ def run_tests(test_plan, test_run):
     if not match:
         response = set_response(400, 'Bad testPlanId or testRunId')
         run = False
+        print(result.stdout)
         return response
 
     test_thread = Thread(target=run_tests_with_args, args=(match.group(1),))

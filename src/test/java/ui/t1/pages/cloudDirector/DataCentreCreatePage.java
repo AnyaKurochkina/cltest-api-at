@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import ui.elements.Input;
+import ui.elements.Select;
 import ui.elements.Slider;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -28,6 +29,11 @@ public class DataCentreCreatePage {
 
     public DataCentreCreatePage setRam(String ram) {
         Slider.byLabel("Оперативная память (RAM), Gb").setValue(ram);
+        return this;
+    }
+
+    public DataCentreCreatePage setDataCentreProfile(String profile) {
+        Select.byXpath("//tbody//button[@title='Open']").setContains(profile);
         return this;
     }
 

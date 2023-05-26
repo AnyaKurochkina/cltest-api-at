@@ -14,9 +14,12 @@ import org.json.JSONObject;
 import java.util.Objects;
 import java.util.Optional;
 
+import static api.routes.TagServiceAPI.v1TagsCreate;
+import static api.routes.TagServiceAPI.v1TagsDelete;
+
 @Builder @Data
-@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
-@ToString(callSuper = true, onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)
+@ToString(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -27,7 +30,7 @@ public class Tag extends Entity {
     String id;
     String parent;
     String contextPath;
-    @JsonIgnore
+    @JsonIgnore @EqualsAndHashCode.Exclude @ToString.Exclude
     Context context;
 
     @Override
@@ -49,8 +52,7 @@ public class Tag extends Entity {
         Tag tag = new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
-                .post("/v1/{}/{}/tags/", context.getType(), context.getId())
-                .assertStatus(201)
+                .api(v1TagsCreate, context.getType(), context.getId())
                 .extractAs(Tag.class);
         StringUtils.copyAvailableFields(tag, this);
     }
@@ -60,7 +62,6 @@ public class Tag extends Entity {
         new Http(Configure.TagService)
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
-                .delete("/v1/{}/{}/tags/{}/", context.getType(), context.getId(), id)
-                .assertStatus(204);
+                .api(v1TagsDelete, context.getType(), context.getId(), id);
     }
 }
