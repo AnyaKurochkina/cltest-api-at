@@ -3,10 +3,7 @@ package ui.t1.pages.cloudDirector;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
-import ui.elements.Button;
-import ui.elements.Dialog;
-import ui.elements.Slider;
-import ui.elements.Table;
+import ui.elements.*;
 import ui.models.StorageProfile;
 import ui.t1.pages.IProductT1Page;
 
@@ -47,6 +44,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public void addProfile(StorageProfile profile) {
         runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
             Button.byText("Добавить профиль оборудования").click();
+            Select.byXpath("(//tbody//button[@title='Open'])[2]").set(profile.getName());
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//textarea").setValue(profile.getLimit());
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//input[@type = 'radio']")
                     .click();
@@ -61,7 +59,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
 
     public void deleteProfile(StorageProfile profile) {
         runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
-            $x("(//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//button)[2]")
+            $x("(//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//button)[3]")
                     .click();
         });
         Waiting.sleep(5000);

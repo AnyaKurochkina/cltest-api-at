@@ -95,7 +95,7 @@ public class Product extends Entity {
     private List<String> versionFields;
     private Object envs;
     @JsonProperty("tag_list")
-    private List<Object> tagList;
+    private List<String> tagList;
 
     @Override
     public Entity init() {
@@ -143,6 +143,7 @@ public class Product extends Entity {
                 .set("$.description", description)
                 .set("$.author", author)
                 .set("$.max_count", maxCount)
+                .set("$.tag_list", tagList)
                 .build();
     }
 
