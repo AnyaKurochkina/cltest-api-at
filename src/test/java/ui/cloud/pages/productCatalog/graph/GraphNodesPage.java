@@ -114,6 +114,7 @@ public class GraphNodesPage extends GraphPage {
         if (!Objects.isNull(node.getTemplateId())) {
             Template template = TemplateSteps.getTemplateById(node.getTemplateId());
             templateSelect.setContains(template.getName());
+            Waiting.sleep(2000);
         }
         additionalTab.click();
         countInput.setValue(String.valueOf(node.getCount()));
