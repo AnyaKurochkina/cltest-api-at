@@ -39,6 +39,10 @@ public class Button implements TypifiedElement {
         return new Button($x("//button[@id='{}']", id));
     }
 
+    public static Button byDataTestId(String id) {
+        return new Button($x("//button[@data-testid='{}']", id));
+    }
+
     public static Button byXpath(@Language("XPath") String xPath) {
         return new Button($x(xPath));
     }
