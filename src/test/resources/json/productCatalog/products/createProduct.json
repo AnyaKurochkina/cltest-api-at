@@ -9,8 +9,6 @@
   "graph_version_pattern": "",
   "context_restrictions": [],
   "author": "Airat Muzafarov",
-  "envs": [],
-  "information_systems": [],
   "is_open": false,
   "max_count": 1,
   "allowed_groups": [],
@@ -25,5 +23,6 @@
   "extra_data": {},
   "in_general_list": true,
   "payment": "paid",
-  "on_request": null
+  "on_request": null,
+  "tag_list": []
 }

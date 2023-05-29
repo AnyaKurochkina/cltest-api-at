@@ -89,7 +89,7 @@ public class Graph extends Entity implements IProductCatalog {
     @JsonProperty("default_item")
     private Object defaultItem;
     @JsonProperty("tag_list")
-    private List<Object> tagList;
+    private List<String> tagList;
 
     @Override
     public Entity init() {

@@ -117,7 +117,7 @@ public class Action extends Entity {
     @JsonProperty("version_fields")
     private List<String> versionFields;
     @JsonProperty("tag_list")
-    private List<Object> tagList;
+    private List<String> tagList;
 
     @Override
     public Entity init() {
