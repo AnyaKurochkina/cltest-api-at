@@ -42,7 +42,7 @@ public class IServicePage {
 
     public void checkGraph() {
         new Runs().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().throwNotRunNodes().throwSkipNodes().throwRunNodes().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR, Graph.NOT_STARTED, Graph.SKIPPED, Graph.STARTED);
     }
 
     private class Runs extends Table {

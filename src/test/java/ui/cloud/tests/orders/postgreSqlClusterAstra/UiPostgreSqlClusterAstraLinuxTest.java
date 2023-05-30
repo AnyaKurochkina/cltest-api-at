@@ -94,7 +94,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
