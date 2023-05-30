@@ -29,12 +29,12 @@ public class PostgreSqlAstraPage extends IProductPage {
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_ROLE = "Роли";
+    private static final String HEADER_NAME = "Имя";
     private static final String HEADER_GROUPS = "Группы";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
-
-
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    private final Switch showDeleteSwitch = Switch.byText("Показывать удаленные");
+    SelenideElement btnDb = $x("//button[.='Владельцы БД']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
@@ -135,9 +135,9 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void createDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
+        if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", name))) {
+            btnGeneralInfo.click();
+            runActionWithParameters(BLOCK_APP, "Добавить БД", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя базы данных", name);
                 generatePassButton.shouldBe(Condition.enabled).click();
@@ -170,33 +170,37 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void updateExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithoutParameters(name, "Актуализировать extensions");
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
+            btnGeneralInfo.click();
+            runActionWithoutParameters(getHeaderBlock(name), "Актуализировать extensions");
         }
     }
 
     public void changeExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithParameters(name, "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
+            btnGeneralInfo.click();
+            runActionWithParameters(getHeaderBlock(name), "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
         }
     }
 
     public void removeDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
+            btnGeneralInfo.click();
             runActionWithoutParameters(name, "Удалить БД");
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
+            Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name), "БД существует");
         }
     }
-
+    public void showDeleteDB(String name) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        btnGeneralInfo.click();
+        showDeleteSwitch.setEnabled(true);
+        Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, name), "БД не обнаружена");
+    }
     public void enlargeDisk(String name, String size, SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
@@ -283,6 +287,11 @@ public class PostgreSqlAstraPage extends IProductPage {
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
+    }
+
+    public SelenideElement getHeaderBlock (String name)
+    {
+        return $x("//td[.='{}']/../descendant::button", name);
     }
 
     //Таблица ролей
