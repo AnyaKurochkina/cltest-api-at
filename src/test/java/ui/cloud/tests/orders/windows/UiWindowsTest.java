@@ -88,7 +88,7 @@ public class UiWindowsTest extends UiProductTest {
         winPage.getBtnGeneralInfo().click();
         winPage.checkHeadersHistory();
         winPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test

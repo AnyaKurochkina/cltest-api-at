@@ -65,7 +65,7 @@ public class UiS3CephTenantTest extends UiProductTest {
         s3CepthPages.getBtnGeneralInfo().click();
         s3CepthPages.checkHeadersHistory();
         s3CepthPages.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
