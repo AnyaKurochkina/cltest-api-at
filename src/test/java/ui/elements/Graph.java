@@ -34,7 +34,7 @@ public class Graph implements TypifiedElement {
         getNodes().forEach(e -> {
             if (!Status.getColor(e).isDeniedStatuses(colors)) {
                 e.hover();
-                Assertions.fail(String.format("Нода графа '%s' имеет цвет недопустимый статус", e.$("strong").getText()));
+                Assertions.fail(String.format("Узел графа '%s' имеет цвет недопустимый статус", e.$("strong").getText()));
             }
         });
         btnFullScreen.click();
