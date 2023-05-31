@@ -50,6 +50,16 @@ public class AstraTest extends Tests {
         }
     }
 
+    @TmsLink("1685463")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Реинвентаризация ВМ (Linux) {0}")
+    void updateVmInfo(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.updateVmInfo();
+        }
+    }
+
     @Disabled
     @TmsLink("391702")
     @Tag("actions")

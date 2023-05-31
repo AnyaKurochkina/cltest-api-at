@@ -30,6 +30,7 @@ public class Redis extends IProduct {
     String appUserPassword;
     String appUser;
     String redisVersion;
+    Flavor flavor;
 
     @Override
     @Step("Заказ продукта")
@@ -45,6 +46,8 @@ public class Redis extends IProduct {
         if (appUser == null)
             appUser = "appuser";
         initProduct();
+        if (flavor == null)
+            flavor = getMinFlavor();
         if (osVersion == null) {
             osVersion = getRandomOsVersion();
         }
@@ -73,6 +76,7 @@ public class Redis extends IProduct {
                     .put("$.order.attrs", "layout", getIdGeoDistribution("2-single-node-servers", "redis"));
         }
         return template.set("$.order.attrs.domain", getDomain())
+                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform", getPlatform())
