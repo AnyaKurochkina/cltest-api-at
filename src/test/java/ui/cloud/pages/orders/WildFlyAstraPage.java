@@ -34,7 +34,7 @@ public class WildFlyAstraPage extends IProductPage {
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(expectedStatus);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 
     public void start() {
@@ -67,9 +67,9 @@ public class WildFlyAstraPage extends IProductPage {
     }
 
     public void restart() {
-        new WildFlyAstraPage.VirtualMachineTable(POWER).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Перезагрузить по питанию");
-        new WildFlyAstraPage.VirtualMachineTable(POWER).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopHard() {
@@ -80,50 +80,50 @@ public class WildFlyAstraPage extends IProductPage {
 
     @Step("Обновить ОС сервера WildFly")
     public void updateServerOs() {
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getBtnAction("", 2), "Обновить ОС сервера WildFly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
         });
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Обновить сертификат WildFly")
     public void updateCertificate() {
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
         });
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Остановить сервис Wildfly")
     public void stopService() {
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getBtnAction("", 2), "Остановить сервис Wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
         });
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Запустить сервис Wildfly")
     public void startService() {
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getBtnAction("", 2), "Запустить сервис Wildfly");
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Перезапустить сервис Wildfly")
     public void resetService() {
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getBtnAction("", 2), "Перезапустить сервис Wildfly");
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Синхронизировать конфигурацию сервера WildFly")
     public void synchronizeService() {
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getBtnAction("", 2), "Синхронизировать конфигурацию сервера WildFly");
-        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Добавить новые группы {group} с ролью {nameGroup}")
@@ -166,6 +166,9 @@ public class WildFlyAstraPage extends IProductPage {
     }
 
     public class VirtualMachineTable extends VirtualMachine {
+        public VirtualMachineTable() {
+            super("Роли узла");
+        }
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

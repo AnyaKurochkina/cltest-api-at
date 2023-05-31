@@ -288,4 +288,25 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.delete();
     }
+
+
+    @Test
+    @Order(27)
+    @TmsLink("1296731")
+    @EnabledIfEnv("prod")
+    @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
+    void monitoringOs() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
+        pSqlPage.checkClusterMonitoringOs();
+    }
+
+    @Test
+    @Order(100)
+    @TmsLink("993399")
+    @DisplayName("UI PostgreSQLAstra. Удаление продукта")
+    void delete() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.delete();
+    }
 }
