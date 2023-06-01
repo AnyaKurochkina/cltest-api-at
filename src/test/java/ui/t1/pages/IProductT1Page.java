@@ -46,6 +46,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
         btnGeneralInfo.click();
         if(Objects.nonNull(OrderUtils.getPreBillingPrice()))
             Assertions.assertEquals(OrderUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        OrderUtils.setPreBillingPrice(null);
         return (C) this;
     }
 

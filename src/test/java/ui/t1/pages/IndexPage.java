@@ -4,6 +4,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.WebElement;
@@ -14,6 +15,8 @@ import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
+
+import java.time.Duration;
 
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
@@ -38,7 +41,7 @@ public class IndexPage {
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
     public static void go() {
-        $x("//*[@title = 'Главная']").shouldBe(Condition.visible).click();
+        $x("//*[@title='Главная']").shouldBe(Condition.visible).click();
     }
 
     public Profile goToProfile(){
@@ -133,6 +136,7 @@ public class IndexPage {
         SelenideElement btnAction = getBtnAction("T1 Cloud Engine");
         Menu.byElement(btnAction).select("Отключить услугу");
         Button.byText("Отключить").click();
+        Waiting.findWithRefresh(() -> !btnAction.isDisplayed(), Duration.ofMinutes(1));
         btnAction.shouldNotBe(Condition.exist);
     }
 }
