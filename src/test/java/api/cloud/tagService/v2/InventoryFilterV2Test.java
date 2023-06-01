@@ -8,6 +8,8 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.tagService.*;
+import models.cloud.tagService.v1.FilterResultV1;
+import models.cloud.tagService.v1.InventoryTagsV1;
 import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.FilterResultV2;
 import models.cloud.tagService.v2.InventoryTagsV2;
@@ -362,5 +364,26 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
                 .build();
         FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
         Assertions.assertEquals(filterResult.getList().get(0).getInventory(), iList.get(0).getId(), "Неверные inventory");
+    }
+
+    @Test
+    @TmsLink("")
+    @org.junit.jupiter.api.Tag("newtest")
+    @DisplayName("Inventory. Фильтр V2 по response_tags")
+    void findInventoriesByResponseTags() {
+        String tagValue = "response_tags";
+        List<Tag> tList = generateTags(2);
+        Inventory inventory = generateInventories(1).get(0);
+
+        inventoryTagsV2(context, inventory.getId(),null, Arrays.asList(new InventoryTagsV2.Tag(tList.get(0).getKey(), tagValue),
+                new InventoryTagsV2.Tag(tList.get(1).getKey(), tagValue)));
+
+        Filter filter = Filter.builder()
+                .tags(new Filter.Tag().addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), tagValue)))
+                .allowEmptyTagFilter(true)
+                .responseTags(Collections.singletonList(tList.get(0).getKey()))
+                .build();
+        FilterResultV2Page filterResult = inventoryFilterV2(context, filter);
+        Assertions.assertEquals(filterResult.getList().get(0).getTags(), Collections.singletonMap(tList.get(0).getKey(), tagValue), "Неверный response_tags");
     }
 }

@@ -53,7 +53,7 @@ public class Inventory extends Entity {
 
     @Override
     protected void create() {
-        Inventory inventory = new Http(Configure.TagService)
+        Inventory inventory = Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
                 .api(v2InventoriesCreate, context.getType(), context.getId())
@@ -73,7 +73,7 @@ public class Inventory extends Entity {
 
     @Override
     public void delete() {
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
                 .api(v2InventoriesDelete, context.getType(), context.getId(), id);
@@ -83,7 +83,7 @@ public class Inventory extends Entity {
         JSONObject req = new JSONObject()
                 .put("security_principals", securityPrincipals)
                 .put("managers", managers);
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(req)
                 .api(v1InventoryAclUpdate, id);

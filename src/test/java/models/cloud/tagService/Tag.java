@@ -49,7 +49,7 @@ public class Tag extends Entity {
 
     @Override
     protected void create() {
-        Tag tag = new Http(Configure.TagService)
+        Tag tag = Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
                 .api(v1TagsCreate, context.getType(), context.getId())
@@ -59,7 +59,7 @@ public class Tag extends Entity {
 
     @Override
     protected void delete() {
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(toJson())
                 .api(v1TagsDelete, context.getType(), context.getId(), id);
