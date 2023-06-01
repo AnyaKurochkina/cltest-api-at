@@ -254,7 +254,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.deleteGroup("superuser");
+        pSqlPage.deleteGroup("user");
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
@@ -286,7 +286,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Показать удаленные БД")
     void showDeleteDB() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.delete();
+        pSqlPage.showDeleteDB(nameDb);
     }
 
 
