@@ -98,7 +98,7 @@ public class TagServiceAPI implements Api {
     @Route(method = Method.PATCH, path = "/v2/{context_type}/{context_id}/inventories/{id}/", status = 200)
     public static Path v2InventoriesPartialUpdate;
 
-    @Route(method = Method.PUT, path = "/v2/{context_type}/{context_id}/inventories/{id}/", status = 201)
+    @Route(method = Method.PUT, path = "/v2/{context_type}/{context_id}/inventories/{id}/", status = 200)
     public static Path v2InventoriesUpdate;
 
     @Route(method = Method.GET, path = "/v2/{context_type}/{context_id}/inventories/{id}/inventory-tags/", status = 200)

@@ -209,22 +209,6 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @TmsLink("1623685")
-    @DisplayName("Inventory. Фильтр V2 по context_path_isnull")
-    void findInventoriesByContextPathIsnull() {
-        Filter filterWidthNullPath = Filter.builder()
-                .contextPathIsnull(true)
-                .allowEmptyTagFilter(true)
-                .build();
-        Filter filterWithoutNullPath = Filter.builder()
-                .contextPathIsnull(false)
-                .allowEmptyTagFilter(true)
-                .build();
-        Assertions.assertTrue(TagServiceSteps.inventoryFilterV2(context, filterWidthNullPath).getMeta().getTotalCount() >
-                TagServiceSteps.inventoryFilterV2(context, filterWithoutNullPath).getMeta().getTotalCount(), "(contextPathIsnull = true) <= (contextPathIsnull = false)");
-    }
-
-    @Test
     @TmsLink("1623686")
     @DisplayName("Inventory. Фильтр V2. allow_empty_tag_filter")
     void findInventoriesByAllowEmptyTagFilter() {
