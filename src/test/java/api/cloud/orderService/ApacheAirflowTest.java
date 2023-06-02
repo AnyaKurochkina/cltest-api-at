@@ -24,7 +24,7 @@ public class ApacheAirflowTest extends Tests {
     private static void createPostgres(ApacheAirflow product) {
         try (PostgreSQL postgreSQL = PostgreSQL.builder().env(product.getEnv()).build().createObjectExclusiveAccess()) {
             String dbName = "airflow";
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
 //        postgreSQL.createDbmsUser("airflow", "user", dbName);
             product.setDbServer(postgreSQL.getIp());
             product.setDbUser(new DbUser(dbName, dbName + "_admin"));
