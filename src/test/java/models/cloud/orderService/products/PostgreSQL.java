@@ -57,6 +57,8 @@ public class PostgreSQL extends IProduct {
         jsonTemplate = "/orders/postgresql.json";
         if (productName == null)
             productName = "PostgreSQL (Astra Linux)";
+        if("LT".equalsIgnoreCase(getEnv()))
+            productName = "PostgreSQL";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
