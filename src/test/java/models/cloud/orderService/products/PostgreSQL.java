@@ -2,7 +2,7 @@ package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import core.utils.ssh.SshClient;
+import core.utils.AssertUtils;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -16,7 +16,6 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,12 +30,13 @@ import static core.utils.AssertUtils.assertContains;
 @NoArgsConstructor
 @SuperBuilder
 public class PostgreSQL extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
-    public final static String DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.conn_limit";
-    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.find{it.db_name=='%s'}.containsKey('conn_limit')";
+    private final static String DB_NAME_PATH = "data.any{it.data.config.db_name=='%s'}";
+    public final static String DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.conn_limit";
+    public final static String EXTENSIONS_LIST = "data.find{it.data.config.db_name=='%s'}.data.config.extensions";
+    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.containsKey('conn_limit')";
     private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     private final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
-    //    private final static String DB_USERNAME_SIZE_PATH = "data.find{it.type=='app'}.config.db_users.size()";
+    private final static String MAX_CONNECTIONS = "data.find{it.type=='app'}.data.config.configuration.max_connections";
     String osVersion;
     @ToString.Include
     String postgresqlVersion;
@@ -105,24 +105,11 @@ public class PostgreSQL extends IProduct {
         expandMountPoint("expand_mount_point_new", "/pg_data", 10);
     }
 
-    public void createDb(String dbName, String dbAdminPass) {
-        if (database.contains(new Db(dbName)))
-            return;
-
-        OrderServiceSteps.executeAction("create_db", this,
-                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, dbAdminPass)), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
-                "База данных не создалась c именем " + dbName);
-        database.add(new Db(dbName));
-        log.info("database = " + database);
-        save();
-    }
-
     public void createNonProd(String dbName, String dbAdminPass) {
         if (database.contains(new Db(dbName)))
             return;
 
-        OrderServiceSteps.executeAction("create_db_nonprod", this,
+        OrderServiceSteps.executeAction("postgresql_create_db", this,
                 new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, dbAdminPass)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
@@ -132,7 +119,7 @@ public class PostgreSQL extends IProduct {
     }
 
     public void setConnLimit(String dbName, int count) {
-        OrderServiceSteps.executeAction("set_conn_limit", this, new JSONObject().put("db_name", dbName).put("conn_limit", count), this.getProjectId());
+        OrderServiceSteps.executeActionWidthFilter("postgresql_db_set_conn_limit", this, new JSONObject().put("conn_limit", count), this.getProjectId(), filterBd(dbName));
         Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
         if (isDev())
             Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s(.*)\\n\\(",
@@ -140,13 +127,85 @@ public class PostgreSQL extends IProduct {
     }
 
     public void removeConnLimit(String dbName) {
-        OrderServiceSteps.executeAction("remove_conn_limit", this, new JSONObject().put("db_name", dbName).put("conn_limit", -1), this.getProjectId());
+        OrderServiceSteps.executeActionWidthFilter("postgresql_db_remove_conn_limit", this, new JSONObject().put("conn_limit", -1), this.getProjectId(), filterBd(dbName));
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(IS_DB_CONN_LIMIT, dbName)));
+    }
+
+    private void addMountPoint(String action, String mount) {
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("mount", mount), this.getProjectId());
+        float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, 0));
+        Assertions.assertTrue(sizeAfter > 0);
+    }
+
+    public void addMountPointPgAudit() {
+        addMountPoint("postgresql_add_mount_point_pg_audit", "/pg_audit");
+    }
+
+    public void addMountPointPgBackup() {
+        addMountPoint("postgresql_add_mount_point_pg_backup", "/pg_backup");
+    }
+
+    public void addMountPointPgWalarchive() {
+        addMountPoint("postgresql_add_mount_point_pg_walarchive", "/pg_walarchive");
+    }
+
+    public void updateMaxConnections() {
+        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app'}.data.config.load_profile");
+        OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
+    }
+
+    public String getCurrentMaxConnections(){
+        return (String) OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
+    }
+
+    public void updateMaxConnectionsBySsh(int connections){
+        String cmd = String.format("sudo -iu postgres psql -c \"Alter system set max_connections to '%s';\"", connections);
+        assertContains(executeSsh(cmd), "ALTER SYSTEM");
+        executeSsh("sudo -i systemctl restart postgresql-14");
+        getConfiguration();
+        Assertions.assertEquals(connections, Integer.valueOf(getCurrentMaxConnections()));
+    }
+
+    public int maxConnections() {
+        return (int) (118 * Math.log(flavor.getCpus() + 1) * Math.log(flavor.getMemory() + 1));
+    }
+
+    public void getConfiguration(){
+        OrderServiceSteps.executeAction("postgresql_get_configuration", this, null, this.getProjectId());
+    }
+
+    public void updatePostgresql(){
+        OrderServiceSteps.executeAction("postgresql_update_postgresql", this, new JSONObject().put("check_agree", true), this.getProjectId());
+    }
+
+    public void updateOs(){
+        OrderServiceSteps.executeAction("postgresql_update_os", this, new JSONObject().put("check_agree", true), this.getProjectId());
+    }
+
+    public void updateExtensions(String dbName, List<String> extensions) {
+        OrderServiceSteps.executeActionWidthFilter("postgresql_db_update_extensions", this, new JSONObject()
+                .put("extensions_updated", extensions)
+                .put("extensions", new ArrayList<>()), this.getProjectId(), filterBd(dbName));
+        AssertUtils.assertEqualsList(extensions, OrderServiceSteps.getProductsField(this, String.format(EXTENSIONS_LIST, dbName), List.class));
+    }
+
+    public void getExtensions(String dbName, String extension) {
+        if (isDev()) {
+            String cmd = String.format("sudo -iu postgres psql -d %s -c \"create extension %s with schema %s;\"", dbName, extension, dbName);
+            assertContains(executeSsh(cmd), "CREATE EXTENSION");
+        }
+        OrderServiceSteps.executeActionWidthFilter("postgresql_db_get_extensions", this, null, this.getProjectId(), filterBd(dbName));
+        if (isDev())
+            Assertions.assertTrue(OrderServiceSteps.getProductsField(this, String.format(EXTENSIONS_LIST, dbName), List.class).contains(extension));
+    }
+
+    private String filterBd(String dbName){
+        return String.format("db_name=='%s'", dbName);
     }
 
     //Удалить БД
     public void removeDb(String dbName) {
-        OrderServiceSteps.executeAction("remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
+        OrderServiceSteps.executeActionWidthFilter("postgresql_remove_db", this, null, this.getProjectId(), filterBd(dbName));
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
@@ -195,12 +254,14 @@ public class PostgreSQL extends IProduct {
         save();
     }
 
-    public void resize(Flavor flavor) {
-        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
+    public void resize(Flavor newFlavor) {
+        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + newFlavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
-        Assertions.assertEquals(flavor.data.cpus, cpusAfter);
-        Assertions.assertEquals(flavor.data.memory, memoryAfter);
+        Assertions.assertEquals(newFlavor.data.cpus, cpusAfter);
+        Assertions.assertEquals(newFlavor.data.memory, memoryAfter);
+        flavor = newFlavor;
+        save();
     }
 
     @SneakyThrows
@@ -222,11 +283,6 @@ public class PostgreSQL extends IProduct {
 
     public void stopHard() {
         stopHard("stop_hard_two_layer");
-    }
-
-    public void updateMaxConnections(String loadProfile, int maxConnections) {
-        OrderServiceSteps.executeAction("postgresql_update_max_connections", this,
-                new JSONObject(String.format("{\"load_profile\":\"%s\", max_connections: %d}", loadProfile, maxConnections)), this.getProjectId());
     }
 
     public void checkUseSsh(String ip, String dbName, String adminPassword) {
