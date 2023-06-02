@@ -116,6 +116,8 @@ public class Action extends Entity {
     private Boolean availableWithCostReduction;
     @JsonProperty("version_fields")
     private List<String> versionFields;
+    @JsonProperty("tag_list")
+    private List<String> tagList;
 
     @Override
     public Entity init() {

@@ -112,11 +112,12 @@ public class Folder extends Entity {
                 .jsonPath()
                 .getString("data.name");
 
-        new Http(Configure.PortalBackURL)
-                .setRole(Role.CLOUD_ADMIN)
-                .body(new JSONObject().put("information_system_ids", informationSystemIds))
-                .post("/v1/folders/{}/information_systems/add_to_folder", name)
-                .assertStatus(201);
+        if (!Configure.isT1())
+            new Http(Configure.PortalBackURL)
+                    .setRole(Role.CLOUD_ADMIN)
+                    .body(new JSONObject().put("information_system_ids", informationSystemIds))
+                    .post("/v1/folders/{}/information_systems/add_to_folder", name)
+                    .assertStatus(201);
     }
 
     @Override

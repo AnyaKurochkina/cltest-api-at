@@ -51,6 +51,8 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
     private String updateDt;
     @JsonProperty("default_order")
     private Object defaultOrder;
+    @JsonProperty("tag_list")
+    private List<String> tagList;
 
     @Override
     public Entity init() {

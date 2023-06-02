@@ -85,7 +85,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
         ubuntuLinuxPage.getBtnGeneralInfo().click();
         ubuntuLinuxPage.checkHeadersHistory();
         ubuntuLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test

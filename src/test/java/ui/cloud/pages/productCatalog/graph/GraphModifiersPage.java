@@ -54,7 +54,7 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Проверка атрибутов модификатора")
     public GraphModifiersPage checkModifierAttributes(GraphModifier modifier) {
-        $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").click();
+        $x("//td[text()='{}']/parent::tr//button[1]", modifier.getName()).click();
         nameInput.getInput().shouldHave(Condition.exactValue(modifier.getName()));
         Assertions.assertEquals(modifier.getEnvs()[0], envTypeSelect.getValue());
         numberInput.getInput().shouldHave(Condition.exactValue(modifier.getNumber()));
@@ -69,7 +69,7 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Редактирование модификатора '{modifier.name}' и сохранение графа")
     public GraphModifiersPage editModifierAndSave(GraphModifier modifier) {
-        $x("//td[@value='" + modifier.getName() + "']/parent::tr//button[1]").scrollIntoView(false).click();
+        $x("//td[text()='{}']/parent::tr//button[1]", modifier.getName()).scrollIntoView(false).click();
         nameInput.setValue(modifier.getName());
         envTypeSelect.set(modifier.getEnvs());
         schemaSelect.set(modifier.getSchema());
@@ -161,7 +161,7 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Удаление модификатора '{name}'")
     public GraphModifiersPage deleteModifier(String name) {
-        $x("//td[@value='" + name + "']/parent::tr//button[2]").scrollIntoView(false).click();
+        $x("//td[text()='{}']/parent::tr//button[2]", name).scrollIntoView(false).click();
         new DeleteDialog().inputValidIdAndDelete("Модификатор успешно удален");
         Waiting.sleep(1100);
         Assertions.assertFalse($x("//td[@value='" + name + "']").exists());

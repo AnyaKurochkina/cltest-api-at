@@ -44,6 +44,7 @@ public class ImportProductTest extends ProductBaseTest {
                         .payment(Payment.PAID)
                         .inGeneralList(json.getBoolean("Product.in_general_list"))
                         .number(json.getInt("Product.number"))
+                        .isOpen(json.getBoolean("Product.is_open"))
                         .build());
         deleteProductByName(name);
     }

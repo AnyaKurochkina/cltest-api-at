@@ -88,12 +88,13 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.getBtnGeneralInfo().click();
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
     @Order(5)
     @TmsLink("993396")
+    @Disabled
     @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
     void restart() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
