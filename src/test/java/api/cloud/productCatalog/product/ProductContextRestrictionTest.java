@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.product;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -23,7 +24,7 @@ import static steps.productCatalog.ProductSteps.getProductByProjectContext;
 @Epic("Продуктовый каталог")
 @Feature("Продукты")
 @DisabledIfEnv("prod")
-public class ProductContextRestrictionTest {
+public class ProductContextRestrictionTest extends Tests {
     Project projectTest = Project.builder().isForOrders(true)
             .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("TEST")).build().createObject();
 

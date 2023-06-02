@@ -1,8 +1,6 @@
 package models.cloud.orderService.products;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -10,20 +8,19 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Db;
 import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
 import java.net.ConnectException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import static core.utils.AssertUtils.assertContains;
 import static models.cloud.orderService.products.ClickHouseCluster.*;
 
 
@@ -125,6 +122,21 @@ public class ClickHouse extends IProduct {
         OrderServiceSteps.executeAction("clickhouse_reset_ch_customer_password", this, new JSONObject(String.format("{\"user_name\":\"ch_customer\",\"user_password\":\"%s\"}", password)), this.getProjectId());
         chCustomerPassword = password;
         save();
+    }
+
+    public void certsInfo() {
+        OrderServiceSteps.executeAction("clickhouse_certs_info", this, null, this.getProjectId());
+    }
+
+    @SneakyThrows
+    public void updateCerts() {
+        Date dateBeforeUpdate;
+        Date dateAfterUpdate;
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
+        super.updateCerts("clickhouse_regenerate_certs");
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
+        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
     public void removeDbmsUser(String username, String dbName) {
@@ -258,13 +270,13 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup, !isDev())
                 .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.clickhouse_users", clickhouseUser)
-                .set("$.order.attrs.clickhouse_password", clickhousePassword)
+                .set("$.order.attrs.clickhouse_users", clickhouseUser, !isDev())
+                .set("$.order.attrs.clickhouse_password", clickhousePassword, !isDev())
                 .set("$.order.attrs.on_support", !isDev())
                 .set("$.order.label", getLabel())
                 .build();

@@ -11,6 +11,8 @@ import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
+import core.helper.http.Api;
+import api.routes.Routes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
@@ -22,11 +24,10 @@ import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
 import static core.helper.Configure.*;
@@ -38,7 +39,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        //####Config for Ui###
+        initApiRoutes();
         Files.deleteIfExists(Paths.get(responseTimeLog));
 
         String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
@@ -146,4 +147,45 @@ public class TestsExecutionListener implements TestExecutionListener {
         System.out.println("##teamcity[publishArtifacts 'logs => logs']");
         System.out.println("##teamcity[publishArtifacts 'target/swagger-coverage-output => swagger-coverage-output.zip']");
     }
+
+    @SneakyThrows
+    private void initApiRoutes(){
+        List<Class<? extends Routes>> classes = getSubclasses(Routes.class);
+        for (Class<? extends Routes> clazz : classes) {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                if (field.isAnnotationPresent(Routes.Route.class)) {
+                    if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
+                        Routes.Route route = field.getAnnotation(Routes.Route.class);
+                        field.setAccessible(true);
+                        try {
+                            field.set(null, new Api(route.method(), route.path(), route.status()));
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    public static List<Class<? extends Routes>> getSubclasses(Class<? extends Routes> superClass) throws ClassNotFoundException {
+        List<Class<? extends Routes>> classes = new ArrayList<>();
+        String packageName = superClass.getPackage().getName();
+        String path = packageName.replace('.', '/');
+        java.net.URL url = ClassLoader.getSystemClassLoader().getResource(path);
+        File dir = new File(url.getFile());
+        for (File file : dir.listFiles()) {
+            if(file.isDirectory())
+                continue;
+            String className = file.getName().substring(0, file.getName().length() - 6);
+            Class<?> clazz = Class.forName(packageName + "." + className);
+            if (superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
+                classes.add((Class<? extends Routes>) clazz);
+            }
+        }
+        return classes;
+    }
+
+
 }

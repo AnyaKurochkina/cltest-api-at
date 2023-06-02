@@ -10,7 +10,7 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.tagService.Filter;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.TagServiceSteps;
-import models.cloud.tagService.v1.FilterResultItemV1;
+import models.cloud.tagService.v1.FilterResultV1Item;
 import models.cloud.tagService.v1.InventoryTagsV1;
 import models.cloud.tagService.Tag;
 import models.cloud.tagService.v1.FilterResultV1;
@@ -193,7 +193,7 @@ public class InventoryFilterV1Test extends AbstractInventoryTest {
 
         FilterResultV1 filterResult = TagServiceSteps.inventoryFilterV1(context, filter, query);
 
-        Assertions.assertEquals(filterResult.stream().map(FilterResultItemV1::getInventory).collect(Collectors.toList()),
+        Assertions.assertEquals(filterResult.stream().map(FilterResultV1Item::getInventory).collect(Collectors.toList()),
                 Arrays.asList(iList.get(2).getId(), iList.get(3).getId(), iList.get(0).getId(), iList.get(1).getId(), iList.get(4).getId()), "Неверный список inventory");
     }
 

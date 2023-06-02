@@ -10,6 +10,7 @@ import ui.cloud.pages.productCatalog.allowedAction.AllowedActionsListPage;
 import ui.elements.Table;
 
 import static core.utils.AssertUtils.assertHeaders;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Feature("Список разрешенных действий")
@@ -60,6 +61,6 @@ public class AllowedActionsListTest extends AllowedActionBaseTest {
         assertTrue(page.isAllowedActionDisplayed(allowedAction.getName()));
         page.getProviderSelect().set(EventProvider.OPENSTACK.getValue());
         page.getApplyFiltersButton().click();
-        assertTrue(page.isAllowedActionDisplayed(allowedAction.getName()));
+        assertFalse(page.isAllowedActionDisplayed(allowedAction.getName()));
     }
 }

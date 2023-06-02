@@ -100,7 +100,7 @@ public class VisualTemplateNegativeTest extends Tests {
                 .createObject();
         String errorMessage = steps.createProductObject(steps.createJsonObject(name)).assertStatus(400)
                 .extractAs(ErrorMessage.class).getMessage();
-        assertEquals("item visualisation template с таким name уже существует.", errorMessage);
+        assertEquals("\"name\": item visualisation template с таким name уже существует.", errorMessage);
     }
 
     @DisplayName("Негативный тест на создание шаблона визуализации с недопустимыми символами в имени")

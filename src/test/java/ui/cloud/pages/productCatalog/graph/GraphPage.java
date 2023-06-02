@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog.graph;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
@@ -18,20 +19,33 @@ import ui.cloud.pages.productCatalog.product.ProductPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.elements.*;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.*;
 
 public class GraphPage extends BasePage {
     protected final String saveGraphAlertText = "Граф успешно сохранен";
     protected final Tab generalInfoTab = Tab.byText("Общая информация");
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
-    private final SelenideElement graphVersion = $x("//div[@aria-labelledby='version']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
     private final Input authorInput = Input.byName("author");
     private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
     private final String nameColumn = "Имя";
+    private final RadioGroup typeRadioGroup = RadioGroup.byFieldsetLabel("Тип");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
+    }
+
+    @Step("Задание атрибутов графа '{graph.name}'")
+    public GraphPage setAttributes(Graph graph) {
+        goToMainTab();
+        titleInput.setValue(graph.getTitle());
+        nameInput.setValue(graph.getName());
+        typeRadioGroup.select(graph.getType());
+        descriptionTextArea.setValue(graph.getDescription());
+        authorInput.setValue(graph.getAuthor());
+        return new GraphPage();
     }
 
     @Step("Проверка атрибутов графа '{graph.name}'")
@@ -46,7 +60,7 @@ public class GraphPage extends BasePage {
 
     @Step("Проверка, что отображаемая версия графа равна '{version}'")
     public GraphPage checkGraphVersion(String version) {
-        graphVersion.shouldBe(Condition.visible).shouldHave(Condition.exactText(version));
+        Waiting.find(() -> versionDropDown.getValue().equals(version), Duration.ofSeconds(5));
         return new GraphPage();
     }
 
@@ -55,14 +69,6 @@ public class GraphPage extends BasePage {
         Select graphVersion = Select.byLabel("Выберите версию");
         graphVersion.set(version);
         return this;
-    }
-
-    @Step("Редактирование графа '{graph.name}'")
-    public GraphPage setAttributes(Graph graph) {
-        goToMainTab();
-        descriptionTextArea.setValue(graph.getDescription());
-        authorInput.setValue(graph.getAuthor());
-        return new GraphPage();
     }
 
     @Step("Сохранение графа со следующей патч-версией")
@@ -168,6 +174,7 @@ public class GraphPage extends BasePage {
     @Step("Возврат в список графов")
     public GraphsListPage returnToGraphsList() {
         graphsListLink.scrollIntoView(false).click();
+        switchTo().alert().accept();
         return new GraphsListPage();
     }
 

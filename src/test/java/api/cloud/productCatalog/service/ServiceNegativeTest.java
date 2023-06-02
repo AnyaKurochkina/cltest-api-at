@@ -148,6 +148,6 @@ public class ServiceNegativeTest extends Tests {
         String str = steps.createProductObject(json)
                 .assertStatus(400)
                 .extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Это поле не может быть пустым.", str);
+        assertEquals("\"start_btn_label\": Это поле не может быть пустым.", str);
     }
 }

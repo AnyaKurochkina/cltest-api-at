@@ -1,6 +1,16 @@
 package models.cloud.tagService.v2;
 
-import core.helper.Page;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import core.helper.Date;
+import lombok.Data;
 
-public class FilterResultV2 extends Page<FilterResultItemV2> {
+import java.util.Map;
+
+@Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class FilterResultV2 {
+    String inventory;
+    String contextPath;
+    Map<String, String> tags;
+    Date createdAt, updatedAt;
 }

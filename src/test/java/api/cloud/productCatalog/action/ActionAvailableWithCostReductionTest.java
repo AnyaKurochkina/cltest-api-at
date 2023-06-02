@@ -50,7 +50,7 @@ public class ActionAvailableWithCostReductionTest extends Tests {
         String actionName = "action_available_with_cost_reduction_update_test_api";
         Action action = Action.builder()
                 .name(actionName)
-                .isDelayable(true)
+                .availableWithCostReduction(true)
                 .version("1.0.0")
                 .build()
                 .createObject();

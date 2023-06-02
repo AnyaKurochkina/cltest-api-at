@@ -16,9 +16,13 @@ import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
+import ui.elements.Button;
 import ui.elements.Select;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.switchTo;
 
 @Getter
 public class ControlPanelIndexPage {
@@ -39,7 +43,11 @@ public class ControlPanelIndexPage {
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
-        graphsLink.click();
+        Button saveButton = Button.byText("Сохранить");
+        if (saveButton.getButton().exists() && saveButton.getButton().isEnabled()) {
+            graphsLink.click();
+            switchTo().alert().accept();
+        } else graphsLink.click();
         return new GraphsListPage();
     }
 

@@ -22,6 +22,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.back;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
 public class ProductPage extends BasePage {
@@ -68,6 +69,7 @@ public class ProductPage extends BasePage {
         nameInput.setValue(product.getName());
         descriptionInput.setValue(product.getDescription());
         info.setValue(new JSONObject(product.getInfo()).toString());
+        isOpenSwitch.getLabel().scrollIntoView(scrollCenter);
         isOpenSwitch.setEnabled(product.getIsOpen());
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
