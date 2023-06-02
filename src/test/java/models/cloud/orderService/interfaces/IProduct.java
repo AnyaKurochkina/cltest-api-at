@@ -222,7 +222,7 @@ public abstract class IProduct extends Entity {
 
     //Обновить сертификаты
     protected void updateCerts(String action) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("dumb", "empty").put("accept", true), this.getProjectId());
     }
 
     //Перезагрузить
