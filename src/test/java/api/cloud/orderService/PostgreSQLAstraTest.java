@@ -50,7 +50,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
         }
     }
 
@@ -61,7 +61,7 @@ public class PostgreSQLAstraTest extends Tests {
     void checkDbConnection(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             String db = "bd_for_check_connection";
-            postgreSQL.createNonProd(db, adminPassword);
+            postgreSQL.createDb(db, adminPassword);
             postgreSQL.checkConnection(db, adminPassword);
             postgreSQL.removeDb(db);
         }
@@ -73,7 +73,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createDbmsUser("chelik1", "user", dbName);
         }
     }
@@ -84,7 +84,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createDbmsUser("chelikforreset1", "user", dbName);
             postgreSQL.resetPassword("chelikforreset1");
         }
@@ -96,7 +96,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.resetDbOwnerPassword(dbName);
         }
     }
@@ -107,7 +107,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createDbmsUser("chelikforreset2", "user", dbName);
             postgreSQL.removeDbmsUser("chelikforreset2", dbName);
         }
@@ -119,7 +119,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Изменить extensions {0}")
     void updateExtensions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.updateExtensions(dbName, Arrays.asList("pg_trgm", "hstore"));
         }
     }
@@ -130,7 +130,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Актуализировать extensions {0}")
     void getExtensions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.getExtensions(dbName, "ltree");
         }
     }
@@ -230,7 +230,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.removeDb(dbName);
         }
     }
@@ -288,7 +288,7 @@ public class PostgreSQLAstraTest extends Tests {
     void setConnLimit(PostgreSQL product) {
         Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.setConnLimit(dbName, 20);
             postgreSQL.removeConnLimit(dbName);
         }
@@ -299,7 +299,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
     void checkUserPermissions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             String ip = (String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip");
             postgreSQL.checkUseSsh(ip, dbName, adminPassword);
         }
