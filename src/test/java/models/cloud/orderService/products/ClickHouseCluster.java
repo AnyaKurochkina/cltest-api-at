@@ -124,6 +124,7 @@ public class ClickHouseCluster extends IProduct {
                 .set("$.order.attrs.flavor_zk", new JSONObject(flavorZk.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .remove("$.order.attrs.ad_logon_grants", !isDev())
                 .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup)
