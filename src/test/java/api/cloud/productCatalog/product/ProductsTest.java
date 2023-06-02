@@ -633,7 +633,7 @@ public class ProductsTest extends Tests {
     @TmsLink("1676200")
     @Test
     public void checkTagListValue() {
-        List tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
         Product product = Product.builder()
                 .name("at_api_check_tag_list_value")
                 .title("AT API Product")
@@ -653,7 +653,7 @@ public class ProductsTest extends Tests {
     @TmsLink("1676202")
     @Test
     public void checkTagListVersioning() {
-        List tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
         Product product = Product.builder()
                 .name("at_api_check_tag_list_versioning")
                 .title("AT API Product")
