@@ -132,7 +132,11 @@ public class Artemis extends IProduct {
     }
 
     public void createService(String name, String ownerCert) {
-        OrderServiceSteps.executeAction("vtb-artemis_create_service", this, new JSONObject("{\"max_size_bytes\":\"100Mb\",\"max_expiry_delay\":60000,\"min_expiry_delay\":10000,\"address_full_policy\":\"Fail\",\"name\":\"" + name + "\",\"owner_cert\":\"" + ownerCert + "\"}"), this.getProjectId());
+        JSONObject obj = JsonHelper.getJsonTemplate("/orders/artemis_service.json")
+                .set("$.name", name)
+                .set("$.owner_cert", ownerCert)
+                .build();
+        OrderServiceSteps.executeAction("vtb-artemis_create_service", this, obj, this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
