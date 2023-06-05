@@ -61,10 +61,12 @@ public class ArtemisAstraTest extends Tests {
     @ParameterizedTest(name = "Создать клиента temporary {0}")
     void createClientTemporary(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
+            artemis.createService("someserv2", "somecertif");
             Artemis.Client client = new Artemis.Client();
             client.setClientTypes("temporary");
             client.setName("randomusr2");
             client.setOwnerCert("randomcertif2");
+            client.setServiceNames(Collections.singletonList("someserv2"));
             artemis.createClient(client);
         }
     }

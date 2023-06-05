@@ -195,14 +195,15 @@ public class Artemis extends IProduct {
                 .body("response[0].attachments.size()", is(5));
     }
 
+    public static String CERT_END_DATE = "data.find{it.data.config.containsKey('cert_end_date')}.data.config.cert_end_date";
     @SneakyThrows
     public void updateCerts() {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
-        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
+        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, CERT_END_DATE));
         super.updateCerts("vtb-artemis_update-cert");
-        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
+        dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, CERT_END_DATE));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
 
     }
