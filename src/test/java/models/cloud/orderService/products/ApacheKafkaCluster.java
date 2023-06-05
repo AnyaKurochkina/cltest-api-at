@@ -135,11 +135,12 @@ public class ApacheKafkaCluster extends IProduct {
                 "    {\n" +
                 "      \"operation\": \"change_cleanup_policy\",\n" +
                 "      \"parameters\": {\n" +
+                "        \"partitions_number\": 1,\n" +
                 "        \"cleanup^policy\": \"delete\",\n" +
                 "        \"retention^ms\": 1800001,\n" +
                 "      \"_cleanup^limit_by\": \"time\"\n" +
                 "      },\n" +
-                "      \"topic_name\": \"" + topic + "\"\n" +
+                "      \"topic_names\": [\"" + topic + "\"]\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}"
