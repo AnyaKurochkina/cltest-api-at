@@ -1,5 +1,8 @@
 package models.cloud.orderService.products;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
@@ -21,6 +24,7 @@ import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Random;
 
 import static core.helper.Configure.StateServiceURL;
@@ -59,13 +63,13 @@ public class Artemis extends IProduct {
             osVersion = getRandomOsVersion();
         if (artemisVersion == null)
             artemisVersion = getRandomProductVersionByPathEnum("artemis_version.enum");
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
@@ -86,7 +90,7 @@ public class Artemis extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.artemis_version", artemisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
@@ -140,14 +144,29 @@ public class Artemis extends IProduct {
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
-    public void createClient(String clientType, String name, String ownerCert) {
-        OrderServiceSteps.executeAction("vtb-artemis_create_client", this, new JSONObject("{\"client_types\":\"" + clientType + "\",\"name\":\"" + name + "\",\"owner_cert\":\"" + ownerCert + "\"}"), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(CLIENT_NAME_PATH, name)));
+    @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    public static class Client {
+        String addressFullPolicy = "FAIL";
+        String clientTypes = "own";
+        Integer maxExpiryDelay = 60000;
+        Integer minExpiryDelay = 10000;
+        String name = "name";
+        String ownerCert = "gfhgh";
+        Integer slowConsumerCheckPeriod = 10;
+        String slowConsumerPolicy = "NOTIFY";
+        Integer slowConsumerThreshold = -1;
+        Boolean useSeparation = false;
+        List<String> serviceNames;
     }
 
-    public void createClientWithService(String clientType, String name, String ownerCert, String serviceName) {
-        OrderServiceSteps.executeAction("vtb-artemis_create_client", this, new JSONObject("{\"client_types\":\"" + clientType + "\",\"service_names\":[\"" + serviceName + "\"],\"name\":\"" + name + "\",\"owner_cert\":\"" + ownerCert + "\"}"), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(RELATIONSHIP_PATH, name, serviceName)));
+    public void createClient(Client client) {
+        OrderServiceSteps.executeAction("vtb-artemis_create_client", this, serialize(client), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(CLIENT_NAME_PATH, client.getName())));
+        if(!client.getServiceNames().isEmpty())
+            for(String serviceName : client.getServiceNames())
+                Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(RELATIONSHIP_PATH, client.getName(), serviceName)));
     }
 
     public void deleteClient(String name) {
@@ -161,8 +180,8 @@ public class Artemis extends IProduct {
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
-    public void exportConf(){
-        OrderServiceSteps.executeAction("vtb-artemis_export_conf", this,null);
+    public void exportConf() {
+        OrderServiceSteps.executeAction("vtb-artemis_export_conf", this, null);
         GlobalUser user = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
