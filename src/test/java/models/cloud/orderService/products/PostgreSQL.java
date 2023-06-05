@@ -40,11 +40,6 @@ public class PostgreSQL extends AbstractPostgreSQL {
     String osVersion;
     @ToString.Include
     String postgresqlVersion;
-    @Builder.Default
-    public List<Db> database = new ArrayList<>();
-    @Builder.Default
-    public List<DbUser> users = new ArrayList<>();
-    Flavor flavor;
 
     @Override
     @Step("Заказ продукта")

@@ -36,7 +36,6 @@ public abstract class AbstractPostgreSQL extends IProduct {
     public List<Db> database = new ArrayList<>();
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
-
     protected Flavor flavor;
 
     public void createDb(String dbName, String dbAdminPass) {
