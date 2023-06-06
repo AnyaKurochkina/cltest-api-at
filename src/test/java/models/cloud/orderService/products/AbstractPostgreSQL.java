@@ -143,8 +143,8 @@ public abstract class AbstractPostgreSQL extends IProduct {
         save();
     }
 
-    public void createDbmsUser(String username, String dbRole, String dbName) {
-        OrderServiceSteps.executeAction("postgresql_cluster_create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)), this.getProjectId());
+    public void createDbmsUser(String action, String username, String dbRole, String dbName) {
+        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
@@ -158,15 +158,15 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     //Сбросить пароль пользователя
-    public void resetPassword(String username) {
+    public void resetPassword(String action, String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
     //Сбросить пароль владельца
-    public void resetDbOwnerPassword(String username) {
+    public void resetDbOwnerPassword(String action, String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
     }
 
     //Изменить default_transaction_isolation
@@ -176,8 +176,8 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     //Удалить пользователя
-    public void removeDbmsUser(String username, String dbName) {
-        OrderServiceSteps.executeAction("postgresql_cluster_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
+    public void removeDbmsUser(String action, String username, String dbName) {
+        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));

@@ -121,6 +121,22 @@ public class PostgreSQL extends AbstractPostgreSQL {
         checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
 
+    public void removeDbmsUser(String username, String dbName) {
+        removeDbmsUser("remove_dbms_user", username, dbName);
+    }
+
+    public void resetDbOwnerPassword(String username) {
+        resetDbOwnerPassword("reset_db_owner_password", username);
+    }
+
+    public void resetPassword(String username) {
+        resetPassword("reset_db_user_password", username);
+    }
+
+    public void createDbmsUser(String username, String dbRole, String dbName) {
+        createDbmsUser("create_dbms_user", username, dbRole, dbName);
+    }
+
     public void checkUseSsh(String ip, String dbName, String adminPassword) {
         String cmd = "psql \"host=localhost dbname=" + dbName +
                 " user=" + dbName + "_admin password=" + adminPassword +

@@ -110,6 +110,22 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         checkConnectDb(dbName, dbName + "_admin", adminPassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)).split(",")[0]);
     }
 
+    public void removeDbmsUser(String username, String dbName) {
+        removeDbmsUser("postgresql_cluster_remove_dbms_user", username, dbName);
+    }
+
+    public void resetDbOwnerPassword(String username) {
+        resetDbOwnerPassword("postgresql_cluster_reset_db_owner_password", username);
+    }
+
+    public void resetPassword(String username) {
+        resetPassword("postgresql_cluster_reset_db_user_password", username);
+    }
+
+    public void createDbmsUser(String username, String dbRole, String dbName) {
+        createDbmsUser("postgresql_cluster_create_dbms_user", username, dbRole, dbName);
+    }
+
     public void resize(Flavor flavor) {
         resize("resize_postgresql_cluster", flavor);
     }
