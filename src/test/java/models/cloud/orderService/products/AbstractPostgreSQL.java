@@ -25,7 +25,7 @@ import static core.utils.AssertUtils.assertContains;
 @ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
 @Log4j2
 public abstract class AbstractPostgreSQL extends IProduct {
-    public final static String DB_NAME_PATH = "data.any{it.data.config.db_name=='%s'}";
+    public final static String DB_NAME_PATH = "data.any{it.data.config.db_name=='%s' && it.data.state=='on'}";
     public final static String DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.conn_limit";
     public final static String EXTENSIONS_LIST = "data.find{it.data.config.db_name=='%s'}.data.config.extensions";
     public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.containsKey('conn_limit')";
@@ -144,7 +144,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void createDbmsUser(String username, String dbRole, String dbName) {
-        OrderServiceSteps.executeAction("create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)), this.getProjectId());
+        OrderServiceSteps.executeAction("postgresql_cluster_create_dbms_user", this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
@@ -177,7 +177,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
 
     //Удалить пользователя
     public void removeDbmsUser(String username, String dbName) {
-        OrderServiceSteps.executeAction("remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
+        OrderServiceSteps.executeAction("postgresql_cluster_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
