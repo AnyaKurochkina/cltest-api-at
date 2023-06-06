@@ -5,17 +5,13 @@ import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.tagService.Context;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.Tag;
 import models.cloud.tagService.TagServiceSteps;
 import models.cloud.tagService.v1.*;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import steps.authorizer.AuthorizerSteps;
 
 import java.util.Arrays;
 import java.util.List;
@@ -68,6 +64,7 @@ public class InventoryV1Test extends AbstractInventoryTest {
     }
 
     @Test
+    @org.junit.jupiter.api.Tag("health_check")
     @TmsLink("1676844")
     @DisplayName("Tag V1. Работа со связями тег-объект инфраструктуры")
     void tagsInventoryTagsUpdateV1() {
