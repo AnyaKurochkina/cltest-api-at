@@ -1,5 +1,6 @@
 package ru.testit.utils;
 
+import lombok.extern.log4j.Log4j;
 import ru.testit.junit5.MethodType;
 import ru.testit.model.request.*;
 import ru.testit.services.LinkItem;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 import static core.helper.StringUtils.getStackTraceThrowable;
 import static org.apache.commons.lang.StringEscapeUtils.escapeHtml;
 
+@Log4j
 public class TestResultRequestFactory {
     private TestResultsRequest request;
 
@@ -28,6 +30,7 @@ public class TestResultRequestFactory {
     }
 
     public void processFinishLaunchUniqueTest(final UniqueTest test, final Map<MethodType, StepNode> utilsMethodSteps, StepNode step) {
+        log.info("processFinishLaunchUniqueTest 1");
         TestResultsRequest req = new TestResultsRequest();
         final String externalId = test.getExternalId();
         final TestResultRequest currentTest = new TestResultRequest();
@@ -35,12 +38,14 @@ public class TestResultRequestFactory {
         currentTest.setConfigurationId(test.getConfigurationId());
         this.processTestSteps(currentTest, step, null);
         this.processUtilsMethodsSteps(currentTest, utilsMethodSteps);
+        log.info("processFinishLaunchUniqueTest 2");
         if (currentTest.getMessage() != null)
             currentTest.setMessage(currentTest.getMessage()
                     .replaceAll("\n", "\t \n")
                     .replaceAll(".at.org\\.junit\\.jupiter\\.engine\\.execution\\.InvocationInterceptorChain\\$ValidatingInvocation\\.proceed\\(InvocationInterceptorChain\\.java:[^*]+", "")
             );
         req.getTestResults().add(currentTest);
+        log.info("processFinishLaunchUniqueTest 3");
         String testResultId = TestITClient.sendTestResult(req);
 
 //        if (Tests.isAttachLog()) {

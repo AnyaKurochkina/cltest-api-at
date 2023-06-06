@@ -39,15 +39,23 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     }
 
     @SuppressWarnings("unchecked")
-    public C checkCreate(){
-        if(Objects.isNull(OrderUtils.getPreBillingPrice()))
-            Waiting.sleep(30000);
+    //false для случаев, когда продукт использует уже созданную сущность и стоимость в итоге будет складываться
+    //(пока без проверки)
+    public C checkCreate(boolean checkCost){
+        if(checkCost)
+            if(Objects.isNull(OrderUtils.getPreBillingPrice()))
+                Waiting.sleep(30000);
         checkLastAction("Развертывание");
         btnGeneralInfo.click();
-        if(Objects.nonNull(OrderUtils.getPreBillingPrice()))
-            Assertions.assertEquals(OrderUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        if(checkCost)
+            if(Objects.nonNull(OrderUtils.getPreBillingPrice()))
+                Assertions.assertEquals(OrderUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
         OrderUtils.setPreBillingPrice(null);
         return (C) this;
+    }
+
+    public C checkCreate(){
+        return checkCreate(true);
     }
 
     @Override

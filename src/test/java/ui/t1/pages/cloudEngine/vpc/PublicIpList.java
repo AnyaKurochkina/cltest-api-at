@@ -18,10 +18,10 @@ public class PublicIpList {
         new IpTable().clickAdd();
         Select.byLabel("Зона доступности").set(availabilityZone);
         OrderUtils.clickOrder();
-        int rowSize = new IpTable().rowSize();
+        boolean isEmpty = new IpTable().isEmpty();
         OrderUtils.waitCreate(() -> {
             IpTable table = new IpTable();
-            if(rowSize > 0) {
+            if(!isEmpty) {
                 String oldIp = table.getFirstValueByColumn(Column.IP_ADDRESS);
                 table.getRow(0).getElementByColumn(Column.IP_ADDRESS).shouldNotBe(Condition.exactText(oldIp), Duration.ofMinutes(1));
             }
