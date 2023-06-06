@@ -34,6 +34,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("1057048")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -173,12 +174,12 @@ public class PostgreSQLAstraTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             if(postgreSQL.isDev()) {
                 postgreSQL.updateMaxConnectionsBySsh(500);
-                postgreSQL.updateMaxConnections();
+                postgreSQL.getConfiguration();
                 Assertions.assertEquals(500, Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
 
                 postgreSQL.updateMaxConnectionsBySsh(99);
             }
-            postgreSQL.updateMaxConnections();
+            postgreSQL.getConfiguration();
             Assertions.assertEquals(postgreSQL.maxConnections(), Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
         }
     }

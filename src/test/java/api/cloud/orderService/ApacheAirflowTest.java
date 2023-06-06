@@ -4,8 +4,10 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.orderService.products.AbstractPostgreSQL;
 import models.cloud.orderService.products.ApacheAirflow;
 import models.cloud.orderService.products.PostgreSQL;
+import models.cloud.orderService.products.PostgresSQLCluster;
 import models.cloud.subModels.DbUser;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -22,10 +24,12 @@ import static api.cloud.orderService.PostgreSQLAstraTest.adminPassword;
 public class ApacheAirflowTest extends Tests {
 
     private static void createPostgres(ApacheAirflow product) {
-        try (PostgreSQL postgreSQL = PostgreSQL.builder().env(product.getEnv()).build().createObjectExclusiveAccess()) {
+        AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
+        if("LT".equalsIgnoreCase(product.getEnv()))
+            abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
+        try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
             String dbName = "airflow";
             postgreSQL.createDb(dbName, adminPassword);
-//        postgreSQL.createDbmsUser("airflow", "user", dbName);
             product.setDbServer(postgreSQL.getIp());
             product.setDbUser(new DbUser(dbName, dbName + "_admin"));
         }
