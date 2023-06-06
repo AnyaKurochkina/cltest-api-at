@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLinks;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.NotFoundException;
@@ -45,6 +46,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
     }
 
     @Test
+    @Tag("health_check")
     @TmsLink("1248261")
     @DisplayName("Cloud Compute. Виртуальные машины. Создание")
     void vmCreatePage() {
