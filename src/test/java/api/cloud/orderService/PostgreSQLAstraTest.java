@@ -114,7 +114,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1701481")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить extensions {0}")
@@ -125,7 +125,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1701482")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Актуализировать extensions {0}")
@@ -184,7 +184,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1701483")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить минорную версию СУБД {0}")
@@ -204,7 +204,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1701485")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Получить актуальную конфигурацию {0}")
@@ -287,7 +287,7 @@ public class PostgreSQLAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Назначить/Убрать предел подключений {0}")
     void setConnLimit(PostgreSQL product) {
-        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
+//        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.setConnLimit(dbName, 20);
