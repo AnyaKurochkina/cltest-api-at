@@ -174,12 +174,14 @@ public class PostgreSQLAstraTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             if(postgreSQL.isDev()) {
                 postgreSQL.updateMaxConnectionsBySsh(500);
-                postgreSQL.getConfiguration();
+                postgreSQL.updateMaxConnections();
                 Assertions.assertEquals(500, Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
 
                 postgreSQL.updateMaxConnectionsBySsh(99);
+                postgreSQL.updateMaxConnections();
+                Assertions.assertEquals(postgreSQL.maxConnections(), Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
             }
-            postgreSQL.getConfiguration();
+            postgreSQL.updateMaxConnections();
             Assertions.assertEquals(postgreSQL.maxConnections(), Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
         }
     }

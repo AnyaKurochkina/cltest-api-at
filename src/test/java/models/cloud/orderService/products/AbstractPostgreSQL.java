@@ -28,7 +28,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     public final static String DB_NAME_PATH = "data.any{it.data.config.db_name=='%s' && it.data.state=='on'}";
     public final static String DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.conn_limit";
     public final static String EXTENSIONS_LIST = "data.find{it.data.config.db_name=='%s'}.data.config.extensions";
-    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.containsKey('conn_limit')";
+//    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.containsKey('conn_limit')";
     public final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     public final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
     public final static String MAX_CONNECTIONS = "data.find{it.type=='app'}.data.config.configuration.max_connections";
@@ -60,7 +60,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
 
     public void removeConnLimit(String dbName) {
         OrderServiceSteps.executeActionWidthFilter("postgresql_db_remove_conn_limit", this, new JSONObject().put("conn_limit", -1), this.getProjectId(), filterBd(dbName));
-        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(IS_DB_CONN_LIMIT, dbName)));
+        Assertions.assertEquals(0, OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
     }
 
     private void addMountPoint(String action, String mount) {
@@ -81,10 +81,10 @@ public abstract class AbstractPostgreSQL extends IProduct {
         addMountPoint("postgresql_add_mount_point_pg_walarchive", "/pg_walarchive");
     }
 
-//    public void updateMaxConnections() {
-//        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app'}.data.config.load_profile");
-//        OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
-//    }
+    public void updateMaxConnections() {
+        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app'}.data.config.load_profile");
+        OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
+    }
 
     public String getCurrentMaxConnections(){
         return (String) OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
