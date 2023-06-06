@@ -93,7 +93,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     public void updateMaxConnectionsBySsh(int connections){
         String cmd = String.format("sudo -iu postgres psql -c \"Alter system set max_connections to '%s';\"", connections);
         assertContains(executeSsh(cmd), "ALTER SYSTEM");
-        executeSsh("sudo -i systemctl restart postgresql-14");
+        executeSsh("sudo -i systemctl restart postgresql-*");
         getConfiguration();
         Assertions.assertEquals(connections, Integer.valueOf(getCurrentMaxConnections()));
     }
