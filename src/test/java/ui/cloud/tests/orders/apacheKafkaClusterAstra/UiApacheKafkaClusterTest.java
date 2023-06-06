@@ -142,7 +142,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(9)
     @TmsLink("1091895")
-    @DisplayName("UI ApacheKafkaCluster. Обновление ядра Kafka до версии 2.8.1")
+    @DisplayName("UI ApacheKafkaCluster. Обновление ядра Kafka до версии 2.8.2")
     void updateKernelVtb() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS,pSqlPage::updateKernelVtb);

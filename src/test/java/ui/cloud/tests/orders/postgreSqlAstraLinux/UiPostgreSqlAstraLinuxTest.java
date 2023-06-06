@@ -15,6 +15,7 @@ import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.cloud.pages.orders.*;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -31,7 +32,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product; // = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/25148ad5-9b01-4e0d-93c1-593d0d8f96a7/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    PostgreSQL product = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/825c387a-0daf-4da9-90aa-be77568d8f1f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
@@ -258,7 +259,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
-
+//
     @Test
     @TmsLink("1091055")
     @Order(24)

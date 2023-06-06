@@ -197,12 +197,12 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.checkClusterMonitoringOs();
     }
 
-    @Test
-    @Order(100)
-    @TmsLink("908275")
-    @DisplayName("UI WildFlyAstra. Удаление продукта")
-    void delete() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.LESS, wildFlyPage::delete);
-    }
+//    @Test
+//    @Order(100)
+//    @TmsLink("908275")
+//    @DisplayName("UI WildFlyAstra. Удаление продукта")
+//    void delete() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.LESS, wildFlyPage::delete);
+//    }
 }

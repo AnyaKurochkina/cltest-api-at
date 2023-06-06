@@ -123,8 +123,10 @@ public class PostgreSqlAstraPage extends IProductPage {
     public void changeConfiguration() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
-                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor)));
+        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
+                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+                CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+        });
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -190,10 +192,10 @@ public class PostgreSqlAstraPage extends IProductPage {
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             btnGeneralInfo.click();
-            runActionWithoutParameters(name, "Удалить БД");
+            runActionWithoutParameters(getHeaderBlock(name), "Удалить БД");}
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name), "БД существует");
-        }
+
     }
     public void showDeleteDB(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);

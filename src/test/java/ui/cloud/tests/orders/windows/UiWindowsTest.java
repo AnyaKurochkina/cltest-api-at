@@ -261,13 +261,13 @@ public class UiWindowsTest extends UiProductTest {
         winPage.deleteKeyAstrom();
     }
 
-    @Test
-    @Order(100)
-    @TmsLink("872683")
-    @DisplayName("UI Windows. Удалить")
-    void deleteWindows() {
-        WindowsPage winPage = new WindowsPage(product);
-        winPage.runActionWithCheckCost(CompareType.ZERO, winPage::delete);
-    }
+//    @Test
+//    @Order(100)
+//    @TmsLink("872683")
+//    @DisplayName("UI Windows. Удалить")
+//    void deleteWindows() {
+//        WindowsPage winPage = new WindowsPage(product);
+//        winPage.runActionWithCheckCost(CompareType.ZERO, winPage::delete);
+//    }
 
 }

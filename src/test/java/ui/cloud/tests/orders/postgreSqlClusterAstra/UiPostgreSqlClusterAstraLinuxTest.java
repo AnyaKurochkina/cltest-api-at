@@ -296,9 +296,9 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Order(25)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменение группы доступа")
     void updateGroup() {
+        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateGroup("superuser",
                 Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
