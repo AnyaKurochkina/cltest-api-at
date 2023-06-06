@@ -81,10 +81,10 @@ public abstract class AbstractPostgreSQL extends IProduct {
         addMountPoint("postgresql_add_mount_point_pg_walarchive", "/pg_walarchive");
     }
 
-    public void updateMaxConnections() {
-        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app'}.data.config.load_profile");
-        OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
-    }
+//    public void updateMaxConnections() {
+//        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app'}.data.config.load_profile");
+//        OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
+//    }
 
     public String getCurrentMaxConnections(){
         return (String) OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);

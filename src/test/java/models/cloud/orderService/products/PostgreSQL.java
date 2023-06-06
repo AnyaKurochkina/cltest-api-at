@@ -52,8 +52,6 @@ public class PostgreSQL extends AbstractPostgreSQL {
         jsonTemplate = "/orders/postgresql.json";
         if (productName == null)
             productName = "PostgreSQL (Astra Linux)";
-        if("LT".equalsIgnoreCase(getEnv()))
-            productName = "PostgreSQL";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -95,7 +93,7 @@ public class PostgreSQL extends AbstractPostgreSQL {
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_two_layer");
+        delete("delete_postgresql");
     }
 
     public void expandMountPoint() {
