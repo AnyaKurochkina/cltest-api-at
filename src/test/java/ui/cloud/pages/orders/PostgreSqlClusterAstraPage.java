@@ -218,11 +218,11 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void removeDb(String name) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
+            btnGeneralInfo.click();
+            runActionWithoutParameters(getHeaderBlock(name), "Удалить БД");
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithoutParameters(name, "Удалить БД");
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
+            Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals("", name), "БД существует");
         }
     }
 
