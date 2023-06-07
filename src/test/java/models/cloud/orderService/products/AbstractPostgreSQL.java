@@ -86,8 +86,8 @@ public abstract class AbstractPostgreSQL extends IProduct {
         OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
     }
 
-    public String getCurrentMaxConnections() {
-        return (String) OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
+    public Integer getCurrentMaxConnections() {
+        return (Integer) OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
     }
 
     public void updateMaxConnectionsBySsh(int connections) {
@@ -95,7 +95,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
         assertContains(executeSsh(cmd), "ALTER SYSTEM");
         executeSsh("sudo -i systemctl restart postgresql-*");
         getConfiguration();
-        Assertions.assertEquals(connections, Integer.valueOf(getCurrentMaxConnections()));
+        Assertions.assertEquals(connections, getCurrentMaxConnections());
     }
 
     public int maxConnections() {
