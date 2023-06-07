@@ -426,4 +426,25 @@ public class GraphSteps extends Steps {
                 .post(graphUrl + "remove_tag_list/?name__in=" + names)
                 .assertStatus(200);
     }
+
+    @Step("Получение списка графов по фильтру")
+    public static List<Graph> getGraphListByFilter(String filter, Object value) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?{}={}", filter, value)
+                .assertStatus(200)
+                .extractAs(GetGraphList.class)
+                .getList();
+    }
+
+    @Step("Получение списка графов по фильтрам")
+    public static List<Graph> getGraphListByFilters(String...filter) {
+        String filters = String.join("&", filter);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?" + filters)
+                .assertStatus(200)
+                .extractAs(GetGraphList.class)
+                .getList();
+    }
 }

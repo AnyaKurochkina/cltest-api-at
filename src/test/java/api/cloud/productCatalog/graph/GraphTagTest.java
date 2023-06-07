@@ -6,7 +6,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -20,7 +19,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.*;
 
 @Tag("product_catalog")
@@ -45,7 +43,7 @@ public class GraphTagTest extends Tests {
     }
 
     @DisplayName("Проверка значения поля tag_list в графах")
-    @TmsLink("")
+    @TmsLink("1701842")
     @Test
     public void checkGraphTagListValueTest() {
         List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
@@ -64,22 +62,22 @@ public class GraphTagTest extends Tests {
         AssertUtils.assertEqualsList(tagList, createdGraph.getTagList());
     }
 
-    @DisplayName("Проверка не версионности поля tag_list в действиях")
-    @TmsLink("1700491")
+    @DisplayName("Проверка не версионности поля tag_list в графах")
+    @TmsLink("1701851")
     @Test
-    public void checkActionTagListVersioning() {
+    public void checkGraphTagListVersioning() {
         List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
-        Action action = Action.builder()
-                .name("at_api_action_check_tag_list_versioning")
+        Graph graph = Graph.builder()
+                .name("at_api_graph_check_tag_list_versioning")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(tagList)
                 .build()
                 .createObject();
         tagList = Collections.singletonList("TestTag3");
-        partialUpdateAction(action.getActionId(), new JSONObject().put("tag_list", tagList));
-        Action updatedAction = getActionById(action.getActionId());
-        assertEquals("1.0.0", updatedAction.getVersion());
+        partialUpdateGraph(graph.getGraphId(), new JSONObject().put("tag_list", tagList));
+        Graph updatedGraph = getGraphById(graph.getGraphId());
+        assertEquals("1.0.0", updatedGraph.getVersion());
     }
 }
 
