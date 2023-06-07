@@ -38,6 +38,10 @@ public class NewOrderPage {
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public static SelenideElement getCalculationDetails() {
+        return $x("(//div[text()='Детали заказа'])[2]");
+    }
+
+    public static SelenideElement getCalculationDetailsHeader() {
         return $x("//div[text()='Детали заказа']");
     }
 
