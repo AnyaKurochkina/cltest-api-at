@@ -55,7 +55,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
         OrderServiceSteps.executeActionWidthFilter("postgresql_db_set_conn_limit", this, new JSONObject().put("conn_limit", count), this.getProjectId(), filterBd(dbName));
         Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
         if (isDev())
-            Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s(.*)\\n\\(",
+            Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s([0-9]*)\\n\\(",
                     executeSsh("sudo -iu postgres psql -c \"select datconnlimit from pg_database where datname='" + dbName + "';\"")));
     }
 
