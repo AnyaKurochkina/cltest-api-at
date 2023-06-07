@@ -17,6 +17,7 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -86,8 +87,11 @@ public abstract class AbstractPostgreSQL extends IProduct {
         OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
     }
 
-    public Integer getCurrentMaxConnections() {
-        return (Integer) OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
+    public String getCurrentMaxConnections() {
+        Object obj = OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
+        if(obj instanceof Integer)
+            obj = String.valueOf(obj);
+        return (String) obj;
     }
 
     public void updateMaxConnectionsBySsh(int connections) {
@@ -95,7 +99,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
         assertContains(executeSsh(cmd), "ALTER SYSTEM");
         executeSsh("sudo -i systemctl restart postgresql-*");
         getConfiguration();
-        Assertions.assertEquals(connections, getCurrentMaxConnections());
+        Assertions.assertEquals(connections, Integer.valueOf(getCurrentMaxConnections()));
     }
 
     public int maxConnections() {
