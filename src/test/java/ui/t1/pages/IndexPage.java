@@ -53,7 +53,7 @@ public class IndexPage {
 
     @Step("Переход на главную страницу")
     public static void go() {
-        $x("(//img[contains(@alt,'logo')])[2]").shouldBe(Condition.visible).click();
+        $x("//*[@title = 'Главная']").shouldBe(Condition.visible).click();
     }
 
     public Profile goToProfile(){
