@@ -124,8 +124,8 @@ public class PostgreSqlAstraPage extends IProductPage {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
-                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
-                CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
         });
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
@@ -192,17 +192,20 @@ public class PostgreSqlAstraPage extends IProductPage {
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             btnGeneralInfo.click();
-            runActionWithoutParameters(getHeaderBlock(name), "Удалить БД");}
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name), "БД существует");
+            runActionWithoutParameters(getHeaderBlock(name), "Удалить БД");
+        }
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name), "БД существует");
 
     }
+
     public void showDeleteDB(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnGeneralInfo.click();
         showDeleteSwitch.setEnabled(true);
         Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, name), "БД не обнаружена");
     }
+
     public void enlargeDisk(String name, String size, SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
@@ -291,10 +294,6 @@ public class PostgreSqlAstraPage extends IProductPage {
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }
 
-    public SelenideElement getHeaderBlock (String name)
-    {
-        return $x("//td[.='{}']/../descendant::button", name);
-    }
 
     //Таблица ролей
     public class RoleTable extends Table {

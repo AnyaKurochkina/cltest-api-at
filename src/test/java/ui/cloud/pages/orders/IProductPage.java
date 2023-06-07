@@ -69,6 +69,10 @@ public abstract class IProductPage {
     public static SelenideElement getBtnAction(String header) {
         return getBtnAction(header, 1);
     }
+    public SelenideElement getHeaderBlock (String name)
+    {
+        return $x("//td[.='{}']/../descendant::button", name);
+    }
 
     public static SelenideElement getBtnAction(String header, int index) {
         return $x("(//*[.='{}']/parent::*//button[@id='actions-menu-button'])" + postfix, header, TypifiedElement.getIndex(index));

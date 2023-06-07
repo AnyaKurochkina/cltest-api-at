@@ -316,10 +316,6 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
     }
-    public SelenideElement getHeaderBlock (String name)
-    {
-        return $x("//td[.='{}']/../descendant::button", name);
-    }
 
     //Таблица ролей
     public class RoleTable extends Table {
