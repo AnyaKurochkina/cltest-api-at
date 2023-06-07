@@ -89,7 +89,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
 
     public String getCurrentMaxConnections() {
         Object obj = OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
-        if(obj instanceof Integer)
+        if (obj instanceof Integer)
             obj = String.valueOf(obj);
         return (String) obj;
     }
@@ -126,8 +126,10 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void getExtensions(String dbName, String extension) {
+        String p = (this instanceof PostgreSQL) ? "" : "-p 6432";
+
         if (isDev()) {
-            String cmd = String.format("sudo -iu postgres psql -d %s -c \"create extension %s with schema %s;\"", dbName, extension, dbName);
+            String cmd = String.format("sudo -iu postgres psql %s -d %s -c \"create extension %s with schema %s;\"", p, dbName, extension, dbName);
             assertContains(executeSsh(cmd), "CREATE EXTENSION");
         }
         OrderServiceSteps.executeActionWidthFilter("postgresql_db_get_extensions", this, null, this.getProjectId(), filterBd(dbName));
