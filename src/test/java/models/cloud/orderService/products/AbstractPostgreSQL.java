@@ -28,7 +28,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     public final static String DB_NAME_PATH = "data.any{it.data.config.db_name=='%s' && it.data.state=='on'}";
     public final static String DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.conn_limit";
     public final static String EXTENSIONS_LIST = "data.find{it.data.config.db_name=='%s'}.data.config.extensions";
-//    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.containsKey('conn_limit')";
+    //    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.containsKey('conn_limit')";
     public final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     public final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
     public final static String MAX_CONNECTIONS = "data.find{it.type=='app'}.data.config.configuration.max_connections";
@@ -55,7 +55,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
         Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
         if (isDev())
             Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s(.*)\\n\\(",
-                    executeSsh("psql -c \"select datconnlimit from pg_database where datname='dbname';\"")));
+                    executeSsh("psql -c \"select datconnlimit from pg_database where datname='" + dbName + "';\"")));
     }
 
     public void removeConnLimit(String dbName) {
@@ -86,11 +86,11 @@ public abstract class AbstractPostgreSQL extends IProduct {
         OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
     }
 
-    public String getCurrentMaxConnections(){
+    public String getCurrentMaxConnections() {
         return (String) OrderServiceSteps.getProductsField(this, MAX_CONNECTIONS);
     }
 
-    public void updateMaxConnectionsBySsh(int connections){
+    public void updateMaxConnectionsBySsh(int connections) {
         String cmd = String.format("sudo -iu postgres psql -c \"Alter system set max_connections to '%s';\"", connections);
         assertContains(executeSsh(cmd), "ALTER SYSTEM");
         executeSsh("sudo -i systemctl restart postgresql-*");
@@ -102,15 +102,15 @@ public abstract class AbstractPostgreSQL extends IProduct {
         return (int) (118 * Math.log(flavor.getCpus() + 1) * Math.log(flavor.getMemory() + 1));
     }
 
-    public void getConfiguration(){
+    public void getConfiguration() {
         OrderServiceSteps.executeAction("postgresql_get_configuration", this, null, this.getProjectId());
     }
 
-    public void updatePostgresql(){
+    public void updatePostgresql() {
         OrderServiceSteps.executeAction("postgresql_update_postgresql", this, new JSONObject().put("check_agree", true), this.getProjectId());
     }
 
-    public void updateOs(){
+    public void updateOs() {
         OrderServiceSteps.executeAction("postgresql_update_os", this, new JSONObject().put("check_agree", true), this.getProjectId());
     }
 
@@ -131,7 +131,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
             Assertions.assertTrue(OrderServiceSteps.getProductsField(this, String.format(EXTENSIONS_LIST, dbName), List.class).contains(extension));
     }
 
-    private String filterBd(String dbName){
+    private String filterBd(String dbName) {
         return String.format("db_name=='%s'", dbName);
     }
 
