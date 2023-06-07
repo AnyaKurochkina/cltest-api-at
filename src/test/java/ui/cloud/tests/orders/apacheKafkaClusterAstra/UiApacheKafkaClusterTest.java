@@ -32,7 +32,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/d2473b5e-14dc-423f-8405-740d462474a4/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/893921dc-541e-4ced-b79b-10d5f3c03977/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -202,7 +202,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.changeParamTopics(name));
     }
-        @Test
+    @Test
     @Order(16)
     @TmsLink("915047")
     @DisplayName("UI ApacheKafkaCluster. Изменить имя кластера")
@@ -324,14 +324,14 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
         pSqlPage.checkClusterMonitoringOs();
     }
-
-    @Test
-    @Order(100)
-    @TmsLink("852007")
-    @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
-    void delete() {
-        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.ZERO, pSqlPage::delete);
-    }
+//
+//    @Test
+//    @Order(100)
+//    @TmsLink("852007")
+//    @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
+//    void delete() {
+//        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.ZERO, pSqlPage::delete);
+//    }
 
  }

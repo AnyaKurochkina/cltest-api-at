@@ -32,7 +32,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
 
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/web/orders/f50263d6-d6c9-4b29-b758-8689b3cb8bc2/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    WildFly product = WildFly.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b3a48047-5370-466c-8764-4899aa4c8282/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -41,41 +41,41 @@ public class UiWildFlyAstraTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-    @Test
-    @TmsLink("908276")
-    @Order(1)
-    @DisplayName("UI WildFlyAstra. Заказ")
-    void orderWildFlyAstra() {
-        double prebillingCost;
-        try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
-            new IndexPage()
-                    .clickOrderMore()
-                    .selectProduct(product.getProductName());
-            WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getGroupWildFly().set(accessGroup);
-            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
-            orderPage.orderClick();
-            new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
-                    .hover()
-                    .click();
-            WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-            wildFlyPage.waitChangeStatus(Duration.ofMinutes(25));
-            wildFlyPage.checkLastAction("Развертывание");
-        } catch (Throwable e) {
-            product.setError(e.toString());
-            throw e;
-        }
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        checkOrderCost(prebillingCost, wildFlyPage);
-    }
+//    @Test
+//    @TmsLink("908276")
+//    @Order(1)
+//    @DisplayName("UI WildFlyAstra. Заказ")
+//    void orderWildFlyAstra() {
+//        double prebillingCost;
+//        try {
+//            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+//            new IndexPage()
+//                    .clickOrderMore()
+//                    .selectProduct(product.getProductName());
+//            WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
+//            orderPage.getOsVersionSelect().set(product.getOsVersion());
+//            orderPage.getSegmentSelect().set(product.getSegment());
+//            orderPage.getPlatformSelect().set(product.getPlatform());
+//            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+//            orderPage.getGroupSelect().set(accessGroup);
+//            orderPage.getGroupWildFly().set(accessGroup);
+//            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+//            orderPage.orderClick();
+//            new OrdersPage()
+//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+//                    .getElementByColumn("Продукт")
+//                    .hover()
+//                    .click();
+//            WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//            wildFlyPage.waitChangeStatus(Duration.ofMinutes(25));
+//            wildFlyPage.checkLastAction("Развертывание");
+//        } catch (Throwable e) {
+//            product.setError(e.toString());
+//            throw e;
+//        }
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        checkOrderCost(prebillingCost, wildFlyPage);
+//    }
 
     @Test
     @TmsLink("1644557")

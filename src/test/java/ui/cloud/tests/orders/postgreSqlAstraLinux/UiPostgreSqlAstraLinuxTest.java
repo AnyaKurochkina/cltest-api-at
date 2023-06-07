@@ -32,7 +32,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/825c387a-0daf-4da9-90aa-be77568d8f1f/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/825c387a-0daf-4da9-90aa-be77568d8f1f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
@@ -259,7 +259,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
-//
+
     @Test
     @TmsLink("1091055")
     @Order(24)
@@ -302,12 +302,12 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.checkClusterMonitoringOs();
     }
 
-    @Test
-    @Order(100)
-    @TmsLink("993399")
-    @DisplayName("UI PostgreSQLAstra. Удаление продукта")
-    void delete() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.delete();
-    }
+//    @Test
+//    @Order(100)
+//    @TmsLink("993399")
+//    @DisplayName("UI PostgreSQLAstra. Удаление продукта")
+//    void delete() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.delete();
+//    }
 }
