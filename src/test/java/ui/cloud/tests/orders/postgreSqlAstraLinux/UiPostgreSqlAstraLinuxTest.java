@@ -302,12 +302,12 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.checkClusterMonitoringOs();
     }
 
-//    @Test
-//    @Order(100)
-//    @TmsLink("993399")
-//    @DisplayName("UI PostgreSQLAstra. Удаление продукта")
-//    void delete() {
-//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-//        pSqlPage.delete();
-//    }
+    @Test
+    @Order(100)
+    @TmsLink("993399")
+    @DisplayName("UI PostgreSQLAstra. Удаление продукта")
+    void delete() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.delete();
+    }
 }

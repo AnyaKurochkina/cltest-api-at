@@ -324,14 +324,14 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
         pSqlPage.checkClusterMonitoringOs();
     }
-//
-//    @Test
-//    @Order(100)
-//    @TmsLink("852007")
-//    @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
-//    void delete() {
-//        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
-//        pSqlPage.runActionWithCheckCost(CompareType.ZERO, pSqlPage::delete);
-//    }
+
+    @Test
+    @Order(100)
+    @TmsLink("852007")
+    @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
+    void delete() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.ZERO, pSqlPage::delete);
+    }
 
  }
