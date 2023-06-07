@@ -38,7 +38,7 @@ public class NewOrderPage {
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public static SelenideElement getCalculationDetails() {
-        return $x("(//div[text()='Детали заказа'])[2]");
+        return $x("//div[text()='Детали заказа']");
     }
 
     public static String getFlavor(Flavor flavor) {
