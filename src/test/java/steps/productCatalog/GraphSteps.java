@@ -406,4 +406,24 @@ public class GraphSteps extends Steps {
                 .get(graphUrl + id + "/version_list/")
                 .assertStatus(200);
     }
+
+    @Step("Добавление списка Тегов графам")
+    public static void addTagListToGraph(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("add_tags", tagsList))
+                .post(graphUrl + "add_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление списка Тегов графов")
+    public static void removeTagListToGraph(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("remove_tags", tagsList))
+                .post(graphUrl + "remove_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
 }

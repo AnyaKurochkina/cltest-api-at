@@ -12,6 +12,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
@@ -152,5 +154,61 @@ public class ActionsListTest extends Tests {
                 .build();
         List<Action> actionList = getActionListByTypeProvider(obj );
         checkEventProvider(actionList, "vm", "vsphere");
+    }
+
+    @DisplayName("Получение списка действий c Тегами")
+    @TmsLink("1700564")
+    @Test
+    public void getActionListWithTagListTest() {
+        Action.builder()
+                .name("at_api_action_check_tag_list_versioning")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Collections.singletonList("api_test"))
+                .build()
+                .createObject();
+        List<Action> actionList = getActionListByFilter("with_tag_list", true);
+        actionList.forEach(x -> assertNotNull(x.getTagList()));
+    }
+
+    @DisplayName("Получение списка действий отфильтрованном по Тегам с полным совпадением")
+    @TmsLink("1700655")
+    @Test
+    public void getActionListFilteredByTagsTest() {
+        String tag1 = "api_test";
+        String tag2 = "complete";
+        Action.builder()
+                .name("at_api_action_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        Action.builder()
+                .name("action_for_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        List<Action> actionList = getActionListByFilters("with_tag_list=true", "tags_complete_match=true",
+                String.format("tags=%s,%s", tag1, tag2));
+        assertEquals(2, actionList.size());
+        actionList.forEach(x-> assertEquals(x.getTagList(), Arrays.asList(tag1, tag2)));
+    }
+
+    @DisplayName("Получение списка действий отфильтрованном по Тегам с не полным совпадением")
+    @TmsLink("1700662")
+    @Test
+    public void getActionListFilteredByTagsAndCompleteMatchFalseTest() {
+        Action.builder()
+                .name("at_api_action_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList("api_test", "api_test_action"))
+                .build()
+                .createObject();
+        List<Action> actionList = getActionListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
+        actionList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }
 }

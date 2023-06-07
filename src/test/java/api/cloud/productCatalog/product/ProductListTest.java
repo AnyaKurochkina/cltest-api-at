@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
+import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -13,9 +14,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
@@ -162,5 +161,61 @@ public class ProductListTest extends Tests {
     public void orderingByStatus() {
         List<Product> list = getProductListOrderingByStatus();
         assertTrue(isOrderingByStatus(list), "Список не отсортирован.");
+    }
+
+    @DisplayName("Получение списка продуктов c Тегами")
+    @TmsLink("1701075")
+    @Test
+    public void getProductListWithTagListTest() {
+        Product.builder()
+                .name("at_api_product_for_list_with_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Collections.singletonList("api_test"))
+                .build()
+                .createObject();
+        List<Product> productList = getProductListByFilter("with_tag_list=true");
+        productList.forEach(x -> assertNotNull(x.getTagList()));
+    }
+
+    @DisplayName("Получение списка продуктов отфильтрованном по Тегам с полным совпадением")
+    @TmsLink("1701098")
+    @Test
+    public void getProductListFilteredByTagsTest() {
+        String tag1 = "api_test";
+        String tag2 = "complete";
+        Product.builder()
+                .name("at_api_product_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        Product.builder()
+                .name("product_for_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        List<Product> productList = getProductListByFilters("with_tag_list=true", "tags_complete_match=true",
+                String.format("tags=%s,%s", tag1, tag2));
+        assertEquals(2, productList.size());
+        productList.forEach(x -> AssertUtils.assertEqualsList(x.getTagList(), Arrays.asList(tag1, tag2)));
+    }
+
+    @DisplayName("Получение списка продуктов отфильтрованном по Тегам с не полным совпадением")
+    @TmsLink("1701329")
+    @Test
+    public void getProductListFilteredByTagsAndCompleteMatchFalseTest() {
+        Product.builder()
+                .name("at_api_product_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList("api_test", "api_test_product"))
+                .build()
+                .createObject();
+        List<Product> productList = getProductListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
+        productList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }
 }

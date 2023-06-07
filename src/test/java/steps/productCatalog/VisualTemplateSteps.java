@@ -6,12 +6,13 @@ import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
-import models.cloud.productCatalog.visualTeamplate.GetVisualTemplateList;
-import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
+import models.cloud.productCatalog.visualTeamplate.*;
 import org.json.JSONObject;
 import steps.Steps;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -129,6 +130,27 @@ public class VisualTemplateSteps extends Steps {
                 .body(body)
                 .post(visualTemplateUrl);
     }
+
+    @Step("Создание шаблона визуализаций")
+    public static ItemVisualTemplate createVisualTemplate(String name) {
+        return ItemVisualTemplate.builder()
+                .name(name)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(CompactTemplate.builder()
+                        .name(new Name("name"))
+                        .type(new Type("type", "label"))
+                        .status(new Status("status"))
+                        .build())
+                .fullTemplate(FullTemplate.builder()
+                        .type("type")
+                        .value(Arrays.asList("value", "value2"))
+                        .build())
+                .isActive(false)
+                .build()
+                .createObject();
+    }
+
     @Step("Экспорт шаблона визуализаций по Id {id}")
     public static Response exportVisualTemplateById(String id) {
         return new Http(ProductCatalogURL)

@@ -72,6 +72,7 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
                 .set("$.full_template", new JSONObject(fullTemplate))
                 .set("$.default_item", defaultItem)
                 .set("$.default_order", defaultOrder)
+                .set("$.tag_list", tagList)
                 .build();
     }
 
