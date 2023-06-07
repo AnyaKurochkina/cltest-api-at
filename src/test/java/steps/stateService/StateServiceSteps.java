@@ -318,7 +318,7 @@ public class StateServiceSteps extends Steps {
 
     public static List<ActionStateService> getActionListByFilter(String filter, String value) {
         return new Http(StateServiceURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .withServiceToken()
                 .get("/api/v1/actions/?{}={}", filter, value)
                 .assertStatus(200)
                 .extractAs(GetActionStateServiceList.class)
