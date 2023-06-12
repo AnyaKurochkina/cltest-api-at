@@ -58,6 +58,18 @@ public class CloudDirectorPage {
         Alert.green("VMware организация {} удалена успешно", name);
     }
 
+    @Step("Удаление VMware организации с существующими заказами и с именем {name}")
+    public CloudDirectorPage deleteWithOrders(String name) {
+        new VmWareOrganizationList().getRowByColumnValue(VmWareOrganizationList.ORGANIZATION_NAME, name)
+                .getElementByColumn("").$x("descendant::*[name()='svg'][1]").click();
+        Dialog dialog = Dialog.byTitle("Удаление");
+        dialog.setInputValue("Идентификатор", dialog.getDialog().find("b").innerText());
+        dialog.clickButton("Удалить");
+        Alert.red("Нельзя удалить VDC организацию с заказами", name);
+        dialog.clickButton("Отмена");
+        return this;
+    }
+
     public VMwareOrganizationPage goToOrganization(String name) {
         new VmWareOrganizationList().getRowByColumnValue(VmWareOrganizationList.ORGANIZATION_NAME, name).get().click();
         return new VMwareOrganizationPage();
