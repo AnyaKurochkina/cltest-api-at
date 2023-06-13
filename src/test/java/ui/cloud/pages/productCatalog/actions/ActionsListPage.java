@@ -82,7 +82,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Импорт действия из файла")
     public ActionsListPage importAction(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;
@@ -108,7 +108,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Проверка заголовков списка действий")
     public ActionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(NAME_COLUMN),
-                "Наименование", NAME_COLUMN, "Дата создания", "Тип", "Провайдер", "", "");
+                "Наименование", NAME_COLUMN, "Дата создания", "Тип", "Провайдер", "Теги", "", "");
         return this;
     }
 
