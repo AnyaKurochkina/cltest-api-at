@@ -1,6 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -28,7 +29,9 @@ public class EngineTest extends AbstractComputeTest {
     }
 
     private void checkElementsEngine(Condition condition){
+        TypifiedElement.refresh();
         IndexPage indexPage = new IndexPage();
+        indexPage.goToCloudEngine();
         indexPage.getLinkDisks().getButton().shouldBe(condition);
         indexPage.getLinkVirtualMachines().getButton().shouldBe(condition);
         indexPage.getLinkSnapshots().getButton().shouldBe(condition);
