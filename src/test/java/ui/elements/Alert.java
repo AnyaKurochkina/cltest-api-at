@@ -15,8 +15,7 @@ import java.util.Collections;
 import java.util.Objects;
 
 import static api.Tests.clickableCnd;
-import static core.helper.StringUtils.$$x;
-import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.*;
 import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
@@ -76,7 +75,7 @@ public class Alert implements TypifiedElement {
     @Step("Проверка на отсутствие красных алертов")
     public static void  checkNoRedAlerts() {
         SelenideElement element = new Alert().getElement();
-        if (element.exists())
+        if (exist(element, Duration.ofSeconds(3)))
             Assertions.assertNotEquals(fromString(element.getCssValue("border-bottom-color")).asHex(), Color.RED.getColor());
     }
 

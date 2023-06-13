@@ -32,7 +32,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
 
-    WildFly product = WildFly.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b3a48047-5370-466c-8764-4899aa4c8282/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    WildFly product;// = WildFly.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b3a48047-5370-466c-8764-4899aa4c8282/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
