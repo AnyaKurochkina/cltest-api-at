@@ -23,6 +23,7 @@ public class AccessGroup extends Entity {
     String prefixName;
     String name;
     String projectName;
+    String accountsType;
     String description;
     List<String> users;
     String domain;
@@ -46,6 +47,8 @@ public class AccessGroup extends Entity {
             name = new Generex("[a-z]{5,15}").random();
         if (codePurpose == null)
             codePurpose = "compute";
+        if (accountsType == null)
+            accountsType = "personal";
         if (projectName == null)
             projectName = ((Project) Project.builder().isForOrders(false).build().createObject()).getId();
         if (description == null)
@@ -63,6 +66,7 @@ public class AccessGroup extends Entity {
                 .set("$.access_group.description", description)
                 .set("$.access_group.project_name", projectName)
                 .set("$.access_group.domain", domain)
+                .set("$.access_group.accounts_type", accountsType)
                 .set("$.access_group.code_purpose", codePurpose)
                 .build();
     }

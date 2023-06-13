@@ -37,8 +37,14 @@ public class NewOrderPage {
     protected Select groupSelect = Select.byLabel("Группы");
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
+    //раскрывающийся список
     public static SelenideElement getCalculationDetails() {
         return $x("(//div[text()='Детали заказа'])[2]");
+    }
+
+    //Заголовок всего окна
+    public static SelenideElement getCalculationDetailsHeader() {
+        return $x("//div[text()='Детали заказа']");
     }
 
     public static String getFlavor(Flavor flavor) {

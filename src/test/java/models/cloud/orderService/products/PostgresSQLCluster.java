@@ -32,17 +32,10 @@ import static models.cloud.orderService.products.PostgreSQL.DB_CONN_LIMIT;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class PostgresSQLCluster extends IProduct {
-    private final static String DB_NAME_PATH = "data.find{it.data.config.containsKey('dbs')}.data.config.dbs.any{it.db_name=='%s'}";
-    private final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
+public class PostgresSQLCluster extends AbstractPostgreSQL {
     String osVersion;
     @ToString.Include
     String postgresqlVersion;
-    @Builder.Default
-    public List<Db> database = new ArrayList<>();
-    @Builder.Default
-    public List<DbUser> users = new ArrayList<>();
-    Flavor flavor;
     private String adminPassword;
 
     @Override
@@ -112,72 +105,29 @@ public class PostgresSQLCluster extends IProduct {
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
 
-    public void createDb(String dbName) {
-        if (database.contains(new Db(dbName)))
-            return;
-        OrderServiceSteps.executeAction(getEnv().equalsIgnoreCase("LT") ? "postgresql_cluster_create_db" : "postgresql_cluster_create_db_nonprod",
-                this, new JSONObject(String.format("{conn_limit: -1, db_name: \"%s\", db_admin_pass: \"%s\"}", dbName, adminPassword)), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем" + dbName);
-        database.add(new Db(dbName));
-        log.info("database = " + database);
-        save();
-    }
-
     @SneakyThrows
     public void checkConnection(String dbName) {
         checkConnectDb(dbName, dbName + "_admin", adminPassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)).split(",")[0]);
     }
 
-    //Удалить БД
-    public void removeDb(String dbName) {
-        OrderServiceSteps.executeAction("postgresql_cluster_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
-        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
-        database.removeIf(db -> db.getNameDB().equals(dbName));
-        save();
+    public void removeDbmsUser(String username, String dbName) {
+        removeDbmsUser("postgresql_cluster_remove_dbms_user", username, dbName);
+    }
+
+    public void resetDbOwnerPassword(String username) {
+        resetDbOwnerPassword("postgresql_cluster_reset_db_owner_password", username);
+    }
+
+    public void resetPassword(String username) {
+        resetPassword("postgresql_cluster_reset_db_user_password", username);
+    }
+
+    public void createDbmsUser(String username, String dbRole, String dbName) {
+        createDbmsUser("postgresql_cluster_create_dbms_user", username, dbRole, dbName);
     }
 
     public void resize(Flavor flavor) {
         resize("resize_postgresql_cluster", flavor);
-    }
-
-    public void createDbmsUser(String username, String dbRole, String dbName) {
-        OrderServiceSteps.executeAction("postgresql_cluster_create_dbms_user",
-                this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}",
-                        dbName, dbRole, username)), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
-                        this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
-                "Имя пользователя отличается от создаваемого");
-        users.add(new DbUser(dbName, username));
-        log.info("users = " + users);
-        save();
-    }
-
-    //Сбросить пароль пользователя
-    public void resetPassword(String username) {
-        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
-    }
-
-    //Сбросить пароль владельца
-    public void resetDbOwnerPassword(String dbName) {
-        Assertions.assertTrue(database.stream().anyMatch(db -> db.getNameDB().equals(dbName)), String.format("Базы %s не существует", dbName));
-        adminPassword = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("postgresql_cluster_reset_db_owner_password", this, new JSONObject(String.format("{\"user_name\":\"%S\",\"user_password\":\"%s\"}", dbName + "_admin", adminPassword)), this.getProjectId());
-    }
-
-    //Удалить пользователя
-    public void removeDbmsUser(String username, String dbName) {
-        OrderServiceSteps.executeAction("postgresql_cluster_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
-        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
-                        this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
-                String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));
-        log.info("users = " + users);
-        save();
-    }
-
-    public void setConnLimit(String dbName, int count) {
-        OrderServiceSteps.executeAction("postgresql_cluster_set_conn_limit", this, new JSONObject().put("db_name", dbName).put("conn_limit", count), this.getProjectId());
-        Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
     }
 
     public void restart() {

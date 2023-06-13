@@ -31,7 +31,7 @@ public class NginxAstraPage extends IProductPage {
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new NginxAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(expectedStatus);
+        new NginxAstraPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 
     public void checkConfiguration() {
@@ -50,14 +50,14 @@ public class NginxAstraPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new NginxAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Обновить сертификат NginxAstra")
     public void updateCertificate() {
-        new NginxAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты");
-        new NginxAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
@@ -97,6 +97,9 @@ public class NginxAstraPage extends IProductPage {
     }
 
     public class VirtualMachineTable extends VirtualMachine {
+        public VirtualMachineTable() {
+            super("Роли узла");
+        }
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

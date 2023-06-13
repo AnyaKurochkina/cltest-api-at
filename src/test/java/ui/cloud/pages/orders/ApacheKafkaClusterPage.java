@@ -145,15 +145,15 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateDistributionVtb() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновление дистрибутива ВТБ-Kafka", "Подтвердить", () -> {
-            CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю, что знаю что делаю.").setChecked(true);
+            //CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю, что знаю что делаю.").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void updateKernelVtb() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(BLOCK_CLUSTER, "Обновление ядра Kafka до версии 2.8.1", "Подтвердить", () -> {
-           // CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю.").setChecked(true);
+        runActionWithParameters(BLOCK_CLUSTER, "Обновление ядра Kafka до версии 2.8.2", "Подтвердить", () -> {
+           CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю.").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -199,7 +199,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
             for (int i = 0; i < names.size(); i++) {
                 if (i != 0)
                     btnAdd.shouldBe(Condition.enabled).click();
-                Select.byLabel("Топик", i + 1).set(names.get(i));
+                Select.byLabel("Топики", i + 1).set(names.get(i));
                 Select.byLabel("Тип очистки").set("compact");
             }
         });

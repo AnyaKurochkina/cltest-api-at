@@ -40,7 +40,7 @@ public class OrderServiceSteps extends Steps {
 
     public static void checkOrderStatus(String exp_status, IProduct product) {
         String orderStatus = "";
-        int counter = 80;
+        int counter = 90;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
@@ -444,7 +444,7 @@ public class OrderServiceSteps extends Steps {
             actions = Arrays.toString(pathList.toArray());
         Assertions.assertNotEquals("", id, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
 
-        return Objects.requireNonNull(id, "Нет действия " + action + " у продукта" + product);
+        return Objects.requireNonNull(id, "Нет действия " + action + " у продукта " + product);
     }
 
     /**

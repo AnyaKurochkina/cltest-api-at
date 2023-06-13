@@ -82,6 +82,7 @@ public class Redis extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.redis_version", redisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.os_version", osVersion)

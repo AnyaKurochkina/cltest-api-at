@@ -12,7 +12,6 @@ app = Flask(__name__)
 config = configparser.ConfigParser()
 config.read('config.ini')
 
-port = int(config.get('DEFAULT', 'port'))
 project_path = os.path.abspath(config.get('DEFAULT', 'project_path'))
 token = config.get('DEFAULT', 'token')
 
@@ -85,7 +84,7 @@ def run_tests_with_args(test_args):
         return_code = result.returncode
 
     run = False
-
+    print('Tests completed!', test_args)
     if return_code != 0:
         return False
 
@@ -104,6 +103,6 @@ def signal_handler(sig, frame):
 
 if __name__ == "__main__":
     signal.signal(signal.SIGINT, signal_handler)
-    app.run(host="localhost", port=port)
+    app.run(host="localhost", port=1313)
     
     
