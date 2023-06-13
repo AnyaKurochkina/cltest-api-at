@@ -38,29 +38,33 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
         initDriver();
     }
 
+    public static Throwable attachFiles(Throwable throwable) {
+        try {
+            AttachUtils.attachLinkVideo();
+            AttachUtils.attachRequests();
+            AttachUtils.attachFiles();
+        } catch (Throwable ex) {
+            throwable.addSuppressed(ex);
+        }
+        return throwable;
+    }
+
     @SneakyThrows
     public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         try {
             invocation.proceed();
         } catch (Throwable e) {
-            try {
-                AttachUtils.attachLinkVideo();
-                AttachUtils.attachRequests();
-                AttachUtils.attachFiles();
-            } catch (Throwable ex) {
-                e.addSuppressed(ex);
-            }
-            throw e;
+            throw attachFiles(e);
         }
-        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
-            if(Boolean.parseBoolean(getAppProp("webdriver.capabilities.enableVideo", "false"))) {
-                String sessionId = ((RemoteWebDriver) WebDriverRunner.getWebDriver()).getSessionId().toString();
-                String host = getAppProp("webdriver.remote.url");
-                new Http(host.substring(0, host.length()-7))
-                        .setWithoutToken()
-                        .delete("/video/{}.mp4", sessionId);
-            }
-        }
+//        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
+//            if(Boolean.parseBoolean(getAppProp("webdriver.capabilities.enableVideo", "false"))) {
+//                String sessionId = ((RemoteWebDriver) WebDriverRunner.getWebDriver()).getSessionId().toString();
+//                String host = getAppProp("webdriver.remote.url");
+//                new Http(host.substring(0, host.length()-7))
+//                        .setWithoutToken()
+//                        .delete("/video/{}.mp4", sessionId);
+//            }
+//        }
     }
 
 }

@@ -22,6 +22,7 @@ import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
+import static core.helper.StringUtils.$x;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @BlockTests
@@ -92,6 +93,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         console.click();
         Button.byText("Развернуть на полный экран").click();
         Button.byText("Выйти из полноэкранного режима").click();
+        $x("//*[@title='Консоль']").shouldBe(Condition.text("Connected (encrypted)"));
         console.getButton().should(Condition.visible);
     }
 

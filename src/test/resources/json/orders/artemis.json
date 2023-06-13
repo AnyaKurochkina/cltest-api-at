@@ -12,7 +12,7 @@
       },
       "platform": "OpenStack",
       "boot_disk": {
-        "size": 30
+        "size": 50
       },
       "extra_nics": [],
       "on_support": false,

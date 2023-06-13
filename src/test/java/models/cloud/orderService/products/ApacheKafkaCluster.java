@@ -38,7 +38,7 @@ public class ApacheKafkaCluster extends IProduct {
     Flavor flavor;
     @ToString.Include
     String osVersion;
-    public static final String KAFKA_VERSION_LATEST = "2.13-2.8.1";
+    public static final String KAFKA_VERSION_LATEST = "2.13-2.8.2";
     public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
     public static final String KAFKA_CLUSTER_RETENTION_MS = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s' && it.retention_ms=='%s'}";
     public static final String KAFKA_CLUSTER_ACL_IDEMPOTENT = "data.find{it.type=='cluster'}.data.config.idempotent_acls.any{it.client_cn=='%s'}";
@@ -135,11 +135,12 @@ public class ApacheKafkaCluster extends IProduct {
                 "    {\n" +
                 "      \"operation\": \"change_cleanup_policy\",\n" +
                 "      \"parameters\": {\n" +
+                "        \"partitions_number\": 1,\n" +
                 "        \"cleanup^policy\": \"delete\",\n" +
                 "        \"retention^ms\": 1800001,\n" +
                 "      \"_cleanup^limit_by\": \"time\"\n" +
                 "      },\n" +
-                "      \"topic_name\": \"" + topic + "\"\n" +
+                "      \"topic_names\": [\"" + topic + "\"]\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}"
@@ -230,7 +231,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void upgrade281() {
         if(!kafkaVersion.equals(KAFKA_VERSION_LATEST)) {
-            OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}").put("accept", true), this.projectId);
+            OrderServiceSteps.executeAction("kafka_upgrade_28x", this, new JSONObject("{dumb: \"empty\"}").put("accept", true), this.projectId);
             Assertions.assertEquals(KAFKA_VERSION_LATEST, OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
             kafkaVersion = KAFKA_VERSION_LATEST;
             save();
