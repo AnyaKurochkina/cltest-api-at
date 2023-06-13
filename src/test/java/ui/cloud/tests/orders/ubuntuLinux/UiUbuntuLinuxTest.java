@@ -50,6 +50,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             UbuntuLinuxOrderPage orderPage = new UbuntuLinuxOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
