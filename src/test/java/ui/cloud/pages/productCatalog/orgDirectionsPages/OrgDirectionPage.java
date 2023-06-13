@@ -40,7 +40,7 @@ public class OrgDirectionPage extends BasePage {
         Input.byName(TITLE).setValue(title);
         Input.byName(NAME).setValue(name);
         TextArea.byName(DESCRIPTION).setValue(description);
-        new InputFile("src/test/resources/icons/testIcon.png").importFile();
+        new FileImportDialog("src/test/resources/icons/testIcon.png").importFile();
         TestUtils.wait(2000);
         TestUtils.scrollToTheBottom();
         saveButton.click();

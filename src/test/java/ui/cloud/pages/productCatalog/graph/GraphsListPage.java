@@ -1,14 +1,12 @@
 package ui.cloud.pages.productCatalog.graph;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
 import ui.cloud.pages.productCatalog.BaseListPage;
-import ui.cloud.pages.productCatalog.BasePage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -16,7 +14,6 @@ import ui.elements.*;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.switchTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GraphsListPage extends BaseListPage {
@@ -44,8 +41,6 @@ public class GraphsListPage extends BaseListPage {
     public GraphPage createGraph(Graph graph) {
         addNewObjectButton.click();
         new GraphPage().setAttributes(graph).getSaveButton().click();
-        //TODO Баг, убрать после исправления PO-1082 п.1
-        switchTo().alert().accept();
         return new GraphPage();
     }
 
@@ -96,7 +91,7 @@ public class GraphsListPage extends BaseListPage {
     @Step("Проверка заголовков списка графов")
     public GraphsListPage checkGraphsListHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Описание", "", "");
+                "Наименование", nameColumn, "Дата создания", "Описание", "Теги", "", "");
         return this;
     }
 
@@ -180,7 +175,7 @@ public class GraphsListPage extends BaseListPage {
     @Step("Импорт графа из файла")
     public GraphsListPage importGraph(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

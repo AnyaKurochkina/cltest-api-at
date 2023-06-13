@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -96,7 +96,7 @@ public class Jinja2TemplatesListPage extends BaseListPage {
     @Step("Импорт шаблона Jinja2 из файла '{path}'")
     public Jinja2TemplatesListPage importJinja2Template(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

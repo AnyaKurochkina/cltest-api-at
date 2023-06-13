@@ -12,7 +12,7 @@ import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
 import ui.elements.Button;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.Table;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -61,7 +61,7 @@ public class TemplatesListPage extends BaseListPage {
     @Step("Проверка заголовков списка шаблонов")
     public TemplatesListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Описание", "", "");
+                "Наименование", nameColumn, "Дата создания", "Описание", "Теги", "", "");
         return this;
     }
 
@@ -142,7 +142,7 @@ public class TemplatesListPage extends BaseListPage {
     @Step("Импорт шаблона из файла '{path}'")
     public TemplatesListPage importTemplate(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

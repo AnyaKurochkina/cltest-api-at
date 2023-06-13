@@ -27,7 +27,7 @@ import static core.helper.StringUtils.format;
 public class BaseListPage {
 
     protected static final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
-    protected static final SelenideElement importButton = $x("//a[.='Импорт']");
+    protected static final SelenideElement importButton = $x("//button[.='Импорт']");
     protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Создать копию']");

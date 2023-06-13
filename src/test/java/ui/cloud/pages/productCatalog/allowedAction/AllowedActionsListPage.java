@@ -5,13 +5,11 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
-import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionPage;
 import ui.elements.Alert;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -99,7 +97,7 @@ public class AllowedActionsListPage extends BaseListPage {
     @Step("Импорт разрешенного действия из файла '{path}'")
     public AllowedActionsListPage importAllowedAction(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

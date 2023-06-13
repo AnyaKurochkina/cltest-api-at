@@ -43,11 +43,7 @@ public class ControlPanelIndexPage {
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
-        Button saveButton = Button.byText("Сохранить");
-        if (saveButton.getButton().exists() && saveButton.getButton().isEnabled()) {
-            graphsLink.click();
-            switchTo().alert().accept();
-        } else graphsLink.click();
+        graphsLink.click();
         return new GraphsListPage();
     }
 

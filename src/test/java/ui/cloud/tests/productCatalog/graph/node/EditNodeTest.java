@@ -130,7 +130,7 @@ public class EditNodeTest extends GraphBaseTest {
         page.getParamsTab().click();
         page.getPrintedOutputHint().shouldHave(Condition
                 .exactText("Переопределение запрещено в шаблоне. Очистите поле или включите переопределение Printed output в шаблоне узлов"));
-        page.getPrintedOutputTextArea().setValue("{}");
+        page.getPrintedOutputTextArea().clear();
         page.getFormSaveNodeButton().click();
         page.saveGraphWithPatchVersion();
     }
