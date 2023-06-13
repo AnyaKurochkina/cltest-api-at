@@ -260,6 +260,17 @@ public class ActionSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка действий по фильтрам")
+    public static List<Action> getActionListByFilters(String...filter) {
+        String filters = String.join("&", filter);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + "?" + filters)
+                .assertStatus(200)
+                .extractAs(GetActionList.class)
+                .getList();
+    }
+
     @Step("Получение действия по фильтру = {filter}")
     public static Action getActionByFilter(String id, String filter) {
         return new Http(ProductCatalogURL)
@@ -403,6 +414,26 @@ public class ActionSteps extends Steps {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(actionUrlV2 + name + "/obj_export/")
+                .assertStatus(200);
+    }
+
+    @Step("Добавление списка Тегов действиям")
+    public static void addTagListToAction(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("add_tags", tagsList))
+                .post(actionUrl + "add_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление списка Тегов действиям")
+    public static void removeTagListToAction(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("remove_tags", tagsList))
+                .post(actionUrl + "remove_tag_list/?name__in=" + names)
                 .assertStatus(200);
     }
 }

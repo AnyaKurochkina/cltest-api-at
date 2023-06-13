@@ -118,6 +118,7 @@ public class Template extends Entity implements IProductCatalog {
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.description", description)
+                .set("$.tag_list", tagList)
                 .build();
     }
 

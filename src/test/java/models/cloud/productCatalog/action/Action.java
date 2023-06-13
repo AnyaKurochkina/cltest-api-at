@@ -118,6 +118,14 @@ public class Action extends Entity {
     private List<String> versionFields;
     @JsonProperty("tag_list")
     private List<String> tagList;
+    @JsonProperty("skip_request_resource_pools")
+    private Boolean skipRequestResourcePools;
+    @JsonProperty("skip_reservation")
+    private Boolean skipReservation;
+    @JsonProperty("skip_validate_checker")
+    private Boolean skipValidateChecker;
+    @JsonProperty("ignore_restriction_service")
+    private Boolean ignoreRestrictionService;
 
     @Override
     public Entity init() {
@@ -151,9 +159,14 @@ public class Action extends Entity {
                 .set("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.event_type_provider", eventTypeProvider)
+                .set("$.tag_list", tagList)
                 .setIfNullRemove("$.available_with_cost_reduction", availableWithCostReduction)
                 .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)
+                .setIfNullRemove("$.skip_request_resource_pools", skipRequestResourcePools)
+                .setIfNullRemove("$.skip_reservation", skipReservation)
+                .setIfNullRemove("$.skip_validate_checker", skipValidateChecker)
+                .setIfNullRemove("$.ignore_restriction_service", ignoreRestrictionService)
                 .build();
     }
 

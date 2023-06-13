@@ -124,4 +124,53 @@ public class TemplateSteps extends Steps {
                 .get(templateUrlV2 + name + "/obj_export/")
                 .assertStatus(200);
     }
+
+    @Step("Добавление списка Тегов шаблонам")
+    public static void addTagListToTemplate(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("add_tags", tagsList))
+                .post(templateUrl + "add_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление списка Тегов шаблонов")
+    public static void removeTagListToTemplate(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("remove_tags", tagsList))
+                .post(templateUrl + "remove_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Частичное обновление шаблона")
+    public static Response partialUpdateTemplate(Integer id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch(templateUrl + id + "/");
+    }
+
+    @Step("Получение списка шаблонов по фильтру")
+    public static List<Template> getTemplateListByFilter(String filter, Object value) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl + "?{}={}", filter, value)
+                .assertStatus(200)
+                .extractAs(GetTemplateList.class)
+                .getList();
+    }
+
+    @Step("Получение списка шаблонов по фильтрам")
+    public static List<Template> getTemplateListByFilters(String...filter) {
+        String filters = String.join("&", filter);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl + "?" + filters)
+                .assertStatus(200)
+                .extractAs(GetTemplateList.class)
+                .getList();
+    }
 }

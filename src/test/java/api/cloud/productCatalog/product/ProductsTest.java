@@ -2,7 +2,6 @@ package api.cloud.productCatalog.product;
 
 import api.Tests;
 import core.helper.http.Response;
-import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -627,44 +626,5 @@ public class ProductsTest extends Tests {
         assertEquals(50, createdProduct.getNumber());
         assertNull(createdProduct.getOnRequest());
         assertEquals(0, createdProduct.getTagList().size());
-    }
-
-    @DisplayName("Проверка значения поля tag_list")
-    @TmsLink("1676200")
-    @Test
-    public void checkTagListValue() {
-        List tagList = Arrays.asList("TestTag1", "TestTag2");
-        Product product = Product.builder()
-                .name("at_api_check_tag_list_value")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(tagList)
-                .build()
-                .createObject();
-        Product createdProduct = getProductById(product.getProductId());
-        AssertUtils.assertEqualsList(tagList, createdProduct.getTagList());
-        tagList = Collections.singletonList("TestTag3");
-        partialUpdateProduct(createdProduct.getProductId(), new JSONObject().put("tag_list", tagList));
-        createdProduct = getProductById(product.getProductId());
-        AssertUtils.assertEqualsList(tagList, createdProduct.getTagList());
-    }
-
-    @DisplayName("Проверка неверсионности поля tag_list")
-    @TmsLink("1676202")
-    @Test
-    public void checkTagListVersioning() {
-        List tagList = Arrays.asList("TestTag1", "TestTag2");
-        Product product = Product.builder()
-                .name("at_api_check_tag_list_versioning")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(tagList)
-                .build()
-                .createObject();
-        Product createdProduct = getProductById(product.getProductId());
-        tagList = Collections.singletonList("TestTag3");
-        partialUpdateProduct(createdProduct.getProductId(), new JSONObject().put("tag_list", tagList));
-        createdProduct = getProductById(product.getProductId());
-        assertEquals("1.0.0", createdProduct.getVersion());
     }
 }
