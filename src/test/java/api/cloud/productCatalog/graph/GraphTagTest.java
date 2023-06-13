@@ -46,7 +46,7 @@ public class GraphTagTest extends Tests {
     @TmsLink("1701842")
     @Test
     public void checkGraphTagListValueTest() {
-        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("graph_tag_test_value", "graph_tag_test_value2");
         Graph graph = Graph.builder()
                 .name("at_api_check_graph_tag_list_value")
                 .title("AT API Product")
@@ -56,7 +56,7 @@ public class GraphTagTest extends Tests {
                 .createObject();
         List<String> graphTagList = graph.getTagList();
         assertTrue(tagList.size() == graphTagList.size() && tagList.containsAll(graphTagList) && graphTagList.containsAll(tagList));
-        tagList = Collections.singletonList("TestTag3");
+        tagList = Collections.singletonList("graph_tag_test_value3");
         partialUpdateGraph(graph.getGraphId(), new JSONObject().put("tag_list", tagList));
         Graph createdGraph = getGraphById(graph.getGraphId());
         AssertUtils.assertEqualsList(tagList, createdGraph.getTagList());
@@ -66,7 +66,7 @@ public class GraphTagTest extends Tests {
     @TmsLink("1701851")
     @Test
     public void checkGraphTagListVersioning() {
-        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("graph_tag_test_value", "graph_tag_test_value2");
         Graph graph = Graph.builder()
                 .name("at_api_graph_check_tag_list_versioning")
                 .title("AT API Product")
@@ -74,7 +74,7 @@ public class GraphTagTest extends Tests {
                 .tagList(tagList)
                 .build()
                 .createObject();
-        tagList = Collections.singletonList("TestTag3");
+        tagList = Collections.singletonList("graph_tag_test_value3");
         partialUpdateGraph(graph.getGraphId(), new JSONObject().put("tag_list", tagList));
         Graph updatedGraph = getGraphById(graph.getGraphId());
         assertEquals("1.0.0", updatedGraph.getVersion());

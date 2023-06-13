@@ -166,4 +166,45 @@ public class VisualTemplateSteps extends Steps {
                 .delete(visualTemplateUrl2 + name + "/")
                 .assertStatus(204);
     }
+
+    @Step("Добавление списка Тегов шаблону визуализаций")
+    public static void addTagListToVisualTemplate(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("add_tags", tagsList))
+                .post(visualTemplateUrl + "add_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление списка Тегов шаблона визуализации")
+    public static void removeTagListToVisualTemplate(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("remove_tags", tagsList))
+                .post(visualTemplateUrl + "remove_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка шаблонов визуализиций по фильтру")
+    public static List<ItemVisualTemplate> getVisualTemplateListByFilter(String filter, Object value) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(visualTemplateUrl + "?{}={}", filter, value)
+                .assertStatus(200)
+                .extractAs(GetVisualTemplateList.class)
+                .getList();
+    }
+
+    @Step("Получение списка шаблонов визуализиций по фильтрам")
+    public static List<ItemVisualTemplate> getVisualTemplateListByFilters(String...filter) {
+        String filters = String.join("&", filter);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(visualTemplateUrl + "?" + filters)
+                .assertStatus(200)
+                .extractAs(GetVisualTemplateList.class)
+                .getList();
+    }
 }

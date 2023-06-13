@@ -6,6 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.action.Action;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -202,7 +203,7 @@ public class ActionsListTest extends Tests {
     @Test
     public void getActionListFilteredByTagsAndCompleteMatchFalseTest() {
         Action.builder()
-                .name("at_api_action_check_tag_list_filtered_by_tags")
+                .name(RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "action_at_ui")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(Arrays.asList("api_test", "api_test_action"))

@@ -38,7 +38,7 @@ public class TagTest extends Tests {
     @TmsLinks({@TmsLink("1695266"), @TmsLink("1695674")})
     @Test
     public void createTagTest() {
-        String tagName = "create_tag";
+        String tagName = "сreate_tag";
         createTagByName(tagName);
         assertEquals(tagName, getTagByName(tagName).getName());
         deleteTagByName(tagName);
@@ -184,5 +184,14 @@ public class TagTest extends Tests {
         String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("\"name\": tag с таким name уже существует.", errorMsg);
         deleteTagByName(tagName);
+    }
+
+    @DisplayName("Негативный тест на создание Тега с невалидным именем")
+    @TmsLink("1707621")
+    @Test
+    public void createTagInvalidNameTest() {
+        String tagName = "Create_invalid_name_tag";
+        String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(String.format("Нельзя создать экземпляр (Tag) с именем (%s)", tagName), errorMsg);
     }
 }

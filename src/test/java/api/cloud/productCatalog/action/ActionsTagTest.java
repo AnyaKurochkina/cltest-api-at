@@ -45,7 +45,7 @@ public class ActionsTagTest extends Tests {
     @TmsLink("1700488")
     @Test
     public void checkActionTagListValueTest() {
-        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("action_tag_test_value", "action_tag_test_value2");
         Action action = Action.builder()
                 .name("at_api_check_tag_list_value")
                 .title("AT API Product")
@@ -55,7 +55,7 @@ public class ActionsTagTest extends Tests {
                 .createObject();
         List<String> actionTagList = action.getTagList();
         assertTrue(tagList.size() == actionTagList.size() && tagList.containsAll(actionTagList) && actionTagList.containsAll(tagList));
-        tagList = Collections.singletonList("TestTag3");
+        tagList = Collections.singletonList("action_tag_test_value3");
         partialUpdateAction(action.getActionId(), new JSONObject().put("tag_list", tagList));
         Action createdAction = getActionById(action.getActionId());
         AssertUtils.assertEqualsList(tagList, createdAction.getTagList());
@@ -65,7 +65,7 @@ public class ActionsTagTest extends Tests {
     @TmsLink("1700491")
     @Test
     public void checkActionTagListVersioning() {
-        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("test_api", "test_api2");
         Action action = Action.builder()
                 .name("at_api_action_check_tag_list_versioning")
                 .title("AT API Product")
@@ -73,7 +73,7 @@ public class ActionsTagTest extends Tests {
                 .tagList(tagList)
                 .build()
                 .createObject();
-        tagList = Collections.singletonList("TestTag3");
+        tagList = Collections.singletonList("test_api3");
         partialUpdateAction(action.getActionId(), new JSONObject().put("tag_list", tagList));
         Action updatedAction = getActionById(action.getActionId());
         assertEquals("1.0.0", updatedAction.getVersion());

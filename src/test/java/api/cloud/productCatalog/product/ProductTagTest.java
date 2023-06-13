@@ -46,7 +46,7 @@ public class ProductTagTest extends Tests {
     @TmsLink("1676200")
     @Test
     public void checkTagListValue() {
-        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("product_tag_test_value", "product_tag_test_value2");
         Product product = Product.builder()
                 .name("at_api_check_tag_list_value")
                 .title("AT API Product")
@@ -56,7 +56,7 @@ public class ProductTagTest extends Tests {
                 .createObject();
         Product createdProduct = getProductById(product.getProductId());
         AssertUtils.assertEqualsList(tagList, createdProduct.getTagList());
-        tagList = Collections.singletonList("TestTag3");
+        tagList = Collections.singletonList("product_tag_test_value3");
         partialUpdateProduct(createdProduct.getProductId(), new JSONObject().put("tag_list", tagList));
         createdProduct = getProductById(product.getProductId());
         AssertUtils.assertEqualsList(tagList, createdProduct.getTagList());
@@ -66,7 +66,7 @@ public class ProductTagTest extends Tests {
     @TmsLink("1676202")
     @Test
     public void checkTagListVersioning() {
-        List<String> tagList = Arrays.asList("TestTag1", "TestTag2");
+        List<String> tagList = Arrays.asList("product_tag_test_value", "product_tag_test_value2");
         Product product = Product.builder()
                 .name("at_api_check_tag_list_versioning")
                 .title("AT API Product")
@@ -75,7 +75,7 @@ public class ProductTagTest extends Tests {
                 .build()
                 .createObject();
         Product createdProduct = getProductById(product.getProductId());
-        tagList = Collections.singletonList("TestTag3");
+        tagList = Collections.singletonList("product_tag_test_value3");
         partialUpdateProduct(createdProduct.getProductId(), new JSONObject().put("tag_list", tagList));
         createdProduct = getProductById(product.getProductId());
         assertEquals("1.0.0", createdProduct.getVersion());
