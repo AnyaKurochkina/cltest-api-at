@@ -10,6 +10,7 @@ import core.helper.http.Response;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
@@ -148,9 +149,9 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
-        String item = getItemIdByOrderIdAndActionTitle(action, product, filter);
+        Action act = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", item)
+                .set("$.item_id", act.itemId)
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
@@ -160,9 +161,9 @@ public class OrderServiceSteps extends Steps {
     //{"order":{"attrs":{"client_types":"own","name":"dfghjkl","owner_cert":"dfghjkl"},"graph_version":"1.0.7"},"item_id":"ad08595a-c325-5434-9e5b-3d8b1bda7306"}
     @Step("Отправка action {action}")
     public static Response sendAction(String action, IProduct product, JSONObject jsonData, String filter) {
-        String item = getItemIdByOrderIdAndActionTitle(action, product, filter);
+        Action act = getItemIdByOrderIdAndActionTitle(action, product, filter);
         return JsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", item)
+                .set("$.item_id", act.itemId)
                 .set("$.order.attrs", jsonData)
                 .send(OrderServiceURL)
                 .setRole(ORDER_SERVICE_ADMIN)
@@ -213,6 +214,7 @@ public class OrderServiceSteps extends Steps {
                 .getBoolean("deletable"));
     }
 
+
     /**
      * Метод выполняет экшен по его имени
      *
@@ -225,7 +227,7 @@ public class OrderServiceSteps extends Steps {
     public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
         //Получение item'ов для экшена
         waitStatus(Duration.ofMinutes(10), product);
-        String item = getItemIdByOrderIdAndActionTitle(action, product, filter);
+        Action act = getItemIdByOrderIdAndActionTitle(action, product, filter);
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
@@ -234,7 +236,10 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    costPreBilling.set(CostSteps.getCostAction(action, item, product, jsonData));
+                    if(act.isWithoutMoney)
+                        costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
+                    else costPreBilling.set(CalcCostSteps.getCostByUid(product));
+
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
@@ -250,7 +255,7 @@ public class OrderServiceSteps extends Steps {
 
         if (costPreBilling.get() != null) {
             Float cost = null;
-            for (int i = 0; i < 20; i++) {
+            for (int i = 0; i < 100; i++) {
                 Waiting.sleep(20000);
                 cost = CalcCostSteps.getCostByUid(product);
                 if (cost == null)
@@ -274,7 +279,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Выполнение action \"{action}\"")
     public static void executeAction(String action, IProduct product, JSONObject jsonData) {
         //Получение item'ов для экшена
-        String item = getItemIdByOrderIdAndActionTitle(action, product, "");
+        Action act = getItemIdByOrderIdAndActionTitle(action, product, "");
         log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
         //TODO: Возможно стоит сделать более детальную проверку на значение
 
@@ -283,7 +288,9 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    costPreBilling.set(CostSteps.getCostAction(action, item, product, jsonData));
+                    if(act.isWithoutMoney)
+                        costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
+                    else costPreBilling.set(CalcCostSteps.getCostByUid(product));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
@@ -419,13 +426,19 @@ public class OrderServiceSteps extends Steps {
         return list.get(new Random().nextInt(list.size()));
     }
 
+    private static class Action {
+        public String itemId;
+        public Boolean isWithoutMoney;
+    }
+
+
     /**
      * @param action  экшен
      * @param product продукт
      * @return - возвращаем ID айтема
      */
-    public static String getItemIdByOrderIdAndActionTitle(String action, IProduct product, String filter) {
-        String id;
+    public static Action getItemIdByOrderIdAndActionTitle(String action, IProduct product, String filter) {
+        Action res = new Action();
         log.info("Получение item_id для " + Objects.requireNonNull(action));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
@@ -436,15 +449,15 @@ public class OrderServiceSteps extends Steps {
 
         if (!filter.equals(""))
             filter = "it.data.config." + filter + " && ";
-        id = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
+        res.itemId = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
+        res.isWithoutMoney = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.available_without_money", filter, action, action));
 
         List<Object> pathList = jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter));
         String actions = "-";
         if (Objects.nonNull(pathList))
             actions = Arrays.toString(pathList.toArray());
-        Assertions.assertNotEquals("", id, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
-
-        return Objects.requireNonNull(id, "Нет действия " + action + " у продукта " + product);
+        Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
+        return res;
     }
 
     /**
