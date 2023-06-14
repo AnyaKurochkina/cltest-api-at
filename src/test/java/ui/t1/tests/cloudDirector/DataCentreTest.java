@@ -5,14 +5,15 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.BlockTests;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
+import ui.extesions.InterceptTestExtension;
 import ui.models.StorageProfile;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
@@ -22,15 +23,15 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 
-//@BlockTests
-//@ExtendWith(InterceptTestExtension.class)
-//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@BlockTests
+@ExtendWith(InterceptTestExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
 public class DataCentreTest extends AbstractCloudDirectorTest {
 
     @Test
-  //  @Order(1)
+    @Order(1)
     @TmsLink("147532")
     @DisplayName("VMware. Создание второго VDC  в одной организации")
     public void createDataCentre() {
@@ -111,18 +112,14 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     }
 
     @Test
-  //  @Order(8)
+    @Order(8)
     @TmsLink("1115943")
     @DisplayName("VMware. VDC. Изменение конфигурации маршрутизатора")
     public void changeRouterConfigTest() {
-//        DataCentrePage dataCentrePage = new IndexPage()
-//                .goToCloudDirector()
-//                .goToOrganization(vmWareOrganization.getName())
-//                .selectDataCentre(dataCentreName);
         DataCentrePage dataCentrePage = new IndexPage()
                 .goToCloudDirector()
-                .goToOrganization("ift-for-tests")
-                .selectDataCentre("test_data");
+                .goToOrganization(vmWareOrganization.getName())
+                .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
     }
 

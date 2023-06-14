@@ -3,6 +3,7 @@ package ui.t1.pages.cloudDirector;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.models.StorageProfile;
 import ui.t1.pages.IProductT1Page;
@@ -43,12 +44,16 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     }
 
     public void changeRouterConfig(String speed, String configType) {
+
         runActionWithParameters(ROUTER_INFO, "Изменить конфигурацию", "Подтвердить", () ->
         {
             Slider.byLabel("Лимит пропускной способности канала, Мбит/сек").setValue(speed);
             RadioGroup.byLabel("Тип конфигурации").select(configType);
             CheckBox.byId("root_high_available").setChecked(true);
-        });
+        }, ActionParameters.builder()
+                .waitChangeStatus(true)
+                .timeOut(Duration.ofMinutes(3))
+                .build());
         Waiting.sleep(5000);
         generalInformation.click();
         RouterTable routerTable = new RouterTable();
