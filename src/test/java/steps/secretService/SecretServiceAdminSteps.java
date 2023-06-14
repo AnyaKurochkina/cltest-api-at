@@ -2,10 +2,16 @@ package steps.secretService;
 
 import core.enums.Role;
 import core.helper.http.Http;
+import core.helper.http.QueryBuilder;
 import models.cloud.secretService.EnginePage;
 import models.cloud.secretService.Secret;
 import models.cloud.secretService.SecretResponse;
+import org.json.JSONObject;
 
+import java.util.List;
+import java.util.Set;
+
+import static api.routes.SecretServiceAPI.getV1Secrets;
 import static api.routes.SecretServiceAdminAPI.*;
 import static models.Entity.serialize;
 
@@ -21,5 +27,21 @@ public class SecretServiceAdminSteps {
 
     public static EnginePage getV1Engines(){
         return Http.builder().setRole(Role.SUPERADMIN).api(getV1Engines).extractAllPages(EnginePage.class);
+    }
+
+    public static void postV1SecretsSecretIdData(String secretId, JSONObject data){
+        Http.builder().setRole(Role.SUPERADMIN).body(new JSONObject().put("data", data)).api(postV1SecretsSecretIdData, secretId);
+    }
+
+    public static void deleteV1SecretsSecretIdData(String secretId, Object[] data){
+        Http.builder().setRole(Role.SUPERADMIN).api(deleteV1SecretsSecretIdData, secretId, new QueryBuilder().add("data[]", data));
+    }
+
+    public static JSONObject getV1SecretsSecretIdData(String secretId){
+        return new JSONObject(Http.builder().setRole(Role.SUPERADMIN).api(getV1SecretsSecretIdData, secretId).toString());
+    }
+
+    public static void patchV1SecretsSecretIdData(String secretId, JSONObject data){
+        Http.builder().setRole(Role.SUPERADMIN).body(new JSONObject().put("data", data)).api(patchV1SecretsSecretIdData, secretId);
     }
 }
