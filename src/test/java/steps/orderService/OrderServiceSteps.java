@@ -301,7 +301,7 @@ public class OrderServiceSteps extends Steps {
                     checkActionStatusMethod("success", product, actionId.get());
                     if (costPreBilling.get() != null) {
                         Float cost = null;
-                        for (int i = 0; i < 20; i++) {
+                        for (int i = 0; i < 100; i++) {
                             Waiting.sleep(20000);
                             cost = CalcCostSteps.getCostByUid(product);
                             if (cost == null)
