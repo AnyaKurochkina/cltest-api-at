@@ -185,8 +185,13 @@ public abstract class IProductPage {
         if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
-        if (params.isWaitChangeStatus())
-            waitChangeStatus();
+        if (params.isWaitChangeStatus()) {
+            if (params.getTimeOut() == null) {
+                waitChangeStatus();
+            } else {
+                waitChangeStatus(params.getTimeOut());
+            }
+        }
         if (params.isCheckLastAction())
             checkLastAction(action);
     }
