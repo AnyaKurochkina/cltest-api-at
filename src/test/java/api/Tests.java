@@ -2,7 +2,7 @@ package api;
 
 import com.codeborne.selenide.Condition;
 import lombok.SneakyThrows;
-import api.cloud.secretService.models.AbstractEntity;
+import models.AbstractEntity;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;

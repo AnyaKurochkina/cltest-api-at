@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
 import api.cloud.secretService.steps.SecretServiceAdminSteps;
+import models.AbstractEntity;
 
 import java.util.List;
 
