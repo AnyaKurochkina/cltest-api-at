@@ -15,7 +15,8 @@ public class Configure {
     public static String RESOURCE_PATH;
     public static String ENV;
     public static volatile boolean isTestItCreateAutotest = System.getProperty("testItCreateAutotest", "false").equals("true");
-
+    public static String KONG_URL;
+    
     public static String IamURL;
     public static String AccountManagerURL;
     public static String PortalBackURL;
@@ -32,7 +33,6 @@ public class Configure {
     public static String ImageService;
     public static String DNSService;
     public static String PowerDns;
-    public static String TagService;
 
     static {
         try {
@@ -60,24 +60,23 @@ public class Configure {
             log.info("SET ENVIRONMENT = {}", ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
             loadProperties(RESOURCE_PATH + "/config/application.properties");
-
-            String kongURL = getAppProp("url.kong");
-            IamURL = kongURL + "iam/api";
-            AccountManagerURL = kongURL + "accountmanager";
-            PortalBackURL = kongURL + "portal/api";
-            TarifficatorURL = kongURL + "tarifficator/api";
-            CalculatorURL = kongURL + "calculator";
-            ProductCatalogURL = kongURL + "product-catalog";
-            OrderServiceURL = kongURL + "order-service/api";
-            OrderServiceAdminURL = kongURL + "order-service/admin/api";
-            StateServiceURL = kongURL + "state-service";
-            ReferencesURL = kongURL + "references";
-            ResourceManagerURL = kongURL + "resource-manager/api";
-            FeedServiceURL = kongURL + "feed-service";
-            Day2ServiceURL = kongURL + "day2-core";
-            ImageService = kongURL + "cloud-images";
-            TagService = kongURL + "tags-service/api";
-            DNSService = kongURL + "cloud-dns";
+            
+            KONG_URL = getAppProp("url.kong");
+            IamURL = KONG_URL + "iam/api";
+            AccountManagerURL = KONG_URL + "accountmanager";
+            PortalBackURL = KONG_URL + "portal/api";
+            TarifficatorURL = KONG_URL + "tarifficator/api";
+            CalculatorURL = KONG_URL + "calculator";
+            ProductCatalogURL = KONG_URL + "product-catalog";
+            OrderServiceURL = KONG_URL + "order-service/api";
+            OrderServiceAdminURL = KONG_URL + "order-service/admin/api";
+            StateServiceURL = KONG_URL + "state-service";
+            ReferencesURL = KONG_URL + "references";
+            ResourceManagerURL = KONG_URL + "resource-manager/api";
+            FeedServiceURL = KONG_URL + "feed-service";
+            Day2ServiceURL = KONG_URL + "day2-core";
+            ImageService = KONG_URL + "cloud-images";
+            DNSService = KONG_URL + "cloud-dns";
             PowerDns = getAppProp("url.powerdns");
         } catch (Exception e) {
             e.printStackTrace();
