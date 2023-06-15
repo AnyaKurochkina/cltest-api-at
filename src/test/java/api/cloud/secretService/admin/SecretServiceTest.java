@@ -18,14 +18,14 @@ public class SecretServiceTest extends AbstractSecretTest {
     public static String mask = "*****";
 
     @Test
-    @TmsLink("")
+    @TmsLink("1714114")
     @DisplayName("Проверка /health")
     void getV1Health() {
         Assertions.assertTrue(SecretServiceSteps.getV1Health());
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1714115")
     @DisplayName("Создание/Удаление секрета")
     void postV1Secrets() {
         SecretResponse secretResponse = generateSecret();
@@ -33,7 +33,7 @@ public class SecretServiceTest extends AbstractSecretTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1714117")
     @DisplayName("Получение списка секретов")
     void getV1Secrets() {
         final JSONObject data = new JSONObject().put("key", "value");
@@ -47,7 +47,7 @@ public class SecretServiceTest extends AbstractSecretTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1714119")
     @DisplayName("Добавление/удаление данных для секрета")
     void deleteV1SecretsSecretIdData() {
         final JSONObject data = new JSONObject().put("k1", "v1").put("k2", "v2").put("k3", "v3");
@@ -61,7 +61,7 @@ public class SecretServiceTest extends AbstractSecretTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1714120")
     @DisplayName("Получение данных для секрета")
     void getV1SecretsSecretIdData() {
         SecretResponse secretResponse = generateSecret();
@@ -72,7 +72,7 @@ public class SecretServiceTest extends AbstractSecretTest {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1714121")
     @DisplayName("Обновление данных для секрета")
     void patchV1SecretsSecretIdData() {
         SecretResponse secretResponse = generateSecret();
