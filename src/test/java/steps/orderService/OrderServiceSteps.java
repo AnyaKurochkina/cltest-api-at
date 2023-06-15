@@ -237,8 +237,8 @@ public class OrderServiceSteps extends Steps {
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
                     if(act.isWithoutMoney)
-                        costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
-                    else costPreBilling.set(CalcCostSteps.getCostByUid(product));
+                        costPreBilling.set(CalcCostSteps.getCostByUid(product));
+                    else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
 
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
