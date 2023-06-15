@@ -1,4 +1,4 @@
-package models.cloud.secretService;
+package api.cloud.secretService.models;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;

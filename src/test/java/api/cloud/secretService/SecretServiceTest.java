@@ -1,17 +1,16 @@
-package api.cloud.secretService.admin;
+package api.cloud.secretService;
 
-import api.cloud.secretService.AbstractSecretTest;
 import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.secretService.SecretResponse;
+import api.cloud.secretService.models.SecretResponse;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import steps.secretService.SecretServiceAdminSteps;
-import steps.secretService.SecretServiceSteps;
+import api.cloud.secretService.steps.SecretServiceAdminSteps;
+import api.cloud.secretService.steps.SecretServiceSteps;
 
 import java.util.Arrays;
 

@@ -1,9 +1,9 @@
-package models.cloud.secretService;
+package api.cloud.secretService.models;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Getter;
-import steps.secretService.SecretServiceAdminSteps;
+import api.cloud.secretService.steps.SecretServiceAdminSteps;
 
 import java.util.List;
 

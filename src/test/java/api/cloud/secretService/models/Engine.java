@@ -1,4 +1,4 @@
-package models.cloud.secretService;
+package api.cloud.secretService.models;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

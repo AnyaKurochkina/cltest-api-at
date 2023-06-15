@@ -2,14 +2,13 @@ package api;
 
 import com.codeborne.selenide.Condition;
 import lombok.SneakyThrows;
-import models.cloud.secretService.AbstractEntity;
+import api.cloud.secretService.models.AbstractEntity;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
-import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;

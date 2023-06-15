@@ -1,4 +1,4 @@
-package models.cloud.secretService;
+package api.cloud.secretService.models;
 
 import core.helper.Page;
 

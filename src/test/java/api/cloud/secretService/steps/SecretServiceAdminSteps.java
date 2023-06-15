@@ -1,17 +1,13 @@
-package steps.secretService;
+package api.cloud.secretService.steps;
 
 import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.QueryBuilder;
-import models.cloud.secretService.EnginePage;
-import models.cloud.secretService.Secret;
-import models.cloud.secretService.SecretResponse;
+import api.cloud.secretService.models.EnginePage;
+import api.cloud.secretService.models.Secret;
+import api.cloud.secretService.models.SecretResponse;
 import org.json.JSONObject;
 
-import java.util.List;
-import java.util.Set;
-
-import static api.routes.SecretServiceAPI.getV1Secrets;
 import static api.routes.SecretServiceAdminAPI.*;
 import static models.Entity.serialize;
 

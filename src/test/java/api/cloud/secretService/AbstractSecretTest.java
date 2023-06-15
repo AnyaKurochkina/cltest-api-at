@@ -2,11 +2,11 @@ package api.cloud.secretService;
 
 import api.Tests;
 import com.mifmif.common.regex.Generex;
-import models.cloud.secretService.EnginePage;
-import models.cloud.secretService.Secret;
-import models.cloud.secretService.SecretResponse;
+import api.cloud.secretService.models.EnginePage;
+import api.cloud.secretService.models.Secret;
+import api.cloud.secretService.models.SecretResponse;
 import org.junit.jupiter.api.Tag;
-import steps.secretService.SecretServiceAdminSteps;
+import api.cloud.secretService.steps.SecretServiceAdminSteps;
 
 @Tag("secret_service")
 public class AbstractSecretTest extends Tests {

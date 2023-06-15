@@ -1,4 +1,4 @@
-package steps.secretService;
+package api.cloud.secretService.steps;
 
 import core.enums.Role;
 import core.helper.http.Http;
