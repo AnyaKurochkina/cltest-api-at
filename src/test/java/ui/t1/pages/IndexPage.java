@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
+import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
@@ -18,6 +19,7 @@ import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 
 import java.time.Duration;
 
+import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.cloud.pages.orders.IProductPage.getBtnAction;
@@ -37,6 +39,9 @@ public class IndexPage {
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
     Button linkNetworks = Button.byXpath("//a[.='Сети']");
+    Button linkTools = Button.byXpath("//a[.='Инструменты']");
+    Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
+    Button linkUsers = Button.byXpath("//a[.='Пользователи']");
 
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
@@ -47,6 +52,11 @@ public class IndexPage {
     public Profile goToProfile(){
         Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
         return new Profile();
+    }
+
+    public IndexPage changeContext(String contextType, String contextValue) {
+        open(String.format("/?context=%s&type=%s", contextValue, contextType));
+        return this;
     }
 
     @Step("Переход на страницу T1 Cloud Engine")
@@ -73,6 +83,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkSshKeys.click();
         return new SshKeyList();
+    }
+
+    @Step("Переход на страницу Пользователи")
+    public UsersPage goToUsers() {
+        linkIAM.click();
+        linkUsers.click();
+        return new UsersPage();
     }
 
     @Step("Переход на страницу Виртуальные машины")
