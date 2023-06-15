@@ -289,8 +289,8 @@ public class OrderServiceSteps extends Steps {
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
                     if(act.isWithoutMoney)
-                        costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
-                    else costPreBilling.set(CalcCostSteps.getCostByUid(product));
+                        costPreBilling.set(CalcCostSteps.getCostByUid(product));
+                    else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
@@ -450,13 +450,13 @@ public class OrderServiceSteps extends Steps {
         if (!filter.equals(""))
             filter = "it.data.config." + filter + " && ";
         res.itemId = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
-        res.isWithoutMoney = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.available_without_money", filter, action, action));
 
         List<Object> pathList = jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter));
         String actions = "-";
         if (Objects.nonNull(pathList))
             actions = Arrays.toString(pathList.toArray());
         Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
+        res.isWithoutMoney = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.available_without_money", filter, action, action));
         return res;
     }
 
