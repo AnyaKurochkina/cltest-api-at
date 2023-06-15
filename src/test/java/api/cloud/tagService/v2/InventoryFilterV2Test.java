@@ -351,8 +351,7 @@ public class InventoryFilterV2Test extends AbstractInventoryTest {
     }
 
     @Test
-    @TmsLink("")
-    @org.junit.jupiter.api.Tag("newtest")
+    @TmsLink("1714125")
     @DisplayName("Inventory. Фильтр V2 по response_tags")
     void findInventoriesByResponseTags() {
         String tagValue = "response_tags";

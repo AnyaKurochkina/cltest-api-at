@@ -2,6 +2,8 @@ package api.cloud.secretService.admin;
 
 import api.cloud.secretService.AbstractSecretTest;
 import core.helper.http.QueryBuilder;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.secretService.SecretResponse;
 import org.json.JSONObject;
@@ -13,7 +15,8 @@ import steps.secretService.SecretServiceSteps;
 
 import java.util.Arrays;
 
-
+@Feature("Сервис секретов")
+@Epic("Действия с секретом")
 public class SecretServiceTest extends AbstractSecretTest {
     public static String mask = "*****";
 
