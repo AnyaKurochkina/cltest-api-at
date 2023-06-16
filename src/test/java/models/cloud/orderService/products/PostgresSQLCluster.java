@@ -114,6 +114,11 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         removeDbmsUser("postgresql_cluster_remove_dbms_user", username, dbName);
     }
 
+    @Override
+    public void getConfiguration() {
+        OrderServiceSteps.executeAction("postgresql_cluster_get_configuration", this, null, this.getProjectId());
+    }
+
     public void resetDbOwnerPassword(String username) {
         resetDbOwnerPassword("postgresql_cluster_reset_db_owner_password", username);
     }
