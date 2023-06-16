@@ -7,7 +7,6 @@ import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.CORS.CORSModal.Method;
 import ui.t1.pages.S3Storage.CORS.CORSModal.AccessControls;
-import ui.t1.tests.engine.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

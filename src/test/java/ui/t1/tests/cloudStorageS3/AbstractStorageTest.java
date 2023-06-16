@@ -1,4 +1,4 @@
-package ui.t1.tests.engine;
+package ui.t1.tests.cloudStorageS3;
 
 import api.Tests;
 import com.mifmif.common.regex.Generex;

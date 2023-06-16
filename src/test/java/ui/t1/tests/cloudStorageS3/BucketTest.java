@@ -6,7 +6,6 @@ import io.qameta.allure.TmsLinks;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
-import ui.t1.tests.engine.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
