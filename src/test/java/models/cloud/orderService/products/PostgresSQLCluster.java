@@ -119,6 +119,17 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         OrderServiceSteps.executeAction("postgresql_cluster_get_configuration", this, null, this.getProjectId());
     }
 
+    @Override
+    public void updatePostgresql() {
+        OrderServiceSteps.executeAction("postgresql_cluster_update_postgresql", this, new JSONObject().put("check_agree", true), this.getProjectId());
+    }
+
+    @Override
+    public void updateDti(String defaultTransactionIsolation) {
+        OrderServiceSteps.executeAction("postgresql_cluster_update_dti", this,
+                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
+    }
+
     public void resetDbOwnerPassword(String username) {
         resetDbOwnerPassword("postgresql_cluster_reset_db_owner_password", username);
     }

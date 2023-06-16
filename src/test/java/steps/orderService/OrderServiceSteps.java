@@ -452,7 +452,7 @@ public class OrderServiceSteps extends Steps {
         res.itemId = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
 
         StringJoiner actions = new StringJoiner("\n", "\n", "");
-        List<Map<String, Object>> mapList = jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions", filter));
+        List<Map<String, Object>> mapList = jsonPath.getList("data.actions.flatten()");
         for(Map<String, Object> e :  mapList)
             actions.add(String.format("['%s' : '%s']", e.get("title"), e.get("name")));
         Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
