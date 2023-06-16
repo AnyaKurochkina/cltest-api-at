@@ -32,7 +32,7 @@ public class ObjectsModal extends AbstractLayerS3<ObjectsModal> {
     public ObjectsLayer addObject(String path, AccessLevel access)
     {
         Select.byLabel("Доступ").set(access.getAccess());
-        new InputFile(path).importFile();
+        new FileImportDialog(path).importFile();
         Button.byText("Загрузить").click();
         Alert.green("Файлов успешно загружено: 1");
         new Dialog("Загрузить объект").clickButton("Закрыть");
@@ -44,7 +44,7 @@ public class ObjectsModal extends AbstractLayerS3<ObjectsModal> {
     {
         Select.byLabel("Доступ").set(access.getAccess());
         for  (String path:pathes)
-            new InputFile(path).importFile();
+            new FileImportDialog(path).importFile();
         Button.byText("Загрузить").click();
         Alert.green("Файлов успешно загружено: " + pathes.length);
         new Dialog("Загрузить объект").clickButton("Закрыть");

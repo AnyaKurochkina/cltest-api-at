@@ -9,7 +9,7 @@ import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.LoginCloudPage;
+import ui.t1.pages.T1LoginPage;
 import ui.extesions.ConfigExtension;
 
 import java.util.Locale;
@@ -31,7 +31,7 @@ public abstract class AbstractStorageTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     public void beforeEach() {
-        new LoginCloudPage(project.getId())
+        new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
         name = getRandomBucketName();
     }
