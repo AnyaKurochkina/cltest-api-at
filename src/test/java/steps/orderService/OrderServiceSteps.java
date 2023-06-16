@@ -451,10 +451,10 @@ public class OrderServiceSteps extends Steps {
             filter = "it.data.config." + filter + " && ";
         res.itemId = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
 
-        List<Object> pathList = jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions.title", filter));
-        String actions = "-";
-        if (Objects.nonNull(pathList))
-            actions = Arrays.toString(pathList.toArray());
+        StringJoiner actions = new StringJoiner("\n", "\n", "");
+        List<Map<String, Object>> mapList = jsonPath.getList(String.format("data.find{%sit.actions.find{it.name!=''}}.actions", filter));
+        for(Map<String, Object> e :  mapList)
+            actions.add(String.format("['%s' : '%s']", e.get("title"), e.get("name")));
         Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
         res.skipOnPrebilling = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.skip_on_prebilling", filter, action, action));
         return res;
