@@ -1,4 +1,4 @@
-package ui.t1.tests.engine.vpc;
+package ui.t1.tests.cloudStorageS3;
 
 import core.utils.Waiting;
 import io.qameta.allure.Feature;
