@@ -236,7 +236,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    if(act.isWithoutMoney)
+                    if(act.skipOnPrebilling)
                         costPreBilling.set(CalcCostSteps.getCostByUid(product));
                     else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
 
@@ -288,7 +288,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    if(act.isWithoutMoney)
+                    if(act.skipOnPrebilling)
                         costPreBilling.set(CalcCostSteps.getCostByUid(product));
                     else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
@@ -428,7 +428,7 @@ public class OrderServiceSteps extends Steps {
 
     private static class Action {
         public String itemId;
-        public Boolean isWithoutMoney;
+        public Boolean skipOnPrebilling;
     }
 
 
@@ -456,7 +456,7 @@ public class OrderServiceSteps extends Steps {
         if (Objects.nonNull(pathList))
             actions = Arrays.toString(pathList.toArray());
         Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
-        res.isWithoutMoney = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.available_without_money", filter, action, action));
+        res.skipOnPrebilling = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.skip_on_prebilling", filter, action, action));
         return res;
     }
 
