@@ -34,6 +34,18 @@ public class MultiSelect extends Select {
         return value;
     }
 
+    @Step("MultiSelect. Добавление нового элемента '{value}'")
+    public String add(String value, Boolean clear) {
+        hover();
+        if (clear) clear();
+        element.click();
+        if (value.equals(RANDOM_VALUE)) value = getRandomItem();
+        element.$x(".//input").setValue(value);
+        Button.byText("Добавить " + value).click();
+        hideOptionsByLastSvg();
+        return value;
+    }
+
     @Override
     @Step("MultiSelect. Выбор элемента по вхождению '{value}'")
     public String setContains(String value) {
@@ -52,13 +64,20 @@ public class MultiSelect extends Select {
             getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
                     .click();
         }
-        hideOptions();
+        //TODO:
+        // Заменил hideOptions() -> hideOptionsByLastSvg(). Не аффектит ли что-либо
+        hideOptionsByLastSvg();
         return values;
     }
 
     @Step("MultiSelect. Скрытие выпадающего списка")
     private void hideOptions() {
         element.$x(".//*[name()='svg'][@class][not(@id)]").click();
+    }
+
+    @Step("MultiSelect. Скрытие выпадающего списка")
+    private void hideOptionsByLastSvg() {
+        element.$x(".//*[name()='svg'][@class][not(@id)][last()]").click();
     }
 
     @Step("MultiSelect. Очистка поля")
