@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 import static core.utils.AssertUtils.assertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
+@Epic("Cloud Compute")
 @Feature("Образы")
 public class ImagesTest extends AbstractComputeTest {
 

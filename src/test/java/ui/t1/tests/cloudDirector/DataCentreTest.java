@@ -1,5 +1,6 @@
 package ui.t1.tests.cloudDirector;
 
+import core.helper.Configure;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -96,12 +97,30 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("692723"), @TmsLink("692724")})
     @DisplayName("VMware. Управление дисковой подсистемой VDC. Добавление/Удаление профиля")
     public void addProfileTest() {
-        StorageProfile profile = new StorageProfile("SP-High", "11");
+        String name = "";
+        if (Configure.ENV.equals("t1prod")) {
+            name = "Veeam-InstantVMRecovery";
+        } else {
+            name = "SP-Standart";
+        }
+        StorageProfile profile = new StorageProfile(name, "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addProfile(profile));
         dataCentrePage.runActionWithCheckCost(CompareType.LESS, () -> dataCentrePage.deleteProfile(profile));
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("1115943")
+    @DisplayName("VMware. VDC. Изменение конфигурации маршрутизатора")
+    public void changeRouterConfigTest() {
+        DataCentrePage dataCentrePage = new IndexPage()
+                .goToCloudDirector()
+                .goToOrganization(vmWareOrganization.getName())
+                .selectDataCentre(dataCentreName);
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
     }
 
     @Test

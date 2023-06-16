@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Data
 @AllArgsConstructor
@@ -17,6 +19,8 @@ public class ContextRestrictionsItem {
     private ProjectEnvironment project_environment;
     @JsonProperty("information_system")
     private InformationSystem informationSystem;
+    @JsonProperty("environment_type")
+    private List<String> environmentType;
 
     public ContextRestrictionsItem(ProjectEnvironment projectEnvironment) {
         this.project_environment = projectEnvironment;

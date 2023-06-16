@@ -3,10 +3,8 @@ package ui.t1.pages.cloudDirector;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
-import ui.elements.Button;
-import ui.elements.Dialog;
-import ui.elements.Slider;
-import ui.elements.Table;
+import ui.cloud.tests.ActionParameters;
+import ui.elements.*;
 import ui.models.StorageProfile;
 import ui.t1.pages.IProductT1Page;
 
@@ -19,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
     public static final String PUBLIC_IP_ADDRESSES = "Публичные IP-адреса";
+    public static final String ROUTER_INFO = "Информация о маршрутизаторе";
 
     private final SelenideElement totalRam = $x("//span[text() = 'RAM, ГБ']//preceding-sibling::div//span[2]");
     private final SelenideElement totalCPU = $x("//span[text() = 'CPU, ядра']//preceding-sibling::div//span[2]");
@@ -44,9 +43,29 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         assertEquals(ipQty, new IpTable().getRows().size());
     }
 
+    public void changeRouterConfig(String speed, String configType) {
+
+        runActionWithParameters(ROUTER_INFO, "Изменить конфигурацию", "Подтвердить", () ->
+        {
+            Slider.byLabel("Лимит пропускной способности канала, Мбит/сек").setValue(speed);
+            RadioGroup.byLabel("Тип конфигурации").select(configType);
+            CheckBox.byId("root_high_available").setChecked(true);
+        }, ActionParameters.builder()
+                .waitChangeStatus(true)
+                .timeOut(Duration.ofMinutes(3))
+                .build());
+        Waiting.sleep(5000);
+        generalInformation.click();
+        RouterTable routerTable = new RouterTable();
+        assertEquals(speed, routerTable.getValueByColumnInFirstRow("Гарантированная ширина канала, Мбит/сек").getText());
+        assertEquals(configType, routerTable.getValueByColumnInFirstRow("Конфигурация").getText());
+        assertEquals("Да", routerTable.getValueByColumnInFirstRow("High availability").getText());
+    }
+
     public void addProfile(StorageProfile profile) {
         runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
             Button.byText("Добавить профиль оборудования").click();
+            Select.byXpath("(//tbody//button[@title='Open'])[2]").set(profile.getName());
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//textarea").setValue(profile.getLimit());
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//input[@type = 'radio']")
                     .click();
@@ -61,7 +80,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
 
     public void deleteProfile(StorageProfile profile) {
         runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
-            $x("(//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//button)[2]")
+            $x("(//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//button)[3]")
                     .click();
         });
         Waiting.sleep(5000);
@@ -109,6 +128,13 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
 
         public StorageProfileTable() {
             super("Лимит, Гб");
+        }
+    }
+
+    private static class RouterTable extends Table {
+
+        public RouterTable() {
+            super("High availability");
         }
     }
 }

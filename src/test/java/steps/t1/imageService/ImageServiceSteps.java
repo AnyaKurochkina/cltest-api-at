@@ -12,7 +12,6 @@ import java.util.Objects;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.helper.Configure.ImageService;
-import static core.helper.Configure.ProductCatalogURL;
 
 public class ImageServiceSteps extends Steps {
 
@@ -48,7 +47,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение статуса health")
     public static String getHealthStatusImageService() {
-        return new Http(ProductCatalogURL)
+        return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)
                 .get("/api/v1/healthcheck")
                 .assertStatus(200)

@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -25,6 +26,7 @@ import static core.utils.AssertUtils.assertHeaders;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @ExtendWith(BeforeAllExtension.class)
+@Epic("Cloud Compute")
 @Feature("Диски")
 public class DiskTest extends AbstractComputeTest {
 

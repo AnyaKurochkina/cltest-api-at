@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.vpc;
 
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -28,6 +29,7 @@ import static core.utils.AssertUtils.assertHeaders;
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Публичные IP")
+@Epic("Cloud Compute")
 public class PublicIpTest extends AbstractComputeTest {
     String ip;
 
@@ -42,6 +44,7 @@ public class PublicIpTest extends AbstractComputeTest {
 
     @Test
     @Order(1)
+    @Tag("health_check")
     @TmsLinks({@TmsLink("1249437"), @TmsLink("1249598")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")
     void addIp() {

@@ -35,7 +35,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     private static final String HEADER_COMMENTS = "Комментарий";
 
 
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    SelenideElement btnDb = $x("//button[.='Владельцы БД']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
@@ -147,8 +147,9 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void createDb(String name) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
-            runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
+        if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", name))) {
+            btnGeneralInfo.click();
+            runActionWithParameters(BLOCK_APP, "Добавить БД", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
                 dlg.setInputValue("Имя базы данных", name);
                 generatePassButton.shouldBe(Condition.enabled).click();
@@ -162,18 +163,17 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void updateExtensions(String name) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithoutParameters(name, "Актуализировать extensions");
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
+            btnGeneralInfo.click();
+            runActionWithoutParameters(getHeaderBlock(name), "Актуализировать extensions");
         }
     }
 
     public void changeExtensions(String name) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
+            btnGeneralInfo.click();
             runActionWithParameters(name, "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
         }
     }
@@ -181,8 +181,8 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void setLimitConnection(String quantity) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", quantity)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, quantity)) {
+            btnGeneralInfo.click();
             runActionWithParameters(quantity, "Назначить предел подключений", "Подтвердить", () -> Input.byLabel("Предел подключений").setValue(quantity));
         }
     }
@@ -190,8 +190,8 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void deleteLimitConnection(String quantity) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", quantity)) {
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, quantity)) {
+            btnGeneralInfo.click();
             runActionWithoutParameters(quantity, "Убрать предел подключений");
         }
     }
@@ -218,11 +218,11 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void removeDb(String name) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
+            btnGeneralInfo.click();
+            runActionWithoutParameters(getHeaderBlock(name), "Удалить БД");
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithoutParameters(name, "Удалить БД");
-            btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
+            Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals("", name), "БД существует");
         }
     }
 
@@ -282,13 +282,13 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").setContains(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
-        }, ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     @Step("Изменить состав групп у роли {role} на {groups}")
@@ -300,10 +300,10 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             groups.forEach(groupsElement::set);
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     @Step("Удалить группу доступа с ролью {role}")
@@ -312,7 +312,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
     }

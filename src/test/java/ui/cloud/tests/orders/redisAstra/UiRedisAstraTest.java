@@ -36,7 +36,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -86,7 +86,7 @@ public class UiRedisAstraTest extends UiProductTest {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         redisPage.checkHeadersHistory();
         redisPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test

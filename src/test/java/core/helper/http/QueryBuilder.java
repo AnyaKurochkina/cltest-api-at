@@ -12,8 +12,13 @@ import java.util.StringJoiner;
 public class QueryBuilder {
     private final transient StringJoiner query = new StringJoiner("&", "?", "");
 
-    public void add(Object key, Object value){
-        query.add(key + "=" + value);
+    public QueryBuilder add(Object key, Object value) {
+        if (value.getClass().isArray())
+            for (Object e : (Object[]) value)
+                query.add(key + "=" + e);
+        else
+            query.add(key + "=" + value);
+        return this;
     }
 
     @Override

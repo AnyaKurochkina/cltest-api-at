@@ -12,6 +12,7 @@ import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 
 import java.util.UUID;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ActionsListTest extends ActionBaseTest {
@@ -62,6 +63,6 @@ public class ActionsListTest extends ActionBaseTest {
         assertTrue(page.isActionDisplayed(action.getName()));
         page.getProviderSelect().set(EventProvider.OPENSTACK.getValue());
         page.getApplyFiltersButton().click();
-        assertTrue(page.isActionDisplayed(action.getName()));
+        assertFalse(page.isActionDisplayed(action.getName()));
     }
 }

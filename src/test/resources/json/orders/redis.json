@@ -36,6 +36,7 @@
 			"user_password": "xxM9glNSuxkV2Bu55N5L7tYrEiRDPMGOWzNsfs4t7bsJDNI74",
 			"auth": false,
 			"auth_user": "user",
+			"notify_keyspace_events": "Ex",
 			"ad_logon_grants": [
 				{
 					"role": "superuser",

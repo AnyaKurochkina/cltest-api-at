@@ -38,7 +38,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -46,7 +46,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @TmsLink("378275")
     @Order(1)
     @DisplayName("UI AstraLinux. Заказ")
-    void orderScyllaDB() {
+    void orderAstraLinux() {
         double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
@@ -86,7 +86,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         astraLinuxPage.getGeneralInfoTab().switchTo();
         astraLinuxPage.checkHeadersHistory();
         astraLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test

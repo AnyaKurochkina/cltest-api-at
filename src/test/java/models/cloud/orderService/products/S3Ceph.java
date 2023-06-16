@@ -144,6 +144,8 @@ public class S3Ceph extends IProduct {
         String userId;
         @Builder.Default
         String selectedRights = "Настраиваемые";
+        @Builder.Default
+        String prefix = "*";
         String bucketName;
 
         @Builder

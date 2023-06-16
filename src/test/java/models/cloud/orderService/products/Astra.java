@@ -75,6 +75,10 @@ public class Astra extends IProduct {
                 .build();
     }
 
+    public void updateVmInfo() {
+        OrderServiceSteps.executeAction("update_vm_info", this, null, this.getProjectId());
+    }
+
     public void stopHard() {
         stopHard("stop_vm_hard");
     }

@@ -81,13 +81,16 @@ public class Response {
         int i = 1;
         T page = extractAs(clazz);
         List items = page.getList();
-        while (page.getMeta().getTotalCount() > items.size()) {
+        int count = items.size();
+        if(Objects.nonNull(page.getMeta()))
+            count = page.getMeta().getTotalCount();
+        while (count > items.size()) {
             http.path = http.path.replaceAll("page=(\\d+)", "page=" + (++i));
             page = http.setSourceToken("").filterRequest().assertStatus(200).extractAs(clazz);
             items.addAll(page.getList());
         }
         page.setList(items);
-        Assertions.assertEquals(page.getMeta().getTotalCount(), items.size(), "Размер списка не равен TotalCount");
+        Assertions.assertEquals(count, items.size(), "Размер списка не равен TotalCount");
         return page;
     }
 

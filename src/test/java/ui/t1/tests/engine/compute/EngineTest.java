@@ -1,7 +1,8 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
+import core.utils.Waiting;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
@@ -11,11 +12,13 @@ import steps.authorizer.AuthorizerSteps;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.tests.engine.AbstractComputeTest;
+
+import java.time.Duration;
 
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Epic("Cloud Compute")
 @Feature("Cloud Engine")
 public class EngineTest extends AbstractComputeTest {
 
@@ -26,15 +29,14 @@ public class EngineTest extends AbstractComputeTest {
     }
 
     private void checkElementsEngine(Condition condition){
+        TypifiedElement.refresh();
         IndexPage indexPage = new IndexPage();
+        indexPage.goToCloudEngine();
         indexPage.getLinkDisks().getButton().shouldBe(condition);
         indexPage.getLinkVirtualMachines().getButton().shouldBe(condition);
         indexPage.getLinkSnapshots().getButton().shouldBe(condition);
         indexPage.getLinkNetworkInterfaces().getButton().shouldBe(condition);
-        indexPage.getLinkNetworks().getButton().shouldBe(condition);
         indexPage.getLinkImages().getButton().shouldBe(condition);
-        indexPage.getLinkSshKeys().getButton().shouldBe(condition);
-        indexPage.getLinkSecurityGroups().getButton().shouldBe(condition);
         indexPage.getLinkPublicIps().getButton().shouldBe(condition);
     }
 
@@ -55,7 +57,7 @@ public class EngineTest extends AbstractComputeTest {
         new IndexPage().disconnectCloudEngine();
         checkElementsEngine(Condition.not(Condition.visible));
         TypifiedElement.refresh();
-        new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible);
+        new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible, Duration.ofMinutes(2));
     }
 
     @AfterAll

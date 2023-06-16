@@ -31,13 +31,13 @@ class UiApacheKafkaClusterCheckUntilOrderTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
     @Test
     @TmsLink("1235642")
-    @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
+    @DisplayName("UI ApacheKafkaCluster. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()

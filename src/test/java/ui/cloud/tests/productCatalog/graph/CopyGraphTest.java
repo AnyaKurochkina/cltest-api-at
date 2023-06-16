@@ -19,7 +19,8 @@ public class CopyGraphTest extends GraphBaseTest {
                 .findGraphByValue(NAME, graph)
                 .copyGraph(NAME);
         graph.setName(copyName);
-        new GraphsListPage()
+        new ControlPanelIndexPage()
+                .goToGraphsPage()
                 .findAndOpenGraphPage(copyName)
                 .checkAttributes(graph);
         deleteGraphByApi(copyName);

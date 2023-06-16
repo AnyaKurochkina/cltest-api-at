@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
+import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
@@ -148,6 +151,61 @@ public class GraphListTest extends Tests {
         assertEquals(1, graphList.size());
         Graph listItem = graphList.get(0);
         assertEquals(graph.getGraphId(), listItem.getGraphId());
+    }
 
+    @DisplayName("Получение списка графов c Тегами")
+    @TmsLink("1701851")
+    @Test
+    public void getGraphListWithTagListTest() {
+        Graph.builder()
+                .name("at_api_graph_check_tag_list_versioning")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Collections.singletonList("api_test"))
+                .build()
+                .createObject();
+        List<Graph> graphList = getGraphListByFilter("with_tag_list", true);
+        graphList.forEach(x -> assertNotNull(x.getTagList()));
+    }
+
+    @DisplayName("Получение списка графов отфильтрованном по Тегам с полным совпадением")
+    @TmsLink("1701878")
+    @Test
+    public void getGraphListFilteredByTagsTest() {
+        String tag1 = "api_test";
+        String tag2 = "complete";
+        Graph.builder()
+                .name("at_api_graph_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        Graph.builder()
+                .name("graph_for_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        List<Graph> graphList = getGraphListByFilters("with_tag_list=true", "tags_complete_match=true",
+                String.format("tags=%s,%s", tag1, tag2));
+        assertEquals(2, graphList.size());
+        graphList.forEach(x-> AssertUtils.assertEqualsList(x.getTagList(), Arrays.asList(tag1, tag2)));
+    }
+
+    @DisplayName("Получение списка графов отфильтрованном по Тегам с не полным совпадением")
+    @TmsLink("1701879")
+    @Test
+    public void getGraphListFilteredByTagsAndCompleteMatchFalseTest() {
+        Graph.builder()
+                .name("at_api_action_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList("api_test", "api_test_action"))
+                .build()
+                .createObject();
+        List<Graph> graphList = getGraphListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
+        graphList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }
 }

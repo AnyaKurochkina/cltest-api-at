@@ -1,6 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import core.utils.Waiting;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -26,6 +27,7 @@ import java.util.Objects;
 import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 @Feature("Дополнительные")
+@Epic("Cloud Compute")
 @ExtendWith(BeforeAllExtension.class)
 public class OtherTest extends AbstractComputeTest {
 
@@ -52,8 +54,9 @@ public class OtherTest extends AbstractComputeTest {
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
         Assertions.assertEquals(4, items.stream().filter(e -> e.getOrderId().equals(orderId))
                 .filter(e -> e.getSrcOrderId().equals(""))
-                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance")).findFirst().orElseThrow(
-                        () -> new NotFoundException("Не найден item с type=compute")).getItemId()))
+                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance"))
+                        .filter(i -> i.getOrderId().equals(orderId))
+                        .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 4 item's (nic & volume)");
 
@@ -92,7 +95,7 @@ public class OtherTest extends AbstractComputeTest {
                 .setPublicIp(ip)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate(false);
         String orderIdVm = vmPage.getOrderId();
 
         String instanceId = StateServiceSteps.getItems(project.getId()).stream()

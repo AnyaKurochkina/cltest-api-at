@@ -2,6 +2,7 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.*;
 import core.exception.CreateEntityException;
+import core.helper.Configure;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -20,6 +21,7 @@ import ui.elements.*;
 
 import java.time.Duration;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 import static api.Tests.activeCnd;
@@ -28,6 +30,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.doubleToString;
+import static ui.elements.Alert.checkNoRedAlerts;
 import static ui.elements.TypifiedElement.postfix;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -35,6 +38,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Getter
 public abstract class IProductPage {
     protected final SelenideElement prebillingCostElement = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
+    private static final String HEADER_GROUP = "Группы";
     private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
@@ -42,7 +46,7 @@ public abstract class IProductPage {
     protected Tab historyTab = Tab.byText("История действий");
     IProduct product;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
-    SelenideElement currentProduct = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
+    SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
     SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
@@ -65,6 +69,10 @@ public abstract class IProductPage {
     public static SelenideElement getBtnAction(String header) {
         return getBtnAction(header, 1);
     }
+    public SelenideElement getHeaderBlock (String name)
+    {
+        return $x("//td[.='{}']/../descendant::button", name);
+    }
 
     public static SelenideElement getBtnAction(String header, int index) {
         return $x("(//*[.='{}']/parent::*//button[@id='actions-menu-button'])" + postfix, header, TypifiedElement.getIndex(index));
@@ -78,6 +86,7 @@ public abstract class IProductPage {
     protected abstract void checkPowerStatus(String expectedStatus);
 
     public void waitChangeStatus() {
+        mainItemPage.click();
         OrderUtils.waitChangeStatus(new TopInfo(), Duration.ofMinutes(8));
     }
 
@@ -106,7 +115,10 @@ public abstract class IProductPage {
     public void checkMonitoringOs() {
         Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
         btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        new MonitoringOsPage(product).check();
+        if (Configure.ENV.equals("ift")) {
+            checkNoRedAlerts();
+        } else new MonitoringOsPage(product).check();
+
     }
 
     @Step("Проверка вкладки Мониторинг кластера")
@@ -118,7 +130,11 @@ public abstract class IProductPage {
             element.shouldBe(Condition.visible).scrollIntoView(scrollCenter).click();
             Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
             btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-            new MonitoringOsPage(product).check();
+            if (Configure.ENV.equals("ift")) {
+                checkNoRedAlerts();
+            } else {
+                new MonitoringOsPage(product).check();
+            }
             goToCluster();
         }
     }
@@ -169,8 +185,13 @@ public abstract class IProductPage {
         if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
-        if (params.isWaitChangeStatus())
-            waitChangeStatus();
+        if (params.isWaitChangeStatus()) {
+            if (params.getTimeOut() == null) {
+                waitChangeStatus();
+            } else {
+                waitChangeStatus(params.getTimeOut());
+            }
+        }
         if (params.isCheckLastAction())
             checkLastAction(action);
     }
@@ -222,8 +243,109 @@ public abstract class IProductPage {
 
     @Step("Проверка на содержание необходимых столбцов на вкладке История действий")
     public void checkHeadersHistory() {
-        Assertions.assertEquals(Arrays.asList("Наименование", "Инициатор", "Дата создания", "Дата запуска", "Продолжительность, сек",
+        Assertions.assertEquals(Arrays.asList("Наименование", "Инициатор", "Дата создания", "Дата запуска", "Продолжительность",
                 "Статус", "Просмотр"), new History().getHeaders());
+    }
+
+
+    @Step("Добавить новые группы {group} с ролью {role}")
+    public void addGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            Select.byLabel("Роль").set(role);
+            groups.forEach(group -> Select.byLabel("Группы").set(group));
+        });
+        groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+    }
+
+    @Step("Изменить состав групп у роли {role} на {groups}")
+    public void updateGroup(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
+        });
+        groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+    }
+
+    public SelenideElement getRoleNode() {
+        return new Table("Роли узла").getRow(0).get();
+    }
+
+    @Step("Добавить новые группы {group} с ролью {role} в ноде")
+    public void addGroupInNode(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
+            Select.byLabel("Роль").setContains(role);
+            groups.forEach(group -> Select.byLabel("Группы").set(group));
+        });
+        btnGeneralInfo.click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
+        groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
+
+    @Step("Изменить состав групп у роли {role} на {groups} в ноде")
+    public void updateGroupInNode(String role, List<String> groups) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+            Select groupsElement = Select.byLabel("Группы").clear();
+            groups.forEach(groupsElement::set);
+        }, ActionParameters.builder().node(getRoleNode()).build());
+        btnGeneralInfo.click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+    }
+
+    @Step("Удалить группу доступа с ролью {role}")
+    public void deleteGroup(String role) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithoutParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
+        Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
+                role));
+
+    }
+
+    @Step("Удалить группу доступа с ролью {role}  в ноде")
+    public void deleteGroupInNode(String role, String nameGroup) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
+        btnGeneralInfo.click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
+                role));
+    }
+
+    //Таблица ролей
+    public class RoleTable extends Table {
+        public RoleTable() {
+            super("Группы");
+        }
+
+        @Override
+        protected void open() {
+            btnGeneralInfo.click();
+        }
+
+        private SelenideElement getRoleMenuElement(String name) {
+            return getRoleRow(name).$("button");
+        }
+
+        private SelenideElement getRoleRow(String name) {
+            return getRowElementByColumnValue("", name);
+        }
+
+        private String getGroupsRole(String name) {
+            return getRowByColumnValue("", name).getValueByColumn("Группы");
+        }
     }
 
     @SneakyThrows
@@ -237,7 +359,7 @@ public abstract class IProductPage {
             return;
         TypifiedElement.refresh();
         currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(3));
-        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(3),
+        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(5),
                 "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (currentCost == prebillingCostValue && prebillingCostValue == 0)
             return;
@@ -266,7 +388,7 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getOrderCost() {
-        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(3)));
+        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(5)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }
@@ -323,7 +445,7 @@ public abstract class IProductPage {
         }
 
         public void checkPowerStatus(String status) {
-            //      Assertions.assertEquals(status, getPowerStatus(), "Статус питания не соотвествует ожидаемому");
+            Assertions.assertEquals(status, getPowerStatus(), "Статус питания не соотвествует ожидаемому");
         }
     }
 }

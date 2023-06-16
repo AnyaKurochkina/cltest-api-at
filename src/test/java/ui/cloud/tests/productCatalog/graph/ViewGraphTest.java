@@ -14,12 +14,14 @@ import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
+import ui.cloud.pages.productCatalog.graph.GraphPage;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -145,5 +147,35 @@ public class ViewGraphTest extends GraphBaseTest {
                 .checkUsageInGraph(superGraph)
                 .goToGraphByUsageLink(superGraph)
                 .checkAttributes(superGraph);
+    }
+
+    @Test
+    @Disabled
+    @TmsLink("")
+    @DisplayName("Пагинация на вкладке 'Использование'")
+    public void checkUsedListPagination() {
+        String name = UUID.randomUUID().toString();
+        Graph superGraph = GraphSteps.createGraph(name, TITLE);
+        JSONObject graphItem = GraphItem.builder()
+                .name("1")
+                .description("1")
+                .subgraphId(graph.getGraphId())
+                .build()
+                .toJson();
+        JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));
+        partialUpdateGraph(superGraph.getGraphId(), graphJSON);
+        superGraph.setVersion("1.0.1");
+        Product product = Product.builder()
+                .name(name)
+                .title("AT API Product for graph usage")
+                .version("1.0.1")
+                .graphId(graph.getGraphId())
+                .graphVersion("1.0.0")
+                .build()
+                .createObject();
+        new ControlPanelIndexPage().goToGraphsPage()
+                .findAndOpenGraphPage(NAME)
+                .goToUsageTab();
+        GraphPage page = new GraphPage();
     }
 }

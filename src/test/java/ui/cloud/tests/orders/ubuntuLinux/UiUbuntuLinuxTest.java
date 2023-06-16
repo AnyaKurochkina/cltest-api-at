@@ -36,7 +36,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -50,6 +50,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             UbuntuLinuxOrderPage orderPage = new UbuntuLinuxOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
@@ -85,7 +86,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
         ubuntuLinuxPage.getBtnGeneralInfo().click();
         ubuntuLinuxPage.checkHeadersHistory();
         ubuntuLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test

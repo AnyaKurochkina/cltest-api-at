@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -71,6 +71,7 @@ public class ForbiddenActionsListPage extends BaseListPage {
     @Step("Проверка отображения запрещенного действия '{name}' в списке")
     public boolean isForbiddenActionDisplayed(String name) {
         Table table = new Table(nameColumn);
+        if (table.isEmpty()) return false;
         if (table.isColumnValueEquals(nameColumn, name)) return true;
         while (nextPageButtonV2.getButton().isEnabled()) {
             nextPageV2();
@@ -96,7 +97,7 @@ public class ForbiddenActionsListPage extends BaseListPage {
     @Step("Импорт запрещенного действия из файла '{path}'")
     public ForbiddenActionsListPage importForbiddenAction(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

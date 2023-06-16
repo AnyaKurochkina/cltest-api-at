@@ -1,0 +1,12 @@
+{
+  "max_size_bytes": "100Mb",
+  "use_separation": false,
+  "max_expiry_delay": 60000,
+  "min_expiry_delay": 10000,
+  "address_full_policy": "FAIL",
+  "slow_consumer_policy": "NOTIFY",
+  "slow_consumer_threshold": -1,
+  "slow_consumer_check_period": 10,
+  "name": "ghgh",
+  "owner_cert": "gfhgh"
+}

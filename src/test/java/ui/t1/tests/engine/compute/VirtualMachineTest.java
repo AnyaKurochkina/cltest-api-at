@@ -2,12 +2,14 @@ package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.SelenideElement;
 import com.mifmif.common.regex.Generex;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.NotFoundException;
@@ -32,6 +34,7 @@ import static core.utils.AssertUtils.assertHeaders;
 
 @ExtendWith(BeforeAllExtension.class)
 @Feature("Виртуальные машины")
+@Epic("Cloud Compute")
 public class VirtualMachineTest extends AbstractComputeTest {
 
     @Test
@@ -39,10 +42,11 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины")
     void vmList() {
         new IndexPage().goToVirtualMachine();
-        assertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
+        assertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Внешние IP-адреса", "Дата создания", "");
     }
 
     @Test
+    @Tag("health_check")
     @TmsLink("1248261")
     @DisplayName("Cloud Compute. Виртуальные машины. Создание")
     void vmCreatePage() {
@@ -102,8 +106,9 @@ public class VirtualMachineTest extends AbstractComputeTest {
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
         Assertions.assertEquals(3, items.stream().filter(e -> e.getOrderId().equals(orderId))
                 .filter(e -> e.getSrcOrderId().equals(""))
-                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance")).findFirst().orElseThrow(
-                        () -> new NotFoundException("Не найден item с type=compute")).getItemId()))
+                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance"))
+                        .filter(i -> i.getOrderId().equals(orderId))
+                        .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 4 item's (nic & volume)");
 
@@ -122,7 +127,6 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 }).count(), "Должен быть один item с новим orderId, size и parent=null");
 
         new IndexPage().goToDisks().selectDisk(name).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).checkCreate().delete();
     }
 
     @Test

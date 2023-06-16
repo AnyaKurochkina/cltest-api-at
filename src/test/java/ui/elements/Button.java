@@ -23,7 +23,6 @@ public class Button implements TypifiedElement {
         return new Button(button);
     }
 
-    @Step("Получение Button по тексту {text}")
     public static Button byText(String text) {
         return byText(text, 1);
     }
@@ -38,6 +37,10 @@ public class Button implements TypifiedElement {
 
     public static Button byId(String id) {
         return new Button($x("//button[@id='{}']", id));
+    }
+
+    public static Button byDataTestId(String id) {
+        return new Button($x("//button[@data-testid='{}']", id));
     }
 
     public static Button byXpath(@Language("XPath") String xPath) {

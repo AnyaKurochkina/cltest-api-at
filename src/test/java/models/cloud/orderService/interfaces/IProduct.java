@@ -83,7 +83,6 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String platform;
 
-    @ToString.Include
     @Setter
     protected String segment;
     @Setter
@@ -223,7 +222,7 @@ public abstract class IProduct extends Entity {
 
     //Обновить сертификаты
     protected void updateCerts(String action) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"dumb\":\"empty\"}"), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("dumb", "empty").put("accept", true), this.getProjectId());
     }
 
     //Перезагрузить
@@ -460,7 +459,7 @@ public abstract class IProduct extends Entity {
         return jsonObject;
     }
 
-    protected boolean isDev() {
+    public boolean isDev() {
         return envType().contains("dev");
     }
 

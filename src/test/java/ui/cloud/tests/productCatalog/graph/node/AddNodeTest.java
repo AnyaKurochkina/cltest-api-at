@@ -23,7 +23,6 @@ import java.util.HashMap;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
@@ -211,7 +210,7 @@ public class AddNodeTest extends GraphBaseTest {
         page.getTemplateSelect().setContains(TEMPLATE_NAME);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.enabled);
-        assertEquals(LogLevel.EMPTY.getDisplayName(), page.getLogLevelSelect().getValue());
+        assertEquals(LogLevel.SHORT.getDisplayName(), page.getLogLevelSelect().getValue());
         page.getLogLevelSelect().set(LogLevel.FULL.getDisplayName());
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
@@ -243,7 +242,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         page.getLogLevelTooltipIcon().hover();
         assertEquals("Поле можно редактировать только для узла с параметром " +
-                "\"Название очереди для старта задачи\" = \"internal\" и включенным переопределением уровня логирования", new Tooltip().getElement().getText());
+                        "\"Название очереди для старта задачи\" = \"internal\" и включенным переопределением уровня логирования",
+                new Tooltip().getElement().getText());
         Waiting.find(() -> page.getLogLevelSelect().getValue().equals(LogLevel.SHORT.getDisplayName()), Duration.ofSeconds(3));
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
@@ -273,8 +273,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
         page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        Waiting.sleep(2000);
         page.getParamsTab().click();
-        Waiting.sleep(1500);
         page.getInputTextArea().setValue("{\"override_param_1\":\"1\"}");
         assertEquals("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)", page.getInputHint().getText());
         page.getOutputTextArea().setValue("{\"override_param_2\":\"1\"}");
@@ -307,8 +307,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
         page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        Waiting.sleep(2000);
         page.getParamsTab().click();
-        Waiting.sleep(1500);
         page.getInputTextArea().setValue(inputValue);
         page.getInputHint().shouldNotBe(Condition.visible);
         page.getOutputTextArea().setValue(outputValue);

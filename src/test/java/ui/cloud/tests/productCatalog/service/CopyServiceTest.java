@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
 
+import static steps.productCatalog.ServiceSteps.deleteServiceByName;
+
 @Feature("Копирование сервиса")
 public class CopyServiceTest extends ServiceBaseTest {
     @Test
@@ -20,6 +22,6 @@ public class CopyServiceTest extends ServiceBaseTest {
         service.setName(copyName);
         new ServicePage()
                 .checkAttributes(service);
-        deleteService(copyName);
+        deleteServiceByName(copyName);
     }
 }

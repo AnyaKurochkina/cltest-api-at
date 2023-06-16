@@ -124,6 +124,7 @@ public class VmCreate {
 
     public VmCreate setPublicIp(String publicIp) {
         setSwitchPublicIp(true);
+        Waiting.sleep(1000);
         this.publicIp = Select.byLabel("Публичный IP").set(publicIp);
         return this;
     }

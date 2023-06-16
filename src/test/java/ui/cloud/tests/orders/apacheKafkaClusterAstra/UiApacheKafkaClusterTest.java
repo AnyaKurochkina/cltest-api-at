@@ -32,13 +32,12 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    ApacheKafkaCluster product;
-    // =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/acfaf6b1-028c-4c88-bcd8-b314e1bfccee/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/893921dc-541e-4ced-b79b-10d5f3c03977/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -86,7 +85,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.getBtnGeneralInfo().click();
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
 
@@ -143,7 +142,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(9)
     @TmsLink("1091895")
-    @DisplayName("UI ApacheKafkaCluster. Обновление ядра Kafka до версии 2.8.1")
+    @DisplayName("UI ApacheKafkaCluster. Обновление ядра Kafka до версии 2.8.2")
     void updateKernelVtb() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS,pSqlPage::updateKernelVtb);
@@ -203,7 +202,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.changeParamTopics(name));
     }
-        @Test
+    @Test
     @Order(16)
     @TmsLink("915047")
     @DisplayName("UI ApacheKafkaCluster. Изменить имя кластера")
@@ -280,6 +279,25 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
 
     @Test
     @Order(23)
+    @TmsLink("1549052")
+    @DisplayName("UI ApacheKafkaCluster.Пакетное создание квот Kafka")
+    void createQuotas() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.createQuotas("131072"));
+    }
+
+    @Test
+    @Order(24)
+    @TmsLink("1549051")
+    @DisplayName("UI ApacheKafkaCluster.Пакетное удаление квот Kafka")
+    void deleteQuotas() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.deleteQuotas("131072"));
+    }
+
+
+    @Test
+    @Order(25)
     @TmsLink("982961")
     @DisplayName("UI ApacheKafkaCluster.Удаление идемпотентных ACL Kafka")
     void dellAclIdempotent() {
@@ -288,7 +306,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(24)
+    @Order(26)
     @TmsLink("852012")
     @DisplayName("UI ApacheKafkaCluster.Проверить конфигурацию")
     void checkConfiguration() {
@@ -297,7 +315,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(25)
+    @Order(27)
     @TmsLink("1216972")
     @EnabledIfEnv("prod")
     @DisplayName("UI ApacheKafkaCluster. Мониторинг ОС")

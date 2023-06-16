@@ -88,6 +88,8 @@ public class Graph extends Entity implements IProductCatalog {
     private Boolean lockOrderOnError;
     @JsonProperty("default_item")
     private Object defaultItem;
+    @JsonProperty("tag_list")
+    private List<String> tagList;
 
     @Override
     public Entity init() {
@@ -115,6 +117,7 @@ public class Graph extends Entity implements IProductCatalog {
                 .set("$.lock_order_on_error", lockOrderOnError)
                 .set("$.allowed_developers", allowedDevelopers)
                 .set("$.restricted_developers", restrictedDevelopers)
+                .set("$.tag_list", tagList)
                 .setIfNullRemove("$.modifications", mod)
                 .setIfNullRemove("$.json_schema", jsonSchema)
                 .setIfNullRemove("$.ui_schema", uiSchema)

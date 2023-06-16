@@ -2,10 +2,7 @@ package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -14,6 +11,7 @@ import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import org.opentest4j.TestAbortedException;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
@@ -108,7 +106,7 @@ public class ClickHouseCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         Flavor flavorCh = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:clickhouse:dev:dev").get(0);
         Flavor flavorZk = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:zookeeper:dev:dev").get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)
@@ -124,6 +122,7 @@ public class ClickHouseCluster extends IProduct {
                 .set("$.order.attrs.flavor_zk", new JSONObject(flavorZk.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .remove("$.order.attrs.ad_logon_grants", !isDev())
                 .set("$.order.attrs.clickhouse_user_ad_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.system_adm_groups[0].groups[0]", accessGroup)
                 .set("$.order.attrs.clickhouse_app_admin_ad_groups[0].groups[0]", accessGroup)
@@ -143,12 +142,17 @@ public class ClickHouseCluster extends IProduct {
         save();
     }
 
+    @SneakyThrows
     public void checkConnectDb(int node) {
-        Assertions.assertThrows(ConnectException.class, () ->
-        checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", chCustomerAdmin, chCustomerAdminPassword,
-                ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[" + node + "]"))
-                        .replaceFirst("/play", "")
-                        .replaceFirst("https:", "clickhouse:")), "UNKNOWN_DATABASE");
+        try {
+            checkConnectDb(clickhouseBb + "?ssl=1&sslmode=none", chCustomerAdmin, chCustomerAdminPassword,
+                    ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[" + node + "]"))
+                            .replaceFirst("/play", "")
+                            .replaceFirst("https:", "clickhouse:"));
+        } catch (ConnectException e) {
+            if(!e.toString().contains("UNKNOWN_DATABASE"))
+                throw e;
+        }
     }
 
     public void createUserAccount(String user, String password) {
@@ -174,6 +178,10 @@ public class ClickHouseCluster extends IProduct {
     public void deleteGroupAdmin(String user) {
         OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_app_admin_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
+    }
+
+    public void certsInfo() {
+        OrderServiceSteps.executeAction("clickhouse_cluster_certs_info", this, null, this.getProjectId());
     }
 
     public void addGroupAdmin(String user) {

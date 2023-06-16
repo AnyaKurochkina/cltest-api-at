@@ -115,6 +115,15 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Создание графа")
+    public static Graph createGraph(String name, String title) {
+        return Graph.builder()
+                .name(name)
+                .title(title)
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание графа")
     public static Graph createGraph() {
         return Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
@@ -396,5 +405,46 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(graphUrl + id + "/version_list/")
                 .assertStatus(200);
+    }
+
+    @Step("Добавление списка Тегов графам")
+    public static void addTagListToGraph(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("add_tags", tagsList))
+                .post(graphUrl + "add_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление списка Тегов графов")
+    public static void removeTagListToGraph(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("remove_tags", tagsList))
+                .post(graphUrl + "remove_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка графов по фильтру")
+    public static List<Graph> getGraphListByFilter(String filter, Object value) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?{}={}", filter, value)
+                .assertStatus(200)
+                .extractAs(GetGraphList.class)
+                .getList();
+    }
+
+    @Step("Получение списка графов по фильтрам")
+    public static List<Graph> getGraphListByFilters(String...filter) {
+        String filters = String.join("&", filter);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(graphUrl + "?" + filters)
+                .assertStatus(200)
+                .extractAs(GetGraphList.class)
+                .getList();
     }
 }

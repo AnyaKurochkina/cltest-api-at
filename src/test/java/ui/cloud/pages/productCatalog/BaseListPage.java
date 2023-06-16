@@ -12,7 +12,6 @@ import ui.elements.Button;
 import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.Table;
-import ui.t1.pages.productCatalog.image.ImagesListPage;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -28,7 +27,7 @@ import static core.helper.StringUtils.format;
 public class BaseListPage {
 
     protected static final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
-    protected static final SelenideElement importButton = $x("//a[.='Импорт']");
+    protected static final SelenideElement importButton = $x("//button[.='Импорт']");
     protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Создать копию']");
@@ -50,10 +49,10 @@ public class BaseListPage {
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
-        Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.scrollIntoView(false).click();
+        Table table = new Table(header);
         Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         String firstValue = table.getValueByColumnInFirstRow(header).getText();
@@ -62,6 +61,7 @@ public class BaseListPage {
                 "Некорректная сортировка по столбцу " + header);
         columnHeader.click();
         Waiting.sleep(1500);
+        table = new Table(header);
         arrowIcon.shouldBe(Condition.visible);
         firstValue = table.getValueByColumnInFirstRow(header).getText();
         lastValue = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();
@@ -77,10 +77,10 @@ public class BaseListPage {
 
     @Step("Проверка сортировки по дате по столбцу '{header}' c форматом '{formatter}'")
     public static void checkSortingByDateField(String header, DateTimeFormatter formatter) {
-        Table table = new Table(header);
         SelenideElement columnHeader = $x("//div[text()='" + header + "']/parent::div");
         SelenideElement arrowIcon = $x("//div[text()='" + header + "']/following-sibling::*[name()='svg']");
         columnHeader.click();
+        Table table = new Table(header);
         Waiting.sleep(1500);
         arrowIcon.shouldBe(Condition.visible);
         String firstDateString = table.getValueByColumnInFirstRow(header).getText();
@@ -90,6 +90,7 @@ public class BaseListPage {
         Assertions.assertTrue(lastDate.isAfter(firstDate) || lastDate.isEqual(firstDate));
         columnHeader.click();
         Waiting.sleep(1500);
+        table = new Table(header);
         arrowIcon.shouldBe(Condition.visible);
         firstDateString = table.getValueByColumnInFirstRow(header).getText();
         lastDateString = table.getValueByColumnInRow(table.getRows().size() - 1, header).getText();

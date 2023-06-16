@@ -15,4 +15,5 @@ public class Server {
     String address;
     @Builder.Default
     String sendProxy = "disabled";
+    String backup;
 }

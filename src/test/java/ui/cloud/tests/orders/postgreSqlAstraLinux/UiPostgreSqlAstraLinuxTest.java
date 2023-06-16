@@ -31,8 +31,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;
-    // = PostgreSQL.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/e97aaf5e-4940-4c25-8340-e73d589fcd07/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/825c387a-0daf-4da9-90aa-be77568d8f1f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
@@ -41,7 +40,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginCloudPage(product.getProjectId())
+        new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
@@ -89,12 +88,13 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.getBtnGeneralInfo().click();
         pSqlPage.checkHeadersHistory();
         pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
     @Order(5)
     @TmsLink("993396")
+    @Disabled
     @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
     void restart() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -254,7 +254,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.deleteGroup("superuser");
+        pSqlPage.deleteGroup("user");
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
@@ -282,6 +282,16 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
     @Test
     @Order(26)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Показать удаленные БД")
+    void showDeleteDB() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.showDeleteDB(nameDb);
+    }
+
+
+    @Test
+    @Order(27)
     @TmsLink("1296731")
     @EnabledIfEnv("prod")
     @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")

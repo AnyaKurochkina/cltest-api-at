@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.visualTeamplate.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -16,8 +17,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductCatalogSteps.isSorted;
 import static steps.productCatalog.VisualTemplateSteps.*;
 
@@ -177,5 +177,73 @@ public class VisualTemplateListTest extends Tests {
             assertTrue(steps.getJsonPath(impl.getId()).getString("event_provider").contains(providerFilter));
             assertTrue(steps.getJsonPath(impl.getId()).getString("event_type").contains(typeFilter));
         }
+    }
+
+    @DisplayName("Получение списка шаблонов визуализации c Тегами")
+    @TmsLink("1710061")
+    @Test
+    public void getVisualTemplateListWithTagListTest() {
+        ItemVisualTemplate.builder()
+                .name("visual_template_check_tag_list_value_test_api")
+                .tagList(Collections.singletonList("api_test"))
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .build()
+                .createObject();
+        List<ItemVisualTemplate> visualTemplateList = getVisualTemplateListByFilter("with_tag_list", true);
+        visualTemplateList.forEach(x -> assertNotNull(x.getTagList()));
+    }
+
+    @DisplayName("Получение списка шаблонов визуализации отфильтрованном по Тегам с полным совпадением")
+    @TmsLink("1710087")
+    @Test
+    public void getVisualTemplateListFilteredByTagsTest() {
+        String tag1 = "api_test";
+        String tag2 = "complete";
+        ItemVisualTemplate.builder()
+                .name("at_api_visual_template_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        ItemVisualTemplate.builder()
+                .name("visual_template_for_list_filtered_by_tags")
+                .title("AT API Product")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        List<ItemVisualTemplate> visualTemplateList = getVisualTemplateListByFilters("with_tag_list=true", "tags_complete_match=true",
+                String.format("tags=%s,%s", tag1, tag2));
+        assertEquals(2, visualTemplateList.size());
+        visualTemplateList.forEach(x -> assertEquals(x.getTagList(), Arrays.asList(tag1, tag2)));
+    }
+
+    @DisplayName("Получение списка шаблонов визуализации отфильтрованном по Тегам с не полным совпадением")
+    @TmsLink("1710126")
+    @Test
+    public void getVisualTemplateListFilteredByTagsAndCompleteMatchFalseTest() {
+        ItemVisualTemplate.builder()
+                .name(RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "visual_template_at_ui")
+                .title("AT API Product")
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .tagList(Arrays.asList("api_test", "api_test_action"))
+                .build()
+                .createObject();
+        List<ItemVisualTemplate> visualTemplateList = getVisualTemplateListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
+        visualTemplateList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }
 }

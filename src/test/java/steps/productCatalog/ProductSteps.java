@@ -65,6 +65,17 @@ public class ProductSteps extends Steps {
                 .extractAs(GetProductList.class).getList();
     }
 
+    @Step("Получение списка продуктов по фильтрам")
+    public static List<Product> getProductListByFilters(String...filter) {
+        String filters = String.join("&", filter);
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productUrl + "?" + filters)
+                .assertStatus(200)
+                .extractAs(GetProductList.class)
+                .getList();
+    }
+
     @Step("Получение продукта по имени {name}")
     public static Product getProductByName(String name) {
         return new Http(ProductCatalogURL)
@@ -88,6 +99,16 @@ public class ProductSteps extends Steps {
         return Product.builder()
                 .name(name)
                 .title("AtTestApiProduct")
+                .version("1.0.0")
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание продукта")
+    public static Product createProduct(String name, String title) {
+        return Product.builder()
+                .name(name)
+                .title(title)
                 .version("1.0.0")
                 .build()
                 .createObject();
@@ -484,5 +505,25 @@ public class ProductSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setWithoutToken()
                 .delete(productUrl + id + "/").assertStatus(401);
+    }
+
+    @Step("Добавление списка Тегов продуктам")
+    public static void addTagListToProduct(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("add_tags", tagsList))
+                .post(productUrl + "add_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    @Step("Удаление списка Тегов продуктов")
+    public static void removeTagListToProduct(List<String> tagsList, String... name) {
+        String names = String.join(",", name);
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("remove_tags", tagsList))
+                .post(productUrl + "remove_tag_list/?name__in=" + names)
+                .assertStatus(200);
     }
 }

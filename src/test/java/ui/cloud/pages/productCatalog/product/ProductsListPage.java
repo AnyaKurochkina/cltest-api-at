@@ -1,6 +1,5 @@
 package ui.cloud.pages.productCatalog.product;
 
-import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
@@ -11,7 +10,7 @@ import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.Select;
 import ui.elements.Table;
 
@@ -24,7 +23,7 @@ public class ProductsListPage extends BaseListPage {
     @Step("Проверка заголовков списка продуктов")
     public ProductsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Категория", "Статус", "", "");
+                "Наименование", nameColumn, "Дата создания", "Категория", "Статус", "Теги", "", "");
         return this;
     }
 
@@ -149,7 +148,7 @@ public class ProductsListPage extends BaseListPage {
     @Step("Импорт продукта из файла '{path}'")
     public ProductsListPage importProduct(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

@@ -1,8 +1,6 @@
 package ui.elements;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
@@ -31,6 +29,10 @@ public class CheckBox implements TypifiedElement {
         return new CheckBox($x("//input[@type='checkbox'][@name='{}']", name).parent());
     }
 
+    public static CheckBox byId(String id) {
+        return new CheckBox($x("//*[@id = '{}']", id));
+    }
+
     @Step("CheckBox. Получение значения")
     public boolean getChecked() {
         return Boolean.valueOf(element.$x("..//input").getAttribute("checked"));
@@ -38,8 +40,9 @@ public class CheckBox implements TypifiedElement {
 
     @Step("CheckBox. Установка в положение {checked}")
     public void setChecked(boolean checked) {
-        if (getChecked() != checked)
+        if (getChecked() != checked) {
             element.parent().shouldBe(clickableCnd).click();
-        Assertions.assertEquals(getChecked(), checked);
+        }
+        Assertions.assertEquals(checked, getChecked());
     }
 }

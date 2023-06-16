@@ -38,10 +38,11 @@ public class ApacheKafkaCluster extends IProduct {
     Flavor flavor;
     @ToString.Include
     String osVersion;
+    public static final String KAFKA_VERSION_LATEST = "2.13-2.8.2";
     public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
     public static final String KAFKA_CLUSTER_RETENTION_MS = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s' && it.retention_ms=='%s'}";
-
     public static final String KAFKA_CLUSTER_ACL_IDEMPOTENT = "data.find{it.type=='cluster'}.data.config.idempotent_acls.any{it.client_cn=='%s'}";
+    public static final String KAFKA_CLUSTER_QUOTAS = "data.find{it.type=='cluster'}.data.config.quotas.any{it.client_cn=='<default>' && it.producer_byte_rate=='%d'}";
 
     @Override
     @Step("Заказ продукта")
@@ -134,11 +135,12 @@ public class ApacheKafkaCluster extends IProduct {
                 "    {\n" +
                 "      \"operation\": \"change_cleanup_policy\",\n" +
                 "      \"parameters\": {\n" +
+                "        \"partitions_number\": 1,\n" +
                 "        \"cleanup^policy\": \"delete\",\n" +
                 "        \"retention^ms\": 1800001,\n" +
                 "      \"_cleanup^limit_by\": \"time\"\n" +
                 "      },\n" +
-                "      \"topic_name\": \"" + topic + "\"\n" +
+                "      \"topic_names\": [\"" + topic + "\"]\n" +
                 "    }\n" +
                 "  ]\n" +
                 "}"
@@ -209,9 +211,31 @@ public class ApacheKafkaCluster extends IProduct {
         OrderServiceSteps.executeAction("kafka_release_upgrade_version", this, new JSONObject().put("accept", true), this.projectId);
     }
 
+    public void addDefaultQuota(int quota) {
+        if(!kafkaVersion.equals(KAFKA_VERSION_LATEST))
+            upgrade281();
+        JSONObject json = JsonHelper.getJsonTemplate("/orders/kafka_quota.json")
+                .set("$.quotas[0].producer_byte_rate", quota)
+                .build();
+        OrderServiceSteps.executeAction("kafka_create_quotas", this, json, this.projectId);
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_QUOTAS, quota)));
+    }
+
+    public void deleteDefaultQuota(int quota) {
+        JSONObject json = JsonHelper.getJsonTemplate("/orders/kafka_quota.json")
+                .remove("$.quotas[0].producer_byte_rate")
+                .build();
+        OrderServiceSteps.executeAction("kafka_delete_quotas", this, json, this.projectId);
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_QUOTAS, quota)));
+    }
+
     public void upgrade281() {
-        OrderServiceSteps.executeAction("kafka_upgrade_281", this, new JSONObject("{dumb: \"empty\"}").put("accept", true), this.projectId);
-        Assertions.assertEquals("2.13-2.8.1", OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
+        if(!kafkaVersion.equals(KAFKA_VERSION_LATEST)) {
+            OrderServiceSteps.executeAction("kafka_upgrade_28x", this, new JSONObject("{dumb: \"empty\"}").put("accept", true), this.projectId);
+            Assertions.assertEquals(KAFKA_VERSION_LATEST, OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.kafka_version"), "Версия kafka не изменилась");
+            kafkaVersion = KAFKA_VERSION_LATEST;
+            save();
+        }
     }
 
     public void start() {

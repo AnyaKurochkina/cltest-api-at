@@ -1,6 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
+import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -21,6 +22,7 @@ import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
+import static core.helper.StringUtils.$x;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @BlockTests
@@ -28,6 +30,7 @@ import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Виртуальные машины. Действия")
+@Epic("Cloud Compute")
 public class VirtualMachineActionsTest extends AbstractComputeTest {
     VmCreate vm;
 
@@ -90,6 +93,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         console.click();
         Button.byText("Развернуть на полный экран").click();
         Button.byText("Выйти из полноэкранного режима").click();
+        $x("//*[@title='Консоль']").shouldBe(Condition.text("Connected (encrypted)"));
         console.getButton().should(Condition.visible);
     }
 

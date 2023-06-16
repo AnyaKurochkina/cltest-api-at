@@ -22,7 +22,11 @@ public class RadioGroup implements TypifiedElement{
         return new RadioGroup($x("(//*[starts-with(text(),'{}')]/..//*[@role='radiogroup'])" + postfix, label, TypifiedElement.getIndex(index)).shouldBe(Condition.visible));
     }
 
-    public static RadioGroup bId(String id){
+    public static RadioGroup byFieldsetLabel(String label){
+        return new RadioGroup($x("//*[text()='{}']/parent::fieldset", label));
+    }
+
+    public static RadioGroup bуId(String id){
         return new RadioGroup($x("//*[@role='radiogroup' and @id='{}']", id).shouldBe(Condition.visible));
     }
 
