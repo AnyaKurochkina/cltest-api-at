@@ -71,6 +71,12 @@ public class Http {
         this.host = host;
     }
 
+    private Http() {}
+
+    public static Http builder() {
+        return new Http();
+    }
+
     public Http(String host, JSONObject body) {
         this.host = host;
         this.body = body.toString();
@@ -101,8 +107,6 @@ public class Http {
     public Response get(String path, Object... args) {
         this.method = "GET";
         for (Object arg : args) {
-            if(arg == null)
-                System.out.println(1);
             path = path.replaceFirst("\\{}", Objects.requireNonNull(arg).toString()
                     .replaceAll("#", "%23")
                     .replaceAll(" ", "%20"));
@@ -133,8 +137,9 @@ public class Http {
         return request();
     }
 
-    public Response api(Api api, Object... args) {
+    public Response api(Path api, Object... args) {
         String pattern = "{}";
+        this.host = api.url;
         this.method = api.method.toString();
         this.path = api.path.replaceAll("\\{([^}]*)}", pattern);
         if(StringUtils.count(this.path, pattern) == args.length - 1)

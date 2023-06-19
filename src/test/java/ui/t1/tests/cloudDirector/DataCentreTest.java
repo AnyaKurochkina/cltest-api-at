@@ -112,6 +112,18 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     }
 
     @Test
+    @Order(8)
+    @TmsLink("1115943")
+    @DisplayName("VMware. VDC. Изменение конфигурации маршрутизатора")
+    public void changeRouterConfigTest() {
+        DataCentrePage dataCentrePage = new IndexPage()
+                .goToCloudDirector()
+                .goToOrganization(vmWareOrganization.getName())
+                .selectDataCentre(dataCentreName);
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
+    }
+
+    @Test
     @Order(99)
     @TmsLink("559157")
     @DisplayName("VMware. Защита от удаления VDC")
