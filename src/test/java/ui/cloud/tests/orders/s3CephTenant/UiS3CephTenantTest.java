@@ -59,7 +59,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     @Test
     @TmsLink("1458370")
     @Order(2)
-    @DisplayName("UI S3CephTenant. Проверка полей заказа")
+    @DisplayName("UI S3CephTenant. Проверка развертывания заказа в истории действий")
     void checkHeaderHistoryTable() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
         s3CepthPages.getBtnGeneralInfo().click();
@@ -110,7 +110,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     @DisplayName("UI S3CephTenant. Добавить правило Corse")
     void addRuleCorse() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
-        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addRuleCorse("ruleCorse","15 sec","15"));
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.addCorsRule("ruleCorse","15 sec","15"));
     }
 
     @Test
@@ -119,7 +119,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     @DisplayName("UI S3CephTenant. Изменить правило Corse")
     void changeRuleCorse() {
         S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
-        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.changeRuleCorse("10 sec","10"));
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.changeCorsRule("10 sec","10"));
     }
 
     @Test
