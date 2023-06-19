@@ -2,6 +2,7 @@ package ui.t1.tests.IAM.users;
 
 import api.Tests;
 import core.enums.Role;
+import kotlin.collections.ArrayDeque;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +14,7 @@ import ui.extesions.ConfigExtension;
 import ui.models.IamUser;
 import ui.t1.pages.T1LoginPage;
 
-import java.util.Collections;
+import java.util.Arrays;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
@@ -26,7 +27,7 @@ public abstract class AbstractIAMTest extends Tests {
     public AbstractIAMTest() {
         project = Project.builder().isForOrders(true).build().createObject();
         folderId = AuthorizerSteps.getParentProject(project.getId());;
-        user = new IamUser("airat.muzafarov@gmail.com", Collections.singletonList("Администратор"));
+        user = new IamUser("airat.muzafarov@gmail.com", new ArrayDeque<>(Arrays.asList("Администратор")));
     }
 
     @BeforeEach

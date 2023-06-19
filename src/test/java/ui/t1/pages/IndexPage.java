@@ -19,7 +19,6 @@ import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 
 import java.time.Duration;
 
-import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.cloud.pages.orders.IProductPage.getBtnAction;
@@ -52,11 +51,6 @@ public class IndexPage {
     public Profile goToProfile(){
         Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
         return new Profile();
-    }
-
-    public IndexPage changeContext(String contextType, String contextValue) {
-        open(String.format("/?context=%s&type=%s", contextValue, contextType));
-        return this;
     }
 
     @Step("Переход на страницу T1 Cloud Engine")
