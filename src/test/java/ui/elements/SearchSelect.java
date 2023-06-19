@@ -36,6 +36,11 @@ public class SearchSelect extends Select {
         return new SearchSelect($x("//div[input[@name='{}']]", name));
     }
 
+    @Step("Получение SearchSelect по placeholder '{placeholder}'")
+    public static SearchSelect byPlaceholder(String placeholder) {
+        return new SearchSelect($x("//div[input[@placeholder='{}']]", placeholder));
+    }
+
     @Step("SearchSelect. Очистить")
     public SearchSelect clear() {
         if (element.$x(".//*[@id='searchSelectClearIcon']").exists()) {

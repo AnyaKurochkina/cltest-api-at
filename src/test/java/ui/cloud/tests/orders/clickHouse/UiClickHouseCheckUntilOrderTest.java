@@ -12,12 +12,15 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.orders.ClickHouseOrderPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
+
+import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
 
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
@@ -57,11 +60,11 @@ class UiClickHouseCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroup().set(accessGroup.getPrefixName());
-        orderPage.getGroup2().set(accessGroup.getPrefixName());
-        orderPage.getGroup3().set(accessGroup.getPrefixName());
-        orderPage.getGroup4().set(accessGroup.getPrefixName());
+        String accessGroup = getRandomAccessGroup(product.getProjectId(), "", "compute");
+        orderPage.getGroup().set(accessGroup);
+        orderPage.getGroup2().set(accessGroup);
+        orderPage.getGroup3().set(accessGroup);
+        orderPage.getGroup4().set(accessGroup);
 
         new ClickHouseOrderPage().checkOrderDetails();
     }
