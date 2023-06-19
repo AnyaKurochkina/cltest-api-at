@@ -5,7 +5,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-public interface Routes {
+public interface Api {
+    abstract String url();
+
     enum Method {
         GET,
         POST,
@@ -18,7 +20,9 @@ public interface Routes {
     @Retention(RetentionPolicy.RUNTIME)
     @interface Route {
         Method method();
+
         String path();
+
         int status();
     }
 }

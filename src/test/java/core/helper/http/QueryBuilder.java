@@ -9,11 +9,15 @@ import java.util.StringJoiner;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class QueryBuilder{
+public class QueryBuilder {
     private final transient StringJoiner query = new StringJoiner("&", "?", "");
 
-    public QueryBuilder add(Object key, Object value){
-        query.add(key + "=" + value);
+    public QueryBuilder add(Object key, Object value) {
+        if (value.getClass().isArray())
+            for (Object e : (Object[]) value)
+                query.add(key + "=" + e);
+        else
+            query.add(key + "=" + value);
         return this;
     }
 

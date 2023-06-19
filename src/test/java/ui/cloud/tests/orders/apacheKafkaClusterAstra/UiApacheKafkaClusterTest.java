@@ -224,7 +224,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("851995")
-    @DisplayName("UI ApacheKafkaCluster.Пакетное создание ACL Kafka")
+    @DisplayName("UI ApacheKafkaCluster.Пакетное создание ACL Kafka на топики")
     void createAclTopics() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->
@@ -234,7 +234,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(18)
     @TmsLink("851996")
-    @DisplayName("UI ApacheKafkaCluster.Пакетное удаление ACL Kafka")
+    @DisplayName("UI ApacheKafkaCluster.Пакетное удаление ACL Kafka на топики")
     void dellAclTopics() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> new ApacheKafkaClusterPage(ApacheKafkaCluster.builder().build()).dellAclTopics(args));

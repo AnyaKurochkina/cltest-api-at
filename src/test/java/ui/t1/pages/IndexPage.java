@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
+import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
@@ -26,6 +27,7 @@ import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 
 @Getter
 public class IndexPage {
+    Button linkCloudStorageS3 = Button.byXpath("//a[.='Cloud Storage S3']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
@@ -51,6 +53,12 @@ public class IndexPage {
     public Profile goToProfile(){
         Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
         return new Profile();
+    }
+
+    @Step("Переход на страницу S3 Cloud Storage")
+    public CloudStorageS3 goToS3CloudStoragePage() {
+        linkCloudStorageS3.click();
+        return new CloudStorageS3();
     }
 
     @Step("Переход на страницу T1 Cloud Engine")

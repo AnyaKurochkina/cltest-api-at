@@ -20,7 +20,7 @@ public class TagServiceSteps {
 
     public static FilterResultV1 inventoryFilterV1(Context context, Filter filter, QueryBuilder query) {
         query.add("page", 1);
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(filter))
                 .api(v1InventoriesCreate, context.getType(), context.getId(), query)
@@ -33,7 +33,7 @@ public class TagServiceSteps {
 
     public static FilterResultV2Page inventoryFilterV2(Context context, Filter filter, QueryBuilder query) {
         query.add("page", 1);
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(filter))
                 .api(v2InventoriesFilterCreate, context.getType(), context.getId(), query)
@@ -46,28 +46,28 @@ public class TagServiceSteps {
 
     public static void inventoryTagsV2(Context context, String inventoryId, String dataSource, List<InventoryTagsV2.Tag> tags) {
         InventoryTagsV2 inventoryTags = new InventoryTagsV2(dataSource, tags);
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(inventoryTags))
                 .api(v2InventoriesInventoryTagsUpdate, context.getType(), context.getId(), inventoryId);
     }
 
     public static void inventoriesDeleteBatchV2(Context context, List<String> inventories) {
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(new JSONObject().put("inventories", inventories))
                 .api(v2InventoriesBatch, context.getType(), context.getId());
     }
 
     public static InventoryV2Page inventoriesListV2(Context context, QueryBuilder query) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .api(v2InventoriesList, context.getType(), context.getId(), query)
                 .extractAs(InventoryV2Page.class);
     }
 
     public static Inventory updateV2Put(Inventory inventory) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(inventory.toJson())
                 .api(v2InventoriesUpdate, inventory.getContext().getType(), inventory.getContext().getId(), inventory.getId())
@@ -75,7 +75,7 @@ public class TagServiceSteps {
     }
 
     public static List<String> getTagsUniqueValuesV1(Context context, String id) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .api(v1TagsUniqueValues, context.getType(), context.getId(), id)
                 .jsonPath()
@@ -83,7 +83,7 @@ public class TagServiceSteps {
     }
 
     public static void tagsInventoryTagsDeleteV1(Context context, String tagId, List<Inventory> inventories) {
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(new JSONObject().put("inventories",new JSONArray(inventories
                         .stream().map(Inventory::getId).collect(Collectors.toList()))))
@@ -91,14 +91,14 @@ public class TagServiceSteps {
     }
 
     public static TagsInventoriesV1 tagsInventoriesV1(Context context, String tagId) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .api(v1TagsInventories, context.getType(), context.getId(), tagId)
                 .extractAllPages(TagsInventoriesV1.class);
     }
 
     public static Tag v1TagsPartialUpdate(Tag tag, String tagId) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(tag))
                 .api(v1TagsPartialUpdate, tag.getContext().getType(), tag.getContext().getId(), tagId)
@@ -106,7 +106,7 @@ public class TagServiceSteps {
     }
 
     public static Tag v1TagsUpdate(Tag tag, String tagId) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(tag))
                 .api(v1TagsUpdate, tag.getContext().getType(), tag.getContext().getId(), tagId)
@@ -114,14 +114,14 @@ public class TagServiceSteps {
     }
 
     public static Tag v1TagsRead(Context context, String id) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .api(v1TagsUpdate, context.getType(), context.getId(), id)
                 .extractAs(Tag.class);
     }
 
     public static CreateOrUpdateInventoryTags tagsInventoryTagsUpdateV1(Context context, String tagId, CreateOrUpdateLinksWithInventoriesRequest request) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(request))
                 .api(v1TagsInventoryTagsUpdate, context.getType(), context.getId(), tagId)
@@ -129,7 +129,7 @@ public class TagServiceSteps {
     }
 
     public static List<PutInventoryRequest.PutInventory> updateInventoriesV2(PutInventoryRequest request) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.SUPERADMIN)
                 .body(serialize(request))
                 .api(v2AdminInventoriesBatch)
@@ -138,7 +138,7 @@ public class TagServiceSteps {
     }
 
     public static void updateV2Path(Inventory inventory) {
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(inventory.toJson())
                 .api(v2InventoriesPartialUpdate, inventory.getContext().getType(), inventory.getContext().getId(), inventory.getId())
@@ -146,21 +146,21 @@ public class TagServiceSteps {
     }
 
     public static Inventory getInventoryV2(Context context, String id) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .api(v2InventoriesRead, context.getType(), context.getId(), id)
                 .extractAs(Inventory.class);
     }
 
     public static InventoryTagListV2Page inventoryTagListV2(Context context, String inventory) {
-        return new Http(Configure.TagService)
+        return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .api(v2InventoriesInventoryTagsRead, context.getType(), context.getId(), inventory)
                 .extractAs(InventoryTagListV2Page.class);
     }
 
     public static void inventoryTagsV1(Context context, InventoryTagsV1 inventoryTags) {
-        new Http(Configure.TagService)
+        Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(inventoryTags))
                 .api(v1InventoryTagsCreate, context.getType(), context.getId());

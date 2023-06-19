@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.action.Action;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -77,6 +78,22 @@ public class ActionsTagTest extends Tests {
         partialUpdateAction(action.getActionId(), new JSONObject().put("tag_list", tagList));
         Action updatedAction = getActionById(action.getActionId());
         assertEquals("1.0.0", updatedAction.getVersion());
+    }
+
+    @DisplayName("Создание действия с двумя одинаковыми Тегами")
+    @TmsLink("1710329")
+    @Test
+    public void createActionWithSameTagsTest() {
+        List<String> tagList = Arrays.asList("same_tag", "same_tag");
+        Action action = Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(10).toLowerCase() + "action_at_api")
+                .title("AT API Product")
+                .tagList(tagList)
+                .build()
+                .createObject();
+        List<String> actionTagList = action.getTagList();
+        assertEquals(1, actionTagList.size());
+        assertEquals("same_tag", actionTagList.get(0));
     }
 }
 

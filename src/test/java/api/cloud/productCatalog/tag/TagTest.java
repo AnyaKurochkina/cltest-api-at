@@ -88,7 +88,7 @@ public class TagTest extends Tests {
     @TmsLink("1695688")
     @Test
     public void copyTagTest() {
-        String tagName = "delete_tag_test_api";
+        String tagName = "copy_tag_test_api";
         String cloneTag = tagName + "-clone";
         createTagByName(tagName);
         models.cloud.productCatalog.tag.Tag tag = copyTagByName(tagName);
@@ -193,5 +193,14 @@ public class TagTest extends Tests {
         String tagName = "Create_invalid_name_tag";
         String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(String.format("Нельзя создать экземпляр (Tag) с именем (%s)", tagName), errorMsg);
+    }
+
+    @DisplayName("Негативный тест на создание Тега с пустым именем")
+    @TmsLink("1710316")
+    @Test
+    public void createTagEmptyNameTest() {
+        String tagName = " ";
+        String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(("\"name\": Это поле не может быть пустым."), errorMsg);
     }
 }

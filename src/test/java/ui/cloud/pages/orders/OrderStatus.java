@@ -14,22 +14,23 @@ import java.time.Duration;
 
 @EqualsAndHashCode
 @Log4j2
-public class ProductStatus {
-    final public static ProductStatus CREATING = new ProductStatus("Разворачивается");
-    final public static ProductStatus CHANGING = new ProductStatus("Изменение");
-    final public static ProductStatus PENDING = new ProductStatus("В процессе");
-    final public static ProductStatus SUCCESS = new ProductStatus("В порядке");
-    final public static ProductStatus DELETING = new ProductStatus("Удаляется");
-    final public static ProductStatus ERROR = new ProductStatus("Ошибка");
-    final public static ProductStatus BLOCKED = new ProductStatus("Заблокирован");
+public class OrderStatus {
+    final public static OrderStatus CREATING = new OrderStatus("Разворачивается");
+    final public static OrderStatus CHANGING = new OrderStatus("Изменение");
+    final public static OrderStatus PENDING = new OrderStatus("В процессе");
+    final public static OrderStatus SUCCESS = new OrderStatus("В порядке");
+    final public static OrderStatus DELETING = new OrderStatus("Удаляется");
+    final public static OrderStatus ERROR = new OrderStatus("Ошибка");
+    final public static OrderStatus BLOCKED = new OrderStatus("Заблокирован");
+    final public static OrderStatus DEPROVISIONED = new OrderStatus("Удалено");
     @Getter
     String status;
 
-    public ProductStatus(String status) {
+    public OrderStatus(String status) {
         this.status = status;
     }
 
-    public ProductStatus(WebElement e) {
+    public OrderStatus(WebElement e) {
         init(e);
     }
 

@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.IProductPage;
-import ui.cloud.pages.orders.ProductStatus;
+import ui.cloud.pages.orders.OrderStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
@@ -85,8 +85,8 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     @Override
     @Step("Проверка статуса заказа")
-    public void checkErrorByStatus(ProductStatus status) {
-        if (status.equals(ProductStatus.ERROR)) {
+    public void checkErrorByStatus(OrderStatus status) {
+        if (status.equals(OrderStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: \nИтоговый статус: %s . \nОшибка: %s", status,
                     StateServiceSteps.getLastErrorByProjectId(OrderUtils.getCurrentProjectId())));
         } else log.info("Статус действия {}", status);
