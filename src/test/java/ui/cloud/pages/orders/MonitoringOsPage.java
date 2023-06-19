@@ -7,7 +7,7 @@ import lombok.Getter;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.orderService.products.Windows;
 import org.junit.jupiter.api.Assertions;
-import ui.elements.DropDown;
+import ui.elements.Select;
 import ui.elements.TypifiedElement;
 
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class MonitoringOsPage {
     };
     private final SelenideElement noData = $x("//*[.='Нет данных для графика']");
     SelenideElement btnResetFilter = $x("//button[.='Сбросить фильтры']");
-    DropDown period = DropDown.byLabel("Период");
+    Select period = Select.byLabel("Период");
     SelenideElement btnApply = $x("//button[.='Применить']");
 
     public MonitoringOsPage(IProduct product) {
@@ -57,7 +57,7 @@ public class MonitoringOsPage {
         String filter = FIRST_FILTER;
         if (filter.equals(period.getValue()))
             filter = SECOND_FILTER;
-        period.select(filter);
+        period.set(filter);
         btnApply.click();
         $x("//span[.='{}']", filter.toLowerCase()).shouldBe(Condition.visible);
     }

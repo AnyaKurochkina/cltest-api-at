@@ -43,6 +43,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
         new IndexPage()
                 .clickOrderMore()
+                .expandProductsList()
                 .selectProduct(product.getProductName());
         WindowsOrderPage orderPage = new WindowsOrderPage();
 
@@ -59,7 +60,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
-        orderPage.getRoleServer().set(product.getRole());
+        orderPage.getRoleServer().setContains("Autotests");
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         orderPage.getGroupSelect().set(accessGroup);
         new WindowsOrderPage().checkOrderDetails();

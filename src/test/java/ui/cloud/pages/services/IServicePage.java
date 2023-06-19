@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.orders.OrderUtils;
-import ui.cloud.pages.orders.ProductStatus;
+import ui.cloud.pages.orders.OrderStatus;
 import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -28,7 +28,7 @@ public class IServicePage {
         btnRun.shouldBe(activeCnd).click();
         Alert.green("Успешно создано действие " + serviceName);
         OrderUtils.waitChangeStatus(new Runs(), Duration.ofSeconds(30));
-        Assertions.assertEquals(ProductStatus.SUCCESS, new Runs().getStatus());
+        Assertions.assertEquals(OrderStatus.SUCCESS, new Runs().getStatus());
     }
 
     public SelenideElement getMenuLastRunsElement() {
@@ -55,8 +55,8 @@ public class IServicePage {
             super("Дата запуска");
         }
 
-        public ProductStatus getStatus() {
-            return new ProductStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
+        public OrderStatus getStatus() {
+            return new OrderStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
         }
     }
 
