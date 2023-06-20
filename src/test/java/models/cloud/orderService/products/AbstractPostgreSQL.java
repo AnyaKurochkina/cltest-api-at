@@ -82,7 +82,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void updateMaxConnections() {
-        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app'}.data.config.load_profile");
+        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app' || it.type=='cluster'}.data.config.load_profile");
         OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
     }
 
