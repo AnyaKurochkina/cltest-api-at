@@ -56,7 +56,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
         Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
         if (isDev())
             Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s([0-9]*)\\n\\(",
-                    executeSsh("sudo -iu postgres psql -c \"select datconnlimit from pg_database where datname='" + dbName + "';\"")));
+                    executeSsh(new SshClient(getIpLeader(), envType()), "sudo -iu postgres psql -c \"select datconnlimit from pg_database where datname='" + dbName + "';\"")));
     }
 
     public void removeConnLimit(String dbName) {
@@ -95,9 +95,10 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void updateMaxConnectionsBySsh(int connections) {
+        SshClient client = new SshClient(getIpLeader(), envType());
         String cmd = String.format("sudo -iu postgres psql -c \"Alter system set max_connections to '%s';\"", connections);
-        assertContains(executeSsh(cmd), "ALTER SYSTEM");
-        executeSsh("sudo -i systemctl restart postgresql-*");
+        assertContains(executeSsh(client, cmd), "ALTER SYSTEM");
+        executeSsh(client,"sudo -i systemctl restart postgresql-*");
         getConfiguration();
         Assertions.assertEquals(connections, Integer.valueOf(getCurrentMaxConnections()));
     }
