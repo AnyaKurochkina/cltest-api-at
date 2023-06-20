@@ -100,6 +100,12 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     transient String leaderIp;
 
     @Override
+    public void updateMaxConnections() {
+        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.load_profile");
+        OrderServiceSteps.executeAction("postgresql_cluster_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
+    }
+
+    @Override
     public String executeSsh(String cmd) {
         if(Objects.isNull(leaderIp)) {
             String ip = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.hostname.contains('-pgc')}.ip");
