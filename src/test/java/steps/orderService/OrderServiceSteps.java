@@ -454,7 +454,8 @@ public class OrderServiceSteps extends Steps {
         StringJoiner actions = new StringJoiner("\n", "\n", "");
         List<Map<String, Object>> mapList = jsonPath.getList("data.actions.flatten()");
         for(Map<String, Object> e :  mapList)
-            actions.add(String.format("['%s' : '%s']", e.get("title"), e.get("name")));
+            if(Objects.nonNull(e))
+                actions.add(String.format("['%s' : '%s']", e.get("title"), e.get("name")));
         Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
         res.skipOnPrebilling = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.skip_on_prebilling", filter, action, action));
         return res;
