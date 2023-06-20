@@ -2,6 +2,7 @@ package models.cloud.orderService.products;
 
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
+import core.utils.ssh.SshClient;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -17,7 +18,6 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -125,12 +125,18 @@ public abstract class AbstractPostgreSQL extends IProduct {
         AssertUtils.assertEqualsList(extensions, OrderServiceSteps.getProductsField(this, String.format(EXTENSIONS_LIST, dbName), List.class));
     }
 
-    public void getExtensions(String dbName, String extension) {
-        String p = (this instanceof PostgreSQL) ? "" : "-p 6432";
+    public String getIpLeader() {
+        if (this instanceof PostgreSQL)
+            return (String) OrderServiceSteps.getProductsField(this, VM_IP_PATH);
+        return StringUtils.findByRegex("(([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3}))",
+                executeSsh("sudo -i patronictl -c /etc/patroni/patroni.yml list | grep Leader"));
+    }
 
+    public void getExtensions(String dbName, String extension) {
         if (isDev()) {
+            String p = (this instanceof PostgreSQL) ? "" : "-p 6432";
             String cmd = String.format("sudo -iu postgres psql %s -d %s -c \"create extension %s with schema %s;\"", p, dbName, extension, dbName);
-            assertContains(executeSsh(cmd), "CREATE EXTENSION");
+            assertContains(executeSsh(new SshClient(getIpLeader(), envType()), cmd), "CREATE EXTENSION");
         }
         OrderServiceSteps.executeActionWidthFilter("postgresql_db_get_extensions", this, null, this.getProjectId(), filterBd(dbName));
         if (isDev())
