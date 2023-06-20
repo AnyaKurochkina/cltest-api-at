@@ -122,7 +122,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Override
     protected void cmdSetMaxConnections(int connections){
-        String cmd = String.format("patronictl -c /etc/patroni/patroni.yml edit-config -p max_connections=\"%s\" --force", connections);
+        String cmd = String.format("sudo patronictl -c /etc/patroni/patroni.yml edit-config -p max_connections=\"%s\" --force", connections);
         assertContains(executeSsh(cmd), "Configuration changed");
     }
 
