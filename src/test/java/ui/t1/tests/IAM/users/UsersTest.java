@@ -49,6 +49,8 @@ public class UsersTest extends AbstractIAMTest {
         assertFalse(isUserAdded(user));
         new UsersPage().addUser(user);
         assertTrue(isUserAdded(user));
+        new UsersPage().removeUser(user);
+        assertFalse(isUserAdded(user));
     }
 
     @Test
@@ -57,11 +59,11 @@ public class UsersTest extends AbstractIAMTest {
     void editUserTest() {
         new IndexPage()
                 .goToUsers()
-                .addUser(user)
-                .addRole(user, "Редактор");
-        user.addRole("Редактор");
-        assertTrue(isUserAdded(user));
-        new UsersPage().removeRoles(user, user.getRole());
+                .addUser(user2)
+                .addRole(user2, "Редактор");
+        user2.addRole("Редактор");
+        assertTrue(isUserAdded(user2));
+        new UsersPage().removeRoles(user2, user2.getRole());
     }
 
     @Test
