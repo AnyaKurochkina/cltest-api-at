@@ -12,7 +12,6 @@ import java.util.Objects;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.helper.Configure.ImageService;
-import static core.helper.Configure.ProductCatalogURL;
 
 public class ImageServiceSteps extends Steps {
 

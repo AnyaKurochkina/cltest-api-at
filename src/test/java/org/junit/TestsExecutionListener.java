@@ -1,18 +1,18 @@
 package org.junit;
 
 
+import api.routes.Api;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
+import core.helper.http.Path;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.ObjectPoolService;
-import core.helper.http.Api;
-import api.routes.Routes;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
 import org.junit.platform.launcher.TestPlan;
@@ -150,16 +150,17 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     private void initApiRoutes(){
-        List<Class<? extends Routes>> classes = getSubclasses(Routes.class);
-        for (Class<? extends Routes> clazz : classes) {
+        List<Class<? extends Api>> classes = getSubclasses(Api.class);
+        for (Class<? extends Api> clazz : classes) {
+            Api api = clazz.newInstance();
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
-                if (field.isAnnotationPresent(Routes.Route.class)) {
+                if (field.isAnnotationPresent(Api.Route.class)) {
                     if (java.lang.reflect.Modifier.isStatic(field.getModifiers())) {
-                        Routes.Route route = field.getAnnotation(Routes.Route.class);
+                        Api.Route route = field.getAnnotation(Api.Route.class);
                         field.setAccessible(true);
                         try {
-                            field.set(null, new Api(route.method(), route.path(), route.status()));
+                            field.set(null, new Path(route.method(), route.path(), route.status(), api.url()));
                         } catch (IllegalAccessException e) {
                             e.printStackTrace();
                         }
@@ -169,8 +170,8 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
     }
 
-    public static List<Class<? extends Routes>> getSubclasses(Class<? extends Routes> superClass) throws ClassNotFoundException {
-        List<Class<? extends Routes>> classes = new ArrayList<>();
+    public static List<Class<? extends Api>> getSubclasses(Class<? extends Api> superClass) throws ClassNotFoundException {
+        List<Class<? extends Api>> classes = new ArrayList<>();
         String packageName = superClass.getPackage().getName();
         String path = packageName.replace('.', '/');
         java.net.URL url = ClassLoader.getSystemClassLoader().getResource(path);
@@ -181,7 +182,7 @@ public class TestsExecutionListener implements TestExecutionListener {
             String className = file.getName().substring(0, file.getName().length() - 6);
             Class<?> clazz = Class.forName(packageName + "." + className);
             if (superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
-                classes.add((Class<? extends Routes>) clazz);
+                classes.add((Class<? extends Api>) clazz);
             }
         }
         return classes;

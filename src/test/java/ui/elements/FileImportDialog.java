@@ -6,12 +6,12 @@ import java.io.File;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class InputFile {
+public class FileImportDialog {
     private final SelenideElement fileInput = $x("//input[@type='file']");
-    private final Button importButton = Button.byText("Импорт");
+    private final Button importButton = Button.byXpath("//div[@role='dialog']//button[.='Импорт']");
     private final String path;
 
-    public InputFile(String path) {
+    public FileImportDialog(String path) {
         this.path = path;
     }
 

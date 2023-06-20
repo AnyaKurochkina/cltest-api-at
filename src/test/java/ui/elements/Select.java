@@ -131,4 +131,16 @@ public class Select implements TypifiedElement {
     public ElementsCollection getOptions() {
         return options.shouldBe(CollectionCondition.allMatch("All options visible", WebElement::isDisplayed));
     }
+
+    @Step("Select. получить текущие значения")
+    public String getValues(Integer fromIdx) {
+        List<String> titles = element.$$x("descendant::input[@value != '']").filter(Condition.visible)
+                .stream().map(SelenideElement::getValue).collect(Collectors.toList());
+        if (titles.isEmpty())
+            titles = element.$$x("descendant::*[text() != '']").filter(Condition.visible).texts();
+        if (titles.isEmpty())
+            titles.add("");
+        String retStr = String.join(", ", titles.subList(fromIdx,titles.size()-1));
+        return retStr;
+    }
 }

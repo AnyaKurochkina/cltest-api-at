@@ -6,7 +6,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.orders.OrderUtils;
-import ui.cloud.pages.orders.ProductStatus;
+import ui.cloud.pages.orders.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -167,8 +167,8 @@ public class VMwareOrganizationPage {
             super(COLUMN_NAME);
         }
 
-        public ProductStatus getStatus() {
-            return new ProductStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
+        public OrderStatus getStatus() {
+            return new OrderStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
         }
     }
 }

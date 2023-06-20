@@ -16,15 +16,15 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 import static steps.productCatalog.ProductCatalogSteps.isSorted;
-import static steps.productCatalog.TemplateSteps.getNodeListUsedTemplate;
-import static steps.productCatalog.TemplateSteps.getTemplateList;
+import static steps.productCatalog.TemplateSteps.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -79,5 +79,61 @@ public class TemplatesListTest extends Tests {
         partialUpdateGraph(graph.getGraphId(), obj);
         String nodeName = getNodeListUsedTemplate(template.getId()).jsonPath().getString("[0].nodes[0].node_name");
         assertEquals(expectedNodeName, nodeName);
+    }
+
+    @DisplayName("Получение списка шаблонов c Тегами")
+    @TmsLink("1709895")
+    @Test
+    public void getTemplateListWithTagListTest() {
+        Template.builder()
+                .name("at_api_template_check_tag_list_versioning")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Collections.singletonList("api_test"))
+                .build()
+                .createObject();
+        List<Template> templateList = getTemplateListByFilter("with_tag_list", true);
+        templateList.forEach(x -> assertNotNull(x.getTagList()));
+    }
+
+    @DisplayName("Получение списка шаблонов отфильтрованном по Тегам с полным совпадением")
+    @TmsLink("1709931")
+    @Test
+    public void getTemplateListFilteredByTagsTest() {
+        String tag1 = "api_test";
+        String tag2 = "complete";
+        Template.builder()
+                .name("at_api_template_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        Template.builder()
+                .name("template_for_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList(tag1, tag2))
+                .build()
+                .createObject();
+        List<Template> templateList = getTemplateListByFilters("with_tag_list=true", "tags_complete_match=true",
+                String.format("tags=%s,%s", tag1, tag2));
+        assertEquals(2, templateList.size());
+        templateList.forEach(x-> assertEquals(x.getTagList(), Arrays.asList(tag1, tag2)));
+    }
+
+    @DisplayName("Получение списка шаблонов отфильтрованном по Тегам с не полным совпадением")
+    @TmsLink("1709934")
+    @Test
+    public void getTemplateListFilteredByTagsAndCompleteMatchFalseTest() {
+        Template.builder()
+                .name("at_api_action_check_tag_list_filtered_by_tags")
+                .title("AT API Product")
+                .version("1.0.0")
+                .tagList(Arrays.asList("api_test", "api_test_action"))
+                .build()
+                .createObject();
+        List<Template> templateList = getTemplateListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
+        templateList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }
 }

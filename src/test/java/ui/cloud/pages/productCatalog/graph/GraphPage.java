@@ -174,7 +174,6 @@ public class GraphPage extends BasePage {
     @Step("Возврат в список графов")
     public GraphsListPage returnToGraphsList() {
         graphsListLink.scrollIntoView(false).click();
-        switchTo().alert().accept();
         return new GraphsListPage();
     }
 

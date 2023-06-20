@@ -36,7 +36,7 @@ public class ImageServiceTest extends Tests {
                 .build()
                 .createObject();
         Waiting.sleep(15000);
-        assertFalse(isImageGroupExist(imageGroup.getName(), false), String.format("Группы с именем %s нет в списке", imageGroup.getName()));
+        assertTrue(isImageGroupExist(imageGroup.getName(), false), String.format("Группы с именем %s нет в списке", imageGroup.getName()));
     }
 
     @Test

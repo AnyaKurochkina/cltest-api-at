@@ -9,7 +9,7 @@ import models.cloud.productCatalog.orgDirection.OrgDirection;
 import ui.cloud.pages.productCatalog.BaseListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
@@ -76,7 +76,7 @@ public class OrgDirectionsListPage extends BaseListPage {
     @Step("Выбор и импорт файла")
     public OrgDirectionsListPage uploadFile(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         closeButton.click();
         return this;
     }
