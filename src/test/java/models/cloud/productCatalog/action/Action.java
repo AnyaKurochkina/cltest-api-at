@@ -126,6 +126,10 @@ public class Action extends Entity {
     private Boolean skipValidateChecker;
     @JsonProperty("ignore_restriction_service")
     private Boolean ignoreRestrictionService;
+    @JsonProperty("skip_restriction_service")
+    private Boolean skipRestrictionService;
+    @JsonProperty("skip_item_change")
+    private Boolean skipItemChange;
 
     @Override
     public Entity init() {
@@ -167,6 +171,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_reservation", skipReservation)
                 .setIfNullRemove("$.skip_validate_checker", skipValidateChecker)
                 .setIfNullRemove("$.ignore_restriction_service", ignoreRestrictionService)
+                .setIfNullRemove("$.skip_restriction_service", skipRestrictionService)
                 .build();
     }
 

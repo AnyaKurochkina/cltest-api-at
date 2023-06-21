@@ -23,8 +23,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ActionSteps.createAction;
-import static steps.productCatalog.ActionSteps.deleteActionById;
+import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.TagSteps.*;
 
@@ -38,7 +37,7 @@ public class TagTest extends Tests {
     @TmsLinks({@TmsLink("1695266"), @TmsLink("1695674")})
     @Test
     public void createTagTest() {
-        String tagName = "сreate_tag";
+        String tagName = "create_tag";
         createTagByName(tagName);
         assertEquals(tagName, getTagByName(tagName).getName());
         deleteTagByName(tagName);
@@ -72,12 +71,16 @@ public class TagTest extends Tests {
     public void deleteTagTest() {
         String tagName = "delete_tag_test_api";
         createTagByName(tagName);
+        String actionName = "action_delete_tag_test_api";
         JSONObject jsonObject = Action.builder()
-                .name("action_delete_tag_test_api")
+                .name(actionName)
                 .graphId(createGraph().getGraphId())
                 .tagList(Collections.singletonList(tagName))
                 .build()
                 .toJson();
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
         Action action = createAction(jsonObject).extractAs(Action.class);
         deleteActionById(action.getActionId());
         deleteTagByName(tagName);
