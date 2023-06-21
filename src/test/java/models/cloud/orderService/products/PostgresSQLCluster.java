@@ -117,7 +117,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Override
     public void cmdRestartPostgres(){
-        executeSsh("sudo -i patronictl -c /etc/patroni/patroni.yml restart $(sudo -i more /etc/patroni/patroni.yml | grep scope | awk '{print $2}') -r master --force");
+        executeSsh("sudo -i patronictl -c /etc/patroni/patroni.yml restart $(sudo -i cat /etc/patroni/patroni.yml | grep scope | awk '{print $2}') -r master --force");
     }
 
     @Override
