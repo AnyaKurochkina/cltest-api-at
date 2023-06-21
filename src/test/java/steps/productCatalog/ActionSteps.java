@@ -58,10 +58,6 @@ public class ActionSteps extends Steps {
 
     @Step("Создание действия")
     public static Response createAction(JSONObject body) {
-        String actionName = body.get("name").toString();
-        if (isActionExists(actionName)) {
-            deleteActionByName(actionName);
-        };
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
