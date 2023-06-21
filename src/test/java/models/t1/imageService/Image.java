@@ -50,6 +50,12 @@ public class Image {
     @JsonProperty("file")
     private String file;
 
+    @JsonProperty("os_type")
+    private String osType;
+
+    @JsonProperty("direct_url")
+    private String directUrl;
+
     @JsonProperty("protected")
     private Boolean jsonMemberProtected;
 
