@@ -7,7 +7,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.*;
 
@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.getActionById;
 
-public class ForbiddenActionPage extends BasePage {
+public class ForbiddenActionPage extends EntityPage {
 
     private final TextArea descriptionTextArea = TextArea.byLabel("Описание");
     private final SearchSelect actionSelect = SearchSelect.byLabel("Действие");

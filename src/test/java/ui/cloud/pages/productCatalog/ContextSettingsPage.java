@@ -14,7 +14,8 @@ public class ContextSettingsPage {
     private final Input devProjectInput = Input.byXpath("//input[@name='dev'][@placeholder]");
     private final Input testProjectInput = Input.byXpath("//input[@name='test'][@placeholder]");
     private final Input prodProjectInput = Input.byXpath("//input[@name='prod'][@placeholder]");
-    private final Button restoreDefaultProjects = Button.byText("Восстановить проекты по умолчанию");
+    private final Button restoreDefaultProjectsButton = Button.byText("Восстановить проекты по умолчанию");
+    private final Button resetEnteredDataButton = Button.byText("Сбросить введенные данные");
     private final Button saveButton = Button.byText("Сохранить");
 
     public ContextSettingsPage() {

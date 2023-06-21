@@ -10,7 +10,7 @@ import lombok.Getter;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Button;
 import ui.elements.Input;
@@ -23,7 +23,7 @@ import static com.codeborne.selenide.Selenide.switchTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Getter
-public class Jinja2TemplatePage extends BasePage {
+public class Jinja2TemplatePage extends EntityPage {
 
     private final Input descriptionInput = Input.byName("description");
     private final TextArea templateTextArea = TextArea.byLabel("Jinja2 шаблон");

@@ -6,7 +6,7 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
 import ui.elements.FileImportDialog;
@@ -17,7 +17,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Getter
-public class Jinja2TemplatesListPage extends BaseListPage {
+public class Jinja2TemplatesListPage extends EntityListPage {
 
     private final String nameColumn = "Код шаблона";
     private final SearchSelect typeSelect = SearchSelect.byLabel("Тип");

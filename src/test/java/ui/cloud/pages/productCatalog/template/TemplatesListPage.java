@@ -8,7 +8,7 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.template.Template;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
 import ui.elements.Button;
@@ -19,7 +19,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Getter
-public class TemplatesListPage extends BaseListPage {
+public class TemplatesListPage extends EntityListPage {
 
     public static final Button goToUsageButton = Button.byText("Перейти в использование");
     public static final String nameColumn = "Код шаблона";
@@ -53,7 +53,7 @@ public class TemplatesListPage extends BaseListPage {
     @Step("Удаление шаблона '{name}'")
     public TemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseListPage.delete(nameColumn, name);
+        EntityListPage.delete(nameColumn, name);
         new DeleteDialog().inputValidIdAndDelete();
         return this;
     }
@@ -91,19 +91,19 @@ public class TemplatesListPage extends BaseListPage {
 
     @Step("Проверка сортировки по наименованию")
     public TemplatesListPage checkSortingByTitle() {
-        BaseListPage.checkSortingByStringField("Наименование");
+        EntityListPage.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду шаблона")
     public TemplatesListPage checkSortingByName() {
-        BaseListPage.checkSortingByStringField(nameColumn);
+        EntityListPage.checkSortingByStringField(nameColumn);
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public TemplatesListPage checkSortingByCreateDate() {
-        BaseListPage.checkSortingByDateField("Дата создания");
+        EntityListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
@@ -134,7 +134,7 @@ public class TemplatesListPage extends BaseListPage {
 
     @Step("Копирование шаблона '{name}'")
     public TemplatesListPage copy(String name) {
-        new BaseListPage().copy(nameColumn, name);
+        new EntityListPage().copy(nameColumn, name);
         Alert.green("Копирование выполнено успешно");
         return this;
     }

@@ -8,18 +8,16 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import java.time.Duration;
 
-import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OrderTemplatesListPage extends BaseListPage {
+public class OrderTemplatesListPage extends EntityListPage {
 
     private final String nameColumn = "Код шаблона";
     private final Input titleInput = Input.byName("title");
@@ -49,19 +47,19 @@ public class OrderTemplatesListPage extends BaseListPage {
 
     @Step("Проверка сортировки по наименованию")
     public OrderTemplatesListPage checkSortingByTitle() {
-        BaseListPage.checkSortingByStringField("Наименование");
+        EntityListPage.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду шаблона")
     public OrderTemplatesListPage checkSortingByName() {
-        BaseListPage.checkSortingByStringField(nameColumn);
+        EntityListPage.checkSortingByStringField(nameColumn);
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public OrderTemplatesListPage checkSortingByCreateDate() {
-        BaseListPage.checkSortingByDateField("Дата создания");
+        EntityListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
@@ -140,7 +138,7 @@ public class OrderTemplatesListPage extends BaseListPage {
     @Step("Удаление шаблона '{name}'")
     public OrderTemplatesListPage deleteTemplate(String name) {
         search(name);
-        BaseListPage.delete(nameColumn, name);
+        EntityListPage.delete(nameColumn, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
@@ -162,7 +160,7 @@ public class OrderTemplatesListPage extends BaseListPage {
 
     @Step("Копирование шаблона '{name}'")
     public OrderTemplatePage copyTemplate(String name) {
-        new BaseListPage().copy(nameColumn, name);
+        new EntityListPage().copy(nameColumn, name);
         Alert.green("Шаблон скопирован");
         TestUtils.wait(500);
         return new OrderTemplatePage();

@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.*;
 
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
-public class ProductPage extends BasePage {
+public class ProductPage extends EntityPage {
 
     private final SelenideElement productsListLink = $x("//a[text()='Список продуктов']");
     private final Input authorInput = Input.byName("author");
