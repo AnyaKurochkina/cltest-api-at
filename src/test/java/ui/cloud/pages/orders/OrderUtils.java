@@ -39,6 +39,7 @@ public class OrderUtils {
 
     public static void updatePreBillingPrice() {
         if (NewOrderPage.getCalculationDetailsHeader().exists()) {
+            Waiting.sleep(2000);
             preBillingPrice.set(getCostValue($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
         } else preBillingPrice.set(null);
     }
