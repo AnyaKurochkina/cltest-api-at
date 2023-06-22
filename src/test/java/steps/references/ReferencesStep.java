@@ -369,6 +369,11 @@ public class ReferencesStep extends Steps {
                 .extractAs(PageFilter.class);
     }
 
+    @Step("Проверка наличия page_filters для приватных ролей")
+    public static boolean isPrivatePageFilterExist(String key) {
+        return getPrivatePageFiltersList().stream().anyMatch(x -> x.getKey().equals(key));
+    }
+
     @Step("Обновление page_filters для приватных ролей")
     public static PageFilter updatePrivatePageFilter(String key, JSONObject object) {
         return new Http(ReferencesURL)
