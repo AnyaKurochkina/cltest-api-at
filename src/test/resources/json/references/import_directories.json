@@ -5,7 +5,7 @@
     "description": "import_directories_api"
   },
   "rel_foreign_models": {},
-  "dump_version": 4.0,
+  "dump_version": 5.0,
   "dump_date": "2022-02-22 08:31:26",
   "is_pinned_versions": false
 }
