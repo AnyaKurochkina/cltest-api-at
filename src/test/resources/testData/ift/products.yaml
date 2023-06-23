@@ -14,6 +14,18 @@ Vault:
   - options:
       - { env: "DEV" }
 
+Grafana:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
+GenericMonitoring:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
+GenericDatabase:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
 Rhel:
   - options:
       - { platform: "vSphere", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
