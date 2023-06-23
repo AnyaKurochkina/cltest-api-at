@@ -28,25 +28,25 @@ import static core.helper.Configure.TarifficatorURL;
 @Log4j2
 public class CostSteps extends Steps {
 
-    @Step("Получение суммы расхода для продуктов")
-    public static Float getConsumptionSumOfProducts(List<String> productsId) {
-        Float consumptionOfOneProduct;
-        float consumption = 0F;
-        for (String product : productsId) {
-            consumptionOfOneProduct = new Http(CalculatorURL)
-                    .setRole(Role.ORDER_SERVICE_ADMIN)
-                    .get("/orders/cost/?uuid__in={}", product)
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get("cost");
-            if (consumptionOfOneProduct != null) {
-                consumption += consumptionOfOneProduct;
-            }
-            log.info("Стоимость продукта : " + consumptionOfOneProduct);
-        }
-        log.debug("Сумма расходов по всем продуктам: " + consumption);
-        return consumption;
-    }
+//    @Step("Получение суммы расхода для продуктов")
+//    public static Float getConsumptionSumOfProducts(List<String> productsId) {
+//        Float consumptionOfOneProduct;
+//        float consumption = 0F;
+//        for (String product : productsId) {
+//            consumptionOfOneProduct = new Http(CalculatorURL)
+//                    .setRole(Role.ORDER_SERVICE_ADMIN)
+//                    .get("/orders/cost/?uuid__in={}", product)
+//                    .assertStatus(200)
+//                    .jsonPath()
+//                    .get("cost");
+//            if (consumptionOfOneProduct != null) {
+//                consumption += consumptionOfOneProduct;
+//            }
+//            log.info("Стоимость продукта : " + consumptionOfOneProduct);
+//        }
+//        log.debug("Сумма расходов по всем продуктам: " + consumption);
+//        return consumption;
+//    }
 
     @Step("Получение расхода для папки/проекта")
     public static double getConsumptionByPath(String path) {
@@ -68,7 +68,7 @@ public class CostSteps extends Steps {
             Waiting.sleep(20000);
             consumption = new Http(CalculatorURL)
                     .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                    .get("/orders/cost/?uuid__in={}", product.getOrderId())
+                    .get("/api/v1/projects/{}/order/{}/cost/", product.getProjectId(), product.getOrderId())
                     .assertStatus(200)
                     .jsonPath()
                     .get("cost");
