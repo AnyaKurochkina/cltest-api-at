@@ -32,7 +32,6 @@ public class ProductInjector implements TestInstancePostProcessor {
                 else
                     product.setPlatform("vSphere");
                 product.init();
-
                 field.set(testInstance, product);
             }
         }
