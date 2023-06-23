@@ -1,6 +1,7 @@
 package ui.cloud.pages.productCatalog.jinja2Template;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -24,6 +25,7 @@ public class Jinja2TemplatesListPage extends EntityListPage {
     private final SearchSelect providerSelect = SearchSelect.byLabel("Провайдер");
 
     public Jinja2TemplatesListPage() {
+        WebDriverRunner.getWebDriver().manage().window().maximize();
         $x("//div[text()='Код шаблона']").shouldBe(Condition.visible);
     }
 

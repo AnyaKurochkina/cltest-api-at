@@ -98,6 +98,7 @@ public class ProductPage extends EntityPage {
         goToMainTab();
         nameInput.getInput().shouldHave(Condition.exactValue(product.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
+        authorInput.getInput().shouldHave(Condition.exactValue(product.getAuthor()));
         descriptionInput.getInput().shouldHave(Condition.exactValue(product.getDescription()));
         assertEquals(new JSONObject(product.getInfo()).toString(),
                 info.getWhitespacesRemovedValue());
@@ -110,7 +111,6 @@ public class ProductPage extends EntityPage {
         goToAdditionalParamsTab();
         assertEquals(product.getCategory(), categorySelect.getValue());
         assertEquals(product.getCategoryV2().getValue(), categoryV2Select.getValue());
-        authorInput.getInput().shouldHave(Condition.exactValue(product.getAuthor()));
         maxCountInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getMaxCount())));
         assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getDisplayName(),
                 onRequestSelect.getValue());
