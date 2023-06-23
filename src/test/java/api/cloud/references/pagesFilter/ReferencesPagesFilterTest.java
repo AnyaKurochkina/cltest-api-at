@@ -41,6 +41,9 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void getPrivatePageFilterList() {
         String key = "create_page_filter_for_get_list_private_test_api";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
         PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         deletePageFiltersList.add(pageFilter.getKey());
@@ -52,6 +55,9 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void createPrivatePageFilterTest() {
         String key = "create_page_filter_test_api";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
         PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         deletePageFiltersList.add(pageFilter.getKey());
@@ -64,6 +70,9 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void getPrivatePageFilterTest() {
         String key = "get_page_filter_private_test_api";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
         PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         PageFilter getPage = getPrivatePageFilter(key);
@@ -77,10 +86,17 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void updatePrivatePageFilterTest() {
         String key = "update_page_filter_test_api";
+        String updatedKey = "updated_key_test";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
+        if (isPrivatePageFilterExist(updatedKey)) {
+            deletePrivatePageFiltersByKey(updatedKey);
+        }
         createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         PageFilter updatedFilter = updatePrivatePageFilter(key, new JSONObject()
-                .put("key", "updated_key_test")
+                .put("key", updatedKey)
                 .put("value", Collections.singletonList("update")));
         deletePageFiltersList.add(updatedFilter.getKey());
         assertEquals(updatedFilter.getKey(), "updated_key_test");
@@ -92,6 +108,9 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void partialUpdatePrivatePageFilterTest() {
         String key = "partial_update_page_filter_test_api";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
         createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
         PageFilter partialUpdatedFilter = partialUpdatePrivatePageFilter(key, new JSONObject()
@@ -105,6 +124,9 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void getPageFilters() {
         String key = "create_page_filter_for_get_list_test_api";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
         deletePageFiltersList.add(key);
         createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
@@ -116,6 +138,9 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void getPageFilterTest() {
         String key = "get_page_filter_test_api";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
         deletePageFiltersList.add(key);
         PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
@@ -131,6 +156,7 @@ public class ReferencesPagesFilterTest extends Tests {
         String data = JsonHelper.getStringFromFile("/references/import_page_filter_api.json");
         String key = new JsonPath(data).get("PageFilterValues.key");
         importPrivatePageFilter(PAGES_FILTER_IMPORT_PATH);
+        assertTrue(isPrivatePageFilterExist(key));
         deletePageFiltersList.add(key);
     }
 
@@ -139,6 +165,9 @@ public class ReferencesPagesFilterTest extends Tests {
     @Test
     public void exportPageFilter() {
         String key = "export_page_filter_test_api";
+        if (isPrivatePageFilterExist(key)) {
+            deletePrivatePageFiltersByKey(key);
+        }
         deletePageFiltersList.add(key);
         PageFilter pageFilter = createPrivatePageFilter(new JSONObject().put("key", key)
                 .put("value", Arrays.asList("data", "data2")));
