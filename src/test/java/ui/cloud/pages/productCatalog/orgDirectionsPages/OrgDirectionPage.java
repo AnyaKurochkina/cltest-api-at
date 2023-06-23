@@ -3,7 +3,7 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -12,7 +12,7 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class OrgDirectionPage extends BasePage {
+public class OrgDirectionPage extends EntityPage {
     private static final String TITLE = "title";
     private static final String NAME = "name";
     private static final String DESCRIPTION = "description";

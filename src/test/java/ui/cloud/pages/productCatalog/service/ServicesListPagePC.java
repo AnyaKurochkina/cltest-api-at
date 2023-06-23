@@ -9,9 +9,8 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -22,7 +21,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ServicesListPagePC extends BaseListPage {
+public class ServicesListPagePC extends EntityListPage {
 
     private static final String columnName = "Код сервиса";
     private final Input searchInput = Input.byPlaceholder("Поиск");
@@ -51,19 +50,19 @@ public class ServicesListPagePC extends BaseListPage {
 
     @Step("Проверка сортировки по наименованию")
     public ServicesListPagePC checkSortingByTitle() {
-        BaseListPage.checkSortingByStringField("Наименование");
+        EntityListPage.checkSortingByStringField("Наименование");
         return this;
     }
 
     @Step("Проверка сортировки по коду сервиса")
     public ServicesListPagePC checkSortingByName() {
-        BaseListPage.checkSortingByStringField(columnName);
+        EntityListPage.checkSortingByStringField(columnName);
         return this;
     }
 
     @Step("Проверка сортировки по дате создания")
     public ServicesListPagePC checkSortingByCreateDate() {
-        BaseListPage.checkSortingByDateField("Дата создания");
+        EntityListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
@@ -148,7 +147,7 @@ public class ServicesListPagePC extends BaseListPage {
     @Step("Удаление сервиса '{name}'")
     public ServicesListPagePC deleteService(String name) {
         search(name);
-        BaseListPage.delete(columnName, name);
+        EntityListPage.delete(columnName, name);
         new DeleteDialog().inputValidIdAndDelete("Отложенные запуски отменены успешно");
         Alert.green("Удаление выполнено успешно");
         Assertions.assertTrue(new Table(columnName).isEmpty());
@@ -219,7 +218,7 @@ public class ServicesListPagePC extends BaseListPage {
 
     @Step("Копирование сервиса '{service.name}'")
     public ServicesListPagePC copyService(Service service) {
-        new BaseListPage().copy(columnName, service.getName());
+        new EntityListPage().copy(columnName, service.getName());
         Alert.green("Копирование выполнено успешно");
         return this;
     }

@@ -6,7 +6,7 @@ import io.qameta.allure.Step;
 import models.t1.imageService.ImageGroup;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.*;
 
@@ -16,7 +16,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ImageGroupsListPage extends BaseListPage {
+public class ImageGroupsListPage extends EntityListPage {
 
     private final String nameColumn = "Имя";
     private final String titleColumn = "Название";
