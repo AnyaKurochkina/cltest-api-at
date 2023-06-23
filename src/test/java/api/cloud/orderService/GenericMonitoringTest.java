@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 
 @Epic("Продукты")
-@Feature("Generic Database")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("gm"), @Tag("prod"), @Tag("newtest")})
+@Feature("Generic Monitoring")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("gm"), @Tag("prod")})
 public class GenericMonitoringTest extends Tests {
 
     @TmsLink("1731017")

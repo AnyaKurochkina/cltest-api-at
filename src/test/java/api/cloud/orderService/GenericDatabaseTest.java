@@ -12,11 +12,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import static core.utils.AssertUtils.assertContains;
-
 @Epic("Продукты")
 @Feature("Generic Database")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("gb"), @Tag("prod"), @Tag("newtest")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("gb"), @Tag("prod")})
 public class GenericDatabaseTest extends Tests {
 
     @TmsLink("1731025")

@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 
 @Epic("Продукты")
 @Feature("Grafana")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("grafana"), @Tag("prod"), @Tag("newtest")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("grafana"), @Tag("prod")})
 public class GrafanaTest extends Tests {
 
     @TmsLink("1731001")

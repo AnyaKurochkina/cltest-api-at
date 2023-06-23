@@ -14,6 +14,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
 import static core.utils.AssertUtils.assertContains;
@@ -25,6 +26,7 @@ import static core.utils.AssertUtils.assertContains;
 @NoArgsConstructor
 @SuperBuilder
 public class Astra extends IProduct {
+    public static String SNAPSHOT_PATH = "data.any{it.data.type=='snapshot' && it.data.state=='on'}";
     @ToString.Include
     String osVersion;
     Flavor flavor;
@@ -109,4 +111,13 @@ public class Astra extends IProduct {
         delete("delete_vm");
     }
 
+    public void createSnapshot(int lifetime) {
+        OrderServiceSteps.executeAction("create_group_snapshot", this, new JSONObject().put("lifetime", lifetime), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот не найден");
+    }
+
+    public void deleteSnapshot() {
+        OrderServiceSteps.executeAction("delete_group_snapshot", this, null, this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот существует");
+    }
 }
