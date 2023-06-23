@@ -23,6 +23,7 @@ import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
@@ -158,7 +159,7 @@ public class Artemis extends IProduct {
         String slowConsumerPolicy = "NOTIFY";
         Integer slowConsumerThreshold = -1;
         Boolean useSeparation = false;
-        List<String> serviceNames;
+        List<String> serviceNames = new ArrayList<>();
     }
 
     public void createClient(Client client) {

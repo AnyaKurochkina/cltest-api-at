@@ -4,7 +4,8 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import org.junit.jupiter.api.Assumptions;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.Button;
 import ui.elements.Table;
 
@@ -14,7 +15,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ImagesListPage extends BaseListPage {
+public class ImagesListPage extends EntityListPage {
 
     private final String imageNameColumn = "Имя";
     private final SelenideElement pageTitle = $x("//div[text() = 'Образы']");

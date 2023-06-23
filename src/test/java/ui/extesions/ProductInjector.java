@@ -30,7 +30,7 @@ public class ProductInjector implements TestInstancePostProcessor {
                     product.setPlatform("OpenStack");
                 }
                 else
-                    product.setPlatform("vSphere");
+                    product.setPlatform("OpenStack");
                 product.init();
                 field.set(testInstance, product);
             }

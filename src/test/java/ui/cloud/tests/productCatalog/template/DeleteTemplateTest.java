@@ -9,14 +9,13 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.template.TemplatePage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.elements.Alert;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -78,7 +77,7 @@ public class DeleteTemplateTest extends TemplateBaseTest {
         partialUpdateGraph(graph.getGraphId(), graphJSON);
         new ControlPanelIndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template);
-        BaseListPage.delete(nameColumn, template.getName());
+        EntityListPage.delete(nameColumn, template.getName());
         new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
         goToUsageButton.click();
         new Alert().close();

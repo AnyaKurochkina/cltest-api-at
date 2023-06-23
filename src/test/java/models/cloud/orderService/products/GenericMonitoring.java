@@ -1,7 +1,6 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,10 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-
-import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -25,8 +21,7 @@ import static core.utils.AssertUtils.assertContains;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class Astra extends IProduct {
-    public static String SNAPSHOT_PATH = "data.any{it.data.type=='snapshot' && it.data.state=='on'}";
+public class GenericMonitoring extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
@@ -34,7 +29,7 @@ public class Astra extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/astra_general_application.json";
-        productName = "Astra Linux";
+        productName = "Generic Monitoring";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -77,47 +72,19 @@ public class Astra extends IProduct {
                 .build();
     }
 
-    public void updateVmInfo() {
-        OrderServiceSteps.executeAction("update_vm_info", this, null, this.getProjectId());
-    }
-
-    public void stopHard() {
-        stopHard("stop_vm_hard");
-    }
-
-    public void stopSoft() {
-        stopSoft("stop_vm_soft");
-    }
-
-    public void start() {
-        start("start_vm");
-    }
-
-    public void restart() {
-        restart("reset_vm");
-    }
-
-    public void expandMountPoint() {
-        expandMountPoint("expand_mount_point_new", "/app", 10);
-    }
-
     public void resize(Flavor flavor) {
         resize("resize_vm", flavor);
     }
 
-    @Step("Удаление продукта")
+    @Step("Расширить")
+    public void expandMountPoint() {
+        expandMountPoint("expand_mount_point_new", "/app", 10);
+    }
+
+    @Step("Удалить")
     @Override
     protected void delete() {
         delete("delete_vm");
     }
 
-    public void createSnapshot(int lifetime) {
-        OrderServiceSteps.executeAction("create_group_snapshot", this, new JSONObject().put("lifetime", lifetime), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот не найден");
-    }
-
-    public void deleteSnapshot() {
-        OrderServiceSteps.executeAction("delete_group_snapshot", this, null, this.getProjectId());
-        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот существует");
-    }
 }

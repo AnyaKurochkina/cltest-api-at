@@ -17,6 +17,18 @@ Vault:
   - options:
       - { env: "DEV" }
 
+Grafana:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
+GenericMonitoring:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
+GenericDatabase:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
 ApacheAirflow:
   - options:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }

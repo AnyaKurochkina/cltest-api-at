@@ -112,6 +112,16 @@ public class AstraTest extends Tests {
         }
     }
 
+    @TmsLinks({@TmsLink("1733768"), @TmsLink("1733769")})
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создать/удалить снапшот {0}")
+    void createSnapshot(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.createSnapshot(1);
+            astra.deleteSnapshot();
+        }
+    }
+
     @TmsLink("391698")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")

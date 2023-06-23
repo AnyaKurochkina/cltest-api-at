@@ -81,6 +81,7 @@ public class ArtemisAstraTest extends Tests {
             client.setClientTypes("own");
             client.setName("randomusr3");
             client.setOwnerCert("randomcertif3");
+            artemis.createClient(client);
             artemis.deleteClient("randomusr3");
         }
     }

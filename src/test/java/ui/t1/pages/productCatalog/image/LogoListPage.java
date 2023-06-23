@@ -5,7 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.t1.imageService.Logo;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
 import ui.elements.Button;
@@ -18,7 +18,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class LogoListPage extends BaseListPage {
+public class LogoListPage extends EntityListPage {
 
     private final String nameColumn = "Имя";
     private final SelenideElement pageTitle = $x("//div[text() = 'Логотипы']");

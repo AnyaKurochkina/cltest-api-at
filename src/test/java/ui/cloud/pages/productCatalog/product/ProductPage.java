@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.*;
 
@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
-public class ProductPage extends BasePage {
+public class ProductPage extends EntityPage {
 
     private final SelenideElement productsListLink = $x("//a[text()='Список продуктов']");
     private final Input authorInput = Input.byName("author");
@@ -98,6 +98,7 @@ public class ProductPage extends BasePage {
         goToMainTab();
         nameInput.getInput().shouldHave(Condition.exactValue(product.getName()));
         titleInput.getInput().shouldHave(Condition.exactValue(product.getTitle()));
+        authorInput.getInput().shouldHave(Condition.exactValue(product.getAuthor()));
         descriptionInput.getInput().shouldHave(Condition.exactValue(product.getDescription()));
         assertEquals(new JSONObject(product.getInfo()).toString(),
                 info.getWhitespacesRemovedValue());
@@ -110,7 +111,6 @@ public class ProductPage extends BasePage {
         goToAdditionalParamsTab();
         assertEquals(product.getCategory(), categorySelect.getValue());
         assertEquals(product.getCategoryV2().getValue(), categoryV2Select.getValue());
-        authorInput.getInput().shouldHave(Condition.exactValue(product.getAuthor()));
         maxCountInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getMaxCount())));
         assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getDisplayName(),
                 onRequestSelect.getValue());

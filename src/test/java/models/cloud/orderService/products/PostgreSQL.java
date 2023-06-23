@@ -114,6 +114,17 @@ public class PostgreSQL extends AbstractPostgreSQL {
         save();
     }
 
+    @Override
+    protected void cmdRestartPostgres(){
+        executeSsh("sudo -i systemctl restart postgresql-*");
+    }
+
+    @Override
+    protected void cmdSetMaxConnections(int connections){
+        String cmd = String.format("sudo -iu postgres psql -c \"Alter system set max_connections to '%s';\"", connections);
+        assertContains(executeSsh(cmd), "ALTER SYSTEM");
+    }
+
     @SneakyThrows
     public void checkConnection(String dbName, String password) {
         checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));

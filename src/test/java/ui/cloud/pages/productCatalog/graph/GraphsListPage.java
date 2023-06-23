@@ -6,7 +6,7 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -16,7 +16,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class GraphsListPage extends BaseListPage {
+public class GraphsListPage extends EntityListPage {
 
     private static final String nameColumn = "Код графа";
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы'][@type]");
@@ -162,7 +162,7 @@ public class GraphsListPage extends BaseListPage {
 
     @Step("Проверка сортировки по дате создания")
     public GraphsListPage checkSortingByCreateDate() {
-        BaseListPage.checkSortingByDateField("Дата создания");
+        EntityListPage.checkSortingByDateField("Дата создания");
         return this;
     }
 
