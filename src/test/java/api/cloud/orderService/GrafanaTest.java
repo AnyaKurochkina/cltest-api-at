@@ -4,25 +4,20 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Grafana;
-import models.cloud.orderService.products.Podman;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import static core.utils.AssertUtils.assertContains;
-
 @Epic("Продукты")
 @Feature("Grafana")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("grafana"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("grafana"), @Tag("prod"), @Tag("newtest")})
 public class GrafanaTest extends Tests {
 
-    @TmsLink("")
+    @TmsLink("1731001")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
@@ -32,7 +27,7 @@ public class GrafanaTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1731002")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
@@ -42,7 +37,7 @@ public class GrafanaTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1731003")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
@@ -52,7 +47,7 @@ public class GrafanaTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1731006")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "AD Проверка создания {0}")
     void checkCreate(Grafana product) {
@@ -61,7 +56,7 @@ public class GrafanaTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1731008")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete

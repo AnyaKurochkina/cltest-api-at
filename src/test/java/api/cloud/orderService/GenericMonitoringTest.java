@@ -4,7 +4,7 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.GenericDatabase;
+import models.cloud.orderService.products.GenericMonitoring;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -12,59 +12,57 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import static core.utils.AssertUtils.assertContains;
-
 @Epic("Продукты")
 @Feature("Generic Database")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("gb"), @Tag("prod"), @Tag("newtest")})
-public class GenericDatabaseTest extends Tests {
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("gm"), @Tag("prod"), @Tag("newtest")})
+public class GenericMonitoringTest extends Tests {
 
-    @TmsLink("1731025")
+    @TmsLink("1731017")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
-    void create(GenericDatabase product) {
+    void create(GenericMonitoring product) {
         //noinspection EmptyTryBlock
-        try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
+        try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
         }
     }
 
-    @TmsLink("1731024")
+    @TmsLink("1731018")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Расширить {0}")
-    void expandMountPoint(GenericDatabase product) {
-        try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
-            gb.expandMountPoint();
+    void expandMountPoint(GenericMonitoring product) {
+        try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
+            gm.expandMountPoint();
         }
     }
 
-    @TmsLink("1731026")
+    @TmsLink("1731020")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
-    void resize(GenericDatabase product) {
-        try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
-            gb.resize(gb.getMaxFlavor());
+    void resize(GenericMonitoring product) {
+        try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
+            gm.resize(gm.getMaxFlavor());
         }
     }
 
-    @TmsLink("1731023")
+    @TmsLink("1731021")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "AD Проверка создания {0}")
-    void checkCreate(GenericDatabase product) {
-        try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
-            gb.checkCertsBySsh();
+    void checkCreate(GenericMonitoring product) {
+        try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
+            gm.checkCertsBySsh();
         }
     }
 
-    @TmsLink("1731027")
+    @TmsLink("1731022")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
-    void delete(GenericDatabase product) {
-        try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
-            gb.deleteObject();
+    void delete(GenericMonitoring product) {
+        try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
+            gm.deleteObject();
         }
     }
 }
