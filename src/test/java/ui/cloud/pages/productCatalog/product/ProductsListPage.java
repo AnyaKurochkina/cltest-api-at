@@ -6,7 +6,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -14,7 +14,7 @@ import ui.elements.FileImportDialog;
 import ui.elements.Select;
 import ui.elements.Table;
 
-public class ProductsListPage extends BaseListPage {
+public class ProductsListPage extends EntityListPage {
 
     private static final String nameColumn = "Код продукта";
     private final Select categorySelect = Select.byLabel("Категория");

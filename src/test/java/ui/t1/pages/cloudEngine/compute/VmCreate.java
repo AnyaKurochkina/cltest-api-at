@@ -93,7 +93,7 @@ public class VmCreate {
         Select select = Select.byLabel("Группы безопасности сетевого интерфейса");
         if (Objects.isNull(this.securityGroups)) {
             this.securityGroups = new ArrayList<>();
-            select.clear();
+//            select.clear();
         }
         this.securityGroups.add(securityGroups);
         select.set(securityGroups);

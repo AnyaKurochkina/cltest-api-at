@@ -4,7 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.Table;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class MarketingInfoListPage extends BaseListPage {
+public class MarketingInfoListPage extends EntityListPage {
 
     private final String nameColumn = "Имя";
     private final SelenideElement pageTitle = $x("//div[text() = 'Маркетинговая информация']");

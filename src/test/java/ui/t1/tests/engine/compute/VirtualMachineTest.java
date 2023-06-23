@@ -56,6 +56,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setImage(image)
                 .setBootSize(2)
                 .setBootType(hddTypeFirst)
+                .addSecurityGroups(securityGroup)
                 .setSubnet(Select.RANDOM_VALUE);
         SelenideElement button = Button.byText("Заказать").getButton();
         button.shouldNot(activeCnd);
@@ -64,8 +65,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
         vmPage.setDescription(new Generex("[a-zA-Z0-9-_]{3,10}").random())
                 .setDeleteOnTermination(false)
                 .setFlavor(Select.RANDOM_VALUE)
-                .setFlavorName(flavorName)
-                .addSecurityGroups(securityGroup);
+                .setFlavorName(flavorName);
     }
 
     @DisabledIfEnv("t1prod")

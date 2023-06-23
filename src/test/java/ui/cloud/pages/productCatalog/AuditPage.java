@@ -18,7 +18,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
-public class AuditPage extends BasePage {
+public class AuditPage extends EntityPage {
 
     public static final String NO_VALUE = "—";
     private final SelenideElement contextId = $x("//span[text()='ID контекста']/following::span[1]");
@@ -76,7 +76,7 @@ public class AuditPage extends BasePage {
         if (!table.isColumnValueContains("Тип операции", operationType)) {
             Waiting.sleep(2000);
             Selenide.refresh();
-            new BasePage().goToAuditTab();
+            new EntityPage().goToAuditTab();
             table = new Table("Учетная запись");
         }
         table.getValueByColumnInFirstRow("Дата и время").shouldHave(Condition.text(dateTime));
@@ -187,7 +187,7 @@ public class AuditPage extends BasePage {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
             TypifiedElement.refresh();
-            if (Tab.byText("История изменений").getElement().exists()) new BasePage().goToAuditTab();
+            if (Tab.byText("История изменений").getElement().exists()) new EntityPage().goToAuditTab();
         }
     }
 
@@ -289,7 +289,7 @@ public class AuditPage extends BasePage {
 
     @Step("Проверка сортировки по дате и времени")
     public AuditPage checkSortingByDate() {
-        BaseListPage.checkSortingByDateField("Дата и время", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        EntityListPage.checkSortingByDateField("Дата и время", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
         return this;
     }
 

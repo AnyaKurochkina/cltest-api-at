@@ -12,7 +12,7 @@ import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
@@ -27,7 +27,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class ActionPage extends BasePage {
+public class ActionPage extends EntityPage {
     private static final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
     private final SelenideElement info = $x("//div[@role = 'status']");

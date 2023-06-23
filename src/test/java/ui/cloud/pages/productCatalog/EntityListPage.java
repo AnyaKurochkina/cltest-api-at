@@ -24,7 +24,7 @@ import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.format;
 
 @Getter
-public class BaseListPage {
+public class EntityListPage {
 
     protected static final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
     protected static final SelenideElement importButton = $x("//button[.='Импорт']");
@@ -128,25 +128,25 @@ public class BaseListPage {
     }
 
     @Step("Переход на следующую страницу списка")
-    public BaseListPage nextPage() {
+    public EntityListPage nextPage() {
         nextPageButton.scrollIntoView(true).click();
         return this;
     }
 
     @Step("Переход на следующую страницу списка")
-    public BaseListPage nextPageV2() {
+    public EntityListPage nextPageV2() {
         nextPageButtonV2.getButton().scrollIntoView(true).click();
         return this;
     }
 
     @Step("Переход на последнюю страницу списка")
-    public BaseListPage lastPage() {
+    public EntityListPage lastPage() {
         lastPageButton.scrollIntoView(true).click();
         return this;
     }
 
     @Step("Переход на последнюю страницу списка для нового компонента таблицы")
-    public BaseListPage lastPageV2() {
+    public EntityListPage lastPageV2() {
         Select pageSelect = Select.byXpath("//button[contains(@aria-label,'Страница 1 из')]");
         pageSelect.getElement().scrollIntoView(true).click();
         String lastPage = pageSelect.getOptions().last().getText();
@@ -156,13 +156,13 @@ public class BaseListPage {
     }
 
     @Step("Проверка номера страницы '{number}'")
-    public BaseListPage checkPageNumber(int number) {
+    public EntityListPage checkPageNumber(int number) {
         $x("//button[contains(@aria-label, 'Страница {}')]", number).shouldBe(Condition.visible);
         return this;
     }
 
     @Step("Изменение количества отображаемых строк на '{number}'")
-    public BaseListPage setRecordsPerPage(int number) {
+    public EntityListPage setRecordsPerPage(int number) {
         String numberString = String.valueOf(number);
         WebDriverRunner.getWebDriver().manage().window().maximize();
         if (recordsPerPageSelect.getElement().exists()) {
@@ -176,7 +176,7 @@ public class BaseListPage {
     }
 
     @Step("Проверка пагинации списка объектов")
-    public BaseListPage checkPagination() {
+    public EntityListPage checkPagination() {
         String allRecords = $x("//div[contains(text(),'записей из')]").getText();
         int allRecordsCount = Integer.valueOf(allRecords.substring(allRecords.lastIndexOf(" ") + 1));
         if (allRecordsCount > 10) {

@@ -154,7 +154,7 @@ public class GraphListTest extends Tests {
     }
 
     @DisplayName("Получение списка графов c Тегами")
-    @TmsLink("1701851")
+    @TmsLink("1701865")
     @Test
     public void getGraphListWithTagListTest() {
         Graph.builder()
