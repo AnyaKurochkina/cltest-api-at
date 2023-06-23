@@ -5,7 +5,6 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.orderService.products.RabbitMQClusterAstra;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -13,7 +12,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.ApacheKafkaClusterOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.RabbitMqClusterAstraOrderPage;
 import ui.extesions.ConfigExtension;
@@ -23,8 +21,8 @@ import ui.extesions.ProductInjector;
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(ProductInjector.class)
-@Feature("ApacheKafkaCluster")
-@Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
+@Feature("RabbitMqClusterAstraCheck")
+@Tags({@Tag("ui"), @Tag("ui_RabbitMqClusterAstraCheck")})
 class UiRabbitMqClusterAstraCheckUntilOrderTest extends Tests {
 
     RabbitMQClusterAstra product;
