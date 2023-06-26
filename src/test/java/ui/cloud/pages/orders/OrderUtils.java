@@ -59,9 +59,11 @@ public class OrderUtils {
         }
     }
 
-    public static double getCostValue(SelenideElement element) {
+    public static Double getCostValue(SelenideElement element) {
         element.shouldBe(Condition.visible);
         final String text = element.getText();
+        if(text.equals("без изменений"))
+            return null;
         log.debug("Стоимость '{}'", text);
         return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?[\\d\\s]{1,},\\d{2})", text))
                 .replace(',', '.').replaceAll(" ", ""));
