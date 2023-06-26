@@ -22,12 +22,14 @@ public abstract class AbstractIAMTest extends Tests {
     String folderId;
     IamUser user;
     IamUser user2;
+    IamUser user3;
 
     public AbstractIAMTest() {
         project = Project.builder().isForOrders(true).build().createObject();
         folderId = AuthorizerSteps.getParentProject(project.getId());;
         user = new IamUser("airat.muzafarov@gmail.com", new ArrayDeque<>(Arrays.asList("Администратор")));
         user2 = new IamUser("x64-bit@ya.ru", new ArrayDeque<>(Arrays.asList("Администратор")));
+        user3 = new IamUser("amuzafarov@t1.ru", new ArrayDeque<>(Arrays.asList("Администратор")));
     }
 
     @BeforeEach

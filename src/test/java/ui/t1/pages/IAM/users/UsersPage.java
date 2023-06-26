@@ -15,18 +15,20 @@ import java.util.List;
 import static api.Tests.activeCnd;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static ui.cloud.pages.productCatalog.BaseListPage.openActionMenu;
 
 @Log4j2
 public class UsersPage {
 
-    Button addUserBtn = Button.byElement($x("//*[@data-testid='user-management-add-button']//button"));
-    Button confirmAddUserBtn = Button.byText("Добавить");
-    Button confirmChangesBtn = Button.byText("Применить", 2);
-    Button openRolesListBtn = Button.byXpath("//button[@title = 'Open']");
-    SelenideElement currentAndLowerLevel = StringUtils.$x("//li[@data-value = 'lowerLevel']");
+    private final Button addUserBtn = Button.byElement($x("//*[@data-testid='user-management-add-button']//button"));
+    private final Button confirmAddUserBtn = Button.byText("Добавить");
+    private final Button closeDialog = Button.byText("Закрыть");
+    private final Button confirmChangesBtn = Button.byText("Применить", 2);
+    private static final Button confirmSearchBtn = Button.byText("Применить");
+    private final Button openRolesListBtn = Button.byXpath("//button[@title = 'Open']");
+    private static final Input searchUser = Input.byPlaceholder("Введите данные пользователя");
+    private static final Button clearFilters = Button.byText("Сбросить фильтры");
 
     public UsersPage() {
         SelenideElement selenideElement = $x("//*[text() = 'Пользователи']");
@@ -48,15 +50,19 @@ public class UsersPage {
 
     @Step("Добавление пользователя")
     public UsersPage addUser(IamUser user) {
+        if (isUserAddedByEmail(user.getEmail())) {
+            removeUser(user);
+        }
         addUserBtn.click();
-        TextArea.byName("userList").setValue(user.getEmail());
-        StringUtils.$x("//*[contains(@id, '{}')]", user.getEmail()).click();
+        TextArea.byName("userList").setValueAndPressEnter(user.getEmail());
+      //  StringUtils.$x("//*[contains(@id, '{}')]", user.getEmail()).click();
         openRolesListBtn.click();
         StringUtils.$x("//li[@role = 'menuitem' and text() = 'Базовые']").click();
         StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", user.getRole().get(0)).click();
         assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", user.getRole().get(0)).isDisplayed());
         confirmAddUserBtn.click();
         Waiting.sleep(1000);
+        assertTrue(isUserAdded(user), "Пользователь не найден");
         return this;
     }
 
@@ -66,6 +72,7 @@ public class UsersPage {
         $x("(//*[text()= 'Отозвать права'])[1]").click();
         new Dialog("Подтверждение").clickButton("Отозвать права");
         Alert.green("Удалены все роли у пользователя {}", user.getEmail());
+        assertFalse(isUserAdded(user), "Пользователь найден");
         return this;
     }
 
@@ -76,6 +83,7 @@ public class UsersPage {
         openRolesListBtn.click();
         StringUtils.$x("//li[@role = 'menuitem' and text() = 'Базовые']").click();
         StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", roleName).click();
+        Waiting.sleep(1000);
         assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", roleName).isDisplayed());
         confirmChangesBtn.click();
         Alert.green("Изменен пользователь {}", user.getEmail());
@@ -91,25 +99,32 @@ public class UsersPage {
         }
         $x("//*[text() = 'Поле обязательно для заполнения']").shouldBe(Condition.visible);
         confirmChangesBtn.getButton().shouldBe(Condition.disabled);
+        closeDialog.click();
         return this;
     }
 
     @Step("Показать пользователей")
     public UsersPage showUsers(String text) {
-       // StringUtils.$x("//div[@aria-labelledby = 'ancestors']//parent::div/*[local-name() = 'svg']").click();
         StringUtils.$x("//div[@aria-labelledby = 'ancestors']").click();
-        StringUtils.$x("//li[text() = '{}']//ancestor::li[@data-value = 'lowerLevel']", text).click();
+        StringUtils.$x("//li[text() = '{}']", text).click();
         return this;
     }
 
     @Step("Проверка заголовков таблицы")
-    public void checkTableHeaders(List<String> tableHeaders) {
+    public UsersPage checkTableHeaders(List<String> tableHeaders) {
         List<String> notEmptyHeaders = new UsersListTable().getNotEmptyHeaders();
         assertEquals(tableHeaders, notEmptyHeaders);
+        return this;
     }
 
     @Step("Проверка существования пользователя в таблице")
     public static boolean isUserAdded(IamUser user) {
+        if (clearFilters.getButton().isDisplayed()) {
+            clearFilters.click();
+        }
+        searchUser.setValue(user.getEmail());
+        Waiting.sleep(1000);
+        confirmSearchBtn.click();
         UsersListTable table = new UsersListTable();
         if (table.isColumnValueEquals("Пользователь", user.getEmail())) {
             List<String> rolesValue = Arrays.asList(table.getRowByColumnValue("Пользователь", user.getEmail())
@@ -118,6 +133,18 @@ public class UsersPage {
             return isRolesEquals(rolesValue, user.getRole());
         }
         return false;
+    }
+
+    @Step("Проверка существования пользователя в таблице только по email")
+    public static boolean isUserAddedByEmail(String email) {
+        if (clearFilters.getButton().isDisplayed()) {
+            clearFilters.click();
+        }
+        searchUser.setValue(email);
+        Waiting.sleep(1000);
+        confirmSearchBtn.click();
+        UsersListTable table = new UsersListTable();
+        return table.isColumnValueEquals("Пользователь", email);
     }
 
     private static boolean isRolesEquals(List<String> roles, List<String> userRoles) {

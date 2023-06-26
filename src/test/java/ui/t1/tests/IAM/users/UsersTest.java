@@ -16,7 +16,6 @@ import ui.t1.pages.IndexPage;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.IAM.users.UsersPage.isUserAdded;
 
@@ -31,12 +30,21 @@ public class UsersTest extends AbstractIAMTest {
     @DisplayName("Пользователи. Добавление/Отзыв прав в проект.")
     void addUserToProjectTest() {
         new IndexPage()
-                .goToUsers();
-        assertFalse(isUserAdded(user));
-        new UsersPage().addUser(user);
-        assertTrue(isUserAdded(user));
-        new UsersPage().removeUser(user);
-        assertFalse(isUserAdded(user));
+                .goToUsers()
+                .addUser(user)
+                .removeUser(user);
+    }
+
+    @Test
+    @TmsLinks({@TmsLink("538813"), @TmsLink("536159")})
+    @DisplayName("Пользователи. Добавление/Отзыв прав в организацию.")
+    void addUserToOrganizationTest() {
+        Organization organization = Organization.builder().build().createObject();
+        new IndexPage()
+                .goToUsers()
+                .changeContext("organization", organization.getName(), organization.getTitle())
+                .addUser(user3)
+                .removeUser(user3);
     }
 
     @Test
@@ -45,12 +53,9 @@ public class UsersTest extends AbstractIAMTest {
     void addUserToFolderTest() {
         new IndexPage()
                 .goToUsers()
-                .changeContext("folder", folderId);
-        assertFalse(isUserAdded(user));
-        new UsersPage().addUser(user);
-        assertTrue(isUserAdded(user));
-        new UsersPage().removeUser(user);
-        assertFalse(isUserAdded(user));
+                .changeContext("folder", folderId)
+                .addUser(user)
+                .removeUser(user);
     }
 
     @Test
@@ -63,7 +68,9 @@ public class UsersTest extends AbstractIAMTest {
                 .addRole(user2, "Редактор");
         user2.addRole("Редактор");
         assertTrue(isUserAdded(user2));
-        new UsersPage().removeRoles(user2, user2.getRole());
+        new UsersPage()
+                .removeRoles(user2, user2.getRole())
+                .removeUser(user2);
     }
 
     @Test
@@ -89,6 +96,19 @@ public class UsersTest extends AbstractIAMTest {
                 .goToUsers()
                 .changeContext("organization", organization.getName(), organization.getTitle())
                 .showUsers("Текущего уровня и ниже")
-                .checkTableHeaders(Arrays.asList("Пользователь", "Роли", "Роли уровней ниже" , "Статус"));
+                .checkTableHeaders(Arrays.asList("Пользователь", "Роли", "Роли уровней ниже", "Статус"));
+    }
+
+    @Test
+    @TmsLink("511136")
+    @DisplayName("Пользователи. Просмотр списка пользователей из папки.")
+    void userListByFolderContextTest() {
+        new IndexPage()
+                .goToUsers()
+                .changeContext("folder", folderId)
+                .showUsers("Текущего уровня и ниже")
+                .checkTableHeaders(Arrays.asList("Пользователь", "Роли", "Роли уровней ниже", "Статус"))
+                .showUsers("Текущего уровня и выше")
+                .checkTableHeaders(Arrays.asList("Пользователь", "Роли", "Роли уровней выше", "Статус"));
     }
 }
