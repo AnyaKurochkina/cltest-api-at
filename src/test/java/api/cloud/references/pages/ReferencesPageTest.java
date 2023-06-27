@@ -13,11 +13,10 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 import ru.testit.annotations.Title;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -175,17 +174,20 @@ public class ReferencesPageTest extends Tests {
 
     @DisplayName("Получение списка pages по фильтру data_environment_contains")
     @TmsLink("1740872")
-    @ParameterizedTest
-    @ValueSource(strings = {"DEV", "TEST", "PROD"})
-    public void getPagesFiltersByDataEnvironmentContains(String env) {
-        JSONObject jsonObject = JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
-                .set("name", RandomStringUtils.randomAlphabetic(3).toLowerCase() + "_data_environments_filter_test")
-                .set("directory", directories.getName())
-                .set("data", new JSONObject().put("environment", Collections.singletonList(env)))
-                .build();
-        createPrivatePages(directories.getName(), jsonObject);
-        List<Pages> result = getPagesList(String.format("data__environment__contains=%s", env));
-        result.forEach(pages -> assertTrue(new JsonPath(toJson(pages.getData())).getList("environment").contains(env)));
+    @Test
+    public void getPagesFiltersByDataEnvironmentContains() {
+        List<String> testData = Arrays.asList("DEV", "TEST", "PROD");
+        for (String str : testData) {
+            JSONObject jsonObject = JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+                    .set("name", RandomStringUtils.randomAlphabetic(3).toLowerCase() + "_data_environments_filter_test")
+                    .set("directory", directories.getName())
+                    .set("data", new JSONObject().put("environment", Collections.singletonList(str)))
+                    .build();
+            createPrivatePages(directories.getName(), jsonObject);
+            List<Pages> result = getPagesList(String.format("data__environment__contains=%s", str));
+            result.forEach(pages -> assertTrue(new JsonPath(toJson(pages.getData())).getList("environment").contains(str)
+                    , String.format("Список не содержит %s", str)));
+        }
     }
 
     @DisplayName("Экспорт Pages")
