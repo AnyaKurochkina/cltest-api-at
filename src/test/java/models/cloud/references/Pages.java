@@ -3,7 +3,6 @@ package models.cloud.references;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
-import org.json.JSONObject;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class Pages {
 
     private String name;
     private String id;
-    private JSONObject data;
+    private Object data;
     private String directory;
     private List<String> tags;
     private List<String> ctx_whitelist;

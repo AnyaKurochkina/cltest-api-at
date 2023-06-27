@@ -1,5 +1,6 @@
 package api.cloud.references.pages;
 
+import api.Tests;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
@@ -8,16 +9,20 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.references.Directories;
 import models.cloud.references.Pages;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import ru.testit.annotations.Title;
-import api.Tests;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
+import static core.helper.JsonHelper.toJson;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.references.ReferencesStep.*;
@@ -166,6 +171,21 @@ public class ReferencesPageTest extends Tests {
         String name = "get_pages_list_test_api";
         createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(name, directories.getId()));
         assertTrue(getPagesList().size() > 0);
+    }
+
+    @DisplayName("Получение списка pages по фильтру data_environment_contains")
+    @TmsLink("1740872")
+    @ParameterizedTest
+    @ValueSource(strings = {"DEV", "TEST", "PROD"})
+    public void getPagesFiltersByDataEnvironmentContains(String env) {
+        JSONObject jsonObject = JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+                .set("name", RandomStringUtils.randomAlphabetic(3).toLowerCase() + "_data_environments_filter_test")
+                .set("directory", directories.getName())
+                .set("data", new JSONObject().put("environment", Collections.singletonList(env)))
+                .build();
+        createPrivatePages(directories.getName(), jsonObject);
+        List<Pages> result = getPagesList(String.format("data__environment__contains=%s", env));
+        result.forEach(pages -> assertTrue(new JsonPath(toJson(pages.getData())).getList("environment").contains(env)));
     }
 
     @DisplayName("Экспорт Pages")
