@@ -1,26 +1,32 @@
 package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import core.helper.Configure;
 import io.qameta.allure.Step;
-import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.orderService.products.RabbitMQClusterAstra;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
+import java.net.MalformedURLException;
+
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
+import static core.utils.AssertUtils.assertContains;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String BLOCK_CLUSTER = "Кластер";
+    private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_USERS = "Пользователи";
     private static final String BLOCK_VIRTUAL_HOSTS = "Виртуальные хосты";
     private static final String BLOCK_PERMISSIONS = "Права доступа";
     private static final String HEADER_NAME_USER = "Имя";
+    private static final String HEADER_CONSOLE = "Точка подключения";
     private static final String HEADER_NAME_USER_PERMISSIONS = "Имя пользователя";
     private static final String HEADER_GROUP_AD = "Группы пользователей AD";
     private static final String HEADER_GROUP_ADMIN = "Группы прикладных администраторов AD";
@@ -56,8 +62,16 @@ public class RabbitMqClusterAstraPage extends IProductPage {
 
     public void checkConfiguration() {
         checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_CLUSTER, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).checkPreBilling(false).node(new Table("Роли узла").getRowByIndex(0)).build());
     }
+
+    public void openAdminConsole() throws MalformedURLException, InterruptedException {
+        String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        Selenide.open(url+"management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
+        Selenide.open(url);
+        Selenide.$x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible);
+    }
+
 
     public void delete() {
         runActionWithParameters(BLOCK_CLUSTER, "Удалить рекурсивно", "Удалить", () ->
@@ -100,6 +114,16 @@ public class RabbitMqClusterAstraPage extends IProductPage {
             Assertions.assertTrue(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser), "Пользователь не существует");
         }
     }
+
+    public void checkUniquenessAddUser(String nameUser) {
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_USERS, "Создать пользователя RabbitMQ", "Отмена", () -> {
+            Dialog dlg = Dialog.byTitle("Создать пользователя RabbitMQ");
+            dlg.setInputValue("Имя пользователя", nameUser);
+            assertContains("Имя пользователя должно быть уникальным");
+        }, ActionParameters.builder().checkAlert(false).build());
+    }
+
     public void deleteUser(String nameUser) {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(getBtnAction(nameUser, 1), "Удалить пользователя RabbitMQ");
@@ -117,6 +141,16 @@ public class RabbitMqClusterAstraPage extends IProductPage {
             btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost), "Ошибка создания вируалного хоста");
         }
+    }
+
+    public void checkUniquenessСreateVirtualHosts(String nameHost) {
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Создать виртуальные хосты RabbitMQ", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Создать виртуальные хосты RabbitMQ");
+            dlg.setInputValue("Имя виртуального хоста", nameHost);
+        });
+        btnGeneralInfo.click();
+        Assertions.assertTrue(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost), "Ошибка создания вируалного хоста");
     }
 
     public void deleteVirtualHosts(String nameHost) {
@@ -253,6 +287,12 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         runActionWithoutParameters(nameGroup, "Удалить пользовательскую группу");
         btnGroups.shouldBe(Condition.enabled).click();
         Assertions.assertFalse(new Table("").isColumnValueContains("", nameGroup), "Ошибка удаления AD");
+    }
+
+    public void openWebInterface() throws MalformedURLException, InterruptedException {
+        Selenide.open("https://dlzorg-wfc001lk.corp.dev.vtb:9993/management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
+        Selenide.open("https://dlzorg-wfc001lk.corp.dev.vtb:9993/");
+        assertContains("Deployments");
     }
 
     public void deleteGroupAdmin(String nameGroup) {
