@@ -39,6 +39,7 @@
   "skip_request_resource_pools": false,
   "skip_reservation": false,
   "skip_validate_checker": false,
+  "skip_item_change": false,
   "ignore_restriction_service": false,
   "tag_list": []
 }
