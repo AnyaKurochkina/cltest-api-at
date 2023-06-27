@@ -31,7 +31,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Сетевые интерфейсы")
     void networkInterfacesList() {
         new IndexPage().goToNetworkInterfaces();
-        assertHeaders(new NetworkInterfaceList.NetworkInterfaceTable(), "", "IP адрес", "MAC адрес", "Сеть", "Подсеть", "Зона доступности", "Группы безопасности", "Виртуальная машина", "");
+        assertHeaders(new NetworkInterfaceList.NetworkInterfaceTable(), "", "IP адрес", "MAC адрес", "Сеть", "Подсеть", "Регион", "Группы безопасности", "Виртуальная машина", "");
     }
 
     @Test
@@ -48,7 +48,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(vm.getName()).checkCreate();
-        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        String ip = new IndexPage().goToPublicIps().addIp(region);
         createdIpList.add(ip);
         new PublicIpList().selectIp(ip).checkCreate();
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
