@@ -13,16 +13,21 @@ import java.util.Objects;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$$x;
+import static core.helper.StringUtils.$x;
 
 public class Menu implements TypifiedElement {
     SelenideElement element;
 
-    private Menu(SelenideElement element) {
+    public Menu(SelenideElement element) {
         this.element = element.shouldBe(activeCnd);
     }
 
     public static Menu byElement(SelenideElement element) {
         return new Menu(element);
+    }
+
+    public static Menu byText(String text) {
+        return new Menu($x("//*[@role = 'menu']//*[text() = '{}']", text));
     }
 
     public void select(String item) {
@@ -37,10 +42,10 @@ public class Menu implements TypifiedElement {
                 .filter(Condition.visible)
                 .first();
         String disabled = element.getAttribute("aria-disabled");
-        if(Objects.nonNull(disabled))
-            if(disabled.equals("true"))
+        if (Objects.nonNull(disabled))
+            if (disabled.equals("true"))
                 throw new ElementClickInterceptedException(String.format("Элемент '%s' disabled", item));
-            return element;
+        return element;
     }
 
     private void waitItem(String item) {
