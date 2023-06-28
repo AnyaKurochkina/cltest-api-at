@@ -14,7 +14,7 @@ import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
-import ui.t1.pages.supportCenter.Notifications;
+import ui.t1.pages.supportCenter.NotificationsPage;
 
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
@@ -144,9 +144,9 @@ public class IndexPage {
     }
 
     @Step("Переход в Центр уведомлений")
-    public Notifications goToNotificationCenter(){
+    public NotificationsPage goToNotificationCenter(){
         linkSupportCenter.click();
         linkNotifications.click();
-        return new Notifications();
+        return new NotificationsPage();
     }
 }

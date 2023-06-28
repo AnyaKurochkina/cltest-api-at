@@ -10,6 +10,7 @@ import steps.Steps;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 import java.util.Objects;
 
 import static core.helper.Configure.getAppProp;
@@ -23,15 +24,19 @@ public class SubscriptionsSteps extends Steps {
     String createTheme = "admin/api/v1/themes";
     String deleteTheme = "admin/api/v1/themes/";
     String sendNotification = "admin/api/v1/events";
+    String getThemeGroupName = "api/v1/theme-groups?id=";
+    String createThemeGroup = "admin/api/v1/theme-groups";
+    String getUnreadIDs = "api/v1/notifications?read_date__isnull=true&channel=ws";
+    String markAllRead = "api/v1/notifications/mark_read";
     
-    @Step("Создаем подписку и получаем ID подписки")
+    @Step("Создаем подписку {themeID} и получаем ID подписки")
     public String createSubscription(String importance, String themeID, String ... channels){
        JSONObject body = JsonHelper.getJsonTemplate("t1/notificationCenter/createSubscription.json")
                 .set("$.importance", Objects.requireNonNull(importance))
                 .set("$.channels", Objects.requireNonNull(channels))
                 .set("$.theme_id", Objects.requireNonNull(themeID)).build();
         return new Http(NCurl)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
                 .body(body)
                 .post(createSubscription)
                 .assertStatus(201)
@@ -39,22 +44,24 @@ public class SubscriptionsSteps extends Steps {
                 .getString("id");
     }
 
-    @Step("Удаляем подписку")
+    @Step("Удаляем подписку c ID {subscriptionID}")
     public void deleteSubscription(String subscriptionID){
         new Http(NCurl)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
                 .delete(deleteSubscription + subscriptionID )
                 .assertStatus(204);
     }
 
 
-    @Step("Создаем тему и получаем ID темы")
-    public String createTheme(String code, String name){
+    @Step("Создаем тему и получаем ID темы {name}")
+    public String createTheme(String code, String name, String group_id, String importance){
         JSONObject body = JsonHelper.getJsonTemplate("t1/notificationCenter/createTheme.json")
                 .set("$.code", Objects.requireNonNull(code))
-                .set("$.name", Objects.requireNonNull(name)).build();
+                .set("$.name", Objects.requireNonNull(name))
+                .set("$.importance", Objects.requireNonNull(importance))
+                .set("$.theme_group_id", Objects.requireNonNull(group_id)).build();
         return new Http(NCurl)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
                 .body(body)
                 .post(createTheme)
                 .assertStatus(201)
@@ -62,10 +69,10 @@ public class SubscriptionsSteps extends Steps {
                 .getString("id");
     }
 
-    @Step("Удаляем тему")
+    @Step("Удаляем тему c ID {themeID}")
     public void deleteTheme(String themeID){
         new Http(NCurl)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
                 .delete(deleteTheme + themeID)
                 .assertStatus(204);
     }
@@ -78,14 +85,84 @@ public class SubscriptionsSteps extends Steps {
                 .set("$.email", Objects.requireNonNull(email))
                 .set("$.subject", Objects.requireNonNull(subject)).build();
         new Http(NCurl)
-                .setRole(Role.CLOUD_ADMIN)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
                 .body(body)
                 .post(sendNotification)
                 .assertStatus(201);
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy\nHH:mm");
         return formatter.format(LocalDateTime.now());
     }
+
+    @Step("Отправляем {amount} уведомлений")
+    public void sendNumberOfNotifications(int amount, String themeCode, String email, String subject){
+        for(int i = 0; i < amount; i++){
+            JSONObject body = JsonHelper.getJsonTemplate("t1/notificationCenter/createEvent.json")
+                    .set("$.theme_code", Objects.requireNonNull(themeCode))
+                    .set("$.email", Objects.requireNonNull(email))
+                    .set("$.subject", Objects.requireNonNull(subject)).build();
+            new Http(NCurl)
+                    .setRole(Role.NOTIFICATIONS_ADMIN)
+                    .body(body)
+                    .post(sendNotification)
+                    .assertStatus(201);
+        }
+    }
+
+    @Step("Находим название группы тем по ID")
+    public String getThemeGroupName(String id){
+        return new Http(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .get(getThemeGroupName + id)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list.name");
+    }
+
+    @Step("Создаем группу тем {name}")
+    public String createThemeGroup(String name){
+        JSONObject body = JsonHelper.getJsonTemplate("t1/notificationCenter/createThemeGroup.json")
+                .set("$.name", Objects.requireNonNull(name)).build();
+      return new Http(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .body(body)
+                .post(createThemeGroup)
+                .assertStatus(201)
+                .jsonPath()
+                .getString("id");
+    }
+
+    @Step("Удаляем группу тем с ID {groupID}")
+    public void deleteThemeGroup(String groupID){
+        new Http(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .delete(createThemeGroup + "/" + groupID)
+                .assertStatus(204);
+    }
+
+    @Step("Получаем ID непрочитанных сообщений")
+    public List<String> getUnreadIDs(){
+      return  new Http(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .get(getUnreadIDs)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list.id");
+    }
+
+    @Step("Отмечаем прочитанным все сообщения")
+    public void markAllRead(){
+        List<String> ids = getUnreadIDs();
+        if(ids.size()>0){
+        JsonHelper.getJsonTemplate("t1/notificationCenter/markAllRead.json")
+                .set("$.ids", Objects.requireNonNull(ids))
+                .send(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .patch(markAllRead)
+                .assertStatus(200);}
+    }
+
+
 
 
 
