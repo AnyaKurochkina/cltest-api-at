@@ -20,7 +20,7 @@ public class Switch implements TypifiedElement{
 
     @Step("Получение Switch по тексту '{text}'")
     public static Switch byText(String text){
-        return new Switch($x("//*[.='{}']/..//label[@role='switch']", text));
+        return new Switch($x("//*[text()='{}']/..//label[@role='switch']", text));
     }
 
 
