@@ -39,7 +39,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public abstract class IProductPage {
 
     protected final SelenideElement prebillingCostElement = Selenide
-            .$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
+            .$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[(contains(.,'₽/сут.') and contains(.,',')) or text()='без изменений']");
     private static final String HEADER_GROUP = "Группы";
     private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;

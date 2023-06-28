@@ -1,0 +1,44 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "bebcc87f-73f3-45f2-a2f1-bc274948373c",
+    "attrs": {
+      "users": "grafana_user",
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "platform": "OpenStack",
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "1.7",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 50,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "users_password": "Ya30GpR49Dget4yY6v3DBBNjJOwcd",
+      "grafana_version": "9.1.6",
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Grafana"
+  }
+}

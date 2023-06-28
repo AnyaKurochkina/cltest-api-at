@@ -2,6 +2,7 @@ package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
 import core.helper.JsonTemplate;
+import core.helper.StringUtils;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
@@ -21,6 +22,7 @@ import steps.portalBack.PortalBackSteps;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import static core.utils.AssertUtils.assertContains;
 import static models.cloud.orderService.products.PostgreSQL.DB_CONN_LIMIT;
@@ -95,6 +97,35 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
                 .build();
     }
 
+    transient String leaderIp;
+
+    @Override
+    public void updateMaxConnections() {
+        String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.load_profile");
+        OrderServiceSteps.executeAction("postgresql_cluster_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
+    }
+
+    @Override
+    public String executeSsh(String cmd) {
+        if(Objects.isNull(leaderIp)) {
+            String ip = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.hostname.contains('-pgc')}.ip");
+            leaderIp = StringUtils.findByRegex("(([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3}))",
+                    executeSsh(new SshClient(ip, envType()), "sudo -i patronictl -c /etc/patroni/patroni.yml list | grep Leader"));
+        }
+        return executeSsh(new SshClient(leaderIp, envType()), cmd);
+    }
+
+    @Override
+    public void cmdRestartPostgres(){
+        executeSsh("sudo -i patronictl -c /etc/patroni/patroni.yml restart $(sudo -i cat /etc/patroni/patroni.yml | grep scope | awk '{print $2}') -r master --force");
+    }
+
+    @Override
+    protected void cmdSetMaxConnections(int connections){
+        String cmd = String.format("sudo patronictl -c /etc/patroni/patroni.yml edit-config -p max_connections=\"%s\" --force", connections);
+        assertContains(executeSsh(cmd), "Configuration changed");
+    }
+
     //Расширить pg_data
     public void expandMountPoint() {
         int size = 11;
@@ -112,6 +143,22 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     public void removeDbmsUser(String username, String dbName) {
         removeDbmsUser("postgresql_cluster_remove_dbms_user", username, dbName);
+    }
+
+    @Override
+    public void getConfiguration() {
+        OrderServiceSteps.executeAction("postgresql_cluster_get_configuration", this, null, this.getProjectId());
+    }
+
+    @Override
+    public void updatePostgresql() {
+        OrderServiceSteps.executeAction("postgresql_cluster_update_postgresql", this, new JSONObject().put("check_agree", true), this.getProjectId());
+    }
+
+    @Override
+    public void updateDti(String defaultTransactionIsolation) {
+        OrderServiceSteps.executeAction("postgresql_cluster_update_dti", this,
+                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
     }
 
     public void resetDbOwnerPassword(String username) {

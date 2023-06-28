@@ -126,7 +126,7 @@ public class GraphSteps extends Steps {
     @Step("Создание графа")
     public static Graph createGraph() {
         return Graph.builder()
-                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .build()
                 .createObject();
     }

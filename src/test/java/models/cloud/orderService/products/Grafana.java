@@ -1,7 +1,6 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,10 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-
-import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -25,16 +21,18 @@ import static core.utils.AssertUtils.assertContains;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class Astra extends IProduct {
-    public static String SNAPSHOT_PATH = "data.any{it.data.type=='snapshot' && it.data.state=='on'}";
+public class Grafana extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
+    String grafanaVersion;
+    String usersPassword;
+    String users;
 
     @Override
     public Entity init() {
-        jsonTemplate = "/orders/astra_general_application.json";
-        productName = "Astra Linux";
+        jsonTemplate = "/orders/grafana.json";
+        productName = "Grafana";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();
@@ -48,6 +46,12 @@ public class Astra extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (grafanaVersion == null)
+            grafanaVersion = getRandomProductVersionByPathEnum("grafana_version.enum");
+        if (usersPassword == null)
+            usersPassword = "Ya30GpR49Dget4yY6v3DBBNjJOwcd";
+        if (users == null)
+            users = "grafana_user";
         return this;
     }
 
@@ -74,50 +78,29 @@ public class Astra extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .set("$.order.attrs.on_support", getSupport())
+                .set("$.order.attrs.users", getUsers())
+                .set("$.order.attrs.users_password", getUsersPassword())
+                .set("$.order.attrs.grafana_version", getGrafanaVersion())
                 .build();
     }
 
-    public void updateVmInfo() {
-        OrderServiceSteps.executeAction("update_vm_info", this, null, this.getProjectId());
-    }
-
-    public void stopHard() {
-        stopHard("stop_vm_hard");
-    }
-
-    public void stopSoft() {
-        stopSoft("stop_vm_soft");
-    }
-
-    public void start() {
-        start("start_vm");
-    }
-
-    public void restart() {
-        restart("reset_vm");
-    }
-
+    @Step("Расширить")
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 
-    public void resize(Flavor flavor) {
-        resize("resize_vm", flavor);
+    @Step("Сбросить пароль")
+    public void resetPassword(String password) {
+        JSONObject jsonData = new JSONObject().put("user_name", getUsers()).put("users_password", password);
+        OrderServiceSteps.executeAction("reset_grafana_user_password", this, jsonData, this.getProjectId());
+        usersPassword = password;
+        save();
     }
 
-    @Step("Удаление продукта")
+    @Step("Удалить")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 
-    public void createSnapshot(int lifetime) {
-        OrderServiceSteps.executeAction("create_group_snapshot", this, new JSONObject().put("lifetime", lifetime), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот не найден");
-    }
-
-    public void deleteSnapshot() {
-        OrderServiceSteps.executeAction("delete_group_snapshot", this, null, this.getProjectId());
-        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот существует");
-    }
 }

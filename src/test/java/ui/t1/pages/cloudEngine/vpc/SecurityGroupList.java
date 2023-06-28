@@ -2,6 +2,7 @@ package ui.t1.pages.cloudEngine.vpc;
 
 import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
+import org.openqa.selenium.NotFoundException;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
 
@@ -17,7 +18,12 @@ public class SecurityGroupList {
         Input.byLabel("Имя").setValue(name);
         TextArea.byLabel("Описание").setValue(desc);
         Dialog.byTitle("Добавить группу безопасности").clickButton("Добавить");
-        Waiting.findWithRefresh(() -> getSecurityGroup(name).getValueByColumn(Column.STATUS).equals("Доступно"), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> {
+            SecurityGroupsTable table = new SecurityGroupsTable();
+            if(table.isColumnValueEquals(Column.NOMINATION, name))
+                return getSecurityGroup(name).getValueByColumn(Column.STATUS).equals("Доступно");
+            else return false;
+        }, Duration.ofMinutes(1));
     }
 
     public void deleteGroup(String name) {

@@ -377,7 +377,10 @@ public class OtherTest extends AbstractComputeTest {
                 .selectDisk(disk.getName())
                 .runActionWithCheckCost(CompareType.LESS, diskPage::detachComputeVolume);
 
-        NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
-        networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSubnet("default");
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .getNetworkMenu()
+                .updateSubnet("default");
     }
 }

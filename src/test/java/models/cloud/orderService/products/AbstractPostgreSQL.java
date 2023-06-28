@@ -17,7 +17,6 @@ import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -32,7 +31,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     //    public final static String IS_DB_CONN_LIMIT = "data.find{it.data.config.db_name=='%s'}.data.config.containsKey('conn_limit')";
     public final static String DB_USERNAME_PATH = "data.find{it.data.config.containsKey('db_users')}.data.config.db_users.any{it.user_name=='%s'}";
     public final static String DB_OWNER_NAME_PATH = "data.find{it.data.config.containsKey('db_owners')}.data.config.db_owners.user_name";
-    public final static String MAX_CONNECTIONS = "data.find{it.type=='app'}.data.config.configuration.max_connections";
+    public final static String MAX_CONNECTIONS = "data.find{it.type=='app' || it.type=='cluster'}.data.config.configuration.max_connections";
     @Builder.Default
     public List<Db> database = new ArrayList<>();
     @Builder.Default
@@ -54,9 +53,9 @@ public abstract class AbstractPostgreSQL extends IProduct {
     public void setConnLimit(String dbName, int count) {
         OrderServiceSteps.executeActionWidthFilter("postgresql_db_set_conn_limit", this, new JSONObject().put("conn_limit", count), this.getProjectId(), filterBd(dbName));
         Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
-        if (isDev())
+        if (isDev() && this instanceof PostgreSQL)
             Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s([0-9]*)\\n\\(",
-                    executeSsh("sudo -iu postgres psql -c \"select datconnlimit from pg_database where datname='" + dbName + "';\"")));
+                    executeSsh(String.format("sudo -iu postgres psql -c \"select datconnlimit from pg_database where datname='%s';\"", dbName))));
     }
 
     public void removeConnLimit(String dbName) {
@@ -94,10 +93,13 @@ public abstract class AbstractPostgreSQL extends IProduct {
         return (String) obj;
     }
 
+    abstract void cmdRestartPostgres();
+
+    abstract void cmdSetMaxConnections(int connections);
+
     public void updateMaxConnectionsBySsh(int connections) {
-        String cmd = String.format("sudo -iu postgres psql -c \"Alter system set max_connections to '%s';\"", connections);
-        assertContains(executeSsh(cmd), "ALTER SYSTEM");
-        executeSsh("sudo -i systemctl restart postgresql-*");
+        cmdSetMaxConnections(connections);
+        cmdRestartPostgres();
         getConfiguration();
         Assertions.assertEquals(connections, Integer.valueOf(getCurrentMaxConnections()));
     }
@@ -126,10 +128,9 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void getExtensions(String dbName, String extension) {
-        String p = (this instanceof PostgreSQL) ? "" : "-p 6432";
-
         if (isDev()) {
-            String cmd = String.format("sudo -iu postgres psql %s -d %s -c \"create extension %s with schema %s;\"", p, dbName, extension, dbName);
+            String extParameters = (this instanceof PostgreSQL) ? "" : "-p 6432";
+            String cmd = String.format("sudo -iu postgres psql %s -d %s -c \"create extension %s with schema %s;\"", extParameters, dbName, extension, dbName);
             assertContains(executeSsh(cmd), "CREATE EXTENSION");
         }
         OrderServiceSteps.executeActionWidthFilter("postgresql_db_get_extensions", this, null, this.getProjectId(), filterBd(dbName));
