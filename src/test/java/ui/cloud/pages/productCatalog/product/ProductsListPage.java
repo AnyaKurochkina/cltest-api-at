@@ -140,8 +140,8 @@ public class ProductsListPage extends EntityListPage {
 
     @Step("Сброс фильтров")
     public ProductsListPage clearFilters() {
-        clearFiltersButton.click();
-        TestUtils.wait(500);
+        clearFiltersButton.getButton().scrollIntoView(false).click();
+        Waiting.sleep(500);
         return this;
     }
 
