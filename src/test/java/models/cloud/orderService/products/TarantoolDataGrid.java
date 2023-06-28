@@ -13,7 +13,10 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
+import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
+
+import java.util.List;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -22,6 +25,8 @@ import steps.orderService.OrderServiceSteps;
 @NoArgsConstructor
 @SuperBuilder
 public class TarantoolDataGrid extends IProduct {
+    public static final String BACKUP_PATH = "data.find{it.type=='cluster'}.data.config.backup.size()";
+    public static final String SERVICE_PATH = "data.find{it.type=='cluster'}.data.config.backup.cluster.find{it.instance=='%s'}.state";
     @ToString.Include
     String osVersion;
     Flavor flavor;
@@ -83,12 +88,40 @@ public class TarantoolDataGrid extends IProduct {
         expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 
-//    @Step("Обновить версию приложения")
-//    public void updateApp() {
-//        JSONObject jsonData = new JSONObject().put("user_name", getUsers()).put("users_password", password);
-//        OrderServiceSteps.executeAction("tdg_update_version", this, jsonData, this.getProjectId());
-//        save();
-//    }
+    @Step("Создать резервную копию")
+    public void backup() {
+        OrderServiceSteps.executeAction("tdg_backup", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
+        Assertions.assertEquals(1, (Integer) OrderServiceSteps.getProductsField(this, BACKUP_PATH), "Отсутствует backup");
+    }
+
+    @Step("Обновить сертификаты")
+    public void updateCerts() {
+        OrderServiceSteps.executeAction("tdg_update_certs", this, null, this.getProjectId());
+    }
+
+    @Step("Остановить сервисы")
+    public void stopInstances(List<String> services) {
+        JSONObject data = new JSONObject().put("type", "Instance").put("instances", services);
+        OrderServiceSteps.executeAction("tdg_stop_instances", this, data, this.getProjectId());
+        for(String service : services)
+            Assertions.assertEquals("off", OrderServiceSteps.getProductsField(this,
+                String.format(SERVICE_PATH, service)), "Статус сервиса " + service);
+    }
+
+    @Step("Запустить сервисы")
+    public void startInstances(List<String> services) {
+        JSONObject data = new JSONObject().put("type", "Instance").put("instances", services);
+        OrderServiceSteps.executeAction("tdg_start_instances", this, data, this.getProjectId());
+        for(String service : services)
+            Assertions.assertEquals("on", OrderServiceSteps.getProductsField(this,
+                    String.format(SERVICE_PATH, service)), "Статус сервиса " + service);
+    }
+
+    @Step("Перезапустить сервисы")
+    public void restartInstances(List<String> services) {
+        JSONObject data = new JSONObject().put("type", "Instance").put("instances", services);
+        OrderServiceSteps.executeAction("tdg_restart_instances", this, data, this.getProjectId());
+    }
 
     @Step("Удалить")
     @Override
