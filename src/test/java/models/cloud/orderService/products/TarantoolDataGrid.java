@@ -83,11 +83,6 @@ public class TarantoolDataGrid extends IProduct {
                 .build();
     }
 
-    @Step("Расширить")
-    public void expandMountPoint() {
-        expandMountPoint("expand_mount_point_new", "/app", 10);
-    }
-
     @Step("Создать резервную копию")
     public void backup() {
         OrderServiceSteps.executeAction("tdg_backup", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
