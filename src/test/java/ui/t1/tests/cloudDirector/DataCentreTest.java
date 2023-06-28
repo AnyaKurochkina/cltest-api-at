@@ -101,7 +101,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         if (Configure.ENV.equals("t1prod")) {
             name = "Veeam-InstantVMRecovery";
         } else {
-            name = "SP-High";
+            name = "SP-Standart";
         }
         StorageProfile profile = new StorageProfile(name, "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
@@ -109,6 +109,18 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addProfile(profile));
         dataCentrePage.runActionWithCheckCost(CompareType.LESS, () -> dataCentrePage.deleteProfile(profile));
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("1115943")
+    @DisplayName("VMware. VDC. Изменение конфигурации маршрутизатора")
+    public void changeRouterConfigTest() {
+        DataCentrePage dataCentrePage = new IndexPage()
+                .goToCloudDirector()
+                .goToOrganization(vmWareOrganization.getName())
+                .selectDataCentre(dataCentreName);
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
     }
 
     @Test

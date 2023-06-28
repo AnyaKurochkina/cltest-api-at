@@ -35,5 +35,11 @@
   "is_safe": null,
   "is_delayable": false,
   "available_with_cost_reduction": false,
-  "default_item": {}
+  "default_item": {},
+  "skip_request_resource_pools": false,
+  "skip_reservation": false,
+  "skip_validate_checker": false,
+  "skip_item_change": false,
+  "ignore_restriction_service": false,
+  "tag_list": []
 }

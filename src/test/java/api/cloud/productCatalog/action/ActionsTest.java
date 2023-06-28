@@ -165,9 +165,11 @@ public class ActionsTest extends Tests {
                 .build()
                 .createObject();
         Action getAction = getActionByFilter(action.getActionId(), "with_version_fields=true");
-        List<String> versionFields = Arrays.asList("graph_id", "graph_version", "graph_version_pattern", "priority", "data_config_path", "data_config_key",
-                "data_config_fields", "item_restriction", "available_without_money",
-                "auto_removing_if_failed", "skip_on_prebilling", "multiple", "location_restriction", "extra_data", "available_with_cost_reduction");
+        List<String> versionFields = Arrays.asList("graph_id", "graph_version", "graph_version_pattern", "priority",
+                "data_config_path", "data_config_key", "data_config_fields", "item_restriction", "auto_removing_if_failed",
+                "ignore_restriction_service", "multiple", "location_restriction", "extra_data", "available_with_cost_reduction",
+                "skip_on_prebilling", "available_without_money", "skip_request_resource_pools", "skip_reservation",
+                "skip_validate_checker", "skip_restriction_service", "skip_item_change");
         assertEquals(versionFields, getAction.getVersionFields());
     }
 
@@ -537,6 +539,57 @@ public class ActionsTest extends Tests {
                 .createObject();
         Action actualAction = getActionById(action.getActionId());
         assertFalse(actualAction.getIsSafe(), "Значение флага is_safe не соответсвует ожидаемому");
+    }
+
+    @DisplayName("Проверка валидации полей available_without_money, skip_reservation, skip_item_change при значении поля skip_on_prebilling = true")
+    @TmsLink("1741033")
+    @Test
+    public void createActionAndCheckFields() {
+        Action action = Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "api_test")
+                .skipOnPrebilling(true)
+                .availableWithoutMoney(true)
+                .skipReservation(true)
+                .skipItemChange(true)
+                .build()
+                .createObject();
+        isActionExists(action.getName());
+
+        String errMessage = createAction(Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "api_test")
+                .graphId(createGraph().getGraphId())
+                .skipOnPrebilling(true)
+                .availableWithoutMoney(false)
+                .skipReservation(true)
+                .skipItemChange(true)
+                .build()
+                .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation, skip_item_change)",
+                errMessage);
+
+        String errMessage2 = createAction(Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "api_test")
+                .graphId(createGraph().getGraphId())
+                .skipOnPrebilling(true)
+                .availableWithoutMoney(true)
+                .skipReservation(false)
+                .skipItemChange(true)
+                .build()
+                .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation, skip_item_change)",
+                errMessage2);
+
+        String errMessage3 = createAction(Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "api_test")
+                .graphId(createGraph().getGraphId())
+                .skipOnPrebilling(true)
+                .availableWithoutMoney(true)
+                .skipReservation(true)
+                .skipItemChange(false)
+                .build()
+                .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation, skip_item_change)",
+                errMessage3);
     }
 }
 

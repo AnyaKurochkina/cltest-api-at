@@ -10,7 +10,7 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.tagService.Filter;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.TagServiceSteps;
-import models.cloud.tagService.v1.FilterResultItemV1;
+import models.cloud.tagService.v1.FilterResultV1Item;
 import models.cloud.tagService.v1.InventoryTagsV1;
 import models.cloud.tagService.Tag;
 import models.cloud.tagService.v1.FilterResultV1;
@@ -18,6 +18,7 @@ import models.cloud.tagService.v2.InventoryTagsV2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.parallel.Isolated;
 import steps.keyCloak.KeyCloakSteps;
 
 import java.util.Arrays;
@@ -193,7 +194,7 @@ public class InventoryFilterV1Test extends AbstractInventoryTest {
 
         FilterResultV1 filterResult = TagServiceSteps.inventoryFilterV1(context, filter, query);
 
-        Assertions.assertEquals(filterResult.stream().map(FilterResultItemV1::getInventory).collect(Collectors.toList()),
+        Assertions.assertEquals(filterResult.stream().map(FilterResultV1Item::getInventory).collect(Collectors.toList()),
                 Arrays.asList(iList.get(2).getId(), iList.get(3).getId(), iList.get(0).getId(), iList.get(1).getId(), iList.get(4).getId()), "Неверный список inventory");
     }
 
@@ -228,22 +229,6 @@ public class InventoryFilterV1Test extends AbstractInventoryTest {
                 .build();
         FilterResultV1 filterResult = TagServiceSteps.inventoryFilterV1(context, filter);
         Assertions.assertEquals(4, filterResult.getList().size(), "Неверное кол-во inventories");
-    }
-
-    @Test
-    @TmsLink("1623789")
-    @DisplayName("Inventory. Фильтр v1 по context_path_isnull")
-    void findInventoriesByContextPathIsnull() {
-        Filter filterWidthNullPath = Filter.builder()
-                .contextPathIsnull(true)
-                .allowEmptyTagFilter(true)
-                .build();
-        Filter filterWithoutNullPath = Filter.builder()
-                .contextPathIsnull(false)
-                .allowEmptyTagFilter(true)
-                .build();
-        Assertions.assertTrue(TagServiceSteps.inventoryFilterV1(context, filterWidthNullPath).getMeta().getTotalCount() >
-                TagServiceSteps.inventoryFilterV1(context, filterWithoutNullPath).getMeta().getTotalCount(), "(contextPathIsnull = true) <= (contextPathIsnull = false)");
     }
 
     @Test

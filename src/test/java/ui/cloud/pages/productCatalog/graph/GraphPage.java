@@ -11,7 +11,7 @@ import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.actions.ActionPage;
@@ -23,7 +23,7 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 
-public class GraphPage extends BasePage {
+public class GraphPage extends EntityPage {
     protected final String saveGraphAlertText = "Граф успешно сохранен";
     protected final Tab generalInfoTab = Tab.byText("Общая информация");
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");

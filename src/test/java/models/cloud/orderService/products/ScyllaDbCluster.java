@@ -54,6 +54,8 @@ public class ScyllaDbCluster extends IProduct {
         jsonTemplate = "/orders/scylla_cluster.json";
         if (productName == null)
             productName = "ScyllaDB Cluster Astra";
+        if("LT".equalsIgnoreCase(getEnv()))
+            productName = "ScyllaDB Cluster Astra LT";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();

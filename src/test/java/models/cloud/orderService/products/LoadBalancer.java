@@ -21,8 +21,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -44,7 +43,7 @@ public class LoadBalancer extends IProduct {
     private final String FRONTEND_PATH = "data.find{it.type=='cluster'}.data.config.frontends.find{it.frontend_name == '%s'}";
     private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
     private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
-
+    private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}.last()";
     @Override
     public Entity init() {
         jsonTemplate = "/orders/load_balancer.json";
@@ -103,6 +102,17 @@ public class LoadBalancer extends IProduct {
 
     public void gslbSync() {
         OrderServiceSteps.executeAction("balancer_gslb_release_sync_info", this, null, this.getProjectId());
+    }
+
+    public void revertConfig(Backend backend) {
+        addBackend(backend);
+        Map<Integer, String> res = OrderServiceSteps.getProductsField(this, BACKUP_LAST_PATH, Map.class);
+        JSONObject data = new JSONObject().put("backup", new JSONObject(res));
+        OrderServiceSteps.executeAction("balancer_release_revert_config", this, data, this.getProjectId());
+        Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
+                String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
+        backends.remove(backend);
+        save();
     }
 
     public void deleteAllGslb() {

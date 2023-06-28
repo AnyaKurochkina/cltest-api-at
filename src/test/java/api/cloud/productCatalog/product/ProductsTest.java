@@ -5,6 +5,7 @@ import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.cloud.authorizer.Project;
 import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.icon.Icon;
@@ -22,9 +23,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.*;
@@ -546,22 +545,6 @@ public class ProductsTest extends Tests {
     }
 
     @Test
-    @DisplayName("Получение значения поля category_v2 по умолчанию")
-    @TmsLink("978267")
-    public void getDefaultValueCategoryV2() {
-        String productName = "get_default_value_category_v2_product_test_api";
-        Product product = Product.builder()
-                .name(productName)
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        Product createdProduct = getProductById(product.getProductId());
-        assertEquals(Categories.COMPUTE, createdProduct.getCategoryV2());
-    }
-
-    @Test
     @DisplayName("Получение значения поля category_v2")
     @TmsLink("978299")
     public void getValueCategoryV2() {
@@ -602,38 +585,6 @@ public class ProductsTest extends Tests {
         assertEquals(Payment.PARTLY_PAID, getProductById(id).getPayment());
     }
 
-    @DisplayName("Создание продукта c дефолтным значением number")
-    @TmsLink("1107406")
-    @Test
-    public void createProductWithDefaultNumber() {
-        String productName = "create_product_with_default_number";
-        Product product = Product.builder()
-                .name(productName)
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        Product actualProduct = getProductById(product.getProductId());
-        assertEquals(50, actualProduct.getNumber());
-    }
-
-    @DisplayName("Создание продукта c дефолтным значением on_request")
-    @TmsLink("1322845")
-    @Test
-    public void createProductWithDefaultOnRequest() {
-        String productName = "create_product_with_default_on_request";
-        Product product = Product.builder()
-                .name(productName)
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .info(info)
-                .build()
-                .createObject();
-        Product actualProduct = getProductById(product.getProductId());
-        assertNull(actualProduct.getOnRequest());
-    }
-
     @DisplayName("Создание продукта с допустимыми значениями поля on_request")
     @TmsLink("1322847")
     @Test
@@ -658,5 +609,22 @@ public class ProductsTest extends Tests {
         Product actualProductPreview = getProductById(productPreview.getProductId());
         assertEquals(OnRequest.ONLY_REQUEST, actualProduct.getOnRequest());
         assertEquals(OnRequest.PREVIEW, actualProductPreview.getOnRequest());
+    }
+
+    @DisplayName("Проверка значений полей по умолчанию")
+    @TmsLinks({@TmsLink("1322845"), @TmsLink("1107406"), @TmsLink("978267")})
+    @Test
+    public void checkProductDefaultFieldValues() {
+        Product product = Product.builder()
+                .name("at_api_check_default_values")
+                .title("AT API Product")
+                .version("1.0.0")
+                .build()
+                .createObject();
+        Product createdProduct = getProductById(product.getProductId());
+        assertEquals(Categories.COMPUTE, createdProduct.getCategoryV2());
+        assertEquals(50, createdProduct.getNumber());
+        assertNull(createdProduct.getOnRequest());
+        assertEquals(0, createdProduct.getTagList().size());
     }
 }

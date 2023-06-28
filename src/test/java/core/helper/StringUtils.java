@@ -1,5 +1,6 @@
 package core.helper;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -10,6 +11,7 @@ import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -56,6 +58,10 @@ public final class StringUtils {
         }
     }
 
+    public static int count(String str, String target) {
+        return (str.length() - str.replace(target, "").length()) / target.length();
+    }
+
     public static String getClipBoardText() {
         Selenide.executeJavaScript("async function getCBContents() { try { window.cb = await navigator.clipboard.readText(); console.log(\"Pasted content: \", window.cb); } catch (err) { console.error(\"Failed to read clipboard contents: \", err); window.cb = \"Error : \" + err; } } getCBContents();");
         return Objects.requireNonNull(Selenide.executeJavaScript("return window.cb;"));
@@ -83,6 +89,14 @@ public final class StringUtils {
                 break;
         }
         return stack.toString();
+    }
+    public static boolean exist(SelenideElement element, Duration duration) {
+        try {
+            element.should(Condition.exist, duration);
+            return true;
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     public static boolean isNullOrEmpty(String value) {

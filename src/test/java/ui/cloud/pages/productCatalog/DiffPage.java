@@ -6,7 +6,7 @@ import ui.elements.Select;
 
 import static com.codeborne.selenide.Selenide.$x;
 
-public class DiffPage extends BasePage {
+public class DiffPage extends EntityPage {
 
     private final Select versionToCompareWith = Select.byLabel("Версия для сравнения");
 

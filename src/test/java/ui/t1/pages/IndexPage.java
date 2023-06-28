@@ -4,17 +4,22 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
+import ui.t1.pages.S3Storage.CloudStorageS3;
+import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 import ui.t1.pages.supportCenter.NotificationsPage;
+
+import java.time.Duration;
 
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
@@ -24,7 +29,6 @@ import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 @Getter
 public class IndexPage {
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
-    Button linkTools = Button.byXpath("//a[.='Инструменты']");
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
@@ -39,6 +43,9 @@ public class IndexPage {
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
     Button linkNetworks = Button.byXpath("//a[.='Сети']");
+    Button linkTools = Button.byXpath("//a[.='Инструменты']");
+    Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
+    Button linkUsers = Button.byXpath("//a[.='Пользователи']");
 
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
@@ -49,6 +56,12 @@ public class IndexPage {
     public Profile goToProfile(){
         Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
         return new Profile();
+    }
+
+    @Step("Переход на страницу S3 Cloud Storage")
+    public CloudStorageS3 goToS3CloudStoragePage() {
+        linkCloudStorageS3.click();
+        return new CloudStorageS3();
     }
 
     @Step("Переход на страницу T1 Cloud Engine")
@@ -75,6 +88,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkSshKeys.click();
         return new SshKeyList();
+    }
+
+    @Step("Переход на страницу Пользователи")
+    public UsersPage goToUsers() {
+        linkIAM.click();
+        linkUsers.click();
+        return new UsersPage();
     }
 
     @Step("Переход на страницу Виртуальные машины")
@@ -138,6 +158,7 @@ public class IndexPage {
         SelenideElement btnAction = getBtnAction("T1 Cloud Engine");
         Menu.byElement(btnAction).select("Отключить услугу");
         Button.byText("Отключить").click();
+        Waiting.findWithRefresh(() -> !btnAction.isDisplayed(), Duration.ofMinutes(1));
         btnAction.shouldNotBe(Condition.exist);
         Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
         Button.byText("Отключить").click();

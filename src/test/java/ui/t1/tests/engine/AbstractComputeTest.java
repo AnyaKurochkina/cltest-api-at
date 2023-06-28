@@ -5,6 +5,7 @@ import com.codeborne.selenide.Selenide;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
@@ -49,6 +50,7 @@ public abstract class AbstractComputeTest extends Tests {
     public void beforeEach() {
         new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
+        Waiting.sleep(5000);
     }
 
     @BeforeAll

@@ -10,7 +10,7 @@ import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
-public class ServicePage extends BasePage {
+public class ServicePage extends EntityPage {
 
     private final SelenideElement serviceListLink = $x("//a[text()='Список сервисов' and not(@href)]");
     private final Input titleInput = Input.byName("title");
@@ -174,7 +174,7 @@ public class ServicePage extends BasePage {
     @Step("Переход на вкладку 'Сравнение версий'")
     public ServicePage goToVersionComparisonTab() {
         TestUtils.scrollToTheTop();
-        versionComparisonTab.click();
+        getVersionComparisonTab().switchTo();
         return this;
     }
 

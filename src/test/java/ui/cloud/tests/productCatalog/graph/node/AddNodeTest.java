@@ -273,8 +273,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
         page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        Waiting.sleep(2000);
         page.getParamsTab().click();
-        Waiting.sleep(1500);
         page.getInputTextArea().setValue("{\"override_param_1\":\"1\"}");
         assertEquals("Свойство \"override_param_1\" отсутствует в шаблоне (переопределение запрещено)", page.getInputHint().getText());
         page.getOutputTextArea().setValue("{\"override_param_2\":\"1\"}");
@@ -307,8 +307,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
         page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        Waiting.sleep(2000);
         page.getParamsTab().click();
-        Waiting.sleep(1500);
         page.getInputTextArea().setValue(inputValue);
         page.getInputHint().shouldNotBe(Condition.visible);
         page.getOutputTextArea().setValue(outputValue);

@@ -9,6 +9,8 @@ import ui.cloud.pages.orders.ProductsPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.services.ServicesListPage;
 
+import java.time.Duration;
+
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static com.codeborne.selenide.Selenide.$x;
@@ -28,7 +30,8 @@ public class IndexPage {
     private final SelenideElement expandMenuIcon = $x("//div[contains(@class,'Footer')]//*[name()='svg']");
 
     public IndexPage() {
-        if (!collapseMenuItem.isDisplayed()) {
+        collapseMenuItem.should(Condition.exist);
+        if (!Waiting.sleep(collapseMenuItem::isDisplayed, Duration.ofSeconds(3))) {
             expandMenuIcon.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         }
         collapseMenuItem.shouldBe(Condition.visible);

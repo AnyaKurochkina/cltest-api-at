@@ -95,7 +95,15 @@ public class Product extends Entity {
     private List<String> versionFields;
     private Object envs;
     @JsonProperty("tag_list")
-    private List<Object> tagList;
+    private List<String> tagList;
+    @JsonProperty("skip_request_resource_pools")
+    private Boolean skipRequestResourcePools;
+    @JsonProperty("skip_reservation")
+    private Boolean skipReservation;
+    @JsonProperty("skip_validate_checker")
+    private Boolean skipValidateChecker;
+    @JsonProperty("skip_restriction_service")
+    private Boolean skipRestrictionService;
 
     @Override
     public Entity init() {
@@ -143,6 +151,7 @@ public class Product extends Entity {
                 .set("$.description", description)
                 .set("$.author", author)
                 .set("$.max_count", maxCount)
+                .set("$.tag_list", tagList)
                 .build();
     }
 

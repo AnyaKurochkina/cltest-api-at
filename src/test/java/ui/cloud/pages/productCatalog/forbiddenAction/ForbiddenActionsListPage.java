@@ -6,10 +6,10 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -17,7 +17,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Getter
-public class ForbiddenActionsListPage extends BaseListPage {
+public class ForbiddenActionsListPage extends EntityListPage {
 
     private final String nameColumn = "Код запрещенного действия";
     private final SearchSelect typeSelect = SearchSelect.byLabel("Тип");
@@ -51,7 +51,7 @@ public class ForbiddenActionsListPage extends BaseListPage {
 
     @Step("Удаление запрещенного действия '{name}' из списка")
     public ForbiddenActionsListPage delete(String name) {
-        BaseListPage.delete(nameColumn, name);
+        EntityListPage.delete(nameColumn, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
@@ -97,7 +97,7 @@ public class ForbiddenActionsListPage extends BaseListPage {
     @Step("Импорт запрещенного действия из файла '{path}'")
     public ForbiddenActionsListPage importForbiddenAction(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

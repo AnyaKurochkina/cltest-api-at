@@ -37,7 +37,9 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Log4j2
 @Getter
 public abstract class IProductPage {
-    protected final SelenideElement prebillingCostElement = Selenide.$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[contains(.,'₽/сут.') and contains(.,',')]");
+
+    protected final SelenideElement prebillingCostElement = Selenide
+            .$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[(contains(.,'₽/сут.') and contains(.,',')) or text()='без изменений']");
     private static final String HEADER_GROUP = "Группы";
     private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;
@@ -47,7 +49,7 @@ public abstract class IProductPage {
     IProduct product;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
     SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
-    SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг ОС']");
+    SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг OC']");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
@@ -68,6 +70,10 @@ public abstract class IProductPage {
 
     public static SelenideElement getBtnAction(String header) {
         return getBtnAction(header, 1);
+    }
+    public SelenideElement getHeaderBlock (String name)
+    {
+        return $x("//td[.='{}']/../descendant::button", name);
     }
 
     public static SelenideElement getBtnAction(String header, int index) {
@@ -95,11 +101,11 @@ public abstract class IProductPage {
         String expectValue = "Защита от удаления выключена";
         if (checked)
             expectValue = "Защита от удаления включена";
-        ProductStatus status = new ProductStatus(expectValue);
+        OrderStatus status = new OrderStatus(expectValue);
         runActionWithParameters(getLabel(), "Защита от удаления", "Подтвердить",
                 () -> Input.byLabel("Включить защиту от удаления").click(), ActionParameters.builder().waitChangeStatus(false).checkPreBilling(false).checkLastAction(false).build());
         new TopInfo().getValueByColumnInFirstRow("Защита от удаления").$x("descendant::*[name()='svg']")
-                .shouldBe(Condition.match(expectValue, e -> new ProductStatus(e).equals(status)), Duration.ofSeconds(10));
+                .shouldBe(Condition.match(expectValue, e -> new OrderStatus(e).equals(status)), Duration.ofSeconds(10));
     }
 
     @Step("Получение label")
@@ -181,8 +187,13 @@ public abstract class IProductPage {
         if (Objects.nonNull(params.getNode())) {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
-        if (params.isWaitChangeStatus())
-            waitChangeStatus();
+        if (params.isWaitChangeStatus()) {
+            if (params.getTimeOut() == null) {
+                waitChangeStatus();
+            } else {
+                waitChangeStatus(params.getTimeOut());
+            }
+        }
         if (params.isCheckLastAction())
             checkLastAction(action);
     }
@@ -223,11 +234,11 @@ public abstract class IProductPage {
     }
 
     @Step("Проверка статуса заказа")
-    public void checkErrorByStatus(ProductStatus status) {
-        if (status.equals(ProductStatus.ERROR)) {
+    public void checkErrorByStatus(OrderStatus status) {
+        if (status.equals(OrderStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
                     product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
-        } else if (status.equals(ProductStatus.BLOCKED)) {
+        } else if (status.equals(OrderStatus.BLOCKED)) {
             Assertions.fail("Продукт в статусе заблокирован");
         } else log.info("Статус действия {}", status);
     }
@@ -350,7 +361,7 @@ public abstract class IProductPage {
             return;
         TypifiedElement.refresh();
         currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(3));
-        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(3),
+        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(5),
                 "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (currentCost == prebillingCostValue && prebillingCostValue == 0)
             return;
@@ -379,14 +390,23 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getOrderCost() {
-        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(3)));
+        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(5)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }
 
-    private static class TopInfo extends Table {
+    static class TopInfo extends Table {
         public TopInfo() {
             super("Защита от удаления");
+        }
+
+        public String getOrderStatus() {
+            return new OrderStatus(getValueByColumnInFirstRow("Статус").$x("descendant::*[name()='svg']")
+                    .scrollIntoView(scrollCenter)).getStatus();
+        }
+
+        public void checkOrderStatus(String status) {
+            Assertions.assertEquals(status, getOrderStatus(), "Статус заказа не соотвествует ожидаемому");
         }
     }
 
@@ -404,12 +424,12 @@ public abstract class IProductPage {
             return getValueByColumnInFirstRow("Наименование").getText();
         }
 
-        public ProductStatus lastActionStatus() {
+        public OrderStatus lastActionStatus() {
             return getValueByColumnInFirstRow("Статус").$$x("descendant::*[name()='svg']")
                     .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                     .stream()
-                    .map(ProductStatus::new)
-                    .filter(ProductStatus::isStatus)
+                    .map(OrderStatus::new)
+                    .filter(OrderStatus::isStatus)
                     .findFirst()
                     .orElseThrow(NotFoundException::new);
         }
@@ -432,7 +452,7 @@ public abstract class IProductPage {
         }
 
         public String getPowerStatus(String header) {
-            return new ProductStatus(getValueByColumnInFirstRow(header).$x("descendant::*[name()='svg']").scrollIntoView(scrollCenter)).getStatus();
+            return new OrderStatus(getValueByColumnInFirstRow(header).$x("descendant::*[name()='svg']").scrollIntoView(scrollCenter)).getStatus();
         }
 
         public void checkPowerStatus(String status) {

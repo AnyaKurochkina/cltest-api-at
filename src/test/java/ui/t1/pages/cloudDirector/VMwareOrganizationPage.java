@@ -6,7 +6,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.orders.OrderUtils;
-import ui.cloud.pages.orders.ProductStatus;
+import ui.cloud.pages.orders.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -15,9 +15,11 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ui.cloud.tests.productCatalog.TestUtils.scrollToTheTop;
 
 public class VMwareOrganizationPage {
     SelenideElement roleDropDown = $x("//*[@id ='mui-component-select-role_id']");
+    SelenideElement cloudDirectorPage = $x("//a[text() = 'Список VMware организаций']");
     Button usersTab;
     Button dataCentreTab;
 
@@ -32,6 +34,13 @@ public class VMwareOrganizationPage {
     public VMwareOrganizationPage goToUsers() {
         usersTab.click();
         return this;
+    }
+
+    @Step("Переход на страницу Список VMware организаций")
+    public CloudDirectorPage goToCloudDirectorPage() {
+        scrollToTheTop();
+        cloudDirectorPage.click();
+        return new CloudDirectorPage();
     }
 
     @Step("Создание пользователя")
@@ -58,6 +67,7 @@ public class VMwareOrganizationPage {
                 .setDataCentreName(name)
                 .setCpu("2")
                 .setRam("4")
+                .setDataCentreProfile("High")
                 .orderDataCentre();
     }
 
@@ -66,6 +76,7 @@ public class VMwareOrganizationPage {
         new DataCentreTable().clickAdd();
         new DataCentreCreatePage()
                 .setDataCentreName(name)
+                .setDataCentreProfile("High")
                 .orderDataCentreWithSameName();
     }
 
@@ -156,8 +167,8 @@ public class VMwareOrganizationPage {
             super(COLUMN_NAME);
         }
 
-        public ProductStatus getStatus() {
-            return new ProductStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
+        public OrderStatus getStatus() {
+            return new OrderStatus(getValueByColumnInFirstRow("Статус").scrollIntoView(true).$x("descendant::*[name()='svg']"));
         }
     }
 }

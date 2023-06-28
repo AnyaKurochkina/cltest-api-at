@@ -54,8 +54,9 @@ public class OtherTest extends AbstractComputeTest {
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
         Assertions.assertEquals(4, items.stream().filter(e -> e.getOrderId().equals(orderId))
                 .filter(e -> e.getSrcOrderId().equals(""))
-                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance")).findFirst().orElseThrow(
-                        () -> new NotFoundException("Не найден item с type=compute")).getItemId()))
+                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance"))
+                        .filter(i -> i.getOrderId().equals(orderId))
+                        .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 4 item's (nic & volume)");
 
@@ -94,7 +95,7 @@ public class OtherTest extends AbstractComputeTest {
                 .setPublicIp(ip)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate(false);
         String orderIdVm = vmPage.getOrderId();
 
         String instanceId = StateServiceSteps.getItems(project.getId()).stream()
@@ -376,7 +377,10 @@ public class OtherTest extends AbstractComputeTest {
                 .selectDisk(disk.getName())
                 .runActionWithCheckCost(CompareType.LESS, diskPage::detachComputeVolume);
 
-        NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
-        networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSubnet("default");
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .getNetworkMenu()
+                .updateSubnet("default");
     }
 }

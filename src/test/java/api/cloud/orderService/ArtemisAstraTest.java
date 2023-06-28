@@ -14,6 +14,8 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import api.Tests;
 
+import java.util.Collections;
+
 @Epic("Продукты")
 @Feature("Artemis Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("artemis_astra"), @Tag("prod")})
@@ -45,7 +47,11 @@ public class ArtemisAstraTest extends Tests {
     @ParameterizedTest(name = "Создать клиента Own без сервиса {0}")
     void createClientOwn(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.createClient("own", "randomusr1", "randomcertif1");
+            Artemis.Client client = new Artemis.Client();
+            client.setClientTypes("own");
+            client.setName("randomusr1");
+            client.setOwnerCert("randomcertif1");
+            artemis.createClient(client);
         }
     }
 
@@ -55,7 +61,13 @@ public class ArtemisAstraTest extends Tests {
     @ParameterizedTest(name = "Создать клиента temporary {0}")
     void createClientTemporary(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.createClient("temporary", "randomusr2", "randomcertif2");
+            artemis.createService("someserv2", "somecertif");
+            Artemis.Client client = new Artemis.Client();
+            client.setClientTypes("temporary");
+            client.setName("randomusr2");
+            client.setOwnerCert("randomcertif2");
+            client.setServiceNames(Collections.singletonList("someserv2"));
+            artemis.createClient(client);
         }
     }
 
@@ -65,7 +77,11 @@ public class ArtemisAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить клиента {0}")
     void deleteClient(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.createClient("own", "randomusr3", "randomcertif3");
+            Artemis.Client client = new Artemis.Client();
+            client.setClientTypes("own");
+            client.setName("randomusr3");
+            client.setOwnerCert("randomcertif3");
+            artemis.createClient(client);
             artemis.deleteClient("randomusr3");
         }
     }
@@ -77,7 +93,11 @@ public class ArtemisAstraTest extends Tests {
     void createClientOwnWithService(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.createService("someserv", "somecertif");
-            artemis.createClientWithService("own", "randomusr4", "randomcertif4", "someserv");
+            Artemis.Client client = new Artemis.Client();
+            client.setClientTypes("own");
+            client.setName("randomusr3");
+            client.setOwnerCert("randomcertif3");
+            client.setServiceNames(Collections.singletonList("someserv"));
         }
     }
 

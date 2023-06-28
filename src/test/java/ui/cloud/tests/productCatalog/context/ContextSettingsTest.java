@@ -28,10 +28,24 @@ public class ContextSettingsTest extends BaseTest {
         page.getDevProjectInput().setValue(devProject.getId());
         page.getTestProjectInput().setValue(testProject.getId());
         page.save();
-        page.getRestoreDefaultProjects().click();
+        page.getRestoreDefaultProjectsButton().click();
         page.getDevProjectInput().getInput().shouldHave(Condition.exactValue(defaultDevProject));
         page.getTestProjectInput().getInput().shouldHave(Condition.exactValue(defaultTestProject));
         page.getProdProjectInput().getInput().shouldHave(Condition.exactValue(defaultProdProject));
         page.save();
+    }
+
+    @Test
+    @TmsLink("1257620")
+    @DisplayName("Сбросить введенные данные")
+    public void resetEnteredData() {
+        ContextSettingsPage page = new ControlPanelIndexPage().goToContextSettingsPage();
+        page.getDevProjectInput().setValue("new_project");
+        page.getTestProjectInput().setValue("new_project");
+        page.getProdProjectInput().setValue("new_project");
+        page.getResetEnteredDataButton().click();
+        page.getDevProjectInput().getInput().shouldHave(Condition.exactValue(defaultDevProject));
+        page.getTestProjectInput().getInput().shouldHave(Condition.exactValue(defaultTestProject));
+        page.getProdProjectInput().getInput().shouldHave(Condition.exactValue(defaultProdProject));
     }
 }

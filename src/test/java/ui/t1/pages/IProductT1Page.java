@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Assertions;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.IProductPage;
-import ui.cloud.pages.orders.ProductStatus;
+import ui.cloud.pages.orders.OrderStatus;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
@@ -26,7 +26,8 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     public static final String BLOCK_PARAMETERS = "Основные параметры";
     private final SelenideElement waitStatus = $x("//*[.='Обновляется информация о заказе']");
 
-    public IProductT1Page() {}
+    public IProductT1Page() {
+    }
 
     public void delete() {
         switchProtectOrder(false);
@@ -39,24 +40,33 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     }
 
     @SuppressWarnings("unchecked")
-    public C checkCreate(){
-        if(Objects.isNull(OrderUtils.getPreBillingPrice()))
-            Waiting.sleep(30000);
+    //false для случаев, когда продукт использует уже созданную сущность и стоимость в итоге будет складываться
+    //(пока без проверки)
+    public C checkCreate(boolean checkCost) {
+        if (checkCost)
+            if (Objects.isNull(OrderUtils.getPreBillingPrice()))
+                Waiting.sleep(30000);
         checkLastAction("Развертывание");
         btnGeneralInfo.click();
-        if(Objects.nonNull(OrderUtils.getPreBillingPrice()))
-            Assertions.assertEquals(OrderUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        if (checkCost)
+            if (Objects.nonNull(OrderUtils.getPreBillingPrice()))
+                Assertions.assertEquals(OrderUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
+        OrderUtils.setPreBillingPrice(null);
         return (C) this;
+    }
+
+    public C checkCreate() {
+        return checkCreate(true);
     }
 
     @Override
     public void waitChangeStatus() {
-        waitChangeStatus(Duration.ofMinutes(1));
+        waitChangeStatus(Duration.ofSeconds(70));
     }
 
     @Override
     public void waitChangeStatus(Duration duration) {
-        if(waitStatus.exists())
+        if (waitStatus.exists())
             waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
     }
 
@@ -64,7 +74,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
         getBtnGeneralInfo().getButton().shouldBe(Condition.visible);
-        if(historyTab.getElement().exists()) {
+        if (historyTab.getElement().exists()) {
             TypifiedElement.refresh();
             historyTab.switchTo();
             History history = new History();
@@ -75,8 +85,8 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     @Override
     @Step("Проверка статуса заказа")
-    public void checkErrorByStatus(ProductStatus status) {
-        if (status.equals(ProductStatus.ERROR)) {
+    public void checkErrorByStatus(OrderStatus status) {
+        if (status.equals(OrderStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: \nИтоговый статус: %s . \nОшибка: %s", status,
                     StateServiceSteps.getLastErrorByProjectId(OrderUtils.getCurrentProjectId())));
         } else log.info("Статус действия {}", status);

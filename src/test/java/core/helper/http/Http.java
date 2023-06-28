@@ -9,7 +9,6 @@ import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.SSLConfig;
 import io.restassured.specification.RequestSpecification;
-import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
@@ -72,6 +71,12 @@ public class Http {
         this.host = host;
     }
 
+    private Http() {}
+
+    public static Http builder() {
+        return new Http();
+    }
+
     public Http(String host, JSONObject body) {
         this.host = host;
         this.body = body.toString();
@@ -102,8 +107,6 @@ public class Http {
     public Response get(String path, Object... args) {
         this.method = "GET";
         for (Object arg : args) {
-            if(arg == null)
-                System.out.println(1);
             path = path.replaceFirst("\\{}", Objects.requireNonNull(arg).toString()
                     .replaceAll("#", "%23")
                     .replaceAll(" ", "%20"));
@@ -132,6 +135,19 @@ public class Http {
         this.method = "PUT";
         this.path = StringUtils.format(path, args);
         return request();
+    }
+
+    public Response api(Path api, Object... args) {
+        String pattern = "{}";
+        this.host = api.url;
+        this.method = api.method.toString();
+        this.path = api.path.replaceAll("\\{([^}]*)}", pattern);
+        if(StringUtils.count(this.path, pattern) == args.length - 1)
+            this.path += pattern;
+        this.path = StringUtils.format(this.path, args);
+        Response request = request();
+        request.assertStatus(api.status);
+        return request;
     }
 
     public Http setContentType(String contentType) {

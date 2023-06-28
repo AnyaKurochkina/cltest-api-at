@@ -33,6 +33,7 @@ public class GraphNodesPage extends GraphPage {
             "div[contains(@class,'LayoutButtonsStyled')]//*[name()='svg'])[1]");
     private final SelenideElement copyNodeFromGraphButton = $x("(//div[@class='react-flow']/" +
             "div[contains(@class,'LayoutButtonsStyled')]//*[name()='svg'])[3]");
+    private final Button deleteSelectedButton = Button.byDataTestId("delete-node");
     private final SelenideElement editNodeButton = $x("(//div[@class='react-flow']//" +
             "div[contains(@class,'ContextMenuIconStyled')]/*[name()='svg'])[1]");
     private final SelenideElement copyNodeButton = $x("(//div[@class='react-flow']//" +
@@ -113,6 +114,7 @@ public class GraphNodesPage extends GraphPage {
         if (!Objects.isNull(node.getTemplateId())) {
             Template template = TemplateSteps.getTemplateById(node.getTemplateId());
             templateSelect.setContains(template.getName());
+            Waiting.sleep(2000);
         }
         additionalTab.click();
         countInput.setValue(String.valueOf(node.getCount()));
@@ -297,6 +299,16 @@ public class GraphNodesPage extends GraphPage {
         fitViewButton.click();
         selectNodeInGraph(node);
         deleteNodeButton.click();
+        saveGraphWithPatchVersion();
+        return this;
+    }
+
+    @Step("Удаление узла '{node.name}' по кнопке 'Удалить выделенные' и сохранение графа")
+    public GraphNodesPage deleteSelectedNodeAndSave(GraphItem node) {
+        generalInfoTab.getElement().scrollIntoView(true);
+        fitViewButton.click();
+        selectNodeInGraph(node);
+        deleteSelectedButton.click();
         saveGraphWithPatchVersion();
         return this;
     }

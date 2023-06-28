@@ -5,13 +5,11 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
-import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionPage;
 import ui.elements.Alert;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.SearchSelect;
 import ui.elements.Table;
 
@@ -19,7 +17,7 @@ import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Getter
-public class AllowedActionsListPage extends BaseListPage {
+public class AllowedActionsListPage extends EntityListPage {
 
     private final String nameColumn = "Код разрешенного действия";
     private final SearchSelect typeSelect = SearchSelect.byLabel("Тип");
@@ -53,7 +51,7 @@ public class AllowedActionsListPage extends BaseListPage {
 
     @Step("Удаление разрешенного действия '{name}' из списка")
     public AllowedActionsListPage delete(String name) {
-        BaseListPage.delete(nameColumn, name);
+        EntityListPage.delete(nameColumn, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
@@ -99,7 +97,7 @@ public class AllowedActionsListPage extends BaseListPage {
     @Step("Импорт разрешенного действия из файла '{path}'")
     public AllowedActionsListPage importAllowedAction(String path) {
         importButton.click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;

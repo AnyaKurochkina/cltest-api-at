@@ -8,7 +8,7 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Getter
-public class ActionsListPage extends BaseListPage {
+public class ActionsListPage extends EntityListPage {
     private static final String NAME_COLUMN = "Код действия";
     private final SearchSelect typeSelect = SearchSelect.byLabel("Тип");
     private final SearchSelect providerSelect = SearchSelect.byLabel("Провайдер");
@@ -82,7 +82,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Импорт действия из файла")
     public ActionsListPage importAction(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
         return this;
@@ -108,7 +108,7 @@ public class ActionsListPage extends BaseListPage {
     @Step("Проверка заголовков списка действий")
     public ActionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(NAME_COLUMN),
-                "Наименование", NAME_COLUMN, "Дата создания", "Тип", "Провайдер", "", "");
+                "Наименование", NAME_COLUMN, "Дата создания", "Тип", "Провайдер", "Теги", "", "");
         return this;
     }
 

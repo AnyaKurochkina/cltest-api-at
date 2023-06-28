@@ -148,6 +148,17 @@ public class ReferencesStep extends Steps {
         return new Gson().fromJson(jsonArray, type);
     }
 
+    @Step("Получение списка Pages по фильтру")
+    public static List<Pages> getPagesList(String...filter) {
+        String filters = String.join("&", filter);
+         return new Http(ReferencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/pages/?" + filters)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", Pages.class);
+    }
+
     @Step("Получение Pages по Id")
     public static Pages getPagesById(String pageId) {
         return new Http(ReferencesURL)
@@ -367,6 +378,11 @@ public class ReferencesStep extends Steps {
                 .post("/api/v1/private/page_filters/")
                 .assertStatus(201)
                 .extractAs(PageFilter.class);
+    }
+
+    @Step("Проверка наличия page_filters для приватных ролей")
+    public static boolean isPrivatePageFilterExist(String key) {
+        return getPrivatePageFiltersList().stream().anyMatch(x -> x.getKey().equals(key));
     }
 
     @Step("Обновление page_filters для приватных ролей")

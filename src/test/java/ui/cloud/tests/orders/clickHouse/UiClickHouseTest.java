@@ -96,7 +96,7 @@ public class UiClickHouseTest extends UiProductTest {
         clickHousePage.getBtnGeneralInfo().click();
         clickHousePage.checkHeadersHistory();
         clickHousePage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test

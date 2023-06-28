@@ -20,5 +20,6 @@
   "priority_can_be_overridden": false,
   "allowed_groups": [],
   "restricted_groups": [],
-  "version_list": []
+  "version_list": [],
+  "tag_list": []
 }

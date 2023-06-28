@@ -33,12 +33,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("ClickHouse Cluster")
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
-    ClickHouseCluster product;
-//    ClickHouseCluster product = ClickHouseCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/50b52931-3f9f-4bd4-9868-373baa186cdf/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
+    ClickHouseCluster product;
+    //=ClickHouseCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/74c978dc-9482-48e3-b8d0-371096655026/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameAD = "at_ad_user";
     String nameLocalAD = "at_local_user";
-    String nameGroup = "cloud-zorg-dev-group";
     SelenideElement node = $x("(//td[.='clickhouse'])[1]");
 
     @BeforeEach
@@ -100,7 +99,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
         clickHouseClusterPage.getBtnGeneralInfo().click();
         clickHouseClusterPage.checkHeadersHistory();
         clickHouseClusterPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
@@ -179,7 +178,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @Test
     @Order(11)
     @TmsLinks({@TmsLink("1152788"), @TmsLink("1152789")})
-    @DisplayName("UI ClickHouse Cluster. Группы. Добавить/удалить пользовательскую группу")
+    @DisplayName("UI ClickHouse Cluster. Группы. Добавить и удалить пользовательскую группу")
     void addGroupAD() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
@@ -190,7 +189,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @Test
     @Order(12)
     @TmsLinks({@TmsLink("1152793"), @TmsLink("1152794")})
-    @DisplayName("UI ClickHouse Cluster. Группы. Добавить группу администраторов")
+    @DisplayName("UI ClickHouse Cluster. Группы. Добавить и удалить группу администраторов")
     void addGroupAdmin() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();

@@ -90,7 +90,7 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("current_version")
     private String currentVersion;
     @JsonProperty("tag_list")
-    private List<Object> tagList;
+    private List<String> tagList;
 
     @Override
     public Entity init() {
@@ -118,6 +118,7 @@ public class Template extends Entity implements IProductCatalog {
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.description", description)
+                .set("$.tag_list", tagList)
                 .build();
     }
 

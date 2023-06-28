@@ -6,17 +6,17 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgreSQL;
+import models.cloud.subModels.Flavor;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
+import steps.references.ReferencesStep;
 
-import static models.cloud.orderService.interfaces.IProduct.VM_IP_PATH;
+import java.util.Arrays;
+import java.util.List;
 
 @Epic("Продукты")
 @Feature("PostgreSQL Astra")
@@ -34,6 +34,7 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("1057048")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -50,7 +51,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
         }
     }
 
@@ -61,7 +62,7 @@ public class PostgreSQLAstraTest extends Tests {
     void checkDbConnection(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             String db = "bd_for_check_connection";
-            postgreSQL.createNonProd(db, adminPassword);
+            postgreSQL.createDb(db, adminPassword);
             postgreSQL.checkConnection(db, adminPassword);
             postgreSQL.removeDb(db);
         }
@@ -73,7 +74,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createDbmsUser("chelik1", "user", dbName);
         }
     }
@@ -84,7 +85,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createDbmsUser("chelikforreset1", "user", dbName);
             postgreSQL.resetPassword("chelikforreset1");
         }
@@ -96,7 +97,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.resetDbOwnerPassword(dbName);
         }
     }
@@ -107,9 +108,111 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createDbmsUser("chelikforreset2", "user", dbName);
             postgreSQL.removeDbmsUser("chelikforreset2", dbName);
+        }
+    }
+
+    @TmsLink("1701481")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменить extensions {0}")
+    void updateExtensions(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.updateExtensions(dbName, Arrays.asList("pg_trgm", "hstore"));
+        }
+    }
+
+    @TmsLink("1701482")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Актуализировать extensions {0}")
+    void getExtensions(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.getExtensions(dbName, "ltree");
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавить точку монтирования /pg_audit {0}")
+    void addMountPointPgAudit(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.addMountPointPgAudit();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавить точку монтирования /pg_backup {0}")
+    void addMountPointPgBackup(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.addMountPointPgBackup();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавить точку монтирования /pg_walarchive {0}")
+    void addMountPointPgWalarchive(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.addMountPointPgWalarchive();
+        }
+    }
+
+    @TmsLink("1057040")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Максимизировать max_connections {0}")
+    void updateMaxConnections(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            if(postgreSQL.isDev()) {
+                postgreSQL.updateMaxConnectionsBySsh(500);
+                postgreSQL.updateMaxConnections();
+                Assertions.assertEquals(500, Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
+
+                postgreSQL.updateMaxConnectionsBySsh(99);
+                postgreSQL.updateMaxConnections();
+                Assertions.assertEquals(postgreSQL.maxConnections(), Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
+            }
+            postgreSQL.updateMaxConnections();
+            Assertions.assertEquals(postgreSQL.maxConnections(), Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
+        }
+    }
+
+    @TmsLink("1701483")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить минорную версию СУБД {0}")
+    void updatePostgresql(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.updatePostgresql();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void updateOs(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.updateOs();
+        }
+    }
+
+    @TmsLink("1701485")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Получить актуальную конфигурацию {0}")
+    void getConfiguration(PostgreSQL product) {
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.getConfiguration();
         }
     }
 
@@ -130,7 +233,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.removeDb(dbName);
         }
     }
@@ -153,7 +256,9 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.resize(postgreSQL.getMaxFlavor());
+            List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(postgreSQL);
+            Assertions.assertTrue(list.size() > 1, "Кол-во flavors: " + list.size());
+            postgreSQL.resize(list.get(1));
         }
     }
 
@@ -179,24 +284,14 @@ public class PostgreSQLAstraTest extends Tests {
         }
     }
 
-    @TmsLink("1057040")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить max_connections {0}")
-    void updateMaxConnections(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.updateMaxConnections("OLTP", 99);
-        }
-    }
-
     @TmsLinks({@TmsLink("1116377"), @TmsLink("1116378"), @TmsLink("1104181")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Назначить/Убрать предел подключений {0}")
     void setConnLimit(PostgreSQL product) {
-        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
+//        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.setConnLimit(dbName, 20);
             postgreSQL.removeConnLimit(dbName);
         }
@@ -207,7 +302,7 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
     void checkUserPermissions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createNonProd(dbName, adminPassword);
+            postgreSQL.createDb(dbName, adminPassword);
             String ip = (String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip");
             postgreSQL.checkUseSsh(ip, dbName, adminPassword);
         }

@@ -50,6 +50,16 @@ public class AstraTest extends Tests {
         }
     }
 
+    @TmsLink("1685463")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Реинвентаризация ВМ (Linux) {0}")
+    void updateVmInfo(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.updateVmInfo();
+        }
+    }
+
     @Disabled
     @TmsLink("391702")
     @Tag("actions")
@@ -99,6 +109,16 @@ public class AstraTest extends Tests {
     void checkCreateAd(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.checkCertsBySsh();
+        }
+    }
+
+    @TmsLinks({@TmsLink("1733768"), @TmsLink("1733769")})
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создать/удалить снапшот {0}")
+    void createSnapshot(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.createSnapshot(1);
+            astra.deleteSnapshot();
         }
     }
 

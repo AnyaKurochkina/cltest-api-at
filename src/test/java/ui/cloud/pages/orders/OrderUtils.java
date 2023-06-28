@@ -38,7 +38,8 @@ public class OrderUtils {
     }
 
     public static void updatePreBillingPrice() {
-        if (NewOrderPage.getCalculationDetails().exists()) {
+        if (NewOrderPage.getCalculationDetailsHeader().exists()) {
+            Waiting.sleep(2000);
             preBillingPrice.set(getCostValue($x("//*[@data-testid='new-order-details-price' and contains(.,',')]").shouldBe(Condition.visible)));
         } else preBillingPrice.set(null);
     }
@@ -58,9 +59,13 @@ public class OrderUtils {
         }
     }
 
-    public static double getCostValue(SelenideElement element) {
+    public static Double getCostValue(SelenideElement element) {
         element.shouldBe(Condition.visible);
-        return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?[\\d\\s]{1,},\\d{2})", element.getText()))
+        final String text = element.getText();
+        if(text.equals("без изменений"))
+            return null;
+        log.debug("Стоимость '{}'", text);
+        return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?[\\d\\s]{1,},\\d{2})", text))
                 .replace(',', '.').replaceAll(" ", ""));
     }
 
@@ -70,19 +75,19 @@ public class OrderUtils {
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
                 .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
-                        new ProductStatus(e).isNeedWaiting()), duration);
+                        new OrderStatus(e).isNeedWaiting()), duration);
         Waiting.sleep(1000);
         List<String> titles = table.update().getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
-                .stream().map(e -> new ProductStatus(e).getStatus()).collect(Collectors.toList());
+                .stream().map(e -> new OrderStatus(e).getStatus()).collect(Collectors.toList());
         log.debug("Итоговый статус: {}", titles);
     }
 
     public static void waitStatus(Table table, String status, Duration duration) {
         table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
                 .shouldBe(CollectionCondition.anyMatch("Ожидание заверешения действия", e ->
-                        new ProductStatus(e).getStatus().equals(status)), duration);
+                        new OrderStatus(e).getStatus().equals(status)), duration);
     }
 
     public static void clickOrder() {

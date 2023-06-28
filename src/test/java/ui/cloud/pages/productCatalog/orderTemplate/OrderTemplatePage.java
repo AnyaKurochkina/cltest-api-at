@@ -6,7 +6,7 @@ import io.qameta.allure.Step;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
@@ -14,7 +14,7 @@ import ui.elements.*;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OrderTemplatePage extends BasePage {
+public class OrderTemplatePage extends EntityPage {
 
     private final SelenideElement previewButton = $x("//button[.//span[text()='Просмотр']]");
     private final Input titleInput = Input.byName("title");

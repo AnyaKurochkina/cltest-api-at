@@ -86,7 +86,7 @@ public class UiPodmanTest extends UiProductTest {
         podmanPage.getGeneralInfoTab().switchTo();
         podmanPage.checkHeadersHistory();
         podmanPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test

@@ -44,7 +44,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 
     public void start() {
@@ -71,13 +71,13 @@ public class ScyllaDbClusterPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Перезагрузить");
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopHard() {
@@ -88,7 +88,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
 
     public void createDb(String name) {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_DB).isEmpty()) {
             runActionWithParameters(BLOCK_DB, "Добавить БД", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить БД");
@@ -100,7 +100,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     }
 
     public void addUserDb(String nameUserDb) {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_DB_USERS_ROLE).isEmpty()) {
             runActionWithParameters(BLOCK_DB_USERS, "Добавить пользователя", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить пользователя");
@@ -114,7 +114,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     }
 
     public void addRightsUser(String nameDb, String nameUserDb) {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER_DB, 2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb))) {
             runActionWithParameters(BLOCK_ACCESS, "Добавить права доступа пользователю БД", "Подтвердить", () -> {
                 Dialog.byTitle("Добавить права доступа пользователю БД");
@@ -128,7 +128,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     }
 
     public void deleteRightsUser(String nameUserDb) {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER)
+        new ScyllaDbClusterPage.VirtualMachineTable()
                 .checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_USER_DB, 2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb)) {
             runActionWithoutParameters(getBtnAction(nameUserDb, 2), "Удалить права доступа пользователю БД");
@@ -139,7 +139,7 @@ public class ScyllaDbClusterPage extends IProductPage {
     }
 
     public void removeDb(String name) {
-        new ScyllaDbClusterPage.VirtualMachineTable(POWER).checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             runActionWithoutParameters(name, "Удалить БД");
             generalInfoTab.switchTo();
@@ -256,8 +256,8 @@ public class ScyllaDbClusterPage extends IProductPage {
 
 
     public class VirtualMachineTable extends VirtualMachine {
-        public VirtualMachineTable(String columnName) {
-            super(columnName);
+        public VirtualMachineTable() {
+            super("Роли узла");
         }
 
         @Override

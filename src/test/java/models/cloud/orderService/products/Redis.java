@@ -30,6 +30,7 @@ public class Redis extends IProduct {
     String appUserPassword;
     String appUser;
     String redisVersion;
+    Flavor flavor;
 
     @Override
     @Step("Заказ продукта")
@@ -45,6 +46,8 @@ public class Redis extends IProduct {
         if (appUser == null)
             appUser = "appuser";
         initProduct();
+        if (flavor == null)
+            flavor = getMinFlavor();
         if (osVersion == null) {
             osVersion = getRandomOsVersion();
         }
@@ -73,11 +76,13 @@ public class Redis extends IProduct {
                     .put("$.order.attrs", "layout", getIdGeoDistribution("2-single-node-servers", "redis"));
         }
         return template.set("$.order.attrs.domain", getDomain())
+                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.redis_version", redisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.project_name", projectId)
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.os_version", osVersion)
@@ -89,7 +94,7 @@ public class Redis extends IProduct {
 
     //Изменить конфигурацию
     public void resize(Flavor flavor) {
-        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}"), this.getProjectId());
+        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");

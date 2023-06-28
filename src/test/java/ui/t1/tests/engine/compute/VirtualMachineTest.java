@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLinks;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.NotFoundException;
@@ -41,10 +42,11 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины")
     void vmList() {
         new IndexPage().goToVirtualMachine();
-        assertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Дата создания", "");
+        assertHeaders(new VmList.VmTable(), "", "Имя", "Статус", "Платформа", "CPU", "RAM", "Зона доступности", "Внутренний IP", "Внешние IP-адреса", "Дата создания", "");
     }
 
     @Test
+    @Tag("health_check")
     @TmsLink("1248261")
     @DisplayName("Cloud Compute. Виртуальные машины. Создание")
     void vmCreatePage() {
@@ -54,6 +56,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setImage(image)
                 .setBootSize(2)
                 .setBootType(hddTypeFirst)
+                .addSecurityGroups(securityGroup)
                 .setSubnet(Select.RANDOM_VALUE);
         SelenideElement button = Button.byText("Заказать").getButton();
         button.shouldNot(activeCnd);
@@ -62,8 +65,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
         vmPage.setDescription(new Generex("[a-zA-Z0-9-_]{3,10}").random())
                 .setDeleteOnTermination(false)
                 .setFlavor(Select.RANDOM_VALUE)
-                .setFlavorName(flavorName)
-                .addSecurityGroups(securityGroup);
+                .setFlavorName(flavorName);
     }
 
     @DisabledIfEnv("t1prod")
@@ -104,8 +106,9 @@ public class VirtualMachineTest extends AbstractComputeTest {
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
         Assertions.assertEquals(3, items.stream().filter(e -> e.getOrderId().equals(orderId))
                 .filter(e -> e.getSrcOrderId().equals(""))
-                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance")).findFirst().orElseThrow(
-                        () -> new NotFoundException("Не найден item с type=compute")).getItemId()))
+                .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance"))
+                        .filter(i -> i.getOrderId().equals(orderId))
+                        .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 4 item's (nic & volume)");
 

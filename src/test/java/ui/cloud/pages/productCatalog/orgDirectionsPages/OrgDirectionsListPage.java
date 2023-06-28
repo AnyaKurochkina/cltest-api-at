@@ -6,17 +6,17 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
-import ui.cloud.pages.productCatalog.BaseListPage;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.InputFile;
+import ui.elements.FileImportDialog;
 import ui.elements.Table;
 import ui.elements.TypifiedElement;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class OrgDirectionsListPage extends BaseListPage {
+public class OrgDirectionsListPage extends EntityListPage {
 
     private final String nameColumn = "Код направления";
 
@@ -76,7 +76,7 @@ public class OrgDirectionsListPage extends BaseListPage {
     @Step("Выбор и импорт файла")
     public OrgDirectionsListPage uploadFile(String path) {
         importButton.scrollIntoView(TypifiedElement.scrollCenter).click();
-        new InputFile(path).importFileAndSubmit();
+        new FileImportDialog(path).importFileAndSubmit();
         closeButton.click();
         return this;
     }

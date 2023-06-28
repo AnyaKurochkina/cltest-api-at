@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import steps.authorizer.AuthorizerSteps;
@@ -71,6 +72,27 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
         } catch (Exception e) {
             deleteVMwareOrganization(project.getId(), orgName);
         }
+    }
+
+    @Test
+    @TmsLink("202041")
+    @DisplayName("VMware. Удаление организации с Виртуальным дата-центром")
+    void deleteVMwareOrganizationWithVDCTest() {
+        String dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "-at-ui";
+        String orgName = new IndexPage()
+                .goToCloudDirector()
+                .create(UUID.randomUUID().toString().substring(25) + "-at-ui");
+        assertTrue(new CloudDirectorPage()
+                .goToOrganization(orgName)
+                .addDataCentre(dataCentreName)
+                .waitChangeStatus()
+                .goToCloudDirectorPage()
+                .deleteWithOrders(orgName)
+                .isOrganizationExist(orgName), "Организации не существует");
+        new CloudDirectorPage().goToOrganization(orgName)
+                .selectDataCentre(dataCentreName)
+                .delete();
+        deleteVMwareOrganization(project.getId(), orgName);
     }
 
     @Test

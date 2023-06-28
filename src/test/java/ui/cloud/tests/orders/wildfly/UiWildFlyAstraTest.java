@@ -32,7 +32,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
 
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/web/orders/f50263d6-d6c9-4b29-b758-8689b3cb8bc2/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    WildFly product;// = WildFly.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b3a48047-5370-466c-8764-4899aa4c8282/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -86,7 +86,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.getGeneralInfoTab().switchTo();
         wildFlyPage.checkHeadersHistory();
         wildFlyPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().checkGraph();
+        new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
@@ -162,7 +162,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("superuser", accessGroupOne.getPrefixName()));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", accessGroupOne.getPrefixName()));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }

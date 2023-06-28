@@ -10,7 +10,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.BasePage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
@@ -24,7 +24,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Getter
-public class TemplatePage extends BasePage {
+public class TemplatePage extends EntityPage {
     private static final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
     private final SelenideElement templateVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
