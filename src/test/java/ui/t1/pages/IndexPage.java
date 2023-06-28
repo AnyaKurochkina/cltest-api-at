@@ -11,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
 import ui.t1.pages.S3Storage.CloudStorageS3;
+import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
@@ -39,6 +40,9 @@ public class IndexPage {
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
     Button linkNetworks = Button.byXpath("//a[.='Сети']");
+    Button linkTools = Button.byXpath("//a[.='Инструменты']");
+    Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
+    Button linkUsers = Button.byXpath("//a[.='Пользователи']");
 
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
@@ -81,6 +85,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkSshKeys.click();
         return new SshKeyList();
+    }
+
+    @Step("Переход на страницу Пользователи")
+    public UsersPage goToUsers() {
+        linkIAM.click();
+        linkUsers.click();
+        return new UsersPage();
     }
 
     @Step("Переход на страницу Виртуальные машины")
