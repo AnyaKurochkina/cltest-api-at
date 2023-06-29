@@ -3,13 +3,15 @@ package ui.cloud.tests.orders;
 import api.Tests;
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.productCatalog.ContextRestrictionsItem;
+import models.cloud.productCatalog.InformationSystem;
+import models.cloud.productCatalog.ProjectEnvironment;
 import models.cloud.productCatalog.product.Product;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -29,6 +31,7 @@ import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.portalBack.PortalBackSteps.getInformationSystemId;
 import static steps.productCatalog.ProductSteps.createProduct;
 import static steps.productCatalog.ProductSteps.partialUpdateProductByName;
 import static ui.elements.TypifiedElement.refresh;
@@ -89,29 +92,25 @@ public class ProductsTest extends Tests {
     @TmsLinks({@TmsLink("1363579"), @TmsLink("1363846")})
     @DisplayName("Ограничение продукта по пользователям")
     void checkProductRestrictionByUsername() {
-        String name = "at_ui_check_product_role_restriction";
+        String name = "at_ui_role_restriction";
         GlobalUser pcAdmin = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
         GlobalUser orderServiceAdmin = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         createProduct(name, name);
         partialUpdateProductByName(name, new JSONObject().put("is_open", "true").put("in_general_list", "true")
                 .put("allowed_groups", Collections.singletonList(pcAdmin.getUsername())));
         ProductsPage page = new IndexPage().clickOrderMore();
-        page.expandProductsList();
         assertFalse(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("allowed_groups",
                 Arrays.asList(pcAdmin.getUsername(), orderServiceAdmin.getUsername())));
         refresh();
-        page.expandProductsList();
         assertTrue(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("allowed_groups", new JSONArray())
                 .put("restricted_groups", Collections.singletonList(pcAdmin.getUsername())));
         refresh();
-        page.expandProductsList();
         assertTrue(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("restricted_groups",
                 Arrays.asList(pcAdmin.getUsername(), orderServiceAdmin.getUsername())));
         refresh();
-        page.expandProductsList();
         assertFalse(page.isProductDisplayed(name));
     }
 
@@ -120,18 +119,122 @@ public class ProductsTest extends Tests {
     @DisplayName("Ограничение продукта по ролям keycloak")
         //Для учётки должна быть добавлена роль "superadmin-product_catalog" в Keycloak
     void checkProductRestrictionByKeycloakRole() {
-        String name = "at_ui_check_product_kk_role_restriction";
+        String name = "at_ui_kk_role_restriction";
         String keycloakRole = "superadmin-product_catalog";
         createProduct(name, name);
         partialUpdateProductByName(name, new JSONObject().put("is_open", "true").put("in_general_list", "true")
                 .put("allowed_groups", Collections.singletonList(keycloakRole)));
         ProductsPage page = new IndexPage().clickOrderMore();
-        page.expandProductsList();
         assertTrue(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("allowed_groups", new JSONArray())
                 .put("restricted_groups", Collections.singletonList(keycloakRole)));
         refresh();
-        page.expandProductsList();
         assertFalse(page.isProductDisplayed(name));
+    }
+
+    @Test
+    @TmsLink("806199")
+    @DisplayName("Контекстное ограничение по организации")
+    void checkContextRestrictionByOrganization() {
+        String name = "at_ui_org_context_restriction";
+        createProduct(name, name);
+        ContextRestrictionsItem restriction1 = ContextRestrictionsItem.builder().organization("org-sandbox").build();
+        ContextRestrictionsItem restriction2 = ContextRestrictionsItem.builder().organization("vtb").build();
+        partialUpdateProductByName(name, new JSONObject()
+                .put("is_open", "true")
+                .put("in_general_list", "true")
+                .put("context_restrictions", Collections.singletonList(restriction1)));
+        ProductsPage page = new IndexPage().clickOrderMore();
+        assertFalse(page.isProductDisplayed(name));
+        partialUpdateProductByName(name, new JSONObject()
+                .put("context_restrictions", Arrays.asList(restriction1, restriction2)));
+        refresh();
+        assertTrue(page.isProductDisplayed(name));
+    }
+
+    @Test
+    @TmsLink("806286")
+    @DisplayName("Контекстное ограничение по информационной системе")
+    void checkContextRestrictionByInfSystem() {
+        String orgName = "vtb";
+        String name = "at_ui_inf_system_context_restriction";
+        createProduct(name, name);
+        String infSystemId1 = getInformationSystemId(orgName, "grvt");
+        String infSystemId2 = getInformationSystemId(orgName, "plux");
+        ContextRestrictionsItem restriction1 = ContextRestrictionsItem.builder()
+                .organization(orgName)
+                .information_system(InformationSystem.builder().id(Collections.singletonList(infSystemId1)).build())
+                .build();
+        ContextRestrictionsItem restriction2 = ContextRestrictionsItem.builder()
+                .organization(orgName)
+                .information_system(InformationSystem.builder().id(Arrays.asList(infSystemId1, infSystemId2)).build())
+                .build();
+        partialUpdateProductByName(name, new JSONObject()
+                .put("is_open", "true")
+                .put("in_general_list", "true")
+                .put("context_restrictions", Collections.singletonList(restriction1)));
+        ProductsPage page = new IndexPage().clickOrderMore();
+        assertFalse(page.isProductDisplayed(name));
+        partialUpdateProductByName(name, new JSONObject()
+                .put("context_restrictions",
+                        Arrays.asList(restriction1, restriction2)));
+        refresh();
+        assertTrue(page.isProductDisplayed(name));
+    }
+
+    @Test
+    @TmsLink("1224672")
+    @DisplayName("Контекстное ограничение по типу среды")
+    void checkContextRestrictionByEnvType() {
+        String name = "at_ui_env_type_context_restriction";
+        createProduct(name, name);
+        ContextRestrictionsItem restriction1 = ContextRestrictionsItem.builder()
+                .project_environment(ProjectEnvironment.builder()
+                        .environment_type(Collections.singletonList("test"))
+                        .build())
+                .build();
+        ContextRestrictionsItem restriction2 = ContextRestrictionsItem.builder()
+                .project_environment(ProjectEnvironment.builder()
+                        .environment_type(Arrays.asList("dev", "test"))
+                        .build())
+                .build();
+        partialUpdateProductByName(name, new JSONObject()
+                .put("is_open", "true")
+                .put("in_general_list", "true")
+                .put("context_restrictions", Collections.singletonList(restriction1)));
+        ProductsPage page = new IndexPage().clickOrderMore();
+        assertFalse(page.isProductDisplayed(name));
+        partialUpdateProductByName(name, new JSONObject()
+                .put("context_restrictions", Arrays.asList(restriction1, restriction2)));
+        refresh();
+        assertTrue(page.isProductDisplayed(name));
+    }
+
+    @Test
+    @TmsLink("1744128")
+    @DisplayName("Контекстное ограничение по среде")
+    void checkContextRestrictionByEnv() {
+        String name = "at_ui_env_context_restriction";
+        createProduct(name, name);
+        ContextRestrictionsItem restriction1 = ContextRestrictionsItem.builder()
+                .project_environment(ProjectEnvironment.builder()
+                        .name(Collections.singletonList("IFT"))
+                        .build())
+                .build();
+        ContextRestrictionsItem restriction2 = ContextRestrictionsItem.builder()
+                .project_environment(ProjectEnvironment.builder()
+                        .name(Arrays.asList("DEV", "IFT"))
+                        .build())
+                .build();
+        partialUpdateProductByName(name, new JSONObject()
+                .put("is_open", "true")
+                .put("in_general_list", "true")
+                .put("context_restrictions", Collections.singletonList(restriction1)));
+        ProductsPage page = new IndexPage().clickOrderMore();
+        assertFalse(page.isProductDisplayed(name));
+        partialUpdateProductByName(name, new JSONObject()
+                .put("context_restrictions", Arrays.asList(restriction1, restriction2)));
+        refresh();
+        assertTrue(page.isProductDisplayed(name));
     }
 }
