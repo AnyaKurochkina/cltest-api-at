@@ -45,7 +45,8 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     void orderRabbitMQClusterAstra() {
         double prebillingCost;
         try {
-            String accessGroup =product.getAccessGroup();
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            //String accessGroup =product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
