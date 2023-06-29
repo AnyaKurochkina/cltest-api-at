@@ -364,7 +364,7 @@ public abstract class IProduct extends Entity {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
-                .getString("'ui:options'.filter").replace(":${context::projectInfo.project_environment.environment_type}", envType().toUpperCase());
+                .getString("'ui:options'.filter").replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase());
     }
 
     @SneakyThrows
