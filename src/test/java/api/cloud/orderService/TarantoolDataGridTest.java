@@ -24,7 +24,7 @@ import java.util.List;
 public class TarantoolDataGridTest extends Tests {
     private static final List<String> services = Arrays.asList("zorg-core-01", "zorg-r01-s01");
 
-    @TmsLink("")
+    @TmsLink("1746053")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
@@ -34,7 +34,7 @@ public class TarantoolDataGridTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1746057")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать резервную копию {0}")
@@ -44,7 +44,7 @@ public class TarantoolDataGridTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1746073")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Обновить сертификаты {0}")
@@ -54,7 +54,7 @@ public class TarantoolDataGridTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1746075")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Остановить/запустить сервисы {0}")
@@ -65,7 +65,7 @@ public class TarantoolDataGridTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1746100")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Перезапустить сервисы {0}")
@@ -75,7 +75,7 @@ public class TarantoolDataGridTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("1746103")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
