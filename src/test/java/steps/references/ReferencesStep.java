@@ -148,6 +148,17 @@ public class ReferencesStep extends Steps {
         return new Gson().fromJson(jsonArray, type);
     }
 
+    @Step("Получение списка Pages по фильтру")
+    public static List<Pages> getPagesList(String...filter) {
+        String filters = String.join("&", filter);
+         return new Http(ReferencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/pages/?" + filters)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", Pages.class);
+    }
+
     @Step("Получение Pages по Id")
     public static Pages getPagesById(String pageId) {
         return new Http(ReferencesURL)

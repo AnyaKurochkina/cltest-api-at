@@ -172,6 +172,11 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_validate_checker", skipValidateChecker)
                 .setIfNullRemove("$.ignore_restriction_service", ignoreRestrictionService)
                 .setIfNullRemove("$.skip_restriction_service", skipRestrictionService)
+                .setIfNullRemove("$.skip_item_change", skipItemChange)
+                .setIfNullRemove("$.available_without_money", availableWithoutMoney)
+                .setIfNullRemove("$.skip_reservation", skipReservation)
+                .setIfNullRemove("$.skip_item_change", skipItemChange)
+                .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
                 .build();
     }
 

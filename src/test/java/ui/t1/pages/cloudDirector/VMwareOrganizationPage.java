@@ -64,10 +64,10 @@ public class VMwareOrganizationPage {
     public VMwareOrganizationPage addDataCentre(String name) {
         new DataCentreTable().clickAdd();
         return new DataCentreCreatePage()
-                .setDataCentreName(name)
                 .setCpu("2")
                 .setRam("4")
                 .setDataCentreProfile("High")
+                .setDataCentreName(name)
                 .orderDataCentre();
     }
 
@@ -75,8 +75,8 @@ public class VMwareOrganizationPage {
     public void addDataCentreWithExistName(String name) {
         new DataCentreTable().clickAdd();
         new DataCentreCreatePage()
-                .setDataCentreName(name)
                 .setDataCentreProfile("High")
+                .setDataCentreName(name)
                 .orderDataCentreWithSameName();
     }
 
