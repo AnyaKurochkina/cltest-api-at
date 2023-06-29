@@ -31,6 +31,7 @@ public interface TypifiedElement {
 
     static void refresh() {
         Selenide.refresh();
+        Selenide.executeJavaScript(Alert.script);
         checkProject();
     }
 
