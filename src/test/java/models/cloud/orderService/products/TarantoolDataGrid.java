@@ -26,7 +26,7 @@ import java.util.List;
 @SuperBuilder
 public class TarantoolDataGrid extends IProduct {
     public static final String BACKUP_PATH = "data.find{it.type=='cluster'}.data.config.backup.size()";
-    public static final String SERVICE_PATH = "data.find{it.type=='cluster'}.data.config.backup.cluster.find{it.instance=='%s'}.state";
+    public static final String SERVICE_PATH = "data.find{it.type=='cluster'}.data.config.cluster.find{it.instance=='%s'}.state";
     @ToString.Include
     String osVersion;
     Flavor flavor;
