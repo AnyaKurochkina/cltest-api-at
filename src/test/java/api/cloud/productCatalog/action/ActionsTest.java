@@ -541,7 +541,7 @@ public class ActionsTest extends Tests {
         assertFalse(actualAction.getIsSafe(), "Значение флага is_safe не соответсвует ожидаемому");
     }
 
-    @DisplayName("Проверка валидации полей available_without_money, skip_reservation, skip_item_change при значении поля skip_on_prebilling = true")
+    @DisplayName("Проверка валидации полей available_without_money, skip_reservation при значении поля skip_on_prebilling = true")
     @TmsLink("1741033")
     @Test
     public void createActionAndCheckFields() {
@@ -564,7 +564,7 @@ public class ActionsTest extends Tests {
                 .skipItemChange(true)
                 .build()
                 .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation, skip_item_change)",
+        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation)",
                 errMessage);
 
         String errMessage2 = createAction(Action.builder()
@@ -576,20 +576,9 @@ public class ActionsTest extends Tests {
                 .skipItemChange(true)
                 .build()
                 .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation, skip_item_change)",
+        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation)",
                 errMessage2);
-
-        String errMessage3 = createAction(Action.builder()
-                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "api_test")
-                .graphId(createGraph().getGraphId())
-                .skipOnPrebilling(true)
-                .availableWithoutMoney(true)
-                .skipReservation(true)
-                .skipItemChange(false)
-                .build()
-                .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation, skip_item_change)",
-                errMessage3);
     }
+
 }
 
