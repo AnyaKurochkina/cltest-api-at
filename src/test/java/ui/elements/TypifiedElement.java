@@ -91,6 +91,7 @@ public interface TypifiedElement {
 
     static void open(String url) {
         Selenide.open(url);
+        Selenide.executeJavaScript(Alert.script);
         checkProject();
     }
 }
