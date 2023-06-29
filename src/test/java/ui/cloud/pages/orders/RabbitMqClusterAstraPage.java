@@ -37,10 +37,17 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement btnGroups = $x("//button[.='Группы']");
+    SelenideElement usernameInput = Selenide.$x("//input[@name='username']");
+    SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
     AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public RabbitMqClusterAstraPage(RabbitMQClusterAstra product) {
         super(product);
+    }
+    private void signIn(String user, String password){
+        usernameInput.shouldBe(Condition.visible).val(user);
+        passwordInput.shouldBe(Condition.visible).val(password);
+        passwordInput.submit();
     }
 
     @Override
@@ -62,14 +69,14 @@ public class RabbitMqClusterAstraPage extends IProductPage {
 
     public void checkConfiguration() {
         checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).checkPreBilling(false).node(new Table("Роли узла").getRowByIndex(0)).build());
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).checkPreBilling(false).checkAlert(false).node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
-    public void openAdminConsole() throws MalformedURLException, InterruptedException {
+    public void openPointConnect() throws MalformedURLException, InterruptedException {
         String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
-        Selenide.open(url+"management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
         Selenide.open(url);
-        Selenide.$x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible);
+        signIn(Configure.getAppProp("dev.user2"),Configure.getAppProp("dev.password"));
+        Selenide.$x("//a[text()='Overview']").shouldBe(Condition.visible);
     }
 
 

@@ -13,7 +13,6 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
-import ui.cloud.tests.ActionParameters;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -26,7 +25,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("RabbitMQClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_rabbit_mq_cluster_astra")})
 public class UiRabbitMqClusterAstraTest extends UiProductTest {
-    RabbitMQClusterAstra product = RabbitMQClusterAstra.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/a0147196-b8bb-47db-85d9-13f5157e8ce6/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    RabbitMQClusterAstra product; // = RabbitMQClusterAstra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fdde9dae-53c5-4542-bcc5-d2562688315e/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameUser = "atUser";
     String nameHost = "atHostName";
@@ -46,7 +45,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     void orderRabbitMQClusterAstra() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup =product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -116,7 +115,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     }
     @Test
     @Order(6)
-    @TmsLink("1060324")
+    @TmsLink("1060319")
     @DisplayName("UI RabbitMqClusterAstraPage. Проверка уникальности имени пользователя Rabbit MQ")
     void checkUniquenessAddUser() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
@@ -209,8 +208,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @DisplayName("UI RabbitMqClusterAstraPage. Проверка доступа к Web интерфейсу управления через AD")
     void openAdminConsole() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::openAdminConsole);
-
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::openPointConnect);
     }
 
 
