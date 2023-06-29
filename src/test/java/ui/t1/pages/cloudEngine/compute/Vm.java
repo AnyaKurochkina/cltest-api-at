@@ -46,6 +46,10 @@ public class Vm extends IProductT1Page<Vm> {
         return new NetworkInterface();
     }
 
+    public NetworkInterfaceList.Menu getNetworkMenu() {
+        return new NetworkInterfaceList().getMenuNetworkInterface(new NetworkInfo().getRow(0).get().$("button"));
+    }
+
     public static class NetworkInfo extends Table {
         public NetworkInfo() {
             super(Column.IP);
