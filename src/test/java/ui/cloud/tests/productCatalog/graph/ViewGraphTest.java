@@ -10,7 +10,6 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import models.cloud.productCatalog.product.Categories;
-import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
@@ -53,7 +52,6 @@ public class ViewGraphTest extends GraphBaseTest {
                 .category(Categories.VM.getValue())
                 .categoryV2(Categories.COMPUTE)
                 .maxCount(1)
-                .payment(Payment.PAID)
                 .author("AT UI")
                 .inGeneralList(false)
                 .number(51)

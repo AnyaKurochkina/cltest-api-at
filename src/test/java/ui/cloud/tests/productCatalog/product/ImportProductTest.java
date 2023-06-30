@@ -6,7 +6,6 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Categories;
-import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -41,7 +40,6 @@ public class ImportProductTest extends ProductBaseTest {
                         .categoryV2(Categories.COMPUTE)
                         .maxCount(json.getInt("Product.max_count"))
                         .author(json.getString("Product.author"))
-                        .payment(Payment.PAID)
                         .inGeneralList(json.getBoolean("Product.in_general_list"))
                         .number(json.getInt("Product.number"))
                         .isOpen(json.getBoolean("Product.is_open"))

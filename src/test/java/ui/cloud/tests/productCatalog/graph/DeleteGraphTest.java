@@ -5,7 +5,6 @@ import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.product.Categories;
-import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
@@ -15,7 +14,6 @@ import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.UUID;
 
@@ -66,7 +64,6 @@ public class DeleteGraphTest extends GraphBaseTest {
                 .category(Categories.VM.getValue())
                 .categoryV2(Categories.COMPUTE)
                 .maxCount(1)
-                .payment(Payment.PAID)
                 .author("AT UI")
                 .inGeneralList(false)
                 .number(51)
