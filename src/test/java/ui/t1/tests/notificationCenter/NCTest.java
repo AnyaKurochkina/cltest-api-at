@@ -31,13 +31,19 @@ public class NCTest extends Tests {
     static String themeIDOne;
     static String themeIDTwo;
     static String themeIDThree;
+    static String themeIDFour;
+    static String themeIDFive;
     static String subscriptionIDOne;
     static String subscriptionIDTwo;
     static String subscriptionIDThree;
+    static String subscriptionIDFour;
+    static String subscriptionIDFive;
 
     String themeCodeOne = "autotest1";
     String themeCodeTwo = "autotest2";
     String themeCodeThree = "autotest3";
+    String themeCodeFour = "autotest4";
+    String themeCodeFive = "autotest5";
 
     String themeGroupNameOne = "autotestGroupOne";
     String themeGroupNameTwo = "autotestGroupTwo";
@@ -54,6 +60,8 @@ public class NCTest extends Tests {
         themeIDOne = subscriptionSteps.createTheme(themeCodeOne, themeCodeOne, groupIDOne, HIGH.getBackName());
         themeIDTwo = subscriptionSteps.createTheme(themeCodeTwo, themeCodeTwo, groupIDTwo, COMMON.getBackName());
         themeIDThree = subscriptionSteps.createTheme(themeCodeThree, themeCodeThree, groupIDThree, LOW.getBackName());
+        themeIDFour = subscriptionSteps.createTheme(themeCodeFour, themeCodeFour, groupIDThree, HIGH.getBackName());
+        themeIDFive = subscriptionSteps.createTheme(themeCodeFive, themeCodeFive, groupIDThree, COMMON.getBackName());
         subscriptionIDOne = subscriptionSteps.createSubscription(HIGH.getBackName(), themeIDOne, WS.getBackName());
         subscriptionIDTwo = subscriptionSteps.createSubscription(
                 COMMON.getBackName(),
@@ -65,7 +73,16 @@ public class NCTest extends Tests {
                 themeIDThree,
                 WS.getBackName(),
                 LENTA.getBackName());
-
+        subscriptionIDFour = subscriptionSteps.createSubscription(
+                HIGH.getBackName(),
+                themeIDFour,
+                WS.getBackName(),
+                EMAIL.getBackName());
+        subscriptionIDFive = subscriptionSteps.createSubscription(
+                COMMON.getBackName(),
+                themeIDFive,
+                WS.getBackName(),
+                EMAIL.getBackName());
         subscriptionSteps.markAllRead();
     }
 
@@ -117,9 +134,7 @@ public class NCTest extends Tests {
                 .setRead()
                 .clickApply()
                 .checkNumberOfNotifications(10)
-                .checkNoReadMark();
-        refresh();
-        notificationsPage.checkNumberOfNotifications(0)
+                .checkNoReadMark()
                 .clickResetFilters()
                 .setDate()
                 .clickApply();
@@ -129,6 +144,7 @@ public class NCTest extends Tests {
                 .setPriorityFilter(LOW.getUiName())
                 .clickApply()
                 .checkPriorityColumn()
+                .clickMarkAllRead()
                 .clickResetFilters();
         refresh();
         notificationsPage.setNumberOfRows(25)
@@ -136,13 +152,31 @@ public class NCTest extends Tests {
                 .setNumberOfRows(50)
                 .checkNumberOfNotifications(50)
                 .setNumberOfRows(10)
-                .checkNumberOfNotifications(10);
+                .checkNumberOfNotifications(10)
+                .clickNextPage();
+    }
 
 
-
-
-
-
+    @Test
+    @Title("Проверяем работу колокольчика")
+    void topBarNotificationTest(){
+        String subject = "Тест колокольчика";
+        subscriptionSteps.sendNumberOfNotifications(5, themeCodeFour, userEmail, subject);
+        int counterValue = subscriptionSteps.getUnreadCount();
+        notificationsPage.checkUnreadCounter(counterValue)
+                        .clickTopBarNotification()
+                        .checkNumberOfMessagesTopBar(subject, 5)
+                        .checkMessageHeader(subject)
+                        .checkImportant()
+                        .checkMessageLink()
+                        .closeTopMessage()
+                        .checkUnreadCounter(0);
+        String subject2 = "Второй тест колокольчика";
+        subscriptionSteps.sendNumberOfNotifications(5, themeCodeFive, userEmail, subject2);
+        notificationsPage.checkUnreadCounter(counterValue)
+                        .clickTopBarNotification()
+                        .checkNoImportant()
+                        .clickMessage(subject2);
     }
 
     @AfterAll
@@ -151,9 +185,13 @@ public class NCTest extends Tests {
         subscriptionSteps.deleteSubscription(subscriptionIDOne);
         subscriptionSteps.deleteSubscription(subscriptionIDTwo);
         subscriptionSteps.deleteSubscription(subscriptionIDThree);
+        subscriptionSteps.deleteSubscription(subscriptionIDFour);
+        subscriptionSteps.deleteSubscription(subscriptionIDFive);
         subscriptionSteps.deleteTheme(themeIDOne);
         subscriptionSteps.deleteTheme(themeIDTwo);
         subscriptionSteps.deleteTheme(themeIDThree);
+        subscriptionSteps.deleteTheme(themeIDFour);
+        subscriptionSteps.deleteTheme(themeIDFive);
         subscriptionSteps.deleteThemeGroup(groupIDOne);
         subscriptionSteps.deleteThemeGroup(groupIDTwo);
         subscriptionSteps.deleteThemeGroup(groupIDThree);

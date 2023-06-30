@@ -28,6 +28,7 @@ public class SubscriptionsSteps extends Steps {
     String createThemeGroup = "admin/api/v1/theme-groups";
     String getUnreadIDs = "api/v1/notifications?read_date__isnull=true&channel=ws";
     String markAllRead = "api/v1/notifications/mark_read";
+    String unreadCount = "api/v1/notifications/unread-count?channel=ws";
     
     @Step("Создаем подписку {themeID} и получаем ID подписки")
     public String createSubscription(String importance, String themeID, String ... channels){
@@ -160,6 +161,16 @@ public class SubscriptionsSteps extends Steps {
                 .setRole(Role.NOTIFICATIONS_ADMIN)
                 .patch(markAllRead)
                 .assertStatus(200);}
+    }
+
+    @Step("Получаем количество непрочитанных сообщений")
+    public int getUnreadCount(){
+        return new Http(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .get(unreadCount)
+                .assertStatus(200)
+                .jsonPath()
+                .get("unread_count");
     }
 
 

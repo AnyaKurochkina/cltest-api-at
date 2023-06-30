@@ -10,8 +10,8 @@ import lombok.Getter;
 import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
-import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.IAM.users.UsersPage;
+import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
@@ -28,6 +28,7 @@ import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 
 @Getter
 public class IndexPage {
+    Button linkCloudStorageS3 = Button.byXpath("//a[.='Cloud Storage S3']");
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
@@ -46,6 +47,7 @@ public class IndexPage {
     Button linkTools = Button.byXpath("//a[.='Инструменты']");
     Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
+
 
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
@@ -170,4 +172,7 @@ public class IndexPage {
         linkNotifications.click();
         return new NotificationsPage();
     }
+
+
+
 }
