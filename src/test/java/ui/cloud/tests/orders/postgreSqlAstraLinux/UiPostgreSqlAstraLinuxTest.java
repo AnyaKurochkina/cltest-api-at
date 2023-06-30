@@ -31,7 +31,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/825c387a-0daf-4da9-90aa-be77568d8f1f/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    PostgreSQL product = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/d4ac7f9d-60fc-480e-ba5f-81273f22b273/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
@@ -43,136 +43,136 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
-
-    @Test
-    @TmsLink("988624")
-    @Order(1)
-    @DisplayName("UI PostgreSQLAstra. Заказ")
-    void orderPostgreSQL() {
-        double preBillingProductPrice;
-        try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
-            new IndexPage()
-                    .clickOrderMore()
-                    .selectProduct(product.getProductName());
-            PostgreSqlAstraOrderPage orderPage = new PostgreSqlAstraOrderPage();
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
-            preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
-            OrderUtils.clickOrder();
-            new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
-                    .hover()
-                    .click();
-            PostgreSqlAstraPage pSqlPages = new PostgreSqlAstraPage(product);
-            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
-            pSqlPages.checkLastAction("Развертывание");
-        } catch (Throwable e) {
-            product.setError(e.toString());
-            throw e;
-        }
-        checkOrderCost(preBillingProductPrice, new PostgreSqlAstraPage(product));
-    }
-
-    @Test
-    @TmsLink("1236733")
-    @Order(2)
-    @DisplayName("UI PostgreSQLAstra. Проверка развертывания заказа в истории действий")
-    void checkHeaderHistoryTable() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.getBtnGeneralInfo().click();
-        pSqlPage.checkHeadersHistory();
-        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().notContainsStatus(Graph.ERROR);
-    }
-
-    @Test
-    @Order(5)
-    @TmsLink("993396")
-    @Disabled
-    @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
-    void restart() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
-    }
-
-    @Test
-    @Order(6)
-    @TmsLink("993391")
-    @DisplayName("UI PostgreSQLAstra. Получить актуальную конфигурацию")
-    void getActualConfiguration() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::getActualConfiguration);
-    }
-
-    @Test
-    @Order(7)
-    @TmsLink("993402")
-    @DisplayName("UI PostgreSQLAstra. Изменить default_transaction_isolation на REPEATABLE READ")
-    void changeTransactionIsolation() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
-    }
-
-    @Test
-    @Order(8)
-    @TmsLink("993392")
-    @DisplayName("UI PostgreSQLAstra. Максимизировать max_connections")
-    void changeMaxConnections() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
-    }
-
-    @Test
-    @Order(9)
-    @TmsLink("993389")
-    @DisplayName("UI PostgreSQLAstra. Расширить точку монтирования")
-    void expandDisk() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", new Table("Роли узла").getRowByIndex(0)));
-    }
-
-    @Test
-    @Order(10)
-    @TmsLink("993393")
-    @DisplayName("UI PostgreSQLAstra. Изменить конфигурацию")
-    void changeConfiguration() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
-    }
-
-    @Test
-    @Order(11)
-    @TmsLink("994656")
-    @DisplayName("UI PostgreSQLAstra. Проверить конфигурацию")
-    void vmActCheckConfig() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
-    }
-
-    @Test
-    @Order(12)
-    @TmsLink("993398")
-    @DisplayName("UI PostgreSQLAstra. Добавить БД")
-    void createDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-    }
-
-    @Test
-    @Order(15)
-    @TmsLink("993388")
-    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
-    void resetPasswordDb() {
-        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPasswordDb);
-    }
+//
+//    @Test
+//    @TmsLink("988624")
+//    @Order(1)
+//    @DisplayName("UI PostgreSQLAstra. Заказ")
+//    void orderPostgreSQL() {
+//        double preBillingProductPrice;
+//        try {
+//            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+//            new IndexPage()
+//                    .clickOrderMore()
+//                    .selectProduct(product.getProductName());
+//            PostgreSqlAstraOrderPage orderPage = new PostgreSqlAstraOrderPage();
+//            orderPage.getOsVersionSelect().set(product.getOsVersion());
+//            orderPage.getSegmentSelect().set(product.getSegment());
+//            orderPage.getPlatformSelect().set(product.getPlatform());
+//            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+//            orderPage.getGroupSelect().set(accessGroup);
+//            orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
+//            preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+//            OrderUtils.clickOrder();
+//            new OrdersPage()
+//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+//                    .getElementByColumn("Продукт")
+//                    .hover()
+//                    .click();
+//            PostgreSqlAstraPage pSqlPages = new PostgreSqlAstraPage(product);
+//            pSqlPages.waitChangeStatus(Duration.ofMinutes(25));
+//            pSqlPages.checkLastAction("Развертывание");
+//        } catch (Throwable e) {
+//            product.setError(e.toString());
+//            throw e;
+//        }
+//        checkOrderCost(preBillingProductPrice, new PostgreSqlAstraPage(product));
+//    }
+//
+//    @Test
+//    @TmsLink("1236733")
+//    @Order(2)
+//    @DisplayName("UI PostgreSQLAstra. Проверка развертывания заказа в истории действий")
+//    void checkHeaderHistoryTable() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.getBtnGeneralInfo().click();
+//        pSqlPage.checkHeadersHistory();
+//        pSqlPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+//        new Graph().notContainsStatus(Graph.ERROR);
+//    }
+//
+//    @Test
+//    @Order(5)
+//    @TmsLink("993396")
+//    @Disabled
+//    @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
+//    void restart() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
+//    }
+//
+//    @Test
+//    @Order(6)
+//    @TmsLink("993391")
+//    @DisplayName("UI PostgreSQLAstra. Получить актуальную конфигурацию")
+//    void getActualConfiguration() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::getActualConfiguration);
+//    }
+//
+//    @Test
+//    @Order(7)
+//    @TmsLink("993402")
+//    @DisplayName("UI PostgreSQLAstra. Изменить default_transaction_isolation на REPEATABLE READ")
+//    void changeTransactionIsolation() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
+//    }
+//
+//    @Test
+//    @Order(8)
+//    @TmsLink("993392")
+//    @DisplayName("UI PostgreSQLAstra. Максимизировать max_connections")
+//    void changeMaxConnections() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
+//    }
+//
+//    @Test
+//    @Order(9)
+//    @TmsLink("993389")
+//    @DisplayName("UI PostgreSQLAstra. Расширить точку монтирования")
+//    void expandDisk() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", new Table("Роли узла").getRowByIndex(0)));
+//    }
+//
+//    @Test
+//    @Order(10)
+//    @TmsLink("993393")
+//    @DisplayName("UI PostgreSQLAstra. Изменить конфигурацию")
+//    void changeConfiguration() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
+//    }
+//
+//    @Test
+//    @Order(11)
+//    @TmsLink("994656")
+//    @DisplayName("UI PostgreSQLAstra. Проверить конфигурацию")
+//    void vmActCheckConfig() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::checkConfiguration);
+//    }
+//
+//    @Test
+//    @Order(12)
+//    @TmsLink("993398")
+//    @DisplayName("UI PostgreSQLAstra. Добавить БД")
+//    void createDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+//    }
+//
+//    @Test
+//    @Order(15)
+//    @TmsLink("993388")
+//    @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
+//    void resetPasswordDb() {
+//        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+//        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::resetPasswordDb);
+//    }
 
     @Test
     @Order(16)

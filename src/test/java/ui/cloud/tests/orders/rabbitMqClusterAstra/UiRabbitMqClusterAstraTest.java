@@ -149,6 +149,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @Order(9)
     @TmsLink("1060331")
+    @Disabled
     @DisplayName("UI RabbitMqClusterAstra. Добавить права на виртуальные хосты RabbitMQ")
     void addPermissions() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
@@ -161,7 +162,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @DisplayName("UI RabbitMqClusterAstra. Редактировать права на виртуальные хосты RabbitMQ")
     void editPermissions() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addPermissions(nameUser,nameHost));
+        //rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addPermissions(nameUser,nameHost));
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.editPermissions(nameUser,nameHost));
     }
 

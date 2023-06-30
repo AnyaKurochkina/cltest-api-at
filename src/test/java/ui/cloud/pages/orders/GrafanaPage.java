@@ -94,7 +94,7 @@ public class GrafanaPage extends IProductPage {
     public void openPointConnect() throws MalformedURLException, InterruptedException {
         String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url);
-        signIn(Configure.getAppProp("dev.user2"),Configure.getAppProp("dev.password"));
+        signIn(Configure.getAppProp("dev.userGrafana"),Configure.getAppProp("dev.passwordGrafana"));
         Selenide.$x("//a[text()='Grafana']").shouldBe(Condition.visible);
     }
     private void signIn(String user, String password){
