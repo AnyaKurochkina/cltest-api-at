@@ -135,8 +135,10 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void changeConfiguration() {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию нод СУБД", "Подтвердить", () ->
-                DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)));
+        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию нод СУБД", "Подтвердить", () -> {
+            DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor));
+            CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю свое действие").setChecked(true);
+        });
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -221,6 +223,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             btnGeneralInfo.click();
             runActionWithoutParameters(getHeaderBlock(name), "Удалить БД");
+            btnGeneralInfo.click();
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals("", name), "БД существует");
         }
@@ -230,7 +233,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         runActionWithParameters(BLOCK_APP, "Расширить точку монтирования /pg_data", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
         btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
