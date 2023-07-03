@@ -139,7 +139,7 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    protected String getAccessGroup() {
+    public String getAccessGroup() {
         return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
     }
 

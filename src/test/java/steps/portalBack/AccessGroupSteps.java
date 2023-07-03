@@ -35,7 +35,7 @@ public class AccessGroupSteps extends Steps {
     }
 
     @SneakyThrows
-    @Step("Добавление пользователя в группу доступа")
+    @Step("Удаление пользователя в группе доступа")
     public static void removeUserFromGroup(AccessGroup group, String user) {
         new Http(PortalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)

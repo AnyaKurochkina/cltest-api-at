@@ -32,9 +32,11 @@ public class NewOrderPage {
     protected Select dataCentreSelect = Select.byLabel("Дата-центр");
     protected Select platformSelect = Select.byLabel("Платформа");
     protected Select osVersionSelect = Select.byLabel("Версия ОС");
+    protected Select domen = Select.byLabel("Домен");
     protected Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
     protected Select roleSelect = Select.byLabel("Роль");
     protected Select groupSelect = Select.byLabel("Группы");
+    protected Select group2Select = Select.byLabel("Группы",2);
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     //раскрывающийся список
