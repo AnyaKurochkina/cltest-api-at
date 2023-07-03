@@ -10,7 +10,7 @@ import ru.testit.annotations.Title;
 import steps.t1.notificationCenterSteps.SubscriptionsSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.LoginT1Page;
+import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.supportCenter.NotificationsPage;
 
 import static com.codeborne.selenide.Selenide.refresh;
@@ -92,7 +92,7 @@ public class NCTest extends Tests {
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
-        new LoginT1Page(project.getId())
+        new T1LoginPage(project.getId())
                 .signIn(Role.NOTIFICATIONS_ADMIN);
     }
 
