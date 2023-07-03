@@ -303,6 +303,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Настроить БД для интеграции с Debezium {0}")
     void configureDebeziumDb(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.configureDebeziumDb();
         }
     }
