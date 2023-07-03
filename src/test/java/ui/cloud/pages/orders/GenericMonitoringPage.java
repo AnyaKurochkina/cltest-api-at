@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Astra;
+import models.cloud.orderService.products.GenericMonitoring;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
@@ -17,10 +18,9 @@ import java.util.List;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class AstraLinuxPage extends IProductPage {
+public class GenericMonitoringPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
-    private static final String BLOCK_SNAPSHOT = "Снапшоты";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
@@ -28,34 +28,34 @@ public class AstraLinuxPage extends IProductPage {
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
 
-    public AstraLinuxPage(Astra product) {
+    public GenericMonitoringPage(GenericMonitoring product) {
         super(product);
     }
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
+        new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
     }
 
     public void start() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_OFF);
         runActionWithoutParameters(BLOCK_APP, "Включить");
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить");
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void checkConfiguration() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
 
     public void changeConfiguration() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
@@ -66,16 +66,6 @@ public class AstraLinuxPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
-
-    public void delete() {
-        runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
-        {
-            Dialog dlgActions = Dialog.byTitle("Удаление");
-            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        });
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_DELETED);
-    }
-
     public void сreateSnapshot() {
         runActionWithParameters(BLOCK_VM, "Создать снапшот", "Подтвердить", () ->
         {
@@ -92,21 +82,30 @@ public class AstraLinuxPage extends IProductPage {
         btnGeneralInfo.click();
         Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
     }
+    public void reInventory() {
+        new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Реинвентаризация ВМ (Linux)");
+    }
 
-    private SelenideElement getSnapshotMenuElement(String name) {
-        return new Table(BLOCK_SNAPSHOT).getValueByColumnInFirstRow("Тип").$("button");
+    public void delete() {
+        runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Удаление");
+            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+        });
+        new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Перезагрузить по питанию");
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopHard() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")
@@ -116,28 +115,28 @@ public class AstraLinuxPage extends IProductPage {
             Select.byLabel("Роль").set(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         });
-        groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        groups.forEach(group -> Assertions.assertTrue(new GenericMonitoringPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Изменить состав групп у роли {role} на {groups}")
     public void updateGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        runActionWithParameters(new AstraLinuxPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
+        runActionWithParameters(new GenericMonitoringPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             Select groupsElement = Select.byLabel("Группы").clear();
             groups.forEach(groupsElement::set);
         });
-        groups.forEach(group -> Assertions.assertTrue(new AstraLinuxPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
+        groups.forEach(group -> Assertions.assertTrue(new GenericMonitoringPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Удалить группу доступа с ролью {role}")
     public void deleteGroup(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        runActionWithoutParameters(new AstraLinuxPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
-        Assertions.assertThrows(NotFoundException.class, () -> new AstraLinuxPage.RoleTable().getRoleRow(role));
+        runActionWithoutParameters(new GenericMonitoringPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
+        Assertions.assertThrows(NotFoundException.class, () -> new GenericMonitoringPage.RoleTable().getRoleRow(role));
     }
 
     public void issueClientCertificate(String nameCertificate) {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_VM, "Выпустить клиентский сертификат", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Выпустить клиентский сертификат");
             dlg.setInputValue("Клиентская часть имени сертификата", nameCertificate);
@@ -146,7 +145,7 @@ public class AstraLinuxPage extends IProductPage {
     }
 
     public void removeDb(String name) {
-        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             runActionWithoutParameters(name, "Удалить БД");
             Assertions.assertFalse(new Table("").isColumnValueEquals("", name), "БД существует");
