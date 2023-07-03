@@ -138,7 +138,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     }
 
     private boolean isNotDebezium(String type){
-        return ((Boolean) OrderServiceSteps.getProductsField(this, String.format("data.find{it.type=='%s'}.data.config.debezium_ready", type)));
+        return !((Boolean) OrderServiceSteps.getProductsField(this, String.format("data.find{it.type=='%s'}.data.config.debezium_ready", type)));
     }
 
     @Step("Настроить кластер для интеграции с Debezium")
