@@ -23,7 +23,7 @@ import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("PostgresSQL Cluster Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod"), @Tag("newtest")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod")})
 public class PostgresSQLClusterAstraTest extends Tests {
     public static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
     static final String dbName = "db_name";
