@@ -1,0 +1,8 @@
+{
+  "importance": "COMMON",
+  "channels": [
+    "ws","lenta","email"
+  ],
+  "theme_id":125,
+  "organization_id": "t1-cloud"
+}
