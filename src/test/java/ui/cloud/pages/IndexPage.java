@@ -55,7 +55,6 @@ public class IndexPage {
     @Step("Переход на страницу Аналитика.Аудит")
     public AuditPage goToPortalAuditPage() {
         instrumentsMenuItem.click();
-        analyticsMenuItem.hover();
         auditMenuItem.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Waiting.sleep(500);
         return new AuditPage();
