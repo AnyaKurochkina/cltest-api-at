@@ -99,7 +99,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Override
     public String executeSsh(String cmd) {
-        if(Objects.isNull(leaderIp)) {
+        if (Objects.isNull(leaderIp)) {
             String ip = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.hostname.contains('-pgc')}.ip");
             leaderIp = StringUtils.findByRegex("(([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3}))",
                     executeSsh(new SshClient(ip, envType()), "sudo -i patronictl -c /etc/patroni/patroni.yml list | grep Leader"));
@@ -108,12 +108,12 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     }
 
     @Override
-    public void cmdRestartPostgres(){
+    public void cmdRestartPostgres() {
         executeSsh("sudo -i patronictl -c /etc/patroni/patroni.yml restart $(sudo -i cat /etc/patroni/patroni.yml | grep scope | awk '{print $2}') -r master --force");
     }
 
     @Override
-    protected void cmdSetMaxConnections(int connections){
+    protected void cmdSetMaxConnections(int connections) {
         String cmd = String.format("sudo patronictl -c /etc/patroni/patroni.yml edit-config -p max_connections=\"%s\" --force", connections);
         assertContains(executeSsh(cmd), "Configuration changed");
     }
@@ -137,13 +137,14 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         removeDbmsUser("postgresql_cluster_remove_dbms_user", username, dbName);
     }
 
-    private boolean isNotDebezium(String type){
-        return !((Boolean) OrderServiceSteps.getProductsField(this, String.format("data.find{it.type=='%s'}.data.config.debezium_ready", type)));
+    private boolean isNotDebezium(String type) {
+        Boolean isDebezium = OrderServiceSteps.getProductsField(this, String.format("data.find{it.type=='%s'}.data.config.debezium_ready", type), Boolean.class, false);
+        return !Objects.isNull(isDebezium) && isDebezium;
     }
 
     @Step("Настроить кластер для интеграции с Debezium")
     public void configureDebezium() {
-        if(isNotDebezium("cluster")) {
+        if (isNotDebezium("cluster")) {
             JSONObject data = new JSONObject().put("check_agree", true).put("user_password", "hcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXz");
             OrderServiceSteps.executeAction("postgresql_cluster_configure_debezium", this, data, this.getProjectId());
         }
@@ -152,7 +153,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     @Step("Настроить БД для интеграции с Debezium")
     public void configureDebeziumDb() {
         configureDebezium();
-        if(isNotDebezium("db")) {
+        if (isNotDebezium("db")) {
             JSONObject data = new JSONObject().put("check_agree", true);
             OrderServiceSteps.executeAction("postgresql_db_configure_for_debezium", this, data, this.getProjectId());
         }

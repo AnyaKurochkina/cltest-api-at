@@ -520,8 +520,8 @@ public class OrderServiceSteps extends Steps {
             s = jsonPath.getObject(path, clazz);
         else
             s = jsonPath.get(path);
+        log.info(String.format("getFiledProduct return: %s", s));
         if (assertion) {
-            log.info(String.format("getFiledProduct return: %s", s));
             Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
         }
         return (T) s;
