@@ -314,6 +314,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Создать/удалить логический слот {0}")
     void createLogicalSlot(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createLogicalSlot("slot_name");
             postgreSQL.removeLogicalSlot("slot_name");
         }
@@ -325,6 +326,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Создать/удалить публикацию {0}")
     void createPublication(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createDb(dbName, adminPassword);
             postgreSQL.createPublication("pub_dbzm");
             postgreSQL.removePublication("pub_dbzm");
         }
