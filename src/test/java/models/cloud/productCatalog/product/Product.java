@@ -53,6 +53,7 @@ public class Product extends Entity {
     private String graphId;
     private String version;
     @JsonProperty("max_count")
+    @Builder.Default
     private int maxCount = 1;
     private Integer number;
     @JsonProperty("version_changed_by_user")
@@ -117,7 +118,6 @@ public class Product extends Entity {
     public JSONObject toJson() {
         String categoryV2 = null;
         String onRequest = null;
-        String payment = null;
         if (this.categoryV2 != null) {
             categoryV2 = this.categoryV2.getValue();
         }

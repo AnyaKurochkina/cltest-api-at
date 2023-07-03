@@ -30,10 +30,8 @@ public class Project extends Entity {
     public ProjectEnvironmentPrefix projectEnvironmentPrefix;
     public String projectName;
     public Boolean isForOrders;
-//    public String prefix;
 
     transient String folderName;
-
 
     public Entity init() {
         if (!Configure.isT1()) {

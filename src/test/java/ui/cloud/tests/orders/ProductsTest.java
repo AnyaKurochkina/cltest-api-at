@@ -160,7 +160,7 @@ public class ProductsTest extends Tests {
         String name = "at_ui_inf_system_context_restriction";
         createProduct(name, name);
         String infSystemId1 = getInformationSystemId(orgName, "grvt");
-        String infSystemId2 = getInformationSystemId(orgName, "plux");
+        String infSystemId2 = project.getInformationSystem();
         ContextRestrictionsItem restriction1 = ContextRestrictionsItem.builder()
                 .organization(orgName)
                 .information_system(InformationSystem.builder().id(Collections.singletonList(infSystemId1)).build())

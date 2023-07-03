@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.ContextRestrictionsItem;
-import models.cloud.productCatalog.InformationSystem;
 import models.cloud.productCatalog.ProjectEnvironment;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +14,6 @@ import ui.cloud.pages.productCatalog.product.ProductPage;
 import ui.elements.Alert;
 import ui.elements.Table;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
