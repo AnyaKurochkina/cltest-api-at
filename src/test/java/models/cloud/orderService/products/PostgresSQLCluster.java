@@ -143,22 +143,24 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Step("Настроить кластер для интеграции с Debezium")
     public void configureDebezium() {
-        JSONObject data = new JSONObject().put("check_agree", true).put("user_password", "hcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXz");
-        OrderServiceSteps.executeAction("postgresql_cluster_configure_debezium", this, data, this.getProjectId());
+        if(isNotDebezium("cluster")) {
+            JSONObject data = new JSONObject().put("check_agree", true).put("user_password", "hcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXz");
+            OrderServiceSteps.executeAction("postgresql_cluster_configure_debezium", this, data, this.getProjectId());
+        }
     }
 
     @Step("Настроить БД для интеграции с Debezium")
     public void configureDebeziumDb() {
-        if(isNotDebezium("cluster"))
-            configureDebezium();
-        JSONObject data = new JSONObject().put("check_agree", true);
-        OrderServiceSteps.executeAction("postgresql_db_configure_for_debezium", this, data, this.getProjectId());
+        configureDebezium();
+        if(isNotDebezium("db")) {
+            JSONObject data = new JSONObject().put("check_agree", true);
+            OrderServiceSteps.executeAction("postgresql_db_configure_for_debezium", this, data, this.getProjectId());
+        }
     }
 
     @Step("Создать логический слот")
     public void createLogicalSlot(String slotName) {
-        if(isNotDebezium("db"))
-            configureDebeziumDb();
+        configureDebeziumDb();
         JSONObject data = new JSONObject().put("slot_name", slotName);
         OrderServiceSteps.executeAction("postgresql_db_create_logical_slot", this, data, this.getProjectId());
         Assertions.assertEquals(state(slotName), "on");
@@ -173,8 +175,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Step("Создать публикацию")
     public void createPublication(String publication) {
-        if(isNotDebezium("db"))
-            configureDebeziumDb();
+        configureDebeziumDb();
         JSONObject data = new JSONObject().put("publication_name", publication);
         OrderServiceSteps.executeAction("postgresql_db_create_publication", this, data, this.getProjectId());
         Assertions.assertEquals(state(publication), "on");
