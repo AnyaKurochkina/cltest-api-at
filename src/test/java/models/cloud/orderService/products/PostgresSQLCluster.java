@@ -10,22 +10,14 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
-import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
-import models.cloud.subModels.Db;
-import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import static core.utils.AssertUtils.assertContains;
-import static models.cloud.orderService.products.PostgreSQL.DB_CONN_LIMIT;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -143,6 +135,56 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     public void removeDbmsUser(String username, String dbName) {
         removeDbmsUser("postgresql_cluster_remove_dbms_user", username, dbName);
+    }
+
+    private boolean isNotDebezium(String type){
+        return ((Boolean) OrderServiceSteps.getProductsField(this, String.format("data.find{it.type=='%s'}.data.config.debezium_ready", type)));
+    }
+
+    @Step("Настроить кластер для интеграции с Debezium")
+    public void configureDebezium() {
+        JSONObject data = new JSONObject().put("check_agree", true).put("user_password", "hcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXz");
+        OrderServiceSteps.executeAction("postgresql_cluster_configure_debezium", this, data, this.getProjectId());
+    }
+
+    @Step("Настроить БД для интеграции с Debezium")
+    public void configureDebeziumDb() {
+        if(isNotDebezium("cluster"))
+            configureDebezium();
+        JSONObject data = new JSONObject().put("check_agree", true);
+        OrderServiceSteps.executeAction("postgresql_db_configure_for_debezium", this, data, this.getProjectId());
+    }
+
+    @Step("Создать логический слот")
+    public void createLogicalSlot(String slotName) {
+        if(isNotDebezium("db"))
+            configureDebeziumDb();
+        JSONObject data = new JSONObject().put("slot_name", slotName);
+        OrderServiceSteps.executeAction("postgresql_db_create_logical_slot", this, data, this.getProjectId());
+        Assertions.assertEquals(state(slotName), "on");
+    }
+
+    @Step("Удалить логический слот")
+    public void removeLogicalSlot(String slotName) {
+        JSONObject data = new JSONObject().put("name", slotName);
+        OrderServiceSteps.executeAction("postgresql_remove_logical_slot", this, data, this.getProjectId());
+        Assertions.assertEquals(state(slotName), "deleted");
+    }
+
+    @Step("Создать публикацию")
+    public void createPublication(String publication) {
+        if(isNotDebezium("db"))
+            configureDebeziumDb();
+        JSONObject data = new JSONObject().put("publication_name", publication);
+        OrderServiceSteps.executeAction("postgresql_db_create_publication", this, data, this.getProjectId());
+        Assertions.assertEquals(state(publication), "on");
+    }
+
+    @Step("Удалить публикацию")
+    public void removePublication(String publication) {
+        JSONObject data = new JSONObject().put("name", publication);
+        OrderServiceSteps.executeAction("postgresql_remove_publication", this, data, this.getProjectId());
+        Assertions.assertEquals(state(publication), "deleted");
     }
 
     @Override

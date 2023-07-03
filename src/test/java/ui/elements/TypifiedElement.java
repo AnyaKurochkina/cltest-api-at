@@ -31,6 +31,7 @@ public interface TypifiedElement {
 
     static void refresh() {
         Selenide.refresh();
+        Selenide.executeJavaScript(Alert.script);
         checkProject();
     }
 
@@ -91,6 +92,7 @@ public interface TypifiedElement {
 
     static void open(String url) {
         Selenide.open(url);
+        Selenide.executeJavaScript(Alert.script);
         checkProject();
     }
 }
