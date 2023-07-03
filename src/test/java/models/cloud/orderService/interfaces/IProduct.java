@@ -77,6 +77,7 @@ public abstract class IProduct extends Entity {
     public static final String START = "Включить";
     public static final String STOP_HARD = "Выключить принудительно";
     public static final String RESIZE = "Изменить конфигурацию";
+    public final static String STATE_PATH = "data.find{it.data.config.name=='%s'}.data.state";
 
     @ToString.Include
     @Getter
@@ -141,6 +142,10 @@ public abstract class IProduct extends Entity {
 
     protected String getAccessGroup() {
         return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+    }
+
+    protected String state(String name){
+        return (String) OrderServiceSteps.getProductsField(this, String.format(STATE_PATH, name));
     }
 
     @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")

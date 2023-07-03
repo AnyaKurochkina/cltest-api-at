@@ -6,12 +6,14 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.PostgreSQL;
 import models.cloud.orderService.products.PostgresSQLCluster;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
@@ -21,7 +23,7 @@ import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("PostgresSQL Cluster Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod"), @Tag("newtest")})
 public class PostgresSQLClusterAstraTest extends Tests {
     public static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
     static final String dbName = "db_name";
@@ -282,6 +284,48 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void addMountPointPgWalarchive(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.addMountPointPgWalarchive();
+        }
+    }
+
+    @TmsLink("1762836")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Настроить кластер для интеграции с Debezium {0}")
+    void configureDebezium(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.configureDebezium();
+        }
+    }
+
+    @TmsLink("1762837")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Настроить БД для интеграции с Debezium {0}")
+    void configureDebeziumDb(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.configureDebeziumDb();
+        }
+    }
+
+    @TmsLink("1762839")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создать/удалить логический слот {0}")
+    void createLogicalSlot(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createLogicalSlot("slot_name");
+            postgreSQL.removeLogicalSlot("slot_name");
+        }
+    }
+
+    @TmsLink("1762840")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создать/удалить публикацию {0}")
+    void createPublication(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.createPublication("pub_dbzm");
+            postgreSQL.removePublication("pub_dbzm");
         }
     }
 
