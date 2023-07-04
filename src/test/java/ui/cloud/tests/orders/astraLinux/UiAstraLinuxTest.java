@@ -32,8 +32,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product;
-    //= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/94ef7758-4ebc-443c-a94e-46e1410f398a/main?context=proj-lww1vo6okh&type=project&org=vtb");
+    Astra product;//= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/ad94c8ba-573d-4857-84b9-f10282b7624f/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -46,7 +45,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @TmsLink("378275")
     @Order(1)
     @DisplayName("UI AstraLinux. Заказ")
-    void orderAstraLinux() {
+    void orderAstra() {
         double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
@@ -169,6 +168,22 @@ public class UiAstraLinuxTest extends UiProductTest {
     void monitoringOs() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.checkMonitoringOs();
+    }
+    @Test
+    @Order(13)
+    @TmsLink("1723134")
+    @DisplayName("UI AstraLinux. Создать снапшот")
+    void сreateSnapshot() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::сreateSnapshot);
+    }
+    @Test
+    @Order(14)
+    @TmsLink("1723138")
+    @DisplayName("UI AstraLinux. Удалить снапшот")
+    void deleteSnapshot() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::deleteSnapshot);
     }
 
     @Test

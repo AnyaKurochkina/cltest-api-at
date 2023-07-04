@@ -20,6 +20,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public class AstraLinuxPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
+    private static final String BLOCK_SNAPSHOT = "Снапшоты";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
@@ -73,6 +74,27 @@ public class AstraLinuxPage extends IProductPage {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
         new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_DELETED);
+    }
+
+    public void сreateSnapshot() {
+        runActionWithParameters(BLOCK_VM, "Создать снапшот", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Создать снапшот");
+            Select.byLabel("Срок хранения в днях").set("1");
+        });
+        btnGeneralInfo.click();
+        Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип","snapshot"));
+    }
+
+    public void deleteSnapshot() {
+        new Table("Имя",2).getRow(0).get().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new Table("Имя").getFirstValueByColumn("Имя"), "Удалить снапшот");
+        btnGeneralInfo.click();
+        Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
+    }
+
+    private SelenideElement getSnapshotMenuElement(String name) {
+        return new Table(BLOCK_SNAPSHOT).getValueByColumnInFirstRow("Тип").$("button");
     }
 
     public void restart() {

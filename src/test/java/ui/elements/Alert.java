@@ -1,79 +1,124 @@
 package ui.elements;
 
-import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.JavascriptException;
 
-import java.util.Map;
+import java.time.Duration;
+import java.util.Objects;
 
+import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.exist;
 import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
+    SelenideElement element;
 
-    private static final String script = "const waitTimeout = %d; " +
-            "return new Promise((resolve, reject) => { " +
-            "  const startTime = new Date().getTime(); " +
-            "  const interval = setInterval(() => { " +
-            "    const element = document.evaluate('//div[@role=\"alert\" and string-length(.)>1][button]', document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; " +
-            "    if (element) { " +
-            "      const text = element.textContent; " +
-            "      const color = window.getComputedStyle(element).borderBottomColor; " +
-            "      const button = element.querySelector('button'); " +
-            "      button.click(); " +
-            "      clearInterval(interval); " +
-            "      resolve({ text, color }); " +
-            "    } " +
-            "    if (new Date().getTime() - startTime > waitTimeout) { " +
-            "      clearInterval(interval); " +
-            "      reject(new Error('Alert not found')); " +
-            "    } " +
-            "  }, 1000); " +
-            "});";
+    public static final String script = "\"function hoverElement(element) {\\n\" +\n" +
+            "        \"  const hoverEvent = new MouseEvent('mouseover', {\\n\" +\n" +
+            "        \"    bubbles: true,\\n\" +\n" +
+            "        \"    cancelable: true,\\n\" +\n" +
+            "        \"    view: window\\n\" +\n" +
+            "        \"  });\\n\" +\n" +
+            "        \"  element.dispatchEvent(hoverEvent);\\n\" +\n" +
+            "        \"}\\n\" +\n" +
+            "        \"\\n\" +\n" +
+            "        \"function trackAndHoverAlerts() {\\n\" +\n" +
+            "        \"  const alertElements = document.evaluate(\\n\" +\n" +
+            "        \"    '//div[@role=\\\"alert\\\" and string-length(.)>1][button]',\\n\" +\n" +
+            "        \"    document,\\n\" +\n" +
+            "        \"    null,\\n\" +\n" +
+            "        \"    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,\\n\" +\n" +
+            "        \"    null\\n\" +\n" +
+            "        \"  );\\n\" +\n" +
+            "        \"\\n\" +\n" +
+            "        \"  for (let i = 0; i < alertElements.snapshotLength; i++) {\\n\" +\n" +
+            "        \"    const alertElement = alertElements.snapshotItem(i);\\n\" +\n" +
+            "        \"\\n\" +\n" +
+            "        \"    setTimeout(() => {\\n\" +\n" +
+            "        \"      hoverElement(alertElement);\\n\" +\n" +
+            "        \"    }, i * 1000); \\n\" +\n" +
+            "        \"  }\\n\" +\n" +
+            "        \"}\\n\" +\n" +
+            "        \"\\n\" +\n" +
+            "        \"const observer = new MutationObserver(trackAndHoverAlerts);\\n\" +\n" +
+            "        \"observer.observe(document.body, {\\n\" +\n" +
+            "        \"  childList: true,\\n\" +\n" +
+            "        \"  subtree: true\\n\" +\n" +
+            "        \"});\\n\" +\n" +
+            "        \"\\n\" +\n" +
+            "        \"window.addEventListener('load', trackAndHoverAlerts);\";";
+
+    public Alert(SelenideElement element) {
+        this.element = element;
+    }
 
     public Alert() {
     }
 
-    private Map<String, String> getElementData(int timeout) {
-        return Selenide.executeJavaScript(String.format(script, timeout));
+    private SelenideElement getElement() {
+        if (Objects.nonNull(element))
+            return element;
+        return $x("//div[@role='alert' and string-length(.)>1][button]");
     }
 
     public static Alert green(String text, Object... args) {
-        return new Alert().check(Color.GREEN, text, args);
+        return new Alert().check(Color.GREEN, text, args).close();
     }
 
     public static Alert red(String text, Object... args) {
-        return new Alert().check(Color.RED, text, args);
+        return new Alert().check(Color.RED, text, args).close();
+    }
+
+    public void waitClose() {
+        try {
+            if (element.exists())
+                element.shouldNot(Condition.visible);
+        } catch (Throwable ignored) {
+        }
+    }
+
+    public Alert close() {
+        try {
+            Button button = Button.byElement(getElement().$x("button[.='']"));
+            button.click();
+            waitClose();
+        } catch (Throwable ignored) {
+        }
+        return this;
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
-        final Map<String, String> data = getElementData(30000);
-        Assertions.assertTrue(data.get("text").toLowerCase().contains(message.toLowerCase()),
-                String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", data.get("text"), message));
-        Assertions.assertEquals(color.getValue(), fromString(data.get("color")).asHex(), "Неверный цвет Alert");
+        element = getElement().shouldBe(Condition.visible).hover();
+        final String elementText = element.getText();
+        Assertions.assertTrue(elementText.toLowerCase().contains(message.toLowerCase()),
+                String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));
+        Assertions.assertEquals(color.getValue(), fromString(element.getCssValue("border-bottom-color")).asHex(),
+                "Неверный цвет Alert");
         return this;
     }
 
     @Step("Проверка на отсутствие красных алертов")
-    public static void checkNoRedAlerts() {
-        try {
-            Map<String, String> data = new Alert().getElementData(3000);
-            Assertions.assertNotEquals(fromString(data.get("color")), Color.RED.getColor());
-        } catch (JavascriptException ignore) {
-        }
+    public static void  checkNoRedAlerts() {
+        SelenideElement element = new Alert().getElement();
+        if (exist(element, Duration.ofSeconds(3)))
+            Assertions.assertNotEquals(fromString(element.getCssValue("border-bottom-color")).asHex(), Color.RED.getColor());
     }
 
 
     @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
         try {
-            for (int i = 0; i < 10; i++)
-                new Alert().getElementData(10000);
-        } catch (Throwable ignore) {
+            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(5));
+            while (e.exists() && e.isDisplayed()) {
+                new Alert(e).close();
+            }
+        } catch (Throwable ignored) {
         }
     }
 

@@ -113,7 +113,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(4)
     @TmsLink("330329")
-    @DisplayName("UI ClickHouse. Расширить диск")
+    @DisplayName("UI ClickHouse. Расширить точку монтирования")
     void expandDisk() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.MORE, () -> clickHousePage.enlargeDisk("/app/clickhouse", "20", new Table("Тип").getRow(0).get()));

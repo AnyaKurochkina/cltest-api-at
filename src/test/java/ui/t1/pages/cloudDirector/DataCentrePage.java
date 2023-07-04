@@ -69,6 +69,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//textarea").setValue(profile.getLimit());
             $x("//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//input[@type = 'radio']")
                     .click();
+            Waiting.sleep(5000);
         });
         Waiting.sleep(5000);
         generalInformation.click();
