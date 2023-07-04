@@ -56,7 +56,6 @@ public class UsersPage {
         }
         addUserBtn.click();
         TextArea.byName("userList").setValueAndPressEnter(user.getEmail());
-      //  StringUtils.$x("//*[contains(@id, '{}')]", user.getEmail()).click();
         openRolesListBtn.click();
         StringUtils.$x("//li[@role = 'menuitem' and text() = 'Базовые']").click();
         StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", user.getRole().get(0)).click();
@@ -87,6 +86,7 @@ public class UsersPage {
         StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", roleName).click();
         Waiting.sleep(1000);
         assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", roleName).isDisplayed());
+        closeRolesListBtn.click();
         confirmChangesBtn.click();
         Alert.green("Изменен пользователь {}", user.getEmail());
         return this;
