@@ -1,5 +1,6 @@
 package core.helper;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -10,6 +11,7 @@ import org.intellij.lang.annotations.Language;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -87,6 +89,15 @@ public final class StringUtils {
                 break;
         }
         return stack.toString();
+    }
+
+    public static boolean exist(SelenideElement element, Duration duration) {
+        try {
+            element.should(Condition.exist, duration);
+            return true;
+        } catch (Throwable ignored) {
+            return false;
+        }
     }
 
     public static boolean isNullOrEmpty(String value) {
