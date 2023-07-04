@@ -35,7 +35,7 @@ public class AccessRulesModal extends AbstractLayerS3<AccessRulesModal> {
     }
 
     public AccessRulesModal setUser(String userName){
-        SearchSelect.byPlaceholder("Пользователи и сервисные аккаунты").set(userName);
+        SearchSelect.byPlaceholder("Пользователи и сервисные аккаунты").setContains(userName);
         return this;
     }
 

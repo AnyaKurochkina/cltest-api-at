@@ -45,7 +45,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @TmsLink("378275")
     @Order(1)
     @DisplayName("UI AstraLinux. Заказ")
-    void orderAstraLinux() {
+    void orderAstra() {
         double prebillingCost;
         try {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");

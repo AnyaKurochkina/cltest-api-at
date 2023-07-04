@@ -27,6 +27,7 @@ public class UsersPage {
     private final Button confirmChangesBtn = Button.byText("Применить", 2);
     private static final Button confirmSearchBtn = Button.byText("Применить");
     private final Button openRolesListBtn = Button.byXpath("//button[@title = 'Open']");
+    private final Button closeRolesListBtn = Button.byXpath("//button[@title = 'Close']");
     private static final Input searchUser = Input.byPlaceholder("Введите данные пользователя");
     private static final Button clearFilters = Button.byText("Сбросить фильтры");
 
@@ -55,11 +56,11 @@ public class UsersPage {
         }
         addUserBtn.click();
         TextArea.byName("userList").setValueAndPressEnter(user.getEmail());
-      //  StringUtils.$x("//*[contains(@id, '{}')]", user.getEmail()).click();
         openRolesListBtn.click();
         StringUtils.$x("//li[@role = 'menuitem' and text() = 'Базовые']").click();
         StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", user.getRole().get(0)).click();
         assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", user.getRole().get(0)).isDisplayed());
+        closeRolesListBtn.click();
         confirmAddUserBtn.click();
         Waiting.sleep(1000);
         assertTrue(isUserAdded(user), "Пользователь не найден");
@@ -85,6 +86,7 @@ public class UsersPage {
         StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", roleName).click();
         Waiting.sleep(1000);
         assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", roleName).isDisplayed());
+        closeRolesListBtn.click();
         confirmChangesBtn.click();
         Alert.green("Изменен пользователь {}", user.getEmail());
         return this;

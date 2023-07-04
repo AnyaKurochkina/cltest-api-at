@@ -54,7 +54,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            System.setProperty("chromeoptions.args", "\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
         }
 
         baseUrl = URL;
@@ -72,7 +71,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");
-        options.addArguments("--disable-web-security");
+//        options.addArguments("--disable-web-security");
         options.addArguments("--allow-external-pages");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
