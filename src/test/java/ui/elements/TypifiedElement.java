@@ -53,10 +53,10 @@ public interface TypifiedElement {
      * @return искомый element
      */
     static WebElement findNearestElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
-            SelenideElement elementE1 = $x(xpathNearElement);
-            ElementsCollection elementsE2 = $$x(xpathSearchElement);
+            SelenideElement elementE1 = $x(xpathNearElement).shouldBe(Condition.exist);
+            ElementsCollection elementsE2 = $$x(xpathSearchElement).shouldBe(CollectionCondition.sizeNotEqual(0));
             if (elementsE2.isEmpty()) {
-                throw new NoSuchElementException("No elements matching xpathSearchElement found");
+                throw new NoSuchElementException(String.format("No elements matching %s found", xpathSearchElement));
             }
             WebElement nearestElement = null;
             double minDistance = Double.MAX_VALUE;

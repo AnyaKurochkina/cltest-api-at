@@ -51,6 +51,7 @@ public class IndexPage {
 
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
+    @Step("Переход на главную страницу")
     public static void go() {
         $x("(//img[contains(@alt,'logo')])[2]").shouldBe(Condition.visible).click();
     }
