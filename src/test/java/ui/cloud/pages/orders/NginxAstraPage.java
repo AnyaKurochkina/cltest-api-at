@@ -2,15 +2,19 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Nginx;
+import models.cloud.orderService.products.PostgreSQL;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
+import steps.references.ReferencesStep;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
 import ui.elements.Select;
 import ui.elements.Table;
 
 
+import java.util.List;
 
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
@@ -50,7 +54,6 @@ public class NginxAstraPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Обновить сертификат NginxAstra")
@@ -65,19 +68,18 @@ public class NginxAstraPage extends IProductPage {
 
     public void changeConfiguration() {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        Flavor maxFlavor = product.getMaxFlavor();
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
-            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+            Select.byLabel("Конфигурация Core/RAM").set("Core: 4, RAM: 16 GB");
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
         });
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
-        Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
-        Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
+        Assertions.assertEquals("4", cpu.getText(), "Размер CPU не изменился");
+        Assertions.assertEquals("16", ram.getText(), "Размер RAM не изменился");
     }
 
     public void enlargeDisk(String name, String size, SelenideElement node) {
