@@ -16,7 +16,7 @@ import static api.Tests.activeCnd;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
 import static org.junit.jupiter.api.Assertions.*;
-import static ui.cloud.pages.productCatalog.BaseListPage.openActionMenu;
+import static ui.cloud.pages.productCatalog.EntityListPage.openActionMenu;
 
 @Log4j2
 public class UsersPage {
