@@ -214,14 +214,4 @@ public class TagTest extends Tests {
         String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(("\"name\": Это поле не может быть пустым."), errorMsg);
     }
-
-    @DisplayName("Проверка создания и изменения тега с символами '=' и ',' в имени")
-    @Disabled("Ждем решения по этому функционалу")
-    @TmsLink("")
-    @Test
-    public void createAndUpdateTagNameWithSpecialSymbolsTest() {
-        String tagName = "tag=,";
-        tagList.add(tagName);
-        createTagByName(tagName);
-    }
 }
