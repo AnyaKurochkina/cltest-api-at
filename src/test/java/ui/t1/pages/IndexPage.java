@@ -46,6 +46,7 @@ public class IndexPage {
 
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
+    @Step("Переход на главную страницу")
     public static void go() {
         $x("//*[@title='Главная']").shouldBe(Condition.visible).click();
     }
