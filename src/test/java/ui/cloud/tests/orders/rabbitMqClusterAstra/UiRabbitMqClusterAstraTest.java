@@ -1,11 +1,13 @@
 package ui.cloud.tests.orders.rabbitMqClusterAstra;
 
 import com.codeborne.selenide.Condition;
+import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.RabbitMQClusterAstra;
+import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -25,7 +27,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("RabbitMQClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_rabbit_mq_cluster_astra")})
 public class UiRabbitMqClusterAstraTest extends UiProductTest {
-    RabbitMQClusterAstra product; // = RabbitMQClusterAstra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fdde9dae-53c5-4542-bcc5-d2562688315e/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    RabbitMQClusterAstra product;// = RabbitMQClusterAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/1b806df5-c1d1-4879-94f6-883bb88a5367/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameUser = "atUser";
     String nameHost = "atHostName";
@@ -96,6 +98,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::updateCertificate);
     }
+
 
     @Test
     @Order(4)
@@ -212,6 +215,34 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::openPointConnect);
     }
+    @Test
+    @Order(16)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Ре-балансировка очередей")
+    void reBalanceQueue() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::reBalanceQueue);
+    }
+    @Test
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Синхронизировать данные кластера RabbitMQ")
+    void synchronizeData() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::synchronizeData);
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Добавить группу доступа на WEB интерфейс")
+    void addGroupWeb() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addGroupWeb("administrator", accessGroup.getPrefixName()));
+
+    }
+
 
 
     @Test

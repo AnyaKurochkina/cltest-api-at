@@ -31,7 +31,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_astra")})
 public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
-    PostgreSQL product = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/d4ac7f9d-60fc-480e-ba5f-81273f22b273/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/d4ac7f9d-60fc-480e-ba5f-81273f22b273/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";

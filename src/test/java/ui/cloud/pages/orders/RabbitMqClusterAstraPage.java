@@ -25,6 +25,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String BLOCK_USERS = "Пользователи";
     private static final String BLOCK_VIRTUAL_HOSTS = "Виртуальные хосты";
     private static final String BLOCK_PERMISSIONS = "Права доступа";
+    private static final String BLOCK_GROUP_AD_WEB= "Группы доступа на WEB интерфейс";
     private static final String HEADER_NAME_USER = "Имя";
     private static final String HEADER_CONSOLE = "Точка подключения";
     private static final String HEADER_NAME_USER_PERMISSIONS = "Имя пользователя";
@@ -105,6 +106,23 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void updateCertificate() {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить сертификаты RabbitMQ", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+        });
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+
+    @Step("Ре-балансировка очередей")
+    public void reBalanceQueue() {
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CLUSTER, "Произвести ре-балансировку очередей", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+        });
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    @Step("Синхронизировать данные кластера RabbitMQ")
+    public void synchronizeData() {
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CLUSTER, "Синхронизировать данные кластера RabbitMQ", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -231,6 +249,28 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
                 value));
     }
+    @Step("Добавить новые группы на WEB интерфейс {group} с ролью {nameGroup}")
+    public void addGroupWeb(String role, String nameGroup) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_GROUP_AD_WEB, "Добавить группу доступа", "Подтвердить", () -> {
+            Select.byLabel("Роль").set(role);
+            Select.byLabel("Группы").set(nameGroup);
+            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+        });
+        btnGeneralInfo.click();
+       // Assertions.assertTrue(getTableByHeader(HEADER_LIST_GROUP).isColumnValueContains(HEADER_NAME_GROUP, nameGroup), "Ошибка создания WildFly");
+    }
+
+//    @Step("Удалить группу  доступа WildFly с ролью {role}")
+//    public void deleteGroupWildFlyAstra(String role, String nameGroup) {
+//        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+//        runActionWithParameters(BLOCK_GROUP, "Удаление группы WildFly", "Подтвердить", () -> {
+//            Select.byLabel("Роль").set(role);
+//            Select.byLabel("Имя группы").set(nameGroup);
+//        });
+//        btnGeneralInfo.click();
+//        Assertions.assertFalse(getTableByHeader(HEADER_LIST_GROUP).isColumnValueContains(HEADER_NAME_GROUP, nameGroup), "Ошибка удаления WildFly");
+//    }
 
 
     public void resetPasswordLA(String name) {

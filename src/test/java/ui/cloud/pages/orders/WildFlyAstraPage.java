@@ -149,7 +149,7 @@ public class WildFlyAstraPage extends IProductPage {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    @Step("Добавить новые группы {group} с ролью {nameGroup}")
+    @Step("Добавить новые группы WildFly {group} с ролью {nameGroup}")
     public void addGroupWildFlyAstra(String role, String nameGroup) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_GROUP, "Добавление группы WildFly", "Подтвердить", () -> {
@@ -160,7 +160,7 @@ public class WildFlyAstraPage extends IProductPage {
         Assertions.assertTrue(getTableByHeader(HEADER_LIST_GROUP).isColumnValueContains(HEADER_NAME_GROUP, nameGroup), "Ошибка создания WildFly");
     }
 
-    @Step("Удалить группу доступа с ролью {role}")
+    @Step("Удалить группу  доступа WildFly с ролью {role}")
     public void deleteGroupWildFlyAstra(String role, String nameGroup) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_GROUP, "Удаление группы WildFly", "Подтвердить", () -> {
