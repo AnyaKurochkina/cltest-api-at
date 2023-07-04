@@ -8,35 +8,52 @@ import lombok.NoArgsConstructor;
 import models.AbstractEntity;
 import org.json.JSONObject;
 
-import static steps.rpcRouter.OutputQueueSteps.deleteOutPutQueue;
+import java.util.Objects;
 
+import static steps.rpcRouter.ExchangeSteps.deleteExchange;
 
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"create_dt", "update_dt", "id"}, callSuper = false)
-public class OutputQueue extends AbstractEntity {
-    private Integer id;
-    private Integer exchange;
-    private String create_dt;
-    private String update_dt;
+public class Exchange extends AbstractEntity {
     private String name;
     private String title;
     private String description;
-    private Object params;
+    private ExchangeType exchange_type;
+    private Objects params;
+    private Integer id;
+    private String create_dt;
+    private String update_dt;
 
     @Override
     public void delete() {
-        deleteOutPutQueue(id);
+        deleteExchange(id);
     }
 
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("rpcDjangoRouter/createOutPutQueue.json")
-                .set("$.exchange", exchange)
+                .set("$.exchange_type", exchange_type)
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
                 .set("$.params", params)
                 .build();
+    }
+
+    enum ExchangeType {
+        DIRECT("direct"),
+        TOPIC("topic"),
+        FANOUT("fanout");
+
+        private final String value;
+
+        ExchangeType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 }

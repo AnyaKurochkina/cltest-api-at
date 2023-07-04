@@ -117,7 +117,6 @@ public class Product extends Entity {
     public JSONObject toJson() {
         String categoryV2 = null;
         String onRequest = null;
-        String payment = null;
         if (this.categoryV2 != null) {
             categoryV2 = this.categoryV2.getValue();
         }
