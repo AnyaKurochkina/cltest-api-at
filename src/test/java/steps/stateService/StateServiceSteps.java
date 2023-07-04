@@ -213,6 +213,26 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка primary items, в которых искомый item_id значится как secondary")
+    public static List<Item> getPrimaryItemsList(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/as_secondary_items/?item_id={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение списка secondary items, в которых искомый item_id значится как primary")
+    public static List<Item> getSecondaryItemsList(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/as_primary_items/?item_id={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
     @Step("Получение списка items по фильтру {filter}")
     public static List<Item> getItemsListByFilter(String filter) {
         return new Http(StateServiceURL)

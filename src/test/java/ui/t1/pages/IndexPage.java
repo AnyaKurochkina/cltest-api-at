@@ -10,13 +10,14 @@ import lombok.Getter;
 import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
-import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.IAM.users.UsersPage;
+import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
+import ui.t1.pages.supportCenter.NotificationsPage;
 
 import java.time.Duration;
 
@@ -28,6 +29,9 @@ import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 @Getter
 public class IndexPage {
     Button linkCloudStorageS3 = Button.byXpath("//a[.='Cloud Storage S3']");
+    Button linkResources = Button.byXpath("//a[.='Ресурсы']");
+    Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
+    Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
@@ -44,11 +48,12 @@ public class IndexPage {
     Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
 
+
     final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
 
     @Step("Переход на главную страницу")
     public static void go() {
-        $x("//*[@title='Главная']").shouldBe(Condition.visible).click();
+        $x("//*[@title = 'Главная']").shouldBe(Condition.visible).click();
     }
 
     public Profile goToProfile(){
@@ -158,5 +163,17 @@ public class IndexPage {
         Button.byText("Отключить").click();
         Waiting.findWithRefresh(() -> !btnAction.isDisplayed(), Duration.ofMinutes(1));
         btnAction.shouldNotBe(Condition.exist);
+        Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
+        Button.byText("Отключить").click();
     }
+
+    @Step("Переход в Центр уведомлений")
+    public NotificationsPage goToNotificationCenter(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        return new NotificationsPage();
+    }
+
+
+
 }

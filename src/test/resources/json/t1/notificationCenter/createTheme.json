@@ -1,0 +1,14 @@
+{
+  "code": "auto test",
+  "name": "auto test",
+  "description": "automatic test",
+  "theme_group_id": 2,
+  "importance": "HIGH",
+  "channels": [
+    "ws", "lenta", "email"
+
+  ],
+  "templates": [
+    1, 2, 19
+  ]
+}

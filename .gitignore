@@ -7,7 +7,6 @@
 .log
 .iml
 .allure
-.sync_repos
 
 #log
 *.log
@@ -25,3 +24,5 @@
 **/secret.json
 /build/reports/tests/
 /build/
+/allure-report/
+/seleniumDrivers/

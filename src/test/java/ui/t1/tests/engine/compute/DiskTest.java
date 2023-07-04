@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.compute;
 
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -108,6 +109,7 @@ public class DiskTest extends AbstractComputeTest {
                 .filter(e -> e.getSize().equals(6L))
                 .count(), "Item volume не соответствует условиям или не найден");
         new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.EQUALS, diskPage::detachComputeVolume);
+        Waiting.sleep(5000);
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> e.getSize().equals(6L))

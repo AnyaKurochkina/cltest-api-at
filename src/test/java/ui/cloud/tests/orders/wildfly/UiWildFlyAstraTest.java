@@ -7,11 +7,14 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.products.WildFly;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.AccessGroupSteps;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
@@ -32,7 +35,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
 
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b3a48047-5370-466c-8764-4899aa4c8282/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/web/orders/534ae842-443d-4351-badb-c47d97e8203e/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -48,7 +51,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     void orderWildFlyAstra() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup =product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -196,6 +199,16 @@ public class UiWildFlyAstraTest extends UiProductTest {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         wildFlyPage.checkClusterMonitoringOs();
     }
+
+    @Test
+    @Order(15)
+    @TmsLink("908267")
+    @DisplayName("UI WildFlyAstra. Консоль администратора")
+    void openAdminConsole() {
+        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::openAdminConsole);
+    }
+
 
     @Test
     @Order(100)

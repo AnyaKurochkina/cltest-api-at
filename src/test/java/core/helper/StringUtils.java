@@ -90,6 +90,7 @@ public final class StringUtils {
         }
         return stack.toString();
     }
+
     public static boolean exist(SelenideElement element, Duration duration) {
         try {
             element.should(Condition.exist, duration);

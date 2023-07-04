@@ -85,7 +85,6 @@ public class ProductPage extends EntityPage {
         categoryV2Select.set(Categories.COMPUTE.getValue());
         maxCountInput.setValue(product.getMaxCount());
         if (product.getOnRequest() != null) onRequestSelect.set(product.getOnRequest().getDisplayName());
-        paymentSelect.set(product.getPayment().getDisplayName());
         inGeneralListSwitch.setEnabled(product.getInGeneralList());
         numberInput.setValue(product.getNumber());
         extraData.setValue(new JSONObject(product.getExtraData()).toString());
@@ -114,7 +113,6 @@ public class ProductPage extends EntityPage {
         maxCountInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getMaxCount())));
         assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getDisplayName(),
                 onRequestSelect.getValue());
-        assertEquals(product.getPayment().getDisplayName(), paymentSelect.getValue());
         assertEquals(product.getInGeneralList(), inGeneralListSwitch.isEnabled());
         numberInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getNumber())));
         assertEquals(new JSONObject(product.getExtraData()).toString(),

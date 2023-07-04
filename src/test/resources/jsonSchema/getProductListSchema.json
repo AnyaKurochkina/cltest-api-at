@@ -61,9 +61,6 @@
             "category_v2": {
               "type": "string"
             },
-            "payment": {
-              "type": "string"
-            },
             "info": {
               "type": "object"
             },
@@ -105,7 +102,6 @@
             "number",
             "category",
             "category_v2",
-            "payment",
             "info",
             "in_general_list",
             "allowed_groups",
