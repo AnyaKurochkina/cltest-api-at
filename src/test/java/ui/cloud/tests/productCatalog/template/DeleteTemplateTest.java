@@ -80,6 +80,7 @@ public class DeleteTemplateTest extends TemplateBaseTest {
         EntityListPage.delete(nameColumn, template.getName());
         new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
         goToUsageButton.click();
+        new Alert().close();
         TemplatePage page = new TemplatePage();
         page.checkTabIsSelected("Использование");
         page.getDeleteButton().click();
