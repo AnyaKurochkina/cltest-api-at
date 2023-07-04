@@ -144,7 +144,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
         Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
         String orderIdVm = vmPage.getOrderId();
 
-        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        String ip = new IndexPage().goToPublicIps().addIp(region);
         createdIpList.add(ip);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         String orderIdIp = ipPage.getOrderId();

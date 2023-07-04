@@ -30,6 +30,7 @@ import java.util.List;
 public abstract class AbstractComputeTest extends Tests {
     protected Project project;
     protected String availabilityZone = "ru-central1-a";
+    protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
     protected String hddTypeFirst = "HDD";
     protected String hddTypeSecond = "HDD";
@@ -41,7 +42,7 @@ public abstract class AbstractComputeTest extends Tests {
 
     public AbstractComputeTest() {
         project = Project.builder().isForOrders(true).build().createObject();
-        if (Configure.ENV.equals("t1ift"))
+        if (!Configure.ENV.equals("t1iprod"))
             availabilityZone = "ru-central1-c";
     }
 
