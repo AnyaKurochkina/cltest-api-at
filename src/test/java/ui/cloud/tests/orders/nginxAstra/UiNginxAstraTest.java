@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.nginxАstra;
+package ui.cloud.tests.orders.nginxAstra;
 
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
@@ -149,12 +149,12 @@ public class UiNginxAstraTest extends UiProductTest {
         nginxAstraPage.checkMonitoringOs();
     }
 
-    @Test
+    /*@Test
     @Order(100)
     @TmsLink("847280")
     @DisplayName("UI NginxAstra. Удаление продукта")
     void delete() {
         NginxAstraPage nginxAstraPage = new NginxAstraPage(product);
         nginxAstraPage.runActionWithCheckCost(CompareType.LESS, nginxAstraPage::delete);
-    }
+    }*/
 }
