@@ -111,7 +111,7 @@ public class PortalBackSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getString("list.find{it.description == '" + desc + "'}.name");
-        return Objects.requireNonNull(accessGroup);
+        return Objects.requireNonNull(accessGroup, "Нет группы с описанием: " + desc);
     }
 
     public static String getInformationSystemId(String organizationName, String informationSystemCode) {
