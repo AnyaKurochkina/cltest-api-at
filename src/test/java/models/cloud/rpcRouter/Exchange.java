@@ -1,10 +1,7 @@
 package models.cloud.rpcRouter;
 
 import core.helper.JsonHelper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import models.AbstractEntity;
 import org.json.JSONObject;
 
@@ -13,6 +10,7 @@ import java.util.Objects;
 import static steps.rpcRouter.ExchangeSteps.deleteExchange;
 
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"create_dt", "update_dt", "id"}, callSuper = false)
@@ -32,7 +30,7 @@ public class Exchange extends AbstractEntity {
     }
 
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate("rpcDjangoRouter/createOutPutQueue.json")
+        return JsonHelper.getJsonTemplate("rpcDjangoRouter/createExchange.json")
                 .set("$.exchange_type", exchange_type)
                 .set("$.name", name)
                 .set("$.title", title)

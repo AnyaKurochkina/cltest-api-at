@@ -29,7 +29,8 @@ public class ExchangeSteps extends Steps {
                 .build()
                 .toJson();
         return new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .withServiceToken()
+              // .setRole(Role.CLOUD_ADMIN)
                 .body(exchange)
                 .post(exchangeV1)
                 .assertStatus(201)

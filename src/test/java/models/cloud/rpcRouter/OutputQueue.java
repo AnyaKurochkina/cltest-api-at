@@ -1,17 +1,16 @@
 package models.cloud.rpcRouter;
 
 import core.helper.JsonHelper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import models.AbstractEntity;
 import org.json.JSONObject;
 
 import static steps.rpcRouter.OutputQueueSteps.deleteOutPutQueue;
+import static steps.rpcRouter.OutputQueueSteps.isOutPutQueueExist;
 
 
 @Builder
+@Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"create_dt", "update_dt", "id"}, callSuper = false)
@@ -27,7 +26,9 @@ public class OutputQueue extends AbstractEntity {
 
     @Override
     public void delete() {
-        deleteOutPutQueue(id);
+        if (isOutPutQueueExist(name)) {
+            deleteOutPutQueue(id);
+        }
     }
 
     public JSONObject toJson() {
