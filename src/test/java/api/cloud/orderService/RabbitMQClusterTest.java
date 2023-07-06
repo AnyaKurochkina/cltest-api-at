@@ -164,7 +164,6 @@ public class RabbitMQClusterTest extends Tests {
     }
 
     @TmsLink("")
-    @Tag("newtest")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Синхронизировать данные кластера {0}")
     void dataSynchronization(RabbitMQClusterAstra product) {
@@ -174,7 +173,6 @@ public class RabbitMQClusterTest extends Tests {
     }
 
     @TmsLink("")
-    @Tag("newtest")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Добавить/удалить группу доступа {0}")
     void accessGroupsOnTheWeb(RabbitMQClusterAstra product) {
@@ -186,7 +184,6 @@ public class RabbitMQClusterTest extends Tests {
     }
 
     @TmsLink("")
-    @Tag("newtest")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
