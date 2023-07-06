@@ -1,11 +1,10 @@
 package models.cloud.rpcRouter;
 
+import com.fasterxml.jackson.annotation.JsonValue;
 import core.helper.JsonHelper;
 import lombok.*;
 import models.AbstractEntity;
 import org.json.JSONObject;
-
-import java.util.Objects;
 
 import static steps.rpcRouter.ExchangeSteps.deleteExchange;
 
@@ -19,7 +18,7 @@ public class Exchange extends AbstractEntity {
     private String title;
     private String description;
     private ExchangeType exchange_type;
-    private Objects params;
+    private Object params;
     private Integer id;
     private String create_dt;
     private String update_dt;
@@ -50,6 +49,7 @@ public class Exchange extends AbstractEntity {
             this.value = value;
         }
 
+        @JsonValue
         public String getValue() {
             return value;
         }

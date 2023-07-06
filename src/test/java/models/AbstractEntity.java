@@ -19,6 +19,7 @@ public abstract class AbstractEntity {
     abstract public void delete();
 
     public AbstractEntity() {
+        System.out.println("test");
         entities.computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(this);
     }
 

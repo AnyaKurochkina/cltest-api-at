@@ -1,6 +1,5 @@
 package steps.rpcRouter;
 
-import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
@@ -23,15 +22,15 @@ public class OutputQueueSteps extends Steps {
     @Step("Удаление OutPutQueue")
     public static Response deleteOutPutQueue(Integer id) {
         return new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(outPutQueueV1 + "{}/", id)
+                .withServiceToken()
+                .delete(outPutQueueV1 + "{}/", id)
                 .assertStatus(204);
     }
 
     @Step("Создание OutPutQueue")
     public static Response createOutPutQueue(JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .withServiceToken()
                 .body(jsonObject)
                 .post(outPutQueueV1)
                 .assertStatus(201);
@@ -46,7 +45,7 @@ public class OutputQueueSteps extends Steps {
                 .build()
                 .toJson();
         return new Http(RpcRouter)
-                .setRole(Role.CLOUD_ADMIN)
+                .withServiceToken()
                 .body(queue)
                 .post(outPutQueueV1)
                 .assertStatus(201)
@@ -56,8 +55,8 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение списка OutPutQueue")
     public static List<OutputQueue> getOutPutQueueList() {
         return new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(outPutQueueV1)
+                .withServiceToken()
+                .get(outPutQueueV1)
                 .assertStatus(201)
                 .extractAs(GetOutPutQueueList.class)
                 .getList();
@@ -66,7 +65,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Обновление OutPutQueue")
     public static OutputQueue updateOutPutQueue(Integer id, JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .withServiceToken()
                 .body(jsonObject)
                 .put(outPutQueueV1 + "{}/", id)
                 .assertStatus(201)
@@ -76,7 +75,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Частичное обновление OutPutQueue")
     public static OutputQueue partialUpdateOutPutQueue(Integer id, JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .withServiceToken()
                 .body(jsonObject)
                 .patch(outPutQueueV1 + "{}/", id)
                 .assertStatus(201)
@@ -86,8 +85,8 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение OutPutQueue по id {id}")
     public static OutputQueue getOutPutQueueById(Integer id) {
         return new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(outPutQueueV1 + "{}/", id)
+                .withServiceToken()
+                .get(outPutQueueV1 + "{}/", id)
                 .assertStatus(201)
                 .extractAs(OutputQueue.class);
     }
@@ -95,9 +94,9 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение OutPutQueue по name {name}")
     public static OutputQueue getOutPutQueueByName(String name) {
         List<OutputQueue> list = new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(outPutQueueV1 + "?name={}", name)
-                .assertStatus(201)
+                .withServiceToken()
+                .get(outPutQueueV1 + "?name={}", name)
+                .assertStatus(200)
                 .extractAs(GetOutPutQueueList.class)
                 .getList();
         return list.stream().findFirst().orElseThrow(() -> new NotFoundException("Исходящая очередь не найдена"));
@@ -106,9 +105,9 @@ public class OutputQueueSteps extends Steps {
     @Step("Проверка существования OutPutQueue по name {name}")
     public static boolean isOutPutQueueExist(String name) {
         List<OutputQueue> list = new Http(RpcRouter)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(outPutQueueV1 + "?name={}", name)
-                .assertStatus(201)
+                .withServiceToken()
+                .get(outPutQueueV1 + "?name={}", name)
+                .assertStatus(200)
                 .extractAs(GetOutPutQueueList.class)
                 .getList();
         return list.stream().findFirst().isPresent();

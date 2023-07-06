@@ -6,7 +6,6 @@ import models.AbstractEntity;
 import org.json.JSONObject;
 
 import static steps.rpcRouter.OutputQueueSteps.deleteOutPutQueue;
-import static steps.rpcRouter.OutputQueueSteps.isOutPutQueueExist;
 
 
 @Builder
@@ -26,9 +25,7 @@ public class OutputQueue extends AbstractEntity {
 
     @Override
     public void delete() {
-        if (isOutPutQueueExist(name)) {
             deleteOutPutQueue(id);
-        }
     }
 
     public JSONObject toJson() {
