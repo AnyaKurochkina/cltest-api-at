@@ -1,7 +1,6 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,12 +14,12 @@ import models.cloud.subModels.Vhost;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static core.utils.AssertUtils.assertContains;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -143,6 +142,28 @@ public class RabbitMQClusterAstra extends IProduct {
                 new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_name\": \"" + vhost + "\"}"), projectId);
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
                 String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Присутствует vhost access " + vhost);
+    }
+
+    @Step("Произвести ре-балансировку очередей")
+    public void queueRebalancing() {
+        OrderServiceSteps.executeAction("rabbitmq_queue_rebalancing_release", this, new JSONObject().put("accept", true), projectId);
+    }
+
+    @Step("Синхронизировать данные кластера")
+    public void dataSynchronization() {
+        OrderServiceSteps.executeAction("rabbitmq_data_synchronization_release", this, new JSONObject().put("accept", true), projectId);
+    }
+
+    @Step("Удалить группу доступа")
+    public void deleteAccessGroupsOnTheWeb(String group, String role) {
+        JSONObject data = new JSONObject().put("accept", true).put("group", group).put("role", role);
+        OrderServiceSteps.executeAction("rabbitmq_delete_access_groups_on_the_web_release", this, data, projectId);
+    }
+
+    @Step("Добавить группу доступа")
+    public void addAccessGroupsOnTheWeb(String group, String role) {
+        JSONObject data = new JSONObject().put("accept", true).append("groups", group).put("role", role);
+        OrderServiceSteps.executeAction("rabbitmq_add_access_groups_on_the_web_release", this, data, projectId);
     }
 
     //Проверить конфигурацию

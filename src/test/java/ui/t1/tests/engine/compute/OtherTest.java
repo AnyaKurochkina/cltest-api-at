@@ -80,7 +80,7 @@ public class OtherTest extends AbstractComputeTest {
     @TmsLink("1398375")
     @DisplayName("Cloud Compute. Создание/Удаление ВМ c публичным IP")
     void createVmWidthPublicIp() {
-        String ip = new IndexPage().goToPublicIps().addIp(region);
+        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
         createdIpList.add(ip);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         String orderIdIp = ipPage.getOrderId();
@@ -348,7 +348,6 @@ public class OtherTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1507767")
-    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Создать вм. Создать диск. Создать снимок. Подключить диск. Удалить снимок. Отключить диск. Изменить подсеть")
     void scenario1() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
