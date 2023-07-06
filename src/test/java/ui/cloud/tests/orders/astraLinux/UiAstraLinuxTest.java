@@ -32,7 +32,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product = Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/d9efd763-4413-4183-9336-cfd9cc414483/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Astra product;//= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/ad94c8ba-573d-4857-84b9-f10282b7624f/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -41,91 +41,91 @@ public class UiAstraLinuxTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-//    @Test
-//    @TmsLink("378275")
-//    @Order(1)
-//    @DisplayName("UI AstraLinux. Заказ")
-//    void orderAstra() {
-//        double prebillingCost;
-//        try {
-//            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
-//            new IndexPage()
-//                    .clickOrderMore()
-//                    .selectProduct(product.getProductName());
-//            AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
-//            orderPage.getOsVersionSelect().set(product.getOsVersion());
-//            orderPage.getSegmentSelect().set(product.getSegment());
-//            orderPage.getPlatformSelect().set(product.getPlatform());
-//            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-//            orderPage.getGroupSelect().set(accessGroup);
-//            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
-//            orderPage.orderClick();
-//            new OrdersPage()
-//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-//                    .getElementByColumn("Продукт")
-//                    .hover()
-//                    .click();
-//            AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-//            astraLinuxPage.waitChangeStatus(Duration.ofMinutes(25));
-//            astraLinuxPage.checkLastAction("Развертывание");
-//        } catch (Throwable e) {
-//            product.setError(e.toString());
-//            throw e;
-//        }
-//        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-//        checkOrderCost(prebillingCost, astraLinuxPage);
-//    }
-//
-//    @Test
-//    @TmsLink("1236736")
-//    @Order(2)
-//    @DisplayName("UI AstraLinux. Проверка развертывания в истории действий")
-//    void checkHeaderHistoryTable() {
-//        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-//        astraLinuxPage.getGeneralInfoTab().switchTo();
-//        astraLinuxPage.checkHeadersHistory();
-//        astraLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-//        new Graph().notContainsStatus(Graph.ERROR);
-//    }
-//
-//    @Test
-//    @DisabledIfEnv("prod")
-//    @Order(3)
-//    @TmsLink("382916")
-//    @DisplayName("UI AstraLinux. Перезагрузить по питанию")
-//    void restart() {
-//        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-//        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::restart);
-//    }
-//
-//    @Test
-//    @Order(4)
-//    @TmsLink("1267198")
-//    @Disabled
-//    @DisplayName("UI AstraLinux. Выпустить клиентский сертификат")
-//    void issueClientCertificate() {
-//        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-//        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.issueClientCertificate("nameCertificate"));
-//    }
-//
-//    @Test
-//    @Order(5)
-//    @TmsLink("382920")
-//    @DisplayName("UI AstraLinux. Расширить точку монтирования")
-//    void expandDisk() {
-//        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-//        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> astraLinuxPage
-//                .enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
-//    }
-//
-//    @Test
-//    @Order(6)
-//    @TmsLink("1267201")
-//    @DisplayName("UI AstraLinux. Проверить конфигурацию")
-//    void vmActCheckConfig() {
-//        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-//        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::checkConfiguration);
-//    }
+    @Test
+    @TmsLink("378275")
+    @Order(1)
+    @DisplayName("UI AstraLinux. Заказ")
+    void orderAstra() {
+        double prebillingCost;
+        try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            new IndexPage()
+                    .clickOrderMore()
+                    .selectProduct(product.getProductName());
+            AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getGroupSelect().set(accessGroup);
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            orderPage.orderClick();
+            new OrdersPage()
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
+                    .hover()
+                    .click();
+            AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+            astraLinuxPage.waitChangeStatus(Duration.ofMinutes(25));
+            astraLinuxPage.checkLastAction("Развертывание");
+        } catch (Throwable e) {
+            product.setError(e.toString());
+            throw e;
+        }
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        checkOrderCost(prebillingCost, astraLinuxPage);
+    }
+
+    @Test
+    @TmsLink("1236736")
+    @Order(2)
+    @DisplayName("UI AstraLinux. Проверка развертывания в истории действий")
+    void checkHeaderHistoryTable() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.getGeneralInfoTab().switchTo();
+        astraLinuxPage.checkHeadersHistory();
+        astraLinuxPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        new Graph().notContainsStatus(Graph.ERROR);
+    }
+
+    @Test
+    @DisabledIfEnv("prod")
+    @Order(3)
+    @TmsLink("382916")
+    @DisplayName("UI AstraLinux. Перезагрузить по питанию")
+    void restart() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::restart);
+    }
+
+    @Test
+    @Order(4)
+    @TmsLink("1267198")
+    @Disabled
+    @DisplayName("UI AstraLinux. Выпустить клиентский сертификат")
+    void issueClientCertificate() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.issueClientCertificate("nameCertificate"));
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("382920")
+    @DisplayName("UI AstraLinux. Расширить точку монтирования")
+    void expandDisk() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, () -> astraLinuxPage
+                .enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
+    }
+
+    @Test
+    @Order(6)
+    @TmsLink("1267201")
+    @DisplayName("UI AstraLinux. Проверить конфигурацию")
+    void vmActCheckConfig() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::checkConfiguration);
+    }
 
     @Test
     @Order(8)

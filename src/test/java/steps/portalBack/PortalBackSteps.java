@@ -8,6 +8,7 @@ import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.portalBack.AccessGroup;
+import models.cloud.productCatalog.InformationSystem;
 import steps.Steps;
 
 import java.util.List;
@@ -111,5 +112,14 @@ public class PortalBackSteps extends Steps {
                 .jsonPath()
                 .getString("list.find{it.description == '" + desc + "'}.name");
         return Objects.requireNonNull(accessGroup);
+    }
+
+    public static String getInformationSystemId(String organizationName, String informationSystemCode) {
+        return new Http(PortalBackURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/v1/organizations/{}/information_systems?q={}", organizationName, informationSystemCode)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list[0].id");
     }
 }

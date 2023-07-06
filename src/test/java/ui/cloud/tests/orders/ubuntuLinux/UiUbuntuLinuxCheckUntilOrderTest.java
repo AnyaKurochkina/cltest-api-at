@@ -10,6 +10,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.NewOrderPage;
@@ -38,9 +39,9 @@ class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1342205")
     @DisplayName("UI UbuntuLinux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
+                .expandProductsList()
                 .selectProduct(product.getProductName());
         UbuntuLinuxOrderPage orderPage = new UbuntuLinuxOrderPage();
 
@@ -58,7 +59,8 @@ class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+        orderPage.getGroupSelect().set(accessGroup);
         new UbuntuLinuxOrderPage().checkOrderDetails();
     }
 }

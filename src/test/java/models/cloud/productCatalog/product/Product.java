@@ -53,7 +53,8 @@ public class Product extends Entity {
     private String graphId;
     private String version;
     @JsonProperty("max_count")
-    private int maxCount;
+    @Builder.Default
+    private int maxCount = 1;
     private Integer number;
     @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;
@@ -88,7 +89,6 @@ public class Product extends Entity {
     private List<String> allowedDevelopers;
     @JsonProperty("restricted_developers")
     private List<String> restrictedDevelopers;
-    private Payment payment;
     @JsonProperty("context_restrictions")
     private List<ContextRestrictionsItem> contextRestrictions;
     @JsonProperty("version_fields")
@@ -118,14 +118,12 @@ public class Product extends Entity {
     public JSONObject toJson() {
         String categoryV2 = null;
         String onRequest = null;
-        String payment = null;
         if (this.categoryV2 != null) {
             categoryV2 = this.categoryV2.getValue();
         }
         if (this.onRequest != null) {
             onRequest = this.onRequest.getValue();
         }
-        if (this.payment != null) payment = this.payment.getValue();
         return JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
                 .set("$.name", name)
                 .set("$.title", title)
@@ -141,7 +139,6 @@ public class Product extends Entity {
                 .set("$.extra_data", extraData)
                 .set("$.information_systems", informationSystems)
                 .set("$.in_general_list", inGeneralList)
-                .set("$.payment", payment)
                 .setIfNullRemove("$.category_v2", categoryV2)
                 .setIfNullRemove("$.on_request", onRequest)
                 .setIfNullRemove("$.number", number)

@@ -14,6 +14,10 @@ Vault:
   - options:
       - { env: "DEV" }
 
+TarantoolDataGrid:
+  - options:
+      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+
 Grafana:
   - options:
       - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }

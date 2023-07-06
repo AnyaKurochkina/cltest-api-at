@@ -1,0 +1,10 @@
+{
+  "name": "autotest",
+  "description": "autotest",
+  "types": {
+    "is_global": false,
+    "is_organization": false,
+    "is_folder": true,
+    "is_project": false
+  }
+}
