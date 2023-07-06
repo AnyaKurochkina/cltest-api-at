@@ -15,7 +15,11 @@ import static ui.t1.pages.cloudEngine.compute.NetworkInterfaceList.NetworkInterf
 public class NetworkInterfaceList extends IProductListT1Page {
 
     public Menu getMenuNetworkInterface(String vm) {
-        return new Menu(new NetworkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getIndex());
+        return new Menu(getMenuElement(new NetworkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getIndex()));
+    }
+
+    public Menu getMenuNetworkInterface(SelenideElement btn) {
+        return new Menu(btn);
     }
 
     public NetworkInterface selectNetworkInterfaceByVm(String vm) {
@@ -24,21 +28,21 @@ public class NetworkInterfaceList extends IProductListT1Page {
     }
 
     public class Menu {
-        private final int index;
+        private final SelenideElement btn;
 
-        public Menu(int index) {
-            this.index = index;
+        public Menu(SelenideElement btn) {
+            this.btn = btn;
         }
 
         @Step("Подключить IP {ip}")
         public void attachIp(String ip) {
-            runActionWithParameters(getMenuElement(index), "Подключить публичный IP", "Подтвердить", () ->
+            runActionWithParameters(btn, "Подключить публичный IP", "Подтвердить", () ->
                     Dialog.byTitle("Подключить публичный IP").setSelectValue("Публичный IP", ip));
         }
 
         @Step("Изменить группы безопасности на {groups}")
         public void updateSecurityGroups(String... groups) {
-            runActionWithParameters(getMenuElement(index), "Изменить группы безопасности", "Подтвердить", () -> {
+            runActionWithParameters(btn, "Изменить группы безопасности", "Подтвердить", () -> {
                 Dialog.byTitle("Изменить группы безопасности");
                 Select select = Select.byLabel("Группы безопасности сетевого интерфейса").clear();
                 Arrays.stream(groups).forEach(select::set);
@@ -47,7 +51,7 @@ public class NetworkInterfaceList extends IProductListT1Page {
 
         @Step("Изменить группы безопасности на {groups}")
         public void updateSubnet(String subnet) {
-            runActionWithParameters(getMenuElement(index), "Изменить подсеть", "Подтвердить", () -> {
+            runActionWithParameters(btn, "Изменить подсеть", "Подтвердить", () -> {
                 Dialog.byTitle("Изменить подсеть");
                 Select.byLabel("Подсеть").setStart(subnet);
             });

@@ -77,6 +77,7 @@ public abstract class IProduct extends Entity {
     public static final String START = "Включить";
     public static final String STOP_HARD = "Выключить принудительно";
     public static final String RESIZE = "Изменить конфигурацию";
+    public final static String STATE_PATH = "data.find{it.data.config.name=='%s'}.data.state";
 
     @ToString.Include
     @Getter
@@ -139,8 +140,12 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    protected String getAccessGroup() {
+    public String getAccessGroup() {
         return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+    }
+
+    protected String state(String name){
+        return (String) OrderServiceSteps.getProductsField(this, String.format(STATE_PATH, name));
     }
 
     @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
@@ -364,7 +369,7 @@ public abstract class IProduct extends Entity {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
-                .getString("'ui:options'.filter");
+                .getString("'ui:options'.filter").replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase());
     }
 
     @SneakyThrows

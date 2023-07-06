@@ -53,7 +53,8 @@ public class Product extends Entity {
     private String graphId;
     private String version;
     @JsonProperty("max_count")
-    private int maxCount;
+    @Builder.Default
+    private int maxCount = 1;
     private Integer number;
     @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;

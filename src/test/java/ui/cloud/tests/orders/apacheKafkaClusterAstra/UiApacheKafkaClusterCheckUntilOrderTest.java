@@ -10,6 +10,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.cloud.pages.orders.ApacheKafkaClusterOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
@@ -52,8 +53,8 @@ class UiApacheKafkaClusterCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+        orderPage.getGroupSelect().set(accessGroup);
         new ApacheKafkaClusterOrderPage().checkOrderDetails();
     }
 

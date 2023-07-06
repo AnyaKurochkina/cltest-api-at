@@ -1,0 +1,70 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "ccb69c61-dbfc-4aca-873b-c4812110e680",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 4,
+        "name": "c4m8",
+        "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
+        "memory": 8
+      },
+      "layout": "886a0c3e-e2f9-4468-9714-f6c58748512b",
+      "platform": "OpenStack",
+      "extra_nics": [],
+      "memtx_core": 256,
+      "on_support": true,
+      "os_version": "1.7",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "access_group": [
+        "cloud-zorg-dev-group"
+      ],
+      "extra_mounts": [
+        {
+          "path": "/app/tarantool",
+          "size": 5,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/nginx",
+          "size": 5,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/etcd",
+          "size": 5,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/logs",
+          "size": 15,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/snap",
+          "size": 8,
+          "file_system": "xfs"
+        }
+      ],
+      "memtx_runner": 256,
+      "memtx_storage": 3072,
+      "ad_integration": true,
+      "geo_distribution": true,
+      "tarantool_version": "2.6.8.0",
+      "ad_logon_grants": [
+        {
+          "role": "user",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Tarantool Data Grid Astra"
+  }
+}

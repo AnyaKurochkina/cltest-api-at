@@ -14,13 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class ContextRestrictionsItem {
 
-    private Object organization;
-    @JsonProperty("project_environment")
+    private String organization;
     private ProjectEnvironment project_environment;
-    @JsonProperty("information_system")
-    private InformationSystem informationSystem;
-    @JsonProperty("environment_type")
-    private List<String> environmentType;
+    private InformationSystem information_system;
 
     public ContextRestrictionsItem(ProjectEnvironment projectEnvironment) {
         this.project_environment = projectEnvironment;

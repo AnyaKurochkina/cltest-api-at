@@ -80,7 +80,7 @@ public class OtherTest extends AbstractComputeTest {
     @TmsLink("1398375")
     @DisplayName("Cloud Compute. Создание/Удаление ВМ c публичным IP")
     void createVmWidthPublicIp() {
-        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        String ip = new IndexPage().goToPublicIps().addIp(region);
         createdIpList.add(ip);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
         String orderIdIp = ipPage.getOrderId();
@@ -377,7 +377,10 @@ public class OtherTest extends AbstractComputeTest {
                 .selectDisk(disk.getName())
                 .runActionWithCheckCost(CompareType.LESS, diskPage::detachComputeVolume);
 
-        NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
-        networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSubnet("default");
+        new IndexPage()
+                .goToVirtualMachine()
+                .selectCompute(vm.getName())
+                .getNetworkMenu()
+                .updateSubnet("default");
     }
 }

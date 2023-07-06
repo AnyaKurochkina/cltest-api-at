@@ -41,6 +41,12 @@ public class TextArea implements TypifiedElement {
         element.setValue(value);
     }
 
+    public void setValueAndPressEnter(String value) {
+        element.shouldBe(Condition.visible).shouldBe(Condition.enabled);
+        clear();
+        element.setValue(value).pressEnter();
+    }
+
     public TextArea click() {
         element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);

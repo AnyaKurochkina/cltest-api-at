@@ -1,15 +1,29 @@
 package ui.cloud.pages.orders;
-
-import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.*;
+import core.enums.Role;
+import core.helper.Configure;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.WildFly;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.junit.jupiter.api.Assertions;
-import ui.elements.CheckBox;
-import ui.elements.Dialog;
-import ui.elements.Select;
-import ui.elements.Table;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.Sleeper;
+import ui.cloud.pages.CloudLoginPage;
+import ui.elements.*;
+import ui.t1.pages.productCatalog.image.MarketingInfoListPage;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+import java.util.function.Predicate;
 
 import static api.Tests.clickableCnd;
+import static com.codeborne.selenide.AuthenticationType.BASIC;
+import static com.codeborne.selenide.AuthenticationType.BEARER;
+import static com.codeborne.selenide.Selenide.*;
+import static core.utils.AssertUtils.assertContains;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class WildFlyAstraPage extends IProductPage {
@@ -18,11 +32,13 @@ public class WildFlyAstraPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_GROUP = "Список групп";
     private static final String HEADER_NAME_GROUP = "Имя группы";
+    private static final String HEADER_CONSOLE = "Консоль управления";
     private static final String HEADER_LIST_GROUP = "Список групп";
     private static final String HEADER_GROUP = "Группы";
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String STATUS = "Статус";
+    private final SelenideElement link = $x("/html/body/div[1]/div/div/div/div[2]/div[2]/div/div/div[4]/div/div[3]/div/div[1]/div/div[2]/div[1]/div[2]/div/div/table/tbody/tr/td[3]/div/a");
 
     public WildFlyAstraPage(WildFly product) {
         super(product);
@@ -57,13 +73,20 @@ public class WildFlyAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
 
+    public void openAdminConsole() throws MalformedURLException, InterruptedException {
+        String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        Selenide.open(url+"management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
+        Selenide.open(url);
+        $x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible);
+    }
+
     public void delete() {
-        runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
+        runActionWithParameters(getBtnAction("", 2), "Удалить рекурсивно", "Удалить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new WildFlyAstraPage.VirtualMachineTable(POWER).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {

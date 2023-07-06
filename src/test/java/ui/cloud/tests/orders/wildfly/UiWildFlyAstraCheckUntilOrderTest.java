@@ -43,15 +43,14 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
-
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.checkOrderDisabled();
-
         //Проверка Детали заказа
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+        orderPage.getRoleSelect().set("user");
         orderPage.getGroupSelect().set(accessGroup.getPrefixName());
         orderPage.getGroupWildFly().set(accessGroup.getPrefixName());
         new WildFlyAstraOrderPage().checkOrderDetails();

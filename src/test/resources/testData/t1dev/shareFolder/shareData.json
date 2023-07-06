@@ -1,14 +1,8 @@
 [
   {
     "objectClassName": "models.cloud.authorizer.Project",
-    "id": "proj-l5c48al6qz",
+    "id": "proj-iuzkj0cp09",
     "projectName": "AT",
-    "isForOrders": true
-  },
-  {
-    "objectClassName": "models.cloud.authorizer.Project",
-    "id": "proj-ls0vejlv7c",
-    "projectName": "AМ",
     "isForOrders": true
   },
   {
