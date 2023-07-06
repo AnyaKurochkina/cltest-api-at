@@ -6,11 +6,12 @@ import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
 import core.utils.Waiting;
-import io.qameta.allure.Epic;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.function.Executable;
 import ru.testit.annotations.BeforeAll;
 import ru.testit.annotations.Title;
 import ui.elements.TypifiedElement;
@@ -40,9 +41,14 @@ public abstract class AbstractComputeTest extends Tests {
     protected String sshKey = getRandomName();
     protected List<String> createdIpList = new ArrayList<>();
 
+    @SneakyThrows
+    protected synchronized void executeWithHistoryLock(Executable executable){
+        executable.execute();
+    }
+
     public AbstractComputeTest() {
         project = Project.builder().isForOrders(true).build().createObject();
-        if (!Configure.ENV.equals("t1iprod"))
+        if (!Configure.ENV.equals("t1prod"))
             availabilityZone = "ru-central1-c";
     }
 
