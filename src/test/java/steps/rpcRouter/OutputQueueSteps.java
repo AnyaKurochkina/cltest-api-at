@@ -65,7 +65,7 @@ public class OutputQueueSteps extends Steps {
     }
 
     @Step("Получение списка OutPutQueue")
-    public static List<OutputQueueResponse> getOutPutQueueList() {
+    public static List<OutputQueue> getOutPutQueueList() {
         return new Http(RpcRouter)
                 .withServiceToken()
                 .get(outPutQueueV1)
@@ -114,8 +114,8 @@ public class OutputQueueSteps extends Steps {
     }
 
     @Step("Получение OutPutQueue по name {name}")
-    public static OutputQueueResponse getOutPutQueueByName(String name) {
-        List<OutputQueueResponse> list = new Http(RpcRouter)
+    public static OutputQueue getOutPutQueueByName(String name) {
+        List<OutputQueue> list = new Http(RpcRouter)
                 .withServiceToken()
                 .get(outPutQueueV1 + "?name={}", name)
                 .assertStatus(200)
@@ -126,7 +126,7 @@ public class OutputQueueSteps extends Steps {
 
     @Step("Проверка существования OutPutQueue по name {name}")
     public static boolean isOutPutQueueExist(String name) {
-        List<OutputQueueResponse> list = new Http(RpcRouter)
+        List<OutputQueue> list = new Http(RpcRouter)
                 .withServiceToken()
                 .get(outPutQueueV1 + "?name={}", name)
                 .assertStatus(200)

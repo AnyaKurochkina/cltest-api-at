@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.rpcRouter.OutputQueue;
 import models.cloud.rpcRouter.OutputQueueResponse;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -28,9 +29,12 @@ public class OutPutQueueTest extends Tests {
     @TmsLink("")
     @Test
     public void createOutPutQueueTest() {
-        OutputQueueResponse outPutQueue = createOutPutQueue();
-        OutputQueueResponse createdQueue = getOutPutQueueByName(outPutQueue.getName());
-        assertEquals(outPutQueue, createdQueue);
+        OutputQueue queue = OutputQueue.builder()
+                .name("create_output_queue:test_api")
+                .build();
+        OutputQueueResponse outPutQueue = createOutPutQueue(queue.toJson()).extractAs(OutputQueueResponse.class);
+        OutputQueue createdQueue = getOutPutQueueByName(outPutQueue.getName());
+        assertEquals(queue, createdQueue);
     }
 
     @DisplayName("Удаление OutPutQueue")
@@ -69,7 +73,7 @@ public class OutPutQueueTest extends Tests {
     @Test
     public void getOutPutQueueListTest() {
         OutputQueueResponse outPutQueue = createOutPutQueue();
-        List<OutputQueueResponse> outPutQueueList = getOutPutQueueList();
+        List<OutputQueue> outPutQueueList = getOutPutQueueList();
         assertTrue(outPutQueueList.contains(outPutQueue));
     }
 
