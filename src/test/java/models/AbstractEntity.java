@@ -21,10 +21,6 @@ public abstract class AbstractEntity {
 
     abstract public void delete();
 
-    public AbstractEntity() {
-        entities.computeIfAbsent(Thread.currentThread().getId(), k -> new LinkedList<>()).add(this);
-    }
-
     public static void deleteCurrentTestEntities() {
         Iterator<AbstractEntity> iterator = entities.getOrDefault(Thread.currentThread().getId(), new LinkedList<>()).descendingIterator();
         while (iterator.hasNext()) {
@@ -32,5 +28,9 @@ public abstract class AbstractEntity {
             deleteEntity(entity);
             iterator.remove();
         }
+    }
+
+    public static void addEntity(AbstractEntity e){
+        entities.computeIfAbsent(Thread.currentThread().getId(), k -> new LinkedList<>()).add(e);
     }
 }
