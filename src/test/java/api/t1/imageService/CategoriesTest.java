@@ -75,14 +75,16 @@ public class CategoriesTest extends Tests {
     }
 
     @Test
-    @Disabled
     @TmsLink("1601251")
     @DisplayName("Негативный тест на создание категории с уже существующим именем")
     public void createCategoryWithExistNameTest() {
         String name = "create_category_with_exist_name_test_api";
         Categories categories = createCategories(name);
         categoriesId.add(categories.getId());
-        createCategoriesResponse(name).assertStatus(400);
-        //todo Когда исправят баг доделать тест
+        String msg = createCategoriesResponse(name)
+                .assertStatus(422)
+                .jsonPath()
+                .getString("detail");
+        assertEquals("Category with this name already exists", msg);
     }
 }

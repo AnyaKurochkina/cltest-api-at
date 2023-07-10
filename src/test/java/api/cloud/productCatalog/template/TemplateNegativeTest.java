@@ -53,7 +53,7 @@ public class TemplateNegativeTest extends Tests {
     @Test
     public void createTemplateWithInvalidType() {
         String templateName = "create_template_with_invalid_type_test_api";
-        if(isTemplateExists(templateName)) {
+        if (isTemplateExists(templateName)) {
             deleteTemplateByName(templateName);
         }
         JSONObject template = Template.builder()

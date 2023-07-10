@@ -13,6 +13,8 @@ public enum Categories {
     COMPUTE("compute"),
     COMPUTE_IP("compute-ip"),
     COMPUTE_NIC("compute-nic"),
+    COMPUTE_VIP("compute-vip"),
+    CONTAINER_KUBERNETES("container_kubernetes"),
     COMPUTE_BACKUP("compute-backup"),
     COMPUTE_VOLUME("compute-volume"),
     COMPUTE_INSTANCE("compute-instance"),
