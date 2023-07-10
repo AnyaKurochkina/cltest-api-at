@@ -14,9 +14,9 @@ import java.util.List;
 public class PublicIpList {
 
     @Step("Добавить IP в зоне {availabilityZone}")
-    public String addIp(String region) {
+    public String addIp(String availabilityZone) {
         new IpTable().clickAdd();
-        Select.byLabel("Регион").set(region);
+        Select.byLabel("Зона доступности").set(availabilityZone);
         OrderUtils.clickOrder();
         boolean isEmpty = new IpTable().isEmpty();
         OrderUtils.waitCreate(() -> {

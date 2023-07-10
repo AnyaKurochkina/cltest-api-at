@@ -154,7 +154,36 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
-    @TmsLink("377639")
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Произвести ре-балансировку очередей {0}")
+    void queueRebalancing(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            rabbit.queueRebalancing();
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Синхронизировать данные кластера {0}")
+    void dataSynchronization(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            rabbit.dataSynchronization();
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Добавить/удалить группу доступа {0}")
+    void accessGroupsOnTheWeb(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            String group = rabbit.getAccessGroup();
+            rabbit.deleteAccessGroupsOnTheWeb(group, rabbit.getRole());
+            rabbit.addAccessGroupsOnTheWeb(group, rabbit.getRole());
+        }
+    }
+
+    @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
