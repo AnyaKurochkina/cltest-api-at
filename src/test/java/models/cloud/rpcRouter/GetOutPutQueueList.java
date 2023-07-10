@@ -19,5 +19,5 @@ public class GetOutPutQueueList {
     private Meta meta;
 
     @JsonProperty("list")
-    private List<OutputQueue> list;
+    private List<OutputQueueResponse> list;
 }

@@ -4,8 +4,10 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.rpcRouter.Exchange;
+import models.cloud.rpcRouter.ExchangeResponse;
 import models.cloud.rpcRouter.GetExchangeList;
 import models.cloud.rpcRouter.OutputQueue;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -13,18 +15,17 @@ import java.util.List;
 import java.util.Optional;
 
 import static core.helper.Configure.RpcRouter;
-import static steps.rpcRouter.OutputQueueSteps.deleteOutPutQueue;
 
 public class ExchangeSteps extends Steps {
 
     private static final String exchangeV1 = "/api/v1/exchanges/";
 
-    @Step("Удаление Exchange")
+    @Step("Удаление Exchange по id {id}")
     public static Response deleteExchange(Integer id) {
-        List<OutputQueue> usedList = getUsedExchangeObjectsList(id);
-        if (!usedList.isEmpty()) {
-            usedList.forEach(outputQueue -> deleteOutPutQueue(outputQueue.getId()));
-        }
+//        List<OutputQueue> usedList = getUsedExchangeObjectsList(id);
+//        if (!usedList.isEmpty()) {
+//            usedList.forEach(outputQueue -> deleteOutPutQueue(outputQueue.getId()));
+//        }
         return new Http(RpcRouter)
                 .withServiceToken()
                 .delete(exchangeV1 + "{}/", id)
@@ -32,11 +33,11 @@ public class ExchangeSteps extends Steps {
     }
 
     @Step("Создание Exchange c name {name}")
-    public static Exchange createExchange(String name) {
-        Optional<Exchange> exchangeOpt = getExchangeByName(name);
-        exchangeOpt.ifPresent(exchange -> deleteExchange(exchange.getId()));
+    public static ExchangeResponse createExchange() {
+//        Optional<Exchange> exchangeOpt = getExchangeByName(name);
+//        exchangeOpt.ifPresent(exchange -> deleteExchange(exchange.getId()));
         JSONObject exchange = Exchange.builder()
-                .name(name)
+                .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "api_test")
                 .build()
                 .toJson();
         return new Http(RpcRouter)
@@ -44,7 +45,7 @@ public class ExchangeSteps extends Steps {
                 .body(exchange)
                 .post(exchangeV1)
                 .assertStatus(201)
-                .extractAs(Exchange.class);
+                .extractAs(ExchangeResponse.class);
     }
 
     @Step("Проверка существования Exchange по name {name}")

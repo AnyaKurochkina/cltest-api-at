@@ -203,7 +203,7 @@ public class TagTest extends Tests {
     public void createTagInvalidNameTest() {
         String tagName = "Create_invalid_name_tag";
         String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Нельзя создать экземпляр (Tag) с именем (%s)", tagName), errorMsg);
+        assertEquals(String.format("Cannot instantiate (Tag) named (%s)", tagName), errorMsg);
     }
 
     @DisplayName("Негативный тест на создание Тега с пустым именем")
