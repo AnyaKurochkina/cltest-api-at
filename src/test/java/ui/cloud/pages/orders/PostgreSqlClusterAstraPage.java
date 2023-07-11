@@ -28,6 +28,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String HEADER_NAME = "Имя";
+    private static final String HEADER_PUBLICATIONS = "Публикации";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_ROLE = "Роли";
     private static final String HEADER_GROUP_COLUMN = "Роль";
@@ -155,12 +156,12 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             CheckBox.byLabel("Я уверен, что хочу настроить кластер для интеграции с Debezium").setChecked(true);
         });
     }
+
     public void setDbIntegrationDebezium(String nameDb) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getHeaderBlock(nameDb), "Настроить БД для интеграции с Debezium", "Подтвердить", () -> {
             CheckBox.byLabel("Я уверен, что хочу настроить БД для интеграции с Debezium").setChecked(true);
         });
-
     }
 
     public void createDb(String name) {
@@ -187,31 +188,31 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
             runActionWithoutParameters(getHeaderBlock(name), "Актуализировать extensions");
         }
     }
-    public void createPost(String name,SelenideElement node2) {
+
+    public void createPost(String namePost, SelenideElement node2) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         node2.scrollIntoView(scrollCenter).click();
-        if (!new Table(HEADER_NAME,2).isColumnValueEquals(HEADER_NAME, name)) {
-            runActionWithoutParameters(getHeaderBlock(name), "Создать публикацию");
-        }
+        runActionWithoutParameters(getHeaderBlock(namePost), "Создать публикацию");
+        btnGeneralInfo.click();
+        node2.scrollIntoView(scrollCenter).click();
+        String nameP = new Table(HEADER_NAME, 2).getFirstValueByColumn(HEADER_NAME);
+        Assertions.assertTrue(getTableByHeader(HEADER_PUBLICATIONS).isColumnValueEquals(HEADER_NAME, nameP), "Публикация не существует");
     }
 
-    public void createLogicSlot(String nameDb,  String nameSlot,SelenideElement node2) {
+    public void createLogicSlot(String nameDb, String nameSlot, SelenideElement node2) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         node2.scrollIntoView(scrollCenter).click();
-        if (!new Table(HEADER_NAME,3).isColumnValueEquals(HEADER_NAME, nameSlot)) {
-            btnGeneralInfo.click();
-            runActionWithParameters(nameDb, "Создать логический слот", "Подтвердить", () ->   Input.byLabel("Имя логического слота").setValue(nameSlot));
-            btnGeneralInfo.click();
-            node2.scrollIntoView(scrollCenter).click();
-            Assertions.assertTrue(getTableByHeader(HEADER_NAME).isColumnValueEquals(HEADER_NAME, nameSlot), "Слот не существует");
+        runActionWithParameters(nameDb, "Создать логический слот", "Подтвердить", () -> Input.byLabel("Имя логического слота").setValue(nameSlot));
+        btnGeneralInfo.click();
+        node2.scrollIntoView(scrollCenter).click();
+        Assertions.assertTrue(getTableByHeader(HEADER_NAME).isColumnValueEquals(HEADER_NAME, nameSlot), "Слот не существует");
 
-        }
     }
 
-    public void deleteLogicSlot(SelenideElement node2,String nameSlot) {
+    public void deleteLogicSlot(SelenideElement node2, String nameSlot) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-            node2.scrollIntoView(scrollCenter).click();
-            runActionWithoutParameters(nameSlot, "Удалить логический слот");
+        node2.scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(nameSlot, "Удалить логический слот");
         btnGeneralInfo.click();
         node2.scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getTableByHeader(HEADER_NAME).isColumnValueEquals(HEADER_NAME, nameSlot), "Слот существует");
@@ -219,12 +220,12 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
 
     public void deletePost(SelenideElement node2) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-            node2.scrollIntoView(scrollCenter).click();
-            String namePost = new Table(HEADER_NAME,2).getFirstValueByColumn(HEADER_NAME);
-            runActionWithoutParameters(namePost, "Удалить публикацию");
+        node2.scrollIntoView(scrollCenter).click();
+        String namePost = new Table(HEADER_NAME, 2).getFirstValueByColumn(HEADER_NAME);
+        runActionWithoutParameters(namePost, "Удалить публикацию");
         btnGeneralInfo.click();
         node2.scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getTableByHeader("Публикации").isColumnValueEquals(HEADER_NAME, namePost), "Публикация существует");
+        Assertions.assertFalse(getTableByHeader(HEADER_PUBLICATIONS).isColumnValueEquals(HEADER_NAME, namePost), "Публикация существует");
     }
 
     public void changeExtensions(String name) {

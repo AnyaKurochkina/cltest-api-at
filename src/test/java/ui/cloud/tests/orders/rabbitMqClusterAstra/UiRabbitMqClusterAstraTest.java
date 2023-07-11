@@ -47,8 +47,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     void orderRabbitMQClusterAstra() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
-            //String accessGroup =product.getAccessGroup();
+            String accessGroup =product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -235,12 +234,12 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @Order(18)
     @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Добавить группу доступа на WEB интерфейс")
+    @DisplayName("UI RabbitMqClusterAstra. Добавить/удалить группу доступа на WEB интерфейс")
     void addGroupWeb() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addGroupWeb("administrator", accessGroup.getPrefixName()));
-
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroup("administrator"));
     }
 
 

@@ -30,6 +30,7 @@ public class Product extends Entity {
     private Boolean isOpen;
     @JsonProperty("version_list")
     private List<String> versionList;
+    private String payment;
     private String author;
     @JsonProperty("current_version")
     private String currentVersion;

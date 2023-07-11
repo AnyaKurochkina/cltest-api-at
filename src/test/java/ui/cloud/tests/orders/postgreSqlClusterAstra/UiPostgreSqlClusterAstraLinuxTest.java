@@ -33,7 +33,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product = PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/e3cc489c-0e82-4ccf-8a8d-fdfc4ca1aa84/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgresSQLCluster product;// = PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/d74bfaa5-1f3d-4ede-bb4d-22c4550bf665/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameDb = "at_db";
     String nameSlot = "at_slot";
     String limit = "20";
@@ -343,63 +343,63 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
         pSqlPage.checkClusterMonitoringOs();
     }
+
     @Test
     @Order(30)
-    @TmsLink("")
+    @TmsLink("1723883")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Настроить кластер для интеграции с Debezium")
     void setIntegrationDebezium() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::setIntegrationDebezium);
     }
 
-        @Test
+    @Test
     @Order(31)
-    @TmsLink("")
+    @TmsLink("1723888")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Настроить БД для интеграции с Debezium")
     void setDbIntegrationDebezium() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.setDbIntegrationDebezium("qa_order_service_admin"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.setDbIntegrationDebezium(nameDb));
     }
+
     @Test
     @Order(32)
-    @TmsLink("")
+    @TmsLink("1723935")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Создать логический слот")
     void createLogicSlot() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createLogicSlot(nameDb,nameSlot,node2));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createLogicSlot(nameDb, nameSlot, node2));
     }
+
     @Test
     @Order(33)
-    @TmsLink("")
+    @TmsLink("1724025")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Создать публикацию")
     void createPost() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createPost(nameDb,node2));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createPost(nameDb, node2));
     }
+
     @Test
     @Order(34)
-    @TmsLink("")
+    @TmsLink("1724047")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить логический слот")
     void deleteLogicSlot() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createLogicSlot(nameDb,nameSlot,node2));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deleteLogicSlot(node2,nameSlot));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deleteLogicSlot(node2, nameSlot));
     }
+
     @Test
     @Order(35)
-    @TmsLink("")
+    @TmsLink("1724049")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить публикацию")
     void deletePost() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        //pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createPost(nameDb,node2));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deletePost(node2));
     }
-
 
     @Test
     @Order(100)
