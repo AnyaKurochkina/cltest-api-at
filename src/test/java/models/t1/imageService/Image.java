@@ -26,6 +26,8 @@ public class Image {
     @JsonProperty("marketing")
     private Marketing marketing;
 
+    private List<Categories> categories;
+
     @JsonProperty("owner_specified.openstack.object")
     private String ownerSpecifiedOpenstackObject;
 

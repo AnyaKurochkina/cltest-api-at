@@ -33,6 +33,7 @@ public class Configure {
     public static String ImageService;
     public static String DNSService;
     public static String PowerDns;
+    public static String RpcRouter;
 
     static {
         try {
@@ -77,6 +78,7 @@ public class Configure {
             Day2ServiceURL = KONG_URL + "day2-core";
             ImageService = KONG_URL + "cloud-images";
             DNSService = KONG_URL + "cloud-dns";
+            RpcRouter = KONG_URL+ "rpc-django-router";
             PowerDns = getAppProp("url.powerdns");
         } catch (Exception e) {
             e.printStackTrace();

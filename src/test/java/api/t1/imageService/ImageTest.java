@@ -4,6 +4,7 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.t1.imageService.Categories;
 import models.t1.imageService.Image;
 import models.t1.imageService.Marketing;
 import org.json.JSONObject;
@@ -11,11 +12,11 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.t1.imageService.ImageServiceSteps.*;
 
 @Tag("image_service")
@@ -55,4 +56,17 @@ public class ImageTest extends Tests {
         assertEquals(expectedMarketing, actualMarketing);
     }
 
+    @Test
+    @TmsLink("")
+    @DisplayName("Обновление categories у Image")
+    public void updateImageCategoriesTest() {
+        Categories category= createCategories("categories_for_image_test_api");
+        Image ubuntu = getImageByName("ubuntu");
+        partialUpdateImageById(Objects.requireNonNull(ubuntu).getInternalId(), new JSONObject().put("category_ids", Collections.singletonList(category.getId())));
+        Image imageById = getImageById(ubuntu.getInternalId());
+        List<Categories> listCategory = imageById.getCategories();
+        assertTrue(listCategory.contains(category));
+        partialUpdateImageById(Objects.requireNonNull(ubuntu).getInternalId(), new JSONObject().put("category_ids", Collections.emptyList()));
+       assertTrue(getImageById(ubuntu.getInternalId()).getCategories().isEmpty());
+    }
 }

@@ -85,7 +85,7 @@ public class JinjaNegativeTest extends Tests {
                 .assertStatus(400)
                 .extractAs(ErrorMessage.class)
                 .getMessage();
-        assertEquals(String.format("Нельзя создать экземпляр (Jinja2Template) с именем (%s)", name), errorMessage);
+        assertEquals(String.format("Cannot instantiate (Jinja2Template) named (%s)", name), errorMessage);
     }
 
     @DisplayName("Негативный тест на создание jinja с пустым полем name")

@@ -80,7 +80,7 @@ public class TagImportTest extends Tests {
     @TmsLink("")
     public void importTagToAnotherSection() {
         String importTagName = createTagByName("import_tag_to_another_section_test_api").getName();
-        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/tag/importTag.json";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/tag/importTagToAnotherSection.json";
         DataFileHelper.write(filePath, exportTagByName(importTagName).toString());
         importProduct(filePath);
         assertTrue(isTagExists(importTagName), "Тега не существует");
