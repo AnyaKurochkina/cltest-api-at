@@ -380,6 +380,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     void createPost() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createLogicSlot(nameDb, nameSlot, node2));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createPost(nameDb, node2));
     }
 
@@ -389,6 +390,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить логический слот")
     void deleteLogicSlot() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createLogicSlot(nameDb, nameSlot, node2));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deleteLogicSlot(node2, nameSlot));
     }
 
@@ -398,6 +401,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить публикацию")
     void deletePost() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createPost(nameDb, node2));
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deletePost(node2));
     }
 

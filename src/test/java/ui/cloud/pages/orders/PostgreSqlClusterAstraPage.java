@@ -1,6 +1,7 @@
 package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.PostgresSQLCluster;
@@ -192,21 +193,24 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void createPost(String namePost, SelenideElement node2) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         node2.scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(getHeaderBlock(namePost), "Создать публикацию");
-        btnGeneralInfo.click();
-        node2.scrollIntoView(scrollCenter).click();
-        String nameP = new Table(HEADER_NAME, 2).getFirstValueByColumn(HEADER_NAME);
-        Assertions.assertTrue(getTableByHeader(HEADER_PUBLICATIONS).isColumnValueEquals(HEADER_NAME, nameP), "Публикация не существует");
+        if (!Selenide.$x("//div[text()='Публикации']").exists()) {
+            runActionWithoutParameters(getHeaderBlock(namePost), "Создать публикацию");
+            btnGeneralInfo.click();
+            node2.scrollIntoView(scrollCenter).click();
+            String nameP = new Table(HEADER_NAME, 2).getFirstValueByColumn(HEADER_NAME);
+            Assertions.assertTrue(getTableByHeader(HEADER_PUBLICATIONS).isColumnValueEquals(HEADER_NAME, nameP), "Публикация не существует");
+        }
     }
 
     public void createLogicSlot(String nameDb, String nameSlot, SelenideElement node2) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         node2.scrollIntoView(scrollCenter).click();
-        runActionWithParameters(nameDb, "Создать логический слот", "Подтвердить", () -> Input.byLabel("Имя логического слота").setValue(nameSlot));
-        btnGeneralInfo.click();
-        node2.scrollIntoView(scrollCenter).click();
-        Assertions.assertTrue(getTableByHeader(HEADER_NAME).isColumnValueEquals(HEADER_NAME, nameSlot), "Слот не существует");
-
+        if (!Selenide.$x("//div[text()='Слоты']").exists()) {
+            runActionWithParameters(nameDb, "Создать логический слот", "Подтвердить", () -> Input.byLabel("Имя логического слота").setValue(nameSlot));
+            btnGeneralInfo.click();
+            node2.scrollIntoView(scrollCenter).click();
+            Assertions.assertTrue(getTableByHeader(HEADER_NAME).isColumnValueEquals(HEADER_NAME, nameSlot), "Слот не существует");
+        }
     }
 
     public void deleteLogicSlot(SelenideElement node2, String nameSlot) {
@@ -291,7 +295,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        runActionWithParameters(BLOCK_APP, "Расширить точку монтирования /pg_data", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
+        runActionWithParameters(BLOCK_APP, "Расширить точку монтирования /pg_data (standalone)", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
         btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
