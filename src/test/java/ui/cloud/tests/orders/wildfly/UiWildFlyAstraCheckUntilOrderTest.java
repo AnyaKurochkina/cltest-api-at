@@ -46,7 +46,13 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.checkOrderDisabled();
         //Проверка Детали заказа
-        orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getVersionWildfly().set(product.getWildFlyVersion());
+        orderPage.getVersionJava().set(product.getVersionJava());
+        if (product.isDev() || product.isIft() )
+            orderPage.getSegmentSelect().set(product.getSegment());
+        if (product.isProd())
+            orderPage.getSegmentSelect().set("PROD-SRV-APP");
+        orderPage.getVersionJava().set(product.getVersionJava());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));

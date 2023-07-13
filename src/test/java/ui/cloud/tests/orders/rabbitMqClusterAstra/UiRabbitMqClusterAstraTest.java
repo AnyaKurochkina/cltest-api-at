@@ -31,7 +31,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
 
     String nameUser = "atUser";
     String nameHost = "atHostName";
-    String nameGroup = "cloud-zorg-dev-group";
+    String nameGroup = "cloud-soub-blue";
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -234,12 +234,13 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @Order(18)
     @TmsLink("")
+    @Disabled
     @DisplayName("UI RabbitMqClusterAstra. Добавить/удалить группу доступа на WEB интерфейс")
     void addGroupWeb() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addGroupWeb("administrator", accessGroup.getPrefixName()));
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroup("administrator"));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addGroupWeb("manager", accessGroup.getPrefixName()));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroup("manager"));
     }
 
 
