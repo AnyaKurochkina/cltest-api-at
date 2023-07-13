@@ -3,10 +3,7 @@ package steps.rpcRouter;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import models.cloud.rpcRouter.Exchange;
-import models.cloud.rpcRouter.ExchangeResponse;
-import models.cloud.rpcRouter.GetExchangeList;
-import models.cloud.rpcRouter.OutputQueue;
+import models.cloud.rpcRouter.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import steps.Steps;
@@ -22,22 +19,29 @@ public class ExchangeSteps extends Steps {
 
     @Step("Удаление Exchange по id {id}")
     public static Response deleteExchange(Integer id) {
-//        List<OutputQueue> usedList = getUsedExchangeObjectsList(id);
-//        if (!usedList.isEmpty()) {
-//            usedList.forEach(outputQueue -> deleteOutPutQueue(outputQueue.getId()));
-//        }
         return new Http(RpcRouter)
                 .withServiceToken()
-                .delete(exchangeV1 + "{}/", id)
-                .assertStatus(204);
+                .delete(exchangeV1 + "{}/", id);
     }
 
-    @Step("Создание Exchange c name {name}")
+    @Step("Создание Exchange")
     public static ExchangeResponse createExchange() {
-//        Optional<Exchange> exchangeOpt = getExchangeByName(name);
-//        exchangeOpt.ifPresent(exchange -> deleteExchange(exchange.getId()));
         JSONObject exchange = Exchange.builder()
-                .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "api_test")
+                .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_api_test")
+                .build()
+                .toJson();
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .body(exchange)
+                .post(exchangeV1)
+                .assertStatus(201)
+                .extractAs(ExchangeResponse.class, true);
+    }
+
+    @Step("Создание Exchange")
+    public static ExchangeResponse createExchangeWithOutAutoDelete() {
+        JSONObject exchange = Exchange.builder()
+                .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_exchange_api_test")
                 .build()
                 .toJson();
         return new Http(RpcRouter)
@@ -50,7 +54,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Проверка существования Exchange по name {name}")
     public static boolean isExchangeExist(String name) {
-        List<Exchange> list = new Http(RpcRouter)
+        List<ExchangeResponse> list = new Http(RpcRouter)
                 .withServiceToken()
                 .get(exchangeV1 + "?name={}", name)
                 .assertStatus(200)
@@ -60,8 +64,8 @@ public class ExchangeSteps extends Steps {
     }
 
     @Step("Получение Exchange по name {name}")
-    public static Optional<Exchange> getExchangeByName(String name) {
-        List<Exchange> list = new Http(RpcRouter)
+    public static Optional<ExchangeResponse> getExchangeByName(String name) {
+        List<ExchangeResponse> list = new Http(RpcRouter)
                 .withServiceToken()
                 .get(exchangeV1 + "?name={}", name)
                 .assertStatus(200)
@@ -71,12 +75,29 @@ public class ExchangeSteps extends Steps {
     }
 
     @Step("Получение объектов использующих Exchange по id {id}")
-    public static List<OutputQueue> getUsedExchangeObjectsList(Integer id) {
+    public static Response getObjectsUsedExchange(Integer id) {
         return new Http(RpcRouter)
                 .withServiceToken()
                 .get(exchangeV1 + "{}/used/", id)
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка Exchange отсортированного по {fieldName}")
+    public static List<ExchangeResponse> getOrderingByFieldExchangeList(String fieldName) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .get(exchangeV1 + "?ordering={}", fieldName)
                 .assertStatus(200)
-                .jsonPath()
-                .getList("OutputQueue", OutputQueue.class);
+                .extractAs(GetExchangeList.class)
+                .getList();
+    }
+
+    @Step("Получение Exchange по id {id}")
+    public static ExchangeResponse getExchangeById(Integer id) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .get(exchangeV1 + "{}/", id)
+                .assertStatus(200)
+                .extractAs(ExchangeResponse.class);
     }
 }

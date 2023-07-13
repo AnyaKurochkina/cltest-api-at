@@ -1,11 +1,13 @@
-package api.cloud.rpcDjangoRouter;
+package api.cloud.rpcDjangoRouter.outputQueue;
 
 import api.Tests;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.rpcRouter.OutputQueue;
+import lombok.SneakyThrows;
+import models.cloud.rpcRouter.ExchangeResponse;
 import models.cloud.rpcRouter.OutputQueueResponse;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -17,6 +19,7 @@ import java.util.List;
 
 import static models.Entity.serialize;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.rpcRouter.ExchangeSteps.getExchangeById;
 import static steps.rpcRouter.OutputQueueSteps.*;
 
 @Tag("rpc-django-router")
@@ -29,12 +32,9 @@ public class OutPutQueueTest extends Tests {
     @TmsLink("")
     @Test
     public void createOutPutQueueTest() {
-        OutputQueue queue = OutputQueue.builder()
-                .name("create_output_queue:test_api")
-                .build();
-        OutputQueueResponse outPutQueue = createOutPutQueue(queue.toJson()).extractAs(OutputQueueResponse.class);
-        OutputQueue createdQueue = getOutPutQueueByName(outPutQueue.getName());
-        assertEquals(queue, createdQueue);
+        OutputQueueResponse outPutQueue = createOutPutQueue();
+        OutputQueueResponse createdQueue = getOutPutQueueByName(outPutQueue.getName());
+        assertEquals(outPutQueue, createdQueue);
     }
 
     @DisplayName("Удаление OutPutQueue")
@@ -46,6 +46,7 @@ public class OutPutQueueTest extends Tests {
         assertFalse(isOutPutQueueExist(outPutQueue.getName()));
     }
 
+    @SneakyThrows
     @DisplayName("Обновление OutPutQueue")
     @TmsLink("")
     @Test
@@ -53,7 +54,7 @@ public class OutPutQueueTest extends Tests {
         OutputQueueResponse outPutQueue = createOutPutQueue();
         JSONObject serializedQueue = serialize(outPutQueue);
         serializedQueue.put("name", "name:test_api");
-        OutputQueueResponse updatedQueue = new Gson().fromJson(String.valueOf(serializedQueue), OutputQueueResponse.class);
+        OutputQueueResponse updatedQueue = new ObjectMapper().readValue(String.valueOf(serializedQueue), OutputQueueResponse.class);
         OutputQueueResponse updatedOutputQueueResponse = updateOutPutQueue(outPutQueue.getId(), serializedQueue);
         assertEquals(updatedQueue, updatedOutputQueueResponse);
     }
@@ -73,7 +74,7 @@ public class OutPutQueueTest extends Tests {
     @Test
     public void getOutPutQueueListTest() {
         OutputQueueResponse outPutQueue = createOutPutQueue();
-        List<OutputQueue> outPutQueueList = getOutPutQueueList();
+        List<OutputQueueResponse> outPutQueueList = getOutPutQueueList();
         assertTrue(outPutQueueList.contains(outPutQueue));
     }
 
@@ -84,5 +85,30 @@ public class OutPutQueueTest extends Tests {
         OutputQueueResponse outPutQueue = createOutPutQueue();
         OutputQueueResponse outputQueueResponse = copyOutPutQueue(outPutQueue.getId());
         assertEquals(outPutQueue.getName() + "-clone", outputQueueResponse.getName());
+    }
+
+    @DisplayName("Получение списка объектов использующих OutputQueue")
+    @TmsLink("")
+    @Test
+    public void getObjectListUsedOutPutQueueTest() {
+        OutputQueueResponse outPutQueue = createOutPutQueue();
+        Response objectsUsedOutputQueue = getObjectsUsedOutputQueue(outPutQueue.getId());
+        String s = objectsUsedOutputQueue.jsonPath().get().toString();
+        assertEquals("{}", s);
+    }
+
+    @DisplayName("Получение списка объектов используемых в OutputQueue")
+    @TmsLink("")
+    @Test
+    public void getObjectListUsingOutputQueueTest() {
+        OutputQueueResponse outPutQueue = createOutPutQueue();
+        List<ExchangeResponse> objectsUsedOutputQueue = getObjectsUsingOutputQueue(outPutQueue.getId()).jsonPath()
+                .getList("Exchange", ExchangeResponse.class);
+        ExchangeResponse exchange = getExchangeById(outPutQueue.getExchange());
+        ExchangeResponse exchangeResponse = objectsUsedOutputQueue.get(0);
+        assertEquals(1, objectsUsedOutputQueue.size());
+        assertEquals(exchange.getId(), exchangeResponse.getId());
+        assertEquals(exchange.getName(), exchangeResponse.getName());
+        assertEquals(exchange.getTitle(), exchangeResponse.getTitle());
     }
 }

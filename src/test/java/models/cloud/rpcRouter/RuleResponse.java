@@ -6,26 +6,26 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import models.AbstractEntity;
 
-import static steps.rpcRouter.ExchangeSteps.deleteExchange;
+import java.util.Date;
+
+import static steps.rpcRouter.RuleSteps.deleteRuleById;
 
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+public class RuleResponse extends AbstractEntity {
 
-public class ExchangeResponse extends AbstractEntity {
     private String name;
     private String title;
     private String description;
-    private ExchangeType exchange_type;
-    private Object params;
+    private String code_expression;
     private Integer id;
-    private String create_dt;
-    private String update_dt;
-    private String queue_list;
+    private Date create_dt;
+    private Date update_dt;
 
     @Override
     public void delete() {
-        deleteExchange(id).assertStatus(204);
+        deleteRuleById(id).assertStatus(204);
     }
 }
