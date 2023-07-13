@@ -1,123 +1,170 @@
 {
   "model_name": "AllowedAction",
   "AllowedAction": {
-    "id": 99,
+    "id": 501,
     "context_restrictions": [],
     "event_type_provider": [
       {
-        "event_type": "bm",
-        "event_provider": "moon"
+        "event_type": "s3",
+        "event_provider": "s3"
       }
     ],
-    "name": "at_api_import_allowed_action",
-    "title": "at_api_import_allowed_action",
-    "description": "api_test",
+    "name": "import_allowed_action_test_api",
+    "title": "import_allowed_action_test_api",
+    "description": "",
     "item_restriction": null,
-    "action": "1bc6b12c-f47d-4a05-af3e-577407664b45"
+    "action_id": "2a6558be-6006-45d5-9a06-560a6b6ab076",
+    "action": "2a6558be-6006-45d5-9a06-560a6b6ab076"
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
-        "graph_id": "1cb3a97f-24a2-4cd1-9729-fa8f927f6382",
+        "graph_id": "80307366-fa38-4a2a-a78a-91f896d8b284",
         "multiple": false,
-        "priority": 10,
+        "priority": 0,
         "extra_data": {},
         "graph_version": "",
         "data_config_key": null,
         "data_config_path": null,
-        "item_restriction": "provider == 'nutanix'",
-        "config_restriction": "",
+        "item_restriction": null,
+        "skip_item_change": false,
+        "skip_reservation": false,
         "data_config_fields": [],
-        "skip_on_prebilling": true,
+        "skip_on_prebilling": false,
         "location_restriction": "",
         "graph_version_pattern": "",
-        "auto_removing_if_failed": true,
-        "available_without_money": true,
+        "skip_validate_checker": false,
+        "auto_removing_if_failed": false,
+        "available_without_money": false,
+        "skip_restriction_service": false,
+        "ignore_restriction_service": false,
+        "skip_request_resource_pools": false,
+        "available_with_cost_reduction": false,
         "current_version": "",
-        "context_restrictions": [
-          {
-            "organization": [
-              "org-sandbox"
-            ],
-            "information_system": {
-              "id": [
-                "ba81c238-9ff4-4136-b872-32b689aa5c4b",
-                "2bf14b6e-0a5d-4406-8a4e-13cb82b9c78f",
-                "3726429b-b290-42be-9970-09e8b6d5afea",
-                "71374593-fd09-458a-a2db-b667a2819141"
-              ],
-              "critical_category": [
-                "Other",
-                "Mission Critical"
-              ]
-            },
-            "project_environment": {
-              "name": [
-                "LT"
-              ],
-              "environment_type": [
-                "PROD"
-              ]
-            }
-          }
-        ],
+        "context_restrictions": [],
         "event_type_provider": [
           {
             "event_type": "vm",
-            "event_provider": "vsphere"
+            "event_provider": "debezium"
           }
         ],
-        "name": "at_api_import_action_for_allowed_action",
-        "title": "at_api_import_action_for_allowed_action",
+        "name": "dbzm_test",
+        "title": "dbzm_test",
         "description": "",
-        "number": 11,
+        "number": 50,
         "is_safe": false,
+        "is_delayable": false,
         "type": "",
         "allowed_groups": [],
         "restricted_groups": [],
-        "required_order_statuses": [],
-        "required_item_statuses": [],
+        "required_order_statuses": [
+          "success"
+        ],
+        "required_item_statuses": [
+          "on"
+        ],
         "allowed_developers": [],
         "restricted_developers": [],
         "version_arr": [
-          2,
+          1,
           0,
-          20
+          0
         ],
         "icon_store_id": null,
-        "icon_store": null,
-        "event_type": [
-          "vm"
-        ],
-        "event_provider": [
-          "vsphere"
-        ]
+        "icon_store": null
       },
       "rel_foreign_models": {
         "graph": {
           "model_name": "Graph",
           "Graph": {
-            "author": "\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u041a\u043e\u0441\u043e\u0432\u0441\u043a\u0438\u0439",
+            "author": "Dmitriy A Pyryakov",
             "output": {},
-            "ui_schema": {},
-            "json_schema": {},
-            "static_data": {},
+            "ui_schema": {
+              "db_name": {
+                "ui:widget": "ConfigUniqNameWidget",
+                "ui:options": {
+                  "key": "db_name",
+                  "path": "dbs",
+                  "validationError": "\u0422\u0430\u043a\u0430\u044f \u0431\u0430\u0437\u0430 \u0434\u0430\u043d\u043d\u044b\u0445 \u0443\u0436\u0435 \u0441\u0443\u0449\u0435\u0441\u0442\u0432\u0443\u0435\u0442!"
+                }
+              },
+              "ui:order": [
+                "db_name",
+                "db_admin_pass",
+                "conn_limit",
+                "connection_limit_passed"
+              ],
+              "db_admin_pass": {
+                "ui:widget": "PasswordGeneratorWidget",
+                "ui:readonly": false
+              },
+              "connection_limit_passed": {
+                "ui:widget": "ConnectionLimitCheckerWidget",
+                "ui:options": {
+                  "dbsPath": "item.data.config.dbs",
+                  "hideText": false,
+                  "maxConnectionPath": "item.data.config.configuration.max_connections",
+                  "connectionLimitKey": "connection_limit",
+                  "connectionLimitThreshold": 5
+                }
+              }
+            },
+            "json_schema": {
+              "type": "object",
+              "required": [
+                "db_name",
+                "db_admin_pass",
+                "conn_limit"
+              ],
+              "properties": {
+                "db_name": {
+                  "type": "string",
+                  "title": "\u0418\u043c\u044f \u0431\u0430\u0437\u044b \u0434\u0430\u043d\u043d\u044b\u0445",
+                  "pattern": "^(?!(?:[p|P][o|O][s|S][t|T][g|G][r|R][e|E][s|S]|[t|T][e|E][m|M][p|P][l|L][a|A][t|T][e|E].*)$)[a-z0-9_]{1,63}$",
+                  "description": "\u041c\u043e\u0436\u0435\u0442 \u0441\u043e\u0434\u0435\u0440\u0436\u0430\u0442\u044c \u0441\u0442\u0440\u043e\u0447\u043d\u044b\u0435 \u043b\u0430\u0442\u0438\u043d\u0441\u043a\u0438\u0435 \u0431\u0443\u043a\u0432\u044b \u043e\u0442 \u00aba\u00bb \u0434\u043e \u00abz\u00bb, \u0447\u0438\u0441\u043b\u043e\u0432\u044b\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \u0438 \u0441\u0438\u043c\u0432\u043e\u043b \u00ab_\u00bb. \u0414\u043b\u0438\u043d\u0430 \u0438\u043c\u0435\u043d\u0438 \u043e\u0442 1 \u0434\u043e 63 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432"
+                },
+                "conn_limit": {
+                  "type": "integer",
+                  "title": "\u041f\u0440\u0435\u0434\u0435\u043b \u043f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0439",
+                  "default": 20,
+                  "maximum": 50,
+                  "minimum": 10
+                },
+                "db_admin_pass": {
+                  "type": "string",
+                  "title": "\u041f\u0430\u0440\u043e\u043b\u044c \u0432\u043b\u0430\u0434\u0435\u043b\u044c\u0446\u0430 \u0411\u0414",
+                  "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])[a-zA-Z0-9\\._-]{16,63}$",
+                  "description": "\u041e\u0431\u044f\u0437\u0430\u0442\u0435\u043b\u044c\u043d\u043e \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0446\u0438\u0444\u0440\u044b, \u043f\u0440\u043e\u043f\u0438\u0441\u043d\u044b\u0435 \u0438 \u0441\u0442\u0440\u043e\u0447\u043d\u044b\u0435 \u043b\u0430\u0442\u0438\u043d\u0441\u043a\u0438\u0435 \u0431\u0443\u043a\u0432\u044b. \u041e\u0442 16 \u0434\u043e 63 \u0441\u0438\u043c\u0432\u043e\u043b\u043e\u0432."
+                },
+                "connection_limit_passed": {
+                  "type": "boolean",
+                  "title": "Connection limit passed"
+                }
+              }
+            },
+            "static_data": {
+              "credential": "VTB.Cloud-DEV",
+              "job_template": "postgresql_create_db",
+              "data_template": "{% set inventory = {'all': {'hosts': {}, 'vars': {}}} %}{% set machines = items.values() | selectattr('type', 'equalto', 'vm') | list %}{% for machine in machines %}{% set _ = inventory.all.hosts.update({machine.data.config.hostname + '.' + machine.data.config.domain: {'ansible_host': machine.data.config.default_v4_address}}) %}{% endfor %}{% set _ = inventory.all.vars.update({'db_name': db_name, 'db_admin_pass': db_admin_pass,'conn_limit':conn_limit, 'config': config}) %}{{ {'inventory': inventory, 'net_segment': (machines | first).data.config.default_nic.net_segment} | tojson }}",
+              "resolved_items": true
+            },
             "modifications": [],
             "printed_output": {},
             "lock_order_on_error": false,
             "damage_order_on_error": false,
             "current_version": "",
-            "name": "at_api_import_graph_for_action",
-            "title": "at_api_import_graph_for_action",
+            "name": "create_db",
+            "title": "\u0421\u043e\u0437\u0434\u0430\u0442\u044c \u0431\u0430\u0437\u0443 \u0434\u0430\u043d\u043d\u044b\u0445 PostgreSQL",
             "description": "",
             "type": "action",
             "allowed_developers": [],
             "restricted_developers": [],
+            "default_item": {},
             "version_arr": [
               1,
               0,
-              9
+              73
             ]
           },
           "rel_foreign_models": {},
@@ -127,114 +174,35 @@
                 "model_name": "Node",
                 "Node": {
                   "hold": false,
-                  "name": "node-3",
+                  "name": "gen_action_data",
                   "color": "",
                   "count": null,
                   "input": {
-                    "environment_type": "environment_type"
+                    "items": "resolved_items",
+                    "config": "resolved_items[item_id]['data']['config']",
+                    "db_name": "data['db_name']",
+                    "template": "data_template",
+                    "from_json": "True",
+                    "conn_limit": "data['conn_limit']",
+                    "db_admin_pass": "data['db_admin_pass']"
                   },
-                  "number": 1,
-                  "output": {},
-                  "depends": [],
-                  "timeout": null,
-                  "coords_x": 139.0,
-                  "coords_y": 199.0,
-                  "for_each": null,
-                  "priority": null,
-                  "condition": "",
-                  "log_level": null,
-                  "extra_data": null,
-                  "description": "node-3-edited",
-                  "subgraph_id": "de22e19d-c385-4769-b135-8fa23e3471cd",
-                  "template_id": null,
-                  "icon_store_id": null,
-                  "is_sequential": false,
-                  "on_prebilling": false,
-                  "printed_output": {},
-                  "run_on_rollback": false,
-                  "subgraph_version": "1.0.1",
-                  "template_version": "",
-                  "lock_order_on_error": false,
-                  "not_damage_on_error": false,
-                  "damage_order_on_error": false,
-                  "subgraph_version_pattern": "",
-                  "template_version_pattern": "",
-                  "subgraph_version_calculated": "1.0.1",
-                  "template_version_calculated": ""
-                },
-                "rel_foreign_models": {
-                  "subgraph": {
-                    "model_name": "Graph",
-                    "Graph": {
-                      "author": "\u0410\u043b\u0435\u043a\u0441\u0435\u0439 \u041a\u043e\u0441\u043e\u0432\u0441\u043a\u0438\u0439",
-                      "output": {},
-                      "ui_schema": {},
-                      "json_schema": {},
-                      "static_data": {},
-                      "modifications": [],
-                      "printed_output": {},
-                      "lock_order_on_error": false,
-                      "damage_order_on_error": false,
-                      "current_version": "",
-                      "name": "test-graph",
-                      "title": "\u0421\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0412\u041c RHEL c \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u043e\u0439 \u0441\u0447\u0435\u0442\u0447\u0438\u043a\u0430",
-                      "description": "",
-                      "type": "creating",
-                      "allowed_developers": [],
-                      "restricted_developers": [],
-                      "version_arr": [
-                        1,
-                        0,
-                        1
-                      ]
-                    },
-                    "rel_foreign_models": {},
-                    "rel_revers_models": {
-                      "nodes": []
-                    }
-                  }
-                }
-              },
-              {
-                "model_name": "Node",
-                "Node": {
-                  "hold": false,
-                  "name": "node1",
-                  "color": "",
-                  "count": null,
-                  "input": {
-                    "nics": "",
-                    "disks": "",
-                    "image": "",
-                    "flavor": "",
-                    "mounts": "",
-                    "tenant": "",
-                    "sysprep": "",
-                    "hostname": "",
-                    "boot_disk": "",
-                    "user_data": "",
-                    "extra_nics": "",
-                    "default_nic": "",
-                    "extra_disks": "",
-                    "resource_pool": ""
-                  },
-                  "number": 1,
+                  "number": 10,
                   "output": {
-                    "config": "",
-                    "item_id": ""
+                    "formatted": "action_data"
                   },
                   "depends": [],
-                  "timeout": 900,
+                  "timeout": 7200,
                   "coords_x": 140.0,
-                  "coords_y": 65.0,
-                  "for_each": null,
+                  "coords_y": 68.0,
+                  "for_each": "",
+                  "icon_url": "",
                   "priority": null,
                   "condition": "",
                   "log_level": null,
                   "extra_data": null,
-                  "description": "node1",
+                  "description": "\u0444\u043e\u0440\u043c\u0438\u0440\u0443\u0435\u043c \u00a0\u0434\u0430\u043d\u043d\u044b\u0435",
                   "subgraph_id": null,
-                  "template_id": 39,
+                  "template_id": 40,
                   "icon_store_id": null,
                   "is_sequential": false,
                   "on_prebilling": false,
@@ -248,59 +216,59 @@
                   "subgraph_version_pattern": "",
                   "template_version_pattern": "",
                   "subgraph_version_calculated": "",
-                  "template_version_calculated": "1.0.1"
+                  "template_version_calculated": "1.0.3"
                 },
                 "rel_foreign_models": {
                   "template": {
                     "model_name": "Template",
                     "Template": {
-                      "id": 39,
-                      "run": "platform:cmd",
-                      "name": "create_vm",
-                      "type": "virtualization_platform",
-                      "color": "",
+                      "run": "internal",
                       "input": {
-                        "nics": {},
-                        "disks": {},
-                        "image": {},
-                        "flavor": {},
-                        "mounts": {},
-                        "tenant": {},
-                        "sysprep": {},
-                        "hostname": {},
-                        "boot_disk": {},
-                        "user_data": {},
-                        "extra_nics": {},
-                        "default_nic": {},
-                        "extra_disks": {},
-                        "resource_pool": {}
+                        "template": {
+                          "required": true
+                        },
+                        "from_json": {}
                       },
-                      "title": "create_vm",
                       "output": {
-                        "config": {},
-                        "item_id": {}
+                        "formatted": {}
                       },
-                      "timeout": 900,
-                      "coords_x": 0.0,
-                      "coords_y": 0.0,
+                      "timeout": 120,
                       "priority": 0,
-                      "rollback": "platform:cmd",
-                      "log_level": null,
-                      "extra_data": null,
-                      "description": "\u0441\u043e\u0437\u0434\u0430\u043d\u0438\u0435 \u0412\u041c",
-                      "allowed_groups": [],
-                      "printed_output": {},
+                      "rollback": null,
+                      "log_level": "full",
+                      "printed_output": [
+                        {
+                          "type": "text",
+                          "data_path": "data",
+                          "node_state": "completed"
+                        },
+                        {
+                          "type": "text",
+                          "data_path": "data.formatted",
+                          "node_state": "completed"
+                        }
+                      ],
                       "additional_input": true,
                       "additional_output": false,
-                      "restricted_groups": [],
-                      "log_can_be_overridden": false,
+                      "log_can_be_overridden": true,
                       "priority_can_be_overridden": false,
-                      "printed_output_can_be_overridden": false,
+                      "printed_output_can_be_overridden": true,
+                      "id": 40,
                       "current_version": "",
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "extra_data": null,
+                      "color": "",
+                      "name": "jinja2_format",
+                      "title": "jinja2_format",
+                      "description": "\u0444\u043e\u0440\u043c\u0430\u0442\u0438\u0440\u043e\u0432\u0430\u043d\u0438\u0435 \u0434\u0430\u043d\u043d\u044b\u0445 \u0441 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u043d\u0438\u0435\u043c jinja2 \u0448\u0430\u0431\u043b\u043e\u043d\u0430",
+                      "type": "system_nodes",
+                      "allowed_groups": [],
+                      "restricted_groups": [],
                       "version_arr": [
                         1,
                         0,
-                        1
+                        3
                       ],
                       "icon_store_id": null,
                       "icon_store": null
@@ -313,32 +281,35 @@
                 "model_name": "Node",
                 "Node": {
                   "hold": false,
-                  "name": "node2",
+                  "name": "create_db",
                   "color": "",
                   "count": null,
                   "input": {
-                    "disk": "",
-                    "tenant": "",
-                    "item_id": "",
-                    "extend_size": "",
-                    "resource_pool": ""
+                    "inventory": "action_data['inventory']",
+                    "credentials": "[credential]",
+                    "net_segment": "action_data['net_segment']",
+                    "job_template": "job_template",
+                    "environment_type": "environment_type"
                   },
-                  "number": 1,
+                  "number": 20,
                   "output": {
-                    "disk": ""
+                    "config": "updated_config"
                   },
-                  "depends": [],
-                  "timeout": 900,
-                  "coords_x": 139.0,
-                  "coords_y": 135.0,
-                  "for_each": null,
+                  "depends": [
+                    "gen_action_data"
+                  ],
+                  "timeout": 7200,
+                  "coords_x": 140.0,
+                  "coords_y": 254.0,
+                  "for_each": "",
+                  "icon_url": "",
                   "priority": null,
                   "condition": "",
                   "log_level": null,
                   "extra_data": null,
-                  "description": "node2",
+                  "description": "\u0441\u043e\u0437\u0434\u0430\u0435\u043c \u0411\u0414",
                   "subgraph_id": null,
-                  "template_id": 81,
+                  "template_id": 43,
                   "icon_store_id": null,
                   "is_sequential": false,
                   "on_prebilling": false,
@@ -352,49 +323,144 @@
                   "subgraph_version_pattern": "",
                   "template_version_pattern": "",
                   "subgraph_version_calculated": "",
-                  "template_version_calculated": "1.0.1"
+                  "template_version_calculated": "1.0.2"
                 },
                 "rel_foreign_models": {
                   "template": {
                     "model_name": "Template",
                     "Template": {
-                      "id": 81,
-                      "run": "platform:cmd",
-                      "name": "extend_vm_disk",
-                      "type": "virtualization_platform",
-                      "color": "",
+                      "run": "awx:cmd",
                       "input": {
-                        "disk": {},
-                        "tenant": {},
-                        "item_id": {},
-                        "extend_size": {},
-                        "resource_pool": {}
+                        "inventory": {},
+                        "credential": {},
+                        "extra_vars": {},
+                        "net_segment": {},
+                        "job_template": {}
                       },
-                      "title": "extend_vm_disk",
                       "output": {
-                        "disk": {}
+                        "config": {},
+                        "item_id": {}
                       },
-                      "timeout": 900,
-                      "coords_x": 0.0,
-                      "coords_y": 0.0,
+                      "timeout": 7200,
                       "priority": 0,
                       "rollback": null,
                       "log_level": null,
-                      "extra_data": null,
-                      "description": "\u0420\u0430\u0441\u0448\u0438\u0440\u0438\u0442\u044c \u0434\u0438\u0441\u043a Windows",
-                      "allowed_groups": [],
                       "printed_output": {},
-                      "additional_input": false,
-                      "additional_output": false,
-                      "restricted_groups": [],
+                      "additional_input": true,
+                      "additional_output": true,
                       "log_can_be_overridden": false,
                       "priority_can_be_overridden": false,
                       "printed_output_can_be_overridden": true,
+                      "id": 43,
                       "current_version": "",
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "extra_data": null,
+                      "color": "",
+                      "name": "ansible_awx",
+                      "title": "ansible_awx",
+                      "description": "\u0437\u0430\u043f\u0443\u0441\u043a job_template \u0432 Ansible AWX",
+                      "type": "rpc",
+                      "allowed_groups": [],
+                      "restricted_groups": [],
                       "version_arr": [
                         1,
                         0,
-                        1
+                        2
+                      ],
+                      "icon_store_id": null,
+                      "icon_store": null
+                    },
+                    "rel_foreign_models": {}
+                  }
+                }
+              },
+              {
+                "model_name": "Node",
+                "Node": {
+                  "hold": false,
+                  "name": "update_postgresql_config",
+                  "color": "",
+                  "count": null,
+                  "input": {
+                    "data": "{**resolved_items[item_id]['data']['config'], **updated_config}",
+                    "type": "enums.EventType.APP.value",
+                    "item_id": "item_id",
+                    "subtype": "enums.EventSubType.CONFIG.value"
+                  },
+                  "number": 30,
+                  "output": {},
+                  "depends": [
+                    "create_db"
+                  ],
+                  "timeout": 7200,
+                  "coords_x": 140.0,
+                  "coords_y": 440.0,
+                  "for_each": "",
+                  "icon_url": "",
+                  "priority": null,
+                  "condition": "",
+                  "log_level": null,
+                  "extra_data": null,
+                  "description": "\u0434\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u043c \u0411\u0414 \u0432 \u0441\u0435\u0440\u0432\u0438\u0441 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+                  "subgraph_id": null,
+                  "template_id": 45,
+                  "icon_store_id": null,
+                  "is_sequential": false,
+                  "on_prebilling": false,
+                  "printed_output": {},
+                  "run_on_rollback": false,
+                  "subgraph_version": "",
+                  "template_version": "",
+                  "lock_order_on_error": false,
+                  "not_damage_on_error": false,
+                  "damage_order_on_error": false,
+                  "subgraph_version_pattern": "",
+                  "template_version_pattern": "",
+                  "subgraph_version_calculated": "",
+                  "template_version_calculated": "1.0.2"
+                },
+                "rel_foreign_models": {
+                  "template": {
+                    "model_name": "Template",
+                    "Template": {
+                      "run": "internal",
+                      "input": {
+                        "data": {},
+                        "type": {},
+                        "status": {},
+                        "item_id": {},
+                        "subtype": {}
+                      },
+                      "output": {
+                        "data": {}
+                      },
+                      "timeout": 120,
+                      "priority": 0,
+                      "rollback": null,
+                      "log_level": "",
+                      "printed_output": {},
+                      "additional_input": true,
+                      "additional_output": true,
+                      "log_can_be_overridden": true,
+                      "priority_can_be_overridden": false,
+                      "printed_output_can_be_overridden": false,
+                      "id": 45,
+                      "current_version": "",
+                      "coords_x": 0.0,
+                      "coords_y": 0.0,
+                      "extra_data": null,
+                      "color": "",
+                      "name": "add_event",
+                      "title": "add_event",
+                      "description": "\u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u0435 Event \u0432 \u0441\u0435\u0440\u0432\u0438\u0441 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0439",
+                      "type": "system_nodes",
+                      "allowed_groups": [],
+                      "restricted_groups": [],
+                      "version_arr": [
+                        1,
+                        0,
+                        2
                       ],
                       "icon_store_id": null,
                       "icon_store": null
@@ -410,6 +476,6 @@
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2022-11-22 19:37:13",
+  "dump_date": "2023-07-06 21:39:21",
   "is_pinned_versions": false
 }
