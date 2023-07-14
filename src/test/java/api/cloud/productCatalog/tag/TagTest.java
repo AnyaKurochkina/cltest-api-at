@@ -14,10 +14,9 @@ import models.cloud.productCatalog.template.Template;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -32,15 +31,24 @@ import static steps.productCatalog.TagSteps.*;
 @Feature("Теги")
 @DisabledIfEnv("prod")
 public class TagTest extends Tests {
+    private static List<String> tagList = new ArrayList<>();
+
+    @AfterAll
+    public static void deleteTag() {
+        for (String name : tagList) {
+            deleteTagByName(name);
+        }
+
+    }
 
     @DisplayName("Создание Тега/Получение Тега по имени")
     @TmsLinks({@TmsLink("1695266"), @TmsLink("1695674")})
     @Test
     public void createTagTest() {
         String tagName = "create_tag";
+        tagList.add(tagName);
         createTagByName(tagName);
         assertEquals(tagName, getTagByName(tagName).getName());
-        deleteTagByName(tagName);
     }
 
     @DisplayName("Получение списка Тегов")
@@ -48,10 +56,10 @@ public class TagTest extends Tests {
     @Test
     public void getTagsListTest() {
         String tagName = "get_tag_list_test_api";
+        tagList.add(tagName);
         createTagByName(tagName);
         List<models.cloud.productCatalog.tag.Tag> tagList = getTagList();
         assertTrue(tagList.stream().anyMatch(x -> x.getName().equals(tagName)));
-        deleteTagByName(tagName);
     }
 
     @DisplayName("Проверка существования Тега")
@@ -59,10 +67,10 @@ public class TagTest extends Tests {
     @Test
     public void checkTagExist() {
         String tagName = "exist_tag_test_api";
+        tagList.add(tagName);
         createTagByName(tagName);
         assertTrue(isTagExists(tagName));
         assertFalse(isTagExists("not_exist"));
-        deleteTagByName(tagName);
     }
 
     @DisplayName("Удаление Тега")
@@ -93,11 +101,11 @@ public class TagTest extends Tests {
     public void copyTagTest() {
         String tagName = "copy_tag_test_api";
         String cloneTag = tagName + "-clone";
+        tagList.add(tagName);
+        tagList.add(cloneTag);
         createTagByName(tagName);
         models.cloud.productCatalog.tag.Tag tag = copyTagByName(tagName);
         assertEquals(cloneTag, tag.getName());
-        deleteTagByName(tagName);
-        deleteTagByName(tag.getName());
     }
 
     @DisplayName("Получение списка объектов использующих Тег")
@@ -195,7 +203,7 @@ public class TagTest extends Tests {
     public void createTagInvalidNameTest() {
         String tagName = "Create_invalid_name_tag";
         String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Нельзя создать экземпляр (Tag) с именем (%s)", tagName), errorMsg);
+        assertEquals(String.format("Cannot instantiate (Tag) named (%s)", tagName), errorMsg);
     }
 
     @DisplayName("Негативный тест на создание Тега с пустым именем")
