@@ -28,7 +28,7 @@ import static steps.rpcRouter.OutputQueueSteps.*;
 @DisabledIfEnv("prod")
 public class OutPutQueueTest extends Tests {
 
-    @DisplayName("Создание OutPutQueue")
+    @DisplayName("API. RPC-Django-Router. Создание OutPutQueue")
     @TmsLink("")
     @Test
     public void createOutPutQueueTest() {
@@ -37,7 +37,7 @@ public class OutPutQueueTest extends Tests {
         assertEquals(outPutQueue, createdQueue);
     }
 
-    @DisplayName("Удаление OutPutQueue")
+    @DisplayName("API. RPC-Django-Router. Удаление OutPutQueue")
     @TmsLink("")
     @Test
     public void deleteOutPutQueueTest() {
@@ -47,7 +47,7 @@ public class OutPutQueueTest extends Tests {
     }
 
     @SneakyThrows
-    @DisplayName("Обновление OutPutQueue")
+    @DisplayName("API. RPC-Django-Router. Обновление OutPutQueue")
     @TmsLink("")
     @Test
     public void updateOutPutQueueTest() {
@@ -59,7 +59,7 @@ public class OutPutQueueTest extends Tests {
         assertEquals(updatedQueue, updatedOutputQueueResponse);
     }
 
-    @DisplayName("Частичное обновление OutPutQueue")
+    @DisplayName("API. RPC-Django-Router. Частичное обновление OutPutQueue")
     @TmsLink("")
     @Test
     public void partialUpdateOutPutQueueTest() {
@@ -69,7 +69,7 @@ public class OutPutQueueTest extends Tests {
         assertEquals(newName, getOutPutQueueById(outPutQueue.getId()).getName());
     }
 
-    @DisplayName("Получение списка OutputQueue")
+    @DisplayName("API. RPC-Django-Router. Получение списка OutputQueue")
     @TmsLink("")
     @Test
     public void getOutPutQueueListTest() {
@@ -78,7 +78,7 @@ public class OutPutQueueTest extends Tests {
         assertTrue(outPutQueueList.contains(outPutQueue));
     }
 
-    @DisplayName("Копирование OutputQueue")
+    @DisplayName("API. RPC-Django-Router. Копирование OutputQueue")
     @TmsLink("")
     @Test
     public void copyOutPutQueueTest() {
@@ -87,7 +87,7 @@ public class OutPutQueueTest extends Tests {
         assertEquals(outPutQueue.getName() + "-clone", outputQueueResponse.getName());
     }
 
-    @DisplayName("Получение списка объектов использующих OutputQueue")
+    @DisplayName("API. RPC-Django-Router. Получение списка объектов использующих OutputQueue")
     @TmsLink("")
     @Test
     public void getObjectListUsedOutPutQueueTest() {
@@ -97,7 +97,7 @@ public class OutPutQueueTest extends Tests {
         assertEquals("{}", s);
     }
 
-    @DisplayName("Получение списка объектов используемых в OutputQueue")
+    @DisplayName("API. RPC-Django-Router. Получение списка объектов используемых в OutputQueue")
     @TmsLink("")
     @Test
     public void getObjectListUsingOutputQueueTest() {

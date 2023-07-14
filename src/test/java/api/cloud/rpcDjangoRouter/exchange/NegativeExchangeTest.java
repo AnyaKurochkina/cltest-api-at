@@ -26,7 +26,7 @@ import static steps.rpcRouter.OutputQueueSteps.deleteOutPutQueue;
 @DisabledIfEnv("prod")
 public class NegativeExchangeTest extends Tests {
 
-    @DisplayName("Удаление Exchange используемого в OutputQueue")
+    @DisplayName("API. RPC-Django-Router. Удаление Exchange используемого в OutputQueue")
     @TmsLink("")
     @Test
     public void deleteExchangeUsedInOutputQueueTest() {

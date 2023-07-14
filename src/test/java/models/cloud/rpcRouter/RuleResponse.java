@@ -1,9 +1,6 @@
 package models.cloud.rpcRouter;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import models.AbstractEntity;
 
 import java.util.Date;
@@ -14,6 +11,8 @@ import static steps.rpcRouter.RuleSteps.deleteRuleById;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode(exclude = {"update_dt", "create_dt"}, callSuper = false)
+@ToString
 public class RuleResponse extends AbstractEntity {
 
     private String name;

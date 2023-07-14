@@ -28,7 +28,7 @@ import static steps.rpcRouter.RuleSteps.deleteRuleById;
 @DisabledIfEnv("prod")
 public class NegativeRuleTest extends Tests {
 
-    @DisplayName("Удаление Rule используемого в InputQueue")
+    @DisplayName("API. RPC-Django-Router. Удаление Rule используемого в InputQueue")
     @TmsLink("")
     @Test
     public void deleteRuleUsedInOutputQueueTest() {

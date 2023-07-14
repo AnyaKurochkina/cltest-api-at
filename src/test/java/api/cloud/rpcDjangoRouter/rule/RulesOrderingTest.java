@@ -24,7 +24,7 @@ import static steps.rpcRouter.RuleSteps.getOrderingByFieldRulesList;
 @DisabledIfEnv("prod")
 public class RulesOrderingTest extends Tests {
 
-    @DisplayName("Получение списка Rule отсортированного по title")
+    @DisplayName("API. RPC-Django-Router. Получение списка Rule отсортированного по title")
     @TmsLink("")
     @Test
     public void orderingRuleListByTitleTest() {
@@ -40,7 +40,7 @@ public class RulesOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка Rule отсортированного по name")
+    @DisplayName("API. RPC-Django-Router. Получение списка Rule отсортированного по name")
     @TmsLink("")
     @Test
     public void orderingRuleListByNameTest() {
@@ -56,7 +56,7 @@ public class RulesOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка Rule отсортированного по create_dt")
+    @DisplayName("API. RPC-Django-Router. Получение списка Rule отсортированного по create_dt")
     @TmsLink("")
     @Test
     public void orderingRuleListByCreateDtTest() {
@@ -72,7 +72,7 @@ public class RulesOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка Rule отсортированного по id")
+    @DisplayName("API. RPC-Django-Router. Получение списка Rule отсортированного по id")
     @TmsLink("")
     @Test
     public void orderingExchangeListByIdTest() {

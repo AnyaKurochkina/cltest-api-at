@@ -25,7 +25,7 @@ import static steps.rpcRouter.RuleSteps.createRule;
 @DisabledIfEnv("prod")
 public class NegativeInputQueueTest extends Tests {
 
-    @DisplayName("Создание InputQueue без ':' в имени")
+    @DisplayName("API. RPC-Django-Router. Создание InputQueue без ':' в имени")
     @TmsLink("")
     @Test
     public void createInputQueueWithOutColonInNameTest() {

@@ -1,0 +1,30 @@
+{
+  "model_name": "InputQueue",
+  "InputQueue": {
+    "id": 38,
+    "name": "pjccw:euyuei_input_queue_test_api",
+    "title": "api_test",
+    "description": "api_test",
+    "durable": true,
+    "params": {}
+  },
+  "rel_foreign_models": {},
+  "rel_revers_models": {
+    "rules": [
+      {
+        "model_name": "Rule",
+        "Rule": {
+          "id": 57,
+          "name": "esvkedee_rule_api_test",
+          "title": "api_test",
+          "description": "string",
+          "code_expression": "return"
+        },
+        "rel_foreign_models": {}
+      }
+    ]
+  },
+  "dump_version": 5.0,
+  "dump_date": "2023-07-11 09:47:50",
+  "is_pinned_versions": false
+}

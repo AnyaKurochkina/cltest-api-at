@@ -23,7 +23,7 @@ import static steps.rpcRouter.OutputQueueSteps.getOrderingByFieldOutPutQueueList
 @DisabledIfEnv("prod")
 public class OutPutQueueOrderingTest extends Tests {
 
-    @DisplayName("Получение списка OutputQueue отсортированного по title")
+    @DisplayName("API. RPC-Django-Router. Получение списка OutputQueue отсортированного по title")
     @TmsLink("")
     @Test
     public void orderingOutputQueueListByTitleTest() {
@@ -39,7 +39,7 @@ public class OutPutQueueOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка OutputQueue отсортированного по name")
+    @DisplayName("API. RPC-Django-Router. Получение списка OutputQueue отсортированного по name")
     @TmsLink("")
     @Test
     public void orderingOutputQueueListByNameTest() {
@@ -55,7 +55,7 @@ public class OutPutQueueOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка OutputQueue отсортированного по create_dt")
+    @DisplayName("API. RPC-Django-Router. Получение списка OutputQueue отсортированного по create_dt")
     @TmsLink("")
     @Test
     public void orderingOutputQueueListByCreateDtTest() {
@@ -71,7 +71,7 @@ public class OutPutQueueOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка OutputQueue отсортированного по id")
+    @DisplayName("API. RPC-Django-Router. Получение списка OutputQueue отсортированного по id")
     @TmsLink("")
     @Test
     public void orderingOutputQueueListByIdTest() {

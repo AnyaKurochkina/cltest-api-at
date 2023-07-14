@@ -4,10 +4,13 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.rpcRouter.*;
 import org.json.JSONObject;
+import org.openqa.selenium.NotFoundException;
 import steps.Steps;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -78,6 +81,17 @@ public class InputQueueSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Импорт InputQueue")
+    public static ImportObject importInputQueue(String pathName) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .multiPart(inputQueueV1 + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
+    }
+
     @Step("Получение списка объектов использующих InputQueue")
     public static Response getObjectsUsedInputQueue(Integer id) {
         return new Http(RpcRouter)
@@ -103,6 +117,17 @@ public class InputQueueSteps extends Steps {
                 .extractAs(InputQueueResponse.class);
     }
 
+    @Step("Получение InputQueue по name {name}")
+    public static InputQueueResponse getInputQueueByName(String name) {
+        List<InputQueueResponse> list = new Http(RpcRouter)
+                .withServiceToken()
+                .get(inputQueueV1 + "?name={}", name)
+                .assertStatus(200)
+                .extractAs(GetInputQueueList.class)
+                .getList();
+        return list.stream().findFirst().orElseThrow(() -> new NotFoundException("Исходящая очередь не найдена"));
+    }
+
     @Step("Проверка существования InputQueue по name {name}")
     public static boolean isInputQueueExist(String name) {
         List<InputQueueResponse> list = new Http(RpcRouter)
@@ -115,7 +140,7 @@ public class InputQueueSteps extends Steps {
     }
 
     @Step("Обновление InputQueue")
-    public static InputQueueResponse updateInputQueueQueue(Integer id, JSONObject jsonObject) {
+    public static InputQueueResponse updateInputQueue(Integer id, JSONObject jsonObject) {
         return new Http(RpcRouter)
                 .withServiceToken()
                 .body(jsonObject)

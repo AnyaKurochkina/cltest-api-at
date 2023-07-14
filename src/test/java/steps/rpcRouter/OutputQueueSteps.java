@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.rpcRouter.ExchangeResponse;
 import models.cloud.rpcRouter.GetOutPutQueueList;
 import models.cloud.rpcRouter.OutputQueue;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.NotFoundException;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.RpcRouter;
@@ -45,6 +47,17 @@ public class OutputQueueSteps extends Steps {
                 //  .withServiceToken()
                 .get(outPutQueueV1 + "{}/obj_export/?as_file=true", id)
                 .assertStatus(200);
+    }
+
+    @Step("Импорт OutPutQueue")
+    public static ImportObject importOutPutQueue(String pathName) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .multiPart(outPutQueueV1 + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Экспорт нескольких OutPutQueue по Id")

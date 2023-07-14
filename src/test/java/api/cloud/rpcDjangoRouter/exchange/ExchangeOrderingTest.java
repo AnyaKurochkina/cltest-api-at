@@ -24,7 +24,7 @@ import static steps.rpcRouter.ExchangeSteps.getOrderingByFieldExchangeList;
 @DisabledIfEnv("prod")
 public class ExchangeOrderingTest extends Tests {
 
-    @DisplayName("Получение списка Exchange отсортированного по title")
+    @DisplayName("API. RPC-Django-Router. Получение списка Exchange отсортированного по title")
     @TmsLink("")
     @Test
     public void orderingExchangeListByTitleTest() {
@@ -40,7 +40,7 @@ public class ExchangeOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка Exchange отсортированного по name")
+    @DisplayName("API. RPC-Django-Router. Получение списка Exchange отсортированного по name")
     @TmsLink("")
     @Test
     public void orderingExchangeListByNameTest() {
@@ -56,7 +56,7 @@ public class ExchangeOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка Exchange отсортированного по create_dt")
+    @DisplayName("API. RPC-Django-Router. Получение списка Exchange отсортированного по create_dt")
     @TmsLink("")
     @Test
     public void orderingExchangeListByCreateDtTest() {
@@ -72,7 +72,7 @@ public class ExchangeOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка Exchange отсортированного по id")
+    @DisplayName("API. RPC-Django-Router. Получение списка Exchange отсортированного по id")
     @TmsLink("")
     @Test
     public void orderingExchangeListByIdTest() {

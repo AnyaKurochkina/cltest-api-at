@@ -23,7 +23,7 @@ import static steps.rpcRouter.OutputQueueSteps.createOutPutQueue;
 @DisabledIfEnv("prod")
 public class NegativeOutPutQueueTest extends Tests {
 
-    @DisplayName("Создание OutPutQueue без ':' в имени")
+    @DisplayName("API. RPC-Django-Router. Создание OutPutQueue без ':' в имени")
     @TmsLink("")
     @Test
     public void createOutPutQueueWithOutColonInNameTest() {

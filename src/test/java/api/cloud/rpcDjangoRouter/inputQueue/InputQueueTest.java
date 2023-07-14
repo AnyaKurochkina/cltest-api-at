@@ -28,7 +28,7 @@ import static steps.rpcRouter.RuleSteps.getRuleById;
 @DisabledIfEnv("prod")
 public class InputQueueTest extends Tests {
 
-    @DisplayName("Создание InputQueue")
+    @DisplayName("API. RPC-Django-Router. Создание InputQueue")
     @TmsLink("")
     @Test
     public void createInputQueueTest() {
@@ -37,7 +37,7 @@ public class InputQueueTest extends Tests {
         assertEquals(inputQueue, createdQueue);
     }
 
-    @DisplayName("Удаление InputQueue")
+    @DisplayName("API. RPC-Django-Router. Удаление InputQueue")
     @TmsLink("")
     @Test
     public void deleteInputQueueTest() {
@@ -47,7 +47,7 @@ public class InputQueueTest extends Tests {
     }
 
     @SneakyThrows
-    @DisplayName("Обновление InputQueue")
+    @DisplayName("API. RPC-Django-Router. Обновление InputQueue")
     @TmsLink("")
     @Test
     public void updateInputQueueTest() {
@@ -55,11 +55,11 @@ public class InputQueueTest extends Tests {
         JSONObject serializedQueue = serialize(inputQueue);
         serializedQueue.put("name", "name:test_api");
         InputQueueResponse updatedQueue = new ObjectMapper().readValue(String.valueOf(serializedQueue), InputQueueResponse.class);
-        InputQueueResponse updatedOutputQueueResponse = updateInputQueueQueue(inputQueue.getId(), serializedQueue);
+        InputQueueResponse updatedOutputQueueResponse = updateInputQueue(inputQueue.getId(), serializedQueue);
         assertEquals(updatedQueue, updatedOutputQueueResponse);
     }
 
-    @DisplayName("Частичное обновление InputQueue")
+    @DisplayName("API. RPC-Django-Router. Частичное обновление InputQueue")
     @TmsLink("")
     @Test
     public void partialUpdateInputQueueTest() {
@@ -69,7 +69,7 @@ public class InputQueueTest extends Tests {
         assertEquals(newName, getInputQueueById(inputQueue.getId()).getName());
     }
 
-    @DisplayName("Получение списка InputQueue")
+    @DisplayName("API. RPC-Django-Router. Получение списка InputQueue")
     @TmsLink("")
     @Test
     public void getInputQueueListTest() {
@@ -78,7 +78,7 @@ public class InputQueueTest extends Tests {
         assertTrue(inputQueueList.contains(inputQueue));
     }
 
-    @DisplayName("Копирование InputQueue")
+    @DisplayName("API. RPC-Django-Router. Копирование InputQueue")
     @TmsLink("")
     @Test
     public void copyInputQueueTest() {
@@ -87,7 +87,7 @@ public class InputQueueTest extends Tests {
         assertEquals(inputQueue.getName() + "-clone", inputQueueResponse.getName());
     }
 
-    @DisplayName("Получение списка объектов использующих InputQueue")
+    @DisplayName("API. RPC-Django-Router. Получение списка объектов использующих InputQueue")
     @TmsLink("")
     @Test
     public void getObjectListUsedInputQueueTest() {
@@ -97,7 +97,7 @@ public class InputQueueTest extends Tests {
         assertEquals("{}", s);
     }
 
-    @DisplayName("Получение списка объектов используемых в InputQueue")
+    @DisplayName("API. RPC-Django-Router. Получение списка объектов используемых в InputQueue")
     @TmsLink("")
     @Test
     public void getObjectListUsingInputQueueTest() {

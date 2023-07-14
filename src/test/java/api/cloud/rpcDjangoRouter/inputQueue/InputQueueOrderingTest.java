@@ -23,7 +23,7 @@ import static steps.rpcRouter.InputQueueSteps.getOrderingByFieldInputQueueList;
 @DisabledIfEnv("prod")
 public class InputQueueOrderingTest extends Tests {
 
-    @DisplayName("Получение списка InputQueue отсортированного по title")
+    @DisplayName("API. RPC-Django-Router. Получение списка InputQueue отсортированного по title")
     @TmsLink("")
     @Test
     public void orderingInputQueueListByTitleTest() {
@@ -39,7 +39,7 @@ public class InputQueueOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка InputQueue отсортированного по name")
+    @DisplayName("API. RPC-Django-Router. Получение списка InputQueue отсортированного по name")
     @TmsLink("")
     @Test
     public void orderingInputQueueListByNameTest() {
@@ -55,7 +55,7 @@ public class InputQueueOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка InputQueue отсортированного по create_dt")
+    @DisplayName("API. RPC-Django-Router. Получение списка InputQueue отсортированного по create_dt")
     @TmsLink("")
     @Test
     public void orderingInputQueueListByCreateDtTest() {
@@ -71,7 +71,7 @@ public class InputQueueOrderingTest extends Tests {
         }
     }
 
-    @DisplayName("Получение списка InputQueue отсортированного по id")
+    @DisplayName("API. RPC-Django-Router. Получение списка InputQueue отсортированного по id")
     @TmsLink("")
     @Test
     public void orderingInputQueueListByIdTest() {

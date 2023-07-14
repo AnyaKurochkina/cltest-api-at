@@ -26,7 +26,7 @@ import static steps.rpcRouter.InputQueueSteps.*;
 @DisabledIfEnv("prod")
 public class InputQueueExportTest extends Tests {
 
-    @DisplayName("Экспорт InputQueue")
+    @DisplayName("API. RPC-Django-Router. Экспорт InputQueue")
     @TmsLink("")
     @Test
     public void exportInputQueueTest() {
@@ -39,7 +39,7 @@ public class InputQueueExportTest extends Tests {
     }
 
     @SneakyThrows
-    @DisplayName("Экспорт нескольких InputQueue")
+    @DisplayName("API. RPC-Django-Router. Экспорт нескольких InputQueue")
     @TmsLink("")
     @Test
     public void exportInputQueuesTest() {
