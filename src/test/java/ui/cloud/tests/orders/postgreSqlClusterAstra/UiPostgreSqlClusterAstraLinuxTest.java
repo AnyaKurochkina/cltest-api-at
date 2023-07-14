@@ -42,7 +42,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     SelenideElement node = $x("(//td[.='postgresql'])[1]");
     SelenideElement node2 = $x("(//td[.='at_db'])[1]");
 
-
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
@@ -64,12 +63,17 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
                     .expandProductsList()
                     .selectProduct(product.getProductName());
             PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
+            if (product.isDev() || product.isIft() )
+                orderPage.getSegmentSelect().set(product.getSegment());
+            if (product.isProd())
+                orderPage.getSegmentSelect().set("PROD-SRV-APP");
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getRoleSelect().set("user");
+            if (product.isDev() || product.isIft() )
+                orderPage.getGroupSelect().set(accessGroup);
+            if (product.isDev())
+                orderPage.getRoleSelect().set("user");
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();

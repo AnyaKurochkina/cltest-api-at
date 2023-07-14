@@ -8,10 +8,7 @@ import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.util.List;
 
@@ -76,7 +73,7 @@ public class RedisAstraPage extends IProductPage {
 
     public void resetPassword() {
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters("default", "Сбросить пароль", "Подтвердить", () ->
+        runActionWithParameters(getBtnAction("default",2), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -135,13 +132,22 @@ public class RedisAstraPage extends IProductPage {
     public void changeConfiguration() {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () ->
-                Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor)));
+        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
+            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+        });
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
+    }
+    public  void changeParamNotify(String param)
+    {
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
+            Select.byLabel("Параметр notify-keyspace-events").set(param);
+        });
     }
 
     public void createDb(String name) {
@@ -191,14 +197,13 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void enlargeDisk(String name, String size, SelenideElement node) {
-
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         expandDisk(name, size, node);
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
                 Integer.parseInt(size));
@@ -232,7 +237,7 @@ public class RedisAstraPage extends IProductPage {
 
     @Step("Добавить новые группы {group} с ролью {role}")
     public void addGroup(String role, List<String> groups) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").set(role);
@@ -266,7 +271,7 @@ public class RedisAstraPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
 

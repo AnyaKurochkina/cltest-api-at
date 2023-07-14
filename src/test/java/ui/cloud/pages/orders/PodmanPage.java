@@ -53,7 +53,7 @@ public class PodmanPage extends IProductPage {
     public void checkConfiguration(SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(node).build());
+        runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).node(node).build());
     }
 
     public void changeConfiguration() {
