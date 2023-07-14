@@ -60,7 +60,8 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
+            if(product.isDev())
+                orderPage.getGroupSelect().set(accessGroup);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
