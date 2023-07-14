@@ -99,7 +99,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     public void addProfileTest() {
         String name = "";
         if (Configure.ENV.equals("t1prod")) {
-            name = "Veeam-InstantVMRecovery";
+            name = "C03-SP-Standard";
         } else {
             name = "SP-Standart";
         }
