@@ -66,11 +66,11 @@ public class NginxAstraPage extends IProductPage {
     public void changeConfiguration() {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
-        Flavor maxFlavor = product.getMaxFlavor();
+        Flavor maxFlavor = product.getMaxFlavorLinuxVm();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
-            DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor));
-            //Select.byLabel("Конфигурация Core/RAM").set("Core: 4, RAM: 16 GB");
+            //DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor));
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
         });
         btnGeneralInfo.click();
