@@ -52,7 +52,7 @@ public interface TypifiedElement {
      * @param xpathNearElement xpath близкого к искомому element элемента
      * @return искомый element
      */
-    static WebElement findNearestElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
+    static SelenideElement findNearestElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
             SelenideElement elementE1 = $x(xpathNearElement).shouldBe(Condition.exist);
             ElementsCollection elementsE2 = $$x(xpathSearchElement).shouldBe(CollectionCondition.sizeNotEqual(0));
             if (elementsE2.isEmpty()) {
@@ -69,7 +69,7 @@ public interface TypifiedElement {
             }
             if (nearestElement == null)
                 throw new NoSuchElementException("No nearest element found");
-            return nearestElement;
+            return (SelenideElement) nearestElement;
     }
 
     static double calculateDistance(WebElement element1, WebElement element2) {
