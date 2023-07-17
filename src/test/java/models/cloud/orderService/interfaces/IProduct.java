@@ -467,8 +467,8 @@ public abstract class IProduct extends Entity {
     public boolean isDev() {
         return envType().contains("dev");
     }
-    public boolean isIft() {
-        return envType().contains("ift");
+    public boolean isTest() {
+        return envType().contains("test");
     }
 
     public boolean isProd() {
