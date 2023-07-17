@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -23,6 +24,7 @@ public class OrgDirectionsListPage extends EntityListPage {
     public OrgDirectionsListPage() {
         SelenideElement directionPageTitle = $x("//div[text() = 'Направления'][@type]");
         directionPageTitle.shouldBe(Condition.visible);
+        WebDriverRunner.getWebDriver().manage().window().maximize();
     }
 
     public OrgDirectionPage createDirection() {
