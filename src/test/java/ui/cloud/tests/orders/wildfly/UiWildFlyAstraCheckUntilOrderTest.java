@@ -48,7 +48,7 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
         //Проверка Детали заказа
         orderPage.getVersionWildfly().set(product.getWildFlyVersion());
         orderPage.getVersionJava().set(product.getVersionJava());
-        if (product.isDev() || product.isIft() )
+        if (product.isDev() || product.isTest() )
             orderPage.getSegmentSelect().set(product.getSegment());
         if (product.isProd())
             orderPage.getSegmentSelect().set("PROD-SRV-APP");

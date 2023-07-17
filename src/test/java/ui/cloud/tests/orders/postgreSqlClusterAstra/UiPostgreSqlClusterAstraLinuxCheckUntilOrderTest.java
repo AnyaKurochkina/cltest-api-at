@@ -47,14 +47,14 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.checkOrderDisabled();
         //Проверка Детали заказа
-        if (product.isDev() || product.isIft() )
+        if (product.isDev() || product.isTest() )
             orderPage.getSegmentSelect().set(product.getSegment());
         if (product.isProd())
             orderPage.getSegmentSelect().set("PROD-SRV-APP");
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        if (product.isDev() || product.isIft() )
+        if (product.isDev() || product.isTest() )
             orderPage.getGroupSelect().set(accessGroup);
         new PostgreSqlClusterAstraOrderPage().checkOrderDetails();
     }
