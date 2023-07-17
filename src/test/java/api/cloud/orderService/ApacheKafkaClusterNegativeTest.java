@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.subModels.KafkaTopic;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -23,6 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("regress"), @Tag("negative"), @Tag("prod"), @Tag("apachekafkacluster")})
+@DisabledIfEnv("ift")
 public class ApacheKafkaClusterNegativeTest extends Tests {
 
     @Tag("actions")

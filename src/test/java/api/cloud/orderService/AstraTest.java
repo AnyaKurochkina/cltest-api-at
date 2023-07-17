@@ -78,7 +78,7 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.resize(astra.getMaxFlavor());
+            astra.resize(astra.getMaxFlavorLinuxVm());
         }
     }
 

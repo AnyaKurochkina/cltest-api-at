@@ -1,6 +1,7 @@
 package api;
 
 import com.codeborne.selenide.Condition;
+import io.qameta.allure.Allure;
 import lombok.SneakyThrows;
 import models.AbstractEntity;
 import org.junit.CustomDisplayNameGenerator;
@@ -13,6 +14,9 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.utils.UniqueTest;
+
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 @ExtendWith(TmsLinkExtension.class)
 @ExtendWith(EnvironmentCondition.class)
@@ -32,6 +36,8 @@ public class Tests {
     @AfterEach
     @Title("Удаление сущностей")
     public void afterEach() {
+        if (Objects.nonNull(UniqueTest.getStepLog()))
+            Allure.getLifecycle().addAttachment("log-test", "text/html", "log", UniqueTest.getStepLog().getBytes(StandardCharsets.UTF_8));
         AbstractEntity.deleteCurrentTestEntities();
     }
 

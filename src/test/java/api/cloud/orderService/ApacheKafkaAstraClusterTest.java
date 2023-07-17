@@ -9,6 +9,7 @@ import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -31,6 +32,7 @@ import static core.enums.KafkaRoles.PRODUCER;
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster_astra"), @Tag("prod")})
+@DisabledIfEnv("ift")
 @Log4j2
 public class ApacheKafkaAstraClusterTest extends Tests {
 

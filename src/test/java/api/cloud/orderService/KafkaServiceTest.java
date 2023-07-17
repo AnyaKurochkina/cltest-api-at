@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.KafkaService;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -18,6 +19,7 @@ import api.Tests;
 @Epic("Продукты")
 @Feature("Kafka service")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("kafka_service"), @Tag("prod")})
+@DisabledIfEnv("ift")
 public class KafkaServiceTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)

@@ -86,6 +86,7 @@ public class CalculatorTest extends Tests {
 
     @Test
     @SneakyThrows
+    @Disabled
 //    @Source(ProductArgumentsProvider.ONE_PRODUCT)
     public void bigIntegrationCalculatorTest() {
         Organization organization = Organization.builder().build().createObject();

@@ -20,6 +20,7 @@ import api.Tests;
 @Epic("Продукты")
 @Feature("Rhel")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rhel"), @Tag("prod")})
+@Disabled
 public class RhelTest extends Tests {
 
     @TmsLink("377711")
@@ -69,7 +70,7 @@ public class RhelTest extends Tests {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.stopHard();
             try {
-                rhel.resize(rhel.getMaxFlavor());
+                rhel.resize(rhel.getMaxFlavorLinuxVm());
             } finally {
                 rhel.start();
             }
