@@ -26,7 +26,7 @@ import static core.utils.AssertUtils.assertContains;
 @NoArgsConstructor
 @SuperBuilder
 public class Astra extends IProduct {
-    public static String SNAPSHOT_PATH = "data.any{it.data.type=='snapshot' && it.data.state=='on'}";
+    public static String SNAPSHOT_PATH = "data.any{it.type=='snapshot' && it.state=='on'}";
     @ToString.Include
     String osVersion;
     Flavor flavor;

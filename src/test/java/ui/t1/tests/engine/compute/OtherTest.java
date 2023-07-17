@@ -9,13 +9,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.ResourceLock;
 import org.openqa.selenium.NotFoundException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
-import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
+import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
@@ -23,8 +22,6 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.List;
 import java.util.Objects;
-
-import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
 
 @Feature("Дополнительные")
 @Epic("Cloud Compute")

@@ -1,6 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
+import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -8,6 +9,7 @@ import io.qameta.allure.TmsLinks;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.openqa.selenium.By;
 import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
@@ -22,6 +24,9 @@ import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
+import java.time.Duration;
+
+import static com.codeborne.selenide.Selenide.switchTo;
 import static core.helper.StringUtils.$x;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
@@ -93,7 +98,11 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         console.click();
         Button.byText("Развернуть на полный экран").click();
         Button.byText("Выйти из полноэкранного режима").click();
-        $x("//*[@title='Консоль']").shouldBe(Condition.text("Connected (encrypted)"));
+        Waiting.find(() -> {
+                    switchTo().defaultContent();
+                    String status = switchTo().frame($x("//*[@title='Консоль']")).findElement(By.id("noVNC_status")).getText();
+                    return status.contains("Connected (encrypted)");
+                }, Duration.ofSeconds(30));
         console.getButton().should(Condition.visible);
     }
 

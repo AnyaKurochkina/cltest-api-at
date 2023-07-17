@@ -43,7 +43,7 @@ public class GenericDatabaseTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(GenericDatabase product) {
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
-            gb.resize(gb.getMaxFlavor());
+            gb.resize(gb.getMaxFlavorLinuxVm());
         }
     }
 

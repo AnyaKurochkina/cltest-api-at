@@ -404,6 +404,26 @@ public abstract class IProduct extends Entity {
         return list.get(0);
     }
 
+    public Flavor getMaxFlavorLinuxVm() {
+        Project project = Project.builder().id(getProjectId()).build().createObject();
+        String filter = String.format("flavor:vm:linux:%s:%s",
+                project.getProjectEnvironmentPrefix().getEnvType().toLowerCase(),
+                project.getProjectEnvironmentPrefix().getEnv().toLowerCase());
+        List<Flavor> list = ReferencesStep.getFlavorsByPageFilterLinkedList(this, filter);
+        Assertions.assertFalse(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
+//        return list.get(list.size() - 1);
+        return list.get(1);
+    }
+
+    public Flavor getMinFlavorLinuxVm() {
+        Project project = Project.builder().id(getProjectId()).build().createObject();
+        String filter = String.format("flavor:vm:linux:%s:%s",
+                project.getProjectEnvironmentPrefix().getEnvType().toLowerCase(),
+                project.getProjectEnvironmentPrefix().getEnv().toLowerCase());
+        List<Flavor> list = ReferencesStep.getFlavorsByPageFilterLinkedList(this, filter);
+        return list.get(0);
+    }
+
     //Расширить
     protected void expandMountPoint(String action, String mount, int size) {
         Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));

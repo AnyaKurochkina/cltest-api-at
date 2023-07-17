@@ -31,7 +31,6 @@ import java.util.List;
 public abstract class AbstractComputeTest extends Tests {
     protected Project project;
     protected String availabilityZone = "ru-central1-a";
-    protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
     protected String hddTypeFirst = "HDD";
     protected String hddTypeSecond = "HDD";

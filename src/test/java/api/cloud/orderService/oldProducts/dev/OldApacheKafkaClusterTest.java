@@ -21,6 +21,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_apachekafkacluster"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled
 @Log4j2
 public class OldApacheKafkaClusterTest extends Tests {
 

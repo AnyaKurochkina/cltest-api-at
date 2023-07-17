@@ -38,7 +38,7 @@ public class NetworkTest extends AbstractComputeTest {
         new IndexPage().goToNetworks();
         assertHeaders(new NetworkList.NetworksTable(), "", "Имя", "Описание", "Статус", "Дата создания", "");
         new NetworkList().selectNetwork(name);
-        assertHeaders(new Network.SubnetListInfo(), "Наименование", "IPv4 CIDR", "Gateway", "Зона доступности", "Статус", "Описание", "");
+        assertHeaders(new Network.SubnetListInfo(), "Наименование", "IPv4 CIDR", "Gateway", "Регион", "Статус", "Описание", "");
     }
 
     @Test
