@@ -45,6 +45,7 @@ public class NginxAstraPage extends IProductPage {
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
@@ -59,6 +60,7 @@ public class NginxAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты");
         new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
     }
@@ -69,7 +71,6 @@ public class NginxAstraPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavorLinuxVm();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
-            //DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor));
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
         });
@@ -77,8 +78,8 @@ public class NginxAstraPage extends IProductPage {
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
-        Assertions.assertEquals("4", cpu.getText(), "Размер CPU не изменился");
-        Assertions.assertEquals("16", ram.getText(), "Размер RAM не изменился");
+        Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
+        Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
     public void enlargeDisk(String name, String size, SelenideElement node) {
@@ -101,6 +102,7 @@ public class NginxAstraPage extends IProductPage {
         public VirtualMachineTable() {
             super("Роли узла");
         }
+
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }
