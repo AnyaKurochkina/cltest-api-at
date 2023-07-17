@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Podman;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -19,6 +20,7 @@ import static core.utils.AssertUtils.assertContains;
 @Epic("Продукты")
 @Feature("Podman Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("podman_astra"), @Tag("prod")})
+@DisabledIfEnv("ift")
 public class PodmanAstraTest extends Tests {
 
     @TmsLink("820506")

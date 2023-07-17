@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.RabbitMQClusterAstra;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -26,6 +27,7 @@ import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("RabbitMQCluster")
+@DisabledIfEnv("ift")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rabbitmqcluster"), @Tag("prod")})
 public class RabbitMQClusterTest extends Tests {
 

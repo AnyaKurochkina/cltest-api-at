@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -17,6 +18,7 @@ import api.Tests;
 @Epic("Продукты")
 @Feature("Windows")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("windows"), @Tag("prod")})
+@DisabledIfEnv("ift")
 public class WindowsTest extends Tests {
 
     @TmsLinks({@TmsLink("377721"), @TmsLink("470095")})

@@ -72,7 +72,7 @@ public class WildFlyAstraTest extends Tests {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
 //            wildFly.stopHard();
 //            try {
-                wildFly.resize(wildFly.getMaxFlavor());
+                wildFly.resize(wildFly.getMaxFlavorLinuxVm());
 //            } finally {
 //                wildFly.start();
 //            }

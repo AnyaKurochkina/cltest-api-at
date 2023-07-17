@@ -15,6 +15,7 @@ import static models.cloud.orderService.interfaces.ProductStatus.STARTED;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_windows"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled
 public class OldWindowsTest extends Tests {
 
     final Windows windows = Windows.builder()

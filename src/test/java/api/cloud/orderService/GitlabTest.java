@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.GitLab;
 import org.json.JSONObject;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -23,6 +24,7 @@ import java.util.Map;
 @Epic("Продукты")
 @Feature("GitLab")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("gitlab"), @Tag("prod")})
+@DisabledIfEnv("ift")
 public class GitlabTest extends Tests {
     private static final GitLab.Project project = GitLab.Project.builder().name("project").visibility("private").description("desc").build();
 

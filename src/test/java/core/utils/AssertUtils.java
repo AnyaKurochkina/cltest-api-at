@@ -1,5 +1,6 @@
 package core.utils;
 
+import core.exception.NotFoundElementException;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.Table;
 
@@ -26,14 +27,24 @@ public class AssertUtils {
         List<String> differences = new ArrayList<>(l1);
         differences.removeAll(l2);
         if (!differences.isEmpty()) {
-            fail(String.format("Not equals:\n%s\n%s", Arrays.toString(l1.toArray()), Arrays.toString(l2.toArray())));
+            fail(String.format("Списки не совпадают:\n%s\n%s", Arrays.toString(l1.toArray()), Arrays.toString(l2.toArray())));
         }
+    }
+
+    public static void assertContainsList(List<?> list, Object object) {
+        if (!list.contains(object))
+            throw new NotFoundElementException("Элемент {} не найден в списке \n{}", object, Arrays.toString(list.toArray()));
+    }
+
+    public static void assertNotContainsList(List<?> list, Object object) {
+        if (list.contains(object))
+            throw new NotFoundElementException("Элемент {} найден в списке \n{}", object, Arrays.toString(list.toArray()));
     }
 
     public static void assertContains(String text, String... strings) {
         for (String str : strings)
             if (!text.contains(str)) {
-                fail(String.format("The text '%s' not found in '%s'", str, text));
+                fail(String.format("Текст '%s' не найден в '%s'", str, text));
             }
     }
 }

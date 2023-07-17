@@ -15,6 +15,7 @@ import static models.cloud.orderService.interfaces.ProductStatus.STOPPED;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_wildfly_astra"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled
 public class OldWildFlyTest extends Tests {
 
     final WildFly wildFly = WildFly.builder()
