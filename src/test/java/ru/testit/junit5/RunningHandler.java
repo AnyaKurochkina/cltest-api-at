@@ -95,8 +95,6 @@ public class RunningHandler {
         if (Objects.isNull(includedTests.get(test))) {
             test = new UniqueTest(extractExternalID(atomicTest, null), TestITClient.getConfigurationId());
         }
-        if (Objects.nonNull(UniqueTest.getStepLog()))
-            Allure.getLifecycle().addAttachment("log-test", "text/html", "log", UniqueTest.getStepLog().getBytes(StandardCharsets.UTF_8));
         final StepNode parentStep = includedTests.get(test);
         createTestItemRequestFactory.processFinishLaunchUniqueTest(utilsMethodSteps, parentStep, test);
         testITClient.sendTestItemsUniqueTest(createTestItemRequestFactory.getCreateTestRequests(test));

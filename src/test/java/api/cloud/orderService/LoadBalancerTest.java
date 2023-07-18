@@ -79,7 +79,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.resize(balancer.getMaxFlavor());
+            balancer.resize(balancer.getMaxFlavorLinuxVm());
         }
     }
 

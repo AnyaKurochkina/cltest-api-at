@@ -1,5 +1,6 @@
 package models.cloud.orderService.products;
 
+import core.helper.Configure;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.Data;
@@ -36,6 +37,8 @@ public class TarantoolDataGrid extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/tarantool.json";
         productName = "Tarantool Data Grid Astra";
+        if(Configure.ENV.equalsIgnoreCase("ift"))
+            productName = "Tarantool Data Grid - Astra Linux";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();

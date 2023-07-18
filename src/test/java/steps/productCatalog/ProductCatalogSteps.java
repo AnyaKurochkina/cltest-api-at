@@ -80,7 +80,7 @@ public class ProductCatalogSteps {
     @Step("Получение статуса health")
     public static String getHealthStatusProductCatalog() {
         return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/healthcheck")
                 .assertStatus(200)
                 .jsonPath()
