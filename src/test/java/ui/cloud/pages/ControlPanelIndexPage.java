@@ -39,7 +39,8 @@ public class ControlPanelIndexPage {
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
     private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
     private final SelenideElement contextSettingsLink = $x("//a[@href='/meccano/context_settings']");
-    private final Select sectionSelect = Select.byXpath("//select/parent::div");
+    private final Button mainMenuButton = Button.byXpath("//div[contains(@class, 'MainMenu')]//button");
+    private final SelenideElement utilsMenuItem = $x("//div[text()='Утилиты']");
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
@@ -103,8 +104,8 @@ public class ControlPanelIndexPage {
 
     @Step("Переход на страницу Утилиты. Аудит")
     public AuditPage goToAuditPage() {
-        Waiting.sleep(500);
-        sectionSelect.set("Утилиты");
+        mainMenuButton.click();
+        utilsMenuItem.hover();
         auditLink.click();
         Waiting.sleep(500);
         return new AuditPage();
