@@ -10,13 +10,14 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
 import ui.cloud.pages.orders.ClickHouseClusterPage;
 import ui.cloud.pages.orders.OrderUtils;
@@ -103,6 +104,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
+    @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("1138093")
     @DisplayName("UI ClickHouse Cluster. Перезагрузить по питанию")

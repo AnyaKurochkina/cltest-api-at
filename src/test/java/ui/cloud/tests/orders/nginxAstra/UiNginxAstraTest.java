@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.nginxАstra;
+package ui.cloud.tests.orders.nginxAstra;
 
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;

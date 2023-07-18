@@ -5,16 +5,17 @@ import core.enums.Role;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Redis;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.RedisAstraOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
+
+import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
@@ -37,7 +38,6 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
     @TmsLink("1235642")
     @DisplayName("UI RedisAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .expandProductsList()
@@ -60,7 +60,8 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         orderPage.getCreateDefaultUserSwitch().setEnabled(true);
         orderPage.getGeneratePassButton().click();
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        String accessGroup = getRandomAccessGroup(product.getProjectId(), "", "compute");
+        orderPage.getGroupSelect().set(accessGroup);
         new RedisAstraOrderPage().checkOrderDetails();
     }
 }

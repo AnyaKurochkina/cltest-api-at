@@ -2,18 +2,12 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import io.qameta.allure.Step;
 import models.cloud.orderService.products.S3Ceph;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
-import java.util.List;
-
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
-import static ui.elements.TypifiedElement.scrollCenter;
 
 public class S3CephTenantPage extends IProductPage {
 
@@ -154,7 +148,7 @@ public class S3CephTenantPage extends IProductPage {
         Assertions.assertTrue(new Table(HEADER_METHOD).isColumnValueEquals(HEADER_MAX_AGE, maxAge), "Ошибка изменения правила ");
     }
 
-    public void deleteRuleCorse() {
+    public void deleteCorsRule() {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRuleCorse.click();
