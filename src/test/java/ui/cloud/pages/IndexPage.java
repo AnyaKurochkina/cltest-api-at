@@ -23,7 +23,7 @@ public class IndexPage {
     private final SelenideElement allServicesMenuItem = $x("//div[text()='Все сервисы']");
     private final SelenideElement analyticsMenuItem = $x("//div[text()='Аналитика']");
     private final SelenideElement auditMenuItem = $x("//div[text()='Аудит']");
-    private final SelenideElement allResourcesMenuItem = $x("//div[text()='Все ресурсы']");
+    private final SelenideElement ordersListMenuItem = $x("//div[text()='Список заказов']");
     private final SelenideElement servicesMenuItem = $x("//div[text()='Сервисы']");
     private final SelenideElement servicesListMenuItem = $x("//div[text()='Список сервисов']");
     private final SelenideElement collapseMenuItem = $x("//div[text()='Свернуть меню']");
@@ -39,7 +39,7 @@ public class IndexPage {
 
     @Step("Переход на страницу заказа продуктов")
     public ProductsPage clickOrderMore() {
-        allResourcesMenuItem.click();
+        ordersListMenuItem.click();
         createOrderButton.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
         return new ProductsPage();
     }

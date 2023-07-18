@@ -58,7 +58,7 @@ class UiAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        String accessGroup = getRandomAccessGroup(product.getProjectId(), "", "compute");
+        String accessGroup = product.getAccessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new AstraLinuxOrderPage().checkOrderDetails();
     }

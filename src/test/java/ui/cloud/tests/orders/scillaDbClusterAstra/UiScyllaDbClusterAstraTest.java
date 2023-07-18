@@ -52,7 +52,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .expandProductsList()

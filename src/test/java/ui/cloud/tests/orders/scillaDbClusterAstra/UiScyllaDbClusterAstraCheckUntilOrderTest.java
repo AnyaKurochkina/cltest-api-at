@@ -61,7 +61,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        String accessGroup = getRandomAccessGroup(product.getProjectId(), "", "compute");
+        String accessGroup = product.getAccessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new ScyllaDbClusterOrderPage().checkOrderDetails();
     }

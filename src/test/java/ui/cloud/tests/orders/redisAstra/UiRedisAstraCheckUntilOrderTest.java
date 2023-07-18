@@ -60,7 +60,7 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         orderPage.getCreateDefaultUserSwitch().setEnabled(true);
         orderPage.getGeneratePassButton().click();
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        String accessGroup = getRandomAccessGroup(product.getProjectId(), "", "compute");
+        String accessGroup = product.getAccessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new RedisAstraOrderPage().checkOrderDetails();
     }

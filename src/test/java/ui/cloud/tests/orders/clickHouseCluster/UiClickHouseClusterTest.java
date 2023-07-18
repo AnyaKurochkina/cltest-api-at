@@ -55,7 +55,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void orderClickHouseCluster() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
