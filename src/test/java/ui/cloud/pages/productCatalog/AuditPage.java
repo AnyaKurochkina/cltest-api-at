@@ -3,6 +3,7 @@ package ui.cloud.pages.productCatalog;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
@@ -47,6 +48,10 @@ public class AuditPage extends EntityPage {
     private final Input statusCodeInput = Input.byLabelV2("Код статуса");
     private final Input objectTypeFilterInput = Input.byLabelV2("Тип объекта");
     private final Input objectIdFilterInput = Input.byLabelV2("ID объекта");
+
+    public AuditPage() {
+        WebDriverRunner.getWebDriver().manage().window().maximize();
+    }
 
     @Step("Проверка содержания записи в таблице аудита")
     public AuditPage checkAuditContains(String dateTime, String user, String operationType, String object,
@@ -119,6 +124,24 @@ public class AuditPage extends EntityPage {
     @Step("Проверка детальных сведений записи с contextId '{contextId}'")
     public AuditPage checkRecordDetailsByContextId(String contextId, String address, String request, String response) {
         openRecordByContextId(contextId);
+        this.contextId.shouldHave(Condition.exactText(contextId));
+        this.address.shouldHave(Condition.text(address));
+        if (showRequest.getChecked() && !request.equals(NO_VALUE)) {
+            this.request.$x(".//descendant::span[2]").shouldHave(Condition.text(request));
+        } else {
+            this.request.$x(".//i").shouldHave(Condition.exactText(request));
+        }
+        if (showResponse.getChecked() && !response.equals(NO_VALUE)) {
+            this.response.$x(".//descendant::span[2]").shouldHave(Condition.text(response));
+        } else {
+            this.response.$x(".//i").shouldHave(Condition.exactText(response));
+        }
+        return this;
+    }
+
+    @Step("Проверка детальных сведений записи, содержащей в ответе '{response}'")
+    public AuditPage checkRecordDetailsByResponse(String contextId, String address, String request, String response) {
+        openRecordByResponse(response);
         this.contextId.shouldHave(Condition.exactText(contextId));
         this.address.shouldHave(Condition.text(address));
         if (showRequest.getChecked() && !request.equals(NO_VALUE)) {
@@ -298,6 +321,15 @@ public class AuditPage extends EntityPage {
         Table table = new Table("Учетная запись");
         for (SelenideElement row : table.getRows()) {
             if (this.contextId.exists() && this.contextId.getText().equals(contextId)) break;
+            row.scrollIntoView(scrollCenter).click();
+        }
+    }
+
+    @Step("Раскрыть запись, содержащую в ответе '{value}'")
+    private void openRecordByResponse(String value) {
+        Table table = new Table("Учетная запись");
+        for (SelenideElement row : table.getRows()) {
+            if (this.response.exists() && this.response.getText().contains(value)) break;
             row.scrollIntoView(scrollCenter).click();
         }
     }
