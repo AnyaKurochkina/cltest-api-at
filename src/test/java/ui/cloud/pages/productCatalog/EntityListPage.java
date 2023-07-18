@@ -112,7 +112,7 @@ public class EntityListPage {
     public static void checkRowIsHighlighted(String columnName, String value) {
         Table table = new Table(columnName);
         Assertions.assertTrue(table.getRowByColumnValue(columnName, value).get().$x("./td").getCssValue("color")
-                .contains("196, 202, 212"));
+                .contains("176, 181, 189"));
     }
 
     @Step("Выполнение действия копирования для строки, содержащей в столбце '{columnName}' значение '{value}'")

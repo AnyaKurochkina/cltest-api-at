@@ -67,6 +67,7 @@ public class ProductPage extends EntityPage {
     public ProductPage setAttributes(Product product) {
         titleInput.setValue(product.getTitle());
         nameInput.setValue(product.getName());
+        authorInput.setValue(product.getAuthor());
         descriptionInput.setValue(product.getDescription());
         info.setValue(new JSONObject(product.getInfo()).toString());
         isOpenSwitch.getLabel().scrollIntoView(scrollCenter);
@@ -79,7 +80,6 @@ public class ProductPage extends EntityPage {
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
         goToAdditionalParamsTab();
-        authorInput.setValue(product.getAuthor());
         categorySelect.set(Categories.VM.getValue());
         Waiting.sleep(500);
         categoryV2Select.set(Categories.COMPUTE.getValue());
@@ -130,6 +130,9 @@ public class ProductPage extends EntityPage {
         titleRequiredFieldHint.shouldBe(Condition.visible);
         titleInput.setValue(product.getTitle());
         titleRequiredFieldHint.shouldNotBe(Condition.visible);
+        authorRequiredFieldHint.shouldBe(Condition.visible);
+        authorInput.setValue(product.getAuthor());
+        authorRequiredFieldHint.shouldNotBe(Condition.visible);
         goToGraphTab();
         graphRequiredFieldHint.shouldBe(Condition.visible);
         graphSelect.setContains(GraphSteps.getGraphById(product.getGraphId()).getName());
@@ -141,9 +144,6 @@ public class ProductPage extends EntityPage {
         categoryV2RequiredFieldHint.shouldBe(Condition.visible);
         categoryV2Select.set(product.getCategoryV2().getValue());
         categoryV2RequiredFieldHint.shouldNotBe(Condition.visible);
-        authorRequiredFieldHint.shouldBe(Condition.visible);
-        authorInput.setValue(product.getAuthor());
-        authorRequiredFieldHint.shouldNotBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.enabled);
         cancelButton.click();
         Selenide.prompt();
@@ -160,7 +160,7 @@ public class ProductPage extends EntityPage {
 
     @Step("Задание в поле Автор '{value}'")
     public ProductPage setAuthor(String value) {
-        goToAdditionalParamsTab();
+        goToMainTab();
         authorInput.setValue(value);
         return this;
     }
