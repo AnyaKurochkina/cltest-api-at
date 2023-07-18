@@ -27,6 +27,8 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String BLOCK_PERMISSIONS = "Права доступа";
     private static final String BLOCK_GROUP_AD_WEB= "Группы доступа на WEB интерфейс";
     private static final String HEADER_NAME_USER = "Имя";
+    private static final String HEADER_GROUP = "Группа";
+    private static final String HEADER_ROLE = "Роль";
     private static final String HEADER_CONSOLE = "Точка подключения";
     private static final String HEADER_NAME_USER_PERMISSIONS = "Имя пользователя";
     private static final String HEADER_GROUP_AD = "Группы пользователей AD";
@@ -210,7 +212,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_PERMISSIONS, "Редактировать права на виртуальные хосты", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Редактировать права на виртуальные хосты");
             dlg.setSelectValue("Пользователь", nameUser);
-            dlg.setSelectValue("Виртуальный хост", nameHost);
+            Select.byLabel("Виртуальный хост").set(nameHost);
             CheckBox.byLabel("Чтение").setChecked(true);
         });
         btnGeneralInfo.click();
@@ -258,17 +260,39 @@ public class RabbitMqClusterAstraPage extends IProductPage {
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();
-       Assertions.assertTrue(new Table("Группа").isColumnValueContains("Группа", nameGroup), "Ошибка создания группы");
+       Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_GROUP, nameGroup), "Ошибка создания группы");
     }
 
-    @Step("Удалить группу  доступа с ролью {role}")
-    public void deleteGroup(String role) {
+    @Step("Изменить группу  доступа с ролью {role}")
+    public void changeGroupWeb(String role, String group) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        runActionWithParameters(role, "Удалить группу доступа", "Подтвердить", () -> {
+        if(new Table(HEADER_GROUP).isColumnValueContains(HEADER_ROLE, role)){
+        runActionWithParameters(role, "Редактировать группы доступа", "Подтвердить", () -> {
+            Select.byLabel("Группы").set(group);
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
-        //btnGeneralInfo.click();
-        //Assertions.assertFalse(getTableByHeader(HEADER_LIST_GROUP).isColumnValueContains(HEADER_NAME_GROUP, nameGroup), "Ошибка удаления WildFly");
+        btnGeneralInfo.click();
+        Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_ROLE, role), "Ошибка изменения группы");
+    }}
+
+    @Step("Добавить роль {role}")
+    public void addRole(String role,String group) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_GROUP_AD_WEB, "Добавить роль", "Подтвердить", () -> {
+            Select.byLabel("Группы").set(group);
+            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+        });
+        btnGeneralInfo.click();
+        Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_GROUP, group), "Ошибка добавления роли");
+    }
+    @Step("Удалить группы доступа {role}")
+    public void deleteGroupWeb(String role) {
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        runActionWithParameters(role, "Редактировать группы доступа", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+        });
+        btnGeneralInfo.click();
+        Assertions.assertFalse(new Table(HEADER_GROUP).isColumnValueContains(HEADER_ROLE, role), "Ошибка удаления группы ");
     }
 
 

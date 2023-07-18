@@ -159,7 +159,6 @@ public class UiRedisAstraTest extends UiProductTest {
     }
     @Test
     @Order(28)
-    @EnabledIfEnv("prod")
     @TmsLink("1296747")
     @DisplayName("UI Windows. Изменить параметр notify-keyspace-events")
     void changeParamNotify() {

@@ -10,7 +10,6 @@ import models.cloud.orderService.products.RabbitMQClusterAstra;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -234,15 +233,30 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @Order(18)
     @TmsLink("")
-    @Disabled
-    @DisplayName("UI RabbitMqClusterAstra. Добавить/удалить группу доступа на WEB интерфейс")
-    void addGroupWeb() {
+    @DisplayName("UI RabbitMqClusterAstra. Удалить группу доступа на WEB интерфейс")
+    void deleteGroup() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addGroupWeb("manager", accessGroup.getPrefixName()));
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroup("manager"));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("manager"));
     }
 
+    @Test
+    @Order(19)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Добавить роль")
+    void addRole() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addRole("manager",accessGroup.getPrefixName()));
+    }
+    @Test
+    @Order(20)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Изменить группу доступа на WEB интерфейс")
+    void changeGroup() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("manager",accessGroup.getPrefixName()));
+    }
 
 
     @Test
