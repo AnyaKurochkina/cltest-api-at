@@ -1,8 +1,8 @@
 {
   "model_name": "InputQueue",
   "InputQueue": {
-    "id": 38,
-    "name": "pjccw:euyuei_input_queue_test_api",
+    "id": 45,
+    "name": "yfcbu:dgegnn_input_queue_test_api",
     "title": "api_test",
     "description": "api_test",
     "durable": true,
@@ -14,8 +14,8 @@
       {
         "model_name": "Rule",
         "Rule": {
-          "id": 57,
-          "name": "esvkedee_rule_api_test",
+          "id": 81,
+          "name": "hjkkmzhg_rule_api_test",
           "title": "api_test",
           "description": "string",
           "code_expression": "return"
