@@ -28,6 +28,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String BLOCK_GROUP_AD_WEB= "Группы доступа на WEB интерфейс";
     private static final String HEADER_NAME_USER = "Имя";
     private static final String HEADER_GROUP = "Группа";
+    private static final String HEADER_GROUPS = "Группы";
     private static final String HEADER_ROLE = "Роль";
     private static final String HEADER_CONSOLE = "Точка подключения";
     private static final String HEADER_NAME_USER_PERMISSIONS = "Имя пользователя";
@@ -256,7 +257,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_GROUP_AD_WEB, "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").set(role);
-            Select.byLabel("Группы").set(nameGroup);
+            Select.byLabel(HEADER_GROUPS).set(nameGroup);
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();
@@ -268,7 +269,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         if(new Table(HEADER_GROUP).isColumnValueContains(HEADER_ROLE, role)){
         runActionWithParameters(role, "Редактировать группы доступа", "Подтвердить", () -> {
-            Select.byLabel("Группы").set(group);
+            Select.byLabel(HEADER_GROUPS).set(group);
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();
@@ -279,7 +280,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void addRole(String role,String group) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_GROUP_AD_WEB, "Добавить роль", "Подтвердить", () -> {
-            Select.byLabel("Группы").set(group);
+            Select.byLabel(HEADER_GROUPS).set(group);
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();
@@ -289,6 +290,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void deleteGroupWeb(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(role, "Редактировать группы доступа", "Подтвердить", () -> {
+            Select.byLabel(HEADER_GROUPS).clear();
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();
