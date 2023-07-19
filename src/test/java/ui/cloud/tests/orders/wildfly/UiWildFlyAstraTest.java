@@ -49,7 +49,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     void orderWildFlyAstra() {
         double prebillingCost;
         try {
-            String accessGroup =product.getAccessGroup();
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -154,7 +154,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @Test
     @Order(9)
     @TmsLinks({@TmsLink("910818"), @TmsLink("910821")})
-    @DisplayName("UI WildFlyAstra. Добавление/Удаление группы WildFly")
+    @DisplayName("UI WildFlyAstra. Добавить/удалить группу WildFly")
     void addGroupWildFlyAstra() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
@@ -165,12 +165,12 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @Test
     @Order(10)
     @TmsLinks({@TmsLink("1644573"), @TmsLink("1644572"), @TmsLink("1644574")})
-    @DisplayName("UI WildFlyAstra. Удаление/Добавление/Изменение группы")
+    @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        //wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", accessGroupOne.getPrefixName()));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", accessGroupOne.getPrefixName()));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }

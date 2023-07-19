@@ -101,7 +101,7 @@ public class ActionsListPage extends EntityListPage {
     public ActionsListPage checkActionIsHighlighted(int rowNumber) {
         Table actionList = new Table(NAME_COLUMN);
         Assertions.assertTrue(actionList.getRow(rowNumber).get().$x("td")
-                .getCssValue("color").contains("196, 202, 212"));
+                .getCssValue("color").contains("176, 181, 189"));
         return this;
     }
 

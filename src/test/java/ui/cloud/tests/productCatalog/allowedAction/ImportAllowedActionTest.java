@@ -46,9 +46,7 @@ public class ImportAllowedActionTest extends AllowedActionBaseTest {
                         .actionId(getActionByName(actionName).getActionId())
                         .eventTypeProvider(json.getList("AllowedAction.event_type_provider", EventTypeProvider.class))
                         .build());
-        Action action = getActionByName(actionName);
         deleteAllowedActionByName(name);
         deleteActionByName(actionName);
-        deleteGraphById(action.getGraphId());
     }
 }

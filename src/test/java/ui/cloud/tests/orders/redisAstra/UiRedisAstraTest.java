@@ -59,6 +59,7 @@ public class UiRedisAstraTest extends UiProductTest {
             orderPage.getGeneratePassButton().click();
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getRoleSelect().set("superuser");
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
