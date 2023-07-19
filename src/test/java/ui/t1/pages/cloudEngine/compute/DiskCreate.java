@@ -63,7 +63,7 @@ public class DiskCreate {
         Waiting.sleep(2000);
         OrderUtils.clickOrder();
         OrderUtils.waitCreate(() -> new DiskList.DiskTable()
-                .getRowByColumnValue(Column.NAME, name).getElementByColumn("Дата создания")
+                .getRowByColumnValue(Column.NAME, name).getElementByColumn(Column.CREATED_DATE)
                 .shouldNot(Condition.exactText(""), Duration.ofSeconds(90)));
         return this;
     }

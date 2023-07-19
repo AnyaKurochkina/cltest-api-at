@@ -1,6 +1,8 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
+import core.helper.StringUtils;
+import core.helper.TableChecker;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -19,15 +21,15 @@ import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
-import ui.t1.pages.cloudEngine.compute.Vm;
-import ui.t1.pages.cloudEngine.compute.VmCreate;
-import ui.t1.pages.cloudEngine.compute.VmList;
+import ui.t1.pages.cloudEngine.Column;
+import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.switchTo;
 import static core.helper.StringUtils.$x;
+import static core.utils.AssertUtils.assertHeaders;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @BlockTests
@@ -51,10 +53,68 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())
+                .setBootSize(4)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).checkCreate();
+        new VmList().selectCompute(vm.getName()).checkCreate(true);
+    }
+
+    @Test
+    @TmsLink("982508")
+    @DisplayName("Cloud Compute. Виртуальные машины (Таблица)")
+    void vmList() {
+        new IndexPage().goToVirtualMachine();
+        new TableChecker()
+                .add("", String::isEmpty)
+                .add(Column.NAME, e -> e.equals(vm.getName()))
+                .add("Статус", e -> e.equals("Включено"))
+                .add("Платформа",  e -> e.length() > 5)
+                .add("CPU", e -> StringUtils.isMatch("^\\d+$", e))
+                .add("RAM", e -> StringUtils.isMatch("^\\d+ ГБ$", e))
+                .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
+                .add("Внутренний IP", e -> StringUtils.isMatch( "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
+                .add("Внешние IP-адреса", e -> e.equals("—"))
+                .add("Дата создания", e -> e.length() > 5)
+                .add("", String::isEmpty)
+                .check(new VmList.VmTable().getRowByColumnValue(Column.NAME, vm.getName()));
+    }
+
+    @Test
+    @TmsLink("1248951")
+    @DisplayName("Cloud Compute. Диски (Таблица)")
+    void diskList() {
+        new IndexPage().goToDisks();
+        new TableChecker()
+                .add("", String::isEmpty)
+                .add(Column.NAME, e -> e.contains(vm.getName()))
+                .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
+                .add("Размер, ГБ",  e -> e.equals(vm.getBootSize().toString()))
+                .add("Виртуальная машина", e -> e.equals(vm.getName()))
+                .add("Дата создания", e -> e.length() > 5)
+                .add("Тип", e -> e.length() > 1)
+                .add("Системный", e -> e.equals("Да"))
+                .add("", String::isEmpty)
+                .check(new DiskList.DiskTable().getRowByColumnValueContains(Column.NAME, vm.getName()));
+    }
+
+    @Test
+    @TmsLink("1249429")
+    @DisplayName("Cloud Compute. Сетевые интерфейсы. (Таблица)")
+    void networkInterfacesList() {
+        new IndexPage().goToNetworkInterfaces();
+        new TableChecker()
+                .add("", String::isEmpty)
+                .add("IP адрес", e -> StringUtils.isMatch( "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
+                .add("MAC адрес", e -> StringUtils.isMatch( "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
+                .add("Сеть", e -> e.length() > 4)
+                .add("Подсеть", e -> e.length() > 4)
+                .add("Регион", e -> e.equals(vm.getAvailabilityZone()))
+                .add("Группы безопасности", e -> e.equals(vm.getSecurityGroups().get(0)))
+                .add(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, e -> e.equals(vm.getName()))
+                .add("", String::isEmpty)
+                .check(new NetworkInterfaceList.NetworkInterfaceTable().getRowByColumnValueContains(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, vm.getName()));
+        assertHeaders(new NetworkInterfaceList.NetworkInterfaceTable(), "", "IP адрес", "MAC адрес", "Сеть", "Подсеть", "Регион", "Группы безопасности", "Виртуальная машина", "");
     }
 
     @Test

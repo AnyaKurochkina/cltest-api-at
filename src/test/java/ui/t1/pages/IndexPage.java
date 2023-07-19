@@ -163,8 +163,6 @@ public class IndexPage {
         Button.byText("Отключить").click();
         Waiting.findWithRefresh(() -> !btnAction.isDisplayed(), Duration.ofMinutes(1));
         btnAction.shouldNotBe(Condition.exist);
-        Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
-        Button.byText("Отключить").click();
     }
 
     @Step("Переход в Центр уведомлений")

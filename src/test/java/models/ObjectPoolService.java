@@ -239,7 +239,7 @@ public class ObjectPoolService {
     }
 
 
-    private static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+    public static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
         threadPool.shutdown();
         try {
             if (!threadPool.awaitTermination(1, TimeUnit.HOURS)) {

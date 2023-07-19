@@ -17,6 +17,7 @@ import static core.utils.AssertUtils.assertHeaders;
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Сети")
 @Epic("Cloud Compute")
 public class NetworkTest extends AbstractComputeTest {
