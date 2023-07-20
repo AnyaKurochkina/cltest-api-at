@@ -49,8 +49,6 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
         orderPage.getVersionJava().set(product.getVersionJava());
         if (product.isDev() || product.isTest() )
             orderPage.getSegmentSelect().set(product.getSegment());
-        if (product.isProd())
-            orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getVersionJava().set(product.getVersionJava());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
