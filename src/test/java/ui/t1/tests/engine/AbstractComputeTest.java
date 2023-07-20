@@ -30,7 +30,7 @@ import static api.routes.VpcApi.deleteSecurityGroupApiV1ProjectsProjectNameSecur
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
-@Tags({@Tag("t1_ui_cloud_compute")})
+@Tags({@Tag("t1_ui_cloud_compute"), @Tag("t1")})
 public abstract class AbstractComputeTest extends Tests {
     protected static Project project = Project.builder().isForOrders(true).build().createObject();
     protected String availabilityZone = "ru-central1-a";

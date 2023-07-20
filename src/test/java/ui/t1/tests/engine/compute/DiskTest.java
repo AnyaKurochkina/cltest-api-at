@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.NotFoundException;
 import steps.stateService.StateServiceSteps;
@@ -28,6 +29,7 @@ import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 public class DiskTest extends AbstractComputeTest {
 
     @Test
+    @Tag("smoke")
     @TmsLinks({@TmsLink("1249416"), @TmsLink("1249418"), @TmsLink("1249425")})
     @DisplayName("Cloud Compute. Диски. Создание/Удаление")
     void createDisk() {

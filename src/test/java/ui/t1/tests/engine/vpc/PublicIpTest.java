@@ -44,6 +44,7 @@ public class PublicIpTest extends AbstractComputeTest {
 
     @Test
     @Order(1)
+    @Tag("smoke")
     @Tag("health_check")
     @TmsLinks({@TmsLink("1249437"), @TmsLink("1249598")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")

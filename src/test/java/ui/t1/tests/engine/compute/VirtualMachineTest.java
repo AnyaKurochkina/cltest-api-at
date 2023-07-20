@@ -36,6 +36,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
 
     @Test
     @Tag("health_check")
+    @Tag("smoke")
     @TmsLink("1248261")
     @DisplayName("Cloud Compute. Виртуальные машины. Создание")
     void vmCreatePage() {

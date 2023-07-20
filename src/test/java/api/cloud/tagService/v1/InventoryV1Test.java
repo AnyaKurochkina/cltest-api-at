@@ -1,6 +1,6 @@
 package api.cloud.tagService.v1;
 
-import api.cloud.tagService.AbstractInventoryTest;
+import api.cloud.tagService.AbstractTagServiceTest;
 import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -21,7 +21,8 @@ import static models.cloud.tagService.TagServiceSteps.inventoryTagsV1;
 
 @Epic("Сервис тегов")
 @Feature("Inventory тесты")
-public class InventoryV1Test extends AbstractInventoryTest {
+@org.junit.jupiter.api.Tag("smoke")
+public class InventoryV1Test extends AbstractTagServiceTest {
 
     @Test
     @TmsLink("1665584")
