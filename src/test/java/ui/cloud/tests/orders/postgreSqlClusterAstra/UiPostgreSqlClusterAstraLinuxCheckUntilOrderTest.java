@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
 import api.Tests;
+import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -47,11 +48,15 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.checkOrderDisabled();
         //Проверка Детали заказа
-        orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        orderPage.getGroupSelect().set(accessGroup);
+        if (product.isDev() || product.isTest() )
+            orderPage.getGroupSelect().set(accessGroup);
+        if (product.isDev())
+            orderPage.getRoleSelect().set("user");
+        orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
         new PostgreSqlClusterAstraOrderPage().checkOrderDetails();
     }
 }

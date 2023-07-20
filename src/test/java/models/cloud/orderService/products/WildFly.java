@@ -27,6 +27,7 @@ import static core.utils.AssertUtils.assertContains;
 public class WildFly extends IProduct {
     @ToString.Include
     String osVersion;
+    String versionJava;
     @ToString.Include
     String wildFlyVersion;
     Flavor flavor;
@@ -50,6 +51,8 @@ public class WildFly extends IProduct {
             osVersion = getRandomOsVersion();
         if (wildFlyVersion == null)
             wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+        if (versionJava == null)
+            versionJava = "11.0.12";
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)

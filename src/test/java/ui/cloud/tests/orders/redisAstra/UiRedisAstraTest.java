@@ -132,7 +132,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.deleteGroup("superuser");
+        redisPage.deleteGroup("user");
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         redisPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
@@ -157,6 +157,16 @@ public class UiRedisAstraTest extends UiProductTest {
     void monitoringOs() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         redisPage.checkMonitoringOs();
+    }
+    @Test
+    @Order(28)
+    @TmsLink("1296747")
+    @DisplayName("UI Windows. Изменить параметр notify-keyspace-events")
+    void changeParamNotify() {
+        if (product.isProd()) {
+            RedisAstraPage redisPage = new RedisAstraPage(product);
+            redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.changeParamNotify("KEA"));
+        }
     }
 
     @Test

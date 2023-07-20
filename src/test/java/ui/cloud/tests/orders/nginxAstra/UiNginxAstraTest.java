@@ -114,9 +114,9 @@ public class UiNginxAstraTest extends UiProductTest {
         NginxAstraPage nginxAstraPage = new NginxAstraPage(product);
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.updateGroupInNode("superuser", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.deleteGroupInNode("superuser", accessGroupOne.getPrefixName()));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.addGroupInNode("user", Collections.singletonList(accessGroupOne.getPrefixName())));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.updateGroupInNode("user", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.deleteGroupInNode("nginx_admin", accessGroupOne.getPrefixName()));
     }
 
 

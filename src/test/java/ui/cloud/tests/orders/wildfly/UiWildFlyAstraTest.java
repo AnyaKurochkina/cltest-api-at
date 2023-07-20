@@ -12,6 +12,7 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
+import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -30,8 +31,9 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("WildFlyAstra")
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
-
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/web/orders/534ae842-443d-4351-badb-c47d97e8203e/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    String versionWildFly = "28.0.1.Final";
+    String versionJava = "17.0.6";
+    WildFly product;// = WildFly.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ce9e3c27-ca51-491d-a355-5e4eb8870a51/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -52,10 +54,14 @@ public class UiWildFlyAstraTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getVersionWildfly().set(product.getWildFlyVersion());
+            orderPage.getVersionJava().set(product.getVersionJava());
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getVersionJava().set(product.getVersionJava());
             orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getRoleSelect().set("user");
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroupWildFly().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -178,11 +184,11 @@ public class UiWildFlyAstraTest extends UiProductTest {
 
     @Test
     @Order(12)
-    @TmsLink("910157")
-    @DisplayName("UI WildFlyAstra. Проверить конфигурацию")
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
     void vmActCheckConfig() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::checkConfiguration);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);
     }
 
 
@@ -205,6 +211,14 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::openAdminConsole);
     }
 
+    @Test
+    @Order(16)
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Заменить Java Wildfly")
+    void changeJavaWildFly() {
+        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly,versionJava));
+    }
 
     @Test
     @Order(100)
