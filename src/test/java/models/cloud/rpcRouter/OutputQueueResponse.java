@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import models.AbstractEntity;
 
+import java.util.Date;
+
 import static steps.rpcRouter.OutputQueueSteps.deleteOutPutQueue;
 
 
 @Builder
-@Getter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(exclude = {"update_dt", "create_dt"}, callSuper = false)
@@ -17,8 +19,8 @@ public class OutputQueueResponse extends AbstractEntity {
     private Integer exchange;
     @JsonIgnore
     private Integer exchange_id;
-    private String create_dt;
-    private String update_dt;
+    private Date create_dt;
+    private Date update_dt;
     private String name;
     private String title;
     private String description;

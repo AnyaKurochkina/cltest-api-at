@@ -3,5 +3,6 @@
   "name": "jinja_api_test",
   "description": "description",
   "jinja2_template": "template",
-  "jinja2_data": {}
+  "jinja2_data": {},
+  "version": "1.0.0"
 }

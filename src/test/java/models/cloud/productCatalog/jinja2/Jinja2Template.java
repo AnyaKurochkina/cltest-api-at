@@ -11,6 +11,8 @@ import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.util.List;
+
 import static steps.productCatalog.Jinja2Steps.*;
 
 @Log4j2
@@ -31,6 +33,12 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     private String description;
     private String id;
     private String title;
+    private String version_changed_by_user;
+    private String version;
+    private String current_version;
+    private String last_version;
+    private String version_create_dt;
+    private List<String> version_list;
     @JsonProperty("create_dt")
     private String createDt;
     @JsonProperty("update_dt")
@@ -49,6 +57,12 @@ public class Jinja2Template extends Entity implements IProductCatalog {
                 .set("$.description", description)
                 .set("$.jinja2_template", jinja2Template)
                 .set("$.jinja2_data", jinja2Data)
+                .set("$.version_changed_by_user", version_changed_by_user)
+                .setIfNullRemove("$.version", version)
+                .set("$.current_version", current_version)
+                .set("$.last_version", last_version)
+                .set("$.version_create_dt", version_create_dt)
+                .set("$.version_list", version_list)
                 .build();
     }
 
