@@ -1,6 +1,7 @@
 package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
 import api.Tests;
+import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -54,6 +55,9 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         if (product.isDev() || product.isTest() )
             orderPage.getGroupSelect().set(accessGroup);
+        if (product.isDev())
+            orderPage.getRoleSelect().set("user");
+        orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
         new PostgreSqlClusterAstraOrderPage().checkOrderDetails();
     }
 }
