@@ -123,6 +123,24 @@ public class VisualTemplateSteps extends Steps {
                 .get(0);
     }
 
+    @Step("Копирование шаблона визуализации по Id")
+    public static ItemVisualTemplate copyVisualTemplateById(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(visualTemplateUrl + objectId + "/copy/")
+                .assertStatus(200)
+                .extractAs(ItemVisualTemplate.class);
+    }
+
+    @Step("Копирование шаблона визуализации по name {name}")
+    public static ItemVisualTemplate copyVisualTemplateByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(visualTemplateUrl2 + name + "/copy/")
+                .assertStatus(200)
+                .extractAs(ItemVisualTemplate.class);
+    }
+
     @Step("Создание шаблона визуализаций")
     public static Response createVisualTemplate(JSONObject body) {
         return new Http(ProductCatalogURL)

@@ -11,6 +11,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.*;
 
@@ -70,5 +72,21 @@ public class GraphByNameTest extends Tests {
         assertTrue(isGraphExists(cloneName), "Граф не существует");
         deleteGraphByName(cloneName);
         assertFalse(isGraphExists(cloneName), "Граф существует");
+    }
+
+    @DisplayName("Проверка tag_list при копировании графа v2")
+    @TmsLink("")
+    @Test
+    public void copyGraphAndCheckTagListV2Test() {
+        String graphName = "clone_graph_v2_test_api";
+        Graph graph = Graph.builder()
+                .name(graphName)
+                .title(graphName)
+                .tagList(Arrays.asList("api_test", "test"))
+                .build()
+                .createObject();
+        Graph cloneGraph = copyGraphByName(graphName);
+        deleteGraphById(cloneGraph.getGraphId());
+        assertEquals(graph.getTagList(), cloneGraph.getTagList());
     }
 }

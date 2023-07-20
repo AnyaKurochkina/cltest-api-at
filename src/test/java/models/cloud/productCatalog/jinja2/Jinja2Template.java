@@ -36,6 +36,7 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     private String version_changed_by_user;
     private String version;
     private String current_version;
+    private String object_info;
     private String last_version;
     private String version_create_dt;
     private List<String> version_list;
@@ -54,6 +55,7 @@ public class Jinja2Template extends Entity implements IProductCatalog {
         return JsonHelper.getJsonTemplate("productCatalog/jinja2/createJinja.json")
                 .set("$.name", name)
                 .set("$.title", title)
+                .set("$.object_info", object_info)
                 .set("$.description", description)
                 .set("$.jinja2_template", jinja2Template)
                 .set("$.jinja2_data", jinja2Data)

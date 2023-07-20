@@ -150,6 +150,22 @@ public class GraphTest extends Tests {
         assertFalse(isGraphExists(cloneName));
     }
 
+    @DisplayName("Проверка tag_list при копировании")
+    @TmsLink("")
+    @Test
+    public void copyGraphAndCheckTagListTest() {
+        String graphName = "clone_graph_test_api";
+        Graph graph = Graph.builder()
+                .name(graphName)
+                .title(graphName)
+                .tagList(Arrays.asList("api_test", "test"))
+                .build()
+                .createObject();
+        Graph cloneGraph = copyGraphById(graph.getGraphId());
+        deleteGraphById(cloneGraph.getGraphId());
+        assertEquals(graph.getTagList(), cloneGraph.getTagList());
+    }
+
     @DisplayName("Частичное обновление графа по Id")
     @TmsLink("642650")
     @Test

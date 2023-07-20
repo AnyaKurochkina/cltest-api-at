@@ -2,6 +2,7 @@
   "title": "jinja_api_test",
   "name": "jinja_api_test",
   "description": "description",
+  "object_info": "",
   "jinja2_template": "template",
   "jinja2_data": {},
   "version": "1.0.0"

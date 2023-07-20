@@ -70,6 +70,7 @@ public class Action extends Entity {
     @JsonProperty("graph_id")
     private String graphId;
     private String version;
+    private String object_info;
     @JsonProperty("last_version")
     private String lastVersion;
     @JsonProperty("data_config_key")
@@ -147,6 +148,7 @@ public class Action extends Entity {
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.name", name)
+                .set("$.object_info", object_info)
                 .set("$.title", title)
                 .set("$.type", type)
                 .set("$.current_version", currentVersion)
