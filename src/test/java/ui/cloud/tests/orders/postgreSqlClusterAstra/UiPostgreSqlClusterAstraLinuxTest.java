@@ -63,8 +63,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
                     .expandProductsList()
                     .selectProduct(product.getProductName());
             PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
-            if (product.isDev() || product.isTest() )
-                orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
