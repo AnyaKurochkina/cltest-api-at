@@ -58,6 +58,7 @@ public class Product extends Entity {
     private Integer number;
     @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;
+    private String object_info;
     private String name;
     @JsonProperty("restricted_paths")
     private List<Object> restrictedPaths;
@@ -129,6 +130,7 @@ public class Product extends Entity {
                 .set("$.title", title)
                 .set("$.graph_id", graphId)
                 .set("$.graph_version", graphVersion)
+                .set("$.object_info", object_info)
                 .set("$.version", version)
                 .set("$.category", category)
                 .set("$.info", info)

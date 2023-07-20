@@ -169,7 +169,7 @@ public class VisualTemplateTest extends Tests {
     @DisplayName("Копирование шаблона визуализации по Id")
     @TmsLink("682886")
     @Test
-    public void copyVisualTemplateById() {
+    public void copyVisualTemplateByIdTest() {
         String name = "copy_item_visual_template_test_api";
         ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
@@ -181,13 +181,33 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         String cloneName = visualTemplates.getName() + "-clone";
-        steps.copyById(visualTemplates.getId());
+        copyVisualTemplateById(visualTemplates.getId());
         String cloneId = getVisualTemplateByName(cloneName).getId();
         boolean isActive = steps.getJsonPath(cloneId).get("is_active");
         assertFalse(isActive);
         deleteVisualTemplateByName(cloneName);
         Assertions.assertFalse(isVisualTemplateExists(cloneName));
         steps.partialUpdateObject(visualTemplates.getId(), new JSONObject().put("is_active", false));
+    }
+
+    @DisplayName("Проверка tag_list при копировании шаблона визуализации")
+    @TmsLink("")
+    @Test
+    public void copyVisualTemplateAndCheckTagListTest() {
+        String visualTemplateName = "clone_visual_template_and_check_tag_list_test_api";
+        ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
+                .name(visualTemplateName)
+                .eventProvider(Collections.singletonList("docker"))
+                .eventType(Collections.singletonList("app"))
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .isActive(false)
+                .tagList(Arrays.asList("test", "api_test"))
+                .build()
+                .createObject();
+        ItemVisualTemplate cloneTemplate = copyVisualTemplateById(visualTemplates.getId());
+        deleteVisualTemplateById(cloneTemplate.getId());
+        assertEquals(visualTemplates.getTagList(), cloneTemplate.getTagList());
     }
 
     @DisplayName("Экспорт шаблона визуализации по Id")

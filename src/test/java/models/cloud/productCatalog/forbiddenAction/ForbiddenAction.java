@@ -40,6 +40,7 @@ public class ForbiddenAction extends Entity {
     private Object contextRestrictions;
     @JsonProperty("update_dt")
     private String updateDt;
+    private String object_info;
     private String name;
     @JsonProperty("create_dt")
     private String createDt;
@@ -72,6 +73,7 @@ public class ForbiddenAction extends Entity {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.name", name)
                 .set("$.title", title)
+                .set("$.object_info", object_info)
                 .set("$.description", description)
                 .set("$.action", actionId)
                 .set("$.item_restriction", itemRestriction)

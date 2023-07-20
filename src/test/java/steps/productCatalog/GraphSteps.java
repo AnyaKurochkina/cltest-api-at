@@ -299,11 +299,12 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Копирование графа по Id")
-    public static void copyGraphById(String objectId) {
-        new Http(ProductCatalogURL)
+    public static Graph copyGraphById(String objectId) {
+        return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(graphUrl + objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(200)
+                .extractAs(Graph.class);
     }
 
     @Step("Копирование графа по имени {name}")

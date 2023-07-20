@@ -42,6 +42,7 @@ public class AllowedAction extends Entity {
     private String createDt;
     @JsonProperty("action")
     private String actionId;
+    private String object_info;
     @JsonProperty("id")
     private Integer id;
 
@@ -69,6 +70,7 @@ public class AllowedAction extends Entity {
                 .set("$.item_restriction", itemRestriction)
                 .set("$.event_type_provider", eventTypeProvider)
                 .set("$.context_restrictions", contextRestriction)
+                .set("$.object_info", object_info)
                 .build();
     }
 

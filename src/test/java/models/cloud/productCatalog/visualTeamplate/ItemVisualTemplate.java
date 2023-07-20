@@ -44,6 +44,7 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
     private LinkedHashMap<String, Object> defaultItem;
     private String description;
     private String id;
+    private String object_info;
     private String title;
     @JsonProperty("create_dt")
     private String createDt;
@@ -73,6 +74,7 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
                 .set("$.default_item", defaultItem)
                 .set("$.default_order", defaultOrder)
                 .set("$.tag_list", tagList)
+                .set("$.object_info", object_info)
                 .build();
     }
 
