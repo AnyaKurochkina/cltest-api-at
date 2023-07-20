@@ -66,7 +66,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             if (product.isDev() || product.isTest() )
                 orderPage.getSegmentSelect().set(product.getSegment());
             if (product.isProd())
-                orderPage.getSegmentSelect().set("PROD-SRV-APP");
+                orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
