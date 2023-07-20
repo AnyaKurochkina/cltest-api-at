@@ -1,0 +1,28 @@
+package core.helper;
+
+import core.utils.AssertUtils;
+import org.junit.jupiter.api.Assertions;
+import ui.elements.Table;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
+
+public class TableChecker {
+    private final List<String> headers = new ArrayList<>();
+    private final List<Predicate<String>> conditions = new ArrayList<>();
+
+    public TableChecker add(String column, Predicate<String> rule){
+        this.headers.add(column);
+        this.conditions.add(rule);
+        return this;
+    }
+
+    public void check(Table.Row row) {
+        AssertUtils.assertHeaders(row.getTable(), headers);
+        for (int i = 0; i < headers.size(); i++) {
+            String value = row.getValueByColumn(headers.get(i));
+            Assertions.assertTrue(conditions.get(i).test(value), String.format("Значение '%s' в колонке '%s' не соответствует условию", value, headers.get(i)));
+        }
+    }
+}

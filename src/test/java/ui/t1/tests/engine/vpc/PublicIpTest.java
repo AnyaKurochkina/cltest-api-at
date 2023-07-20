@@ -25,9 +25,9 @@ import java.util.Objects;
 import static core.utils.AssertUtils.assertHeaders;
 
 @BlockTests
-@ExtendWith(BeforeAllExtension.class)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Публичные IP")
 @Epic("Cloud Compute")
 public class PublicIpTest extends AbstractComputeTest {
@@ -44,13 +44,13 @@ public class PublicIpTest extends AbstractComputeTest {
 
     @Test
     @Order(1)
+    @Tag("smoke")
     @Tag("health_check")
     @TmsLinks({@TmsLink("1249437"), @TmsLink("1249598")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")
     void addIp() {
         ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
-        createdIpList.add(ip);
-        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate();
+        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate(true);
         String orderId = ipPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
@@ -72,7 +72,7 @@ public class PublicIpTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
 
         PublicIp ipPage =  new IndexPage().goToPublicIps().selectIp(ip);
@@ -97,8 +97,6 @@ public class PublicIpTest extends AbstractComputeTest {
                 .filter(e -> e.getFloatingIpAddress().equals(ip))
                 .filter(e -> Objects.isNull(e.getParent()))
                 .count(), "Item ip не соответствует условиям или не найден");
-
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
     }
 
     @Test
@@ -106,7 +104,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @Order(100)
     @DisplayName("Cloud VPC. Публичные IP-адреса. Освободить")
     void deleteIp() {
-        PublicIp ipPage = new IndexPage().goToPublicIps().selectIp(ip);
+        PublicIp ipPage = new IndexPage().goToPublicIps().selectIp(ip).markForDeletion(new PublicIpEntity());
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
     }

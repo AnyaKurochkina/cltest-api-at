@@ -1,31 +1,26 @@
 package ui.extesions;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.WebDriverRunner;
 import core.helper.AttachUtils;
-import core.helper.http.Http;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
-import static core.helper.Configure.getAppProp;
 import static org.junit.TestsExecutionListener.initDriver;
 
 public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, BeforeAllCallback, InvocationInterceptor {
     @Override
     public void beforeAll(ExtensionContext extensionContext) {
-//        SelenideLogger.addListener("AllureSelenide",
-//                new AllureSelenide().screenshots(false).savePageSource(false));
         LoggingPreferences logs = new LoggingPreferences();
         logs.enable(LogType.BROWSER, Level.ALL);
         Configuration.browserCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
+        initDriver();
     }
 
     @Override

@@ -1,6 +1,6 @@
 package api.cloud.tagService.v2;
 
-import api.cloud.tagService.AbstractInventoryTest;
+import api.cloud.tagService.AbstractTagServiceTest;
 import core.enums.Role;
 import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
@@ -8,8 +8,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.tagService.*;
-import models.cloud.tagService.v1.FilterResultV1;
-import models.cloud.tagService.v1.InventoryTagsV1;
 import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.FilterResultV2;
 import models.cloud.tagService.v2.InventoryTagsV2;
@@ -28,7 +26,7 @@ import static models.cloud.tagService.TagServiceSteps.*;
 
 @Epic("Сервис тегов")
 @Feature("Фильтр Inventory V2")
-public class InventoryFilterV2Test extends AbstractInventoryTest {
+public class InventoryFilterV2Test extends AbstractTagServiceTest {
 
     @Test
     @TmsLink("1623645")

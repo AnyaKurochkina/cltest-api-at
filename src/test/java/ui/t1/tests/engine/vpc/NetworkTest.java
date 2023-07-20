@@ -8,6 +8,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.vpc.Network;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.tests.engine.AbstractComputeTest;
@@ -17,6 +18,7 @@ import static core.utils.AssertUtils.assertHeaders;
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Сети")
 @Epic("Cloud Compute")
 public class NetworkTest extends AbstractComputeTest {
@@ -36,7 +38,7 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети")
     void networkList() {
         new IndexPage().goToNetworks();
-        assertHeaders(new NetworkList.NetworksTable(), "", "Имя", "Описание", "Статус", "Дата создания", "");
+        assertHeaders(new NetworkList.NetworksTable(), "", "Имя", "Описание", "Статус", Column.CREATED_DATE, "");
         new NetworkList().selectNetwork(name);
         assertHeaders(new Network.SubnetListInfo(), "Наименование", "IPv4 CIDR", "Gateway", "Регион", "Статус", "Описание", "");
     }

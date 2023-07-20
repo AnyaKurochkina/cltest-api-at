@@ -10,4 +10,5 @@ public class Column {
     public static final String IP = "IP";
     public static final String IP_ADDRESS = "IP-адрес";
     public static final String DESC = "Описание";
+    public static final String CREATED_DATE = "Дата создания";
 }

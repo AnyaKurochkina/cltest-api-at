@@ -26,6 +26,10 @@ public final class StringUtils {
         return null;
     }
 
+    public static boolean isMatch(@Language("regexp") String regex, String text) {
+        return Pattern.compile(regex).matcher(text).find();
+    }
+
     public static String format(String str, Object... args) {
         for (Object arg : args)
             str = str.replaceFirst("\\{}", Objects.requireNonNull(arg).toString());
