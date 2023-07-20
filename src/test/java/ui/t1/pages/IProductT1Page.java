@@ -5,11 +5,12 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
+import models.AbstractEntity;
 import org.junit.jupiter.api.Assertions;
 import steps.stateService.StateServiceSteps;
-import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.IProductPage;
 import ui.cloud.pages.orders.OrderStatus;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
@@ -42,21 +43,27 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @SuppressWarnings("unchecked")
     //false для случаев, когда продукт использует уже созданную сущность и стоимость в итоге будет складываться
     //(пока без проверки)
-    public C checkCreate(boolean checkCost) {
-        if (checkCost)
-            if (Objects.isNull(OrderUtils.getPreBillingPrice()))
+    public C checkCreate(boolean checkCost){
+        if(checkCost)
+            if(Objects.isNull(OrderUtils.getPreBillingPrice()))
                 Waiting.sleep(30000);
         checkLastAction("Развертывание");
         btnGeneralInfo.click();
-        if (checkCost)
-            if (Objects.nonNull(OrderUtils.getPreBillingPrice()))
+        if(checkCost)
+            if(Objects.nonNull(OrderUtils.getPreBillingPrice()))
                 Assertions.assertEquals(OrderUtils.getPreBillingPrice(), getOrderCost(), 0.01, "Стоимость заказа отличается от стоимости предбиллинга");
         OrderUtils.setPreBillingPrice(null);
         return (C) this;
     }
 
-    public C checkCreate() {
+    public C checkCreate(){
         return checkCreate(true);
+    }
+
+    @SuppressWarnings("unchecked")
+    public C markForDeletion(AbstractEntity entity) {
+        AbstractEntity.addEntity(entity);
+        return (C) this;
     }
 
     @Override

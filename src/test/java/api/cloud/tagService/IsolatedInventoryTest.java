@@ -16,7 +16,7 @@ import org.junit.jupiter.api.parallel.Isolated;
 @Epic("Сервис тегов")
 @Feature("Изолированные тесты")
 @Execution(ExecutionMode.SAME_THREAD)
-public class IsolatedInventoryTest extends AbstractInventoryTest {
+public class IsolatedInventoryTest extends AbstractTagServiceTest {
 
     @Test
     @TmsLink("1623789")

@@ -1,6 +1,6 @@
 package api.cloud.tagService.v2;
 
-import api.cloud.tagService.AbstractInventoryTest;
+import api.cloud.tagService.AbstractTagServiceTest;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -19,7 +19,7 @@ import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 
 @Epic("Сервис тегов")
 @Feature("Фильтр Inventory V2")
-public class InventoryFilterByLookupV2Test extends AbstractInventoryTest {
+public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
 
     @Test
     @TmsLink("1623699")

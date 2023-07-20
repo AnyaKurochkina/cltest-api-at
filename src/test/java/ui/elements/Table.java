@@ -193,6 +193,10 @@ public class Table implements TypifiedElement {
             return getRowByIndex(index);
         }
 
+        public Table getTable(){
+            return Table.this;
+        }
+
         public String getValueByColumn(String column) {
             return getValueByColumnInRow(index, column).hover().getText();
         }

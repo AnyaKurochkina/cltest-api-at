@@ -1,7 +1,6 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
-import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -20,6 +19,7 @@ import java.time.Duration;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Epic("Cloud Compute")
 @Feature("Cloud Engine")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EngineTest extends AbstractComputeTest {
 
     public EngineTest() {
@@ -27,6 +27,9 @@ public class EngineTest extends AbstractComputeTest {
         String parentFolder = AuthorizerSteps.getParentProject(projectOrders.getId());
         project = Project.builder().projectName("Проект для EngineTest").folderName(parentFolder).build().createObjectPrivateAccess();
     }
+
+    @BeforeAll
+    public static void beforeAll() {}
 
     private void checkElementsEngine(Condition condition){
         TypifiedElement.refresh();
@@ -58,10 +61,5 @@ public class EngineTest extends AbstractComputeTest {
         checkElementsEngine(Condition.not(Condition.visible));
         TypifiedElement.refresh();
         new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible, Duration.ofMinutes(2));
-    }
-
-    @AfterAll
-    @Override
-    public void afterAll() {
     }
 }

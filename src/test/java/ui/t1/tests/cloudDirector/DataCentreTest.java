@@ -40,7 +40,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .addDataCentre(dataCentreName)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
-                .checkCreate()
+                .checkCreate(true)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(dataCentreName));
 
@@ -50,7 +50,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .addDataCentre(secondDataCentreName)
                 .waitChangeStatus()
                 .selectDataCentre(secondDataCentreName)
-                .checkCreate()
+                .checkCreate(true)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(secondDataCentreName));
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
