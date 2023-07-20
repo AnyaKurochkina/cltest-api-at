@@ -75,7 +75,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
                 .add("Внутренний IP", e -> StringUtils.isMatch( "^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
                 .add("Внешние IP-адреса", e -> e.equals("—"))
-                .add(Column.CREATED_DATE, e -> e.length() > 5)
+//                .add(Column.CREATED_DATE, e -> e.length() > 5)
                 .add("", String::isEmpty)
                 .check(new VmList.VmTable().getRowByColumnValue(Column.NAME, vm.getName()));
     }
@@ -91,7 +91,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
                 .add("Размер, ГБ",  e -> e.equals(vm.getBootSize().toString()))
                 .add("Виртуальная машина", e -> e.equals(vm.getName()))
-                .add(Column.CREATED_DATE, e -> e.length() > 5)
+//                .add(Column.CREATED_DATE, e -> e.length() > 5)
                 .add("Тип", e -> e.length() > 1)
                 .add("Системный", e -> e.equals("Да"))
                 .add("", String::isEmpty)

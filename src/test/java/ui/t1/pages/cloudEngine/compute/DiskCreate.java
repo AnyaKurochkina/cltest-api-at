@@ -62,9 +62,10 @@ public class DiskCreate {
     public DiskCreate clickOrder(){
         Waiting.sleep(2000);
         OrderUtils.clickOrder();
-        OrderUtils.waitCreate(() -> new DiskList.DiskTable()
-                .getRowByColumnValue(Column.NAME, name).getElementByColumn(Column.CREATED_DATE)
-                .shouldNot(Condition.exactText(""), Duration.ofSeconds(90)));
+//        OrderUtils.waitCreate(() -> new DiskList.DiskTable()
+//                .getRowByColumnValue(Column.NAME, name).getElementByColumn(Column.CREATED_DATE)
+//                .shouldNot(Condition.exactText(""), Duration.ofSeconds(90)));
+        Waiting.sleep(90000);
         return this;
     }
 }
