@@ -11,6 +11,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -94,13 +95,15 @@ public class RabbitMQClusterTest extends Tests {
         }
     }
 
-    @TmsLink("377646")
+    @TmsLinks({@TmsLink("377646"), @TmsLink("SOUL-6730")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    @ParameterizedTest(name = "Обновить сертификаты. Проверка создание бэкапа сертификатов {0}")
     void updateCerts(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbitMQCluster = product.createObjectExclusiveAccess()) {
+            Assertions.assertEquals("", rabbitMQCluster.executeSsh("ls /app/tls/backup/"));
             rabbitMQCluster.updateCerts();
+            assertContains(rabbitMQCluster.executeSsh("ls /app/tls/backup/"), ".tar.gz");
         }
     }
 
@@ -153,6 +156,16 @@ public class RabbitMQClusterTest extends Tests {
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_vhosts"), "sshVhostAccess");
             rabbit.addVhostAccess("sshUser", Collections.singletonList("READ"), "sshVhostAccess");
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_permissions"), "sshUser");
+        }
+    }
+
+    @TmsLink("SOUL-6729")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Проверка дублирования промежуточных сертификатов RabbitMQ {0}")
+    void checkDuplicateCerts(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            String[] certs = rabbit.executeSsh("cat /app/tls/certs/root.pem").split("-----END CERTIFICATE-----\n");
+            Assertions.assertEquals(certs.length, Arrays.stream(certs).distinct().count());
         }
     }
 

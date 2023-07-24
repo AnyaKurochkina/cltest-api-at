@@ -10,7 +10,7 @@ PostgreSQL:
   - options:
       - { platform: "OpenStack", env: "LT" }
 
-RabbitMQCluster:
+RabbitMQClusterAstra:
   - options:
       - { platform: "OpenStack", env: "IFT" }
 
@@ -33,3 +33,61 @@ ApacheKafkaCluster:
 PostgresSQLCluster:
   - options:
       - { platform: "OpenStack", env: "LT" }
+
+Artemis:
+  - options:
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
+
+LoadBalancer:
+  - options:
+
+ClickHouseCluster:
+  - options:
+
+ApacheAirflow:
+  - options:
+
+GenericDatabase:
+  - options:
+
+OpenShiftProject:
+  - options:
+
+Grafana:
+  - options:
+
+TarantoolDataGrid:
+  - options:
+
+KafkaService:
+  - options:
+
+GitLab:
+  - options:
+
+Ubuntu:
+  - options:
+
+Podman:
+  - options:
+
+ScyllaDbCluster:
+  - options:
+
+Vault:
+  - options:
+
+ElasticsearchOpensearchCluster:
+  - options:
+
+GenericMonitoring:
+  - options:
+
+Moon:
+  - options:
+
+ClickHouse:
+  - options:
+
+S3Ceph:
+  - options:

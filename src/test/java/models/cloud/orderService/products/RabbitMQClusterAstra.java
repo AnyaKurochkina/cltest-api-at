@@ -106,7 +106,7 @@ public class RabbitMQClusterAstra extends IProduct {
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
-        super.updateCerts("rabbitmq_update_certs");
+        super.updateCerts("rabbitmq_update_certs_release");
 //        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
 //        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
