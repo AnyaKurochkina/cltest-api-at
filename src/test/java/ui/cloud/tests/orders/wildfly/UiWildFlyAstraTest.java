@@ -7,14 +7,11 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.authorizer.Project;
-import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.products.WildFly;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.AccessGroupSteps;
 import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
@@ -34,8 +31,9 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("WildFlyAstra")
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
-
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/web/orders/534ae842-443d-4351-badb-c47d97e8203e/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    String versionWildFly = "28.0.1.Final";
+    String versionJava = "17.0.6";
+    WildFly product;// = WildFly.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ce9e3c27-ca51-491d-a355-5e4eb8870a51/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -51,15 +49,19 @@ public class UiWildFlyAstraTest extends UiProductTest {
     void orderWildFlyAstra() {
         double prebillingCost;
         try {
-            String accessGroup =product.getAccessGroup();
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getVersionWildfly().set(product.getWildFlyVersion());
+            orderPage.getVersionJava().set(product.getVersionJava());
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getVersionJava().set(product.getVersionJava());
             orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getRoleSelect().set("user");
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroupWildFly().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -149,7 +151,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @Test
     @Order(9)
     @TmsLinks({@TmsLink("910818"), @TmsLink("910821")})
-    @DisplayName("UI WildFlyAstra. Добавление/Удаление группы WildFly")
+    @DisplayName("UI WildFlyAstra. Добавить/удалить группу WildFly")
     void addGroupWildFlyAstra() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
@@ -160,7 +162,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @Test
     @Order(10)
     @TmsLinks({@TmsLink("1644573"), @TmsLink("1644572"), @TmsLink("1644574")})
-    @DisplayName("UI WildFlyAstra. Удаление/Добавление/Изменение группы")
+    @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
@@ -182,11 +184,11 @@ public class UiWildFlyAstraTest extends UiProductTest {
 
     @Test
     @Order(12)
-    @TmsLink("910157")
-    @DisplayName("UI WildFlyAstra. Проверить конфигурацию")
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
     void vmActCheckConfig() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::checkConfiguration);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);
     }
 
 
@@ -209,6 +211,14 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::openAdminConsole);
     }
 
+    @Test
+    @Order(16)
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Заменить Java Wildfly")
+    void changeJavaWildFly() {
+        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly,versionJava));
+    }
 
     @Test
     @Order(100)

@@ -10,13 +10,14 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
 import ui.cloud.pages.orders.ClickHouseClusterPage;
 import ui.cloud.pages.orders.OrderUtils;
@@ -54,22 +55,25 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void orderClickHouseCluster() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             ClickHouseClusterOrderPage orderPage = new ClickHouseClusterOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getNameCluster().setValue("cluster");
-            orderPage.getNameUser().setValue("at_user");
+            if(product.isDev())
+                orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+            if(product.isDev())
+                orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroup2().set(accessGroup);
-            orderPage.getGroup3().set(accessGroup);
-            orderPage.getGroup4().set(accessGroup);
+            if(product.isDev()){
+                orderPage.getGroup3().set(accessGroup);
+                orderPage.getGroup4().set(accessGroup);}
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -103,6 +107,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
+    @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("1138093")
     @DisplayName("UI ClickHouse Cluster. Перезагрузить по питанию")

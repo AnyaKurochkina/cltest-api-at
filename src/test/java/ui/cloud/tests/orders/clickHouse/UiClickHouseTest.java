@@ -58,16 +58,20 @@ public class UiClickHouseTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getNameUser().setValue("at_user");
+            if(product.isDev())
+                orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+            if(product.isDev())
+                orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
             orderPage.getGroup().set(accessGroup);
             orderPage.getGroup2().set(accessGroup);
-            orderPage.getGroup3().set(accessGroup);
-            orderPage.getGroup4().set(accessGroup);
+            if(product.isDev()) {
+                orderPage.getGroup3().set(accessGroup);
+                orderPage.getGroup4().set(accessGroup);
+            }
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

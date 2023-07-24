@@ -1,10 +1,13 @@
-package api.cloud.rpcDjangoRouter;
+package api.cloud.rpcDjangoRouter.outputQueue;
 
 import api.Tests;
-import com.google.gson.Gson;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import lombok.SneakyThrows;
+import models.cloud.rpcRouter.ExchangeResponse;
 import models.cloud.rpcRouter.OutputQueueResponse;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -16,6 +19,7 @@ import java.util.List;
 
 import static models.Entity.serialize;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.rpcRouter.ExchangeSteps.getExchangeById;
 import static steps.rpcRouter.OutputQueueSteps.*;
 
 @Tag("rpc-django-router")
@@ -24,7 +28,7 @@ import static steps.rpcRouter.OutputQueueSteps.*;
 @DisabledIfEnv("prod")
 public class OutPutQueueTest extends Tests {
 
-    @DisplayName("Создание OutPutQueue")
+    @DisplayName("API. RPC-Django-Router. Создание OutPutQueue")
     @TmsLink("")
     @Test
     public void createOutPutQueueTest() {
@@ -33,7 +37,7 @@ public class OutPutQueueTest extends Tests {
         assertEquals(outPutQueue, createdQueue);
     }
 
-    @DisplayName("Удаление OutPutQueue")
+    @DisplayName("API. RPC-Django-Router. Удаление OutPutQueue")
     @TmsLink("")
     @Test
     public void deleteOutPutQueueTest() {
@@ -42,19 +46,20 @@ public class OutPutQueueTest extends Tests {
         assertFalse(isOutPutQueueExist(outPutQueue.getName()));
     }
 
-    @DisplayName("Обновление OutPutQueue")
+    @SneakyThrows
+    @DisplayName("API. RPC-Django-Router. Обновление OutPutQueue")
     @TmsLink("")
     @Test
     public void updateOutPutQueueTest() {
         OutputQueueResponse outPutQueue = createOutPutQueue();
         JSONObject serializedQueue = serialize(outPutQueue);
         serializedQueue.put("name", "name:test_api");
-        OutputQueueResponse updatedQueue = new Gson().fromJson(String.valueOf(serializedQueue), OutputQueueResponse.class);
+        OutputQueueResponse updatedQueue = new ObjectMapper().readValue(String.valueOf(serializedQueue), OutputQueueResponse.class);
         OutputQueueResponse updatedOutputQueueResponse = updateOutPutQueue(outPutQueue.getId(), serializedQueue);
         assertEquals(updatedQueue, updatedOutputQueueResponse);
     }
 
-    @DisplayName("Частичное обновление OutPutQueue")
+    @DisplayName("API. RPC-Django-Router. Частичное обновление OutPutQueue")
     @TmsLink("")
     @Test
     public void partialUpdateOutPutQueueTest() {
@@ -64,7 +69,7 @@ public class OutPutQueueTest extends Tests {
         assertEquals(newName, getOutPutQueueById(outPutQueue.getId()).getName());
     }
 
-    @DisplayName("Получение списка OutputQueue")
+    @DisplayName("API. RPC-Django-Router. Получение списка OutputQueue")
     @TmsLink("")
     @Test
     public void getOutPutQueueListTest() {
@@ -73,12 +78,37 @@ public class OutPutQueueTest extends Tests {
         assertTrue(outPutQueueList.contains(outPutQueue));
     }
 
-    @DisplayName("Копирование OutputQueue")
+    @DisplayName("API. RPC-Django-Router. Копирование OutputQueue")
     @TmsLink("")
     @Test
     public void copyOutPutQueueTest() {
         OutputQueueResponse outPutQueue = createOutPutQueue();
         OutputQueueResponse outputQueueResponse = copyOutPutQueue(outPutQueue.getId());
         assertEquals(outPutQueue.getName() + "-clone", outputQueueResponse.getName());
+    }
+
+    @DisplayName("API. RPC-Django-Router. Получение списка объектов использующих OutputQueue")
+    @TmsLink("")
+    @Test
+    public void getObjectListUsedOutPutQueueTest() {
+        OutputQueueResponse outPutQueue = createOutPutQueue();
+        Response objectsUsedOutputQueue = getObjectsUsedOutputQueue(outPutQueue.getId());
+        String s = objectsUsedOutputQueue.jsonPath().get().toString();
+        assertEquals("{}", s);
+    }
+
+    @DisplayName("API. RPC-Django-Router. Получение списка объектов используемых в OutputQueue")
+    @TmsLink("")
+    @Test
+    public void getObjectListUsingOutputQueueTest() {
+        OutputQueueResponse outPutQueue = createOutPutQueue();
+        List<ExchangeResponse> objectsUsedOutputQueue = getObjectsUsingOutputQueue(outPutQueue.getId()).jsonPath()
+                .getList("Exchange", ExchangeResponse.class);
+        ExchangeResponse exchange = getExchangeById(outPutQueue.getExchange());
+        ExchangeResponse exchangeResponse = objectsUsedOutputQueue.get(0);
+        assertEquals(1, objectsUsedOutputQueue.size());
+        assertEquals(exchange.getId(), exchangeResponse.getId());
+        assertEquals(exchange.getName(), exchangeResponse.getName());
+        assertEquals(exchange.getTitle(), exchangeResponse.getTitle());
     }
 }

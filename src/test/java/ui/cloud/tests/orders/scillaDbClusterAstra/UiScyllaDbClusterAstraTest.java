@@ -13,7 +13,9 @@ import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -28,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Epic("UI Продукты")
 @Feature("ScyllaDbClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
-public class UiScyllaDbClusterAstraTest extends UiProductTest{
+public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
     ScyllaDbCluster product;
     //=ScyllaDbCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/ca4a3e5b-17f9-4d19-9c40-9fc3bae634af/main?context=proj-pkvckn08w9&type=project&org=vtb");
@@ -50,7 +52,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .expandProductsList()
@@ -60,7 +62,8 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
+            if(product.isDev())
+                orderPage.getGroupSelect().set(accessGroup);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
@@ -169,7 +172,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addUserDb(shortNameUserDB));
-        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addRightsUser(nameDb,shortNameUserDB));
+        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addRightsUser(nameDb, shortNameUserDB));
     }
 
     @Test
@@ -180,7 +183,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.createDb(nameDb));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addUserDb(shortNameUserDB));
-        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addRightsUser(nameDb,shortNameUserDB));
+        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.addRightsUser(nameDb, shortNameUserDB));
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.deleteRightsUser(shortNameUserDB));
 
     }
@@ -192,7 +195,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest{
     @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
     void monitoringOs() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
-         scyllaPage.checkClusterMonitoringOs();
+        scyllaPage.checkClusterMonitoringOs();
     }
 
     @Test

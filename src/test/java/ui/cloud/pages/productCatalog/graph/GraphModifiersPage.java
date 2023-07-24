@@ -12,6 +12,7 @@ import ui.models.GraphModifier;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
+import static ui.elements.TypifiedElement.scrollCenter;
 
 public class GraphModifiersPage extends GraphPage {
 
@@ -134,7 +135,7 @@ public class GraphModifiersPage extends GraphPage {
     @Step("Проверка, что JSONSchema содержит значение '{value}'")
     public GraphModifiersPage checkModifiedJSONSchemaContains(String value) {
         Waiting.sleep(500);
-        jsonSchemaButton.getButton().scrollIntoView(TypifiedElement.scrollCenter).click();
+        jsonSchemaButton.getButton().scrollIntoView(scrollCenter).click();
         $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'" + value + "')]")
                 .shouldBe(Condition.visible);
         return this;
@@ -151,9 +152,8 @@ public class GraphModifiersPage extends GraphPage {
 
     @Step("Проверка, что StaticData содержит значение '{value}'")
     public GraphModifiersPage checkModifiedStaticDataContains(String value) {
-        TestUtils.wait(500);
-        TestUtils.scroll(300);
-        staticDataButton.click();
+        Waiting.sleep(500);
+        staticDataButton.getButton().scrollIntoView(scrollCenter).click();
         $x("//div[contains(@class,'monaco-editor')]//span[contains(text(),'" + value + "')]")
                 .shouldBe(Condition.visible);
         return this;
@@ -171,14 +171,14 @@ public class GraphModifiersPage extends GraphPage {
     @Step("Выбор типа среды просмотра модификатора")
     public GraphModifiersPage setEnvType(String value) {
         $x("//span[text()='Тип среды']/following::div[text()='{}']", value)
-                .scrollIntoView(TypifiedElement.scrollCenter).click();
+                .scrollIntoView(scrollCenter).click();
         return this;
     }
 
     @Step("Выбор среды просмотра модификатора")
     public GraphModifiersPage setEnv(String value) {
         $x("//span[text()='Среда']/following::div[text()='{}']", value)
-                .scrollIntoView(TypifiedElement.scrollCenter).click();
+                .scrollIntoView(scrollCenter).click();
         return this;
     }
 }

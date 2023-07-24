@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.rpcRouter.ExchangeResponse;
 import models.cloud.rpcRouter.GetOutPutQueueList;
 import models.cloud.rpcRouter.OutputQueue;
@@ -12,6 +13,7 @@ import org.json.JSONObject;
 import org.openqa.selenium.NotFoundException;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.RpcRouter;
@@ -35,20 +37,39 @@ public class OutputQueueSteps extends Steps {
         return new Http(RpcRouter)
                 .withServiceToken()
                 .body(jsonObject)
-                .post(outPutQueueV1)
-                .assertStatus(201);
+                .post(outPutQueueV1);
     }
 
     @Step("Экспорт OutPutQueue")
     public static Response exportOutPutQueue(Integer id) {
         return new Http(RpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-              //  .withServiceToken()
+                //  .withServiceToken()
                 .get(outPutQueueV1 + "{}/obj_export/?as_file=true", id)
                 .assertStatus(200);
     }
 
-    @Step("Создание OutPutQueue с именем {name}")
+    @Step("Импорт OutPutQueue")
+    public static ImportObject importOutPutQueue(String pathName) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .multiPart(outPutQueueV1 + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
+    }
+
+    @Step("Экспорт нескольких OutPutQueue по Id")
+    public static Response exportOutPutQueuesById(JSONObject json) {
+        return new Http(RpcRouter)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(json)
+                .post(outPutQueueV1 + "objects_export/")
+                .assertStatus(200);
+    }
+
+    @Step("Создание OutPutQueue")
     public static OutputQueueResponse createOutPutQueue() {
         ExchangeResponse exchange = createExchange();
         JSONObject queue = OutputQueue.builder()
@@ -61,7 +82,7 @@ public class OutputQueueSteps extends Steps {
                 .body(queue)
                 .post(outPutQueueV1)
                 .assertStatus(201)
-                .extractAs(OutputQueueResponse.class);
+                .extractAs(OutputQueueResponse.class, true);
     }
 
     @Step("Получение списка OutPutQueue")
@@ -92,7 +113,6 @@ public class OutputQueueSteps extends Steps {
                 .body(jsonObject)
                 .patch(outPutQueueV1 + "{}/", id)
                 .assertStatus(200);
-
     }
 
     @Step("Копирование OutPutQueue")
@@ -101,7 +121,7 @@ public class OutputQueueSteps extends Steps {
                 .withServiceToken()
                 .post(outPutQueueV1 + "{}/copy/", id)
                 .assertStatus(200)
-                .extractAs(OutputQueueResponse.class);
+                .extractAs(OutputQueueResponse.class, true);
     }
 
     @Step("Получение OutPutQueue по id {id}")
@@ -133,5 +153,31 @@ public class OutputQueueSteps extends Steps {
                 .extractAs(GetOutPutQueueList.class)
                 .getList();
         return list.stream().findFirst().isPresent();
+    }
+
+    @Step("Получение списка OutPutQueue отсортированного по {fieldName}")
+    public static List<OutputQueueResponse> getOrderingByFieldOutPutQueueList(String fieldName) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .get(outPutQueueV1 + "?ordering={}", fieldName)
+                .assertStatus(200)
+                .extractAs(GetOutPutQueueList.class)
+                .getList();
+    }
+
+    @Step("Получение списка объектов использующих OutputQueue")
+    public static Response getObjectsUsedOutputQueue(Integer id) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .get(outPutQueueV1 + "{}/used/", id)
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка объектов используемых в OutputQueue")
+    public static Response getObjectsUsingOutputQueue(Integer id) {
+        return new Http(RpcRouter)
+                .withServiceToken()
+                .get(outPutQueueV1 + "{}/using_objects/", id)
+                .assertStatus(200);
     }
 }

@@ -32,7 +32,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/893921dc-541e-4ced-b79b-10d5f3c03977/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/8aa9ed70-a2b2-47ea-9c85-6a8f27fa2874/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

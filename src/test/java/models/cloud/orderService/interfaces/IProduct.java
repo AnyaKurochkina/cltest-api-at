@@ -487,6 +487,13 @@ public abstract class IProduct extends Entity {
     public boolean isDev() {
         return envType().contains("dev");
     }
+    public boolean isTest() {
+        return envType().contains("test");
+    }
+
+    public boolean isProd() {
+        return envType().contains("prod");
+    }
 
     public String envType() {
         Project project = Project.builder().id(projectId).build().createObject();

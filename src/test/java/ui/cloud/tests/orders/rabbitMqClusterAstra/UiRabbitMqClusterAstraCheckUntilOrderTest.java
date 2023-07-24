@@ -37,7 +37,7 @@ class UiRabbitMqClusterAstraCheckUntilOrderTest extends Tests {
     }
 
     @Test
-    @TmsLink("")
+    @TmsLink("1727718")
     @DisplayName("UI RabbitMQClusterAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()

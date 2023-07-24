@@ -1,9 +1,6 @@
 package models.cloud.rpcRouter;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import models.AbstractEntity;
 
 import static steps.rpcRouter.ExchangeSteps.deleteExchange;
@@ -12,7 +9,8 @@ import static steps.rpcRouter.ExchangeSteps.deleteExchange;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-
+@EqualsAndHashCode(exclude = {"update_dt", "create_dt"}, callSuper = false)
+@ToString
 public class ExchangeResponse extends AbstractEntity {
     private String name;
     private String title;
@@ -22,9 +20,10 @@ public class ExchangeResponse extends AbstractEntity {
     private Integer id;
     private String create_dt;
     private String update_dt;
+    private String queue_list;
 
     @Override
     public void delete() {
-        deleteExchange(id);
+        deleteExchange(id).assertStatus(204);
     }
 }
