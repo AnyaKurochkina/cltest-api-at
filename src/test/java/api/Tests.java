@@ -27,10 +27,6 @@ public class Tests {
     public final static Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
     public final static Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
 
-    static {
-        new TestsExecutionListener.Loader();
-    }
-
     @BeforeEach
     @SneakyThrows
     @Title("Инициализация логирования")
