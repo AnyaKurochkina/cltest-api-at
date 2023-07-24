@@ -29,6 +29,7 @@ public class WildFly extends IProduct {
     String osVersion;
     @ToString.Include
     String wildFlyVersion;
+    String javaVersion;
     Flavor flavor;
 
     @Override
@@ -50,6 +51,8 @@ public class WildFly extends IProduct {
             osVersion = getRandomOsVersion();
         if (wildFlyVersion == null)
             wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+        if (javaVersion == null)
+            javaVersion = "11.0.12";
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
@@ -74,6 +77,7 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.wildfly_version", getWildFlyVersion())
+                .set("$.order.attrs.java_version", getJavaVersion())
                 .set("$.order.attrs.access_group[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")

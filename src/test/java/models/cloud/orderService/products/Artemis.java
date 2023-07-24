@@ -56,7 +56,7 @@ public class Artemis extends IProduct {
             setProjectId(project.getId());
         }
         if (productName == null)
-            productName = "VTB Apache ActiveMQ Artemis Astra";
+            productName = "VTB Artemis";
         initProduct();
         if (flavor == null)
             flavor = getMinFlavor();

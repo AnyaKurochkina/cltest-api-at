@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -7,14 +8,13 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.subModels.KafkaTopic;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
-import api.Tests;
 
 import java.util.Collections;
 
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("regress"), @Tag("negative"), @Tag("prod"), @Tag("apachekafkacluster")})
-@DisabledIfEnv("ift")
+@Disabled
 public class ApacheKafkaClusterNegativeTest extends Tests {
 
     @Tag("actions")
