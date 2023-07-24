@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 import models.AbstractEntity;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.EnvironmentCondition;
+import org.junit.TestsExecutionListener;
 import org.junit.TmsLinkExtension;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +26,10 @@ import java.util.Objects;
 public class Tests {
     public final static Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
     public final static Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
+
+    static {
+        new TestsExecutionListener.Loader();
+    }
 
     @BeforeEach
     @SneakyThrows

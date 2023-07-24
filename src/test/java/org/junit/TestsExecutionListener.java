@@ -24,6 +24,7 @@ import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,15 +38,23 @@ public class TestsExecutionListener implements TestExecutionListener {
     private static final String URL = getAppProp("base.url");
     public static final String responseTimeLog = "logs/ResponseTime.log";
 
-    @SneakyThrows
-    public void testPlanExecutionStarted(TestPlan testPlan) {
-        initApiRoutes();
-        Files.deleteIfExists(Paths.get(responseTimeLog));
+    public static class Loader {
+        static  {
+            initApiRoutes();
+            try {
+                Files.deleteIfExists(Paths.get(responseTimeLog));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
+            if (Files.exists(Paths.get(fileSecret)))
+                ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
+            loadSecretJson();
+        }
+    }
 
-        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
-        if (Files.exists(Paths.get(fileSecret)))
-            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
-        loadSecretJson();
+
+    public void testPlanExecutionStarted(TestPlan testPlan) {
     }
 
     @SneakyThrows
@@ -104,7 +113,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         return cbPreference;
     }
 
-    public void loadSecretJson() {
+    public static void loadSecretJson() {
         String secret = System.getProperty("secret");
         if (secret == null)
             secret = Configure.getAppProp("secret");
@@ -148,7 +157,7 @@ public class TestsExecutionListener implements TestExecutionListener {
     }
 
     @SneakyThrows
-    private void initApiRoutes(){
+    private static void initApiRoutes(){
         List<Class<? extends Api>> classes = getSubclasses(Api.class);
         for (Class<? extends Api> clazz : classes) {
             Api api = clazz.newInstance();
