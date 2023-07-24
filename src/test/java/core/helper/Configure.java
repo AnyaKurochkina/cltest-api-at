@@ -1,13 +1,21 @@
 package core.helper;
 
 import lombok.extern.log4j.Log4j2;
+import models.ObjectPoolService;
+import org.junit.TestsExecutionListener;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.stream.Collectors;
+
+import static org.junit.TestsExecutionListener.initApiRoutes;
+import static org.junit.TestsExecutionListener.loadSecretJson;
 
 @Log4j2
 public class Configure {
@@ -80,6 +88,13 @@ public class Configure {
             DNSService = KONG_URL + "cloud-dns";
             RpcRouter = KONG_URL+ "rpc-django-router";
             PowerDns = getAppProp("url.powerdns");
+
+            initApiRoutes();
+            String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
+            if (Files.exists(Paths.get(fileSecret)))
+                ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
+            loadSecretJson();
+            Files.deleteIfExists(Paths.get(TestsExecutionListener.responseTimeLog));
         } catch (Exception e) {
             e.printStackTrace();
         }

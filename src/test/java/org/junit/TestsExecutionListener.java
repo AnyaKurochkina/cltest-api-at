@@ -38,22 +38,6 @@ public class TestsExecutionListener implements TestExecutionListener {
     private static final String URL = getAppProp("base.url");
     public static final String responseTimeLog = "logs/ResponseTime.log";
 
-    public static class Loader {
-        static  {
-            initApiRoutes();
-            try {
-                Files.deleteIfExists(Paths.get(responseTimeLog));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
-            if (Files.exists(Paths.get(fileSecret)))
-                ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
-            loadSecretJson();
-        }
-    }
-
-
     public void testPlanExecutionStarted(TestPlan testPlan) {
     }
 
@@ -157,7 +141,7 @@ public class TestsExecutionListener implements TestExecutionListener {
     }
 
     @SneakyThrows
-    private static void initApiRoutes(){
+    public static void initApiRoutes(){
         List<Class<? extends Api>> classes = getSubclasses(Api.class);
         for (Class<? extends Api> clazz : classes) {
             Api api = clazz.newInstance();
