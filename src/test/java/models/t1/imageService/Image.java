@@ -85,6 +85,11 @@ public class Image {
     @JsonProperty("stores")
     private String stores;
 
+    private String vmware_ostype;
+    private String description;
+
+    private String cinder_img_volume_type;
+
     @JsonProperty("internal_id")
     private String internalId;
 
