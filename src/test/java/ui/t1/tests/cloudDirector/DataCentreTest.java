@@ -7,14 +7,14 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.BlockTests;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
-import ui.extesions.InterceptTestExtension;
 import ui.models.StorageProfile;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
@@ -25,8 +25,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 
 @BlockTests
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+//@ExtendWith(InterceptTestExtension.class)
+//@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
 public class DataCentreTest extends AbstractCloudDirectorTest {
@@ -76,8 +76,12 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Зарезервировать/отозвать внешние IP адреса")
     public void reserveExternalIPAddressesTest() {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(dataCentreName);
+                .goToOrganization("ift-298df4a4177-at-ui")
+                .selectDataCentre("lhhkuclyhn-at-ui");
+
+//        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
+//                .goToOrganization(vmWareOrganization.getName())
+//                .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addIpAddresses(2));
         dataCentrePage.runActionWithCheckCost(CompareType.LESS, dataCentrePage::removeIpAddresses);
     }
