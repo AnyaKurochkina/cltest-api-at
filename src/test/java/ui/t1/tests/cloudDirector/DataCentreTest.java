@@ -1,6 +1,7 @@
 package ui.t1.tests.cloudDirector;
 
 import core.helper.Configure;
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -131,6 +132,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
+        Waiting.sleep(10000);
         dataCentrePage.switchProtectOrder(true);
         try {
             new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить", "Удалить", () -> {
