@@ -5,25 +5,34 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import models.Entity;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.StringJoiner;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class QueryBuilder {
-    private final transient StringJoiner query = new StringJoiner("&", "?", "");
+    private final transient Map<String, String> map = new HashMap<>();
 
     public QueryBuilder add(Object key, Object value) {
         if (value.getClass().isArray())
             for (Object e : (Object[]) value)
-                query.add(key + "=" + e);
+                map.put(key.toString(), e.toString());
         else
-            query.add(key + "=" + value);
+            map.put(key.toString(), value.toString());
         return this;
     }
 
     @Override
     public String toString() {
+        StringJoiner joiner = new StringJoiner("&", "?", "");
+        map.forEach((k, v) -> joiner.add(k + "=" + v));
         Entity.serialize(this).toMap().forEach(this::add);
-        return query.toString().length() == 1 ? "" : query.toString();
+        return joiner.toString().length() == 1 ? "" : joiner.toString();
+    }
+
+    public Map<String, String> toMap() {
+        Entity.serialize(this).toMap().forEach(this::add);
+        return map;
     }
 }
