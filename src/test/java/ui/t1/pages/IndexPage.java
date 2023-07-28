@@ -1,13 +1,10 @@
 package ui.t1.pages;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
 import ui.t1.pages.IAM.users.UsersPage;
@@ -21,7 +18,6 @@ import ui.t1.pages.supportCenter.NotificationsPage;
 
 import java.time.Duration;
 
-import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.cloud.pages.orders.IProductPage.getBtnAction;
 
@@ -47,9 +43,7 @@ public class IndexPage {
     Button linkTools = Button.byXpath("//a[.='Инструменты']");
     Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
-
-
-    final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
+    SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
 
     @Step("Переход на главную страницу")
     public static void go() {
@@ -57,7 +51,7 @@ public class IndexPage {
     }
 
     public Profile goToProfile(){
-        Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
+        linkProfile.shouldBe(Condition.visible).click();
         return new Profile();
     }
 
