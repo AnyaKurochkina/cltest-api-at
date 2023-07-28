@@ -23,6 +23,11 @@ public class ExchangeResponse extends AbstractEntity {
     private String queue_list;
 
     @Override
+    protected int getPriority() {
+        return 0;
+    }
+
+    @Override
     public void delete() {
         deleteExchange(id).assertStatus(204);
     }

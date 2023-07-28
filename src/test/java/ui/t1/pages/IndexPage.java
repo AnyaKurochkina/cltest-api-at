@@ -17,6 +17,7 @@ import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
+import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
 import ui.t1.pages.supportCenter.NotificationsPage;
 
 import java.time.Duration;
@@ -40,6 +41,7 @@ public class IndexPage {
     Button linkVirtualMachines = Button.byXpath("//a[.='Серверы']");
     Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
     Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
+    Button linkVirtualIps = Button.byXpath("//a[.='Виртуальные IP-адреса']");
     Button linkImages = Button.byXpath("//a[.='Образы']");
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
@@ -154,6 +156,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkPublicIps.click();
         return new PublicIpList();
+    }
+
+    @Step("Переход на страницу Публичные IP-адреса")
+    public VirtualIpList goToVirtualIps() {
+        linkCloudEngine.click();
+        linkVirtualIps.click();
+        return new VirtualIpList();
     }
 
     @Step("Отключить Cloud Engine")

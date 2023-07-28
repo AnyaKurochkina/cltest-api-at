@@ -1,17 +1,20 @@
 package ui.elements;
 
 import com.codeborne.selenide.SelenideElement;
+import core.exception.NotFoundElementException;
+import io.qameta.allure.Step;
+import lombok.SneakyThrows;
+import org.intellij.lang.annotations.Language;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-import static api.Tests.activeCnd;
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
 public class DataTable extends Table {
     SelenideElement recordCount;
-    SelenideElement selectPage;
+    Select selectPage;
     SelenideElement nextPage;
     SelenideElement previousPage;
 
@@ -19,21 +22,63 @@ public class DataTable extends Table {
 
     public DataTable(String columnName) {
         super(columnName);
-        SelenideElement parent = table.parent();
-        recordCount = parent.$x("button[contains(@aria-label,'Записей')]");
-        selectPage = parent.$x("button[contains(@aria-label,'Страница')]");
-        nextPage = parent.$x("button[contains(@aria-label,'Следующая')]");
-        previousPage = parent.$x("button[contains(@aria-label,'Предыдущая')]");
+        @Language("XPath") String xpath = getXpath().substring(2);
+        recordCount = TypifiedElement.getNearElement("button[contains(@aria-label,'Записей')]", xpath);
+        selectPage = new Select(TypifiedElement.getNearElement("button[contains(@aria-label,'Страница')]", xpath));
+        nextPage = TypifiedElement.getNearElement("button[contains(@aria-label,'Следующая')]", xpath);
+        previousPage = TypifiedElement.getNearElement("button[contains(@aria-label,'Предыдущая')]", xpath);
+    }
+
+    public boolean isNextPage() {
+        return nextPage.isEnabled();
+    }
+
+    public boolean isPreviousPage() {
+        return previousPage.isEnabled();
+    }
+
+    public void selectPage(int page) {
+        selectPage.set(String.valueOf(page));
+    }
+
+    public void nextPage() {
+        selectPage(Integer.parseInt(selectPage.getValue()) + 1);
+        update();
     }
 
     public void clickAdd() {
         Button.byElement(btnAdd).click();
     }
 
-    public List<String> getColumnValuesList(String column) {
+    public List<String> getColumnValuesListPage(String column) {
         List<String> values = new ArrayList<>();
         for (int i = 0; i < rowSize(); i++)
             values.add(getValueByColumnInRow(i, column).getText());
         return values;
+    }
+
+    public List<String> getColumnValuesList(String column) {
+        List<String> values = getColumnValuesListPage(column);
+        while (isNextPage()) {
+            nextPage();
+            values.addAll(getColumnValuesListPage(column));
+        }
+        selectPage(1);
+        return values;
+    }
+
+    @SneakyThrows
+    @Step("Поиск страницы с подходящим условием")
+    public DataTable searchAllPages(Predicate<DataTable> condition) {
+        if(isPreviousPage())
+            selectPage(1);
+        while (true) {
+            if (condition.test(this))
+                return this;
+            if (!isNextPage())
+                break;
+            nextPage();
+        }
+        throw new NotFoundElementException("Не найдена страница с подходящим условием");
     }
 }
