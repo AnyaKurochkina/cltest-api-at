@@ -49,7 +49,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @TmsLinks({@TmsLink("1249437"), @TmsLink("1249598")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")
     void addIp() {
-        ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        ip = new IndexPage().goToPublicIps().addIp(region);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate(true);
         String orderId = ipPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()

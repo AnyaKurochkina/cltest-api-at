@@ -39,6 +39,7 @@ public abstract class AbstractComputeTest extends Tests {
     protected String hddTypeSecond = "HDD";
     protected String securityGroup = "default";
     protected String flavorName = "Intel";
+    protected String region = "ru-central1";
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
     protected static final String sshKey = "AT-default";
 

@@ -49,7 +49,7 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети. Добавление подсети")
     void addSubnet() {
         new IndexPage().goToNetworks().selectNetwork(name).addSubnet()
-                .setAvailabilityZone(availabilityZone)
+                .setRegion(region)
                 .setCidr("10.0.0.0")
                 .setName(getRandomName())
                 .setDesc("addSubnet")
@@ -64,7 +64,7 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети. Удаление подсети")
     void editSubnet() {
         Network.CreateSubnet subnet = new IndexPage().goToNetworks().selectNetwork(name).addSubnet()
-                .setAvailabilityZone(availabilityZone)
+                .setRegion(region)
                 .setCidr("10.1.0.0")
                 .setName(getRandomName())
                 .setDesc("deleteSubnet")
