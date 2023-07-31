@@ -8,10 +8,6 @@ import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Table;
-
-import static api.Tests.activeCnd;
-import static api.Tests.clickableCnd;
-import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class EtcdPage extends IProductPage {
