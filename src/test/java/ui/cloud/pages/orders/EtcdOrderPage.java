@@ -12,8 +12,6 @@ import static core.helper.StringUtils.$x;
 public class EtcdOrderPage extends NewOrderPage {
 
     Select numberNodes = Select.byLabel("Количество нод");
-    Select configureCh = Select.byLabel("Конфигурация Core/RAM ClickHouse");
-    Select configureZ = Select.byLabel("Конфигурация Core/RAM Zookeeper");
     Input nameUser = Input.byLabel("Пользователь etcd");
     Input nameCluster = Input.byLabel("Имя кластера");
     Input nameDB = Input.byLabel("Имя базы данных");
