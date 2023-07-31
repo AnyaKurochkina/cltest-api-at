@@ -32,7 +32,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_Grafana")})
 public class UiGrafanaTest extends UiProductTest {
 
-    Grafana product;// = Grafana.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/devops_tools/orders/1790aad9-085b-44e4-a087-68628be050fc/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Grafana product; // = Grafana.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/5b2343c6-7c16-4fdf-8a03-4f5a0295f16d/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -97,7 +97,7 @@ public class UiGrafanaTest extends UiProductTest {
     void expandDisk() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.MORE, () -> grafanaPage
-                .enlargeDisk("/app", "20", new Table("Размер, ГБ").getRowByIndex(0)));
+                .enlargeDisk("/app", "20", new Table("Роли узла").getRowByIndex(0)));
     }
 
     @Test
@@ -136,6 +136,7 @@ public class UiGrafanaTest extends UiProductTest {
     @Test
     @Order(7)
     @TmsLink("1688710")
+    @EnabledIfEnv("blue")
     @DisplayName("UI Grafana. Изменить конфигурацию")
     void changeConfiguration() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
@@ -172,6 +173,7 @@ public class UiGrafanaTest extends UiProductTest {
     @Test
     @Order(11)
     @TmsLink("1688715")
+    @EnabledIfEnv("blue")
     @DisplayName("UI Grafana.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
@@ -184,6 +186,23 @@ public class UiGrafanaTest extends UiProductTest {
     void openAdminConsole() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::openPointConnect);
+    }
+
+    @Test
+    @Order(13)
+    @TmsLink("")
+    @DisplayName("UI Grafana. Сбросить пароль")
+    void resetPassword() {
+        GrafanaPage grafanaPage = new GrafanaPage(product);
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::resetPassword);
+    }
+    @Test
+    @Order(14)
+    @TmsLink("")
+    @DisplayName("UI Grafana. Выпустить клиентский сертификат")
+    void issueClientCertificate() {
+        GrafanaPage grafanaPage = new GrafanaPage(product);
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS,  () -> grafanaPage.issueClientCertificate("Cert"));
     }
 
     @Test

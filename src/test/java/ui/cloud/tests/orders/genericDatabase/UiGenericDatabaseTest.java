@@ -178,6 +178,15 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.checkMonitoringOs();
     }
+    @Test
+    @Order(12)
+    @TmsLink("")
+    @EnabledIfEnv("blue")
+    @DisplayName("UI GenericDatabase.  Выпустить клиентский сертификат")
+    void issueClientCertificate() {
+        GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
+        genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, ()-> genericDatabasePage.issueClientCertificate("Certificate"));
+    }
 
     @Test
     @Order(100)
