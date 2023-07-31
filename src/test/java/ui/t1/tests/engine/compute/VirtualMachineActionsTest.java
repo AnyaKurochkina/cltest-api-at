@@ -20,7 +20,6 @@ import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.tests.engine.AbstractComputeTest;
@@ -33,7 +32,7 @@ import static core.utils.AssertUtils.assertHeaders;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @BlockTests
-@ExtendWith(BeforeAllExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Виртуальные машины. Действия")
@@ -62,6 +61,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("982508")
+    @Order(2)
     @DisplayName("Cloud Compute. Виртуальные машины (Таблица)")
     void vmList() {
         new IndexPage().goToVirtualMachine();
@@ -82,6 +82,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1248951")
+    @Order(3)
     @DisplayName("Cloud Compute. Диски (Таблица)")
     void diskList() {
         new IndexPage().goToDisks();
@@ -100,6 +101,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("1249429")
+    @Order(4)
     @DisplayName("Cloud Compute. Сетевые интерфейсы. (Таблица)")
     void networkInterfacesList() {
         new IndexPage().goToNetworkInterfaces();
@@ -118,7 +120,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     }
 
     @Test
-    @Order(2)
+    @Order(5)
     @TmsLink("1248684")
     @DisplayName("Cloud Compute. Виртуальные машины. Защита от удаления")
     void switchProtect() {
@@ -139,7 +141,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     }
 
     @Test
-    @Order(3)
+    @Order(6)
     @TmsLinks({@TmsLink("1248845"), @TmsLink("1248846")})
     @DisplayName("Cloud Compute. Виртуальные машины. Остановить/Запустить")
     void stopAndStartVm() {
@@ -149,7 +151,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     }
 
     @Test
-    @Order(4)
+    @Order(7)
     @TmsLink("1248862")
     @DisplayName("Cloud Compute. Виртуальные машины. Консоль")
     void getConsoleLink() {
@@ -167,7 +169,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     }
 
     @Test
-    @Order(5)
+    @Order(8)
     @TmsLink("1248781")
     @DisplayName("Cloud Compute. Виртуальные машины. Изменить конфигурацию")
     void resize() {
