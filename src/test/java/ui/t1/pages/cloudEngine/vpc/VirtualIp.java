@@ -6,26 +6,17 @@ import ui.t1.pages.IProductT1Page;
 
 public class VirtualIp extends IProductT1Page<VirtualIp> {
 
-    @Step("Подключить IP к ВМ {vmName}")
-    public void attachComputeIp(String vmName) {
+    @Step("Подключить к сетевому интерфейсу {networkInterface}")
+    public void attachComputeIp(String networkInterface) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
                         Dialog.byTitle("Подключить к виртуальной машине")
-                                .setSelectValue("Доступные виртуальные машины", vmName));
+                                .setSelectValue("Сетевой интерфейс", networkInterface));
     }
 
-    @Step("Отключить IP от интерфейса")
-    public void detachComputeIp() {
-        runActionWithoutParameters(BLOCK_PARAMETERS, "Отключить от сетевого интерфейса");
-    }
-
-    @Override
-    public void delete() {
-        switchProtectOrder(false);
-        runActionWithParameters(BLOCK_PARAMETERS, "Освободить", "Удалить", () ->
-        {
-            Dialog dlgActions = Dialog.byTitle("Удаление");
-            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
-        });
-        checkPowerStatus(TopInfo.POWER_STATUS_DELETED);
+    @Step("Отключить от сетевого интерфейса {ip}")
+    public void detachComputeIp(String ip) {
+        runActionWithParameters(BLOCK_PARAMETERS, "Отключить от сетевого интерфейса", "Подтвердить", () ->
+                Dialog.byTitle("Отключить от сетевого интерфейса")
+                        .setSelectValue("Сетевой интерфейс", ip));
     }
 }

@@ -30,7 +30,7 @@ public class Network {
     public static class CreateSubnet {
         String name;
         String desc;
-        String availabilityZone;
+        String region;
         String cidr;
         int prefix;
         boolean dhcp;
@@ -47,9 +47,9 @@ public class Network {
             return this;
         }
 
-        public CreateSubnet setAvailabilityZone(String availabilityZone) {
-            this.availabilityZone = availabilityZone;
-            Select.byLabel("Зона").set(availabilityZone);
+        public CreateSubnet setRegion(String region) {
+            this.region = region;
+            Select.byLabel("Регион").set(region);
             return this;
         }
 

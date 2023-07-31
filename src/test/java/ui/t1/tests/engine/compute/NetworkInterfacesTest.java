@@ -34,7 +34,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
-        String ip = new IndexPage().goToPublicIps().addIp(availabilityRegion);
+        String ip = new IndexPage().goToPublicIps().addIp(region);
         new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity()).checkCreate(true);
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).attachIp(ip);

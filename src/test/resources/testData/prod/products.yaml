@@ -17,6 +17,10 @@ TarantoolDataGrid:
   - options:
       - { platform: "OpenStack", env: "DEV" }
 
+Etcd:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
 Grafana:
   - options:
       - { platform: "OpenStack", env: "DEV" }
