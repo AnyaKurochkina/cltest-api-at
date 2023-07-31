@@ -7,12 +7,10 @@ import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
-import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
+import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.tests.engine.AbstractComputeTest;
 
@@ -29,7 +27,7 @@ public class SnapshotTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Снимки")
     void snapshotList() {
         new IndexPage().goToSnapshots();
-        assertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "Дата", "");
+        assertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "");
     }
 
     @Test

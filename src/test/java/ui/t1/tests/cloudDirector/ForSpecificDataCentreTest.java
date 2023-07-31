@@ -5,16 +5,14 @@ import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.junit.BlockTests;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
-import ui.extesions.InterceptTestExtension;
 import ui.models.StorageProfile;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
@@ -23,42 +21,15 @@ import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
+/*
+Данный класс предназначен для теста с предварительно созданной организацией и вдц. Данные нужно указать в поле класса.
+ */
 
-@BlockTests
-@ExtendWith(InterceptTestExtension.class)
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
-public class DataCentreTest extends AbstractCloudDirectorTest {
-
-    @Test
-    @Order(1)
-    @TmsLink("147532")
-    @DisplayName("VMware. Создание второго VDC  в одной организации")
-    public void createDataCentre() {
-        assertTrue(new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .addDataCentre(dataCentreName)
-                .waitChangeStatus()
-                .selectDataCentre(dataCentreName)
-                .checkCreate(true)
-                .goToVMwareOrgPage()
-                .isDataCentreExist(dataCentreName));
-
-        String secondDataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
-        assertTrue(new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .addDataCentre(secondDataCentreName)
-                .waitChangeStatus()
-                .selectDataCentre(secondDataCentreName)
-                .checkCreate(true)
-                .goToVMwareOrgPage()
-                .isDataCentreExist(secondDataCentreName));
-        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(secondDataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
-    }
+public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
+    private String orgName = "org-nzfrg964e8-03f7ba6e385-at-ui";
+    private String vdcName = "ajejxzdjaq-at-ui";
 
     @Test
     @Order(4)
@@ -66,8 +37,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Проверка уникальности имени VDC")
     public void createDataCentreWithSameNameTest() {
         new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .addDataCentreWithExistName(dataCentreName);
+                .goToOrganization(orgName)
+                .addDataCentreWithExistName(vdcName);
     }
 
     @Test
@@ -75,13 +46,9 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("158901"), @TmsLink("767870")})
     @DisplayName("VMware. Зарезервировать/отозвать внешние IP адреса")
     public void reserveExternalIPAddressesTest() {
-//        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-//                .goToOrganization("ift-298df4a4177-at-ui")
-//                .selectDataCentre("lhhkuclyhn-at-ui");
-
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(dataCentreName);
+                .goToOrganization(orgName)
+                .selectDataCentre(vdcName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addIpAddresses(2));
         dataCentrePage.runActionWithCheckCost(CompareType.LESS, dataCentrePage::removeIpAddresses);
     }
@@ -92,9 +59,9 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Изменение конфигурации VDC Allocation Pool")
     public void changeConfigVDCAllocationPoolTest() {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(dataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeConfig(4, 16));
+                .goToOrganization(orgName)
+                .selectDataCentre(vdcName);
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeConfig(8, 16));
     }
 
     @Test
@@ -110,8 +77,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         }
         StorageProfile profile = new StorageProfile(name, "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(dataCentreName);
+                .goToOrganization(orgName)
+                .selectDataCentre(vdcName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addProfile(profile));
         dataCentrePage.runActionWithCheckCost(CompareType.LESS, () -> dataCentrePage.deleteProfile(profile));
     }
@@ -123,8 +90,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     public void changeRouterConfigTest() {
         DataCentrePage dataCentrePage = new IndexPage()
                 .goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(dataCentreName);
+                .goToOrganization(orgName)
+                .selectDataCentre(vdcName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
     }
 
@@ -134,8 +101,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Защита от удаления VDC")
     public void protectedDataCentreFromDelete() {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(dataCentreName);
+                .goToOrganization(orgName)
+                .selectDataCentre(vdcName);
         Waiting.sleep(10000);
         dataCentrePage.switchProtectOrder(true);
         try {
@@ -157,8 +124,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Удаление VDC и Тоггл \"Показывать удаленные\"")
     public void deleteDataCentre() {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-                .goToOrganization(vmWareOrganization.getName())
-                .selectDataCentre(dataCentreName);
+                .goToOrganization(orgName)
+                .selectDataCentre(vdcName);
         dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
         assertFalse(dataCentrePage
                 .goToVMwareOrgPage()
