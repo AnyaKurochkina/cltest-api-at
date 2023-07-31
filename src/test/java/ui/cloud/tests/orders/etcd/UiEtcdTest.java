@@ -47,7 +47,7 @@ public class UiEtcdTest extends UiProductTest {
     @TmsLink("")
     @Order(1)
     @DisplayName("UI Etcd. Заказ")
-    void orderClickHouseCluster() {
+    void orderEtcd() {
         double prebillingCost;
         try {
             String accessGroup = product.getAccessGroup();
