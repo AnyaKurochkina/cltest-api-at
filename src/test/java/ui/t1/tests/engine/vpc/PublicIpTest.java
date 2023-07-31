@@ -12,7 +12,6 @@ import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
@@ -49,7 +48,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @TmsLinks({@TmsLink("1249437"), @TmsLink("1249598")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")
     void addIp() {
-        ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        ip = new IndexPage().goToPublicIps().addIp(region);
         PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate(true);
         String orderId = ipPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
@@ -62,7 +61,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @Test
     @Order(2)
     @TmsLinks({@TmsLink("1249438"), @TmsLink("1249439"), @TmsLink("1248950")})
-    @DisplayName("Cloud VPC. Публичные IP-адреса. Подключить к виртуальной машине/Отвязать от сетевого интерфейса ")
+    @DisplayName("Cloud VPC. Публичные IP-адреса. Подключить к виртуальной машине/Отвязать от сетевого интерфейса")
     void attachIp() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)

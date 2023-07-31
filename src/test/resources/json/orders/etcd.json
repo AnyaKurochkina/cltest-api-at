@@ -1,0 +1,51 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "fce9c81f-1b4e-4de4-9826-93948974ff5e",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "platform": "OpenStack",
+      "etcd_user": "user",
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "1.7",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "nodes_count": 3,
+      "cluster_name": "cluster_name",
+      "etcd_version": "3.5.1",
+      "etcd_password": "MQVyiHVxApaGiaOPCvh6HPvfPaHKo15RIHH",
+      "ad_integration": true,
+      "etcd_extra_mounts": [
+        {
+          "path": "/app/etcd/data",
+          "size": 15,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/etcd/logs",
+          "size": 10,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_logon_grants": [
+        {
+          "role": "user",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Etcd"
+  }
+}

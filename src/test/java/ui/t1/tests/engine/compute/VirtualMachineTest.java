@@ -11,14 +11,12 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.NotFoundException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.elements.Button;
 import ui.elements.Select;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
@@ -133,7 +131,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
         Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
 
-        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        String ip = new IndexPage().goToPublicIps().addIp(region);
         PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity()).checkCreate(true);
         String orderIdIp = ipPage.getOrderId();
 
