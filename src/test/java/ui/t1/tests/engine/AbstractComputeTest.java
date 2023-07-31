@@ -34,13 +34,12 @@ import static api.routes.VpcApi.deleteSecurityGroupApiV1ProjectsProjectNameSecur
 public abstract class AbstractComputeTest extends Tests {
     protected static Project project = Project.builder().isForOrders(true).build().createObject();
     protected String availabilityZone = "ru-central1-a";
-    protected String availabilityRegion = "ru-central1";
+    protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
     protected String hddTypeFirst = "HDD";
     protected String hddTypeSecond = "HDD";
     protected String securityGroup = "default";
     protected String flavorName = "Intel";
-    protected String region = "ru-central1";
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
     protected static final String sshKey = "AT-default";
 
