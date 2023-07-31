@@ -20,7 +20,6 @@ public class EtcdPage extends IProductPage {
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
 
     public EtcdPage(Etcd product) {
         super(product);
@@ -67,15 +66,6 @@ public class EtcdPage extends IProductPage {
         checkPowerStatus(EtcdPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(EtcdPage.VirtualMachineTable.POWER_STATUS_OFF);
-    }
-
-    public void removeDb(String name) {
-        new EtcdPage.VirtualMachineTable("Статус").checkPowerStatus(EtcdPage.VirtualMachineTable.POWER_STATUS_ON);
-        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runActionWithoutParameters(name, "Удалить БД");
-        btnGeneralInfo.click();
-        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        Assertions.assertFalse(new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name), "БД существует");
     }
 
     public void enlargeDisk(String name, String size, SelenideElement node) {
