@@ -27,7 +27,8 @@ public class CreateTemplateTest extends TemplateBaseTest {
     @Step("Создание шаблона узлов")
     public void createTemplate() {
         template.setName(UUID.randomUUID().toString());
-        new ControlPanelIndexPage().goToTemplatesPage()
+        new ControlPanelIndexPage()
+                .goToTemplatesPage()
                 .createTemplate(template)
                 .checkAttributes(template)
                 .deleteTemplate();
