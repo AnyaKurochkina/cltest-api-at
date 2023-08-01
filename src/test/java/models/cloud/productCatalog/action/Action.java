@@ -131,6 +131,8 @@ public class Action extends Entity {
     private Boolean skipRestrictionService;
     @JsonProperty("skip_item_change")
     private Boolean skipItemChange;
+    @JsonProperty("skip_item_with_secondary_rel")
+    private Boolean skipItemWithSecondaryRel;
 
     @Override
     public Entity init() {
@@ -179,6 +181,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_reservation", skipReservation)
                 .setIfNullRemove("$.skip_item_change", skipItemChange)
                 .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
+                .setIfNullRemove("$.skip_item_with_secondary_rel", skipItemWithSecondaryRel)
                 .build();
     }
 

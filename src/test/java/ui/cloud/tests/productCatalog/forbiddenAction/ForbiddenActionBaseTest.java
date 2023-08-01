@@ -20,6 +20,6 @@ public class ForbiddenActionBaseTest extends BaseTest {
 
     @BeforeEach
     public void setUp() {
-        forbiddenAction = createForbiddenAction(NAME, TITLE);
+        forbiddenAction = createForbiddenAction(TITLE);
     }
 }

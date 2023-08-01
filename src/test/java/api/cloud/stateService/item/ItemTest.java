@@ -145,7 +145,7 @@ public class ItemTest extends Tests {
         assertTrue(primaryItemsList.stream().anyMatch(item -> item.getItemId().equals(secondaryItem2.getItemId())));
     }
 
-    @DisplayName("Получение списка secondary items по items/as_primary_items/")
+    @DisplayName("Получение списка items у которых нет primary связи с конкретным item_id")
     @TmsLink("1745012")
     @Test
     public void getItemsListWithOutPrimaryRelationTest() {
@@ -165,7 +165,7 @@ public class ItemTest extends Tests {
                 .graphId(graph.getGraphId())
                 .orderId(UUID.randomUUID().toString())
                 .itemId(UUID.randomUUID().toString())
-                .type("bm")
+                .type("app")
                 .subtype("acls")
                 .build()
                 .toJson();
@@ -174,6 +174,38 @@ public class ItemTest extends Tests {
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         relationsIdsForDelete.add(extRelation.getId());
-        List<Item> primaryItemsList = getItemsListWithOutPrimaryRelation(primaryItem.getItemId());
+        List<Item> primaryItemsList = getItemsListWithOutPrimaryRelation(secondaryItem.getItemId());
+    }
+
+    @DisplayName("Получение списка items у которых нет secondary связи с конкретным item_id")
+    @TmsLink("1745012")
+    @Test
+    public void getItemsListWithOutSecondaryRelationTest() {
+        String orderId = UUID.randomUUID().toString();
+        String itemId = UUID.randomUUID().toString();
+        JSONObject json = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(orderId)
+                .itemId(itemId)
+                .type("bm")
+                .subtype("acls")
+                .build()
+                .toJson();
+        JSONObject secondaryJson = Item.builder()
+                .actionId(action.getActionId())
+                .graphId(graph.getGraphId())
+                .orderId(UUID.randomUUID().toString())
+                .itemId(UUID.randomUUID().toString())
+                .type("app")
+                .subtype("acls")
+                .build()
+                .toJson();
+        Item primaryItem = createItem(project.getId(), json);
+        Item secondaryItem = createItem(project.getId(), secondaryJson);
+        ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
+                false);
+        relationsIdsForDelete.add(extRelation.getId());
+        List<Item> secondaryItemsList = getItemsListWithOutSecondaryRelation(primaryItem.getItemId());
     }
 }
