@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
