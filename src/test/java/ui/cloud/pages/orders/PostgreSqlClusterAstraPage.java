@@ -378,7 +378,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
+        Assertions.assertFalse(getActionsMenuButton(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
     }
 
     //Таблица ролей

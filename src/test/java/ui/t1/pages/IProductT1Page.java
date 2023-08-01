@@ -102,7 +102,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Step("Получить ID продукта")
     public String getOrderId() {
         btnGeneralInfo.getButton().shouldBe(Condition.visible);
-        Menu.byElement(getBtnAction("Действия")).select("Скопировать ID");
+        Menu.byElement(getActionsMenuButton("Действия")).select("Скопировать ID");
         Alert.green("ID скопирован");
         return getClipBoardText();
     }

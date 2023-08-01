@@ -7,7 +7,6 @@ import models.cloud.productCatalog.enums.EventType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 
 import java.util.UUID;

@@ -68,15 +68,15 @@ public abstract class IProductPage {
     public IProductPage() {
     }
 
-    public static SelenideElement getBtnAction(String header) {
-        return getBtnAction(header, 1);
+    public static SelenideElement getActionsMenuButton(String header) {
+        return getActionsMenuButton(header, 1);
     }
     public SelenideElement getHeaderBlock (String name)
     {
         return $x("//td[.='{}']/../descendant::button", name);
     }
 
-    public static SelenideElement getBtnAction(String header, int index) {
+    public static SelenideElement getActionsMenuButton(String header, int index) {
         return $x("(//*[.='{}']/parent::*//button[@id='actions-menu-button'])" + postfix, header, TypifiedElement.getIndex(index));
     }
 
@@ -211,19 +211,19 @@ public abstract class IProductPage {
     }
 
     protected void runActionWithoutParameters(String headerBlock, String action, ActionParameters params) {
-        runActionWithoutParameters(getBtnAction(headerBlock), action, params);
+        runActionWithoutParameters(getActionsMenuButton(headerBlock), action, params);
     }
 
     protected void runActionWithoutParameters(String headerBlock, String action) {
-        runActionWithoutParameters(getBtnAction(headerBlock), action, ActionParameters.builder().build());
+        runActionWithoutParameters(getActionsMenuButton(headerBlock), action, ActionParameters.builder().build());
     }
 
     public void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable, ActionParameters params) {
-        runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, params);
+        runActionWithParameters(getActionsMenuButton(headerBlock), action, textButton, executable, params);
     }
 
     public void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable) {
-        runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
+        runActionWithParameters(getActionsMenuButton(headerBlock), action, textButton, executable, ActionParameters.builder().build());
     }
 
     @Step("Расширить диск {name} на {size}ГБ")
