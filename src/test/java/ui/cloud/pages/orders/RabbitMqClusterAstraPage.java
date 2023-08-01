@@ -154,7 +154,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
 
     public void deleteUser(String nameUser) {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(getBtnAction(nameUser, 1), "Удалить пользователя");
+        runActionWithoutParameters(getActionsMenuButton(nameUser, 1), "Удалить пользователя");
         btnGeneralInfo.click();
         Assertions.assertFalse(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser), "Ошибка удаления вируалного хоста");
     }
@@ -223,7 +223,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
 
     public void deletePermissions(String nameUser) {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(getBtnAction(nameUser, 2), "Удалить права на виртуальный хост");
+        runActionWithoutParameters(getActionsMenuButton(nameUser, 2), "Удалить права на виртуальный хост");
         btnGeneralInfo.click();
         Assertions.assertFalse(new Table(HEADER_NAME_USER_PERMISSIONS).isColumnValueContains(HEADER_NAME_USER_PERMISSIONS, nameUser), "Ошибка удаления прав");
     }

@@ -59,7 +59,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
         ContextRestrictionsItem restriction2 = ContextRestrictionsItem.builder().organization("vtb").build();
         partialUpdateActionByName(actionName, new JSONObject()
                 .put("context_restrictions", Collections.singletonList(restriction1)));
-        new IndexPage().getAllResourcesMenuItem().click();
+        new IndexPage().getOrdersListMenuItem().click();
         new OrdersPage().openOrder(product.getLabel());
         TestProductOrderPage page = new TestProductOrderPage(product);
         assertFalse(page.isActionDisplayed(actionName), format("Действие '{}' отображается", actionName));
@@ -89,7 +89,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
                 .build();
         partialUpdateActionByName(actionName, new JSONObject()
                 .put("context_restrictions", Collections.singletonList(restriction1)));
-        new IndexPage().getAllResourcesMenuItem().click();
+        new IndexPage().getOrdersListMenuItem().click();
         new OrdersPage().openOrder(product.getLabel());
         TestProductOrderPage page = new TestProductOrderPage(product);
         assertFalse(page.isActionDisplayed(actionName), format("Действие '{}' отображается", actionName));
@@ -110,7 +110,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
         String restriction2 = "config['flavor']['name'] == 'c2m4'";
         partialUpdateActionByName(actionName, new JSONObject()
                 .put("item_restriction", restriction1));
-        new IndexPage().getAllResourcesMenuItem().click();
+        new IndexPage().getOrdersListMenuItem().click();
         new OrdersPage().openOrder(product.getLabel());
         TestProductOrderPage page = new TestProductOrderPage(product);
         assertFalse(page.isActionDisplayed(actionName), format("Действие '{}' отображается", actionName));
@@ -131,7 +131,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
         String keycloakRole = "superadmin-product_catalog";
         partialUpdateActionByName(actionName, new JSONObject()
                 .put("restricted_groups", Collections.singletonList(keycloakRole)));
-        new IndexPage().getAllResourcesMenuItem().click();
+        new IndexPage().getOrdersListMenuItem().click();
         new OrdersPage().openOrder(product.getLabel());
         TestProductOrderPage page = new TestProductOrderPage(product);
         assertFalse(page.isActionDisplayed(actionName), format("Действие '{}' отображается", actionName));
@@ -152,7 +152,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
         GlobalUser orderServiceAdmin = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         partialUpdateActionByName(actionName, new JSONObject()
                 .put("allowed_groups", Collections.singletonList(pcAdmin.getUsername())));
-        new IndexPage().getAllResourcesMenuItem().click();
+        new IndexPage().getOrdersListMenuItem().click();
         new OrdersPage().openOrder(product.getLabel());
         TestProductOrderPage page = new TestProductOrderPage(product);
         assertFalse(page.isActionDisplayed(actionName), format("Действие '{}' отображается", actionName));

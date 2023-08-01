@@ -73,7 +73,7 @@ public class RedisAstraPage extends IProductPage {
 
     public void resetPassword() {
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getBtnAction("default",2), "Сбросить пароль", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("default",2), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
