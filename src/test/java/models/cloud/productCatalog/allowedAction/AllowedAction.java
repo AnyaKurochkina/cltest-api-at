@@ -63,7 +63,6 @@ public class AllowedAction extends Entity {
     @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/allowedAction/createAllowedAction.json")
-                .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
                 .set("$.action", actionId)
@@ -76,7 +75,6 @@ public class AllowedAction extends Entity {
 
     @Override
     protected void create() {
-        deleteAllowedActionIfExist();
         AllowedAction createAllowedAction = createAllowedAction(toJson())
                 .assertStatus(201)
                 .compareWithJsonSchema("jsonSchema/allowedAction/postAllowedAction.json")
@@ -94,12 +92,6 @@ public class AllowedAction extends Entity {
     private void deleteActionIfExist(String actionName) {
         if (isActionExists(actionName)) {
             deleteActionByName(actionName);
-        }
-    }
-
-    private void deleteAllowedActionIfExist() {
-        if (isAllowedActionExists(name)) {
-            deleteAllowedActionByName(name);
         }
     }
 }

@@ -233,6 +233,26 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка items у которых нет primary связи с конкретным item_id")
+    public static List<Item> getItemsListWithOutPrimaryRelation(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/?ext_rel_primary_not={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение списка items у которых нет secondary связи с конкретным item_id")
+    public static List<Item> getItemsListWithOutSecondaryRelation(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/?ext_rel_secondary_not={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
     @Step("Получение списка items по фильтру {filter}")
     public static List<Item> getItemsListByFilter(String filter) {
         return new Http(StateServiceURL)

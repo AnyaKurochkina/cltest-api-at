@@ -49,8 +49,8 @@ public class AllowedActionExportTest extends Tests {
     @TmsLink("1507936")
     @Test
     public void exportAllowedActionByIdTest() {
-        String allowedActionName = "allowed_action_export_test_api";
-        AllowedAction allowedAction = createAllowedAction(allowedActionName);
+        String allowedActionTitle = "allowed_action_export_test_api";
+        AllowedAction allowedAction = createAllowedAction(allowedActionTitle);
         exportAllowedActionById(String.valueOf(allowedAction.getId()));
     }
 }
