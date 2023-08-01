@@ -1,13 +1,10 @@
 package ui.t1.pages;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
 import ui.t1.pages.IAM.users.UsersPage;
@@ -17,11 +14,11 @@ import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
+import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
 import ui.t1.pages.supportCenter.NotificationsPage;
 
 import java.time.Duration;
 
-import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
@@ -39,6 +36,7 @@ public class IndexPage {
     Button linkVirtualMachines = Button.byXpath("//a[.='Серверы']");
     Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
     Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
+    Button linkVirtualIps = Button.byXpath("//a[.='Виртуальные IP-адреса']");
     Button linkImages = Button.byXpath("//a[.='Образы']");
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
@@ -46,9 +44,7 @@ public class IndexPage {
     Button linkTools = Button.byXpath("//a[.='Инструменты']");
     Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
-
-
-    final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
+    SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
 
     @Step("Переход на главную страницу")
     public static void go() {
@@ -56,7 +52,7 @@ public class IndexPage {
     }
 
     public Profile goToProfile(){
-        Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
+        linkProfile.shouldBe(Condition.visible).click();
         return new Profile();
     }
 
@@ -153,6 +149,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkPublicIps.click();
         return new PublicIpList();
+    }
+
+    @Step("Переход на страницу Публичные IP-адреса")
+    public VirtualIpList goToVirtualIps() {
+        linkCloudEngine.click();
+        linkVirtualIps.click();
+        return new VirtualIpList();
     }
 
     @Step("Отключить Cloud Engine")

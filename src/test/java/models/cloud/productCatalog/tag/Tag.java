@@ -44,7 +44,7 @@ public class Tag extends Entity implements IProductCatalog {
     }
 
     @Override
-    @Step("Создание шаблона")
+    @Step("Создание Тега")
     protected void create() {
         if (isTagExists(name)) {
             Tag template = getTagByName(name);

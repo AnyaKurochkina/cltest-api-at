@@ -6,6 +6,10 @@ Vault:
   - options:
       - { env: "DEV" }
 
+Etcd:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
 TarantoolDataGrid:
   - options:
       - { platform: "OpenStack", env: "DEV" }

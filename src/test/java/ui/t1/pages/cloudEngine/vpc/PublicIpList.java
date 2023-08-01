@@ -13,10 +13,10 @@ import java.util.List;
 
 public class PublicIpList {
 
-    @Step("Добавить IP в зоне {availabilityZone}")
-    public String addIp(String availabilityZone) {
+    @Step("Добавить IP в зоне {region}")
+    public String addIp(String region) {
         new IpTable().clickAdd();
-        Select.byLabel("Зона доступности").set(availabilityZone);
+        Select.byLabel("Регион").set(region);
         OrderUtils.clickOrder();
         boolean isEmpty = new IpTable().isEmpty();
         OrderUtils.waitCreate(() -> {

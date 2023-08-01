@@ -43,6 +43,8 @@ public class Item {
     @JsonProperty("order_id")
     private String orderId;
     private String status;
+    @JsonProperty("restriction_reasons")
+    private Object restrictionReasons;
     private String jsonTemplate;
     private String folder;
     @JsonProperty("maintance_mode")

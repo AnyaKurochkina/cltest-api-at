@@ -10,10 +10,7 @@ import models.cloud.orderService.products.Grafana;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
-import ui.elements.CheckBox;
-import ui.elements.Dialog;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.net.MalformedURLException;
 import java.util.List;
@@ -26,6 +23,7 @@ public class GrafanaPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_SNAPSHOT = "Снапшоты";
     private static final String HEADER_NAME_DB = "Имя базы данных";
+    private static final String STATUS = "Статус";
     private static final String POWER = "Питание";
     private static final String HEADER_CONSOLE = "Точка подключения";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
@@ -41,29 +39,29 @@ public class GrafanaPage extends IProductPage {
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new GrafanaPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(expectedStatus);
     }
 
     public void start() {
-        checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_OFF);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Включить");
         checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
-        checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить");
         checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void checkConfiguration() {
-        checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
 
     public void changeConfiguration() {
-        checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
@@ -86,7 +84,7 @@ public class GrafanaPage extends IProductPage {
         new GrafanaPage.VirtualMachineTable(POWER).checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
     public void reInventory() {
-        new GrafanaPage.VirtualMachineTable(POWER).checkPowerStatus(GenericDatabasePage.VirtualMachineTable.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Реинвентаризация ВМ (Linux)");
     }
@@ -123,13 +121,13 @@ public class GrafanaPage extends IProductPage {
     }
 
     public void restart() {
-        new GrafanaPage.VirtualMachineTable(POWER).checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Перезагрузить по питанию");
         new GrafanaPage.VirtualMachineTable(POWER).checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopHard() {
-        checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
 
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
@@ -138,36 +136,52 @@ public class GrafanaPage extends IProductPage {
 
     @Step("Добавить новые группы {group} с ролью {role}")
     public void addGroup(String role, List<String> groups) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").set(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         });
+        btnGeneralInfo.click();
+        new Table("Тип").getRow(0).get().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new GrafanaPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Изменить состав групп у роли {role} на {groups}")
     public void updateGroup(String role, List<String> groups) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new GrafanaPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             Select groupsElement = Select.byLabel("Группы").clear();
             groups.forEach(groupsElement::set);
         });
+        btnGeneralInfo.click();
+        new Table("Тип").getRow(0).get().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new GrafanaPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Удалить группу доступа с ролью {role}")
     public void deleteGroup(String role) {
-        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new GrafanaPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
-        Assertions.assertThrows(NotFoundException.class, () -> new GrafanaPage.RoleTable().getRoleRow(role));
+        btnGeneralInfo.click();
+        new Table("Тип").getRow(0).get().scrollIntoView(scrollCenter).click();
+        Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
+                role));
+    }
+    public void resetPassword() {
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(getBtnAction("default",2), "Сбросить пароль", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
+        });
     }
 
     public void issueClientCertificate(String nameCertificate) {
-        new GrafanaPage.VirtualMachineTable(POWER).checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithParameters(BLOCK_VM, "Выпустить клиентский сертификат", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Выпустить клиентский сертификат");
@@ -193,15 +207,17 @@ public class GrafanaPage extends IProductPage {
     }
 
     public class VirtualMachineTable extends VirtualMachine {
+        public VirtualMachineTable() {
+            super("Роли узла");
+        }
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }
 
         @Override
         public String getPowerStatus() {
-            return getPowerStatus(POWER);
+            return getPowerStatus(STATUS);
         }
-
     }
 
     //Таблица ролей

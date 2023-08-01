@@ -65,6 +65,7 @@ public class S3CephTenantPage extends IProductPage {
         getRoleNode().click();
         runActionWithoutParameters(BLOCK_PARAM, "Удалить бакет", ActionParameters.builder().node(getRoleNode()).build());
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
+        getBtnGeneralInfo().click();
         Assertions.assertFalse(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, "de-plux-bucket"), "Ошибка удаления");
     }
 
@@ -78,6 +79,7 @@ public class S3CephTenantPage extends IProductPage {
             CheckBox.byLabel("Версионирование").setChecked(true);
         }, ActionParameters.builder().node(getRoleNode()).build());
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
+        getBtnGeneralInfo().click();
         Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(BLOCK_VERSION, "true"), "Ошибка изменения");
     }
 

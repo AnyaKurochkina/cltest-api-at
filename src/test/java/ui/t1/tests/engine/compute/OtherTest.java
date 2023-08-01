@@ -78,7 +78,7 @@ public class OtherTest extends AbstractComputeTest {
     @TmsLink("1398375")
     @DisplayName("Cloud Compute. Создание/Удаление ВМ c публичным IP")
     void createVmWidthPublicIp() {
-        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
+        String ip = new IndexPage().goToPublicIps().addIp(region);
         PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity()).checkCreate(true);
         String orderIdIp = ipPage.getOrderId();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
@@ -297,7 +297,7 @@ public class OtherTest extends AbstractComputeTest {
     @Test
     @TmsLink("1398406")
     @DisplayName("Cloud Compute. Создание диска из пользовательского образа")
-    void creatDiskFromUserImage() {
+    void createDiskFromUserImage() {
         DiskCreate disk = new IndexPage()
                 .goToDisks()
                 .addDisk()

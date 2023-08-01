@@ -1,0 +1,91 @@
+OpenShiftProject:
+  - options:
+      - { env: "DEV" }
+
+Vault:
+  - options:
+      - { env: "DEV" }
+
+TarantoolDataGrid:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Grafana:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+GenericMonitoring:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+GenericDatabase:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+ApacheAirflow:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+ClickHouse:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+ClickHouseCluster:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+WildFly:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+PostgreSQL:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+RabbitMQClusterAstra:
+  - options:
+#      - { platform: "OpenStack", env: "DEV" }
+
+Nginx:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Redis:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Ubuntu:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Astra:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+LoadBalancer:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+PostgresSQLCluster:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+ElasticsearchOpensearchCluster:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+ScyllaDbCluster:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Artemis:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Moon:
+  - options:
+#      - { env: "DEV", resourcePoolLabel: "ds5-genr05.corp.dev.vtb - DEV-SRV-APP" }
+
+GitLab:
+  - options:
+#      - { env: "DEV" }

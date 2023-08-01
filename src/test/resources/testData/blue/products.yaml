@@ -9,6 +9,11 @@ OpenShiftProject:
       - { env: "DEV" }
       - { env: "HOTFIX" }
       - { env: "LT" }
+
+Etcd:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
 Vault:
   - options:
       - { env: "DEV" }
@@ -109,6 +114,7 @@ ApacheKafkaCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Ubuntu:
   - options:

@@ -24,6 +24,11 @@ public class RuleResponse extends AbstractEntity {
     private Date update_dt;
 
     @Override
+    protected int getPriority() {
+        return 0;
+    }
+
+    @Override
     public void delete() {
         deleteRuleById(id).assertStatus(204);
     }
