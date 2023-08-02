@@ -37,14 +37,19 @@ public class SshClient {
 
     @SneakyThrows
     public String execute(String cmd) {
-        Session session = initSession(host, user, password);
-        Channel channel = initChannel(cmd, session);
-        channel.connect();
-        if (!Waiting.sleep(channel::isClosed, Duration.ofMinutes(1)))
-            log.debug("SSH Соединение будет закрыто принудительно");
-        String res = out.toString();
-        log.debug("SSH response: {}", res);
-        return res;
+        try {
+            Session session = initSession(host, user, password);
+            Channel channel = initChannel(cmd, session);
+            channel.connect();
+            if (!Waiting.sleep(channel::isClosed, Duration.ofMinutes(1)))
+                log.debug("SSH Соединение будет закрыто принудительно");
+            String res = out.toString();
+            log.debug("SSH response: {}", res);
+            return res;
+        } catch (JSchException e){
+            log.debug("SSH connect error: {} {} {}", host, user, password);
+            throw e;
+        }
     }
 
     private Channel initChannel(String commands, Session session) throws JSchException {
