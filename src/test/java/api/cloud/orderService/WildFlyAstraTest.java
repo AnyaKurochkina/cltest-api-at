@@ -152,6 +152,16 @@ public class WildFlyAstraTest extends Tests {
         }
     }
 
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Заменить Java Wildfly {0}")
+    void wildflyChangeJava(WildFly product) {
+        try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            wildFly.wildflyChangeJava();
+        }
+    }
+
     @TmsLinks({@TmsLink("989482"),@TmsLink("989486")})
     @Disabled
     @Tag("actions")

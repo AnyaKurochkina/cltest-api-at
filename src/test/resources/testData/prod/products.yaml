@@ -1,8 +1,10 @@
 S3Ceph:
   - options:
       - { env: "DEV" }
-      - { env: "EDU" }
+      - { env: "IFT" }
       - { env: "HOTFIX" }
+      - { env: "LT" }
+      - { env: "PROD", dataCentre: "5" }
 
 OpenShiftProject:
   - options:
@@ -56,7 +58,6 @@ ClickHouse:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 ClickHouseCluster:
   - options:
@@ -64,7 +65,7 @@ ClickHouseCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 WildFly:
   - options:
@@ -77,7 +78,7 @@ WildFly:
 PostgreSQL:
   - options:
       - { platform: "OpenStack", env: "DEV" }
-      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
       - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }

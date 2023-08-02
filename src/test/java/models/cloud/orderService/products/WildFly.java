@@ -29,6 +29,7 @@ public class WildFly extends IProduct {
     String osVersion;
     @ToString.Include
     String wildFlyVersion;
+    private static String otherJavaVersion = "1.8.0";
     String javaVersion;
     Flavor flavor;
 
@@ -94,7 +95,8 @@ public class WildFly extends IProduct {
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
-        OrderServiceSteps.executeAction("wildfly_update_certs", this, new JSONObject().put("accept", true), this.getProjectId());
+        JSONObject data = new JSONObject().put("accept_cert_updating", true).put("is_balancer", false);
+        OrderServiceSteps.executeAction("wildfly_update_certs", this, data, this.getProjectId());
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
 
@@ -123,6 +125,11 @@ public class WildFly extends IProduct {
 
     public void restartService() {
         OrderServiceSteps.executeAction("wildfly_restart_wf", this, new JSONObject().put("accept", true), this.getProjectId());
+    }
+
+    public void wildflyChangeJava() {
+        JSONObject data = new JSONObject().put("accept", true).put("java_version", otherJavaVersion).put("wildfly_version", wildFlyVersion);
+        OrderServiceSteps.executeAction("wildfly_change_java", this, data, this.getProjectId());
     }
 
     //Добавление пользователя WildFly

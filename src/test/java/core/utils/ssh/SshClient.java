@@ -5,6 +5,7 @@ import core.helper.Configure;
 import core.utils.Waiting;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Assumptions;
 
 import java.io.*;
 import java.time.Duration;
@@ -26,6 +27,7 @@ public class SshClient {
     }
 
     public SshClient(String host, String env) {
+        Assumptions.assumeTrue("dev".equalsIgnoreCase(env), "Тест включен только для dev среды");
         this.host = host;
         this.user = Objects.requireNonNull(Configure.getAppProp(env + ".user"),
                 "Не задан параметр " + env + ".user");

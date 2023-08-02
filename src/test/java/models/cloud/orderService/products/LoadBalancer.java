@@ -20,6 +20,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
+import steps.references.ReferencesStep;
 
 import java.util.*;
 
@@ -34,6 +35,7 @@ public class LoadBalancer extends IProduct {
     String osVersion;
     Flavor flavor;
     String password;
+    String zone;
     @Builder.Default
     List<Backend> backends = new ArrayList<>();
     @Builder.Default
@@ -63,6 +65,10 @@ public class LoadBalancer extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if(zone == null)
+            setZone(ReferencesStep.getJsonPathList(String
+                    .format("tags__contains=%s,%s,available&directory__name=gslb_servers", envType().toUpperCase(), segment))
+                    .getString("[0].data.name"));
         return this;
     }
 
@@ -88,6 +94,7 @@ public class LoadBalancer extends IProduct {
                 .set("$.order.attrs.password", password)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", "superuser")
+                .set("$.order.attrs.dns_zone", zone)
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())

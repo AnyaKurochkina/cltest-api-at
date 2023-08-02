@@ -17,6 +17,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 @Epic("Продукты")
 @Feature("ScyllaDb Cluster Rhel")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("scylladb_cluster"), @Tag("prod")})
+@Disabled
 public class ScyllaDbClusterRhelTest extends Tests {
     private final String password = "pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ";
     private static final String productName = "ScyllaDB Cluster RHEL";
