@@ -36,7 +36,7 @@ public class ProductsPage {
     @Step("Раскрыть список продуктов")
     public ProductsPage expandProductsList() {
         try {
-            Waiting.find(() -> expandButtons.first().exists(), Duration.ofSeconds(7));
+            Waiting.find(() -> expandButtons.first().exists(), Duration.ofSeconds(10));
         } catch (Exception ignored) {
         }
         for (SelenideElement button : expandButtons) {

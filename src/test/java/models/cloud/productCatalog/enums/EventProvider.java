@@ -8,7 +8,8 @@ public enum EventProvider {
     TAAS("taas"),
     VSPHERE("vsphere"),
     OPENSTACK("openstack"),
-    WILDFLY("wildfly");
+    WILDFLY("wildfly"),
+    QA_AT("qa_at");
 
     private final String value;
 

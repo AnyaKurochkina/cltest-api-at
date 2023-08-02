@@ -48,7 +48,7 @@ public class UiWindowsTest extends UiProductTest {
     void orderWindows() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectCategory("Базовые вычисления")
