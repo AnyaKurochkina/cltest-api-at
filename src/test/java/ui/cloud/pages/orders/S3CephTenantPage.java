@@ -87,7 +87,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRule.click();
-        runActionWithParameters(getBtnAction("", 3), "Добавить правило жизненного цикла", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 3), "Добавить правило жизненного цикла", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Добавить правило жизненного цикла");
             dlgActions.setInputValue("Название", name);
@@ -105,7 +105,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRule.click();
-        runActionWithParameters(getBtnAction("", 4), "Изменить правило жизненного цикла", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 4), "Изменить правило жизненного цикла", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить правило жизненного цикла");
             dlgActions.setInputValue("Кол-во дней", size);
@@ -121,7 +121,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRuleCorse.click();
-        runActionWithParameters(getBtnAction("", 3), "Добавить cors", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 3), "Добавить cors", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Добавить cors");
             Input.byXpath("descendant::div/input").setValue("ruleCorse");
@@ -138,7 +138,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRuleCorse.click();
-        runActionWithParameters(getBtnAction("", 4), "Изменить правило CORS", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 4), "Изменить правило CORS", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить правило CORS");
             CheckBox.byLabel("PUT").setChecked(true);
@@ -154,7 +154,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRuleCorse.click();
-        runActionWithoutParameters(getBtnAction("", 4), "Удалить правило CORS", ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(getActionsMenuButton("", 4), "Удалить правило CORS", ActionParameters.builder().node(getRoleNode()).build());
         generalInfoTab.switchTo();
         getRoleNode().click();
         btnRuleCorse.click();
@@ -165,7 +165,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRule.click();
-        runActionWithoutParameters(getBtnAction("", 4), "Удалить правило жизненного цикла", ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(getActionsMenuButton("", 4), "Удалить правило жизненного цикла", ActionParameters.builder().node(getRoleNode()).build());
         generalInfoTab.switchTo();
         getRoleNode().click();
         btnRule.click();
@@ -199,7 +199,7 @@ public class S3CephTenantPage extends IProductPage {
 
     public void changeAccessPolicy() {
         btnAccessPolicy.click();
-        runActionWithParameters(getBtnAction("", 3), "Изменить политику", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 3), "Изменить политику", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить политику");
             dlgActions.setSelectValue(HEADER_RIGHTS, "Настраиваемые");
@@ -210,7 +210,7 @@ public class S3CephTenantPage extends IProductPage {
 
     public void deleteUser() {
         btnUsers.click();
-        runActionWithoutParameters(getBtnAction("", 3), "Удалить пользователя");
+        runActionWithoutParameters(getActionsMenuButton("", 3), "Удалить пользователя");
         btnUsers.click();
         Assertions.assertTrue(new Table(HEADER_NAME_USER).isEmpty(), "Ошибка удаления правила ");
     }

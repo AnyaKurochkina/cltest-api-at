@@ -10,6 +10,7 @@ import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.VersionDiff;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
+import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class Action extends Entity {
     private String title;
     private String type;
     @JsonProperty("required_item_statuses")
-    private List<Object> requiredItemStatuses;
+    private List<String> requiredItemStatuses;
     @JsonProperty("data_config_path")
     private String dataConfigPath;
     @JsonProperty("restricted_paths")
@@ -164,6 +165,7 @@ public class Action extends Entity {
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.event_type_provider", eventTypeProvider)
                 .set("$.tag_list", tagList)
+                .set("$.required_item_statuses", requiredItemStatuses)
                 .setIfNullRemove("$.available_with_cost_reduction", availableWithCostReduction)
                 .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)

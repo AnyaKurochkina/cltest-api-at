@@ -20,8 +20,7 @@ import ui.t1.pages.supportCenter.NotificationsPage;
 import java.time.Duration;
 
 import static core.helper.StringUtils.$x;
-import static ui.cloud.pages.orders.IProductPage.getBtnAction;
-
+import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
 @Getter
 public class IndexPage {
@@ -161,7 +160,7 @@ public class IndexPage {
 
     @Step("Отключить Cloud Engine")
     public void disconnectCloudEngine() {
-        SelenideElement btnAction = getBtnAction("T1 Cloud Engine");
+        SelenideElement btnAction = getActionsMenuButton("T1 Cloud Engine");
         Menu.byElement(btnAction).select("Отключить услугу");
         Button.byText("Отключить").click();
         Waiting.findWithRefresh(() -> !btnAction.isDisplayed(), Duration.ofMinutes(1));
