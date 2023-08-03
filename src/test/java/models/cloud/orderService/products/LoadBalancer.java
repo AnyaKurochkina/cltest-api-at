@@ -82,7 +82,6 @@ public class LoadBalancer extends IProduct {
     public JSONObject toJson() {
         Organization org = Organization.builder().build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -92,7 +91,7 @@ public class LoadBalancer extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.password", password)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
                 .set("$.order.attrs.ad_logon_grants[0].role", "superuser")
                 .set("$.order.attrs.dns_zone", zone)
                 .set("$.order.attrs.ad_integration", true)

@@ -68,7 +68,7 @@ public class Redis extends IProduct {
     }
 
     public JSONObject toJson() {
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         JsonTemplate template = JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId);
         if (envType().contains("prod")) {
