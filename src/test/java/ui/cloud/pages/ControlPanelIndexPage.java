@@ -18,6 +18,7 @@ import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.elements.Button;
 import ui.elements.Select;
+import ui.elements.Tab;
 
 import java.time.Duration;
 
@@ -38,9 +39,9 @@ public class ControlPanelIndexPage {
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
     private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
-    private final SelenideElement contextSettingsLink = $x("//a[@href='/meccano/context_settings']");
     private final Button mainMenuButton = Button.byXpath("//div[contains(@class, 'MainMenu')]//button");
     private final SelenideElement utilsMenuItem = $x("//div[text()='Утилиты']");
+    private final SelenideElement accountSettingsMenuItem = $x("//div[text()='Настройки аккаунта']");
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
@@ -113,7 +114,8 @@ public class ControlPanelIndexPage {
 
     @Step("Переход на страницу 'Настройки контекста'")
     public ContextSettingsPage goToContextSettingsPage() {
-        contextSettingsLink.click();
+        accountSettingsMenuItem.click();
+        Tab.byText("Настройки контекста").switchTo();
         return new ContextSettingsPage();
     }
 }

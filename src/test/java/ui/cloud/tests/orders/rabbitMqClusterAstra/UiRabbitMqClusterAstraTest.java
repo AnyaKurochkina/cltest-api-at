@@ -27,10 +27,8 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_rabbit_mq_cluster_astra")})
 public class UiRabbitMqClusterAstraTest extends UiProductTest {
     RabbitMQClusterAstra product;// = RabbitMQClusterAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/1b806df5-c1d1-4879-94f6-883bb88a5367/main?context=proj-iv550odo9a&type=project&org=vtb");
-
     String nameUser = "atUser";
     String nameHost = "atHostName";
-    String nameGroup = "cloud-soub-blue";
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -46,7 +44,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     void orderRabbitMQClusterAstra() {
         double prebillingCost;
         try {
-            String accessGroup =product.getAccessGroup();
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -257,7 +255,6 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("manager",accessGroup.getPrefixName()));
     }
-
 
     @Test
     @Order(100)

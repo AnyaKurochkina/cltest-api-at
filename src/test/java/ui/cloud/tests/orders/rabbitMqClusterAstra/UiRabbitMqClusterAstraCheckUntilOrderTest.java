@@ -53,9 +53,9 @@ class UiRabbitMqClusterAstraCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
-        orderPage.getGroup2Select().set(accessGroup.getPrefixName());
+        String accessGroup = product.getAccessGroup();
+        orderPage.getGroupSelect().set(accessGroup);
+        orderPage.getGroup2Select().set(accessGroup);
         new RabbitMqClusterAstraOrderPage().checkOrderDetails();
     }
 

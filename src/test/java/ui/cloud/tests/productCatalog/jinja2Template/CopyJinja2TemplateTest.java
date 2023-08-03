@@ -15,7 +15,7 @@ public class CopyJinja2TemplateTest extends Jinja2TemplateBaseTest {
     @Test
     @TmsLink("836591")
     @DisplayName("Копирование шаблона Jinja2")
-    public void createJinja2TemplateTest() {
+    public void copyJinja2TemplateTest() {
         String cloneName = NAME + "-clone";
         new ControlPanelIndexPage().goToJinja2TemplatesListPage()
                 .copy(jinja2Template);

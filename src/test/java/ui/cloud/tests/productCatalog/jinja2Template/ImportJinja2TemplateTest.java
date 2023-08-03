@@ -24,7 +24,7 @@ public class ImportJinja2TemplateTest extends Jinja2TemplateBaseTest {
     @Test
     @TmsLink("836758")
     @DisplayName("Импорт шаблона Jinja2 из файла")
-    public void importAllowedAction() {
+    public void importJinja2Template() {
         String data = JsonHelper.getStringFromFile("/productCatalog/jinja2/importJinja2Template.json");
         JsonPath json = new JsonPath(data);
         String name = json.getString("Jinja2Template.name");

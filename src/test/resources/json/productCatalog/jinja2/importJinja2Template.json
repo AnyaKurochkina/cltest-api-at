@@ -8,7 +8,12 @@
     "jinja2_data": {
       "policy_name": "my_policy",
       "project_name": "proj22"
-    }
+    },
+    "version_arr": [
+      1,
+      0,
+      0
+    ]
   },
   "rel_foreign_models": {},
   "dump_version": 5.0,

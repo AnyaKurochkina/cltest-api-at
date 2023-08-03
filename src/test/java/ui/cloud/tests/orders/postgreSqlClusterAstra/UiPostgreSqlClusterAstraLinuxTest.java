@@ -56,7 +56,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     void orderPostgreSqlCluster() {
         double preBillingProductPrice;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectCategory("Базы данных")

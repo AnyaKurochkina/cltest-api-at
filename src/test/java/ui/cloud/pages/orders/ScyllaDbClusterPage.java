@@ -131,7 +131,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         new ScyllaDbClusterPage.VirtualMachineTable()
                 .checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         if (new Table(HEADER_NAME_USER_DB, 2).isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb)) {
-            runActionWithoutParameters(getBtnAction(nameUserDb, 2), "Удалить права доступа пользователю БД");
+            runActionWithoutParameters(getActionsMenuButton(nameUserDb, 2), "Удалить права доступа пользователю БД");
             generalInfoTab.switchTo();
             Assertions.assertFalse(new Table(HEADER_NAME_USER_DB, 2)
                     .isColumnValueEquals(HEADER_NAME_USER_DB, nameUserDb), "Ошибка удаления прав доступа");
@@ -224,7 +224,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         generalInfoTab.switchTo();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getBtnAction(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
+        Assertions.assertFalse(getActionsMenuButton(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
         //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }
 

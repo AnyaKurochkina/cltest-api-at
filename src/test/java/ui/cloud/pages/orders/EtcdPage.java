@@ -83,7 +83,7 @@ public class EtcdPage extends IProductPage {
     }
 
     public void resetPassword(String name) {
-        runActionWithParameters(getBtnAction(name), "Сброс пароля", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton(name), "Сброс пароля", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сброс пароля");
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");

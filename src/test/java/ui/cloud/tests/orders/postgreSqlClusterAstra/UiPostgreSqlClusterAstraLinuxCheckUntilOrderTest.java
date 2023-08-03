@@ -39,7 +39,7 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1151310")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+        String accessGroup = product.getAccessGroup();
         new IndexPage()
                 .clickOrderMore()
                 .expandProductsList()

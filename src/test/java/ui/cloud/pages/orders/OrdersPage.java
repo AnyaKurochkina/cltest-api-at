@@ -7,4 +7,7 @@ public class OrdersPage extends Table {
         super("Продукт");
     }
 
+    public void openOrder(String label) {
+        getRowByColumnValue("Продукт", label).getElementByColumn("Продукт").click();
+    }
 }
