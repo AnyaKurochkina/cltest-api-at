@@ -97,7 +97,7 @@ public class LoadBalancer extends IProduct {
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
-                .set("$.order.attrs.layout", getIdGeoDistribution("balancer-1", envType().toUpperCase(), "balancer", org.getName()))
+                .set("$.order.attrs.layout", getIdGeoDistribution("balancer-2", envType().toUpperCase(), "balancer", org.getName()))
                 .set("$.order.attrs.on_support", getSupport())
                 .build();
     }
