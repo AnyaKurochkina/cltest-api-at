@@ -173,7 +173,7 @@ ScyllaDbCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Artemis:
   - options:
