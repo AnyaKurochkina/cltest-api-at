@@ -32,6 +32,7 @@ public class IndexPage {
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
+    Button linkMySubscriptions = Button.byXpath("//a[.='Мои подписки']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
@@ -166,13 +167,21 @@ public class IndexPage {
         Button.byText("Отключить").click();
     }
 
-    @Step("Переход в Центр уведомлений")
+    @Step("Переход в Центр уведомлений на страницу Мои уведомления")
     public NotificationsPage goToNotificationCenter(){
         linkSupportCenter.click();
         linkNotifications.click();
         return new NotificationsPage();
     }
 
+    @Step("Переход в Центр уведомлений на страницу Мои подписки")
+    public NotificationsPage goToMySubscriptions(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        linkMySubscriptions.click();
+
+        return new NotificationsPage();
+    }
 
 
 }
