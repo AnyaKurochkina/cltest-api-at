@@ -4,14 +4,19 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-
 import models.cloud.orderService.products.ScyllaDbCluster;
+import org.junit.EnabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 @Epic("Продукты")
 @Feature("ScyllaDb Cluster")
@@ -25,6 +30,20 @@ public class ScyllaDbClusterTest extends Tests {
     void create(ScyllaDbCluster product) {
         //noinspection EmptyTryBlock
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {}
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @EnabledIfEnv({"prod", "blue"})
+    @ParameterizedTest(name = "Заказ на быстрых дисках {0}")
+    void checkDiskVm(ScyllaDbCluster product) {
+        List<String> envs = Arrays.asList("LT", "PROD");
+        Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
+        try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
+            scyllaDb.checkVmDisk(new HashMap<String, String>() {{
+                put("*", "nvme");
+            }});
+        }
     }
 
     @TmsLink("1349521")
