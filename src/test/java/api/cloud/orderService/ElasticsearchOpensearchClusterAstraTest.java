@@ -6,13 +6,19 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ElasticsearchOpensearchCluster;
+import org.junit.EnabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 @Epic("Продукты")
 @Feature("Elasticsearch Opensearch Cluster Astra")
@@ -24,7 +30,24 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(ElasticsearchOpensearchCluster product) {
         //noinspection EmptyTryBlock
-        try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {}
+        try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @EnabledIfEnv({"prod", "blue"})
+    @ParameterizedTest(name = "Заказ на быстрых дисках {0}")
+    void checkDiskVm(ElasticsearchOpensearchCluster product) {
+        List<String> envs = Arrays.asList("LT", "DEV", "PROD");
+        Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
+        try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
+            String type = (elastic.getEnv().equals("LT") || elastic.getEnv().equals("PROD")) ? "nvme" : "ssd";
+            elastic.checkVmDisk(new HashMap<String, String>() {{
+                put("master", type);
+                put("data", type);
+            }});
+        }
     }
 
     @TmsLink("796250")
@@ -50,7 +73,7 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
     }
 
     @Disabled
-    @TmsLinks({@TmsLink("796244"),@TmsLink("796248")})
+    @TmsLinks({@TmsLink("796244"), @TmsLink("796248")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Выключить принудительно/Включить {0}")

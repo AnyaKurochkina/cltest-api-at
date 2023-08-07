@@ -7,13 +7,17 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.EnabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+
+import java.util.HashMap;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -28,6 +32,20 @@ public class ClickHouseClusterTest extends Tests {
     void create(ClickHouseCluster product) {
         //noinspection EmptyTryBlock
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @EnabledIfEnv({"prod", "blue"})
+    @ParameterizedTest(name = "Заказ на быстрых дисках {0}")
+    void checkDiskVm(ClickHouseCluster product) {
+        Assumptions.assumeTrue("LT".contains(product.getEnv()), "Тест только для среды LT");
+        try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
+            cluster.checkVmDisk(new HashMap<String, String>() {{
+                put("zookeeper", "nvme");
+                put("clickhouse", "nvme");
+            }});
         }
     }
 

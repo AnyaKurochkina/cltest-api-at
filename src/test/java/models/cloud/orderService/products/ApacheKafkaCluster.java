@@ -79,7 +79,6 @@ public class ApacheKafkaCluster extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         Organization org = Organization.builder().build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -89,7 +88,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.layout", getIdGeoDistribution("kafka-4:zookeeper-3", envType().toUpperCase(), "kafka", org.getName()))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .remove("$.order.attrs.ad_logon_grants", !isDev())
                 //Fix
