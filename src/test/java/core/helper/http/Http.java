@@ -149,7 +149,7 @@ public class Http {
         this.path = api.path;
         int i = 0;
         Pattern pattern = Pattern.compile("\\{([^}]*)}");
-        Matcher matcher = pattern.matcher(path);
+        Matcher matcher = pattern.matcher(path.replaceFirst("\\?(.*)", ""));
         while (matcher.find()) {
             pathParams.put(matcher.group(1), args[i].toString());
             i++;
@@ -255,14 +255,14 @@ public class Http {
         int status = 0;
 //        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
 //        path = url.getFile();
-
+        RequestSpecification specification = null;
         io.restassured.response.Response response = null;
         try {
             RequestSpecBuilder build = new RequestSpecBuilder();
             build.setBaseUri(host);
             build.build();
 
-            RequestSpecification specification = RestAssured.given()
+            specification = RestAssured.given()
                     .spec(build.build())
                  //   .filter(new SwaggerCoverage())
                     .config(RestAssured.config().sslConfig(sslConfig))
@@ -327,10 +327,8 @@ public class Http {
                     response = specification.get(pathWithoutParameters);
             }
 
-            path = SpecificationQuerier.query(specification).getDerivedPath();
-
             if (isLogged)
-                log.debug(String.format("%s URL: %s\n", method, (host + path)));
+                log.debug(String.format("%s URL: %s\n", method, SpecificationQuerier.query(specification).getURI()));
             if (field.length() == 0) {
                 if (body.length() > 0 || method.equals("POST")) {
                     if (isLogged)
@@ -342,14 +340,14 @@ public class Http {
                 throw e;
             if (response != null)
                 status = response.getStatusCode();
-            Assertions.fail(String.format("Ошибка отправки http запроса (%s) %s. \nОшибка: %s\nСтатус: %s", role, (host + path), e, status));
+            Assertions.fail(String.format("Ошибка отправки http запроса (%s) %s. \nОшибка: %s\nСтатус: %s", role, SpecificationQuerier.query(specification).getURI(), e, status));
         } finally {
             SEMAPHORE.release();
             if (response != null)
                 if (response.getTime() > 1000)
                     if (!((host + path).contains(TestITClient.properties.getUrl())))
                         DataFileHelper.appendToFile(TestsExecutionListener.responseTimeLog,
-                                String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, (host + path), response.getHeader("x-request-id")));
+                                String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, SpecificationQuerier.query(specification).getURI(), response.getHeader("x-request-id")));
         }
         if (isLogged)
             log.debug(String.format("RESPONSE (%d) (%s): %s\n\n", Objects.requireNonNull(response).getStatusCode(), response.getHeader("x-request-id"), response.getBody().asPrettyString()));

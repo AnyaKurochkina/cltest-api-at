@@ -96,7 +96,7 @@ public class Response {
         if(Objects.nonNull(page.getMeta()))
             count = page.getMeta().getTotalCount();
         while (count > items.size()) {
-            http.path = http.path.replaceAll("page=(\\d+)", "page=" + (++i));
+            http.queryParams.put("page", "" + (++i));
             page = http.setSourceToken("").filterRequest().assertStatus(200).extractAs(clazz);
             items.addAll(page.getList());
         }
