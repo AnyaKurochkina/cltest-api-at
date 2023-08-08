@@ -25,7 +25,7 @@ public class ApacheAirflowTest extends Tests {
 
     private static void createPostgres(ApacheAirflow product) {
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
-        if("LT".equalsIgnoreCase(product.getEnv()))
+        if("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
             abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
         try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
             String dbName = "airflow";

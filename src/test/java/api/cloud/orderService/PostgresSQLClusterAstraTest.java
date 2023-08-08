@@ -7,17 +7,17 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgresSQLCluster;
+import org.junit.EnabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -34,6 +34,22 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void create(PostgresSQLCluster product) {
         //noinspection EmptyTryBlock
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @EnabledIfEnv({"prod", "blue"})
+    @ParameterizedTest(name = "Заказ на быстрых дисках {0}")
+    void checkDiskVm(PostgresSQLCluster product) {
+        List<String> envs = Arrays.asList("LT", "PROD");
+        Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            String type = (postgres.getEnv().equals("PROD")) ? "nvme" : "ssd";
+            postgres.checkVmDisk(new HashMap<String, String>() {{
+                put("postgresql", type);
+                put("etcd", "hdd");
+            }});
         }
     }
 

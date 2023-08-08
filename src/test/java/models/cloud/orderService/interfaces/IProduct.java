@@ -156,6 +156,15 @@ public abstract class IProduct extends Entity {
                 .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
     }
 
+    @Step("Проверка дисков соответствию rules")
+    public void checkVmDisk(Map<String, String> rules) {
+        List<Map<String, String>> vmList = OrderServiceSteps.getProductsField(this,
+                "data.findAll{it.type=='vm'}.data.config.collect{[(it.node_roles==null?'*':it.node_roles[0]):it.storage_profile]}", List.class);
+        for(Map.Entry<String, String> rule : rules.entrySet())
+            Assertions.assertTrue(vmList.stream().filter(e -> e.containsKey(rule.getKey())).allMatch(e -> e.get(rule.getKey()).equalsIgnoreCase(rule.getValue())),
+                    "Диски не соответствуют правилу: " + rule.getKey() + ":" + rule.getValue());
+    }
+
     @Override
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         T entity = ObjectPoolService.create(this, exclusiveAccess, isPublic);

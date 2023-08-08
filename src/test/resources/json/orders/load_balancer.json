@@ -18,6 +18,7 @@
       "on_support": true,
       "os_version": "8.4",
       "data_center": "5",
+      "dns_zone": "",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },

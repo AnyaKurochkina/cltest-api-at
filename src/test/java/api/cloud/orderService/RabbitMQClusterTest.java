@@ -88,10 +88,11 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLink("377656")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать пользователя RabbitMQ {0}")
+    @ParameterizedTest(name = "Создать/Удалить пользователя RabbitMQ {0}")
     void createUser(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser("testapiuser");
+            rabbit.rabbitmqDeleteUser("testapiuser");
         }
     }
 
@@ -123,12 +124,12 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLinks({@TmsLink("707976"), @TmsLink("707978")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавление/Удаление прав на vhost {0}")
+    @ParameterizedTest(name = "Редактирование/Удаление прав на vhost {0}")
     void addVhostAccess(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser("vhostUser");
             rabbit.addVhost(Collections.singletonList("vhostAccess"));
-            rabbit.addVhostAccess("vhostUser", Arrays.asList("READ", "WRITE", "CONFIGURE"), "vhostAccess");
+            rabbit.editVhostAccess("vhostUser", Arrays.asList("READ", "WRITE", "CONFIGURE"), "vhostAccess");
             rabbit.deleteVhostAccess("vhostUser", "vhostAccess");
         }
     }
@@ -154,7 +155,7 @@ public class RabbitMQClusterTest extends Tests {
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_users"), "sshUser");
             rabbit.addVhost(Collections.singletonList("sshVhostAccess"));
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_vhosts"), "sshVhostAccess");
-            rabbit.addVhostAccess("sshUser", Collections.singletonList("READ"), "sshVhostAccess");
+            rabbit.editVhostAccess("sshUser", Collections.singletonList("READ"), "sshVhostAccess");
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_permissions"), "sshUser");
         }
     }
@@ -189,12 +190,11 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить/удалить группу доступа {0}")
+    @ParameterizedTest(name = "Редактировать группу доступа {0}")
     void accessGroupsOnTheWeb(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             String group = rabbit.getAccessGroup();
-            rabbit.deleteAccessGroupsOnTheWeb(group, rabbit.getRole());
-            rabbit.addAccessGroupsOnTheWeb(group, rabbit.getRole());
+            rabbit.editAccessGroupsOnTheWeb(group, rabbit.getRole());
         }
     }
 
