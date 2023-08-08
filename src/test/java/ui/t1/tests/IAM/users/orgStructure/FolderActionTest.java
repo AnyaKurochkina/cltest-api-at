@@ -10,6 +10,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import ui.elements.Alert;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IAM.OrgStructurePage;
 import ui.t1.pages.IndexPage;
@@ -17,7 +18,6 @@ import ui.t1.pages.T1LoginPage;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.resourceManager.ResourceManagerSteps.deleteFolder;
 
 @Epic("IAM и Управление")
 @Feature("Действия с проектом")
@@ -36,8 +36,8 @@ public class FolderActionTest extends Tests {
     }
 
     @Test
-    @DisplayName("Создание/редактирование/удаление папки")
-    public void createAndDeleteFolder() {
+    @DisplayName("Создание/удаление папки")
+    public void createAndDeleteFolderTest() {
         String folderName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         assertTrue(new IndexPage().goToOrgStructure()
                 .createFolder(folderName)
@@ -49,7 +49,7 @@ public class FolderActionTest extends Tests {
 
     @Test
     @DisplayName("Редактирование папки")
-    public void editFolder() {
+    public void editFolderTest() {
         String folderName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         String newName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         assertTrue(new IndexPage()
@@ -57,6 +57,19 @@ public class FolderActionTest extends Tests {
                 .createFolder(folderName)
                 .changeNameFolder(folderName, newName)
                 .isFolderExist(newName));
-        deleteFolder(newName);
+        new OrgStructurePage()
+                .deleteFolder(newName);
+    }
+
+    @Test
+    @DisplayName("Удаление папки, находясь в ее контексте")
+    public void deleteFolderInContextTest() {
+        String folderName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
+        new IndexPage()
+                .goToOrgStructure()
+                .createFolder(folderName)
+                .selectContext(folderName)
+                .deleteFolder(folderName);
+        new Alert().check(Alert.Color.GREEN, "Выбран контекст:");
     }
 }

@@ -18,6 +18,7 @@ import static com.codeborne.selenide.Selenide.$x;
 public class OrgStructurePage {
     SelenideElement createAction = $x("//div[text() = 'Создать проект']");
     SelenideElement createFolderAction = $x("//div[text() = 'Создать папку']");
+    SelenideElement selectContextAction = $x("//div[text() = 'Выбрать контекст']");
     SelenideElement deleteAction = $x("//div[text() = 'Удалить']");
     SelenideElement editAction = $x("//div[text() = 'Редактировать']");
 
@@ -40,6 +41,17 @@ public class OrgStructurePage {
                 .setInputValue("Наименование", name)
                 .clickButton("Создать");
         Alert.green(String.format("Папка \"%s\" создана", name));
+        return this;
+    }
+
+    @Step("Выбрать контекст")
+    public OrgStructurePage selectContext(String name) {
+        new OrgTable().getRowByColumnValue("Название", name)
+                .get().$x(".//button[@id='actions-menu-button']")
+                .click();
+        selectContextAction.shouldBe(Condition.visible).click();
+        Alert.green(String.format("Выбран контекст: Папка \"%s\"", name));
+        Waiting.sleep(5000);
         return this;
     }
 
