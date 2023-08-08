@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLink;
 import models.t1.imageService.Categories;
 import models.t1.imageService.Image;
 import models.t1.imageService.Marketing;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -60,13 +61,15 @@ public class ImageTest extends Tests {
     @TmsLink("")
     @DisplayName("Обновление categories у Image")
     public void updateImageCategoriesTest() {
-        Categories category= createCategories("categories_for_image_test_api");
+        Categories category = createCategories(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_at_api");
+        Categories category2 = createCategories(RandomStringUtils.randomAlphabetic(6).toLowerCase()+ "_at_api");
         Image ubuntu = getImageByName("ubuntu");
         partialUpdateImageById(Objects.requireNonNull(ubuntu).getInternalId(), new JSONObject().put("category_ids", Collections.singletonList(category.getId())));
         Image imageById = getImageById(ubuntu.getInternalId());
         List<Categories> listCategory = imageById.getCategories();
         assertTrue(listCategory.contains(category));
-        partialUpdateImageById(Objects.requireNonNull(ubuntu).getInternalId(), new JSONObject().put("category_ids", Collections.emptyList()));
-       assertTrue(getImageById(ubuntu.getInternalId()).getCategories().isEmpty());
+        partialUpdateImageById(Objects.requireNonNull(ubuntu).getInternalId(), new JSONObject().put("category_ids", Collections.singletonList(category2.getId())));
+        deleteCategoryById(category.getId());
+        assertTrue(getImageById(ubuntu.getInternalId()).getCategories().contains(category2));
     }
 }

@@ -17,12 +17,8 @@ import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.elements.Button;
-import ui.elements.Select;
-
-import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.switchTo;
 
 @Getter
 public class ControlPanelIndexPage {
@@ -38,9 +34,12 @@ public class ControlPanelIndexPage {
     private final SelenideElement servicesLink = $x("//a[@href='/meccano/services']");
     private final SelenideElement productsLink = $x("//a[@href='/meccano/products']");
     private final SelenideElement auditLink = $x("//a[@href='/day2/audit']");
+    private final SelenideElement organizationLink = $x("//a[@href='/iam/organizations']");
     private final SelenideElement contextSettingsLink = $x("//a[@href='/meccano/context_settings']");
     private final Button mainMenuButton = Button.byXpath("//div[contains(@class, 'MainMenu')]//button");
     private final SelenideElement utilsMenuItem = $x("//div[text()='Утилиты']");
+    private final SelenideElement iamMenuItem = $x("//div[text()='IAM и Управление']");
+
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {

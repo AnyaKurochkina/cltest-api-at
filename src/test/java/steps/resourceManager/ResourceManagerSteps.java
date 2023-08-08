@@ -1,8 +1,10 @@
 package steps.resourceManager;
 
 import core.enums.Role;
+import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.http.Response;
+import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import steps.Steps;
 
@@ -34,5 +36,13 @@ public class ResourceManagerSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getString("data.path"));
+    }
+
+    @Step("Удаление папки с именем {name}")
+    public static void deleteFolder(String name) {
+        new Http(Configure.ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .delete("/v1/folders/" + name)
+                .assertStatus(204);
     }
 }
