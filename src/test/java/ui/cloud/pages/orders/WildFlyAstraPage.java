@@ -77,7 +77,7 @@ public class WildFlyAstraPage extends IProductPage {
     }
 
     public void delete() {
-        runActionWithParameters(getBtnAction("", 2), "Удалить рекурсивно", "Удалить", () ->
+        runActionWithParameters(getActionsMenuButton("", 2), "Удалить рекурсивно", "Удалить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
@@ -100,7 +100,7 @@ public class WildFlyAstraPage extends IProductPage {
     @Step("Обновить ОС сервера WildFly")
     public void updateServerOs() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getBtnAction("", 2), "Обновить ОС сервера Wildfly", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton("", 2), "Обновить ОС сервера Wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -108,7 +108,7 @@ public class WildFlyAstraPage extends IProductPage {
     @Step("Заменить Java Wildfly")
     public void changeJavaWildFly(String versionWildFly,String versionJava) {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getBtnAction("", 2), "Заменить Java Wildfly", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton("", 2), "Заменить Java Wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
             Dialog dlg = new Dialog("Заменить Java Wildfly");
             dlg.setSelectValue("Текущая ерсия Wildfly",versionWildFly);
@@ -129,7 +129,7 @@ public class WildFlyAstraPage extends IProductPage {
     @Step("Остановить сервис Wildfly")
     public void stopService() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getBtnAction("", 2), "Остановить сервис Wildfly", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton("", 2), "Остановить сервис Wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -138,14 +138,14 @@ public class WildFlyAstraPage extends IProductPage {
     @Step("Запустить сервис Wildfly")
     public void startService() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(getBtnAction("", 2), "Запустить сервис Wildfly");
+        runActionWithoutParameters(getActionsMenuButton("", 2), "Запустить сервис Wildfly");
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Перезапустить сервис Wildfly")
     public void resetService() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getBtnAction("", 2), "Перезапустить сервис Wildfly", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton("", 2), "Перезапустить сервис Wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -154,7 +154,7 @@ public class WildFlyAstraPage extends IProductPage {
     @Step("Синхронизировать конфигурацию сервера WildFly")
     public void synchronizeService() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(getBtnAction("", 2), "Синхронизировать конфигурацию сервера WildFly");
+        runActionWithoutParameters(getActionsMenuButton("", 2), "Синхронизировать конфигурацию сервера WildFly");
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 

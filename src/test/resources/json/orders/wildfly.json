@@ -1,65 +1,58 @@
 {
-	"order": {
-		"attrs": {
-			"access_group": [
-				"cloud-zorg-ift-group"
-			],
-			"ad_integration": true,
-			"ad_logon_grants": [
-				{
-					"groups": [
-						"cloud-zorg-ift-group"
-					],
-					"role": "user"
-				}
-			],
-			"balancer_type": "no",
-			"data_center": "5",
-			"default_nic": {
-				"net_segment": "test-srv-synt"
-			},
-			"domain": "test.vtb.ru",
-			"extra_mounts": [
-				{
-					"file_system": "xfs",
-					"path": "/app/app",
-					"size": 30
-				},
-				{
-					"file_system": "xfs",
-					"path": "/app/logs",
-					"size": 20
-				}
-			],
-			"extra_nics": [
-			],
-			"flavor": {
-				"cpus": 2,
-				"memory": 4,
-				"name": "c2m4",
-				"uuid": "3dfab004-286c-4f39-9932-baf865756a23"
-			},
-			"info_access_group": {
-			},
-			"info_ad": {
-			},
-			"info_balancer": {
-			},
-			"info_devops": {
-			},
-			"info_os": {
-			},
-			"info_vm": {
-			},
-			"java_version": "11.0.12",
-			"on_support": true,
-			"os_version": "1.7",
-			"platform": "OpenStack",
-			"wildfly_version": "28.0.1.Final"
-		},
-		"count": 1,
-		"label": "WildFly Astra",
-		"product_id": "d69ab3f7-6925-46db-b2ac-9f48e9c0f79e",
-		"project_name": "proj-114wetem0c"
-	}
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "d69ab3f7-6925-46db-b2ac-9f48e9c0f79e",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "info_ad": {},
+      "info_os": {},
+      "info_vm": {},
+      "platform": "OpenStack",
+      "extra_nics": [],
+      "on_support": true,
+      "os_version": "1.7",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "info_devops": {},
+      "access_group": [
+        "cloud-zorg-dev-group"
+      ],
+      "extra_mounts": [
+        {
+          "path": "/app/app",
+          "size": 30,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/logs",
+          "size": 20,
+          "file_system": "xfs"
+        }
+      ],
+      "balancer_type": "no",
+      "info_balancer": {},
+      "ad_integration": true,
+      "wildfly_version": "23.0.2.Final",
+      "info_access_group": {},
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ],
+      "java_version": "1.8.0"
+    },
+    "count": 1,
+    "label": "WildFly Astra"
+  }
 }

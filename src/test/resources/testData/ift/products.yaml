@@ -93,3 +93,7 @@ Moon:
 GitLab:
   - options:
 #      - { env: "DEV" }
+
+TestProduct:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }

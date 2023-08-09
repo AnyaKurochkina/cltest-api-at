@@ -2,6 +2,7 @@ package ui.cloud.pages.productCatalog.template;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -28,6 +29,7 @@ public class TemplatesListPage extends EntityListPage {
 
     public TemplatesListPage() {
         pageTitle.shouldBe(Condition.visible);
+        WebDriverRunner.getWebDriver().manage().window().maximize();
     }
 
     @Step("Создание шаблона узлов '{template.name}'")

@@ -1,8 +1,10 @@
 S3Ceph:
   - options:
       - { env: "DEV" }
-      - { env: "EDU" }
+      - { env: "IFT" }
       - { env: "HOTFIX" }
+      - { env: "LT" }
+      - { env: "PROD", dataCentre: "5" }
 
 OpenShiftProject:
   - options:
@@ -32,6 +34,7 @@ GenericMonitoring:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 GenericDatabase:
   - options:
@@ -39,6 +42,7 @@ GenericDatabase:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 ApacheAirflow:
   - options:
@@ -46,6 +50,7 @@ ApacheAirflow:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 ClickHouse:
   - options:
@@ -60,6 +65,7 @@ ClickHouseCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 WildFly:
   - options:
@@ -67,13 +73,15 @@ WildFly:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 PostgreSQL:
   - options:
       - { platform: "OpenStack", env: "DEV" }
-      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 RabbitMQClusterAstra:
   - options:
@@ -81,6 +89,7 @@ RabbitMQClusterAstra:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Windows:
   - options:
@@ -88,6 +97,7 @@ Windows:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Nginx:
   - options:
@@ -95,6 +105,7 @@ Nginx:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Redis:
   - options:
@@ -102,6 +113,7 @@ Redis:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 KafkaService:
   - options:
@@ -113,6 +125,7 @@ ApacheKafkaCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Ubuntu:
   - options:
@@ -120,6 +133,7 @@ Ubuntu:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Astra:
   - options:
@@ -127,6 +141,7 @@ Astra:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 LoadBalancer:
   - options:
@@ -134,6 +149,7 @@ LoadBalancer:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 PostgresSQLCluster:
   - options:
@@ -141,6 +157,7 @@ PostgresSQLCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 ElasticsearchOpensearchCluster:
   - options:
@@ -148,6 +165,7 @@ ElasticsearchOpensearchCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 ScyllaDbCluster:
   - options:
@@ -155,6 +173,7 @@ ScyllaDbCluster:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Artemis:
   - options:
@@ -162,6 +181,7 @@ Artemis:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Moon:
   - options:

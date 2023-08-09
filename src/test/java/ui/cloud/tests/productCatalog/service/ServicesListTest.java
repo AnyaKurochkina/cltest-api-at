@@ -38,7 +38,7 @@ public class ServicesListTest extends ServiceBaseTest {
     @Test
     @TmsLink("770468")
     @DisplayName("Фильтрация списка сервисов")
-    public void filterOrderTemplatesTest() {
+    public void filterServicesTest() {
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .setStatusFilter("Опубликован")
                 .applyFilters()

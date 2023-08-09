@@ -17,8 +17,13 @@ import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.elements.Button;
+import ui.elements.Select;
+import ui.elements.Tab;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.switchTo;
 
 @Getter
 public class ControlPanelIndexPage {
@@ -40,6 +45,7 @@ public class ControlPanelIndexPage {
     private final SelenideElement utilsMenuItem = $x("//div[text()='Утилиты']");
     private final SelenideElement iamMenuItem = $x("//div[text()='IAM и Управление']");
 
+    private final SelenideElement accountSettingsMenuItem = $x("//div[text()='Настройки аккаунта']");
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
@@ -112,7 +118,8 @@ public class ControlPanelIndexPage {
 
     @Step("Переход на страницу 'Настройки контекста'")
     public ContextSettingsPage goToContextSettingsPage() {
-        contextSettingsLink.click();
+        accountSettingsMenuItem.click();
+        Tab.byText("Настройки контекста").switchTo();
         return new ContextSettingsPage();
     }
 }

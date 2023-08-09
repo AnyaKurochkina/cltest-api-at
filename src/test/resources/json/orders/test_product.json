@@ -1,0 +1,33 @@
+{
+  "order": {
+    "project_name": "proj-pkvckn08w9",
+    "product_id": "e80170bb-f601-494f-8a9d-762cf2fcd887",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "platform": "OpenStack",
+      "extra_nics": [],
+      "on_support": true,
+      "os_version": "7.9",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 10,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true
+    },
+    "count": 1,
+    "label": "AT UI Product"
+  }
+}
