@@ -44,6 +44,15 @@ public class OrgStructurePage {
         return this;
     }
 
+    @Step("Открыть модальное окно у папки/проекта/организации")
+    public ModalWindow openModalWindow(String name) {
+        String type = new OrgTable().getRowByColumnValue("Название", name).getValueByColumn("Тип");
+        new OrgTable().getRowByColumnValue("Название", name)
+                .get()
+                .click();
+        return new ModalWindow(String.format("%s \"%s\"",type, name));
+    }
+
     @Step("Выбрать контекст")
     public OrgStructurePage selectContext(String name) {
         new OrgTable().getRowByColumnValue("Название", name)
