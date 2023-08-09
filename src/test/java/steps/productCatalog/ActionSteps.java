@@ -42,15 +42,6 @@ public class ActionSteps extends Steps {
                 .extractAs(GetActionList.class).getList();
     }
 
-    @Step("Получение списка действий продуктового каталога")
-    public static GetActionList f(Integer next) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(actionUrl + "?page={}", next)
-                .assertStatus(200)
-                .extractAs(GetActionList.class);
-    }
-
     @Step("Получение Meta данных списка действий продуктового каталога")
     public static Meta getMetaActionList() {
         return new Http(ProductCatalogURL)

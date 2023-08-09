@@ -75,10 +75,6 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("158901"), @TmsLink("767870")})
     @DisplayName("VMware. Зарезервировать/отозвать внешние IP адреса")
     public void reserveExternalIPAddressesTest() {
-//        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
-//                .goToOrganization("ift-298df4a4177-at-ui")
-//                .selectDataCentre("lhhkuclyhn-at-ui");
-
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);

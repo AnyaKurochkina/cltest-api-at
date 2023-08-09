@@ -22,11 +22,12 @@ import java.util.Objects;
 import static core.helper.StringUtils.$x;
 
 @Getter
+
 public class Table implements TypifiedElement {
-    List<String> headers;
-    SelenideElement table;
-    ElementsCollection rows;
-    ElementsCollection headersCollection;
+    protected List<String> headers;
+    protected SelenideElement table;
+    protected ElementsCollection rows;
+    protected ElementsCollection headersCollection;
     @Language("XPath")
     private String xpath;
 

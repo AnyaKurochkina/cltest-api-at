@@ -1,12 +1,14 @@
 package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.elements.Button;
 import ui.elements.Menu;
+import ui.t1.pages.IAM.OrgStructurePage;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
@@ -19,6 +21,8 @@ import ui.t1.pages.supportCenter.NotificationsPage;
 
 import java.time.Duration;
 
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
@@ -44,7 +48,9 @@ public class IndexPage {
     Button linkTools = Button.byXpath("//a[.='Инструменты']");
     Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
+    Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
     SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
+    SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
 
     @Step("Переход на главную страницу")
     public static void go() {
@@ -93,6 +99,13 @@ public class IndexPage {
         linkIAM.click();
         linkUsers.click();
         return new UsersPage();
+    }
+
+    @Step("Переход на страницу Орг. структура")
+    public OrgStructurePage goToOrgStructure() {
+        linkIAM.click();
+        linkOrgStructure.click();
+        return new OrgStructurePage();
     }
 
     @Step("Переход на страницу Виртуальные машины")
@@ -174,6 +187,15 @@ public class IndexPage {
         return new NotificationsPage();
     }
 
+    @Step("Переход в модальное окно изменения контекста")
+    public ContextDialog changeContext(){
+        changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
+        return new ContextDialog();
+    }
 
-
+    @Step("Проверка отображения имени {contextName} контекста")
+    public boolean isContextNameDisplayed(String contextName){
+        Selenide.refresh();
+        return $x("//div[text() = '{}']", contextName).shouldBe(Condition.visible).isDisplayed();
+    }
 }
