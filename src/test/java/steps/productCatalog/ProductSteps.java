@@ -403,11 +403,12 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Копирование продукта по Id")
-    public static void copyProductById(String objectId) {
-        new Http(ProductCatalogURL)
+    public static Product copyProductById(String objectId) {
+        return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(productUrl + objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(200)
+                .extractAs(Product.class);
     }
 
     @Step("Копирование продукта по имени {name}")

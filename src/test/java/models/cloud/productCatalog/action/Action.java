@@ -70,6 +70,7 @@ public class Action extends Entity {
     @JsonProperty("graph_id")
     private String graphId;
     private String version;
+    private String object_info;
     @JsonProperty("last_version")
     private String lastVersion;
     @JsonProperty("data_config_key")
@@ -131,6 +132,8 @@ public class Action extends Entity {
     private Boolean skipRestrictionService;
     @JsonProperty("skip_item_change")
     private Boolean skipItemChange;
+    @JsonProperty("skip_item_with_secondary_rel")
+    private Boolean skipItemWithSecondaryRel;
 
     @Override
     public Entity init() {
@@ -147,6 +150,7 @@ public class Action extends Entity {
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.name", name)
+                .set("$.object_info", object_info)
                 .set("$.title", title)
                 .set("$.type", type)
                 .set("$.current_version", currentVersion)
@@ -179,6 +183,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_reservation", skipReservation)
                 .setIfNullRemove("$.skip_item_change", skipItemChange)
                 .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
+                .setIfNullRemove("$.skip_item_with_secondary_rel", skipItemWithSecondaryRel)
                 .build();
     }
 

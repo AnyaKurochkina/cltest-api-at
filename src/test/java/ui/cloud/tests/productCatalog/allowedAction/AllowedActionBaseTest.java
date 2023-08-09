@@ -24,6 +24,6 @@ public class AllowedActionBaseTest extends BaseTest {
 
     @BeforeEach
     public void setUp() {
-        allowedAction = createAllowedAction(NAME, TITLE);
+        allowedAction = createAllowedAction(TITLE);
     }
 }

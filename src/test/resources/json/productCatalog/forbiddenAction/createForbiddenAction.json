@@ -1,6 +1,6 @@
 {
-  "name": "string",
   "title": "AT API Forbidden Action",
+  "object_info": "",
   "description": "Description",
   "event_type_provider": [
     {

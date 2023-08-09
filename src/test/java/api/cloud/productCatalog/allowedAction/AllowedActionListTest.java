@@ -27,10 +27,8 @@ public class AllowedActionListTest extends Tests {
     @TmsLink("1242975")
     @Test
     public void getAllowedActionListTest() {
-        String actionName = "get_allowed_action_list_test_api";
         AllowedAction action = AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
+                .title("get_allowed_action_list_test_api")
                 .build()
                 .createObject();
         List<AllowedAction> allowedActionList = getAllowedActionList();

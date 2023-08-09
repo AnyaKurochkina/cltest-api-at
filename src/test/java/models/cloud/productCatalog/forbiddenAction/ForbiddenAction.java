@@ -40,6 +40,7 @@ public class ForbiddenAction extends Entity {
     private Object contextRestrictions;
     @JsonProperty("update_dt")
     private String updateDt;
+    private String object_info;
     private String name;
     @JsonProperty("create_dt")
     private String createDt;
@@ -51,13 +52,9 @@ public class ForbiddenAction extends Entity {
     private Boolean isAllLevels;
     @JsonProperty("direction")
     private String direction;
-    private String jsonTemplate;
-    private String productName;
 
     @Override
     public Entity init() {
-        jsonTemplate = "productCatalog/forbiddenAction/createForbiddenAction.json";
-        productName = "/api/v1/forbidden_actions/";
         if (actionId == null) {
             Action action = Action.builder().name(RandomStringUtils.randomAlphabetic(10).toLowerCase())
                     .build()
@@ -69,9 +66,9 @@ public class ForbiddenAction extends Entity {
 
     @Override
     public JSONObject toJson() {
-        return JsonHelper.getJsonTemplate(jsonTemplate)
-                .set("$.name", name)
+        return JsonHelper.getJsonTemplate("productCatalog/forbiddenAction/createForbiddenAction.json")
                 .set("$.title", title)
+                .set("$.object_info", object_info)
                 .set("$.description", description)
                 .set("$.action", actionId)
                 .set("$.item_restriction", itemRestriction)
@@ -91,7 +88,7 @@ public class ForbiddenAction extends Entity {
         ForbiddenAction forbiddenAction = new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
-                .post(productName)
+                .post("/api/v1/forbidden_actions/")
                 .assertStatus(201)
                 .extractAs(ForbiddenAction.class);
         StringUtils.copyAvailableFields(forbiddenAction, this);

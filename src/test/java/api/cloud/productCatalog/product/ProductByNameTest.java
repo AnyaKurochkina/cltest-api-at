@@ -14,6 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.*;
 
@@ -83,6 +85,22 @@ public class ProductByNameTest extends Tests {
         assertTrue(isProductExists(cloneName), "Продукт не существует");
         deleteProductByName(cloneName);
         assertFalse(isProductExists(cloneName), "Продукт существует");
+    }
+
+    @DisplayName("Проверка tag_list при копировании продукта V2")
+    @TmsLink("")
+    @Test
+    public void copyProductAndCheckTagListV2Test() {
+        String productName = "clone_product_and_check_tag_list_v2_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .tagList(Arrays.asList("api_test", "test"))
+                .build()
+                .createObject();
+        Product cloneProduct = copyProductByName(productName);
+        deleteProductById(cloneProduct.getProductId());
+        assertEquals(product.getTagList(), cloneProduct.getTagList());
     }
 
     @Test

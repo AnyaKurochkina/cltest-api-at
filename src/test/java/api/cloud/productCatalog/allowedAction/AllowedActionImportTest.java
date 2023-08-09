@@ -3,18 +3,18 @@ package api.cloud.productCatalog.allowedAction;
 import api.Tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
-import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.ActionSteps.getActionById;
 import static steps.productCatalog.AllowedActionSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
@@ -27,38 +27,35 @@ import static steps.productCatalog.ProductSteps.importProduct;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AllowedActionImportTest extends Tests {
     private static final String PATHNAME = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/importAllowedAction.json";
+    private static final String PATHNAME2 = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/importAllowedAction2.json";
 
     @DisplayName("Импорт разрешенного действия")
     @TmsLink("1320447")
     @Test
     public void importAllowedActionTest() {
-        String data = JsonHelper.getStringFromFile("productCatalog/allowedAction/importAllowedAction.json");
-        String allowedActionName = new JsonPath(data).get("AllowedAction.name");
-        if (isAllowedActionExists(allowedActionName)) {
-            deleteAllowedActionByName(allowedActionName);
-        }
+        JSONObject jsonObject = AllowedAction.builder()
+                .title("import_allowed_action_test_api")
+                .actionId(createAction().getActionId())
+                .build()
+                .toJson();
+        AllowedAction allowedAction = createAllowedAction(jsonObject).assertStatus(201).extractAs(AllowedAction.class);
+        String actionName = allowedAction.getName();
+        DataFileHelper.write(PATHNAME, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
+        deleteAllowedActionByName(actionName);
         ImportObject importObject = importAllowedAction(PATHNAME);
-        assertEquals(allowedActionName, importObject.getObjectName());
+        assertEquals(actionName, importObject.getObjectName());
         assertEquals("success", importObject.getStatus());
-        assertTrue(isAllowedActionExists(allowedActionName), "Разрешенное действие не существует");
-        deleteAllowedActionByName(allowedActionName);
-        assertFalse(isAllowedActionExists(allowedActionName), "Разрешенное действие существует");
+        assertTrue(isAllowedActionExists(actionName), "Разрешенное действие не существует");
     }
 
     @DisplayName("Импорт нескольких разрешенный действий")
     @TmsLink("1507972")
     @Test
     public void importMultiAllowedActionTest() {
-        String allowedActionName = "import_allowed_action_test_api";
-        if (isAllowedActionExists(allowedActionName)) {
-            deleteAllowedActionByName(allowedActionName);
-        }
-        String allowedActionName2 = "import_allowed_action2_test_api";
-        if (isAllowedActionExists(allowedActionName2)) {
-            deleteAllowedActionByName(allowedActionName2);
-        }
-        AllowedAction allowedAction = createAllowedAction(allowedActionName);
-        AllowedAction allowedAction2 = createAllowedAction(allowedActionName2);
+        AllowedAction allowedAction = createAllowedAction("multi_import_allowed_action_test_api");
+        AllowedAction allowedAction2 = createAllowedAction("multi_import_allowed_action2_test_api");
+        String allowedActionName = allowedAction.getName();
+        String allowedActionName2 = allowedAction2.getName();
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedAction.json";
         String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/multiAllowedAction2.json";
         DataFileHelper.write(filePath, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
@@ -78,15 +75,14 @@ public class AllowedActionImportTest extends Tests {
     @TmsLink("1320574")
     @Test
     public void importExistAllowedActionTest() {
-        String allowedActionName = "import_exist_allowed_action_test_api";
-        AllowedAction allowedAction = createAllowedAction(allowedActionName);
+        AllowedAction allowedAction = createAllowedAction("import_exist_allowed_action_test_api");
         Action action = getActionById(allowedAction.getActionId());
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/existAllowedActionImport.json";
         DataFileHelper.write(filePath, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
         ImportObject importObject = importAllowedAction(filePath);
         DataFileHelper.delete(filePath);
         assertEquals("success", importObject.getStatus());
-        assertEquals( String.format("Обновлен объект %s %s:%d", importObject.getModelName(), action.getName(), allowedAction.getId()),
+        assertEquals(String.format("Обновлен объект %s %s:%d", importObject.getModelName(), action.getName(), allowedAction.getId()),
                 importObject.getMessages().get(0));
     }
 
@@ -94,14 +90,13 @@ public class AllowedActionImportTest extends Tests {
     @DisplayName("Негативный тест импорт разрешенного действия в другой раздел")
     @TmsLink("1320584")
     public void importAllowedActionToAnotherSection() {
-        String data = JsonHelper.getStringFromFile("productCatalog/allowedAction/importAllowedAction2.json");
-        String allowedActionName = new JsonPath(data).get("AllowedAction.name");
-        if (isAllowedActionExists(allowedActionName)) {
-            deleteAllowedActionByName(allowedActionName);
-        }
-        importProduct(Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/importAllowedAction2.json");
-        assertTrue(isAllowedActionExists(allowedActionName), "Разрешенное действие не существует");
-        deleteAllowedActionByName(allowedActionName);
-        assertFalse(isAllowedActionExists(allowedActionName), "Разрешенное действие существует");
+        AllowedAction allowedAction = createAllowedAction("import_allowed_action_test_api");
+        String actionName = allowedAction.getName();
+        DataFileHelper.write(PATHNAME2, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
+        deleteAllowedActionByName(actionName);
+        importProduct(PATHNAME2);
+        assertTrue(isAllowedActionExists(actionName), "Разрешенное действие не существует");
+        deleteAllowedActionByName(actionName);
+        assertFalse(isAllowedActionExists(actionName), "Разрешенное действие существует");
     }
 }
