@@ -26,7 +26,8 @@ public class AllowedActionPage extends EntityPage {
     private final SelenideElement nameRequiredFieldHint =
             nameInput.getInput().$x("./following::div[text()='Необходимо ввести код разрешенного действия']");
     private final SelenideElement nonUniqueNameValidationHint =
-            nameInput.getInput().$x("./following::div[text()='Разрешенное действие с таким кодом уже существует']");
+            nameInput.getInput().$x("./following::div[text()='Разрешенное действие с таким кодом уже существует. " +
+                    "Выберите другое действие или направление разрешения']");
     private final SelenideElement titleRequiredFieldHint =
             titleInput.getInput().$x("./following::div[text()='Необходимо ввести наименование разрешенного действия']");
     private final SelenideElement actionRequiredFieldHint =
@@ -67,8 +68,6 @@ public class AllowedActionPage extends EntityPage {
         descriptionTextArea.setValue("test");
         saveButton.getButton().shouldBe(Condition.disabled);
         nameRequiredFieldHint.shouldBe(Condition.visible);
-        nameInput.setValue(allowedAction.getName());
-        nameRequiredFieldHint.shouldNotBe(Condition.visible);
         titleRequiredFieldHint.shouldBe(Condition.visible);
         titleInput.setValue(allowedAction.getTitle());
         titleRequiredFieldHint.shouldNotBe(Condition.visible);
@@ -76,6 +75,7 @@ public class AllowedActionPage extends EntityPage {
         Action action = getActionById(allowedAction.getActionId());
         actionSelect.setContains(action.getName());
         actionRequiredFieldHint.shouldNotBe(Condition.visible);
+        nameRequiredFieldHint.shouldNotBe(Condition.visible);
         paramsTab.switchTo();
         paramsRequiredAlert.shouldBe(Condition.visible);
         addTypeProvider(allowedAction.getEventTypeProvider().get(0).getEvent_type(),
@@ -108,7 +108,8 @@ public class AllowedActionPage extends EntityPage {
 
     @Step("Проверка валидации неуникального имени разрешенного действия '{allowedAction.name}'")
     public AllowedActionsListPage checkNonUniqueNameValidation(AllowedAction allowedAction) {
-        nameInput.setValue(allowedAction.getName());
+        Action action = getActionById(allowedAction.getActionId());
+        actionSelect.setContains(action.getName());
         titleInput.setValue(allowedAction.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.disabled);
@@ -118,7 +119,6 @@ public class AllowedActionPage extends EntityPage {
 
     @Step("Заполнение атрибутов разрешенного действия '{allowedAction.name}'")
     public AllowedActionPage setAttributes(AllowedAction allowedAction) {
-        nameInput.setValue(allowedAction.getName());
         titleInput.setValue(allowedAction.getTitle());
         Action action = getActionById(allowedAction.getActionId());
         actionSelect.setContains(action.getName());
@@ -136,10 +136,10 @@ public class AllowedActionPage extends EntityPage {
 
     @Step("Проверка атрибутов разрешенного действия '{allowedAction.name}'")
     public AllowedActionPage checkAttributes(AllowedAction allowedAction) {
-        mainTab.switchTo();
-        nameInput.getInput().shouldHave(Condition.exactValue(allowedAction.getName()));
-        titleInput.getInput().shouldHave(Condition.exactValue(allowedAction.getTitle()));
         Action action = getActionById(allowedAction.getActionId());
+        mainTab.switchTo();
+        nameInput.getInput().shouldHave(Condition.exactValue(action.getName() + "__parent_to_child"));
+        titleInput.getInput().shouldHave(Condition.exactValue(allowedAction.getTitle()));
         assertTrue(actionSelect.getValue().contains(action.getName()));
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(allowedAction.getDescription()));
         paramsTab.switchTo();

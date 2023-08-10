@@ -23,7 +23,6 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
     @TmsLink("1247489")
     @DisplayName("Создание разрешенного действия")
     public void createAllowedActionTest() {
-        checkNameValidation();
         createWithoutRequiredParameters();
         createWithNonUniqueName();
         createAllowedAction();
@@ -31,37 +30,30 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
 
     @Step("Создание разрешенного действия без заполнения обязательных полей")
     private void createWithoutRequiredParameters() {
-        allowedAction.setName(NAME + "_");
-        new ControlPanelIndexPage().goToAllowedActionsListPage()
-                .addNewAllowedAction()
+        allowedAction.setActionId(createAction().getActionId());
+        new ControlPanelIndexPage()
+                .goToAllowedActionsListPage()
+                .openAddNewAllowedActionDialog()
                 .checkRequiredParams(allowedAction);
     }
 
     @Step("Создание разрешенного действия с неуникальным кодом")
     private void createWithNonUniqueName() {
-        allowedAction.setName(NAME);
+        allowedAction.setActionId(action.getActionId());
         new ControlPanelIndexPage().goToAllowedActionsListPage()
-                .addNewAllowedAction()
+                .openAddNewAllowedActionDialog()
                 .checkNonUniqueNameValidation(allowedAction);
-    }
-
-    @Step("Создание разрешенного действия с недопустимым кодом")
-    private void checkNameValidation() {
-        new ControlPanelIndexPage().goToAllowedActionsListPage()
-                .addNewAllowedAction()
-                .checkNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 
     @Step("Создание разрешенного действия")
     private void createAllowedAction() {
-        allowedAction.setName(NAME + "_");
         allowedAction.setEventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                 .event_type(EventType.BM.getValue())
                 .event_provider(EventProvider.HCP.getValue())
                 .build()));
         allowedAction.setActionId(createAction().getActionId());
         new ControlPanelIndexPage().goToAllowedActionsListPage()
-                .addNewAllowedAction()
+                .openAddNewAllowedActionDialog()
                 .setAttributes(allowedAction);
         AllowedActionPage page = new AllowedActionPage();
         page.getSaveButton().click();

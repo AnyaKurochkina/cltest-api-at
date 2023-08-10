@@ -89,7 +89,7 @@ public class AllowedActionsListPage extends EntityListPage {
     }
 
     @Step("Открытие страницы создания разрешенного действия")
-    public AllowedActionPage addNewAllowedAction() {
+    public AllowedActionPage openAddNewAllowedActionDialog() {
         addNewObjectButton.click();
         return new AllowedActionPage();
     }
