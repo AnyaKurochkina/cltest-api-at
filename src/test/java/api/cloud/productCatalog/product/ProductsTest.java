@@ -298,7 +298,7 @@ public class ProductsTest extends Tests {
     }
 
     @DisplayName("Проверка tag_list при копировании продукта")
-    @TmsLink("")
+    @TmsLink("SOUL-6999")
     @Test
     public void copyProductAndCheckTagListTest() {
         String productName = "clone_product_and_check_tag_list_test_api";

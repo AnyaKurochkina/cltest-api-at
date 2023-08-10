@@ -151,7 +151,7 @@ public class GraphTest extends Tests {
     }
 
     @DisplayName("Проверка tag_list при копировании")
-    @TmsLink("")
+    @TmsLink("SOUL-7004")
     @Test
     public void copyGraphAndCheckTagListTest() {
         String graphName = "clone_graph_test_api";

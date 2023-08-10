@@ -33,7 +33,7 @@ public class VisualTemplateByNameTest extends Tests {
             .build();
 
     @DisplayName("Проверка tag_list при копировании шаблона визуализации V2")
-    @TmsLink("")
+    @TmsLink("SOUL-7006")
     @Test
     public void copyVisualTemplateAndCheckTagListV2Test() {
         String visualTemplateName = "clone_visual_template_and_check_tag_list_v2_test_api";

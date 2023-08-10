@@ -191,7 +191,7 @@ public class VisualTemplateTest extends Tests {
     }
 
     @DisplayName("Проверка tag_list при копировании шаблона визуализации")
-    @TmsLink("")
+    @TmsLink("SOUL-7005")
     @Test
     public void copyVisualTemplateAndCheckTagListTest() {
         String visualTemplateName = "clone_visual_template_and_check_tag_list_test_api";
