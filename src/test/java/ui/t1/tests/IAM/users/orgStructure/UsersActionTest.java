@@ -37,6 +37,5 @@ public class UsersActionTest extends Tests {
         new IndexPage().goToOrgStructure()
                 .createFolder(folderName)
                 .openModalWindow(folderName);
-
     }
 }
