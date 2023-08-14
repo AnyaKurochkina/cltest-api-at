@@ -15,16 +15,21 @@ import models.cloud.productCatalog.graph.RootPath;
 import models.cloud.productCatalog.graph.UpdateType;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
+import models.cloud.references.Pages;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
+import org.openqa.selenium.NotFoundException;
 
 import java.time.ZonedDateTime;
 import java.util.*;
 
+import static core.helper.JsonHelper.toJson;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.*;
+import static steps.references.ReferencesStep.getPrivatePagesListByDirectoryName;
+import static steps.references.ReferencesStep.partialUpdatePrivatePagesById;
 
 @Tag("product_catalog")
 @Tag("Graphs")
@@ -151,7 +156,7 @@ public class GraphTest extends Tests {
     }
 
     @DisplayName("Проверка tag_list при копировании")
-    @TmsLink("")
+    @TmsLink("SOUL-7004")
     @Test
     public void copyGraphAndCheckTagListTest() {
         String graphName = "clone_graph_test_api";
@@ -377,6 +382,11 @@ public class GraphTest extends Tests {
     @TmsLink("1378600")
     @Test
     public void createGraphWithModInTestLtEnv() {
+        List<Pages> enumsPage = getPrivatePagesListByDirectoryName("enums");
+        Pages environmentTypesPage = enumsPage.stream().filter(x -> x.getName().equals("EnvironmentTypes")).findFirst()
+                .orElseThrow(() -> new NotFoundException("Страница в справочнике не найдена"));
+        JSONObject data = new JSONObject(toJson(environmentTypesPage.getData())).put("TEST_LT", "TEST_LT");
+        partialUpdatePrivatePagesById("enums", environmentTypesPage.getId(), new JSONObject().put("data", data));
         Modification mod = Modification.builder()
                 .name("mod1")
                 .data(new LinkedHashMap<String, Object>() {{

@@ -83,7 +83,7 @@ public class JinjaVersionTest {
         if (isJinja2Exists(updateName)) {
             deleteJinjaByName(updateName);
         }
-        Jinja2Template jinjaObject = createJinja("test_object");
+        Jinja2Template jinjaObject = createJinja("test_object_not_versioned_fields_test_api");
         putJinja2ById(jinjaObject.getId(), Jinja2Template.builder()
                 .name(updateName)
                 .title(updateTitle)

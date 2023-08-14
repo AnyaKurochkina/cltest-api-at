@@ -75,7 +75,7 @@ public class GraphByNameTest extends Tests {
     }
 
     @DisplayName("Проверка tag_list при копировании графа v2")
-    @TmsLink("")
+    @TmsLink("SOUL-7003")
     @Test
     public void copyGraphAndCheckTagListV2Test() {
         String graphName = "clone_graph_v2_test_api";

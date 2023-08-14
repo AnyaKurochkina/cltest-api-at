@@ -27,6 +27,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 import static steps.productCatalog.TemplateSteps.getTemplateById;
+import static steps.productCatalog.TemplateSteps.partialUpdateTemplate;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -66,7 +67,7 @@ public class TemplatesTest extends Tests {
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetTemplateResponse actualTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
+        Template actualTemplate = getTemplateById(template.getId());
         assertFalse(actualTemplate.getIconStoreId().isEmpty());
         assertFalse(actualTemplate.getIconUrl().isEmpty());
     }
@@ -94,8 +95,8 @@ public class TemplatesTest extends Tests {
                 .iconStoreId(icon.getId())
                 .build()
                 .createObject();
-        GetTemplateResponse actualFirstTemplate =(GetTemplateResponse) steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
-        GetTemplateResponse actualSecondTemplate =(GetTemplateResponse) steps.getById(String.valueOf(secondTemplate.getId()), GetTemplateResponse.class);
+        Template actualFirstTemplate = getTemplateById(template.getId());
+        Template actualSecondTemplate = getTemplateById(secondTemplate.getId());
         assertEquals(actualFirstTemplate.getIconUrl(), actualSecondTemplate.getIconUrl());
         assertEquals(actualFirstTemplate.getIconStoreId(), actualSecondTemplate.getIconStoreId());
     }
@@ -122,7 +123,7 @@ public class TemplatesTest extends Tests {
                 .name(templateName)
                 .build()
                 .createObject();
-        steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class);
+        getTemplateById(template.getId());
     }
 
     @DisplayName("Копирование шаблона по Id и удаление этого клона")
@@ -153,8 +154,7 @@ public class TemplatesTest extends Tests {
         String expectedValue = "UpdateDescription";
         steps.partialUpdateObject(String.valueOf(template.getId()), new JSONObject()
                 .put("description", expectedValue));
-        String actual = steps.getById(String.valueOf(template.getId()), GetTemplateResponse.class)
-                .getDescription();
+        String actual = getTemplateById(template.getId()).getDescription();
         Assertions.assertEquals(expectedValue, actual);
     }
 
@@ -167,19 +167,19 @@ public class TemplatesTest extends Tests {
                 .version("1.0.999")
                 .priority(0)
                 .build().createObject();
-        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 1));
-        String currentVersion = steps.getById(String.valueOf(templateTest.getId()), GetTemplateResponse.class).getVersion();
+        partialUpdateTemplate(templateTest.getId(), new JSONObject().put("priority", 1));
+        String currentVersion = getTemplateById(templateTest.getId()).getVersion();
         assertEquals("1.1.0", currentVersion);
-        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 2)
+        partialUpdateTemplate(templateTest.getId(), new JSONObject().put("priority", 2)
                 .put("version", "1.999.999"));
-        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 3));
-        currentVersion = steps.getById(String.valueOf(templateTest.getId()), GetTemplateResponse.class).getVersion();
+        partialUpdateTemplate(templateTest.getId(), new JSONObject().put("priority", 3));
+        currentVersion = getTemplateById(templateTest.getId()).getVersion();
         assertEquals("2.0.0", currentVersion);
-        steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 4)
+        partialUpdateTemplate(templateTest.getId(), new JSONObject().put("priority", 4)
                 .put("version", "999.999.999"));
-         String errorMessage = steps.partialUpdateObject(String.valueOf(templateTest.getId()), new JSONObject().put("priority", 5))
+        String errorMessage = partialUpdateTemplate(templateTest.getId(), new JSONObject().put("priority", 5))
                 .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-         assertEquals("Version counter full [999, 999, 999]", errorMessage);
+        assertEquals("Version counter full [999, 999, 999]", errorMessage);
     }
 
     @DisplayName("Проверка сортировки по дате создания в шаблонах")
@@ -306,7 +306,7 @@ public class TemplatesTest extends Tests {
         String errMsg = steps.getDeleteObjectResponse(Integer.toString(template.getId())).assertStatus(400)
                 .extractAs(ErrorMessage.class).getMessage();
         String expectedErrorMessage = String.format("Нельзя удалить шаблон: %s. Он используется:\nGraph: (name: %s, version: %s)"
-        , template.getName(), graph.getName(), "1.0.1");
+                , template.getName(), graph.getName(), "1.0.1");
         assertEquals(expectedErrorMessage, errMsg);
     }
 
