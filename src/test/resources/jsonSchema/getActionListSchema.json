@@ -92,6 +92,9 @@
             "is_delayable": {
               "type": "boolean"
             },
+            "skip_item_with_secondary_rel": {
+              "type": "boolean"
+            },
             "icon_store_id": {
               "type": ["string", "null"]
             },
@@ -121,7 +124,8 @@
             "is_safe",
             "is_delayable",
             "icon_store_id",
-            "context_restrictions"
+            "context_restrictions",
+            "skip_item_with_secondary_rel"
           ]
         }
       ]

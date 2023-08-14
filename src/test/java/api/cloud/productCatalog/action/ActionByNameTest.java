@@ -88,7 +88,7 @@ public class ActionByNameTest extends Tests {
     }
 
     @DisplayName("Проверка tag_list при копировании действия v2")
-    @TmsLink("")
+    @TmsLink("SOUL-7001")
     @Test
     public void copyActionAndCheckTagListV2Test() {
         String actionName = "clone_action_v2_test_api";
