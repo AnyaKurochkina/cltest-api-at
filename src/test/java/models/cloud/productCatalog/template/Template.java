@@ -41,6 +41,7 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("icon_base64")
     private String iconBase64;
     private String type;
+    private String object_info;
     private String description;
     private String run;
     @JsonProperty("priority_can_be_overridden")
@@ -104,6 +105,7 @@ public class Template extends Entity implements IProductCatalog {
                 .set("$.version", version)
                 .set("$.type", type)
                 .set("$.title", title)
+                .set("$.object_info", object_info)
                 .set("$.run", run)
                 .set("$.rollback", rollback)
                 .set("$.input", input)

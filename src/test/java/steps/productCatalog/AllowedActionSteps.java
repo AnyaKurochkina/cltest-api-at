@@ -57,6 +57,15 @@ public class AllowedActionSteps extends Steps {
                 .extractAs(AllowedAction.class);
     }
 
+    @Step("Копирование разрешенного действия по id {id}")
+    public static AllowedAction copyAllowedActionById(Integer id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(allowedUrl + "{}/", id)
+                .assertStatus(201)
+                .extractAs(AllowedAction.class);
+    }
+
     @Step("Удаление разрешенного действия по id {id}")
     public static void deleteAllowedActionById(Integer id) {
         new Http(ProductCatalogURL)
@@ -84,18 +93,8 @@ public class AllowedActionSteps extends Steps {
     }
 
     @Step("Создание разрешенного действия")
-    public static AllowedAction createAllowedAction(String name) {
+    public static AllowedAction createAllowedAction(String title) {
         return AllowedAction.builder()
-                .name(name)
-                .title(name)
-                .build()
-                .createObject();
-    }
-
-    @Step("Создание разрешенного действия")
-    public static AllowedAction createAllowedAction(String name, String title) {
-        return AllowedAction.builder()
-                .name(name)
                 .title(title)
                 .build()
                 .createObject();

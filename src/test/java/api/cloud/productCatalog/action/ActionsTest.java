@@ -169,7 +169,8 @@ public class ActionsTest extends Tests {
                 "data_config_path", "data_config_key", "data_config_fields", "item_restriction", "auto_removing_if_failed",
                 "ignore_restriction_service", "multiple", "location_restriction", "extra_data", "available_with_cost_reduction",
                 "skip_on_prebilling", "available_without_money", "skip_request_resource_pools", "skip_reservation",
-                "skip_validate_checker", "skip_restriction_service", "skip_item_change");
+                "skip_validate_checker", "skip_restriction_service", "skip_item_change", "object_info");
+        assertIterableEquals(versionFields, getAction.getVersionFields());
         assertEquals(versionFields, getAction.getVersionFields());
     }
 
@@ -188,6 +189,22 @@ public class ActionsTest extends Tests {
         assertTrue(isActionExists(cloneName), "Действие не существует");
         deleteActionByName(cloneName);
         assertFalse(isActionExists(cloneName), "Действие существует");
+    }
+
+    @DisplayName("Проверка tag_list при копировании действия")
+    @TmsLink("SOUL-7002")
+    @Test
+    public void copyActionAndCheckTagListTest() {
+        String actionName = "clone_action_test_api";
+        Action action = Action.builder()
+                .name(actionName)
+                .title(actionName)
+                .tagList(Arrays.asList("api_test", "test"))
+                .build()
+                .createObject();
+        Action cloneAction = copyActionById(action.getActionId());
+        deleteActionById(cloneAction.getActionId());
+        assertEquals(action.getTagList(), cloneAction.getTagList());
     }
 
     @DisplayName("Копирование действия по Id и проверка на соответствие полей")

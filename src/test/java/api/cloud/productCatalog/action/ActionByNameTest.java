@@ -14,6 +14,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 
@@ -83,6 +85,22 @@ public class ActionByNameTest extends Tests {
         assertTrue(isActionExists(cloneName), "Действие не существует");
         deleteActionByName(cloneName);
         assertFalse(isActionExists(cloneName), "Действие существует");
+    }
+
+    @DisplayName("Проверка tag_list при копировании действия v2")
+    @TmsLink("SOUL-7001")
+    @Test
+    public void copyActionAndCheckTagListV2Test() {
+        String actionName = "clone_action_v2_test_api";
+        Action action = Action.builder()
+                .name(actionName)
+                .title(actionName)
+                .tagList(Arrays.asList("api_test", "test"))
+                .build()
+                .createObject();
+        Action cloneAction = copyActionByName(actionName);
+        deleteActionById(cloneAction.getActionId());
+        assertEquals(action.getTagList(), cloneAction.getTagList());
     }
 
     @Test

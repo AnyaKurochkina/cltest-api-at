@@ -8,6 +8,7 @@ import models.cloud.rpcRouter.InputQueueResponse;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import static steps.rpcRouter.InputQueueSteps.createInputQueue;
 import static steps.rpcRouter.InputQueueSteps.getOrderingByFieldInputQueueList;
 
 
-@Tag("rpc-django-router")
+@Tags({@Tag("rpc-django-router")})
 @Epic("RPC Django Router")
 @Feature("InputQueue")
 @DisabledIfEnv("prod")

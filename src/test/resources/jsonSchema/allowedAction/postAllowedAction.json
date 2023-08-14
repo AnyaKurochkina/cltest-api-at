@@ -30,6 +30,9 @@
     "item_restriction": {
       "type": "string"
     },
+    "object_info": {
+      "type": "string"
+    },
     "action": {
       "type": "string"
     }
@@ -45,6 +48,7 @@
     "description",
     "event_type_provider",
     "item_restriction",
+    "object_info",
     "action"
   ]
 }

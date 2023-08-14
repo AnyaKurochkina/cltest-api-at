@@ -48,8 +48,7 @@ public class ForbiddenActionExportTest extends Tests {
     @TmsLink("1518531")
     @Test
     public void exportForbiddenActionByIdTest() {
-        String forbiddenActionName = "forbidden_action_export_test_api";
-        ForbiddenAction allowedAction = createForbiddenAction(forbiddenActionName);
+        ForbiddenAction allowedAction = createForbiddenAction("forbidden_action_export_test_api");
         exportForbiddenActionById(String.valueOf(allowedAction.getId()));
     }
 }

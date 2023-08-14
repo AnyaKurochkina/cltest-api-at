@@ -5,10 +5,12 @@ import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.tests.productCatalog.BaseTest;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static steps.productCatalog.TemplateSteps.deleteTemplateById;
 import static steps.productCatalog.TemplateSteps.getTemplateByName;
@@ -23,8 +25,6 @@ public class TemplateBaseTest extends BaseTest {
     protected final static String QUEUE_NAME = "internal";
     protected final String NAME = UUID.randomUUID().toString();
     protected Template template;
-    protected ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/templates/",
-            "productCatalog/templates/createTemplate.json");
 
     @BeforeEach
     public void setUp() {

@@ -29,18 +29,8 @@ public class ForbiddenActionSteps extends Steps {
     }
 
     @Step("Создание запрещенного действия")
-    public static ForbiddenAction createForbiddenAction(String name) {
+    public static ForbiddenAction createForbiddenAction(String title) {
         return ForbiddenAction.builder()
-                .name(name)
-                .title(name)
-                .build()
-                .createObject();
-    }
-
-    @Step("Создание запрещенного действия")
-    public static ForbiddenAction createForbiddenAction(String name, String title) {
-        return ForbiddenAction.builder()
-                .name(name)
                 .title(title)
                 .build()
                 .createObject();

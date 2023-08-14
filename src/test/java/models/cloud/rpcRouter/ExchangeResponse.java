@@ -9,7 +9,7 @@ import static steps.rpcRouter.ExchangeSteps.deleteExchange;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-@EqualsAndHashCode(exclude = {"update_dt", "create_dt"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"update_dt", "create_dt", "queue_list"}, callSuper = false)
 @ToString
 public class ExchangeResponse extends AbstractEntity {
     private String name;

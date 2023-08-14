@@ -6,7 +6,6 @@ import org.junit.TestsExecutionListener;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Map;
@@ -24,7 +23,7 @@ public class Configure {
     public static String ENV;
     public static volatile boolean isTestItCreateAutotest = System.getProperty("testItCreateAutotest", "false").equals("true");
     public static String KONG_URL;
-    
+
     public static String IamURL;
     public static String AccountManagerURL;
     public static String PortalBackURL;
@@ -48,15 +47,15 @@ public class Configure {
             RESOURCE_PATH = new File("src/test/resources").getAbsolutePath();
             properties = new Properties();
             properties.setProperty("testIt", "false");
-            if(Objects.nonNull(System.getProperty("moon")))
+            if (Objects.nonNull(System.getProperty("moon")))
                 properties.setProperty("webdriver.remote.url", System.getProperty("moon"));
-            if(Objects.nonNull(System.getProperty("dev.user")))
+            if (Objects.nonNull(System.getProperty("dev.user")))
                 properties.setProperty("dev.user", System.getProperty("dev.user"));
-            if(Objects.nonNull(System.getProperty("dev.password")))
+            if (Objects.nonNull(System.getProperty("dev.password")))
                 properties.setProperty("dev.password", System.getProperty("dev.password"));
-            if(Objects.nonNull(System.getProperty("test.user")))
+            if (Objects.nonNull(System.getProperty("test.user")))
                 properties.setProperty("test.user", System.getProperty("test.user"));
-            if(Objects.nonNull(System.getProperty("test.password")))
+            if (Objects.nonNull(System.getProperty("test.password")))
                 properties.setProperty("test.password", System.getProperty("test.password"));
             loadProperties(RESOURCE_PATH + "/config/kafka.config.properties");
             loadProperties(RESOURCE_PATH + "/config/application.properties");
@@ -69,7 +68,7 @@ public class Configure {
             log.info("SET ENVIRONMENT = {}", ENV);
             loadProperties(RESOURCE_PATH + "/config/" + ENV + ".properties");
             loadProperties(RESOURCE_PATH + "/config/application.properties");
-            
+
             KONG_URL = getAppProp("url.kong");
             IamURL = KONG_URL + "iam/api";
             AccountManagerURL = KONG_URL + "accountmanager";
@@ -86,7 +85,7 @@ public class Configure {
             Day2ServiceURL = KONG_URL + "day2-core";
             ImageService = KONG_URL + "cloud-images";
             DNSService = KONG_URL + "cloud-dns";
-            RpcRouter = KONG_URL+ "rpc-django-router";
+            RpcRouter = KONG_URL + "rpc-django-router";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();

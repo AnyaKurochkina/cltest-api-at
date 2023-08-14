@@ -84,12 +84,14 @@ public class Graph extends Entity implements IProductCatalog {
     private List<String> restrictedDevelopers;
     @JsonProperty("current_version")
     private String currentVersion;
+    private String object_info;
     @JsonProperty("lock_order_on_error")
     private Boolean lockOrderOnError;
     @JsonProperty("default_item")
     private Object defaultItem;
     @JsonProperty("tag_list")
     private List<String> tagList;
+
 
     @Override
     public Entity init() {
@@ -105,6 +107,7 @@ public class Graph extends Entity implements IProductCatalog {
         }
         return JsonHelper.getJsonTemplate("productCatalog/graphs/createGraph.json")
                 .set("$.name", name)
+                .set("$.object_info", object_info)
                 .set("$.title", title)
                 .set("$.description", description)
                 .set("$.type", type)
