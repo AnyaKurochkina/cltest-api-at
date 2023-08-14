@@ -7,8 +7,8 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -16,7 +16,6 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.switchTo;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.getActionById;
 
 public class AllowedActionPage extends EntityPage {
@@ -140,7 +139,7 @@ public class AllowedActionPage extends EntityPage {
         mainTab.switchTo();
         nameInput.getInput().shouldHave(Condition.exactValue(action.getName() + "__parent_to_child"));
         titleInput.getInput().shouldHave(Condition.exactValue(allowedAction.getTitle()));
-        assertTrue(actionSelect.getValue().contains(action.getName()));
+        Waiting.find(() -> actionSelect.getValue().contains(action.getName()), Duration.ofSeconds(5));
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(allowedAction.getDescription()));
         paramsTab.switchTo();
         Table table = new Table("Тип");

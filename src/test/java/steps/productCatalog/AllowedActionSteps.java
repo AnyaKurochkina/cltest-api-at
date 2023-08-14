@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.isTypeProviderContains;
 
@@ -96,6 +97,7 @@ public class AllowedActionSteps extends Steps {
     public static AllowedAction createAllowedAction(String title) {
         return AllowedAction.builder()
                 .title(title)
+                .description("AT_" + randomAlphanumeric(10))
                 .build()
                 .createObject();
     }

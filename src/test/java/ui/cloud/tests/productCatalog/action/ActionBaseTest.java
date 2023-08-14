@@ -8,7 +8,6 @@ import models.cloud.productCatalog.enums.EventType;
 import org.junit.DisabledIfEnv;
 import ui.cloud.tests.productCatalog.BaseTest;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @DisabledIfEnv("prod")
