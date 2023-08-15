@@ -52,7 +52,8 @@ public class AllowedAction extends Entity {
         if (actionId == null) {
             String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_allowed_action_api_test";
             deleteActionIfExist(actionName);
-            Action action = Action.builder().name(RandomStringUtils.randomAlphabetic(10).toLowerCase())
+            Action action = Action.builder()
+                    .name(actionName)
                     .build()
                     .createObject();
             actionId = action.getActionId();

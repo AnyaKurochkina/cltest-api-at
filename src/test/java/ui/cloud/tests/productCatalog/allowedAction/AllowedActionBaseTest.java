@@ -8,8 +8,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import ui.cloud.tests.productCatalog.BaseTest;
 
-import java.util.UUID;
-
+import static steps.productCatalog.ActionSteps.getActionById;
 import static steps.productCatalog.AllowedActionSteps.createAllowedAction;
 
 @Epic("Конструктор. Разрешенные действия")
@@ -17,7 +16,7 @@ import static steps.productCatalog.AllowedActionSteps.createAllowedAction;
 public class AllowedActionBaseTest extends BaseTest {
 
     protected final String TITLE = "AT UI Allowed Action";
-    protected final String NAME = UUID.randomUUID().toString();
+    protected String NAME;
     protected AllowedAction allowedAction;
     protected Action action;
     protected Graph graph;
@@ -25,5 +24,7 @@ public class AllowedActionBaseTest extends BaseTest {
     @BeforeEach
     public void setUp() {
         allowedAction = createAllowedAction(TITLE);
+        NAME = allowedAction.getName();
+        action = getActionById(allowedAction.getActionId());
     }
 }

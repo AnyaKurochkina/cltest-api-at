@@ -75,8 +75,7 @@ public class ProductPage extends EntityPage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.sleep(5000);
-        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(10));
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
         goToAdditionalParamsTab();
@@ -264,7 +263,7 @@ public class ProductPage extends EntityPage {
 
     @Step("Удаление иконки")
     public ProductPage deleteIcon() {
-        deleteIconButton.click();
+        deleteIconButton.scrollIntoView(scrollCenter).click();
         saveWithoutPatchVersion(saveProductAlertText);
         addIconLabel.shouldBe(Condition.visible);
         return this;

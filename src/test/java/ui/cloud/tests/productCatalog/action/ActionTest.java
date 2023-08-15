@@ -25,7 +25,10 @@ import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -224,7 +227,6 @@ public class ActionTest extends ActionBaseTest {
     public void returnToActionListFromActionPage() {
         new ControlPanelIndexPage()
                 .goToActionsListPage()
-                .goToNextPageActionList()
                 .openActionFormByRowNumber(2)
                 .backByBrowserButtonBack()
                 .checkActionIsHighlighted(2)

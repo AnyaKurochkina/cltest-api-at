@@ -45,8 +45,8 @@ public class GraphNodesPage extends GraphPage {
     private final Button formAddNodeButton = Button.byXpath("//div[@role='dialog']//button[.='Добавить']");
     private final Button formSaveNodeButton = Button.byXpath("//div[@role='dialog']//button[.='Сохранить']");
     private final Button formCancelButton = Button.byXpath("//div[@role='dialog']//button[.='Отмена']");
-    private final TextArea inputTextArea = TextArea.byXPath("//div[@role='dialog']//label[text()='Input']/following::textarea[1]");
-    private final TextArea outputTextArea = TextArea.byXPath("//div[@role='dialog']//label[text()='Output']/following::textarea[1]");
+    private final TextArea inputTextArea = TextArea.byXPath("//div[@role='dialog']//*[text()='Input']/following::textarea[1]");
+    private final TextArea outputTextArea = TextArea.byXPath("//div[@role='dialog']//*[text()='Output']/following::textarea[1]");
     private final TextArea printedOutputTextArea = TextArea.byLabelContains("Printed output");
     private final Input numberInput = Input.byName("number");
     private final Input timeoutInput = Input.byName("timeout");
@@ -83,9 +83,12 @@ public class GraphNodesPage extends GraphPage {
     private final Button addButton = Button.byText("Добавить");
     private final Select logLevelSelect = Select.byXpath("//label[.='Уровень логирования']/following::div[1]");
     private final SelenideElement logLevelTooltipIcon = $x("//div[text()='Уровень логирования']/following::*[name()='svg'][1]");
-    private final SelenideElement inputHint = $x("//label[text()='Input']/following-sibling::p");
-    private final SelenideElement outputHint = $x("//label[text()='Output']/following-sibling::p");
-    private final SelenideElement printedOutputHint = $x("//label[text()='Printed output ']/following::p");
+    private final SelenideElement inputHint =
+            $x("//*[text()='Input']/following::div[contains(@class,'ErrorTextStyled')][1]");
+    private final SelenideElement outputHint =
+            $x("//*[text()='Output']/following::div[contains(@class,'ErrorTextStyled')][1]");
+    private final SelenideElement printedOutputHint =
+            $x("//*[text()='Printed output ']/following::div[contains(@class,'ErrorTextStyled')][1]");
 
     public GraphNodesPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();

@@ -142,7 +142,7 @@ public class ActionSteps extends Steps {
                 .assertStatus(204);
     }
 
-    @Step("Проверка существования действия по имени")
+    @Step("Проверка существования действия по имени '{name}'")
     public static boolean isActionExists(String name) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)

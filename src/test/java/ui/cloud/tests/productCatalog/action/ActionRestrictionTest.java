@@ -166,4 +166,20 @@ public class ActionRestrictionTest extends ActionBaseTest {
                 Arrays.asList(pcAdmin.getUsername(), orderServiceAdmin.getUsername())));
         findWithRefresh(() -> !page.isActionDisplayedEnabled(actionName), Duration.ofSeconds(10));
     }
+
+    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @ParameterizedTest(name = "Регистрация действия")
+    @DisplayName("Регистрация действия")
+    //SOUL-6051
+    public void registerActionTest(TestProduct p) {
+        TestProduct product = p.createObject();
+        String actionName = "at_ui_registered_action";
+        createAction(actionName, EventType.VM, EventProvider.QA_AT);
+        new IndexPage().getOrdersListMenuItem().click();
+        new OrdersPage().openOrder(product.getLabel());
+        TestProductOrderPage page = new TestProductOrderPage(product);
+        assertFalse(page.isActionDisplayed(actionName), format("Действие '{}' отображается", actionName));
+        registerAction(actionName);
+        findWithRefresh(() -> page.isActionDisplayedEnabled(actionName), Duration.ofSeconds(10));
+    }
 }

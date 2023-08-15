@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
@@ -27,6 +28,7 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ui.elements.TypifiedElement.scrollCenter;
 
+@Getter
 public class ActionPage extends EntityPage {
     private static final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
@@ -41,12 +43,12 @@ public class ActionPage extends EntityPage {
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
     private final Input graphInput = Input.byLabelV2("Граф");
-    private final SelenideElement deleteButton = $x("//div[text() ='Удалить']");
     private final SelenideElement currentVersionInput = $x("//label[text()='Выберите версию']/following::div[@id='selectValueWrapper']/div");
     private final SelenideElement addTypeAndProviderButton = $x("//button[div[text()='Добавить']]");
     private final Input priorityInput = Input.byName("priority");
     private final MultiSelect requiredItemStatusesSelect = MultiSelect.byLabel("Обязательные статусы item");
     private final MultiSelect requiredOrderStatusesSelect = MultiSelect.byLabel("Обязательные статусы заказа");
+    private final Button registerButton = Button.byText("Зарегистрировать");
 
     public ActionPage() {
         actionsListLink.shouldBe(Condition.visible);

@@ -5,7 +5,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.feedService.action.EventTypeProvider;
-import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,7 +14,6 @@ import ui.cloud.pages.ControlPanelIndexPage;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.AllowedActionSteps.deleteAllowedActionByName;
 import static steps.productCatalog.AllowedActionSteps.isAllowedActionExists;
-import static steps.productCatalog.GraphSteps.deleteGraphById;
 
 @Feature("Импорт из файла")
 public class ImportAllowedActionTest extends AllowedActionBaseTest {
