@@ -156,20 +156,24 @@ public class Jinja2TemplatePage extends EntityPage {
     @Step("Проверка баннера о несохранённых изменениях. Ок")
     public Jinja2TemplatePage checkUnsavedChangesAlertAccept(Jinja2Template jinja2Template) {
         String newValue = "new value";
+        mainTab.switchTo();
         titleInput.setValue(newValue);
         back();
         acceptAlert(unsavedChangesAlertText);
         new Jinja2TemplatesListPage().openJinja2TemplatePage(jinja2Template.getName());
+        mainTab.switchTo();
         titleInput.getInput().shouldHave(Condition.exactValue(jinja2Template.getTitle()));
         titleInput.setValue(newValue);
         templatesListLink.click();
         acceptAlert(unsavedChangesAlertText);
         new Jinja2TemplatesListPage().openJinja2TemplatePage(jinja2Template.getName());
+        mainTab.switchTo();
         titleInput.getInput().shouldHave(Condition.exactValue(jinja2Template.getTitle()));
         descriptionTextArea.setValue(newValue);
         mainPage.click();
         acceptAlert(unsavedChangesAlertText);
         new ControlPanelIndexPage().goToJinja2TemplatesListPage().findAndOpenJinja2TemplatePage(jinja2Template.getName());
+        mainTab.switchTo();
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(jinja2Template.getDescription()));
         return this;
     }

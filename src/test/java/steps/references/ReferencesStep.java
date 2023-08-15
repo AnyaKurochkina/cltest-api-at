@@ -50,7 +50,7 @@ public class ReferencesStep extends Steps {
     @Step("Получение списка flavors для продукта {product}")
     public static List<Flavor> getProductFlavorsLinkedListByFilter(IProduct product) {
         String filter = product.getFilter();
-        if(Objects.isNull(filter))
+        if (Objects.isNull(filter))
             return getProductFlavorsLinkedList(product);
         Project project = Project.builder().id(product.getProjectId()).build().createObject();
         String jsonArray = new Http(ReferencesURL)
@@ -149,9 +149,9 @@ public class ReferencesStep extends Steps {
     }
 
     @Step("Получение списка Pages по фильтру")
-    public static List<Pages> getPagesList(String...filter) {
+    public static List<Pages> getPagesList(String... filter) {
         String filters = String.join("&", filter);
-         return new Http(ReferencesURL)
+        return new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/pages/?" + filters)
                 .assertStatus(200)

@@ -6,8 +6,8 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.Alert;
 import ui.elements.FileImportDialog;
 import ui.elements.SearchSelect;
@@ -89,7 +89,7 @@ public class AllowedActionsListPage extends EntityListPage {
     }
 
     @Step("Открытие страницы создания разрешенного действия")
-    public AllowedActionPage addNewAllowedAction() {
+    public AllowedActionPage openAddNewAllowedActionDialog() {
         addNewObjectButton.click();
         return new AllowedActionPage();
     }

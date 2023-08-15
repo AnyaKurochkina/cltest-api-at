@@ -43,6 +43,9 @@
             "update_dt": {
               "type": "string"
             },
+            "object_info": {
+              "type": "string"
+            },
             "context_restrictions": {
               "type": "array"
             },
@@ -73,6 +76,7 @@
             "update_dt",
             "context_restrictions",
             "name",
+            "object_info",
             "title",
             "description",
             "event_type_provider",

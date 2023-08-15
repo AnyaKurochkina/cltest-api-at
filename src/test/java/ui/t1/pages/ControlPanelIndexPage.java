@@ -1,7 +1,10 @@
 package ui.t1.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
+import ui.elements.Button;
+import ui.t1.pages.IAM.organization.OrganizationsPage;
 import ui.t1.pages.productCatalog.image.ImageGroupsListPage;
 import ui.t1.pages.productCatalog.image.ImagesListPage;
 import ui.t1.pages.productCatalog.image.LogoListPage;
@@ -15,6 +18,9 @@ public class ControlPanelIndexPage {
     private final SelenideElement imageGroupsLink = $x("//*[@href='/meccano/image_groups']");
     private final SelenideElement marketingInfoLink = $x("//*[@href='/meccano/marketing']");
     private final SelenideElement logosLink = $x("//*[@href='/meccano/logotypes']");
+    private final SelenideElement organizationLink = $x("//a[@href='/iam/organizations']");
+    private final SelenideElement iamMenuItem = $x("//div[text()='IAM и Управление']");
+    private final Button mainMenuButton = Button.byXpath("//div[contains(@class, 'MainMenu')]//button");
 
     @Step("Переход на страницу Образы")
     public ImagesListPage goToImagesListPage() {
@@ -41,5 +47,14 @@ public class ControlPanelIndexPage {
         imagesLink.scrollIntoView(true).click();
         logosLink.click();
         return new LogoListPage();
+    }
+
+    @Step("Переход на страницу IAM и Управление. Организации")
+    public OrganizationsPage goToOrganizationPage() {
+        mainMenuButton.click();
+        iamMenuItem.hover();
+        organizationLink.click();
+        Waiting.sleep(500);
+        return new OrganizationsPage();
     }
 }

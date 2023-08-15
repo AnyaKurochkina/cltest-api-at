@@ -32,10 +32,8 @@ public class AllowedActionCreateWithEventTypeProviderTest extends Tests {
     public void createAllowedActionWithEventProviderTest() {
         List<EventTypeProvider> expectedEventTypeProviderList =
                 Collections.singletonList(new EventTypeProvider("vm", "vsphere"));
-        String actionName = "create_allowed_action_with_event_provider_test_api";
         AllowedAction action = AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
+                .title("create_allowed_action_with_event_provider_test_api")
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .build()
                 .createObject();
@@ -50,9 +48,7 @@ public class AllowedActionCreateWithEventTypeProviderTest extends Tests {
         EventTypeProvider eventTypeProvider = new EventTypeProvider("test", "test");
         List<EventTypeProvider> expectedEventTypeProviderList =
                 Collections.singletonList(eventTypeProvider);
-        String actionName = "create_allowed_action_with_not_exist_event_type_provider_test_api";
         JSONObject json = AllowedAction.builder()
-                .name(actionName)
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .build()
                 .init()

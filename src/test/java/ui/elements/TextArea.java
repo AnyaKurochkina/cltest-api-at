@@ -20,11 +20,11 @@ public class TextArea implements TypifiedElement {
     }
 
     public static TextArea byLabel(String label) {
-        return new TextArea($x("//label[text()='{}']/following::textarea[1]", label));
+        return new TextArea($x("//*[text()='{}']/following::textarea[1]", label));
     }
 
     public static TextArea byLabelContains(String label) {
-        return new TextArea($x("//label[contains(text(),'{}')]/following::textarea[1]", label));
+        return new TextArea($x("//*[contains(text(),'{}')]/following::textarea[1]", label));
     }
 
     public static TextArea byName(String name) {
