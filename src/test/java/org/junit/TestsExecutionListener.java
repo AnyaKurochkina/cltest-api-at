@@ -73,6 +73,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
+        options.addExtensions(new File("src/test/resources/requestLogger.crx"));
         options.setExperimentalOption("prefs", prefs);
 
         synchronized (TestsExecutionListener.class) {

@@ -10,6 +10,7 @@ import lombok.Getter;
 import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.WebElement;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
@@ -69,6 +70,7 @@ public class Select implements TypifiedElement {
     @Step("Select. Выбрать элемент с названием '{value}'")
     public String set(String value) {
         hover();
+        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
         if (currentTitle.equals(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
             return value;
@@ -82,6 +84,7 @@ public class Select implements TypifiedElement {
     @Step("Select. Выбрать элемент с названием содержащим '{value}'")
     public String setContains(String value) {
         hover();
+        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
         if (currentTitle.contains(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
             return value;
@@ -95,6 +98,7 @@ public class Select implements TypifiedElement {
     @Step("Select. Выбрать элемент с названием начинающимся с '{value}'")
     public String setStart(String value) {
         hover();
+        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
         if (currentTitle.startsWith(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
             return value;

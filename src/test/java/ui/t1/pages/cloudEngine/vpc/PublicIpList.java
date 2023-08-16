@@ -1,12 +1,12 @@
 package ui.t1.pages.cloudEngine.vpc;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.cloud.pages.orders.OrderUtils;
-import ui.t1.pages.cloudEngine.Column;
 import ui.elements.DataTable;
 import ui.elements.Select;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 import java.util.List;
@@ -20,13 +20,13 @@ public class PublicIpList {
         OrderUtils.clickOrder();
         boolean isEmpty = new IpTable().isEmpty();
         OrderUtils.waitCreate(() -> {
-            IpTable table = new IpTable();
-            if(!isEmpty) {
-                String oldIp = table.getFirstValueByColumn(Column.IP_ADDRESS);
-                table.getRow(0).getElementByColumn(Column.IP_ADDRESS).shouldNotBe(Condition.exactText(oldIp), Duration.ofMinutes(1));
+            if (!isEmpty) {
+                String oldIp = new IpTable().getFirstValueByColumn(Column.IP_ADDRESS);
+                Waiting.find(() -> !new IpTable().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofMinutes(1));
+            } else {
+                Waiting.find(() -> !new IpTable().isEmpty(), Duration.ofMinutes(1));
+                Waiting.find(() -> !new IpTable().getFirstValueByColumn(Column.IP_ADDRESS).equals("—"), Duration.ofMinutes(1));
             }
-            else
-                table.getRows().shouldBe(CollectionCondition.sizeNotEqual(0), Duration.ofMinutes(1));
         });
         return new IpTable().getFirstValueByColumn(Column.IP_ADDRESS);
     }

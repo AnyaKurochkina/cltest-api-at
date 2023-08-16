@@ -1,40 +1,56 @@
 package ui.t1.pages.cloudEngine.vpc;
 
 import com.codeborne.selenide.Condition;
-import core.utils.Waiting;
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.cloud.pages.orders.OrderUtils;
-import ui.elements.*;
+import ui.elements.DataTable;
+import ui.elements.Dialog;
 import ui.t1.pages.cloudEngine.Column;
+import ui.t1.pages.cloudEngine.compute.IProductListT1Page;
 
-import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 
-public class VirtualIpList {
+import static ui.t1.pages.cloudEngine.vpc.VirtualIpList.IpTable.getMenuElement;
 
-    @Step("Добавить IP в регионе {region}")
-    public String addIp(String region, String name, String network, String mode, boolean l2, String networkInterface) {
+public class VirtualIpList extends IProductListT1Page {
+    public VirtualIpCreate addIp() {
         new IpTable().clickAdd();
-        Input.byLabel("Имя VIP").setValue(name);
-        Select.byLabel("Регион").set(region);
-        Select.byLabel("Подсеть").setContains(network);
-        RadioGroup.byLabel("Режим").select(mode);
-        Switch.byText("Задействовать L2").setEnabled(l2);
-        if(Objects.nonNull(networkInterface)) {
-            Switch.byText("Задать IP адрес сетевого интерфейса").setEnabled(true);
-            Input.byPlaceholder("0.0.0.0").setValue(networkInterface);
-        }
-        OrderUtils.clickOrder();
-        OrderUtils.waitCreate(() -> new IpTable()
-                .getRowByColumnValue(Column.NAME, name).getElementByColumn(Column.CREATED_DATE)
-                .shouldNot(Condition.exactText(""), Duration.ofSeconds(60)));
-        return new IpTable().getFirstValueByColumn(Column.IP_ADDRESS);
+        return new VirtualIpCreate();
     }
 
-    public VirtualIp selectIp(String name) {
-        new IpTable().getRowByColumnValue(Column.IP_ADDRESS, name).get().shouldBe(Condition.visible).click();
+    public VirtualIp selectIp(String ip) {
+        new IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip).getElementByColumn(Column.IP_ADDRESS).shouldBe(Condition.visible).click();
         return new VirtualIp();
+    }
+
+    public Menu getMenuVirtualIp(String ip) {
+        return new Menu(getMenuElement(new IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip).getIndex()));
+    }
+
+    public Menu getMenuVirtualIp(SelenideElement btn) {
+        return new Menu(btn);
+    }
+
+    public class Menu {
+        private final SelenideElement btn;
+
+        public Menu(SelenideElement btn) {
+            this.btn = btn;
+        }
+
+        @Step("Подключить к сетевому интерфейсу {ip}")
+        public void attachComputeIp(String ip) {
+            runActionWithParameters(btn, "Подключить к сетевому интерфейсу", "Подтвердить", () ->
+                    Dialog.byTitle("Подключить к сетевому интерфейсу")
+                            .setSelectValue("Сетевой интерфейс", ip));
+        }
+
+        @Step("Отключить от сетевого интерфейса {ip}")
+        public void detachComputeIp(String ip) {
+            runActionWithParameters(btn, "Отключить от сетевого интерфейса", "Подтвердить", () ->
+                    Dialog.byTitle("Отключить от сетевого интерфейса")
+                            .setSelectValue("Сетевой интерфейс", ip));
+        }
     }
 
     public List<String> getIpList() {
@@ -45,6 +61,10 @@ public class VirtualIpList {
 
         public IpTable() {
             super(Column.IP_ADDRESS);
+        }
+
+        public static SelenideElement getMenuElement(int index) {
+            return new IpTable().getRow(index).get().$("button");
         }
     }
 }

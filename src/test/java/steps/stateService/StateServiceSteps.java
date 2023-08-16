@@ -320,7 +320,7 @@ public class StateServiceSteps extends Steps {
             ShortItem itemData = new ShortItem();
 
             if(item.getType().equals("public_ip"))
-                itemData.setFloatingIpAddress(((Map<String, String>) item.getData().get("config")).get("floating_ip_address"));
+                itemData.floatingIpAddress = ((Map<String, String>) item.getData().get("config")).get("floating_ip_address");
             else if(item.getType().equals("volume")){
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
                 itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").longValue();
@@ -338,6 +338,10 @@ public class StateServiceSteps extends Steps {
             else if(item.getType().equals("nic")) {
                 List<Object> ips = ((Map<String, List<Object>>) item.getData().get("config")).get("fixed_ips");
                 itemData.name = ((Map<String, String>) ips.get(0)).get("ip_address");
+            }
+            else if(item.getType().equals("vip")) {
+                List<Object> ips = ((Map<String, List<Object>>) item.getData().get("config")).get("fixed_ips");
+                itemData.floatingIpAddress = ((Map<String, String>) ips.get(0)).get("ip_address");
             }
 
             itemData.type = item.getType();

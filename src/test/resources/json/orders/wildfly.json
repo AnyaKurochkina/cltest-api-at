@@ -1,7 +1,7 @@
 {
   "order": {
-    "project_name": "proj-ln4zg69jek",
-    "product_id": "d69ab3f7-6925-46db-b2ac-9f48e9c0f79e",
+    "project_name": "proj-iv550odo9a",
+    "product_id": "d6ea7011-07d3-47d3-b13d-e958a3e4ab1c",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
@@ -23,7 +23,7 @@
       },
       "info_devops": {},
       "access_group": [
-        "cloud-zorg-dev-group"
+        "cloud-soub-kttsyligz"
       ],
       "extra_mounts": [
         {
@@ -40,17 +40,18 @@
       "balancer_type": "no",
       "info_balancer": {},
       "ad_integration": true,
-      "wildfly_version": "23.0.2.Final",
+      "standalone_type": "standard",
+      "wildfly_version": "28.0.1.Final",
       "info_access_group": {},
       "ad_logon_grants": [
         {
           "role": "superuser",
           "groups": [
-            "cloud-zorg-dev-group"
+            "cloud-soub-xfyln"
           ]
         }
       ],
-      "java_version": "1.8.0"
+      "java_version": "11.0.12"
     },
     "count": 1,
     "label": "WildFly Astra"

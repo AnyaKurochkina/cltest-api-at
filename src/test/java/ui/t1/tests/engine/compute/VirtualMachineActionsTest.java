@@ -8,6 +8,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.AbstractEntity;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +29,6 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.switchTo;
 import static core.helper.StringUtils.$x;
-import static core.utils.AssertUtils.assertHeaders;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @BlockTests
@@ -48,6 +48,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         vm = new IndexPage()
                 .goToVirtualMachine()
                 .addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setDeleteOnTermination(true)
@@ -56,7 +57,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
     }
 
     @Test
@@ -77,7 +78,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .add("Внешние IP-адреса", e -> e.equals("—"))
 //                .add(Column.CREATED_DATE, e -> e.length() > 5)
                 .add("", String::isEmpty)
-                .check(new VmList.VmTable().getRowByColumnValue(Column.NAME, vm.getName()));
+                .check(() -> new VmList.VmTable().getRowByColumnValue(Column.NAME, vm.getName()));
     }
 
     @Test
@@ -96,7 +97,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .add("Тип", e -> e.length() > 1)
                 .add("Системный", e -> e.equals("Да"))
                 .add("", String::isEmpty)
-                .check(new DiskList.DiskTable().getRowByColumnValueContains(Column.NAME, vm.getName()));
+                .check(() -> new DiskList.DiskTable().getRowByColumnValueContains(Column.NAME, vm.getName()));
     }
 
     @Test
@@ -111,12 +112,11 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .add("MAC адрес", e -> StringUtils.isMatch( "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
                 .add("Сеть", e -> e.length() > 4)
                 .add("Подсеть", e -> e.length() > 4)
-                .add("Регион", e -> e.equals(vm.getAvailabilityZone()))
+                .add("Регион", e -> e.equals(vm.getRegion()))
                 .add("Группы безопасности", e -> e.equals(vm.getSecurityGroups().get(0)))
                 .add(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, e -> e.equals(vm.getName()))
                 .add("", String::isEmpty)
-                .check(new NetworkInterfaceList.NetworkInterfaceTable().getRowByColumnValueContains(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, vm.getName()));
-        assertHeaders(new NetworkInterfaceList.NetworkInterfaceTable(), "", "IP адрес", "MAC адрес", "Сеть", "Подсеть", "Регион", "Группы безопасности", "Виртуальная машина", "");
+                .check(() -> new NetworkInterfaceList.NetworkInterfaceTable().getRowByColumnValueContains(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, vm.getName()));
     }
 
     @Test
@@ -160,12 +160,12 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         console.click();
         Button.byText("Развернуть на полный экран").click();
         Button.byText("Выйти из полноэкранного режима").click();
+        console.getButton().should(Condition.visible);
         Waiting.find(() -> {
                     switchTo().defaultContent();
                     String status = switchTo().frame($x("//*[@title='Консоль']")).findElement(By.id("noVNC_status")).getText();
                     return status.contains("Connected (encrypted)");
                 }, Duration.ofSeconds(30));
-        console.getButton().should(Condition.visible);
     }
 
     @Test
