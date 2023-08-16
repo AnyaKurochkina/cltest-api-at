@@ -240,20 +240,24 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @Order(19)
     @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Добавить роль")
+    @DisplayName("UI RabbitMqClusterAstra. Добавить роль на Web интерфейс")
     void addRole() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addRole("manager",accessGroup.getPrefixName()));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS,
+                () -> rabbitMqClusterAstraPage.addRole("manager", product.getAccessGroup()));
     }
     @Test
     @Order(20)
     @TmsLink("")
     @DisplayName("UI RabbitMqClusterAstra. Изменить группу доступа на WEB интерфейс")
     void changeGroup() {
+        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random())
+                .projectName(product.getProjectId())
+                .build()
+                .createObject();
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("manager",accessGroup.getPrefixName()));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS,
+                () -> rabbitMqClusterAstraPage.changeGroupWeb("manager",accessGroup.getPrefixName()));
     }
 
     @Test
