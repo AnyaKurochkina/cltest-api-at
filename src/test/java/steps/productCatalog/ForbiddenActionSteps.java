@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 public class ForbiddenActionSteps extends Steps {
     private static final String endPoint = "/api/v1/forbidden_actions/";
@@ -32,6 +33,7 @@ public class ForbiddenActionSteps extends Steps {
     public static ForbiddenAction createForbiddenAction(String title) {
         return ForbiddenAction.builder()
                 .title(title)
+                .description("AT_" + randomAlphanumeric(10))
                 .build()
                 .createObject();
     }

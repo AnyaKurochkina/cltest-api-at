@@ -23,7 +23,6 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
     @TmsLink("946766")
     @DisplayName("Создание запрещенного действия")
     public void createForbiddenActionTest() {
-        checkNameValidation();
         createWithoutRequiredParameters();
         createWithNonUniqueName();
         createForbiddenAction();
@@ -31,7 +30,7 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
 
     @Step("Создание запрещенного действия без заполнения обязательных полей")
     private void createWithoutRequiredParameters() {
-        forbiddenAction.setName(NAME + "_");
+        forbiddenAction.setActionId(createAction().getActionId());
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
                 .addNewForbbidenAction()
                 .checkRequiredParams(forbiddenAction);
@@ -39,22 +38,14 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
 
     @Step("Создание запрещенного действия с неуникальным кодом")
     private void createWithNonUniqueName() {
-        forbiddenAction.setName(NAME);
+        forbiddenAction.setActionId(action.getActionId());
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
                 .addNewForbbidenAction()
                 .checkNonUniqueNameValidation(forbiddenAction);
     }
 
-    @Step("Создание запрещенного действия с недопустимым кодом")
-    private void checkNameValidation() {
-        new ControlPanelIndexPage().goToForbiddenActionsListPage()
-                .addNewForbbidenAction()
-                .checkNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
-    }
-
     @Step("Создание запрещенного действия")
     private void createForbiddenAction() {
-        forbiddenAction.setName(NAME + "_");
         forbiddenAction.setEventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                 .event_type(EventType.BM.getValue())
                 .event_provider(EventProvider.HCP.getValue())

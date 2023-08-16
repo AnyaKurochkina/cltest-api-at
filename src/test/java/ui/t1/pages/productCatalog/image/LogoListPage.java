@@ -7,10 +7,7 @@ import models.t1.imageService.Logo;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.elements.Alert;
-import ui.elements.Button;
-import ui.elements.Input;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.util.Arrays;
 
@@ -103,9 +100,10 @@ public class LogoListPage extends EntityListPage {
 
     @Step("Открытие формы редактирования для логотипа '{logo.name}'")
     public LogoListPage openEditDialog(Logo logo) {
-        Table table = new Table(nameColumn);
-        table.getRowByColumnValueContains(nameColumn, logo.getName()).get()
-                .$x(".//td[last()-1]//*[@class and name()='svg']").click();
+        DataTable table = new DataTable(nameColumn);
+        table.searchAllPages(t -> table.isColumnValueContains(nameColumn, logo.getName()))
+                .getRowByColumnValueContains(nameColumn, logo.getName()).get()
+                .$x(".//td[last()-1]//*[@class and name()='svg']").click();;
         return this;
     }
 
