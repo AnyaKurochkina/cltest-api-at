@@ -1,28 +1,26 @@
 {
   "order": {
-    "project_name": "proj-pkvckn08w9",
-    "product_id": "ac07b427-4e3e-4ba4-be3c-fa0fbf526e7e",
+    "project_name": "proj-iv550odo9a",
+    "product_id": "eacf9dd6-a005-46ef-adb2-ae744f4e9537",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
-        "cpus": 4,
-        "name": "c4m8",
-        "uuid": "1498c9c9-5f20-4c1e-8d53-683bb8c2c205",
-        "memory": 8
+        "cpus": 8,
+        "name": "c8m32",
+        "uuid": "37e685c2-6b4b-4e68-aa2e-ee4d183b8c49",
+        "memory": 32
       },
       "executor": "localexecutor",
-      "platform": "vSphere",
-      "boot_disk": {
-        "size": 30
-      },
+      "platform": "OpenStack",
       "extra_nics": [],
-      "on_support": false,
+      "on_support": true,
       "os_version": "1.7",
+      "vms_config": {},
       "data_center": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
-      "cluster_name": "airflow-rel-0001",
+      "cluster_name": "airflow-dev-0001",
       "extra_mounts": [
         {
           "path": "/app",
@@ -35,34 +33,41 @@
           "file_system": "xfs"
         }
       ],
-      "ad_integration": true,
-      "airflow_version": "1.10.15",
-      "additional_config": {
-        "postgresql_config": {
-          "db_host": "10.226.63.240",
-          "db_user": "bdUser",
-          "db_database": "bdname",
-          "db_password": "-Ua4ThUMMcqpwbudYKKjOyUu4Ocm4Qgt0wk4"
-        }
-      },
-      "ad_logon_grants": [
+      "deploy_grants": [
         {
-          "role": "user",
+          "role": "airflow_deploy",
           "groups": [
-            "cloud-plux-windbkbmjsez"
+            "cloud-soub-at-dev"
           ]
         }
       ],
+      "ad_integration": true,
+      "general_config": {},
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-soub-blue"
+          ]
+        }
+      ],
+      "airflow_version": "2.5.2",
+      "postgresql_config": {
+        "db_host": "10.226.42.64",
+        "db_user": "bdname",
+        "db_database": "bdname_admin",
+        "db_password": "YRebWq4g4ySmS7viYdcHxAr2EuHSfzKSn"
+      },
       "web_console_grants": [
         {
-          "role": "operator",
+          "role": "admin",
           "groups": [
-            "cloud-plux-windbkbmjsez"
+            "cloud-soub-blue"
           ]
         }
       ]
     },
     "count": 1,
-    "label": "Apache Airflow Astra"
+    "label": "Разработка Apache Airflow Astra"
   }
 }

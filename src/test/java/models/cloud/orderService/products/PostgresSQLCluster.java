@@ -30,7 +30,6 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     String osVersion;
     @ToString.Include
     String postgresqlVersion;
-    private String adminPassword;
 
     @Override
     @Step("Заказ продукта")
@@ -102,9 +101,24 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         if (Objects.isNull(leaderIp)) {
             String ip = (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.hostname.contains('-pgc')}.ip");
             leaderIp = StringUtils.findByRegex("(([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3})\\.([0-9]{1,3}))",
-                    executeSsh(new SshClient(ip, envType()), "sudo -i patronictl -c /etc/patroni/patroni.yml list | grep Leader"));
+                    executeSsh(SshClient.builder().host(ip).env(envType()).build(), "sudo -i patronictl -c /etc/patroni/patroni.yml list | grep Leader"));
         }
-        return executeSsh(new SshClient(leaderIp, envType()), cmd);
+        return executeSsh(SshClient.builder().host(leaderIp).env(envType()).build(), cmd);
+    }
+
+    @Override
+    public void addMountPointPgAudit() {
+        addMountPoint("postgresql_cluster_add_mount_point_pg_audit", "/pg_audit");
+    }
+
+    @Override
+    public void addMountPointPgBackup() {
+        addMountPoint("postgresql_cluster_add_mount_point_pg_backup", "/pg_backup");
+    }
+
+    @Override
+    public void addMountPointPgWalarchive() {
+        addMountPoint("postgresql_cluster_add_mount_point_pg_walarchive", "/pg_walarchive");
     }
 
     @Override
@@ -247,7 +261,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         String cmd = "psql \"host=localhost dbname=" + dbName +
                 " user=" + dbName + "_admin password=" + adminPassword +
                 "\" -c \"\\pset pager off\" -c \"CREATE TABLE test1 (name varchar(30), surname varchar(30));\" -c \"\\z " + dbName + ".test1\"";
-        assertContains(executeSsh(new SshClient(ip, envType()), cmd), dbName + "_user=arwd/" + dbName + "_admin",
+        assertContains(executeSsh(SshClient.builder().host(ip).env(envType()).build(), cmd), dbName + "_user=arwd/" + dbName + "_admin",
                 dbName + "_reader=r/" + dbName + "_admin", dbName + "_admin=arwdDxt/" + dbName + "_admin");
     }
 

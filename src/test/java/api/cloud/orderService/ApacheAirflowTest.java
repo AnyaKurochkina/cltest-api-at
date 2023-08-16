@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import static api.cloud.orderService.PostgreSQLAstraTest.adminPassword;
 
 @Epic("Продукты")
 @Feature("Apache Airflow")
@@ -25,11 +24,12 @@ public class ApacheAirflowTest extends Tests {
 
     private static void createPostgres(ApacheAirflow product) {
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
+        String pgAdminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         if("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
-            abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
+            abstractPostgreSQL = PostgresSQLCluster.builder().adminPassword(pgAdminPassword).env(product.getEnv()).build();
         try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
             String dbName = "airflow";
-            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.createDb(dbName);
             product.setDbServer(postgreSQL.getIp());
             product.setDbUser(new DbUser(dbName, dbName + "_admin"));
         }

@@ -68,6 +68,7 @@ WildFly:
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 PostgreSQL:
   - options:
@@ -110,11 +111,11 @@ KafkaService:
 
 ApacheKafkaCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV" }
-      - { platform: "OpenStack", env: "LT" }
-      - { platform: "OpenStack", env: "IFT" }
-      - { platform: "OpenStack", env: "HOTFIX" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Ubuntu:
   - options:
@@ -139,10 +140,10 @@ LoadBalancer:
 
 PostgresSQLCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV" }
-      - { platform: "OpenStack", env: "LT" }
-      - { platform: "OpenStack", env: "IFT" }
-      - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
 
 ElasticsearchOpensearchCluster:
   - options:

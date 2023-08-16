@@ -17,41 +17,6 @@ import static org.openqa.selenium.support.Color.fromString;
 public class Alert implements TypifiedElement {
     SelenideElement element;
 
-    public static final String script = "\"function hoverElement(element) {\\n\" +\n" +
-            "        \"  const hoverEvent = new MouseEvent('mouseover', {\\n\" +\n" +
-            "        \"    bubbles: true,\\n\" +\n" +
-            "        \"    cancelable: true,\\n\" +\n" +
-            "        \"    view: window\\n\" +\n" +
-            "        \"  });\\n\" +\n" +
-            "        \"  element.dispatchEvent(hoverEvent);\\n\" +\n" +
-            "        \"}\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"function trackAndHoverAlerts() {\\n\" +\n" +
-            "        \"  const alertElements = document.evaluate(\\n\" +\n" +
-            "        \"    '//div[@role=\\\"alert\\\" and string-length(.)>1][button]',\\n\" +\n" +
-            "        \"    document,\\n\" +\n" +
-            "        \"    null,\\n\" +\n" +
-            "        \"    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,\\n\" +\n" +
-            "        \"    null\\n\" +\n" +
-            "        \"  );\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"  for (let i = 0; i < alertElements.snapshotLength; i++) {\\n\" +\n" +
-            "        \"    const alertElement = alertElements.snapshotItem(i);\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"    setTimeout(() => {\\n\" +\n" +
-            "        \"      hoverElement(alertElement);\\n\" +\n" +
-            "        \"    }, i * 1000); \\n\" +\n" +
-            "        \"  }\\n\" +\n" +
-            "        \"}\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"const observer = new MutationObserver(trackAndHoverAlerts);\\n\" +\n" +
-            "        \"observer.observe(document.body, {\\n\" +\n" +
-            "        \"  childList: true,\\n\" +\n" +
-            "        \"  subtree: true\\n\" +\n" +
-            "        \"});\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"window.addEventListener('load', trackAndHoverAlerts);\";";
-
     public Alert(SelenideElement element) {
         this.element = element;
     }

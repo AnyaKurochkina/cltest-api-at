@@ -1,24 +1,16 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
-import core.utils.AssertUtils;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
-import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.subModels.Db;
-import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -126,8 +118,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
     }
 
     @SneakyThrows
-    public void checkConnection(String dbName, String password) {
-        checkConnectDb(dbName, dbName + "_admin", password, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
+    public void checkConnection(String dbName) {
+        checkConnectDb(dbName, dbName + "_admin", adminPassword, ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL)));
     }
 
     public void removeDbmsUser(String username, String dbName) {
@@ -146,7 +138,7 @@ public class PostgreSQL extends AbstractPostgreSQL {
         createDbmsUser("create_dbms_user", username, dbRole, dbName);
     }
 
-    public void checkUseSsh(String ip, String dbName, String adminPassword) {
+    public void checkUseSsh(String ip, String dbName) {
         String cmd = "psql \"host=localhost dbname=" + dbName +
                 " user=" + dbName + "_admin password=" + adminPassword +
                 "\" -c \"\\pset pager off\" -c \"CREATE TABLE test1 (name varchar(30), surname varchar(30));\" -c \"\\z " + dbName + ".test1\"";
