@@ -43,6 +43,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setBootSize(2)
+                .setRegion(region)
                 .setBootType(hddTypeFirst)
                 .addSecurityGroups(securityGroup)
                 .setSubnet(Select.RANDOM_VALUE);
@@ -92,7 +93,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
         Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
         String orderId = vmPage.getOrderId();
 
-        final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
+        final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(getProjectId());
         Assertions.assertEquals(3, items.stream().filter(e -> e.getOrderId().equals(orderId))
                 .filter(e -> e.getSrcOrderId().equals(""))
                 .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance"))
@@ -103,7 +104,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
 
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
 
-        final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(project.getId());
+        final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(getProjectId());
         Assertions.assertTrue(items2.stream().noneMatch(e -> e.getOrderId().equals(orderId)), "Существуют item's с orderId=" + orderId);
         Assertions.assertEquals(1, items2.stream().filter(i -> Objects.nonNull(i.getName()))
                 .filter(i -> i.getName().startsWith(vm.getName()))
@@ -132,12 +133,12 @@ public class VirtualMachineTest extends AbstractComputeTest {
         String orderIdVm = vmPage.getOrderId();
 
         String ip = new IndexPage().goToPublicIps().addIp(region);
-        PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity()).checkCreate(true);
+        PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new IpEntity()).checkCreate(true);
         String orderIdIp = ipPage.getOrderId();
 
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.MORE, () -> vmPage.attachIp(ip));
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getSrcOrderId().equals(orderIdIp))
                 .filter(e -> e.getFloatingIpAddress().equals(ip))

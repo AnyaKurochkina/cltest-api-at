@@ -31,7 +31,6 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
@@ -200,7 +199,7 @@ public abstract class IProduct extends Entity {
     }
 
     public String executeSsh(String cmd) {
-        return executeSsh(new SshClient((String) OrderServiceSteps.getProductsField(this, VM_IP_PATH), envType()), cmd);
+        return executeSsh(SshClient.builder().host(OrderServiceSteps.getProductsField(this, VM_IP_PATH).toString()).env(envType()).build(), cmd);
     }
 
     public void addLinkProduct() {
@@ -328,12 +327,11 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action, Flavor flavor) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("flavor", flavor.toString()).put("check_agree", true), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
         Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
-
     }
 
     //example: https://cloud.vtb.ru/vm/orders/ecb3567b-afa6-43a4-8a49-6e0ef5b1a952/topics?context=proj-7ll0yy5zsc&type=project&org=vtb

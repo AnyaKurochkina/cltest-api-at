@@ -37,12 +37,13 @@ public abstract class AbstractPostgreSQL extends IProduct {
     @Builder.Default
     public List<DbUser> users = new ArrayList<>();
     protected Flavor flavor;
+    protected String adminPassword;
 
-    public void createDb(String dbName, String dbAdminPass) {
+    public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
         OrderServiceSteps.executeAction("postgresql_create_db", this,
-                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, dbAdminPass)), this.getProjectId());
+                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, adminPassword)), this.getProjectId());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
@@ -63,7 +64,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
         Assertions.assertEquals(0, OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
     }
 
-    private void addMountPoint(String action, String mount) {
+    void addMountPoint(String action, String mount) {
         OrderServiceSteps.executeAction(action, this, new JSONObject().put("mount", mount), this.getProjectId());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, 0));
         Assertions.assertTrue(sizeAfter > 0);
@@ -174,6 +175,8 @@ public abstract class AbstractPostgreSQL extends IProduct {
     public void resetDbOwnerPassword(String action, String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+        this.adminPassword = password;
+        save();
     }
 
     //Изменить default_transaction_isolation

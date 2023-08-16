@@ -10,7 +10,7 @@ import ui.elements.TypifiedElement;
 import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.open;
+import static ui.elements.TypifiedElement.open;
 
 public abstract class LoginPage {
     protected SelenideElement usernameInput = $x("//input[@id='username']");

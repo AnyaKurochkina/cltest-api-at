@@ -8,11 +8,11 @@ WildFly:
 
 PostgreSQL:
   - options:
-      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
 
 RabbitMQClusterAstra:
   - options:
-      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "LT" }
 
 Windows:
   - options:

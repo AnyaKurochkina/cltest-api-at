@@ -1,6 +1,7 @@
 package ui.extesions;
 
 import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 import core.helper.AttachUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
@@ -15,11 +16,15 @@ import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static org.junit.TestsExecutionListener.initDriver;
 
 public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, BeforeAllCallback, InvocationInterceptor {
-    @Override
-    public void beforeAll(ExtensionContext extensionContext) {
+
+    static {
         LoggingPreferences logs = new LoggingPreferences();
         logs.enable(LogType.BROWSER, Level.ALL);
         Configuration.browserCapabilities.setCapability(CapabilityType.LOGGING_PREFS, logs);
+    }
+
+    @Override
+    public void beforeAll(ExtensionContext extensionContext) {
         initDriver();
     }
 
@@ -31,6 +36,8 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
         initDriver();
+        Selenide.open("");
+        Selenide.localStorage().setItem("themeType", "\"light\"");
     }
 
     public static Throwable attachFiles(Throwable throwable) {

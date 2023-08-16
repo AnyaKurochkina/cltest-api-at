@@ -7,6 +7,7 @@ import ui.elements.Table;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class TableChecker {
     private final List<String> headers = new ArrayList<>();
@@ -18,10 +19,10 @@ public class TableChecker {
         return this;
     }
 
-    public void check(Table.Row row) {
-        AssertUtils.assertHeaders(row.getTable(), headers);
+    public void check(Supplier<Table.Row> row) {
+        AssertUtils.assertHeaders(row.get().getTable(), headers);
         for (int i = 0; i < headers.size(); i++) {
-            String value = row.getValueByColumn(headers.get(i));
+            String value = row.get().getValueByColumn(headers.get(i));
             Assertions.assertTrue(conditions.get(i).test(value), String.format("Значение '%s' в колонке '%s' не соответствует условию", value, headers.get(i)));
         }
     }
