@@ -74,7 +74,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Override
     public void waitChangeStatus(Duration duration) {
         if (Waiting.sleep(waitStatus::exists, Duration.ofSeconds(5)))
-            waitStatus.shouldNot(Condition.visible, duration);
+            waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
     }
 
     @Override
