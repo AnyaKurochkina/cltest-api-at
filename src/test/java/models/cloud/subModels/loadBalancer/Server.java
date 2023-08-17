@@ -17,4 +17,5 @@ public class Server {
     String sendProxy = "disabled";
     String backup;
     Integer fall;
+    Integer rise;
 }
