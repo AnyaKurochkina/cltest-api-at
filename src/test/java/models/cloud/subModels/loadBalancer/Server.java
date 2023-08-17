@@ -18,4 +18,5 @@ public class Server {
     String backup;
     Integer fall;
     Integer rise;
+    Integer inter;
 }
