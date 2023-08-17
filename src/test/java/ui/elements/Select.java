@@ -12,6 +12,7 @@ import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
 import java.util.List;
+import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
@@ -72,12 +73,13 @@ public class Select implements TypifiedElement {
         hover();
         Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
-        if (currentTitle.equals(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.equals(value))
             return value;
         element.click();
         if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
-        getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            setItem(new Random().nextInt(getOptions().size()));
+        else
+            getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
     }
 
@@ -86,12 +88,13 @@ public class Select implements TypifiedElement {
         hover();
         Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
-        if (currentTitle.contains(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.contains(value))
             return value;
         element.click();
         if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
-        getOptions().filter(Condition.matchText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            setItem(new Random().nextInt(getOptions().size()));
+        else
+            getOptions().filter(Condition.matchText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
     }
 
@@ -100,12 +103,13 @@ public class Select implements TypifiedElement {
         hover();
         Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
-        if (currentTitle.startsWith(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.startsWith(value))
             return value;
         element.click();
         if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
-        getOptions().filter(Condition.matchText(value + "[^\\\\>]*")).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            setItem(new Random().nextInt(getOptions().size()));
+        else
+            getOptions().filter(Condition.matchText(value + "[^\\\\>]*")).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
     }
 
@@ -120,16 +124,17 @@ public class Select implements TypifiedElement {
         return titles.get(titles.size() - 1);
     }
 
-    private String random(List<String> list) {
-        return list.get(ThreadLocalRandom.current().nextInt(list.size()) % list.size());
-    }
-
     protected SelenideElement getClearBtn() {
         return element.scrollIntoView(scrollCenter).hover().$x("descendant::button[@aria-label='Clear']");
     }
 
-    protected String getRandomItem() {
-        return random(getOptions().texts());
+    protected String setItem(int index) {
+        List<String> texts = getOptions().texts();
+        if(getValue().equals(texts.get(index)))
+            element.click();
+        else
+            getOptions().filter(Condition.exactText(texts.get(index))).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        return texts.get(index);
     }
 
     public ElementsCollection getOptions() {
