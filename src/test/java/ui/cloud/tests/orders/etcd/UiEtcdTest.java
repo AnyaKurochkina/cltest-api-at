@@ -137,7 +137,6 @@ public class UiEtcdTest extends UiProductTest {
 
     @Test
     @Order(15)
-    @EnabledIfEnv("prod")
     @TmsLink("")
     @DisplayName("UI Etcd. Мониторинг ОС")
     void monitoringOs() {

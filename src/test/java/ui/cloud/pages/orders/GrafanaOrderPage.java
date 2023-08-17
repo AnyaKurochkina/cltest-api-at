@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import lombok.Getter;
 import ui.elements.Button;
 import ui.elements.Input;
-import ui.elements.Switch;
 
 import java.util.UUID;
 
@@ -22,6 +21,6 @@ public class GrafanaOrderPage extends NewOrderPage {
 
     public void checkOrderDetails() {
         super.checkOrderDetails();
-        getHardDrive2().shouldBe(Condition.visible);
+        getHardDrives().shouldBe(Condition.visible);
     }
 }

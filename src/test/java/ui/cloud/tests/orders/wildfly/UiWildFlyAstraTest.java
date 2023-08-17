@@ -194,7 +194,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
 
     @Test
     @Order(13)
-    @EnabledIfEnv("prod")
     @TmsLink("1171954")
     @DisplayName("UI WildFlyAstra. Мониторинг ОС")
     void monitoringOs() {

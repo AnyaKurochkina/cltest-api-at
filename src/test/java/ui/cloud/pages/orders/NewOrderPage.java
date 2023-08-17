@@ -22,7 +22,7 @@ public class NewOrderPage {
     private final SelenideElement opMemory = $x("//div[contains(text(),'Оперативная память')]");
     private final SelenideElement hardDrive = $x("//div[contains(text(),'Жесткий диск')]");
     private final SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
-    private final SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
+    private final SelenideElement hardDrives = $x("//div[contains(text(),'Жесткие диски')]");
     private final SelenideElement processor = $x("//div[contains(text(),'Процессор')]");
     private final SelenideElement windowsOS = $x("//div[contains(text(),'ОС Windows')]");
     private final SelenideElement linuxOS = $x("//div[contains(text(),'ОС linux')]");
@@ -77,6 +77,6 @@ public class NewOrderPage {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }
         getProcessor().shouldBe(Condition.visible);
-        getHardDrive().shouldBe(Condition.visible);
+        getOpMemory().shouldBe(Condition.visible);
     }
 }

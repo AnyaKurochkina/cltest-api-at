@@ -171,7 +171,6 @@ public class UiGenericDatabaseTest extends UiProductTest {
 
     @Test
     @Order(11)
-    @EnabledIfEnv("prod")
     @TmsLink("1687213")
     @DisplayName("UI GenericDatabase. Мониторинг ОС")
     void monitoringOs() {
