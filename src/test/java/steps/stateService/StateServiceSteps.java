@@ -46,6 +46,7 @@ public class StateServiceSteps extends Steps {
     @Step("Создание Item")
     public static Item createItem(String projectId, JSONObject json) {
         return new Http(StateServiceURL)
+              //  .setRole(Role.CLOUD_ADMIN)
                 .withServiceToken()
                 .body(json)
                 .post("/api/v1/projects/{}/items/", projectId)
