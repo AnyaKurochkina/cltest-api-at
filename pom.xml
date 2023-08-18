@@ -65,7 +65,7 @@
         <dependency>
             <groupId>com.codeborne</groupId>
             <artifactId>selenide</artifactId>
-            <version>5.25.0</version>
+            <version>5.25.1</version>
         </dependency>
         <!-- ui-->
         <!-- https://mvnrepository.com/artifact/org.apache.kafka/kafka-clients -->
