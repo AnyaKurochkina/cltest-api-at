@@ -17,6 +17,6 @@ public class AstraLinuxOrderPage extends NewOrderPage {
 
     public void checkOrderDetails() {
         super.checkOrderDetails();
-        getHardDrive2().shouldBe(Condition.visible);
+        getHardDrives().shouldBe(Condition.visible);
     }
 }

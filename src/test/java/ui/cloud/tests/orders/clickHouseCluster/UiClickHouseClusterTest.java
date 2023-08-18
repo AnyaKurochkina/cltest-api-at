@@ -226,7 +226,6 @@ public class UiClickHouseClusterTest extends UiProductTest {
 
     @Test
     @Order(15)
-    @EnabledIfEnv("prod")
     @TmsLink("1296753")
     @DisplayName("UI ClickHouse Cluster. Мониторинг ОС")
     void monitoringOs() {

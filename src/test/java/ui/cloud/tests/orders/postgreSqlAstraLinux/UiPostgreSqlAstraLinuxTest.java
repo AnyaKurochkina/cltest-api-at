@@ -51,7 +51,6 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     void orderPostgreSQL() {
         double preBillingProductPrice;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -60,7 +59,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
+            orderPage.getGroupSelect().set(product.getAccessGroup());
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
@@ -293,7 +292,6 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(27)
     @TmsLink("1296731")
-    @EnabledIfEnv("prod")
     @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
     void monitoringOs() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);

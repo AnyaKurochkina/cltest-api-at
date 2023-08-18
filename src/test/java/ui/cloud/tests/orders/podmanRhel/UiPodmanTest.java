@@ -140,7 +140,6 @@ public class UiPodmanTest extends UiProductTest {
     @Test
     @Order(10)
     @TmsLink("1296740")
-    @EnabledIfEnv("prod")
     @DisplayName("UI Podman. Мониторинг ОС")
     void monitoringOs() {
         PodmanPage podmanPage = new PodmanPage(product);

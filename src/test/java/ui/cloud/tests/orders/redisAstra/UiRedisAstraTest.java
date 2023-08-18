@@ -151,7 +151,6 @@ public class UiRedisAstraTest extends UiProductTest {
 
     @Test
     @Order(27)
-    @EnabledIfEnv("prod")
     @TmsLink("1296747")
     @DisplayName("UI Windows. Мониторинг ОС")
     void monitoringOs() {

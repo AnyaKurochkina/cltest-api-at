@@ -33,7 +33,8 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product;// = PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/d74bfaa5-1f3d-4ede-bb4d-22c4550bf665/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgresSQLCluster product;
+    //=PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/477825e1-c2cf-4992-82e5-f5582b494882/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameDb = "at_db";
     String nameSlot = "at_slot";
     String limit = "20";
@@ -88,7 +89,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         }
         checkOrderCost(preBillingProductPrice, new PostgreSqlClusterAstraPage(product));
     }
-
 
     @Test
     @TmsLink("1236731")
@@ -337,7 +337,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(29)
     @TmsLink("1296732")
-    @EnabledIfEnv("prod")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Мониторинг ОС")
     void monitoringOs() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
