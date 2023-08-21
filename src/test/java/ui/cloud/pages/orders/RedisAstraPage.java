@@ -72,8 +72,15 @@ public class RedisAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
-    public void resetPassword(String name) {
+    public void resetPasswordSentinel(String name) {
         runActionWithParameters(getActionsMenuButton(name), "Сбросить пароль", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
+        });
+    } public void resetPassword() {
+        runActionWithParameters(getActionsMenuButton("default",2), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
