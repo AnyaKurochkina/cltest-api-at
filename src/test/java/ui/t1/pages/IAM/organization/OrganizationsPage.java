@@ -2,10 +2,7 @@ package ui.t1.pages.IAM.organization;
 
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
-import ui.elements.Alert;
-import ui.elements.Button;
-import ui.elements.DataTable;
-import ui.elements.Input;
+import ui.elements.*;
 import ui.models.Organization;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -29,13 +26,30 @@ public class OrganizationsPage {
         ownerEmail.setValue(org.getEmail());
         INN.setValue(org.getINN());
         create.click();
-        Alert.green("Организация успешно создана");
+        Alert.green("Новая организация создана");
+        return this;
+    }
+
+    @Step("Удаление организации")
+    public OrganizationsPage deleteOrganization(Organization org) {
+        String orgName = org.getName();
+        OrganizationTable table = new OrganizationTable();
+        Menu.byElement(table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, orgName))
+                .getRowByColumnValue(OrganizationTable.COLUMN_NAME, orgName)
+                        .getElementByColumnIndex(3)
+                        .$("button"))
+                .select("Удалить");
+        Dialog.byTitle("Удаление организации")
+                .clickButton("Удалить");
+        Alert.green("Организация удалена");
         return this;
     }
 
     @Step("Проверка существования организации")
     public boolean isOrgExist(String name) {
-        return new OrganizationTable().isColumnValueEquals(OrganizationTable.COLUMN_NAME, name);
+        OrganizationTable table = new OrganizationTable();
+        return table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, name))
+                .isColumnValueEquals(OrganizationTable.COLUMN_NAME, name);
     }
 
     private static class OrganizationTable extends DataTable {

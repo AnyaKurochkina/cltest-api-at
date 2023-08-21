@@ -58,7 +58,7 @@ public class ProjectActionTest extends Tests {
                     .changeNameProject(name, updatedName)
                     .isProjectExist(updatedName));
             new OrgStructurePage()
-                    .deleteProject(name);
+                    .deleteProject(updatedName);
     }
 
     @Test
