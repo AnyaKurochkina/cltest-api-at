@@ -110,6 +110,7 @@ public class GrafanaPage extends IProductPage {
             Select.byLabel("Срок хранения в днях").set("1");
         });
         btnGeneralInfo.click();
+        new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип","snapshot"));
     }
 
@@ -117,6 +118,7 @@ public class GrafanaPage extends IProductPage {
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new Table("Имя").getFirstValueByColumn("Имя"), "Удалить снапшот");
         btnGeneralInfo.click();
+        new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
     }
 
