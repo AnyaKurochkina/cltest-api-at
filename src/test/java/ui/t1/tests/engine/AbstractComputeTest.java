@@ -59,7 +59,7 @@ public abstract class AbstractComputeTest extends Tests {
     private static final Map<String, Integer> projectCountMap = new ConcurrentHashMap<>();
 
     static {
-        Folder folderPollProject = Folder.builder().title("ProjectPool").build().getObject();
+        Folder folderPollProject = Folder.builder().title("ProjectPool").build().onlyGetObject();
         ResourceManagerSteps.getChildren(folderPollProject.getName()).forEach(e -> projectCountMap.put(e, 0));
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractComputeTest extends Tests {
     }
 
     @BeforeAll
-    public static void beforeAll() {
+    public static synchronized void beforeAll() {
         new T1LoginPage(getProjectId())
                 .signIn(Role.CLOUD_ADMIN);
         new IndexPage().goToSshKeys().addKey(sshKey, SSH_USER);
