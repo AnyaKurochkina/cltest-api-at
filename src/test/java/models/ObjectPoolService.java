@@ -123,7 +123,7 @@ public class ObjectPoolService {
         return writeEntityToMap(e);
     }
 
-    public static <T extends Entity> T getObject(Entity e) {
+    public static <T extends Entity> T onlyGetObject(Entity e) {
         for (ObjectPoolEntity objectPoolEntity : entities.values()) {
             if (objectPoolEntity.equalsEntity(e)) {
                 return objectPoolEntity.get();
