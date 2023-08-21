@@ -156,7 +156,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Order(12)
-    @EnabledIfEnv("prod")
     @TmsLink("1296749")
     @DisplayName("UI UbuntuLinux. Мониторинг ОС")
     void checkMonitoringOs() {

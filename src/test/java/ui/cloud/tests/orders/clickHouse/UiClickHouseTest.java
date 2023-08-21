@@ -244,7 +244,6 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("1536880")
-    @EnabledIfEnv("prod")
     @DisplayName("UI ClickHouse. Мониторинг ОС")
     void monitoringOs() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

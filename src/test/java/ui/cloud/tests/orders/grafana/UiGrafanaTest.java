@@ -145,7 +145,6 @@ public class UiGrafanaTest extends UiProductTest {
 
     @Test
     @Order(8)
-    @EnabledIfEnv("prod")
     @TmsLink("1688705")
     @DisplayName("UI Grafana. Мониторинг ОС")
     void monitoringOs() {

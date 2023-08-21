@@ -141,7 +141,6 @@ public class UiNginxAstraTest extends UiProductTest {
 
     @Test
     @Order(8)
-    @EnabledIfEnv("prod")
     @TmsLink("1644504")
     @DisplayName("UI NginxAstra. Мониторинг ОС")
     void monitoringOs() {

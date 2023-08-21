@@ -317,7 +317,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(27)
     @TmsLink("1216972")
-    @EnabledIfEnv("prod")
     @DisplayName("UI ApacheKafkaCluster. Мониторинг ОС")
     void monitoringOs() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);

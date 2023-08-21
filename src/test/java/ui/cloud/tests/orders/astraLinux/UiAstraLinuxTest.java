@@ -162,7 +162,6 @@ public class UiAstraLinuxTest extends UiProductTest {
 
     @Test
     @Order(12)
-    @EnabledIfEnv("prod")
     @TmsLink("1164676")
     @DisplayName("UI AstraLinux. Мониторинг ОС")
     void monitoringOs() {

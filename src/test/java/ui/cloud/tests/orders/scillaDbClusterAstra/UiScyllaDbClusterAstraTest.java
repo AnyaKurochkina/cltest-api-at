@@ -190,7 +190,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
     @Test
     @Order(22)
-    @EnabledIfEnv("prod")
     @TmsLink("1368052")
     @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
     void monitoringOs() {
