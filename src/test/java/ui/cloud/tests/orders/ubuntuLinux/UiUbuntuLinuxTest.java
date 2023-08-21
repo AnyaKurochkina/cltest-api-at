@@ -9,11 +9,14 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Ubuntu;
 import models.cloud.portalBack.AccessGroup;
+import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -90,6 +93,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("378042")
     @DisplayName("UI UbuntuLinux. Перезагрузить по питанию")
@@ -152,7 +156,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Order(12)
-    @EnabledIfEnv("prod")
     @TmsLink("1296749")
     @DisplayName("UI UbuntuLinux. Мониторинг ОС")
     void checkMonitoringOs() {

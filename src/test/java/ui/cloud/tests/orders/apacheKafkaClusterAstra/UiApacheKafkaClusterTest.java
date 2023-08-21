@@ -32,7 +32,8 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/893921dc-541e-4ced-b79b-10d5f3c03977/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ApacheKafkaCluster product;
+    //=ApacheKafkaCluster.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/application_integration/orders/cae6f318-c6ad-49d7-b764-615ca79f0652/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -48,7 +49,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     void orderApacheKafkaCluster() {
         double preBillingProductPrice;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -74,7 +75,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         }
         checkOrderCost(preBillingProductPrice, new ApacheKafkaClusterPage(product));
     }
-
 
     @Test
     @TmsLink("1319683")
@@ -317,7 +317,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(27)
     @TmsLink("1216972")
-    @EnabledIfEnv("prod")
     @DisplayName("UI ApacheKafkaCluster. Мониторинг ОС")
     void monitoringOs() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
@@ -333,5 +332,4 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.ZERO, pSqlPage::delete);
     }
-
  }

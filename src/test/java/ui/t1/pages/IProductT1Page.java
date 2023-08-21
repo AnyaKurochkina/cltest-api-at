@@ -5,11 +5,12 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
+import models.AbstractEntity;
 import org.junit.jupiter.api.Assertions;
 import steps.stateService.StateServiceSteps;
-import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.IProductPage;
 import ui.cloud.pages.orders.OrderStatus;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
@@ -59,6 +60,12 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
         return checkCreate(true);
     }
 
+    @SuppressWarnings("unchecked")
+    public C markForDeletion(AbstractEntity entity) {
+        AbstractEntity.addEntity(entity);
+        return (C) this;
+    }
+
     @Override
     public void waitChangeStatus() {
         waitChangeStatus(Duration.ofSeconds(70));
@@ -66,7 +73,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     @Override
     public void waitChangeStatus(Duration duration) {
-        if (waitStatus.exists())
+        if (Waiting.sleep(waitStatus::exists, Duration.ofSeconds(5)))
             waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
     }
 
@@ -95,7 +102,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Step("Получить ID продукта")
     public String getOrderId() {
         btnGeneralInfo.getButton().shouldBe(Condition.visible);
-        Menu.byElement(getBtnAction("Действия")).select("Скопировать ID");
+        Menu.byElement(getActionsMenuButton("Действия")).select("Скопировать ID");
         Alert.green("ID скопирован");
         return getClipBoardText();
     }

@@ -1,6 +1,7 @@
 package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
+import core.utils.ssh.SshClient;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Table;
@@ -19,6 +20,11 @@ public class NetworkInterface extends IProductT1Page<NetworkInterface> {
 
     public Table.Row getIpRow(String ip){
         return getTableByHeader("Публичные IP").getRowByColumnValue(Column.NAME, ip);
+    }
+
+    public NetworkInterface sshExecute(String cmd){
+        SshClient.builder().host(getTableByHeader("Публичные IP").getFirstValueByColumn(Column.NAME)).privateKey(SshKeyList.PRIVATE_KEY).build().execute(cmd);
+        return this;
     }
 
 }

@@ -5,6 +5,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,49 +15,50 @@ import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebElement;
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.*;
 
 @Getter
 public class Table implements TypifiedElement {
-    List<String> headers;
-    SelenideElement table;
-    ElementsCollection rows;
-    ElementsCollection headersCollection;
     @Language("XPath")
-    private String xpath;
+    private static final String tableXpath = "//table[thead/tr/th[.='{}']]";
+    protected List<String> headers;
+    protected ElementsCollection rows;
+    protected ElementsCollection headersCollection;
+    @Language("XPath")
+    private final String xpath;
 
     protected void open() {}
 
     public Table(String columnName) {
         open();
-        table = $x("//table[thead/tr/th[.='{}']]", columnName).shouldBe(Condition.visible);
-        init(table);
+        xpath = format(tableXpath, columnName);
+        init($x(xpath).shouldBe(Condition.visible));
     }
 
     public Table(String columnName, int index) {
         open();
-        table = $x("(//table[thead/tr/th[.='{}']])" + TypifiedElement.postfix, columnName, TypifiedElement.getIndex(index)).shouldBe(Condition.visible);
-        init(table);
+        xpath = format( "(" + tableXpath + ")" + TypifiedElement.postfix, columnName, TypifiedElement.getIndex(index));
+        init($x(xpath).shouldBe(Condition.visible));
     }
 
     public Table(SelenideElement table) {
         open();
+        xpath = table.getSearchCriteria().replaceAll("By.xpath: ", "");
         init(table);
     }
 
-    public Table update(){
+    public Table update() {
         init($x(xpath));
         return this;
     }
 
     public void init(SelenideElement table) {
-        xpath = table.getSearchCriteria().replaceAll("By.xpath: ", "");
-
         $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
         table.$x("descendant::*[text()='Идет обработка данных']").shouldNot(Condition.exist);
         headersCollection = table.$$x("thead/tr/th");
@@ -77,7 +79,7 @@ public class Table implements TypifiedElement {
     }
 
     public static Table getTableByColumnNameContains(String columnName) {
-        return new Table($x("//table[thead/tr/th[contains(., '"+ columnName + "')]]"));
+        return new Table($x("//table[thead/tr/th[contains(., '" + columnName + "')]]"));
     }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
@@ -129,7 +131,7 @@ public class Table implements TypifiedElement {
 
     @Step("Проверка, что в колонке '{column}' есть значение, равное '{value}'")
     public boolean isColumnValueEquals(String column, String value) {
-        if(isEmpty())
+        if (isEmpty())
             return false;
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
@@ -153,7 +155,7 @@ public class Table implements TypifiedElement {
 
     @Step("Проверка, что в колонке '{column}' есть значение, содержащее '{value}'")
     public boolean isColumnValueContains(String column, String value) {
-        if(isEmpty())
+        if (isEmpty())
             return false;
         for (SelenideElement e : rows) {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
@@ -189,8 +191,12 @@ public class Table implements TypifiedElement {
     public class Row {
         int index;
 
-        public SelenideElement get(){
+        public SelenideElement get() {
             return getRowByIndex(index);
+        }
+
+        public Table getTable() {
+            return Table.this;
         }
 
         public String getValueByColumn(String column) {
@@ -236,5 +242,9 @@ public class Table implements TypifiedElement {
         List<String> list = new ArrayList<>(headers);
         list.removeAll(Collections.singletonList(""));
         return list;
+    }
+
+    public static boolean isExist(String column) {
+        return Waiting.sleep(() -> $x(tableXpath, column).isDisplayed(), Duration.ofSeconds(5));
     }
 }

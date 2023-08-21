@@ -1,6 +1,6 @@
 package api.cloud.tagService.v2;
 
-import api.cloud.tagService.AbstractInventoryTest;
+import api.cloud.tagService.AbstractTagServiceTest;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -21,7 +21,7 @@ import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 
 @Epic("Сервис тегов")
 @Feature("Фильтр Inventory V2")
-public class InventoryFilterByDateV2Test extends AbstractInventoryTest {
+public class InventoryFilterByDateV2Test extends AbstractTagServiceTest {
 
     //GTE(">="), GT(">"), LT("<"), LTE("<=");
     @Test

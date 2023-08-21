@@ -1,7 +1,6 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,12 +14,12 @@ import models.cloud.subModels.Vhost;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
-
-import static core.utils.AssertUtils.assertContains;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Random;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -91,8 +90,13 @@ public class RabbitMQClusterAstra extends IProduct {
 
     //Создать пользователя RabbitMQ
     public void rabbitmqCreateUser(String user) {
-        OrderServiceSteps.executeAction("rabbitmq_create_user", this, new JSONObject(String.format("{rabbitmq_users: [{user: \"%s\"}]}", user)), this.getProjectId());
+        OrderServiceSteps.executeAction("rabbitmq_create_user_release", this, new JSONObject(String.format("{rabbitmq_users: [{name: \"%s\"}]}", user)), this.getProjectId());
         Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь " + user);
+    }
+
+    public void rabbitmqDeleteUser(String user) {
+        OrderServiceSteps.executeAction("rabbitmq_delete_users_release", this, new JSONObject().put("name", user), this.getProjectId());
+        Assertions.assertFalse(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта присутствует пользователь " + user);
     }
 
     @Step("Удаление продукта")
@@ -107,7 +111,7 @@ public class RabbitMQClusterAstra extends IProduct {
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
-        super.updateCerts("rabbitmq_update_certs");
+        super.updateCerts("rabbitmq_update_certs_release");
 //        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
 //        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
@@ -118,31 +122,47 @@ public class RabbitMQClusterAstra extends IProduct {
         List<Vhost> vhosts = new ArrayList<>();
         for (String name : collect)
             vhosts.add(new Vhost(name));
-        OrderServiceSteps.executeAction("rabbitmq_create_vhosts", this, new JSONObject("{\"rabbitmq_vhosts\": " + JsonHelper.toJson(vhosts) + "}"), projectId);
+        OrderServiceSteps.executeAction("rabbitmq_create_vhosts_release", this, new JSONObject("{\"rabbitmq_vhosts\": " + JsonHelper.toJson(vhosts) + "}"), projectId);
         for (String name : collect)
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
                     String.format(RABBIT_CLUSTER_VHOST, name)), "Отсутствует vhost " + name);
     }
 
     public void deleteVhost(List<String> collect) {
-        OrderServiceSteps.executeAction("rabbitmq_delete_vhosts", this, new JSONObject("{\"vhosts\": " + JsonHelper.toJson(collect) + "}"), projectId);
+        OrderServiceSteps.executeAction("rabbitmq_delete_vhosts_release", this, new JSONObject("{\"vhosts\": " + JsonHelper.toJson(collect) + "}"), projectId);
         for (String name : collect)
             Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
                     String.format(RABBIT_CLUSTER_VHOST, name)), "Присутствует vhost " + name);
     }
 
-    public void addVhostAccess(String user, List<String> permissions, String vhost) {
-        OrderServiceSteps.executeAction("rabbitmq_add_vhost_access", this,
+    public void editVhostAccess(String user, List<String> permissions, String vhost) {
+        OrderServiceSteps.executeAction("rabbitmq_edit_vhost_access_release", this,
                 new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_permissions\": [{\"permissions\": " + JsonHelper.toJson(permissions) + ", \"vhost_name\": \"" + vhost + "\"}]}"), projectId);
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
                 String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Отсутствует vhost access " + vhost);
     }
 
     public void deleteVhostAccess(String user, String vhost) {
-        OrderServiceSteps.executeAction("rabbitmq_delete_vhost_access", this,
+        OrderServiceSteps.executeAction("rabbitmq_delete_vhost_access_release", this,
                 new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_name\": \"" + vhost + "\"}"), projectId);
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
                 String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Присутствует vhost access " + vhost);
+    }
+
+    @Step("Произвести ре-балансировку очередей")
+    public void queueRebalancing() {
+        OrderServiceSteps.executeAction("rabbitmq_queue_rebalancing_release", this, new JSONObject().put("accept", true), projectId);
+    }
+
+    @Step("Синхронизировать данные кластера")
+    public void dataSynchronization() {
+        OrderServiceSteps.executeAction("rabbitmq_data_synchronization_release", this, new JSONObject().put("accept", true), projectId);
+    }
+
+    @Step("Редактировать группу доступа")
+    public void editAccessGroupsOnTheWeb(String group, String role) {
+        JSONObject data = new JSONObject().put("accept", true).append("members", group).put("role", role);
+        OrderServiceSteps.executeAction("rabbitmq_edit_access_groups_on_the_web_release", this, data, projectId);
     }
 
     //Проверить конфигурацию

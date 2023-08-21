@@ -29,7 +29,7 @@ public class GraphPage extends EntityPage {
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
     private final Input authorInput = Input.byName("author");
-    private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
+    private final Button usageButton = Button.byText("Перейти в использование");
     private final String nameColumn = "Имя";
     private final RadioGroup typeRadioGroup = RadioGroup.byFieldsetLabel("Тип");
 
@@ -166,7 +166,7 @@ public class GraphPage extends EntityPage {
         deleteButton.click();
         new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
-        usageLink.click();
+        usageButton.click();
         checkTabIsSelected("Использование");
         return this;
     }

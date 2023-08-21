@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Engine{
+public class Engine {
 	private String updatedAt;
 	private String segment;
 	private String name;

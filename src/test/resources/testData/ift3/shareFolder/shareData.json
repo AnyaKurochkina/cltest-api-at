@@ -1,0 +1,72 @@
+[
+  {
+    "objectClassName": "models.cloud.authorizer.Project",
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d3",
+    "id": "proj-z4sozqtzjr",
+    "projectName": "TEST",
+    "projectEnvironmentPrefix": {
+      "env": "IFT",
+      "id": "df8e9a1f-7bc2-4ada-9f92-005c1b5e59b3",
+      "envType": "TEST",
+      "projectEnvironmentId": "92f2acb2-aa33-4317-9352-dc1553e0097f"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
+    "id": "sa_proj-z4sozqtzjr-1v",
+    "secret": "33f96f852ea5a483378970798639c336",
+    "isDeleted": false,
+    "projectId": "proj-z4sozqtzjr",
+    "role": "roles/order-service.admin",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.portalBack.AccessGroup",
+    "prefixName": "cloud-plux-group",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-z4sozqtzjr",
+    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f576",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Project",
+    "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
+    "id": "proj-pkvckn08w9",
+    "projectName": "DEV",
+    "projectEnvironmentPrefix": {
+      "env": "DEV",
+      "id": "ccdf17a9-b2a6-4d23-9f7b-af5cc4575839",
+      "envType": "DEV",
+      "projectEnvironmentId": "447044a8-00ae-486e-8e59-6136353ca4ce"
+    },
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.portalBack.AccessGroup",
+    "prefixName": "cloud-plux-group-at",
+    "user": "",
+    "isDeleted": false,
+    "projectName": "proj-pkvckn08w9",
+    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
+    "id": "sa_proj-pkvckn08w9-1u",
+    "secret": "264e60c838ca8a02f5fa6be835b01a32",
+    "isDeleted": false,
+    "projectId": "proj-pkvckn08w9",
+    "role": "roles/order-service.admin",
+    "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.InformationSystem",
+    "objectUid": "cafa1b9d-5702-459a-bfff-7ee70df2651d",
+    "id": "9cef3ede-fd3f-407f-bbed-9767e700036e",
+    "isForOrders": true
+  }
+]

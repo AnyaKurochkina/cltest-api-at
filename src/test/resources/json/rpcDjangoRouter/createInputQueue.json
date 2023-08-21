@@ -1,0 +1,10 @@
+{
+  "name": "string",
+  "title": "api_test",
+  "description": "api_test",
+  "durable": true,
+  "params": {},
+  "rules": [
+    0
+  ]
+}

@@ -11,7 +11,7 @@ public class PublicIp extends IProductT1Page<PublicIp> {
     public void attachComputeIp(String vmName) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
                         Dialog.byTitle("Подключить к виртуальной машине")
-                                .setSelectValue("Доступные виртуальные машины", vmName));
+                                .setSelectValue("Сетевой интерфейс", vmName));
     }
 
     @Step("Отключить IP от интерфейса")

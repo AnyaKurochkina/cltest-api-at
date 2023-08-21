@@ -9,6 +9,7 @@ import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.builder.RequestSpecBuilder;
 import io.restassured.config.SSLConfig;
 import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.SpecificationQuerier;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
@@ -33,6 +34,8 @@ import java.security.NoSuchAlgorithmException;
 import java.util.*;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 import static core.helper.JsonHelper.stringPrettyFormat;
@@ -56,6 +59,8 @@ public class Http {
     boolean isLogged = true;
     private static final InheritableThreadLocal<Role> fixedRole = new InheritableThreadLocal<>();
     Map<String, String> headers = new HashMap<>();
+    Map<String, String> pathParams = new HashMap<>();
+    Map<String, String> queryParams = new HashMap<>();
 
     static {
         org.apache.http.conn.ssl.SSLSocketFactory clientAuthFactory = null;
@@ -138,13 +143,21 @@ public class Http {
     }
 
     public Response api(Path api, Object... args) {
-        String pattern = "{}";
+
         this.host = api.url;
         this.method = api.method.toString();
-        this.path = api.path.replaceAll("\\{([^}]*)}", pattern);
-        if(StringUtils.count(this.path, pattern) == args.length - 1)
-            this.path += pattern;
-        this.path = StringUtils.format(this.path, args);
+        this.path = api.path;
+        int i = 0;
+        Pattern pattern = Pattern.compile("\\{([^}]*)}");
+        Matcher matcher = pattern.matcher(path.replaceFirst("\\?(.*)", ""));
+        while (matcher.find()) {
+            pathParams.put(matcher.group(1), args[i].toString());
+            i++;
+        }
+        for (Object o : args) {
+            if (o instanceof QueryBuilder)
+                queryParams = ((QueryBuilder) o).toMap();
+        }
         Response request = request();
         request.assertStatus(api.status);
         return request;
@@ -242,14 +255,14 @@ public class Http {
         int status = 0;
 //        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
 //        path = url.getFile();
-
+        RequestSpecification specification = null;
         io.restassured.response.Response response = null;
         try {
             RequestSpecBuilder build = new RequestSpecBuilder();
             build.setBaseUri(host);
             build.build();
 
-            RequestSpecification specification = RestAssured.given()
+            specification = RestAssured.given()
                     .spec(build.build())
                  //   .filter(new SwaggerCoverage())
                     .config(RestAssured.config().sslConfig(sslConfig))
@@ -282,6 +295,11 @@ public class Http {
             if (body.length() > 0)
                 specification.body(body);
 
+            if(!pathParams.isEmpty())
+                specification.pathParams(pathParams);
+            if(!queryParams.isEmpty())
+                specification.queryParams(queryParams);
+
 //            specification.params(getParamsUrl(StringUtils.findByRegex("\\?(.*)", path)));
             String params = StringUtils.findByRegex("\\?(.*)", path);
             List<String> values;
@@ -310,7 +328,7 @@ public class Http {
             }
 
             if (isLogged)
-                log.debug(String.format("%s URL: %s\n", method, (host + path)));
+                log.debug(String.format("%s URL: %s\n", method, SpecificationQuerier.query(specification).getURI()));
             if (field.length() == 0) {
                 if (body.length() > 0 || method.equals("POST")) {
                     if (isLogged)
@@ -322,14 +340,14 @@ public class Http {
                 throw e;
             if (response != null)
                 status = response.getStatusCode();
-            Assertions.fail(String.format("Ошибка отправки http запроса (%s) %s. \nОшибка: %s\nСтатус: %s", role, (host + path), e, status));
+            Assertions.fail(String.format("Ошибка отправки http запроса (%s) %s. \nОшибка: %s\nСтатус: %s", role, SpecificationQuerier.query(specification).getURI(), e, status));
         } finally {
             SEMAPHORE.release();
             if (response != null)
                 if (response.getTime() > 1000)
                     if (!((host + path).contains(TestITClient.properties.getUrl())))
                         DataFileHelper.appendToFile(TestsExecutionListener.responseTimeLog,
-                                String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, (host + path), response.getHeader("x-request-id")));
+                                String.format("[%s ms] %s %s (%s)\n", response.getTime(), method, SpecificationQuerier.query(specification).getURI(), response.getHeader("x-request-id")));
         }
         if (isLogged)
             log.debug(String.format("RESPONSE (%d) (%s): %s\n\n", Objects.requireNonNull(response).getStatusCode(), response.getHeader("x-request-id"), response.getBody().asPrettyString()));

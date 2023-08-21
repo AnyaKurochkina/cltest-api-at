@@ -62,6 +62,7 @@ public class Jinja2TemplatePage extends EntityPage {
 
     @Step("Проверка валидации недопустимых значений в коде шаблона Jinja2")
     public Jinja2TemplatesListPage checkNameValidation(String[] names) {
+        mainTab.switchTo();
         for (String name : names) {
             nameInput.setValue(name);
             Waiting.findWithAction(() -> nameValidationHint.isDisplayed(),
@@ -74,6 +75,7 @@ public class Jinja2TemplatePage extends EntityPage {
 
     @Step("Проверка валидации обязательных параметров при создании шаблона Jinja2")
     public Jinja2TemplatesListPage checkRequiredParams(Jinja2Template jinja2Template) {
+        mainTab.switchTo();
         descriptionTextArea.setValue("test");
         createButton.getButton().shouldBe(Condition.disabled);
         nameRequiredFieldHint.shouldBe(Condition.visible);
@@ -94,6 +96,7 @@ public class Jinja2TemplatePage extends EntityPage {
 
     @Step("Проверка валидации неуникального имени шаблона Jinja2 '{jinja2Template.name}'")
     public Jinja2TemplatesListPage checkNonUniqueNameValidation(Jinja2Template jinja2Template) {
+        mainTab.switchTo();
         titleInput.setValue(jinja2Template.getTitle());
         nameInput.setValue(jinja2Template.getName());
         Waiting.findWithAction(() -> nonUniqueNameValidationHint.isDisplayed(),
@@ -109,6 +112,7 @@ public class Jinja2TemplatePage extends EntityPage {
 
     @Step("Заполнение атрибутов шаблона Jinja2 '{jinja2Template.name}'")
     public Jinja2TemplatePage setAttributes(Jinja2Template jinja2Template) {
+        mainTab.switchTo();
         nameInput.setValue(jinja2Template.getName());
         nameRequiredFieldHint.shouldNotBe(Condition.visible);
         titleInput.setValue(jinja2Template.getTitle());
@@ -152,20 +156,24 @@ public class Jinja2TemplatePage extends EntityPage {
     @Step("Проверка баннера о несохранённых изменениях. Ок")
     public Jinja2TemplatePage checkUnsavedChangesAlertAccept(Jinja2Template jinja2Template) {
         String newValue = "new value";
+        mainTab.switchTo();
         titleInput.setValue(newValue);
         back();
         acceptAlert(unsavedChangesAlertText);
         new Jinja2TemplatesListPage().openJinja2TemplatePage(jinja2Template.getName());
+        mainTab.switchTo();
         titleInput.getInput().shouldHave(Condition.exactValue(jinja2Template.getTitle()));
         titleInput.setValue(newValue);
         templatesListLink.click();
         acceptAlert(unsavedChangesAlertText);
         new Jinja2TemplatesListPage().openJinja2TemplatePage(jinja2Template.getName());
+        mainTab.switchTo();
         titleInput.getInput().shouldHave(Condition.exactValue(jinja2Template.getTitle()));
         descriptionTextArea.setValue(newValue);
         mainPage.click();
         acceptAlert(unsavedChangesAlertText);
         new ControlPanelIndexPage().goToJinja2TemplatesListPage().findAndOpenJinja2TemplatePage(jinja2Template.getName());
+        mainTab.switchTo();
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(jinja2Template.getDescription()));
         return this;
     }

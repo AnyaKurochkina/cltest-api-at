@@ -17,6 +17,7 @@ import static core.utils.AssertUtils.assertHeaders;
 
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Feature("Группы безопасности")
 @Epic("Cloud Compute")

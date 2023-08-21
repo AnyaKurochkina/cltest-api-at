@@ -1,13 +1,14 @@
 package ui.cloud.pages.productCatalog.forbiddenAction;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.Alert;
 import ui.elements.FileImportDialog;
 import ui.elements.SearchSelect;
@@ -25,6 +26,7 @@ public class ForbiddenActionsListPage extends EntityListPage {
 
     public ForbiddenActionsListPage() {
         $x("//div[text()='Код запрещенного действия']").shouldBe(Condition.visible);
+        WebDriverRunner.getWebDriver().manage().window().maximize();
     }
 
     @Step("Проверка сортировки списка запрещённых действий")

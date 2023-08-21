@@ -6,16 +6,17 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.Podman;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.PodmanOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
+
+import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
 
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
@@ -38,7 +39,6 @@ class UiPodmanCheckUntilOrderTest extends Tests {
     @TmsLink("1349839")
     @DisplayName("UI Podman. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -58,7 +58,8 @@ class UiPodmanCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        String accessGroup = product.getAccessGroup();
+        orderPage.getGroupSelect().set(accessGroup);
         new PodmanOrderPage().checkOrderDetails();
     }
 

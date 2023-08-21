@@ -35,6 +35,24 @@ public class AuthorizerSteps extends Steps {
                 .get(String.format("data.find{it.name=='%s'}.parent", target)));
     }
 
+    @Step("Получение имени контекста")
+    public static String getContextName(String target) {
+        String url;
+        if (Objects.requireNonNull(target).startsWith("fold")) {
+            url = "/v1/folders/" + target;
+        } else if (target.startsWith("proj")) {
+            url = "/v1/projects/" + target;
+        } else {
+            throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
+        }
+        return Objects.requireNonNull(new Http(ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get(url)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("data.title"));
+    }
+
     @Step("Получение списка пользователей организации по тексту '{text}'")
     public static List<UserItem> findUsers(String text, Organization org) {
         @SuppressWarnings(value = "unchecked")

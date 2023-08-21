@@ -27,8 +27,7 @@ public class EditJinja2TemplateTest extends Jinja2TemplateBaseTest {
                 .findAndOpenJinja2TemplatePage(NAME)
                 .setAttributes(jinja2Template);
         Jinja2TemplatePage page = new Jinja2TemplatePage();
-        page.getSaveButton().click();
-        Alert.green("Jinja2 шаблон успешно изменен");
+        page.saveWithPatchVersion("Jinja2 шаблон успешно изменен");
         page.checkAttributes(jinja2Template);
     }
 

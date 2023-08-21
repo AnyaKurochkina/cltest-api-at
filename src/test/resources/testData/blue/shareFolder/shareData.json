@@ -56,6 +56,26 @@
     "role": "roles/order-service.admin"
   },
   {
+    "objectClassName": "models.cloud.authorizer.ServiceAccount",
+    "secret": "293c3d8ea1bca1bc8f76b124c0e084c6",
+    "id": "sa_proj-0c0ki636z5-6x",
+    "projectId": "proj-0c0ki636z5",
+    "role": "roles/order-service.admin"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Project",
+    "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
+    "id": "proj-0c0ki636z5",
+    "projectName": "PROD",
+    "projectEnvironmentPrefix": {
+      "env": "PROD",
+      "id": "82bc81e5-31ff-4d3e-b64d-a228df7bac41",
+      "projectEnvironmentId": "4f908a53-b0dc-47cc-8c18-9cd3e912a985",
+      "envType": "PROD"
+    },
+    "isForOrders": true
+  },
+  {
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "3c9e2600-36b9-453b-83d5-f836b5e241be",
     "id": "proj-iv550odo9a",

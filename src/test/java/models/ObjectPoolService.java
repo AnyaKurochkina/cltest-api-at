@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import core.enums.ObjectStatus;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.exception.NotFoundElementException;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.helper.StringUtils;
@@ -122,6 +123,15 @@ public class ObjectPoolService {
         return writeEntityToMap(e);
     }
 
+    public static <T extends Entity> T getObject(Entity e) {
+        for (ObjectPoolEntity objectPoolEntity : entities.values()) {
+            if (objectPoolEntity.equalsEntity(e)) {
+                return objectPoolEntity.get();
+            }
+        }
+        throw new NotFoundElementException("Элемента {} нет в коллекции", new Gson().toJson(e, e.getClass()));
+    }
+
     public static void saveEntity(Entity entity) {
         ObjectPoolEntity objectPoolEntity = getObjectPoolEntity(entity);
         if (objectPoolEntity != null) {
@@ -131,7 +141,6 @@ public class ObjectPoolService {
 
     public static ObjectPoolEntity getObjectPoolEntity(Entity entity) {
         return entities.get(entity.uuid);
-
     }
 
     private static ObjectPoolEntity writeEntityToMap(Entity entity) {
@@ -239,7 +248,7 @@ public class ObjectPoolService {
     }
 
 
-    private static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
+    public static void awaitTerminationAfterShutdown(ExecutorService threadPool) {
         threadPool.shutdown();
         try {
             if (!threadPool.awaitTermination(1, TimeUnit.HOURS)) {

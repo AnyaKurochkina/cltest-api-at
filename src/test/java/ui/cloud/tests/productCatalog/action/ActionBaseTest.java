@@ -8,7 +8,7 @@ import models.cloud.productCatalog.enums.EventType;
 import org.junit.DisabledIfEnv;
 import ui.cloud.tests.productCatalog.BaseTest;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 @DisabledIfEnv("prod")
 public class ActionBaseTest extends BaseTest {
@@ -21,7 +21,7 @@ public class ActionBaseTest extends BaseTest {
                 .name(name)
                 .title(TITLE)
                 .number(0)
-                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))

@@ -18,6 +18,7 @@ import ui.elements.*;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.back;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
@@ -41,7 +42,6 @@ public class ServicePage extends EntityPage {
     private final SelenideElement deleteTagMenuAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Удалить']");
     private final SelenideElement deleteTagSubmitButton = $x("//form//button[@type='submit']");
     private final String tagTitleColumn = "Наименование";
-    private final String noDataFound = "Нет данных для отображения";
     private final Switch isPublishedSwitch = Switch.byText("Опубликован");
 
     public ServicePage() {
@@ -60,7 +60,7 @@ public class ServicePage extends EntityPage {
             Graph graph = GraphSteps.getGraphById(service.getGraphId());
             goToGraphTab();
             TestUtils.wait(2000);
-            Assertions.assertTrue(graphSelect.getValue().contains(graph.getName()));
+            assertTrue(graphSelect.getValue().contains(graph.getName()));
             assertEquals(service.getGraphVersion(), graphVersionSelect.getValue());
         }
         return this;
@@ -288,14 +288,14 @@ public class ServicePage extends EntityPage {
     @Step("Проверка, что таблица тегов пустая")
     public ServicePage checkTagsTableIsEmpty() {
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
-        assertEquals(noDataFound, table.getRowByIndex(0).getText());
+        assertTrue(table.isEmpty());
         return this;
     }
 
     @Step("Проверка, что таблица исключающих тегов пустая")
     public ServicePage checkExcludeTagsTableIsEmpty() {
         Table table = new Table($x("//div[text()='" + excludeTagsTableTitle + "']/following::table[1]"));
-        assertEquals(noDataFound, table.getRowByIndex(0).getText());
+        assertTrue(table.isEmpty());
         return this;
     }
 

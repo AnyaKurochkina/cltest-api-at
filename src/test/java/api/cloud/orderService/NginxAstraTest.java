@@ -73,7 +73,7 @@ public class NginxAstraTest extends Tests {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
 //            nginx.stopHard();
 //            try {
-            nginx.resize(nginx.getMaxFlavor());
+            nginx.resize(nginx.getMaxFlavorLinuxVm());
 //            } finally {
 //                nginx.start();
 //            }

@@ -131,16 +131,6 @@ public class ProductNegativeTest extends Tests {
         assertEquals("Deletion not allowed (is_open=True)", message);
     }
 
-    @Test
-    @DisplayName("Негативный тест на передачу значения поля payment не из справочника")
-    @TmsLink("979225")
-    public void setInvalidValuePayment() {
-        Product product = createProductByName("set_invalid_value_payment_product_test_api");
-        String message = partialUpdateProduct(product.getProductId(), new JSONObject().put("payment", "test"))
-                .assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("\"payment\": Значения test нет среди допустимых вариантов.", message);
-    }
-
     @DisplayName("Негативный тест на создание продукта cо значением number меньше min значения")
     @TmsLink("1107460")
     @Test

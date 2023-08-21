@@ -2,15 +2,16 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Nginx;
+import models.cloud.orderService.products.PostgreSQL;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import ui.elements.CheckBox;
-import ui.elements.Dialog;
-import ui.elements.Select;
-import ui.elements.Table;
+import steps.references.ReferencesStep;
+import ui.elements.*;
 
 
+import java.util.List;
 
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
@@ -44,13 +45,13 @@ public class NginxAstraPage extends IProductPage {
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Обновить сертификат NginxAstra")
@@ -59,14 +60,15 @@ public class NginxAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты");
         new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
     }
 
     public void changeConfiguration() {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        Flavor maxFlavor = product.getMaxFlavor();
         getRoleNode().scrollIntoView(scrollCenter).click();
+        Flavor maxFlavor = product.getMaxFlavorLinuxVm();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
@@ -100,6 +102,7 @@ public class NginxAstraPage extends IProductPage {
         public VirtualMachineTable() {
             super("Роли узла");
         }
+
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

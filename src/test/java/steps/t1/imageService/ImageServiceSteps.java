@@ -9,6 +9,7 @@ import steps.Steps;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.helper.Configure.ImageService;
@@ -151,6 +152,11 @@ public class ImageServiceSteps extends Steps {
                 .get(apiUrl + "/categories/{}", id)
                 .assertStatus(200)
                 .extractAs(Categories.class);
+    }
+
+    @Step("Получение Category по name {name}")
+    public static Optional<Categories> getCategoryByName(String name) {
+        return getCategoriesList().stream().filter(x -> x.getName().equals(name)).findFirst();
     }
 
     @Step("Получение marketing по name {name}")
@@ -297,6 +303,8 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Создание categories")
     public static Categories createCategories(String name) {
+        Optional<Categories> categoryByName = getCategoryByName(name);
+        categoryByName.ifPresent(categories -> deleteCategoryById(categories.getId()));
         JSONObject object = new JSONObject().put("name", name);
         return new Http(ImageService)
                 .setRole(CLOUD_ADMIN)

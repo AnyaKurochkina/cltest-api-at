@@ -15,6 +15,7 @@ import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 public class ForbiddenActionSteps extends Steps {
     private static final String endPoint = "/api/v1/forbidden_actions/";
@@ -29,19 +30,10 @@ public class ForbiddenActionSteps extends Steps {
     }
 
     @Step("Создание запрещенного действия")
-    public static ForbiddenAction createForbiddenAction(String name) {
+    public static ForbiddenAction createForbiddenAction(String title) {
         return ForbiddenAction.builder()
-                .name(name)
-                .title(name)
-                .build()
-                .createObject();
-    }
-
-    @Step("Создание запрещенного действия")
-    public static ForbiddenAction createForbiddenAction(String name, String title) {
-        return ForbiddenAction.builder()
-                .name(name)
                 .title(title)
+                .description("AT_" + randomAlphanumeric(10))
                 .build()
                 .createObject();
     }
@@ -116,5 +108,15 @@ public class ForbiddenActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);
+    }
+
+    @Step("Копирование запрещенного действия по id {id}")
+    public static ForbiddenAction copyForbiddenActionById(Integer id, JSONObject jsonObject) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(jsonObject)
+                .post(endPoint + "{}/copy/", id)
+                .assertStatus(200)
+                .extractAs(ForbiddenAction.class);
     }
 }

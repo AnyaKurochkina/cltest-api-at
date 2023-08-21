@@ -6,7 +6,6 @@ import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.OnRequest;
-import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
@@ -65,7 +64,6 @@ public class ProductBaseTest extends BaseTest {
                 .categoryV2(Categories.COMPUTE)
                 .maxCount(2)
                 .onRequest(OnRequest.PREVIEW)
-                .payment(Payment.PARTLY_PAID)
                 .author("AT UI")
                 .inGeneralList(false)
                 .number(51)

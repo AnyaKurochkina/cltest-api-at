@@ -67,6 +67,7 @@ public class ProductPage extends EntityPage {
     public ProductPage setAttributes(Product product) {
         titleInput.setValue(product.getTitle());
         nameInput.setValue(product.getName());
+        authorInput.setValue(product.getAuthor());
         descriptionInput.setValue(product.getDescription());
         info.setValue(new JSONObject(product.getInfo()).toString());
         isOpenSwitch.getLabel().scrollIntoView(scrollCenter);
@@ -74,18 +75,15 @@ public class ProductPage extends EntityPage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.sleep(5000);
-        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(10));
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
         goToAdditionalParamsTab();
-        authorInput.setValue(product.getAuthor());
         categorySelect.set(Categories.VM.getValue());
         Waiting.sleep(500);
         categoryV2Select.set(Categories.COMPUTE.getValue());
         maxCountInput.setValue(product.getMaxCount());
         if (product.getOnRequest() != null) onRequestSelect.set(product.getOnRequest().getDisplayName());
-        paymentSelect.set(product.getPayment().getDisplayName());
         inGeneralListSwitch.setEnabled(product.getInGeneralList());
         numberInput.setValue(product.getNumber());
         extraData.setValue(new JSONObject(product.getExtraData()).toString());
@@ -114,7 +112,6 @@ public class ProductPage extends EntityPage {
         maxCountInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getMaxCount())));
         assertEquals(product.getOnRequest() == null ? "Нет" : product.getOnRequest().getDisplayName(),
                 onRequestSelect.getValue());
-        assertEquals(product.getPayment().getDisplayName(), paymentSelect.getValue());
         assertEquals(product.getInGeneralList(), inGeneralListSwitch.isEnabled());
         numberInput.getInput().shouldHave(Condition.exactValue(String.valueOf(product.getNumber())));
         assertEquals(new JSONObject(product.getExtraData()).toString(),
@@ -132,6 +129,9 @@ public class ProductPage extends EntityPage {
         titleRequiredFieldHint.shouldBe(Condition.visible);
         titleInput.setValue(product.getTitle());
         titleRequiredFieldHint.shouldNotBe(Condition.visible);
+        authorRequiredFieldHint.shouldBe(Condition.visible);
+        authorInput.setValue(product.getAuthor());
+        authorRequiredFieldHint.shouldNotBe(Condition.visible);
         goToGraphTab();
         graphRequiredFieldHint.shouldBe(Condition.visible);
         graphSelect.setContains(GraphSteps.getGraphById(product.getGraphId()).getName());
@@ -143,9 +143,6 @@ public class ProductPage extends EntityPage {
         categoryV2RequiredFieldHint.shouldBe(Condition.visible);
         categoryV2Select.set(product.getCategoryV2().getValue());
         categoryV2RequiredFieldHint.shouldNotBe(Condition.visible);
-        authorRequiredFieldHint.shouldBe(Condition.visible);
-        authorInput.setValue(product.getAuthor());
-        authorRequiredFieldHint.shouldNotBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.enabled);
         cancelButton.click();
         Selenide.prompt();
@@ -162,7 +159,7 @@ public class ProductPage extends EntityPage {
 
     @Step("Задание в поле Автор '{value}'")
     public ProductPage setAuthor(String value) {
-        goToAdditionalParamsTab();
+        goToMainTab();
         authorInput.setValue(value);
         return this;
     }
@@ -266,7 +263,7 @@ public class ProductPage extends EntityPage {
 
     @Step("Удаление иконки")
     public ProductPage deleteIcon() {
-        deleteIconButton.click();
+        deleteIconButton.scrollIntoView(scrollCenter).click();
         saveWithoutPatchVersion(saveProductAlertText);
         addIconLabel.shouldBe(Condition.visible);
         return this;

@@ -46,6 +46,7 @@ public class StateServiceSteps extends Steps {
     @Step("Создание Item")
     public static Item createItem(String projectId, JSONObject json) {
         return new Http(StateServiceURL)
+              //  .setRole(Role.CLOUD_ADMIN)
                 .withServiceToken()
                 .body(json)
                 .post("/api/v1/projects/{}/items/", projectId)
@@ -213,6 +214,46 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка primary items, в которых искомый item_id значится как secondary")
+    public static List<Item> getPrimaryItemsList(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/as_secondary_items/?item_id={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение списка secondary items, в которых искомый item_id значится как primary")
+    public static List<Item> getSecondaryItemsList(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/as_primary_items/?item_id={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение списка items у которых нет primary связи с конкретным item_id")
+    public static List<Item> getItemsListWithOutPrimaryRelation(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/?ext_rel_primary_not={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
+    @Step("Получение списка items у которых нет secondary связи с конкретным item_id")
+    public static List<Item> getItemsListWithOutSecondaryRelation(String id) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/?ext_rel_secondary_not={}", id)
+                .assertStatus(200)
+                .extractAs(GetItemList.class)
+                .getList();
+    }
+
     @Step("Получение списка items по фильтру {filter}")
     public static List<Item> getItemsListByFilter(String filter) {
         return new Http(StateServiceURL)
@@ -280,7 +321,7 @@ public class StateServiceSteps extends Steps {
             ShortItem itemData = new ShortItem();
 
             if(item.getType().equals("public_ip"))
-                itemData.setFloatingIpAddress(((Map<String, String>) item.getData().get("config")).get("floating_ip_address"));
+                itemData.floatingIpAddress = ((Map<String, String>) item.getData().get("config")).get("floating_ip_address");
             else if(item.getType().equals("volume")){
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
                 itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").longValue();
@@ -298,6 +339,10 @@ public class StateServiceSteps extends Steps {
             else if(item.getType().equals("nic")) {
                 List<Object> ips = ((Map<String, List<Object>>) item.getData().get("config")).get("fixed_ips");
                 itemData.name = ((Map<String, String>) ips.get(0)).get("ip_address");
+            }
+            else if(item.getType().equals("vip")) {
+                List<Object> ips = ((Map<String, List<Object>>) item.getData().get("config")).get("fixed_ips");
+                itemData.floatingIpAddress = ((Map<String, String>) ips.get(0)).get("ip_address");
             }
 
             itemData.type = item.getType();

@@ -6,12 +6,15 @@ import models.cloud.authorizer.Project;
 import models.cloud.tagService.Context;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.Tag;
+import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Tags;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@org.junit.jupiter.api.Tag("tag_service")
-public class AbstractInventoryTest extends Tests {
+@Tags({@org.junit.jupiter.api.Tag("tag_service"), @org.junit.jupiter.api.Tag("t1"), @org.junit.jupiter.api.Tag("regress")})
+@DisabledIfEnv("prod")
+public class AbstractTagServiceTest extends Tests {
     protected Project project = Project.builder().isForOrders(true).build().createObject();
     protected Context context = Context.byId(project.getId());
 

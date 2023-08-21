@@ -10,6 +10,7 @@ import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.VersionDiff;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
+import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class Action extends Entity {
     private String title;
     private String type;
     @JsonProperty("required_item_statuses")
-    private List<Object> requiredItemStatuses;
+    private List<String> requiredItemStatuses;
     @JsonProperty("data_config_path")
     private String dataConfigPath;
     @JsonProperty("restricted_paths")
@@ -69,6 +70,7 @@ public class Action extends Entity {
     @JsonProperty("graph_id")
     private String graphId;
     private String version;
+    private String object_info;
     @JsonProperty("last_version")
     private String lastVersion;
     @JsonProperty("data_config_key")
@@ -130,6 +132,8 @@ public class Action extends Entity {
     private Boolean skipRestrictionService;
     @JsonProperty("skip_item_change")
     private Boolean skipItemChange;
+    @JsonProperty("skip_item_with_secondary_rel")
+    private Boolean skipItemWithSecondaryRel;
 
     @Override
     public Entity init() {
@@ -146,6 +150,7 @@ public class Action extends Entity {
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
                 .set("$.name", name)
+                .set("$.object_info", object_info)
                 .set("$.title", title)
                 .set("$.type", type)
                 .set("$.current_version", currentVersion)
@@ -164,6 +169,7 @@ public class Action extends Entity {
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.event_type_provider", eventTypeProvider)
                 .set("$.tag_list", tagList)
+                .set("$.required_item_statuses", requiredItemStatuses)
                 .setIfNullRemove("$.available_with_cost_reduction", availableWithCostReduction)
                 .setIfNullRemove("$.is_safe", isSafe)
                 .setIfNullRemove("$.number", number)
@@ -177,6 +183,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_reservation", skipReservation)
                 .setIfNullRemove("$.skip_item_change", skipItemChange)
                 .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
+                .setIfNullRemove("$.skip_item_with_secondary_rel", skipItemWithSecondaryRel)
                 .build();
     }
 

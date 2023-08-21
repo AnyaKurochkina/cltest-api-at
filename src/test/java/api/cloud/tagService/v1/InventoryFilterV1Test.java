@@ -1,6 +1,6 @@
 package api.cloud.tagService.v1;
 
-import api.cloud.tagService.AbstractInventoryTest;
+import api.cloud.tagService.AbstractTagServiceTest;
 import core.enums.Role;
 import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
@@ -18,7 +18,6 @@ import models.cloud.tagService.v2.InventoryTagsV2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.parallel.Isolated;
 import steps.keyCloak.KeyCloakSteps;
 
 import java.util.Arrays;
@@ -31,7 +30,7 @@ import static models.cloud.tagService.TagServiceSteps.*;
 
 @Epic("Сервис тегов")
 @Feature("Фильтр Inventory V1")
-public class InventoryFilterV1Test extends AbstractInventoryTest {
+public class InventoryFilterV1Test extends AbstractTagServiceTest {
 
     @Test
     @TmsLink("1623836")

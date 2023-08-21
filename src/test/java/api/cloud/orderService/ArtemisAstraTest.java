@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Artemis;
+import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -19,6 +20,7 @@ import java.util.Collections;
 @Epic("Продукты")
 @Feature("Artemis Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("artemis_astra"), @Tag("prod")})
+@DisabledIfEnv("ift")
 public class ArtemisAstraTest extends Tests {
 
     @TmsLink("982658")
@@ -124,6 +126,7 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
+    @Disabled
     @TmsLink("982649")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -132,7 +135,7 @@ public class ArtemisAstraTest extends Tests {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
 //            artemis.stopHard();
 //            try {
-                artemis.resize(artemis.getMaxFlavor());
+                artemis.resize(artemis.getMaxFlavorLinuxVm());
 //            } finally {
 //                artemis.start();
 //            }

@@ -4,6 +4,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
+import io.qameta.allure.Step;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 
@@ -38,7 +39,7 @@ public class Menu implements TypifiedElement {
 
     private SelenideElement getItem(String item) {
         SelenideElement element = $$x("//li[.='{}']", item)
-                .shouldBe(CollectionCondition.anyMatch("Поиск элемента меню " + item, WebElement::isDisplayed))
+                .shouldBe(CollectionCondition.anyMatch("Поиск элемента меню: " + item, WebElement::isDisplayed))
                 .filter(Condition.visible)
                 .first();
         String disabled = element.getAttribute("aria-disabled");
@@ -50,5 +51,27 @@ public class Menu implements TypifiedElement {
 
     private void waitItem(String item) {
         Waiting.find(() -> getItem(item).isDisplayed(), Duration.ofSeconds(10));
+    }
+
+    @Step("Проверка отображения пункта '{title}'")
+    public boolean isItemDisplayed(String title) {
+        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        return $$x("//li[.='{}']", title).first().isDisplayed();
+    }
+
+    @Step("Проверка отображения доступного пункта '{title}'")
+    public boolean isItemDisplayedEnabled(String title) {
+        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        return $$x("//li[.='{}']", title)
+                .filter(Condition.attribute("aria-disabled", "false"))
+                .first().isDisplayed();
+    }
+
+    @Step("Проверка отображения недоступного пункта '{title}'")
+    public boolean isItemDisplayedDisabled(String title) {
+        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        return $$x("//li[.='{}']", title)
+                .filter(Condition.attribute("aria-disabled", "true"))
+                .first().isDisplayed();
     }
 }

@@ -1,9 +1,11 @@
 package api.cloud.productCatalog.allowedAction;
 
+import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -12,10 +14,9 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ActionSteps.isActionExists;
+import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.AllowedActionSteps.*;
 
 @Tag("product_catalog")
@@ -28,37 +29,33 @@ public class AllowedActionTest extends Tests {
     @TmsLink("1242726")
     @Test
     public void createAllowedActionTest() {
-        String actionName = "create_allowed_action_test_api";
         AllowedAction action = AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
+                .title("create_allowed_action_test_api")
                 .build()
                 .createObject();
+        Action actionById = getActionById(action.getActionId());
         AllowedAction actualAction = getAllowedActionById(action.getId());
         assertEquals(action, actualAction);
+        assertEquals(actionById.getName() + "__parent_to_child", actualAction.getName());
     }
 
     @DisplayName("Проверка существования разрешенного действия")
     @TmsLink("1243008")
     @Test
     public void checkAllowedActionExistTest() {
-        String actionName = "check_allowed_action_exist_test_api";
-        AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
+        AllowedAction allowedAction = AllowedAction.builder()
+                .title("check_allowed_action_exist_test_api")
                 .build()
                 .createObject();
-        assertTrue(isAllowedActionExists(actionName));
+        assertTrue(isAllowedActionExists(allowedAction.getName()));
     }
 
     @DisplayName("Частичное обновление разрешенного действия")
     @TmsLink("1243254")
     @Test
     public void partialUpdateAllowedActionTest() {
-        String actionName = "partial_update_allowed_action_test_api";
         AllowedAction action = AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
+                .title("partial_update_allowed_action_test_api")
                 .build()
                 .createObject();
         String description = "update";
@@ -70,34 +67,45 @@ public class AllowedActionTest extends Tests {
     @TmsLink("1243306")
     @Test
     public void updateAllowedActionTest() {
-        String actionName = "update_allowed_action_test_api";
         AllowedAction action = AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
+                .title("update_allowed_action_test_api")
                 .build()
                 .createObject();
-        String updatedName = "new_update_allowed_action_test_api";
+        String updatedTitle = "new_update_allowed_action_test_api";
         JSONObject jsonObject = AllowedAction.builder()
-                .name(updatedName)
-                .title(updatedName)
+                .title("new_update_allowed_action_test_api")
                 .build()
                 .init().toJson();
+        String updatedName = getActionById(jsonObject.get("action").toString()).getName() + "__parent_to_child";
         AllowedAction updatedAction = updateAllowedAction(action.getId(), jsonObject);
-        assertEquals(updatedAction.getName(), updatedName);
+        assertEquals(updatedTitle, updatedAction.getTitle());
+        assertEquals(updatedName, updatedAction.getName());
     }
 
     @DisplayName("Удаление по id разрешенного действия")
     @TmsLink("1243320")
     @Test
     public void deleteAllowedActionTest() {
-        String actionName = "delete_allowed_action_test_api";
         AllowedAction action = AllowedAction.builder()
-                .name(actionName)
-                .title(actionName)
+                .title("delete_allowed_action_test_api")
                 .build()
                 .createObject();
         deleteAllowedActionById(action.getId());
-        assertFalse(isAllowedActionExists(actionName));
+        assertFalse(isAllowedActionExists(action.getName()));
+    }
+
+    @DisplayName("Копирование разрешенного действия по id")
+    @TmsLink("SOUL-7074")
+    @Test
+    public void copyByIdAllowedActionTest() {
+        AllowedAction action = AllowedAction.builder()
+                .title("copy_by_id_allowed_action_test_api")
+                .build()
+                .createObject();
+        Action action1 = createAction();
+        AllowedAction copiedAllowedAction = copyAllowedActionById(action.getId(), new JSONObject().put("action_id", action1.getActionId()));
+        assertTrue(isAllowedActionExists(copiedAllowedAction.getName()));
+        assertEquals(action1.getName() + "__parent_to_child", copiedAllowedAction.getName());
     }
 
     @Test

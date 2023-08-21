@@ -40,7 +40,7 @@ class UiWindowsCheckUntilOrderTest extends Tests {
     @TmsLink("975914")
     @DisplayName("UI Windows. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+        String accessGroup = product.getAccessGroup();
         new IndexPage()
                 .clickOrderMore()
                 .expandProductsList()

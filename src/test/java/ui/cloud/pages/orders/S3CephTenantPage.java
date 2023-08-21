@@ -2,18 +2,12 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import io.qameta.allure.Step;
 import models.cloud.orderService.products.S3Ceph;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
-import java.util.List;
-
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
-import static ui.elements.TypifiedElement.scrollCenter;
 
 public class S3CephTenantPage extends IProductPage {
 
@@ -71,6 +65,7 @@ public class S3CephTenantPage extends IProductPage {
         getRoleNode().click();
         runActionWithoutParameters(BLOCK_PARAM, "Удалить бакет", ActionParameters.builder().node(getRoleNode()).build());
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
+        getBtnGeneralInfo().click();
         Assertions.assertFalse(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, "de-plux-bucket"), "Ошибка удаления");
     }
 
@@ -84,6 +79,7 @@ public class S3CephTenantPage extends IProductPage {
             CheckBox.byLabel("Версионирование").setChecked(true);
         }, ActionParameters.builder().node(getRoleNode()).build());
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
+        getBtnGeneralInfo().click();
         Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(BLOCK_VERSION, "true"), "Ошибка изменения");
     }
 
@@ -91,7 +87,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRule.click();
-        runActionWithParameters(getBtnAction("", 3), "Добавить правило жизненного цикла", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 3), "Добавить правило жизненного цикла", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Добавить правило жизненного цикла");
             dlgActions.setInputValue("Название", name);
@@ -109,7 +105,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRule.click();
-        runActionWithParameters(getBtnAction("", 4), "Изменить правило жизненного цикла", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 4), "Изменить правило жизненного цикла", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить правило жизненного цикла");
             dlgActions.setInputValue("Кол-во дней", size);
@@ -125,7 +121,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRuleCorse.click();
-        runActionWithParameters(getBtnAction("", 3), "Добавить cors", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 3), "Добавить cors", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Добавить cors");
             Input.byXpath("descendant::div/input").setValue("ruleCorse");
@@ -142,7 +138,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRuleCorse.click();
-        runActionWithParameters(getBtnAction("", 4), "Изменить правило CORS", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 4), "Изменить правило CORS", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить правило CORS");
             CheckBox.byLabel("PUT").setChecked(true);
@@ -154,11 +150,11 @@ public class S3CephTenantPage extends IProductPage {
         Assertions.assertTrue(new Table(HEADER_METHOD).isColumnValueEquals(HEADER_MAX_AGE, maxAge), "Ошибка изменения правила ");
     }
 
-    public void deleteRuleCorse() {
+    public void deleteCorsRule() {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRuleCorse.click();
-        runActionWithoutParameters(getBtnAction("", 4), "Удалить правило CORS", ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(getActionsMenuButton("", 4), "Удалить правило CORS", ActionParameters.builder().node(getRoleNode()).build());
         generalInfoTab.switchTo();
         getRoleNode().click();
         btnRuleCorse.click();
@@ -169,7 +165,7 @@ public class S3CephTenantPage extends IProductPage {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getRoleNode().click();
         btnRule.click();
-        runActionWithoutParameters(getBtnAction("", 4), "Удалить правило жизненного цикла", ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(getActionsMenuButton("", 4), "Удалить правило жизненного цикла", ActionParameters.builder().node(getRoleNode()).build());
         generalInfoTab.switchTo();
         getRoleNode().click();
         btnRule.click();
@@ -203,7 +199,7 @@ public class S3CephTenantPage extends IProductPage {
 
     public void changeAccessPolicy() {
         btnAccessPolicy.click();
-        runActionWithParameters(getBtnAction("", 3), "Изменить политику", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("", 3), "Изменить политику", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить политику");
             dlgActions.setSelectValue(HEADER_RIGHTS, "Настраиваемые");
@@ -214,7 +210,7 @@ public class S3CephTenantPage extends IProductPage {
 
     public void deleteUser() {
         btnUsers.click();
-        runActionWithoutParameters(getBtnAction("", 3), "Удалить пользователя");
+        runActionWithoutParameters(getActionsMenuButton("", 3), "Удалить пользователя");
         btnUsers.click();
         Assertions.assertTrue(new Table(HEADER_NAME_USER).isEmpty(), "Ошибка удаления правила ");
     }

@@ -29,6 +29,8 @@ public class WildFly extends IProduct {
     String osVersion;
     @ToString.Include
     String wildFlyVersion;
+    private static String otherJavaVersion = "1.8.0";
+    String javaVersion;
     Flavor flavor;
 
     @Override
@@ -50,6 +52,8 @@ public class WildFly extends IProduct {
             osVersion = getRandomOsVersion();
         if (wildFlyVersion == null)
             wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+        if (javaVersion == null)
+            javaVersion = "11.0.12";
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
@@ -74,6 +78,7 @@ public class WildFly extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.wildfly_version", getWildFlyVersion())
+                .set("$.order.attrs.java_version", getJavaVersion())
                 .set("$.order.attrs.access_group[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
@@ -85,12 +90,12 @@ public class WildFly extends IProduct {
 
     //Обновить сертификаты
     @SneakyThrows
-    public void updateCerts() {
+    public void updateCerts(JSONObject data) {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
-        OrderServiceSteps.executeAction("wildfly_update_certs", this, new JSONObject().put("accept", true), this.getProjectId());
+        OrderServiceSteps.executeAction("wildfly_release_update_certs", this, data, this.getProjectId());
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
 
@@ -102,23 +107,28 @@ public class WildFly extends IProduct {
     }
 
     public void syncDev() {
-        OrderServiceSteps.executeAction("wildfly_sync", this, null, this.getProjectId());
+        OrderServiceSteps.executeAction("wildfly_release_sync", this, null, this.getProjectId());
     }
 
     public void updateOs() {
-        OrderServiceSteps.executeAction("wildfly_update_os", this, new JSONObject().put("accept", true), this.getProjectId());
+        OrderServiceSteps.executeAction("wildfly_release_update_os", this, new JSONObject().put("accept", true), this.getProjectId());
     }
 
     public void stopService() {
-        OrderServiceSteps.executeAction("wildfly_stop_wf", this, new JSONObject().put("accept", true), this.getProjectId());
+        OrderServiceSteps.executeAction("wildfly_release_stop_wf", this, new JSONObject().put("accept", true), this.getProjectId());
     }
 
     public void startService() {
-        OrderServiceSteps.executeAction("wildfly_start_wf", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
+        OrderServiceSteps.executeAction("wildfly_release_start_wf", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
     }
 
     public void restartService() {
-        OrderServiceSteps.executeAction("wildfly_restart_wf", this, new JSONObject().put("accept", true), this.getProjectId());
+        OrderServiceSteps.executeAction("wildfly_release_restart_wf", this, new JSONObject().put("accept", true), this.getProjectId());
+    }
+
+    public void wildflyChangeJava() {
+        JSONObject data = new JSONObject().put("accept", true).put("java_version", otherJavaVersion).put("wildfly_version", wildFlyVersion);
+        OrderServiceSteps.executeAction("wildfly_release_change_java", this, data, this.getProjectId());
     }
 
     //Добавление пользователя WildFly
@@ -136,13 +146,13 @@ public class WildFly extends IProduct {
 
     //Добавление группы WildFly
     public void addGroup(String name, String role) {
-        OrderServiceSteps.executeAction("wildfly_add_group", this,
+        OrderServiceSteps.executeAction("wildfly_release_add_group", this,
                 new JSONObject().put("new_wildfly_user", new JSONObject().append("group_name", name).put("user_role", role)), this.getProjectId());
     }
 
     //Удаление группы WildFly
     public void deleteGroup(String name, String role) {
-        OrderServiceSteps.executeAction("wildfly_del_group", this,
+        OrderServiceSteps.executeAction("wildfly_release_del_group", this,
                 new JSONObject().put("wildfly_deployer", name).put("user_role", role), this.getProjectId());
     }
 

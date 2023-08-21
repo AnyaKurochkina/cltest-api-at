@@ -1,13 +1,18 @@
 [
   {
     "objectClassName": "models.cloud.authorizer.Organization",
-    "title": "VTB тест",
+    "title": "T1-CLOUD-INFRA",
     "name": "org-745ms323e2"
   },
   {
     "objectClassName": "models.cloud.authorizer.Project",
-    "id": "proj-30ez4qwnfd",
-    "projectName": "AT_UI",
+    "id": "proj-h7jm0cj44h",
+    "projectName": "AT",
     "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Folder",
+    "title": "ProjectPool",
+    "name": "fold-9iky5j88c5"
   }
 ]

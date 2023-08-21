@@ -79,7 +79,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.resize(balancer.getMaxFlavor());
+            balancer.resize(balancer.getMaxFlavorLinuxVm());
         }
     }
 
@@ -199,7 +199,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("g-tcp-public-" + balancer.getEnv())
+                    .globalname("g-tcp-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend)
                     .build());
         }
@@ -213,7 +213,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("g-http-public-" + balancer.getEnv())
+                    .globalname("g-http-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend)
                     .healthCheckParams(Gslb.HealthCheckParams.builder()
                             .urlPath("/")
@@ -258,7 +258,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
-                    .globalname("tcp-public" + balancer.getEnv())
+                    .globalname("tcp-public" + balancer.getEnv().toLowerCase())
                     .frontend(frontend)
                     .build();
             balancer.addGslb(gslb);

@@ -4,5 +4,15 @@
     "id": "proj-votmndlfyh",
     "projectName": "API",
     "isForOrders": true
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Organization",
+    "title": "ИФТ",
+    "name": "ift"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Folder",
+    "title": "ProjectPool",
+    "name": "fold-1ssni7vbut"
   }
 ]

@@ -112,7 +112,7 @@ public class GraphNegativeTest extends Tests {
                 .build()
                 .init()
                 .toJson();
-        String error = createGraph(jsonObject).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
         assertEquals(String.format("Значения поля (envs) неуникальные: (%s)", env.getValue()), error);
     }
 
@@ -137,7 +137,7 @@ public class GraphNegativeTest extends Tests {
                 .build()
                 .init()
                 .toJson();
-        String error = createGraph(jsonObject).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].err_message[0]");
         assertEquals("Тип среды отсутствует в справочнике", error);
     }
 }

@@ -13,6 +13,7 @@ import ui.t1.tests.engine.AbstractComputeTest;
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Личные SSH ключи")
 @Epic("Cloud Compute")
 public class PrivateSshKeysTest extends AbstractComputeTest {

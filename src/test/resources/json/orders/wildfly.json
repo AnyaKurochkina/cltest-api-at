@@ -1,51 +1,59 @@
 {
-	"order": {
-		"project_name": "proj-aydi9thv3w",
-		"product_id": "62ba467c-3ee8-4631-9393-578ce04f3fd2",
-		"attrs": {
-			"domain": "corp.dev.vtb",
-			"flavor": {
-				"cpus": 2,
-				"name": "c2m4",
-				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-				"memory": 4
-			},
-			"platform": "vSphere",
-			"extra_nics": [],
-			"on_support": false,
-			"os_version": "8.4",
-			"data_center": "5",
-			"default_nic": {
-				"net_segment": "dev-srv-app"
-			},
-			"access_group": [
-				"cloud-dmcrux-testgroup100"
-			],
-			"extra_mounts": [
-				{
-					"path": "/app/app",
-					"size": 30,
-					"file_system": "xfs"
-				},
-				{
-					"path": "/app/logs",
-					"size": 20,
-					"file_system": "xfs"
-				}
-			],
-			"java_version": "1.8.0",
-			"ad_integration": true,
-			"wildfly_version": "23.0.2.Final",
-			"ad_logon_grants": [
-				{
-					"role": "user",
-					"groups": [
-						"cloud-dmcrux-testgroup100"
-					]
-				}
-			]
-		},
-		"count": 1,
-		"label": "WildFly_0001"
-	}
+  "order": {
+    "project_name": "proj-iv550odo9a",
+    "product_id": "d6ea7011-07d3-47d3-b13d-e958a3e4ab1c",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "info_ad": {},
+      "info_os": {},
+      "info_vm": {},
+      "platform": "OpenStack",
+      "extra_nics": [],
+      "on_support": true,
+      "os_version": "1.7",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "info_devops": {},
+      "access_group": [
+        "cloud-soub-kttsyligz"
+      ],
+      "extra_mounts": [
+        {
+          "path": "/app/app",
+          "size": 30,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/logs",
+          "size": 20,
+          "file_system": "xfs"
+        }
+      ],
+      "balancer_type": "no",
+      "info_balancer": {},
+      "ad_integration": true,
+      "standalone_type": "standard",
+      "wildfly_version": "28.0.1.Final",
+      "info_access_group": {},
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-soub-xfyln"
+          ]
+        }
+      ],
+      "java_version": "11.0.12"
+    },
+    "count": 1,
+    "label": "WildFly Astra"
+  }
 }

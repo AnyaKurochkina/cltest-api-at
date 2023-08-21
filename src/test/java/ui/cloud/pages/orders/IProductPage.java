@@ -38,9 +38,9 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Getter
 public abstract class IProductPage {
 
+    private static final String HEADER_GROUP = "Группы";
     protected final SelenideElement prebillingCostElement = Selenide
             .$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[(contains(.,'₽/сут.') and contains(.,',')) or text()='без изменений']");
-    private static final String HEADER_GROUP = "Группы";
     private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
@@ -49,7 +49,7 @@ public abstract class IProductPage {
     IProduct product;
     SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
     SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
-    SelenideElement btnMonitoringOs = $x("//button[.='Мониторинг OC']");
+    Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
     SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
     SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
@@ -68,21 +68,21 @@ public abstract class IProductPage {
     public IProductPage() {
     }
 
-    public static SelenideElement getBtnAction(String header) {
-        return getBtnAction(header, 1);
-    }
-    public SelenideElement getHeaderBlock (String name)
-    {
-        return $x("//td[.='{}']/../descendant::button", name);
+    public static SelenideElement getActionsMenuButton(String header) {
+        return getActionsMenuButton(header, 1);
     }
 
-    public static SelenideElement getBtnAction(String header, int index) {
+    public static SelenideElement getActionsMenuButton(String header, int index) {
         return $x("(//*[.='{}']/parent::*//button[@id='actions-menu-button'])" + postfix, header, TypifiedElement.getIndex(index));
     }
 
     @Step("Получение таблицы по заголовку")
     public static Table getTableByHeader(String header) {
         return new Table($$x("(//*[text() = '{}']/ancestor-or-self::*[count(.//table) = 1])[last()]//table", header).filter(Condition.visible).first());
+    }
+
+    public SelenideElement getHeaderBlock(String name) {
+        return $x("//td[.='{}']/../descendant::button", name);
     }
 
     protected abstract void checkPowerStatus(String expectedStatus);
@@ -115,8 +115,9 @@ public abstract class IProductPage {
 
     @Step("Проверка вкладки Мониторинг")
     public void checkMonitoringOs() {
-        Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
-        btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        Assumptions.assumeTrue(Waiting.sleep(() -> monitoringOsTab.getElement().isDisplayed(), Duration.ofSeconds(5)),
+                "Мониторинг недоступен");
+        monitoringOsTab.getElement().scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         if (Configure.ENV.equals("ift")) {
             checkNoRedAlerts();
         } else new MonitoringOsPage(product).check();
@@ -130,8 +131,9 @@ public abstract class IProductPage {
         for (int i = 0; i < size; i++) {
             SelenideElement element = new Table(column).getRowByIndex(i);
             element.shouldBe(Condition.visible).scrollIntoView(scrollCenter).click();
-            Assumptions.assumeTrue(btnMonitoringOs.isDisplayed(), "Мониторинг недоступен");
-            btnMonitoringOs.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+            Assumptions.assumeTrue(Waiting.sleep(() -> monitoringOsTab.getElement().isDisplayed(), Duration.ofSeconds(5)),
+                    "Мониторинг недоступен");
+            monitoringOsTab.getElement().scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
             if (Configure.ENV.equals("ift")) {
                 checkNoRedAlerts();
             } else {
@@ -211,19 +213,19 @@ public abstract class IProductPage {
     }
 
     protected void runActionWithoutParameters(String headerBlock, String action, ActionParameters params) {
-        runActionWithoutParameters(getBtnAction(headerBlock), action, params);
+        runActionWithoutParameters(getActionsMenuButton(headerBlock), action, params);
     }
 
     protected void runActionWithoutParameters(String headerBlock, String action) {
-        runActionWithoutParameters(getBtnAction(headerBlock), action, ActionParameters.builder().build());
+        runActionWithoutParameters(getActionsMenuButton(headerBlock), action, ActionParameters.builder().build());
     }
 
     public void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable, ActionParameters params) {
-        runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, params);
+        runActionWithParameters(getActionsMenuButton(headerBlock), action, textButton, executable, params);
     }
 
     public void runActionWithParameters(String headerBlock, String action, String textButton, Executable executable) {
-        runActionWithParameters(getBtnAction(headerBlock), action, textButton, executable, ActionParameters.builder().build());
+        runActionWithParameters(getActionsMenuButton(headerBlock), action, textButton, executable, ActionParameters.builder().build());
     }
 
     @Step("Расширить диск {name} на {size}ГБ")
@@ -326,30 +328,6 @@ public abstract class IProductPage {
                 role));
     }
 
-    //Таблица ролей
-    public class RoleTable extends Table {
-        public RoleTable() {
-            super("Группы");
-        }
-
-        @Override
-        protected void open() {
-            btnGeneralInfo.click();
-        }
-
-        private SelenideElement getRoleMenuElement(String name) {
-            return getRoleRow(name).$("button");
-        }
-
-        private SelenideElement getRoleRow(String name) {
-            return getRowElementByColumnValue("", name);
-        }
-
-        private String getGroupsRole(String name) {
-            return getRowByColumnValue("", name).getValueByColumn("Группы");
-        }
-    }
-
     @SneakyThrows
     @Step("Запуск действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
@@ -407,6 +385,30 @@ public abstract class IProductPage {
 
         public void checkOrderStatus(String status) {
             Assertions.assertEquals(status, getOrderStatus(), "Статус заказа не соотвествует ожидаемому");
+        }
+    }
+
+    //Таблица ролей
+    public class RoleTable extends Table {
+        public RoleTable() {
+            super("Группы");
+        }
+
+        @Override
+        protected void open() {
+            btnGeneralInfo.click();
+        }
+
+        private SelenideElement getRoleMenuElement(String name) {
+            return getRoleRow(name).$("button");
+        }
+
+        private SelenideElement getRoleRow(String name) {
+            return getRowElementByColumnValue("", name);
+        }
+
+        private String getGroupsRole(String name) {
+            return getRowByColumnValue("", name).getValueByColumn("Группы");
         }
     }
 

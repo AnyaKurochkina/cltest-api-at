@@ -3,18 +3,19 @@ package api.cloud.productCatalog.forbiddenAction;
 import api.Tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
-import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
+import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.createAction;
+import static steps.productCatalog.ActionSteps.getActionById;
 import static steps.productCatalog.ForbiddenActionSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
 import static steps.productCatalog.ProductSteps.importProduct;
@@ -26,16 +27,21 @@ import static steps.productCatalog.ProductSteps.importProduct;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ForbiddenActionImportTest extends Tests {
     private static final String PATHNAME = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/importForbiddenAction.json";
+    private static final String PATHNAME2 = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/alreadyExistImportForbiddenAction.json";
 
     @DisplayName("Импорт запрещенного действия действия")
     @TmsLink("1092365")
     @Test
     public void importForbiddenActionTest() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/forbiddenAction/importForbiddenAction.json");
-        String forbiddenActionName = new JsonPath(data).get("ForbiddenAction.name");
-        if (isForbiddenActionExists(forbiddenActionName)) {
-            deleteForbiddenActionByName(forbiddenActionName);
-        }
+        JSONObject jsonObject = ForbiddenAction.builder()
+                .title("import_forbidden_action_test_api")
+                .actionId(createAction().getActionId())
+                .build()
+                .toJson();
+        ForbiddenAction forbiddenAction = createForbiddenAction(jsonObject).assertStatus(201).extractAs(ForbiddenAction.class);
+        String forbiddenActionName = forbiddenAction.getName();
+        DataFileHelper.write(PATHNAME, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
+        deleteForbiddenActionByName(forbiddenActionName);
         ImportObject importObject = importForbiddenAction(PATHNAME);
         assertEquals(forbiddenActionName, importObject.getObjectName());
         assertEquals("success", importObject.getStatus());
@@ -48,30 +54,22 @@ public class ForbiddenActionImportTest extends Tests {
     @TmsLink("1320761")
     @Test
     public void importExistForbiddenActionTest() {
-        String data = JsonHelper.getStringFromFile("/productCatalog/forbiddenAction/importForbiddenAction.json");
-        String forbiddenActionName = new JsonPath(data).get("ForbiddenAction.name");
-        if (isForbiddenActionExists(forbiddenActionName)) {
-            deleteForbiddenActionByName(forbiddenActionName);
-        }
-        importForbiddenAction(PATHNAME);
-        Integer id = getForbiddenActionIdByNameWithMultiSearch(forbiddenActionName);
-        String description = "test_test";
-        partialUpdateForbiddenAction(id, new JSONObject().put("description", description));
-        ForbiddenAction updatedForbiddenAction = getForbiddenActionById(id);
-        assertEquals(description, updatedForbiddenAction.getDescription());
-        importForbiddenAction(PATHNAME);
-        assertNotEquals(updatedForbiddenAction, getForbiddenActionById(id));
-        assertTrue(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие не существует");
-        deleteForbiddenActionByName(forbiddenActionName);
-        assertFalse(isForbiddenActionExists(forbiddenActionName), "Запрещенное действие существует");
+        ForbiddenAction forbiddenAction = createForbiddenAction("already_exist_import_forbidden_action_test_api");
+        Action action = getActionById(forbiddenAction.getActionId());
+        DataFileHelper.write(PATHNAME2, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
+        ImportObject importObject = importForbiddenAction(PATHNAME2);
+        DataFileHelper.delete(PATHNAME2);
+        assertEquals("success", importObject.getStatus());
+        assertEquals(String.format("Обновлен объект %s %s:%d,%s", importObject.getModelName(), action.getName(), forbiddenAction.getId(), forbiddenAction.getDirection()),
+                importObject.getMessages().get(0));
     }
 
     @Test
     @DisplayName("Негативный тест импорт запрещенного действия в другой раздел")
     @TmsLink("1320775")
     public void importForbiddenActionToAnotherSection() {
-        String forbiddenActionName = "import_forb_action_for_another_section_test_api";
-        ForbiddenAction forbiddenAction = createForbiddenAction(forbiddenActionName);
+        ForbiddenAction forbiddenAction = createForbiddenAction("import_forb_action_for_another_section_test_api");
+        String forbiddenActionName = forbiddenAction.getName();
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/importForbiddenActionAnother.json";
         DataFileHelper.write(filePath, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
         deleteForbiddenActionByName(forbiddenActionName);
@@ -85,16 +83,10 @@ public class ForbiddenActionImportTest extends Tests {
     @TmsLink("1518484")
     @Test
     public void importMultiForbiddenActionTest() {
-        String forbiddenActionName = "import_forbidden_action_test_api";
-        if (isForbiddenActionExists(forbiddenActionName)) {
-            deleteForbiddenActionByName(forbiddenActionName);
-        }
-        String forbiddenActionName2 = "import_forbidden_action2_test_api";
-        if (isForbiddenActionExists(forbiddenActionName2)) {
-            deleteForbiddenActionByName(forbiddenActionName2);
-        }
-        ForbiddenAction forbiddenAction = createForbiddenAction(forbiddenActionName);
-        ForbiddenAction forbiddenAction2 = createForbiddenAction(forbiddenActionName2);
+        ForbiddenAction forbiddenAction = createForbiddenAction("import_forbidden_action_test_api");
+        ForbiddenAction forbiddenAction2 = createForbiddenAction("import_forbidden_action2_test_api");
+        String forbiddenActionName = forbiddenAction.getName();
+        String forbiddenActionName2 = forbiddenAction2.getName();
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/multiForbiddenAction.json";
         String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/forbiddenAction/multiForbiddenAction2.json";
         DataFileHelper.write(filePath, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());

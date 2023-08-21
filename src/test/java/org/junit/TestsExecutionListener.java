@@ -24,6 +24,7 @@ import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -37,15 +38,7 @@ public class TestsExecutionListener implements TestExecutionListener {
     private static final String URL = getAppProp("base.url");
     public static final String responseTimeLog = "logs/ResponseTime.log";
 
-    @SneakyThrows
     public void testPlanExecutionStarted(TestPlan testPlan) {
-        initApiRoutes();
-        Files.deleteIfExists(Paths.get(responseTimeLog));
-
-        String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";
-        if (Files.exists(Paths.get(fileSecret)))
-            ObjectPoolService.loadEntities(DataFileHelper.read(fileSecret));
-        loadSecretJson();
     }
 
     @SneakyThrows
@@ -54,7 +47,6 @@ public class TestsExecutionListener implements TestExecutionListener {
         if (getAppProp("webdriver.path") != null) {
             String DRIVER_PATH = new File(getAppProp("webdriver.path")).getAbsolutePath();
             System.setProperty("webdriver.chrome.driver", DRIVER_PATH);
-            System.setProperty("chromeoptions.args", "\"--disable-notifications\",\"--disable-web-security\",\"--allow-external-pages\",\"--disable-gpu\",\"--no-sandbox\",\"--disable-browser-side-navigation\"");
         }
 
         baseUrl = URL;
@@ -72,7 +64,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");
-        options.addArguments("--disable-web-security");
+//        options.addArguments("--disable-web-security");
         options.addArguments("--allow-external-pages");
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
@@ -81,6 +73,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         options.addArguments("--ignore-certificate-errors");
         options.addArguments("--disable-browser-side-navigation");
         options.addArguments("--start-maximized");
+        options.addExtensions(new File("src/test/resources/requestLogger.crx"));
         options.setExperimentalOption("prefs", prefs);
 
         synchronized (TestsExecutionListener.class) {
@@ -105,7 +98,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         return cbPreference;
     }
 
-    public void loadSecretJson() {
+    public static void loadSecretJson() {
         String secret = System.getProperty("secret");
         if (secret == null)
             secret = Configure.getAppProp("secret");
@@ -149,7 +142,7 @@ public class TestsExecutionListener implements TestExecutionListener {
     }
 
     @SneakyThrows
-    private void initApiRoutes(){
+    public static void initApiRoutes(){
         List<Class<? extends Api>> classes = getSubclasses(Api.class);
         for (Class<? extends Api> clazz : classes) {
             Api api = clazz.newInstance();

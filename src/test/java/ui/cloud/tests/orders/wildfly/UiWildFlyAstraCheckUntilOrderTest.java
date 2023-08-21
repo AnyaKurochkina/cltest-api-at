@@ -38,22 +38,24 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
     @TmsLink("")
     @DisplayName("UI WildFlyAstra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
         WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
-
         //Проверка кнопки Заказать на неактивность, до заполнения полей
         orderPage.checkOrderDisabled();
-
         //Проверка Детали заказа
+        orderPage.getVersionWildfly().set(product.getWildFlyVersion());
+        orderPage.getVersionJava().set(product.getJavaVersion());
         orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getVersionJava().set(product.getJavaVersion());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
-        orderPage.getGroupWildFly().set(accessGroup.getPrefixName());
+        orderPage.getRoleSelect().set("user");
+        String accessGroup = product.getAccessGroup();
+        orderPage.getGroupSelect().set(accessGroup);
+        orderPage.getGroupWildFly().set(accessGroup);
         new WildFlyAstraOrderPage().checkOrderDetails();
     }
 }

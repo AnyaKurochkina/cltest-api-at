@@ -32,9 +32,8 @@ public class ForbiddenActionCreateWithEventTypeProviderTest extends Tests {
     public void createForbiddenActionWithEventProviderTest() {
         List<EventTypeProvider> expectedEventTypeProviderList =
                 Collections.singletonList(new EventTypeProvider("vm", "vsphere"));
-        String actionName = "create_forbidden_action_with_exist_event_type_provider_test_api";
         ForbiddenAction action = ForbiddenAction.builder()
-                .name(actionName)
+                .title("create_forbidden_action_with_exist_event_type_provider_test_api")
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .build()
                 .createObject();
@@ -49,9 +48,8 @@ public class ForbiddenActionCreateWithEventTypeProviderTest extends Tests {
         EventTypeProvider eventTypeProvider = new EventTypeProvider("test", "test");
         List<EventTypeProvider> expectedEventTypeProviderList =
                 Collections.singletonList(eventTypeProvider);
-        String actionName = "create_forbidden_action_with_not_exist_event_type_provider_test_api";
         JSONObject jsonObject = ForbiddenAction.builder()
-                .name(actionName)
+                .title("create_forbidden_action_with_not_exist_event_type_provider_test_api")
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .build()
                 .init()

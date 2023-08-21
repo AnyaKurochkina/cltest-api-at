@@ -1,178 +1,174 @@
 S3Ceph:
   - options:
-      - { env: "DEV", segment: "dev-srv-app" }
+      - { env: "DEV" }
+      - { env: "EDU" }
+      - { env: "HOTFIX" }
 
 OpenShiftProject:
   - options:
-#      - { env: "DEV", resourcePoolLabel: "ds1-genr01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
-      - { env: "DEV", segment: "dev-srv-app" }
-#      - { env: "ST", resourcePoolLabel: "ds5-genr03.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
-#      - { env: "IFT", resourcePoolLabel: "ss5-genr02.test.vtb.ru - TEST-SRV-SYNT", segment: "test-srv-synt" }
-#      - { env: "LT", resourcePoolLabel: "ls5-genr02.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf" }
-#      - { env: "LT", resourcePoolLabel: "ls5-lpal01.test.vtb.ru - TEST-SRV-PERF", segment: "test-srv-perf" }
-#      - { env: "HOTFIX", resourcePoolLabel: "rs5-genr02.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
-#      - { env: "HOTFIX", resourcePoolLabel: "rs5-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
-#      - { env: "PREPROD", resourcePoolLabel: "rs1-lpar01.test.vtb.ru - TEST-SRV-REAL-APP", segment: "test-srv-real-app" }
+      - { env: "DEV" }
+      - { env: "HOTFIX" }
+      - { env: "LT" }
+
+Etcd:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Vault:
+  - options:
+      - { env: "DEV" }
+
+TarantoolDataGrid:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Grafana:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+
+GenericMonitoring:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
+
+GenericDatabase:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 ApacheAirflow:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 ClickHouse:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 ClickHouseCluster:
-    - options:
-          - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-
-Podman:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 WildFly:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
-
-Rhel:
-  - options:
-   #   - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-   #   - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-  #    - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-  #   - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-  #    - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-  #    - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-  #    - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
-  #    - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 PostgreSQL:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 RabbitMQClusterAstra:
   - options:
-  #    - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-  #    - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-  #    - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-  #    - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-  #    - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-  #    - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-  #   - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 Windows:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-      - { platform: "OpenStack", env: "PREPROD", segment: "test-srv-real-app" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 Nginx:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 Redis:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-#      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-#     - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-#     - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
+
+KafkaService:
+  - options:
+      - { env: "DEV" }
 
 ApacheKafkaCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-#      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-#      - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt" }
-#      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-#      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-#      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-#      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Ubuntu:
   - options:
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 Astra:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
+
+LoadBalancer:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 PostgresSQLCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
 
 ElasticsearchOpensearchCluster:
   - options:
-  #    - { platform: "Nutanix", env: "DEV", segment: "dev-srv-app" }
-  #    - { platform: "OpenStack", env: "ST", segment: "dev-srv-app" }
-      - { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-  #    - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-  #    - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-  #    - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
-  #    - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app" }
-  #    - { platform: "vsphere", env: "LT", segment: "test-srv-perf" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
+
+ScyllaDbCluster:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 Artemis:
   - options:
-      #- { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-      #- { platform: "Nutanix", env: "ST", segment: "dev-srv-app" }
-      #- { platform: "OpenStack", env: "IFT", segment: "test-srv-synt" }
-      #- { platform: "OpenStack", env: "EDU", segment: "test-srv-synt" }
-      #- { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt" }
-      - { platform: "OpenStack", env: "HOTFIX", segment: "test-srv-real-app" }
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 Moon:
   - options:
-      - { env: "DEV", resourcePoolLabel: "ds5-genr05.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app" }
+      - { env: "DEV", resourcePoolLabel: "ds5-genr05.corp.dev.vtb - DEV-SRV-APP" }
 
 GitLab:
   - options:

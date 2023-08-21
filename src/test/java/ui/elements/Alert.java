@@ -1,21 +1,17 @@
 package ui.elements;
 
-import com.codeborne.selenide.*;
-import com.codeborne.selenide.ex.ElementNotFound;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.NotFoundException;
-import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Objects;
 
-import static api.Tests.clickableCnd;
-import static core.helper.StringUtils.*;
+import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.exist;
 import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
@@ -63,7 +59,7 @@ public class Alert implements TypifiedElement {
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
-        element = getElement().shouldBe(Condition.visible);
+        element = getElement().shouldBe(Condition.visible).hover();
         final String elementText = element.getText();
         Assertions.assertTrue(elementText.toLowerCase().contains(message.toLowerCase()),
                 String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));

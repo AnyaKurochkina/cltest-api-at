@@ -9,7 +9,7 @@
           "type": "string"
         },
         "data__provider": {
-          "type": "string"
+          "type": ["string", "null"]
         },
         "count": {
           "type": "integer"

@@ -17,7 +17,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ActionSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 import ui.cloud.pages.productCatalog.enums.action.ActionType;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
@@ -26,7 +25,7 @@ import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -131,7 +130,7 @@ public class ActionTest extends ActionBaseTest {
                 .name(name)
                 .title(name)
                 .number(0)
-                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
@@ -158,7 +157,7 @@ public class ActionTest extends ActionBaseTest {
                 .name(name)
                 .title(name)
                 .number(0)
-                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
@@ -185,7 +184,7 @@ public class ActionTest extends ActionBaseTest {
                 .name(name)
                 .title(name)
                 .number(0)
-                .eventTypeProvider(Arrays.asList(EventTypeProvider.builder()
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
@@ -228,7 +227,6 @@ public class ActionTest extends ActionBaseTest {
     public void returnToActionListFromActionPage() {
         new ControlPanelIndexPage()
                 .goToActionsListPage()
-                .goToNextPageActionList()
                 .openActionFormByRowNumber(2)
                 .backByBrowserButtonBack()
                 .checkActionIsHighlighted(2)

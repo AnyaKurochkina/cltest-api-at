@@ -3,20 +3,19 @@ package models.cloud.orderService.products;
 import com.mifmif.common.regex.Generex;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
-
-import static api.cloud.orderService.PostgreSQLAstraTest.adminPassword;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -33,6 +32,7 @@ public class ApacheAirflow extends IProduct {
     String airflowVersion;
     String dbServer;
     DbUser dbUser;
+    String pgAdminPassword;
 
     @Override
     @Step("Заказ продукта")
@@ -65,7 +65,7 @@ public class ApacheAirflow extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), getDomain(), "compute");
+        String accessGroup = getAccessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -76,12 +76,14 @@ public class ApacheAirflow extends IProduct {
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.cluster_name", new Generex("at-[a-z]{6}").random())
                 .set("$.order.attrs.airflow_version", airflowVersion)
-                .set("$.order.attrs.additional_config.postgresql_config.db_host", dbServer)
-                .set("$.order.attrs.additional_config.postgresql_config.db_user", dbUser.getUsername())
-                .set("$.order.attrs.additional_config.postgresql_config.db_database", dbUser.getNameDB())
-                .set("$.order.attrs.additional_config.postgresql_config.db_password", adminPassword)
+                .set("$.order.attrs.postgresql_config.db_host", dbServer)
+                .set("$.order.attrs.postgresql_config.db_user", dbUser.getUsername())
+                .set("$.order.attrs.postgresql_config.db_database", dbUser.getNameDB())
+                .set("$.order.attrs.postgresql_config.db_password", pgAdminPassword)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
+                //TODO: нужна тех группа!
+                .set("$.order.attrs.deploy_grants[0].groups[0]", accessGroup)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.label", getLabel())

@@ -1,6 +1,7 @@
 package models.t1.imageService;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,6 +16,7 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Image {
 
     @JsonProperty("schema")
@@ -25,6 +27,8 @@ public class Image {
 
     @JsonProperty("marketing")
     private Marketing marketing;
+
+    private List<Categories> categories;
 
     @JsonProperty("owner_specified.openstack.object")
     private String ownerSpecifiedOpenstackObject;
@@ -41,6 +45,9 @@ public class Image {
     @JsonProperty("created_at")
     private String createdAt;
 
+    @JsonProperty("architecture")
+    private String architecture;
+
     @JsonProperty("os_hash_value")
     private String osHashValue;
 
@@ -49,6 +56,9 @@ public class Image {
 
     @JsonProperty("file")
     private String file;
+
+    @JsonProperty("type")
+    private String type;
 
     @JsonProperty("os_type")
     private String osType;
@@ -83,11 +93,49 @@ public class Image {
     @JsonProperty("stores")
     private String stores;
 
+    private String vmware_ostype;
+    private String description;
+
+    private String cinder_img_volume_type;
+
     @JsonProperty("internal_id")
     private String internalId;
 
     @JsonProperty("os_version")
     private String osVersion;
+
+    @JsonProperty("hw_disk_bus")
+    private String hw_disk_bus;
+
+    @JsonProperty("hw_pmu")
+    private String hw_pmu;
+
+    @JsonProperty("hw_machine_type")
+    private String hw_machine_type;
+
+    @JsonProperty("hw_qemu_guest_agent")
+    private String hw_qemu_guest_agent;
+
+    @JsonProperty("hw_rng_model")
+    private String hw_rng_model;
+
+    @JsonProperty("hw_scsi_model")
+    private String hw_scsi_model;
+
+    @JsonProperty("hw_time_hpet")
+    private String hw_time_hpet;
+
+    @JsonProperty("hw_video_model")
+    private String hw_video_model;
+
+    @JsonProperty("hw_vif_model")
+    private String hw_vif_model;
+
+    @JsonProperty("os_require_quiesce")
+    private String os_require_quiesce;
+
+    @JsonProperty("hw_vif_multiqueue_enabled")
+    private String hw_vif_multiqueue_enabled;
 
     @JsonProperty("tags")
     private List<String> tags;

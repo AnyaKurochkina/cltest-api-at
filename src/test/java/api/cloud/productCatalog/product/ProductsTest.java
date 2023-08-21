@@ -12,7 +12,6 @@ import models.cloud.productCatalog.icon.Icon;
 import models.cloud.productCatalog.icon.IconStorage;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.OnRequest;
-import models.cloud.productCatalog.product.Payment;
 import models.cloud.productCatalog.product.Product;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -23,7 +22,10 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.*;
@@ -293,6 +295,22 @@ public class ProductsTest extends Tests {
         assertTrue(steps.isExists(cloneName));
         deleteProductByName(cloneName);
         assertFalse(steps.isExists(cloneName));
+    }
+
+    @DisplayName("Проверка tag_list при копировании продукта")
+    @TmsLink("SOUL-6999")
+    @Test
+    public void copyProductAndCheckTagListTest() {
+        String productName = "clone_product_and_check_tag_list_test_api";
+        Product product = Product.builder()
+                .name(productName)
+                .title(productName)
+                .tagList(Arrays.asList("api_test", "test"))
+                .build()
+                .createObject();
+        Product cloneProduct = copyProductById(product.getProductId());
+        deleteProductById(cloneProduct.getProductId());
+        assertEquals(product.getTagList(), cloneProduct.getTagList());
     }
 
     @DisplayName("Обновление продукта")
@@ -565,25 +583,24 @@ public class ProductsTest extends Tests {
         assertEquals(product.getVersion(), createdProduct.getVersion());
     }
 
-    @Test
-    @DisplayName("Получение значения поля payment в продуктах")
-    @TmsLink("979091")
-    public void getPaymentProduct() {
-        Product product = Product.builder()
-                .name("get_payment_product_test_api")
-                .title("AtTestApiProduct")
-                .version("1.0.0")
-                .payment(Payment.PAID)
-                .info(info)
-                .build()
-                .createObject();
-        String id = product.getProductId();
-        assertEquals(Payment.PAID, getProductById(id).getPayment());
-        steps.partialUpdateObject(id, new JSONObject().put("payment", "free"));
-        assertEquals(Payment.FREE, getProductById(id).getPayment());
-        steps.partialUpdateObject(id, new JSONObject().put("payment", "partly_paid"));
-        assertEquals(Payment.PARTLY_PAID, getProductById(id).getPayment());
-    }
+//    @Test
+//    @DisplayName("Получение значения поля payment в продуктах")
+//    @TmsLink("979091")
+//    public void getPaymentProduct() {
+//        Product product = Product.builder()
+//                .name("get_payment_product_test_api")
+//                .title("AtTestApiProduct")
+//                .version("1.0.0")
+//                .info(info)
+//                .build()
+//                .createObject();
+//        String id = product.getProductId();
+//        assertEquals(Payment.PAID, getProductById(id).getPayment());
+//        steps.partialUpdateObject(id, new JSONObject().put("payment", "free"));
+//        assertEquals(Payment.FREE, getProductById(id).getPayment());
+//        steps.partialUpdateObject(id, new JSONObject().put("payment", "partly_paid"));
+//        assertEquals(Payment.PARTLY_PAID, getProductById(id).getPayment());
+//    }
 
     @DisplayName("Создание продукта с допустимыми значениями поля on_request")
     @TmsLink("1322847")

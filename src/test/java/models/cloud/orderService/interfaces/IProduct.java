@@ -31,7 +31,6 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
@@ -77,6 +76,7 @@ public abstract class IProduct extends Entity {
     public static final String START = "Включить";
     public static final String STOP_HARD = "Выключить принудительно";
     public static final String RESIZE = "Изменить конфигурацию";
+    public final static String STATE_PATH = "data.find{it.data.config.name=='%s'}.data.state";
 
     @ToString.Include
     @Getter
@@ -139,8 +139,12 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    protected String getAccessGroup() {
+    public String getAccessGroup() {
         return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+    }
+
+    protected String state(String name){
+        return (String) OrderServiceSteps.getProductsField(this, String.format(STATE_PATH, name));
     }
 
     @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
@@ -149,6 +153,15 @@ public abstract class IProduct extends Entity {
         Arrays.stream(tags).forEach(tagsJoiner::add);
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tagsJoiner))
                 .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
+    }
+
+    @Step("Проверка дисков соответствию rules")
+    public void checkVmDisk(Map<String, String> rules) {
+        List<Map<String, String>> vmList = OrderServiceSteps.getProductsField(this,
+                "data.findAll{it.type=='vm'}.data.config.collect{[(it.node_roles==null?'*':it.node_roles[0]):it.storage_profile]}", List.class);
+        for(Map.Entry<String, String> rule : rules.entrySet())
+            Assertions.assertTrue(vmList.stream().filter(e -> e.containsKey(rule.getKey())).allMatch(e -> e.get(rule.getKey()).equalsIgnoreCase(rule.getValue())),
+                    "Диски не соответствуют правилу: " + rule.getKey() + ":" + rule.getValue());
     }
 
     @Override
@@ -186,7 +199,7 @@ public abstract class IProduct extends Entity {
     }
 
     public String executeSsh(String cmd) {
-        return executeSsh(new SshClient((String) OrderServiceSteps.getProductsField(this, VM_IP_PATH), envType()), cmd);
+        return executeSsh(SshClient.builder().host(OrderServiceSteps.getProductsField(this, VM_IP_PATH).toString()).env(envType()).build(), cmd);
     }
 
     public void addLinkProduct() {
@@ -314,12 +327,11 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action, Flavor flavor) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
         Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
-
     }
 
     //example: https://cloud.vtb.ru/vm/orders/ecb3567b-afa6-43a4-8a49-6e0ef5b1a952/topics?context=proj-7ll0yy5zsc&type=project&org=vtb
@@ -364,7 +376,7 @@ public abstract class IProduct extends Entity {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
         return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
-                .getString("'ui:options'.filter");
+                .getString("'ui:options'.filter").replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase());
     }
 
     @SneakyThrows
@@ -396,6 +408,26 @@ public abstract class IProduct extends Entity {
 
     public Flavor getMinFlavor() {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
+        return list.get(0);
+    }
+
+    public Flavor getMaxFlavorLinuxVm() {
+        Project project = Project.builder().id(getProjectId()).build().createObject();
+        String filter = String.format("flavor:vm:linux:%s:%s",
+                project.getProjectEnvironmentPrefix().getEnvType().toLowerCase(),
+                project.getProjectEnvironmentPrefix().getEnv().toLowerCase());
+        List<Flavor> list = ReferencesStep.getFlavorsByPageFilterLinkedList(this, filter);
+        Assertions.assertFalse(list.size() < 2, "Действие недоступно, либо кол-во flavor's < 2");
+//        return list.get(list.size() - 1);
+        return list.get(1);
+    }
+
+    public Flavor getMinFlavorLinuxVm() {
+        Project project = Project.builder().id(getProjectId()).build().createObject();
+        String filter = String.format("flavor:vm:linux:%s:%s",
+                project.getProjectEnvironmentPrefix().getEnvType().toLowerCase(),
+                project.getProjectEnvironmentPrefix().getEnv().toLowerCase());
+        List<Flavor> list = ReferencesStep.getFlavorsByPageFilterLinkedList(this, filter);
         return list.get(0);
     }
 
@@ -461,6 +493,13 @@ public abstract class IProduct extends Entity {
 
     public boolean isDev() {
         return envType().contains("dev");
+    }
+    public boolean isTest() {
+        return envType().contains("test");
+    }
+
+    public boolean isProd() {
+        return envType().contains("prod");
     }
 
     public String envType() {

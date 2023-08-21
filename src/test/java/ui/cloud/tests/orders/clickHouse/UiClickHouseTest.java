@@ -58,16 +58,20 @@ public class UiClickHouseTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getNameUser().setValue("at_user");
+            if(product.isDev())
+                orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+            if(product.isDev())
+                orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
             orderPage.getGroup().set(accessGroup);
             orderPage.getGroup2().set(accessGroup);
-            orderPage.getGroup3().set(accessGroup);
-            orderPage.getGroup4().set(accessGroup);
+            if(product.isDev()) {
+                orderPage.getGroup3().set(accessGroup);
+                orderPage.getGroup4().set(accessGroup);
+            }
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -113,7 +117,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(4)
     @TmsLink("330329")
-    @DisplayName("UI ClickHouse. Расширить диск")
+    @DisplayName("UI ClickHouse. Расширить точку монтирования")
     void expandDisk() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.MORE, () -> clickHousePage.enlargeDisk("/app/clickhouse", "20", new Table("Тип").getRow(0).get()));
@@ -240,7 +244,6 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("1536880")
-    @EnabledIfEnv("prod")
     @DisplayName("UI ClickHouse. Мониторинг ОС")
     void monitoringOs() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

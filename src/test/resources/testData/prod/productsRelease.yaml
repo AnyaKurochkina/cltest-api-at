@@ -1,42 +1,40 @@
-Podman:
+Astra:
   - options:
-      - { platform: "OpenStack", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "IFT" }
 
 WildFly:
   - options:
-        - { platform: "OpenStack", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
-
-Rhel:
-  - options:
-      - { platform: "Nutanix", env: "EDU", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9", productName: "RHEL General Application" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 PostgreSQL:
   - options:
-      - { platform: "OpenStack", env: "IFT", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "IFT" }
 
-RabbitMQCluster:
+RabbitMQClusterAstra:
   - options:
-      - { platform: "Nutanix", env: "MIGR", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "LT" }
 
 Windows:
   - options:
-      - { platform: "OpenStack", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "2019" }
-      - { platform: "Nutanix", env: "ST", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "2016" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 Nginx:
   - options:
-      - { platform: "OpenStack", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "LT" }
 
 Redis:
   - options:
-      - { platform: "Nutanix", env: "PREPROD", segment: "test-srv-real-app", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "OpenStack", env: "IFT"}
 
 ApacheKafkaCluster:
   - options:
-      - { platform: "vsphere", env: "LT", segment: "test-srv-perf", domain: "test.vtb.ru", dataCentre: "5", osVersion: "7.9" }
+      - { platform: "OpenStack", env: "HOTFIX" }
 
 PostgresSQLCluster:
   - options:
-      - { platform: "Nutanix", env: "MIGR", postgresqlVersion: "12", segment: "test-srv-synt", domain: "test.vtb.ru", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "LT" }
+
+Artemis:
+  - options:
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
+

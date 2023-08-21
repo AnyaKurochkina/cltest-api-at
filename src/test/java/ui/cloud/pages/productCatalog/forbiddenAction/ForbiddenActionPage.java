@@ -7,8 +7,8 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.forbiddenAction.ForbiddenAction;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -26,13 +26,15 @@ public class ForbiddenActionPage extends EntityPage {
     private final SelenideElement nameRequiredFieldHint =
             nameInput.getInput().$x("./following::div[text()='Необходимо ввести код запрещенного действия']");
     private final SelenideElement nonUniqueNameValidationHint =
-            nameInput.getInput().$x("./following::div[text()='Запрещенное действие с таким кодом уже существует']");
+            nameInput.getInput().$x("./following::div[text()='Запрещенное действие с таким кодом уже существует. " +
+                    "Выберите другое действие или направление разрешения']");
     private final SelenideElement titleRequiredFieldHint =
             titleInput.getInput().$x("./following::div[text()='Необходимо добавить минимум одну запись']");
     private final SelenideElement actionRequiredFieldHint =
             actionSelect.getElement().$x(".//div[text()='Поле обязательно для заполнения']");
     private final SelenideElement nameValidationHint =
-            Selenide.$x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
+            Selenide.$x("//div[text()='Поле может содержать только символы: " +
+                    "\"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement paramsRequiredAlert =
             Selenide.$x("//div[@role='alert']//div[text()='Необходимо добавить минимум одну запись']");
     private final Button addButton = Button.byText("Добавить");
@@ -67,8 +69,6 @@ public class ForbiddenActionPage extends EntityPage {
         descriptionTextArea.setValue("test");
         saveButton.getButton().shouldBe(Condition.disabled);
         nameRequiredFieldHint.shouldBe(Condition.visible);
-        nameInput.setValue(forbiddenAction.getName());
-        nameRequiredFieldHint.shouldNotBe(Condition.visible);
         titleRequiredFieldHint.shouldBe(Condition.visible);
         titleInput.setValue(forbiddenAction.getTitle());
         titleRequiredFieldHint.shouldNotBe(Condition.visible);
@@ -76,6 +76,7 @@ public class ForbiddenActionPage extends EntityPage {
         Action action = getActionById(forbiddenAction.getActionId());
         actionSelect.setContains(action.getName());
         actionRequiredFieldHint.shouldNotBe(Condition.visible);
+        nameRequiredFieldHint.shouldNotBe(Condition.visible);
         paramsTab.switchTo();
         paramsRequiredAlert.shouldBe(Condition.visible);
         addTypeProvider(forbiddenAction.getEventTypeProvider().get(0).getEvent_type(),
@@ -92,8 +93,8 @@ public class ForbiddenActionPage extends EntityPage {
         addButton.click();
         Waiting.sleep(3000);
         Table table = new Table("Тип");
-        Select typeSelect = new Select(table.getRow(0).get().$x("(.//div[select])[1]"));
-        Select providerSelect = new Select(table.getRow(0).get().$x("(.//div[select])[2]"));
+        SearchSelect typeSelect = new SearchSelect(table.getRow(0).get().$x("(.//div[select])[1]"));
+        SearchSelect providerSelect = new SearchSelect(table.getRow(0).get().$x("(.//div[select])[2]"));
         typeSelect.set(type);
         providerSelect.set(provider);
         table.getRow(0).get().$x(".//button[.='Сохранить']").click();
@@ -108,7 +109,8 @@ public class ForbiddenActionPage extends EntityPage {
 
     @Step("Проверка валидации неуникального имени запрещенного действия '{forbiddenAction.name}'")
     public ForbiddenActionsListPage checkNonUniqueNameValidation(ForbiddenAction forbiddenAction) {
-        nameInput.setValue(forbiddenAction.getName());
+        Action action = getActionById(forbiddenAction.getActionId());
+        actionSelect.setContains(action.getName());
         titleInput.setValue(forbiddenAction.getTitle());
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         saveButton.getButton().shouldBe(Condition.disabled);
@@ -118,10 +120,9 @@ public class ForbiddenActionPage extends EntityPage {
 
     @Step("Заполнение атрибутов запрещенного действия '{forbiddenAction.name}'")
     public ForbiddenActionPage setAttributes(ForbiddenAction forbiddenAction) {
-        nameInput.setValue(forbiddenAction.getName());
-        titleInput.setValue(forbiddenAction.getTitle());
         Action action = getActionById(forbiddenAction.getActionId());
         actionSelect.setContains(action.getName());
+        titleInput.setValue(forbiddenAction.getTitle());
         descriptionTextArea.setValue(forbiddenAction.getDescription());
         assertAll(() -> nameRequiredFieldHint.shouldNotBe(Condition.visible),
                 () -> titleRequiredFieldHint.shouldNotBe(Condition.visible),
@@ -137,9 +138,9 @@ public class ForbiddenActionPage extends EntityPage {
     @Step("Проверка атрибутов запрещенного действия '{forbiddenAction.name}'")
     public ForbiddenActionPage checkAttributes(ForbiddenAction forbiddenAction) {
         mainTab.switchTo();
-        nameInput.getInput().shouldHave(Condition.exactValue(forbiddenAction.getName()));
-        titleInput.getInput().shouldHave(Condition.exactValue(forbiddenAction.getTitle()));
         Action action = getActionById(forbiddenAction.getActionId());
+        nameInput.getInput().shouldHave(Condition.exactValue(action.getName() + "__parent_to_child"));
+        titleInput.getInput().shouldHave(Condition.exactValue(forbiddenAction.getTitle()));
         assertTrue(actionSelect.getValue().contains(action.getName()));
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(forbiddenAction.getDescription()));
         paramsTab.switchTo();

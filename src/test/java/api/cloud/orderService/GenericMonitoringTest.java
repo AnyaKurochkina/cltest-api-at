@@ -43,7 +43,7 @@ public class GenericMonitoringTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(GenericMonitoring product) {
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
-            gm.resize(gm.getMaxFlavor());
+            gm.resize(gm.getMaxFlavorLinuxVm());
         }
     }
 

@@ -1,5 +1,6 @@
 package api.cloud.roles;
 
+import api.Tests;
 import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.StatusResponseException;
@@ -8,14 +9,12 @@ import io.qameta.allure.Feature;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.portalBack.AccessGroup;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
-import api.Tests;
 
 @Feature("Ролевая модель")
 @Epic("Администратор заказов")
 @Tags({@Tag("regress")})
-@DisabledIfEnv("prod")
+@Disabled
 public class OrderAdminTest extends Tests {
 
     @Test

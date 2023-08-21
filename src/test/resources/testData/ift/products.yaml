@@ -1,97 +1,99 @@
-S3Ceph:
-  - options:
-      - { env: "DEV", segment: "dev-srv-app", dataCentre: "5" }
-
 OpenShiftProject:
   - options:
-      - { env: "DEV", resourcePoolLabel: "ds5-plux01.corp.dev.vtb - DEV-SRV-APP", segment: "dev-srv-app", dataCentre: "5" }
-
-ApacheAirflow:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { env: "DEV" }
 
 Vault:
   - options:
       - { env: "DEV" }
 
+Etcd:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+TarantoolDataGrid:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
 Grafana:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
 
 GenericMonitoring:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
 
 GenericDatabase:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
 
-Rhel:
+ApacheAirflow:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-ClickHouseCluster:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
-
-PostgreSQL:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-RabbitMQClusterAstra:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-Windows:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-Nginx:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-WildFly:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-Redis:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-Ubuntu:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-
-Astra:
-  - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "OpenStack", env: "DEV" }
 
 ClickHouse:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5", osVersion: "8.4" }
+      - { platform: "OpenStack", env: "DEV" }
 
-Podman:
+ClickHouseCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "OpenStack", env: "DEV" }
 
-ScyllaDbCluster:
+WildFly:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
+
+PostgreSQL:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+RabbitMQClusterAstra:
+  - options:
+#      - { platform: "OpenStack", env: "DEV" }
+
+Nginx:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Redis:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Ubuntu:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Astra:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
 
 LoadBalancer:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
 
 PostgresSQLCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "OpenStack", env: "DEV" }
 
-ApacheKafkaCluster:
+ElasticsearchOpensearchCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "dev-srv-app", domain: "corp.dev.vtb", dataCentre: "5" }
+      - { platform: "OpenStack", env: "DEV" }
+
+ScyllaDbCluster:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Artemis:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
+Moon:
+  - options:
+#      - { env: "DEV", resourcePoolLabel: "ds5-genr05.corp.dev.vtb - DEV-SRV-APP" }
+
+GitLab:
+  - options:
+#      - { env: "DEV" }
+
+TestProduct:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }

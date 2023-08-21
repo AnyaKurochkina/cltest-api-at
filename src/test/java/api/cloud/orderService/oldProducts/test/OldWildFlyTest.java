@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.WildFly;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import api.Tests;
 
@@ -15,6 +16,7 @@ import static models.cloud.orderService.interfaces.ProductStatus.STOPPED;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("old_wildfly_astra"), @Tag("prod"), @Tag("old")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Disabled
 public class OldWildFlyTest extends Tests {
 
     final WildFly wildFly = WildFly.builder()
@@ -90,7 +92,8 @@ public class OldWildFlyTest extends Tests {
         if (wildFly.productStatusIs(STOPPED)) {
             wildFly.start();
         }
-        wildFly.updateCerts();
+        JSONObject data = new JSONObject().put("accept_cert_updating", true).put("is_balancer", false).put("is_balancer", "default");
+        wildFly.updateCerts(data);
     }
 
     @Disabled

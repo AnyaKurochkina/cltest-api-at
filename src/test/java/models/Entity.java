@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
 import core.helper.http.StatusResponseException;
@@ -44,7 +45,9 @@ public abstract class Entity implements AutoCloseable {
 
     @SneakyThrows
     public static JSONObject serialize(Object object) {
-        return new JSONObject(new ObjectMapper().writeValueAsString(object));
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        return new JSONObject(objectMapper.writeValueAsString(object));
     }
 
     @SneakyThrows
@@ -100,6 +103,10 @@ public abstract class Entity implements AutoCloseable {
 
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         return ObjectPoolService.create(this, exclusiveAccess, isPublic);
+    }
+
+    public <T extends Entity> T getObject() {
+        return ObjectPoolService.getObject(this);
     }
 
     @SneakyThrows

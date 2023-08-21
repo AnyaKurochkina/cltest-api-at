@@ -93,16 +93,14 @@ public class StateServiceListTest extends Tests {
     @DisplayName("Получение списка items with actions по контексту и фильтру")
     @TmsLink("")
     public void getItemListWithActions() {
-        // TODO: 26.09.2022 разобраться с проектом.
-        Project.builder().isForOrders(true)
-                .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
+        Project project = Project.builder().isForOrders(true)
                 .build()
                 .createObject();
-        List<Item> itemsTypeList = getItemsWithActionsByFilter("proj-42pomp56tw", "type", "vm");
+        List<Item> itemsTypeList = getItemsWithActionsByFilter(project.getId(), "type", "vm");
         for (Item item : itemsTypeList) {
             assertEquals("vm", item.getType());
         }
-        List<Item> itemsProviderList = getItemsWithActionsByFilter("proj-42pomp56tw", "provider", "vsphere");
+        List<Item> itemsProviderList = getItemsWithActionsByFilter(project.getId(), "provider", "vsphere");
         for (Item item : itemsProviderList) {
             assertEquals("vsphere", item.getProvider());
         }
@@ -171,7 +169,7 @@ public class StateServiceListTest extends Tests {
     @DisplayName("Получение статистики по Items")
     @TmsLink("1350167")
     public void getItemsStatTest() {
-        Project project = Project.builder().build().createObject();
+        Project project = Project.builder().isForOrders(true).build().createObject();
         getItemStatByProjectId(project.getId()).compareWithJsonSchema("jsonSchema/ItemsStatSchema.json");
     }
 

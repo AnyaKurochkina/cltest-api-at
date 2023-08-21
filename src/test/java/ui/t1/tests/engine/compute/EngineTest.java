@@ -1,6 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
+import core.enums.Role;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -12,21 +13,36 @@ import steps.authorizer.AuthorizerSteps;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.T1LoginPage;
 import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.time.Duration;
 
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Tag("smoke")
 @Epic("Cloud Compute")
 @Feature("Cloud Engine")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EngineTest extends AbstractComputeTest {
+    Project project;
 
     public EngineTest() {
         Project projectOrders = Project.builder().isForOrders(true).build().createObject();
         String parentFolder = AuthorizerSteps.getParentProject(projectOrders.getId());
         project = Project.builder().projectName("Проект для EngineTest").folderName(parentFolder).build().createObjectPrivateAccess();
     }
+
+    @Override
+    @BeforeEach
+    public void beforeEach() {
+        new T1LoginPage(project.getId())
+                .signIn(Role.CLOUD_ADMIN);
+        Waiting.sleep(3000);
+    }
+
+    @BeforeAll
+    public static void beforeAll() {}
 
     private void checkElementsEngine(Condition condition){
         TypifiedElement.refresh();
@@ -58,10 +74,5 @@ public class EngineTest extends AbstractComputeTest {
         checkElementsEngine(Condition.not(Condition.visible));
         TypifiedElement.refresh();
         new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible, Duration.ofMinutes(2));
-    }
-
-    @AfterAll
-    @Override
-    public void afterAll() {
     }
 }

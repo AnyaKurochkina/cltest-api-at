@@ -22,7 +22,7 @@ public class NewOrderPage {
     private final SelenideElement opMemory = $x("//div[contains(text(),'Оперативная память')]");
     private final SelenideElement hardDrive = $x("//div[contains(text(),'Жесткий диск')]");
     private final SelenideElement hardDrive1 = $x("(//div[contains(text(),'Жесткий диск')])[1]");
-    private final SelenideElement hardDrive2 = $x("(//div[contains(text(),'Жесткий диск')])[2]");
+    private final SelenideElement hardDrives = $x("//div[contains(text(),'Жесткие диски')]");
     private final SelenideElement processor = $x("//div[contains(text(),'Процессор')]");
     private final SelenideElement windowsOS = $x("//div[contains(text(),'ОС Windows')]");
     private final SelenideElement linuxOS = $x("//div[contains(text(),'ОС linux')]");
@@ -32,9 +32,13 @@ public class NewOrderPage {
     protected Select dataCentreSelect = Select.byLabel("Дата-центр");
     protected Select platformSelect = Select.byLabel("Платформа");
     protected Select osVersionSelect = Select.byLabel("Версия ОС");
+    protected Select versionWildfly = Select.byLabel("Версия Wildfly");
+    protected Select versionJava = Select.byLabel("Версия java");
+    protected Select domain = Select.byLabel("Домен");
     protected Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
     protected Select roleSelect = Select.byLabel("Роль");
     protected Select groupSelect = Select.byLabel("Группы");
+    protected Select group2Select = Select.byLabel("Группы",2);
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     //раскрывающийся список
@@ -73,7 +77,6 @@ public class NewOrderPage {
             getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
         }
         getProcessor().shouldBe(Condition.visible);
-        getHardDrive().shouldBe(Condition.visible);
         getOpMemory().shouldBe(Condition.visible);
     }
 }

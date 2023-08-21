@@ -1,6 +1,6 @@
 package ui.t1.tests.cloudDirector;
 
-import core.helper.Configure;
+import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -32,25 +32,29 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
 
     @Test
     @Order(1)
-    @TmsLink("147532")
-    @DisplayName("VMware. Создание второго VDC  в одной организации")
     public void createDataCentre() {
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentre(dataCentreName)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
-                .checkCreate()
+                .checkCreate(true)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(dataCentreName));
+    }
 
+    @Test
+    @Order(2)
+    @TmsLink("147532")
+    @DisplayName("VMware. Создание второго VDC  в одной организации")
+    public void createSecondDataCentreTest() {
         String secondDataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentre(secondDataCentreName)
                 .waitChangeStatus()
                 .selectDataCentre(secondDataCentreName)
-                .checkCreate()
+                .checkCreate(true)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(secondDataCentreName));
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
@@ -97,13 +101,13 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("692723"), @TmsLink("692724")})
     @DisplayName("VMware. Управление дисковой подсистемой VDC. Добавление/Удаление профиля")
     public void addProfileTest() {
-        String name = "";
-        if (Configure.ENV.equals("t1prod")) {
-            name = "Veeam-InstantVMRecovery";
-        } else {
-            name = "SP-Standart";
-        }
-        StorageProfile profile = new StorageProfile(name, "11");
+//        String name = "";
+//        if (Configure.ENV.equals("t1prod")) {
+//            name = "SP-Common01";
+//        } else {
+//            name = "SP-Common01";
+//        }
+        StorageProfile profile = new StorageProfile("SP-Common01", "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
@@ -131,6 +135,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
+        Waiting.sleep(10000);
         dataCentrePage.switchProtectOrder(true);
         try {
             new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить", "Удалить", () -> {
@@ -140,6 +145,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
             Alert.red("Заказ защищен от удаления");
             TypifiedElement.refresh();
         } finally {
+            Waiting.sleep(10000);
             dataCentrePage.switchProtectOrder(false);
         }
     }

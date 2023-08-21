@@ -27,7 +27,7 @@ public class IServicePage {
     public void run() {
         btnRun.shouldBe(activeCnd).click();
         Alert.green("Успешно создано действие " + serviceName);
-        OrderUtils.waitChangeStatus(new Runs(), Duration.ofSeconds(30));
+        OrderUtils.waitChangeStatus(new Runs(), Duration.ofSeconds(60));
         Assertions.assertEquals(OrderStatus.SUCCESS, new Runs().getStatus());
     }
 

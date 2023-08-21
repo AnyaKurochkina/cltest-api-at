@@ -14,7 +14,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static steps.productCatalog.ForbiddenActionSteps.createForbiddenAction;
+import static steps.productCatalog.ForbiddenActionSteps.partialUpdateForbiddenAction;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -31,14 +33,12 @@ public class ForbiddenActionNegativeTest extends Tests {
                 .build()
                 .createObject();
         ForbiddenAction.builder()
-                .name("create_forbidden_action_with_not_unig_action_direction_test_api")
                 .title("create_forbidden_action_with_not_unig_action_direction_test_api")
                 .direction("parent_to_child")
                 .actionId(action.getActionId())
                 .build()
                 .createObject();
         JSONObject json = ForbiddenAction.builder()
-                .name("create_second_forbidden_action_with_not_unig_action_direction_test_api")
                 .title("create_second_forbidden_action_with_not_unig_action_direction_test_api")
                 .direction("parent_to_child")
                 .actionId(action.getActionId())
@@ -47,5 +47,15 @@ public class ForbiddenActionNegativeTest extends Tests {
                 .toJson();
         String msg = createForbiddenAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("\"non_field_errors\": Поля action, direction должны производить массив с уникальными значениями.", msg);
+    }
+
+    @DisplayName("Негативный тест на редактирование имени запрещенного действия")
+    @TmsLink("")
+    @Test
+    public void editForbiddenActionNameTest() {
+        String forbiddenActionName = "edit_forbidden_action_name_test_api";
+        ForbiddenAction action = createForbiddenAction("create_allowed_action_for_edit_name_api_test");
+        partialUpdateForbiddenAction(action.getId(), new JSONObject().put("name", forbiddenActionName));
+        assertNotEquals(action.getName(), forbiddenActionName);
     }
 }

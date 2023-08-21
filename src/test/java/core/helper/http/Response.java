@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import core.helper.Page;
+import models.AbstractEntity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -70,9 +71,19 @@ public class Response {
 
     @SneakyThrows
     public <T> T extractAs(Class<T> clazz) {
+        return extractAs(clazz, false);
+    }
+
+    @SneakyThrows
+    public <T> T extractAs(Class<T> clazz, boolean deletable) {
         JSONObject jsonObject = new JSONObject(responseMessage);
         ObjectMapper objectMapper = new ObjectMapper();
-        return objectMapper.convertValue(jsonObject.toMap(), clazz);
+        T value = objectMapper.convertValue(jsonObject.toMap(), clazz);
+        if(deletable)
+            if(value instanceof AbstractEntity)
+                AbstractEntity.addEntity((AbstractEntity) value);
+            else throw new Exception("Параметр deletable = true может быть только для AbstractEntity");
+        return value;
     }
 
     @SneakyThrows
@@ -85,7 +96,7 @@ public class Response {
         if(Objects.nonNull(page.getMeta()))
             count = page.getMeta().getTotalCount();
         while (count > items.size()) {
-            http.path = http.path.replaceAll("page=(\\d+)", "page=" + (++i));
+            http.queryParams.put("page", "" + (++i));
             page = http.setSourceToken("").filterRequest().assertStatus(200).extractAs(clazz);
             items.addAll(page.getList());
         }

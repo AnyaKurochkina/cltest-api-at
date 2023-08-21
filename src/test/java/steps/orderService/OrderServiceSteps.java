@@ -10,7 +10,6 @@ import core.helper.http.Response;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
@@ -171,7 +170,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Добавление действия {actionName} заказа и регистрация его в авторайзере")
-    public static void registrationAction(String actionName) {
+    public static void registerAction(String actionName) {
         new Http(OrderServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("action_name", actionName))
@@ -520,8 +519,8 @@ public class OrderServiceSteps extends Steps {
             s = jsonPath.getObject(path, clazz);
         else
             s = jsonPath.get(path);
+        log.info(String.format("getFiledProduct return: %s", s));
         if (assertion) {
-            log.info(String.format("getFiledProduct return: %s", s));
             Assertions.assertNotNull(s, "По path '" + path + "' не найден объект в response " + jsonPath.prettify());
         }
         return (T) s;

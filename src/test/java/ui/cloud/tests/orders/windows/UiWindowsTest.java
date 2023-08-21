@@ -32,7 +32,8 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product; // = Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/cc66d20c-9b2e-42ad-90a5-f85d14e9d391/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Windows product;
+    //=Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/d83b7cd3-f4c0-4797-a922-6d3ab3bfe780/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -48,7 +49,7 @@ public class UiWindowsTest extends UiProductTest {
     void orderWindows() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.getAccessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectCategory("Базовые вычисления")
@@ -235,7 +236,6 @@ public class UiWindowsTest extends UiProductTest {
 
     @Test
     @Order(17)
-    @EnabledIfEnv("prod")
     @TmsLink("1171958")
     @DisplayName("UI Windows. Мониторинг ОС")
     void monitoringOs() {

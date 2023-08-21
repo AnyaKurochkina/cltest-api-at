@@ -22,4 +22,10 @@ public class Secret {
     private String uri;
 	@Singular
     private List<String> tags;
+
+    public Secret(SecretResponse response) {
+        this.engineId = response.getEngine().getId();
+        this.uri = response.getUri();
+        this.tags = response.getTags();
+    }
 }

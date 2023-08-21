@@ -1,15 +1,14 @@
 package ui.t1.pages;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import org.openqa.selenium.WebElement;
 import ui.elements.Button;
 import ui.elements.Menu;
+import ui.t1.pages.IAM.OrgStructurePage;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
@@ -18,15 +17,16 @@ import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 import ui.t1.pages.supportCenter.MySubscriptionsPage;
+import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
 import ui.t1.pages.supportCenter.NotificationsPage;
 import ui.t1.pages.supportCenter.SubscribeUsersPage;
 
 import java.time.Duration;
 
-import static core.helper.StringUtils.$$x;
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
-import static ui.cloud.pages.orders.IProductPage.getBtnAction;
-
+import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
 @Getter
 public class IndexPage {
@@ -44,6 +44,7 @@ public class IndexPage {
     Button linkVirtualMachines = Button.byXpath("//a[.='Серверы']");
     Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
     Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
+    Button linkVirtualIps = Button.byXpath("//a[.='Виртуальные IP-адреса']");
     Button linkImages = Button.byXpath("//a[.='Образы']");
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
@@ -51,16 +52,17 @@ public class IndexPage {
     Button linkTools = Button.byXpath("//a[.='Инструменты']");
     Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
+    Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
+    SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
+    SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
 
-
-    final ElementsCollection linkProfile = $$x("//*[@data-testid='topbar-menu-profile']");
-
+    @Step("Переход на главную страницу")
     public static void go() {
-        $x("(//img[contains(@alt,'logo')])[2]").shouldBe(Condition.visible).click();
+        $x("//*[@title = 'Главная']").shouldBe(Condition.visible).click();
     }
 
     public Profile goToProfile(){
-        Menu.byElement(linkProfile.should(CollectionCondition.anyMatch("", WebElement::isDisplayed)).filter(Condition.visible).first()).select("Профиль");
+        linkProfile.shouldBe(Condition.visible).click();
         return new Profile();
     }
 
@@ -101,6 +103,13 @@ public class IndexPage {
         linkIAM.click();
         linkUsers.click();
         return new UsersPage();
+    }
+
+    @Step("Переход на страницу Орг. структура")
+    public OrgStructurePage goToOrgStructure() {
+        linkIAM.click();
+        linkOrgStructure.click();
+        return new OrgStructurePage();
     }
 
     @Step("Переход на страницу Виртуальные машины")
@@ -159,15 +168,20 @@ public class IndexPage {
         return new PublicIpList();
     }
 
+    @Step("Переход на страницу Публичные IP-адреса")
+    public VirtualIpList goToVirtualIps() {
+        linkCloudEngine.click();
+        linkVirtualIps.click();
+        return new VirtualIpList();
+    }
+
     @Step("Отключить Cloud Engine")
     public void disconnectCloudEngine() {
-        SelenideElement btnAction = getBtnAction("T1 Cloud Engine");
+        SelenideElement btnAction = getActionsMenuButton("T1 Cloud Engine");
         Menu.byElement(btnAction).select("Отключить услугу");
         Button.byText("Отключить").click();
         Waiting.findWithRefresh(() -> !btnAction.isDisplayed(), Duration.ofMinutes(1));
         btnAction.shouldNotBe(Condition.exist);
-        Menu.byElement(getBtnAction("T1 Cloud Engine")).select("Отключить услугу");
-        Button.byText("Отключить").click();
     }
 
     @Step("Переход в Центр уведомлений на страницу Мои уведомления")
@@ -194,6 +208,15 @@ public class IndexPage {
 
         return new SubscribeUsersPage();
     }
+    @Step("Переход в модальное окно изменения контекста")
+    public ContextDialog changeContext(){
+        changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
+        return new ContextDialog();
+    }
 
-
+    @Step("Проверка отображения имени {contextName} контекста")
+    public boolean isContextNameDisplayed(String contextName){
+        Selenide.refresh();
+        return $x("//div[text() = '{}']", contextName).shouldBe(Condition.visible).isDisplayed();
+    }
 }

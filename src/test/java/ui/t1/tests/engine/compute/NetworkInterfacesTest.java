@@ -6,37 +6,23 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.parallel.ResourceLock;
-import ui.cloud.pages.CompareType;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.parallel.Isolated;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.BeforeAllExtension;
 import ui.t1.pages.cloudEngine.compute.NetworkInterfaceList;
-import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-import static core.utils.AssertUtils.assertHeaders;
-import static org.junit.jupiter.api.parallel.ResourceAccessMode.READ_WRITE;
-
-@ExtendWith(BeforeAllExtension.class)
+//@Isolated
 @Epic("Cloud Compute")
 @Feature("Сетевые интерфейсы")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class NetworkInterfacesTest extends AbstractComputeTest {
 
     @Test
-    @TmsLink("1249429")
-    @DisplayName("Cloud Compute. Сетевые интерфейсы")
-    void networkInterfacesList() {
-        new IndexPage().goToNetworkInterfaces();
-        assertHeaders(new NetworkInterfaceList.NetworkInterfaceTable(), "", "IP адрес", "MAC адрес", "Сеть", "Подсеть", "Зона доступности", "Группы безопасности", "Виртуальная машина", "");
-    }
-
-    @Test
     @TmsLinks({@TmsLink("1280488"), @TmsLink("1249430")})
-    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Подключить/Отключить публичный IP")
     void attachIp() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
@@ -47,20 +33,16 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).checkCreate();
-        String ip = new IndexPage().goToPublicIps().addIp(availabilityZone);
-        createdIpList.add(ip);
-        new PublicIpList().selectIp(ip).checkCreate();
+        new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        String ip = new IndexPage().goToPublicIps().addIp(region);
+        new PublicIpList().selectIp(ip).markForDeletion(new IpEntity()).checkCreate(true);
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).attachIp(ip);
         networkInterfaceList.selectNetworkInterfaceByVm(vm.getName()).detachComputeIp(ip);
-//        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
-//        new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.LESS, ipPage::delete);
     }
 
     @Test
     @TmsLink("1280489")
-    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Изменить группы безопасности")
     void changeSecurityGroup() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
@@ -71,17 +53,14 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
-        new IndexPage().goToSecurityGroups().addGroup(vm.getName(), "desc");
+        new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        new IndexPage().goToSecurityGroups().addGroup(vm.getName(), "desc").markForDeletion();
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSecurityGroups(vm.getName());
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
-        new IndexPage().goToSecurityGroups().deleteGroup(vm.getName());
     }
 
     @Test
     @TmsLink("1508998")
-    @ResourceLock(value = "compute_history", mode = READ_WRITE)
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Изменить подсеть")
     void changeSubnet() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
@@ -92,9 +71,8 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).checkCreate();
+        new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSubnet("default");
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
     }
 }

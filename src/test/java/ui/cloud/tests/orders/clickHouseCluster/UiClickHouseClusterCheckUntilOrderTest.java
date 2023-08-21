@@ -58,7 +58,7 @@ class UiClickHouseClusterCheckUntilOrderTest extends Tests {
         orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
-        String accessGroup = getRandomAccessGroup(product.getProjectId(), "", "compute");
+        String accessGroup = product.getAccessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         orderPage.getGroup2().set(accessGroup);
         orderPage.getGroup3().set(accessGroup);

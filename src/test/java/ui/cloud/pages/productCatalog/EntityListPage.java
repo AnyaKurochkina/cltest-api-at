@@ -8,10 +8,7 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
-import ui.elements.Button;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -103,16 +100,19 @@ public class EntityListPage {
 
     @Step("Раскрытие меню действий для строки, содержащей в столбце '{columnName}' значение '{value}'")
     public static void openActionMenu(String columnName, String value) {
-        new Table(columnName).getRowByColumnValue(columnName, value).get().$x(".//button[@id = 'actions-menu-button']")
+        DataTable table = new DataTable(columnName);
+        table.searchAllPages(t -> table.isColumnValueEquals(columnName, value))
+                .getRowByColumnValue(columnName, value).get()
+                .$x(".//button[@id = 'actions-menu-button']")
                 .click();
-        TestUtils.wait(500);
+        Waiting.sleep(500);
     }
 
     @Step("Проверка, что строка, содержащая в столбце '{columnName}' значение '{value}', подсвечена как ранее выбранная")
     public static void checkRowIsHighlighted(String columnName, String value) {
         Table table = new Table(columnName);
         Assertions.assertTrue(table.getRowByColumnValue(columnName, value).get().$x("./td").getCssValue("color")
-                .contains("196, 202, 212"));
+                .contains("176, 181, 189"));
     }
 
     @Step("Выполнение действия копирования для строки, содержащей в столбце '{columnName}' значение '{value}'")

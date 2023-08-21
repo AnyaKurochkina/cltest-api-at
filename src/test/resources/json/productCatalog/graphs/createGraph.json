@@ -4,6 +4,7 @@
   "title": "AT API Graph",
   "modifications" : [],
   "description": "for at tests",
+  "object_info": "",
   "graph": [],
   "type": "action",
   "version": "1.0.0",

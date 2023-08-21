@@ -67,7 +67,7 @@ public class UbuntuTest extends Tests {
     @ParameterizedTest(name = "Изменить конфигурацию {0}")
     void resize(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
-            ubuntu.resize(ubuntu.getMaxFlavor());
+            ubuntu.resize(ubuntu.getMaxFlavorLinuxVm());
         }
     }
 

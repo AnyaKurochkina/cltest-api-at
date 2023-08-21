@@ -9,12 +9,17 @@ import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.action.GetActionList;
+import models.cloud.productCatalog.enums.EventProvider;
+import models.cloud.productCatalog.enums.EventType;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
+import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 
 import java.io.File;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -35,15 +40,6 @@ public class ActionSteps extends Steps {
                 .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetActionList.class).getList();
-    }
-
-    @Step("Получение списка действий продуктового каталога")
-    public static GetActionList f(Integer next) {
-        return new Http(ProductCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(actionUrl + "?page={}", next)
-                .assertStatus(200)
-                .extractAs(GetActionList.class);
     }
 
     @Step("Получение Meta данных списка действий продуктового каталога")
@@ -76,6 +72,20 @@ public class ActionSteps extends Steps {
     public static Action createAction() {
         return Action.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание действия")
+    public static Action createAction(String name, EventType type, EventProvider provider) {
+        return Action.builder()
+                .name(name)
+                .title(name)
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
+                        .event_type(type.getValue())
+                        .event_provider(provider.getValue())
+                        .build()))
+                .requiredItemStatuses(Collections.singletonList(ItemStatus.ON.getValue()))
                 .build()
                 .createObject();
     }
@@ -132,7 +142,7 @@ public class ActionSteps extends Steps {
                 .assertStatus(204);
     }
 
-    @Step("Проверка существования действия по имени")
+    @Step("Проверка существования действия по имени '{name}'")
     public static boolean isActionExists(String name) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
