@@ -14,7 +14,6 @@ import ru.testit.annotations.Title;
 import steps.t1.notificationCenterSteps.SubscriptionsSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.T1LoginPage;
-import ui.t1.pages.supportCenter.MySubscriptionsPage;
 import ui.t1.pages.supportCenter.NotificationsPage;
 
 import static core.enums.NotificationCenterPriorities.*;
@@ -30,7 +29,7 @@ public class AbstractNotificationsClass extends Tests {
 
     SubscriptionsSteps subscriptionSteps = new SubscriptionsSteps();
     NotificationsPage notificationsPage = new NotificationsPage();
-    MySubscriptionsPage mySubscriptionsPage = new MySubscriptionsPage();
+
 
 
     static String groupIDOne, groupIDTwo, groupIDThree, groupIDFour, uiGroupID;

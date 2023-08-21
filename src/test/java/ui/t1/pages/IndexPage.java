@@ -17,7 +17,9 @@ import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.NetworkList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
+import ui.t1.pages.supportCenter.MySubscriptionsPage;
 import ui.t1.pages.supportCenter.NotificationsPage;
+import ui.t1.pages.supportCenter.SubscribeUsersPage;
 
 import java.time.Duration;
 
@@ -33,6 +35,7 @@ public class IndexPage {
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
     Button linkMySubscriptions = Button.byXpath("//a[.='Мои подписки']");
+    Button linkSubscriptionsByAdmin = Button.byXpath("//a[.='Подписки пользователей организации']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
@@ -175,12 +178,21 @@ public class IndexPage {
     }
 
     @Step("Переход в Центр уведомлений на страницу Мои подписки")
-    public NotificationsPage goToMySubscriptions(){
+    public MySubscriptionsPage goToMySubscriptions(){
         linkSupportCenter.click();
         linkNotifications.click();
         linkMySubscriptions.click();
 
-        return new NotificationsPage();
+        return new MySubscriptionsPage();
+    }
+
+    @Step("Переходим в Центр уведомлений на страницу Подписки пользователей организации")
+    public SubscribeUsersPage goToUsersSubscriptions(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        linkSubscriptionsByAdmin.click();
+
+        return new SubscribeUsersPage();
     }
 
 

@@ -19,7 +19,7 @@ import static core.helper.Configure.getAppProp;
 public class SubscriptionsSteps extends Steps {
 
     String NCurl = getAppProp("url.kong") + "notificationcenter-service/";
-    String createSubscription = "api/v1/folders/t1-cloud/subscriptions";
+    String createOrganizationsSubscription = "api/v1/organizations/t1-cloud/subscriptions";
     String deleteSubscription = "api/v1/subscriptions/";
     String createTheme = "admin/api/v1/themes";
     String deleteTheme = "admin/api/v1/themes/";
@@ -41,7 +41,7 @@ public class SubscriptionsSteps extends Steps {
         return new Http(NCurl)
                 .setRole(Role.NOTIFICATIONS_ADMIN)
                 .body(body)
-                .post(createSubscription)
+                .post(createOrganizationsSubscription)
                 .assertStatus(201)
                 .jsonPath()
                 .getString("id");

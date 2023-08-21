@@ -6,6 +6,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.BeforeAllExtension;
+import ui.t1.pages.supportCenter.MySubscriptionsPage;
+import ui.t1.pages.supportCenter.SubscribeUsersPage;
 
 import static com.codeborne.selenide.Selenide.refresh;
 import static core.enums.NotificationCenterPriorities.COMMON;
@@ -39,7 +41,7 @@ public class NCTest extends AbstractNotificationsClass {
 
     @Test
     @Title("Проверка работы фильтров и пагинации")
-    void filtersTests(){
+    void filtersTest(){
         subscriptionSteps.sendNumberOfNotifications(5, themeCodeTwo, userEmail, "test 2", messageURL);
         subscriptionSteps.sendNumberOfNotifications(5, themeCodeThree, userEmail, "test 3", messageURL);
         new IndexPage().goToNotificationCenter();
@@ -104,36 +106,70 @@ public class NCTest extends AbstractNotificationsClass {
                         .clickMessage(subject2);
     }
 
-//    @Test
-//    @Title("Проверяем работу канала Почта")
-//    void emailNotificationsTest(){
-////        String subject = "Проверка почты";
-////        subscriptionSteps.sendNumberOfNotifications(1, emailCodeOne, userEmail, subject, messageURL);
-////        emailSteps.getEmail(subject, "Тест почты" );
-//    }
 
     @Test
     @Title("Подписываемся и отписываемся от группы тем")
-    void subscribeThemeGroup(){
-        new IndexPage().goToMySubscriptions();
-       String context = mySubscriptionsPage.setContext(1);
+    void subscribeThemeGroupTest(){
+        MySubscriptionsPage mySubscriptionsPage = new IndexPage().goToMySubscriptions();
         mySubscriptionsPage
                 .createThemeGroupSubscription(uiTestsGroup)
-                .checkThemeGroupSubscription(context, uiTestCodeOne, uiTestCodeTwo)
+                .checkThemeGroupSubscription("Глобальный", uiTestCodeOne, uiTestCodeTwo)
                 .deleteThemeGroupSubscription(uiTestsGroup)
-                .checkNoThemeGroupSubscription(context);
+                .checkNoThemeGroupSubscription("Глобальный");
     }
 
     @Test
     @Title("Подписываемся, редактируем затем удаляем подписку")
-    void subscribeSingleTheme(){
-        new IndexPage().goToMySubscriptions();
-        String context = mySubscriptionsPage.setContext(2);
+    void subscribeSingleThemeTest(){
+        MySubscriptionsPage mySubscriptionsPage = new IndexPage().goToMySubscriptions();
         mySubscriptionsPage
-                .createThemeSubscription(uiTestCodeOne, uiTestsGroup, context)
-                .checkThemeSubscription(uiTestCodeOne, context)
+                .createThemeSubscription(uiTestCodeOne, uiTestsGroup, "Глобальный")
+                .checkThemeSubscription(uiTestCodeOne, "Глобальный")
                 .editSubscription(uiTestCodeOne)
                 .unSubscribe(uiTestCodeOne);
+    }
+
+    @Test
+    @Title("Создаем подписку для другого пользователя на Группу тем ") // интерфейс в ближайшее время будет меняться + есть баг из-за которого написание теста пока невозможно.
+    void subscribeOtherTest(){
+        SubscribeUsersPage subscribeUsersPage = new IndexPage().goToUsersSubscriptions();
+        String context = "тест-проект";
+        subscribeUsersPage.clickCreateSubscription()
+                            .clickGlobal();
+        int rowIndex = subscribeUsersPage.getRowIndex(themeGroupNameThree);
+        subscribeUsersPage.clickSubscribeThemeGroup(rowIndex);
+        subscribeUsersPage
+                .createAdminThemeGroupSubscription("review@technoserv.cloud")
+                .backToAdminSubscriptionMain()
+                .checkAdminSubscriptions(
+                        themeGroupNameThree,
+                        context,
+                        themeCodeThree,
+                        themeCodeFour,
+                        themeCodeFive,
+                        emailTestOne,
+                        emailTestTwo,
+                        uiTestCodeOne,
+                        uiTestCodeTwo);
+        subscribeUsersPage
+                .clickCreateSubscription()
+                .clickUnSubscribeThemeGroup(themeGroupNameThree);
+        subscribeUsersPage.unSubscribeThemeGroup(
+                context,
+                "review@technoserv.cloud",
+                themeCodeThree,
+                themeCodeFour,
+                themeCodeFive,
+                emailTestOne,
+                emailTestTwo,
+                uiTestCodeOne,
+                uiTestCodeTwo);
+    }
+
+    @Test
+    @Title("Проверяем подписку администратора со стороны пользователя")
+    void checkAdminSubscriptionTest(){
+
     }
 
 

@@ -21,6 +21,12 @@ public class MySubscriptionsPage {
         return this;
     }
 
+    @Step("Нажимаем Глобальные")
+    public MySubscriptionsPage clickGlobal(){
+        Button.byText("Глобальные").click();
+        return this;
+    }
+
     @Step("Переходим на страницу {page}")
     public MySubscriptionsPage setPage(int page){
         setPage.click();
@@ -29,7 +35,7 @@ public class MySubscriptionsPage {
         return this;
     }
 
-    int getRowIndex(String groupName){
+    public int getRowIndex(String groupName){
         int index = -1;
         int page = 0;
         while (index < 0){
@@ -42,27 +48,41 @@ public class MySubscriptionsPage {
         if($x("//button[@aria-label='Следующая страница, выбрать']").isEnabled() && index == -1) {
             Button.byAriaLabel("Следующая страница, выбрать").click();
             page++;
+         }
+        else break;
         }
-
-    }
+        if(index == -1){
+            throw new RuntimeException("Группа тем не найдена");
+        }
         setPage(page + 1);
         return (index + 2);
     }
 
-    @Step("Подписываемся на группу тем")
-    public MySubscriptionsPage createThemeGroupSubscription(String groupName){
+    @Step("Нажимаем 'Подписаться' напротив Группы тем")
+   public MySubscriptionsPage clickSubscribeThemeGroup(String groupName){
+        while ($x("//td[.='{}']//..//button[.='Подписаться']").is(Condition.not(Condition.visible))){
 
-        int rowIndex;
+        }
+
+        $x("//td[.='{}']//..//button[.='Подписаться']", groupName).click();
+
+        return this;
+    }
+
+    @Step("Нажимаем 'Отписаться' напротив Группы тем")
+    public MySubscriptionsPage clickUnSubscribeThemeGroup(String groupName){
+            $x("//td[.='{}']//..//button[.='Отписаться']", groupName).click();
+
+            return this;
+    }
+
+    @Step("Подписываемся на группу тем {groupName}")
+    public MySubscriptionsPage createThemeGroupSubscription(String groupName){
         clickCreateSubscription();
-        rowIndex = getRowIndex(groupName);
-        if (rowIndex >= 0){
-          $x("(//tr[@role='row'])[" + rowIndex + "]//button[.='Подписаться']").click();
-        }
-        else {
-            throw new NotFoundException("В таблице нет такой группы тем");
-        }
-        alert.check(Alert.Color.GREEN, "Подписки успешно созданы");
-        $x("(//tr[@role='row'])[" + rowIndex + "]//button[.='Отписаться']").shouldBe(Condition.visible);
+        clickGlobal();
+        clickSubscribeThemeGroup(groupName);
+        alert.check(Alert.Color.GREEN, "Подписки успешно созданы").waitClose();
+        $x("//td[.='{}']//..//button[.='Отписаться']", groupName).shouldBe(Condition.visible);
 
         return this;
     }
@@ -70,7 +90,7 @@ public class MySubscriptionsPage {
     @Step("Проверяем что Группа тем появилась в подписках")
     public MySubscriptionsPage checkThemeGroupSubscription(String context, String ... themes){
         $x("//div[.='Мои подписки']").click();
-        $x("//span[contains(text(), '{}')]//..//..//button", context).click();
+        $x("//td[.='{}']//..//button", context).click();
         Table table = new Table(tableHeader);
         for(String theme : themes){
             Assertions.assertTrue(table.isColumnValueEquals("Тема", theme));
@@ -78,40 +98,36 @@ public class MySubscriptionsPage {
         return this;
     }
 
+    @Step("Раскрываем спойлер контекста")
+    public MySubscriptionsPage clickContextButton(String context){
+        $x("//td[.='{}']//..//button", context).click();
+        return this;
+    }
+
+    @Step("Возвращаемся к Мои подписки")
+    public MySubscriptionsPage returnToMySubscriptionPage(){
+        $x("//div[.='Мои подписки']").click();
+        return this;
+    }
+
     @Step("Проверяем что тема появилась в подписках")
     public MySubscriptionsPage checkThemeSubscription(String theme, String context){
-        $x("//div[.='Мои подписки']").click();
-        $x("(//td[.='{}']//..//button)", context).click();
+        returnToMySubscriptionPage();
+        clickContextButton(context);
         $x("//td[.='{}']", theme).shouldBe(Condition.visible);
 
         return this;
     }
 
-    @Step("Проверяем что темы нет в подписках")
-    public MySubscriptionsPage checkNoThemeSubscription(String theme, String groupName){
-        $x("//div[.='Мои подписки']").click();
-        $x("(//td[.='{}']//..//button)", groupName).click();
-        $x("//td[.='{}']", theme).shouldNotBe(Condition.visible);
-
-        return this;
-    }
-
     @Step("Отписываемся от группы тем")
-    public MySubscriptionsPage deleteThemeGroupSubscription(String groupName){
-
-        int rowIndex;
+    public MySubscriptionsPage deleteThemeGroupSubscription (String groupName){
         clickCreateSubscription();
-        rowIndex = getRowIndex(groupName);
-        if (rowIndex > 0){
-            $x("(//tr[@role='row'])[" + rowIndex + "]//button[.='Отписаться']").click();
-        }
-        else {
-            throw new NotFoundException("В таблице нет такой группы тем");
-        }
+        clickGlobal();
+        clickUnSubscribeThemeGroup(groupName);
         Dialog dialog = new Dialog("Подтверждение удаления подписок на группу тем");
         dialog.clickButton("Да");
-        alert.check(Alert.Color.GREEN, "Подписки удалены");
-        $x("(//tr[@role='row'])[" + rowIndex + "]//button[.='Подписаться']").shouldBe(Condition.visible);
+        alert.check(Alert.Color.GREEN, "Подписки удалены").waitClose();
+        $x("//td[.='{}']//..//button[.='Подписаться']", groupName).shouldBe(Condition.visible);
 
         return this;
     }
@@ -124,18 +140,10 @@ public class MySubscriptionsPage {
 
     }
 
-    @Step("Меняем контекст")
-    public String setContext(int index){
-        $x("(//div[starts-with(@class,'UserContext')])[1]").click();
-      String context =  $x("(//div[@class='title-wrapper']//p)[" + index + "]").getText();
-        $x("(//div[@class='title-wrapper'])[" + index + "]").click();
-
-        return context;
-    }
-
     @Step("Подписываемся на тему")
     public MySubscriptionsPage createThemeSubscription(String theme, String groupName, String context){
         clickCreateSubscription();
+        clickGlobal();
         int rowIndex = getRowIndex(groupName);
         if (rowIndex > 0){
             $x("(//td[.='{}']//..//button)[2]", groupName).click();

@@ -2,9 +2,9 @@
   "name": "autotest",
   "description": "autotest",
   "types": {
-    "is_global": false,
+    "is_global": true,
     "is_organization": true,
-    "is_folder": false,
+    "is_folder": true,
     "is_project": true
   }
 }
