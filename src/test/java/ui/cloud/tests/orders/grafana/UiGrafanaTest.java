@@ -190,6 +190,7 @@ public class UiGrafanaTest extends UiProductTest {
     @Test
     @Order(13)
     @TmsLink("")
+    @EnabledIfEnv({"blue","prod"})
     @DisplayName("UI Grafana. Сбросить пароль")
     void resetPassword() {
         GrafanaPage grafanaPage = new GrafanaPage(product);

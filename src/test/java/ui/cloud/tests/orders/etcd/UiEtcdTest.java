@@ -31,7 +31,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_Etcd")})
 public class UiEtcdTest extends UiProductTest {
 
-    Etcd product;// = Etcd.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/48c224c9-38cf-4dc1-b78c-bb14e47985cf/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Etcd product; // = Etcd.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/48c224c9-38cf-4dc1-b78c-bb14e47985cf/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameUser = "at_user";
 
 
@@ -96,7 +96,7 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(4)
+    @Order(3)
     @TmsLink("")
     @DisplayName("UI Etcd. Расширить точку монтирования")
     void expandDisk() {
@@ -105,7 +105,7 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(5)
+    @Order(4)
     @TmsLink("")
     @DisplayName("UI Etcd. Проверить конфигурацию")
     void vmActCheckConfig() {
@@ -114,7 +114,7 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     @TmsLink("")
     @DisplayName("UI Etcd. Пользователь. Сброс пароля")
     void createLocalAccount() {
@@ -123,20 +123,38 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(10)
+    @Order(6)
+    @TmsLink("")
+    @DisplayName("UI Etcd. Создать сертификаты для пользователя etcd")
+    void createCertificate() {
+        EtcdPage etcdPage = new EtcdPage(product);
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.createCertificate(nameUser));
+    }
+    @Test
+    @Order(7)
+    @TmsLink("")
+    @DisplayName("UI Etcd. Изменить конфигурацию")
+    void changeConfiguration() {
+        EtcdPage etcdPage = new EtcdPage(product);
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, etcdPage::changeConfiguration);
+    }
+
+    @Test
+    @Order(8)
     @TmsLinks({@TmsLink(""), @TmsLink(""), @TmsLink("")})
     @DisplayName("UI Etcd. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         EtcdPage etcdPage = new EtcdPage(product);
         AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.deleteGroupInNode("user", accessGroupOne.getPrefixName()));
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.deleteGroupInNode("superuser", accessGroupOne.getPrefixName()));
         etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
         etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.updateGroupInNode("superuser", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
     }
 
     @Test
-    @Order(15)
+    @Order(9)
+    @EnabledIfEnv("prod")
     @TmsLink("")
     @DisplayName("UI Etcd. Мониторинг ОС")
     void monitoringOs() {
