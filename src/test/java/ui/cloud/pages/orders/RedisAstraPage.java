@@ -34,6 +34,7 @@ public class RedisAstraPage extends IProductPage {
     private static final String HEADER_COMMENTS = "Комментарий";
 
 
+
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement cpu = $x("(//h5)[1]");
@@ -71,9 +72,8 @@ public class RedisAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
-    public void resetPassword() {
-        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getActionsMenuButton("default",2), "Сбросить пароль", "Подтвердить", () ->
+    public void resetPassword(String name) {
+        runActionWithParameters(getActionsMenuButton(name), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -81,6 +81,20 @@ public class RedisAstraPage extends IProductPage {
         });
     }
 
+    public void deleteUser(String name){
+        runActionWithParameters(getActionsMenuButton(name), "Удалить пользователя", "Подтвердить", () -> {
+        });
+        btnGeneralInfo.click();
+        Assertions.assertFalse(getActionsMenuButton(name).exists(), "Ошибка удаления пользователя БД");
+    }
+    public void createUser (String nameUser){
+        runActionWithParameters(BLOCK_DB_USERS, "Создать пользователя", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Создать пользователя");
+            dlg.setInputValue("Имя пользователя", nameUser);
+        });
+        btnGeneralInfo.click();
+        Assertions.assertTrue(getActionsMenuButton(nameUser).exists(), "Пользователь не существует");
+    }
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
@@ -142,6 +156,19 @@ public class RedisAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+    public void changeConfigurationSentinel() {
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Flavor maxFlavor = product.getMaxFlavor();
+        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
+            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+        });
+        btnGeneralInfo.click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
+        Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
+    }
     public  void changeParamNotify(String param)
     {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -149,6 +176,16 @@ public class RedisAstraPage extends IProductPage {
             Select.byLabel("Параметр notify-keyspace-events").set(param);
         });
     }
+
+    public void issueClientCertificate(String nameCertificate) {
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        runActionWithParameters(BLOCK_VM, "Выпустить клиентский сертификат", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Выпустить клиентский сертификат");
+            dlg.setInputValue("Клиентская часть имени сертификата", nameCertificate);
+            generatePassButton.shouldBe(Condition.enabled).click();
+        });
+    }
+
 
     public void createDb(String name) {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
