@@ -53,13 +53,11 @@ public class SearchSelect extends Select {
     public String set(String value) {
         hover();
         String currentTitle = getValue();
-        if (currentTitle.equals(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.equals(value))
             return value;
         element.click();
         clear();
         element.$x(".//input").setValue(value);
-        if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
         getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
                 .click();
         return value;
@@ -69,13 +67,11 @@ public class SearchSelect extends Select {
     public String setContains(String value) {
         hover();
         String currentTitle = getValue();
-        if (currentTitle.contains(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.contains(value))
             return value;
         element.click();
         clear();
         element.$x(".//input").setValue(value);
-        if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
         getOptions().filter(Condition.matchText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
                 .click();
         return value;
@@ -85,13 +81,11 @@ public class SearchSelect extends Select {
     public String setStart(String value) {
         hover();
         String currentTitle = getValue();
-        if (currentTitle.startsWith(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.startsWith(value))
             return value;
         element.click();
         clear();
         element.$x(".//input").setValue(value);
-        if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
         getOptions().filter(Condition.matchText(value + "[^\\\\>]*")).first().shouldBe(activeCnd).hover()
                 .shouldBe(clickableCnd).click();
         return value;

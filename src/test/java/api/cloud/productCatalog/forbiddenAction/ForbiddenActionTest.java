@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.createAction;
-import static steps.productCatalog.ForbiddenActionSteps.createForbiddenAction;
-import static steps.productCatalog.ForbiddenActionSteps.getForbiddenActionById;
+import static steps.productCatalog.ForbiddenActionSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -83,5 +83,22 @@ public class ForbiddenActionTest extends Tests {
                 .toJson();
         ForbiddenAction forbiddenAction = createForbiddenAction(json).assertStatus(201).extractAs(ForbiddenAction.class);
         assertEquals(action.getName() + "__" + forbiddenAction.getDirection(), forbiddenAction.getName());
+    }
+
+    @DisplayName("Копирование forbidden action по id")
+    @TmsLink("SOUL-7075")
+    @Test
+    public void copyByIdForbiddenActionTest() {
+        ForbiddenAction forbiddenAction = ForbiddenAction.builder()
+                .title("copy_by_id_forbidden_action_test_api")
+                .build()
+                .createObject();
+        String direction = "child_to_parent";
+        Action action1 = createAction();
+        ForbiddenAction copiedForbiddenAction = copyForbiddenActionById(forbiddenAction.getId(), new JSONObject()
+                .put("action_id", action1.getActionId())
+                .put("direction", direction));
+        assertTrue(isForbiddenActionExists(copiedForbiddenAction.getName()));
+        assertEquals(action1.getName() + "__" + direction, copiedForbiddenAction.getName());
     }
 }

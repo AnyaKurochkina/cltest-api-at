@@ -105,6 +105,10 @@ public abstract class Entity implements AutoCloseable {
         return ObjectPoolService.create(this, exclusiveAccess, isPublic);
     }
 
+    public <T extends Entity> T getObject() {
+        return ObjectPoolService.getObject(this);
+    }
+
     @SneakyThrows
     public void negativeCreateRequest(int expectedStatus) {
         try {

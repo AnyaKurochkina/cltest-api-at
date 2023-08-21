@@ -12,13 +12,14 @@ import core.utils.Waiting;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
-import models.cloud.authorizer.ProjectPool;
+import models.cloud.authorizer.Folder;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import steps.resourceManager.ResourceManagerSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
@@ -58,8 +59,8 @@ public abstract class AbstractComputeTest extends Tests {
     private static final Map<String, Integer> projectCountMap = new ConcurrentHashMap<>();
 
     static {
-        ProjectPool pool = ProjectPool.builder().build().createObject();
-        pool.getId().forEach(e -> projectCountMap.put(e, 0));
+        Folder folderPollProject = Folder.builder().title("ProjectPool").build().getObject();
+        ResourceManagerSteps.getChildren(folderPollProject.getName()).forEach(e -> projectCountMap.put(e, 0));
     }
 
     public static String getProjectId() {
