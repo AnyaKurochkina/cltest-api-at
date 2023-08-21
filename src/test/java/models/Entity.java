@@ -105,8 +105,8 @@ public abstract class Entity implements AutoCloseable {
         return ObjectPoolService.create(this, exclusiveAccess, isPublic);
     }
 
-    public <T extends Entity> T getObject() {
-        return ObjectPoolService.getObject(this);
+    public <T extends Entity> T onlyGetObject() {
+        return ObjectPoolService.onlyGetObject(this);
     }
 
     @SneakyThrows
