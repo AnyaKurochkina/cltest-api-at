@@ -327,7 +327,7 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action, Flavor flavor) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject().put("flavor", flavor.toString()).put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");

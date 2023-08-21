@@ -11,18 +11,8 @@
     "isForOrders": true
   },
   {
-    "objectClassName": "models.cloud.authorizer.ProjectPool",
-    "id": [
-      "proj-dwxybnxjzq",
-      "proj-5e4ruq93j0",
-      "proj-njq6s4l4j6",
-      "proj-g75raelnc2",
-      "proj-cxr1jhpxdd",
-      "proj-wtpm1aa8n1",
-      "proj-j1r72ro3v5",
-      "proj-1u19obc3h5",
-      "proj-75k2np5k3m",
-      "proj-b6kocz95g7"
-    ]
+    "objectClassName": "models.cloud.authorizer.Folder",
+    "title": "ProjectPool",
+    "name": "fold-9iky5j88c5"
   }
 ]
