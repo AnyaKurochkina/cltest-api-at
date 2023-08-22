@@ -2,9 +2,10 @@ package ui.elements;
 
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
-import io.qameta.allure.Step;
 import lombok.Getter;
 import org.intellij.lang.annotations.Language;
+
+import java.time.Duration;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
@@ -45,6 +46,10 @@ public class Button implements TypifiedElement {
 
     public static Button byXpath(@Language("XPath") String xPath) {
         return new Button($x(xPath));
+    }
+
+    public boolean isVisible() {
+        return Waiting.sleep(button::isDisplayed, Duration.ofSeconds(10));
     }
 
     public void click() {

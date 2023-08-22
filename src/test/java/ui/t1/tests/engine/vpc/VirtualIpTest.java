@@ -61,6 +61,7 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("Подсеть",  e -> e.length() > 5)
                 .add("поддержка L2", e -> e.equals("Да"))
                 .add("Режим", e -> e.equals(ip.getMode()))
+                .add("Дата создания",  e -> e.length() > 4)
                 .add("", String::isEmpty)
                 .check(() -> new VirtualIpList.IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip.getIp()));
     }
@@ -74,7 +75,7 @@ public class VirtualIpTest extends AbstractComputeTest {
         new TableChecker()
                 .add(Column.IP, e -> e.equals(ip.getIp()))
                 .add("Имя", e -> e.equals(ip.getName()))
-                .add("Тип",  e -> e.equals("VIP"))
+                .add("Тип",  e -> e.equals("Виртуальный IP адрес"))
                 .add("Статус",  e -> e.equals(""))
                 .add("MAC-адрес", e -> StringUtils.isMatch( "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
                 .add("", String::isEmpty)

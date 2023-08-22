@@ -108,7 +108,7 @@ public class VmCreate {
 
     public VmCreate setImage(SelectBox.Image image) {
         this.image = image;
-        SelectBox.setMarketPlaceImage(image);
+        SelectBox.setOsImage(image);
         return this;
     }
 

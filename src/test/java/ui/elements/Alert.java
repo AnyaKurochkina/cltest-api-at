@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Assertions;
 
 import java.time.Duration;
@@ -16,6 +17,10 @@ import static org.openqa.selenium.support.Color.fromString;
 
 public class Alert implements TypifiedElement {
     SelenideElement element;
+    @Language("XPath")
+    String alertXpath = "//div[@role='alert' and string-length(.)>1][button]";
+    @Language("XPath")
+    String buttonXpath = alertXpath + "/button[.='']";
 
     public Alert(SelenideElement element) {
         this.element = element;
@@ -27,7 +32,7 @@ public class Alert implements TypifiedElement {
     private SelenideElement getElement() {
         if (Objects.nonNull(element))
             return element;
-        return $x("//div[@role='alert' and string-length(.)>1][button]");
+        return $x(alertXpath);
     }
 
     public static Alert green(String text, Object... args) {
@@ -48,7 +53,7 @@ public class Alert implements TypifiedElement {
 
     public Alert close() {
         try {
-            Button button = Button.byElement(getElement().$x("button[.='']"));
+            Button button = Button.byXpath(buttonXpath);
             button.click();
             waitClose();
         } catch (Throwable ignored) {
@@ -59,7 +64,8 @@ public class Alert implements TypifiedElement {
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
-        element = getElement().shouldBe(Condition.visible).hover();
+        $x(buttonXpath).shouldBe(Condition.visible).hover();
+        element = getElement();
         final String elementText = element.getText();
         Assertions.assertTrue(elementText.toLowerCase().contains(message.toLowerCase()),
                 String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));
