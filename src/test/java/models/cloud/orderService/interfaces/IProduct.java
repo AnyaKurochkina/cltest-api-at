@@ -141,14 +141,13 @@ public abstract class IProduct extends Entity {
     }
 
     public String getAccessGroup(String type, String desc) {
-        String accessGroupId = null;
+        String accessGroupId;
         try {
             accessGroupId = PortalBackSteps.getAccessGroupByDesc(projectId, desc, type, domain);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        } catch (NullPointerException ignored) {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).description(desc).accountsType(type).domain(domain).build().createObject();
+            accessGroupId = accessGroup.getPrefixName();
         }
-        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).description(desc).accountsType(type).domain(domain).build().createObject();
-        accessGroupId = accessGroup.getPrefixName();
         return accessGroupId;
     }
 
