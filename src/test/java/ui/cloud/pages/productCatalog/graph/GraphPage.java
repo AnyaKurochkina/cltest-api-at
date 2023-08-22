@@ -164,7 +164,7 @@ public class GraphPage extends EntityPage {
     @Step("Проверка недоступности удаления используемого графа")
     public GraphPage checkDeleteUsedGraphUnavailable() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
+        new DeleteDialog().submitAndCheckNotDeletable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
         usageButton.click();
         checkTabIsSelected("Использование");

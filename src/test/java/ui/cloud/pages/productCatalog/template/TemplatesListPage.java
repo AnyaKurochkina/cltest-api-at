@@ -56,7 +56,7 @@ public class TemplatesListPage extends EntityListPage {
     public TemplatesListPage deleteTemplate(String name) {
         search(name);
         EntityListPage.delete(nameColumn, name);
-        new DeleteDialog().inputValidIdAndDelete();
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
 

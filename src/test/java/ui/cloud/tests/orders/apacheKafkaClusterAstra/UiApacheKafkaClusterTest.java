@@ -184,7 +184,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/app", "20", new Table("Роли узла").getRow(0).get()));
     }
 
-
     @Test
     @Order(14)
     @TmsLink("851993")
@@ -295,7 +294,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.deleteQuotas("131072"));
     }
 
-
     @Test
     @Order(25)
     @TmsLink("982961")
@@ -306,6 +304,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(26)
     @TmsLink("852012")
     @DisplayName("UI ApacheKafkaCluster.Проверить конфигурацию")

@@ -96,6 +96,7 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(3)
     @TmsLink("")
     @DisplayName("UI Etcd. Расширить точку монтирования")
@@ -105,6 +106,7 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("")
     @DisplayName("UI Etcd. Проверить конфигурацию")
@@ -130,7 +132,9 @@ public class UiEtcdTest extends UiProductTest {
         EtcdPage etcdPage = new EtcdPage(product);
         etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.createCertificate(nameUser));
     }
+
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(7)
     @TmsLink("")
     @DisplayName("UI Etcd. Изменить конфигурацию")
@@ -140,6 +144,7 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(8)
     @TmsLinks({@TmsLink(""), @TmsLink(""), @TmsLink("")})
     @DisplayName("UI Etcd. Удалить/добавить/изменить группу доступа")

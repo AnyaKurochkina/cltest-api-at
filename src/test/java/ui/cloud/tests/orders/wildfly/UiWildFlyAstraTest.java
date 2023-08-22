@@ -160,6 +160,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(10)
     @TmsLinks({@TmsLink("1644573"), @TmsLink("1644572"), @TmsLink("1644574")})
     @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
@@ -173,6 +174,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("908277")
     @DisplayName("UI WildFlyAstraLinux. Расширить точку монтирования")
@@ -183,6 +185,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(12)
     @TmsLink("")
     @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
@@ -190,7 +193,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);
     }
-
 
     @Test
     @Order(13)
