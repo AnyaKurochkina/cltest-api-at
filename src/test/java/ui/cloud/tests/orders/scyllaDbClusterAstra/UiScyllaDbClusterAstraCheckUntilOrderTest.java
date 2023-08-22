@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.scillaDbClusterAstra;
+package ui.cloud.tests.orders.scyllaDbClusterAstra;
 
 
 import api.Tests;
@@ -16,8 +16,6 @@ import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.ScyllaDbClusterOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
-
-import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
 
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)

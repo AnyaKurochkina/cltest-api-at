@@ -91,6 +91,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("796991")
     @DisplayName("UI RedisAstra. Расширить точку монтирования")
@@ -109,6 +110,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("797006")
     @DisplayName("UI RedisAstra. Проверить конфигурацию")
@@ -127,6 +129,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink("1454017"), @TmsLink("1454015")})
     @Order(25)
     @DisplayName("UI RedisAstra. Удалить и добавить группу доступа")
@@ -138,6 +141,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("1454016")
     @Order(26)
     @DisplayName("UI RedisAstra. Изменить состав группы доступа")

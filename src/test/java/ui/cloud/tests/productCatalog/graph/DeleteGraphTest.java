@@ -44,8 +44,7 @@ public class DeleteGraphTest extends GraphBaseTest {
         new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .openDeleteDialog()
-                .inputInvalidId("test")
-                .inputValidIdAndDelete();
+                .submitAndDelete("Удаление выполнено успешно");
         new GraphsListPage()
                 .checkGraphNotFound(NAME);
     }

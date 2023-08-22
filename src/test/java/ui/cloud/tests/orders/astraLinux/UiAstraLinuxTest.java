@@ -168,6 +168,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.checkMonitoringOs();
     }
+
     @Test
     @Order(13)
     @TmsLink("1723134")
@@ -176,6 +177,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::сreateSnapshot);
     }
+
     @Test
     @Order(14)
     @TmsLink("1723138")

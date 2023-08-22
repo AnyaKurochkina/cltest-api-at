@@ -48,7 +48,7 @@ public class ForbiddenActionPage extends EntityPage {
     @Step("Удаление запрещенного действия")
     public ForbiddenActionsListPage delete() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return new ForbiddenActionsListPage();
     }
 

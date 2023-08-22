@@ -74,14 +74,14 @@ public class GraphsListPage extends EntityListPage {
     @Step("Удаление графа '{name}'")
     public GraphsListPage deleteGraph(String name) {
         delete(nameColumn, name);
-        new DeleteDialog().inputValidIdAndDelete();
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
 
     @Step("Проверка недоступности удаления используемого графа")
     public GraphPage checkDeleteUsedGraphUnavailable(Graph graph) {
         delete(nameColumn, graph.getName());
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
+        new DeleteDialog().submitAndCheckNotDeletable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
         usageLink.click();
         new GraphPage().checkTabIsSelected("Использование");

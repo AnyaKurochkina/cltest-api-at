@@ -105,7 +105,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Order(5)
     @TmsLink("851706")
     @Disabled
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Перезагрузить по питанию")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Перезагрузить")
     void restart() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
@@ -138,7 +138,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
     }
 
-
     @Test
     @Order(9)
     @TmsLink("851714")
@@ -149,6 +148,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("852936")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверить конфигурацию")
@@ -165,7 +165,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
     }
-
 
     @Test
     @Order(13)
@@ -285,6 +284,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink("1091089"), @TmsLink("1091067")})
     @Order(24)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Добавление/удаление группы доступа")
@@ -296,6 +296,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("1091118")
     @Order(25)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменение группы доступа")
