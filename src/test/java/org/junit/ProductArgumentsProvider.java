@@ -136,8 +136,10 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             try {
                 Class<?> c = Class.forName("models.cloud.orderService.products." + e.getKey());
                 List listProduct = findListInMapByKey("options", e.getValue());
-                if (listProduct == null)
+                if (listProduct == null) {
+                    list.add((IProduct) objectMapper.convertValue(Collections.singletonMap("skip", true), c));
                     continue;
+                }
                 for (Object orderObj : listProduct) {
                     IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
                     list.add(product);

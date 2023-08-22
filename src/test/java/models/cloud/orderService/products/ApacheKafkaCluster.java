@@ -19,6 +19,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
+import steps.references.ReferencesStep;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -164,6 +165,18 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void resize() {
         resize("kafka_resize_cluster_vms");
+    }
+
+    @Override
+    protected void resize(String action) {
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
+        Flavor flavor = list.get(list.size() - 1);
+        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
+        int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
+        Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
+        Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
     }
 
     public void createAcl(String topicName, KafkaRoles role) {

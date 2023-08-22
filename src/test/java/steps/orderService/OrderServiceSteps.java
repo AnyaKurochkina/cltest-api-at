@@ -400,7 +400,7 @@ public class OrderServiceSteps extends Steps {
                         product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
-                .getList("list.code");
+                .getList("list.findAll{it.status == 'available'}.code");
         if (list.contains(dc))
             return dc;
         return list.get(new Random().nextInt(list.size()));

@@ -22,9 +22,10 @@ import java.lang.annotation.*;
 public abstract class Entity implements AutoCloseable {
     public String objectClassName;
     public String uuid;
-    @Setter
-    @Getter
+    @Setter @Getter
     String configurationId;
+    @Getter @Setter
+    boolean skip;
 
     public abstract Entity init();
 
