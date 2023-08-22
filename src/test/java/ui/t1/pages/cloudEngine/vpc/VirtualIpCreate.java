@@ -28,7 +28,7 @@ public class VirtualIpCreate {
     }
 
     public VirtualIpCreate setName(String name) {
-        Input.byLabel("Имя VIP").setValue(name);
+        Input.byLabel("Имя виртуального IP адреса").setValue(name);
         this.name = name;
         return this;
     }
