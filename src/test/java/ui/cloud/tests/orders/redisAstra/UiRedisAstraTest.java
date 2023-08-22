@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
+import static ui.cloud.pages.orders.RedisAstraOrderPage.userNameRedisSentinel;
 
 @Epic("UI Продукты")
 @Feature("Redis (Astra)")
@@ -55,7 +56,7 @@ public class UiRedisAstraTest extends UiProductTest {
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getCreateDefaultUserSwitch().setEnabled(true);
+            orderPage.getUserInput().setValue(userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -123,7 +124,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Сбросить пароль")
     void resetPassword() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::resetPassword);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPasswordSentinel(RedisAstraOrderPage.userNameRedisSentinel));
     }
 
     @Test
@@ -132,7 +133,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.deleteGroup("user");
+        redisPage.deleteGroup("superuser");
         AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         redisPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
     }
