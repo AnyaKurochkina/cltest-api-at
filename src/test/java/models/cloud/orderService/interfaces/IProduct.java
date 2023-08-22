@@ -153,7 +153,7 @@ public abstract class IProduct extends Entity {
     }
 
     public String getAccessGroup() {
-        return getAccessGroup("compute", "AT-ORDER");
+        return getAccessGroup("personal", "AT-ORDER");
     }
 
     protected String state(String name){
