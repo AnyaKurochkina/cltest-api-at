@@ -25,6 +25,7 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.portalBack.AccessGroup;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.subModels.Flavor;
@@ -139,8 +140,20 @@ public abstract class IProduct extends Entity {
         save();
     }
 
+    public String getAccessGroup(String type, String desc) {
+        String accessGroupId = null;
+        try {
+            accessGroupId = PortalBackSteps.getAccessGroupByDesc(projectId, desc, type, domain);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+        }
+        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).description(desc).accountsType(type).domain(domain).build().createObject();
+        accessGroupId = accessGroup.getPrefixName();
+        return accessGroupId;
+    }
+
     public String getAccessGroup() {
-        return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+        return getAccessGroup("compute", "AT-ORDER");
     }
 
     protected String state(String name){
