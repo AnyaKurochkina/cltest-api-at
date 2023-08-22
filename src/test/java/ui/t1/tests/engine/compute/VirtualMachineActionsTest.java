@@ -1,7 +1,6 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
-import core.helper.Configure;
 import core.helper.StringUtils;
 import core.helper.TableChecker;
 import core.utils.Waiting;
@@ -67,22 +66,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины (Таблица)")
     void vmList() {
         new IndexPage().goToVirtualMachine();
-        if (Configure.ENV.equals("t1prod")) {
-            new TableChecker()
-                    .add("", String::isEmpty)
-                    .add(Column.NAME, e -> e.equals(vm.getName()))
-                    .add("Статус", e -> e.equals("Включено"))
-                    .add("Платформа", e -> e.length() > 5)
-                    .add("CPU", e -> StringUtils.isMatch("^\\d+$", e))
-                    .add("RAM", e -> StringUtils.isMatch("^\\d+ ГБ$", e))
-                    .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
-                    .add("Внутренний IP", e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
-                    .add("Внешние IP-адреса", e -> e.equals("—"))
-//                .add(Column.CREATED_DATE, e -> e.length() > 5)
-                    .add("", String::isEmpty)
-                    .check(() -> new VmList.VmTable().getRowByColumnValue(Column.NAME, vm.getName()));
-        }
-        if (Configure.ENV.equals("t1ift")) {
             new TableChecker()
                     .add("", String::isEmpty)
                     .add(Column.NAME, e -> e.equals(vm.getName()))
@@ -96,7 +79,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                     .add(Column.CREATED_DATE, e -> e.length() > 5)
                     .add("", String::isEmpty)
                     .check(() -> new VmList.VmTable().getRowByColumnValue(Column.NAME, vm.getName()));
-        }
     }
 
     @Test
@@ -105,20 +87,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Диски (Таблица)")
     void diskList() {
         new IndexPage().goToDisks();
-        if (Configure.ENV.equals("t1prod")) {
-            new TableChecker()
-                    .add("", String::isEmpty)
-                    .add(Column.NAME, e -> e.contains(vm.getName()))
-                    .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
-                    .add("Размер, ГБ", e -> e.equals(vm.getBootSize().toString()))
-                    .add("Виртуальная машина", e -> e.equals(vm.getName()))
-//                .add(Column.CREATED_DATE, e -> e.length() > 5)
-                    .add("Тип", e -> e.length() > 1)
-                    .add("Системный", e -> e.equals("Да"))
-                    .add("", String::isEmpty)
-                    .check(() -> new DiskList.DiskTable().getRowByColumnValueContains(Column.NAME, vm.getName()));
-        }
-        if (Configure.ENV.equals("t1ift")) {
             new TableChecker()
                     .add("", String::isEmpty)
                     .add(Column.NAME, e -> e.contains(vm.getName()))
@@ -130,7 +98,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                     .add(Column.CREATED_DATE, e -> e.length() > 5)
                     .add("", String::isEmpty)
                     .check(() -> new DiskList.DiskTable().getRowByColumnValueContains(Column.NAME, vm.getName()));
-        }
     }
 
     @Test
@@ -139,20 +106,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Сетевые интерфейсы. (Таблица)")
     void networkInterfacesList() {
         new IndexPage().goToNetworkInterfaces();
-        if (Configure.ENV.equals("t1prod")) {
-            new TableChecker()
-                    .add("", String::isEmpty)
-                    .add("IP адрес", e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
-                    .add("MAC адрес", e -> StringUtils.isMatch("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
-                    .add("Сеть", e -> e.length() > 4)
-                    .add("Подсеть", e -> e.length() > 4)
-                    .add("Регион", e -> e.equals(vm.getRegion()))
-                    .add("Группы безопасности", e -> e.equals(vm.getSecurityGroups().get(0)))
-                    .add(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, e -> e.equals(vm.getName()))
-                    .add("", String::isEmpty)
-                    .check(() -> new NetworkInterfaceList.NetworkInterfaceTable().getRowByColumnValueContains(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, vm.getName()));
-        }
-        if (Configure.ENV.equals("t1ift")) {
             new TableChecker()
                     .add("", String::isEmpty)
                     .add("IP адрес", e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
@@ -165,7 +118,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                     .add(Column.CREATED_DATE, e -> e.length() > 5)
                     .add("", String::isEmpty)
                     .check(() -> new NetworkInterfaceList.NetworkInterfaceTable().getRowByColumnValueContains(NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM, vm.getName()));
-        }
     }
 
     @Test
