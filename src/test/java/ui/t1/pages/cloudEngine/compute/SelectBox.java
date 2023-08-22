@@ -3,13 +3,11 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.AllArgsConstructor;
-import org.openqa.selenium.By;
 import ui.elements.Button;
 import ui.elements.Menu;
 import ui.elements.Select;
 import ui.elements.TypifiedElement;
 
-import static com.codeborne.selenide.Selenide.$;
 import static core.helper.StringUtils.$x;
 
 public class SelectBox implements TypifiedElement {
@@ -34,9 +32,10 @@ public class SelectBox implements TypifiedElement {
 
     public static void setUserImage(String image) {
         if (!Button.byText("Пользовательские").isVisible()) {
-            Menu.byElement($(By.className("overflow-menu-button-with-dropdown"))).select("Пользовательские");
+            Menu.byElement($x("//*[@id = 'Cloud Marketplace']/following-sibling::div/button")).select("Пользовательские");
+        } else {
+            Button.byId("Пользовательские").click();
         }
-        Button.byId("Пользовательские").click();
         Select.byPlaceholder("выберите").setStart(image);
     }
 
