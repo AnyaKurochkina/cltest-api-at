@@ -82,7 +82,8 @@ public class WildFlyAstraPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new WildFlyAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        //new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
@@ -100,7 +101,7 @@ public class WildFlyAstraPage extends IProductPage {
     @Step("Обновить ОС сервера WildFly")
     public void updateServerOs() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getActionsMenuButton("", 2), "Обновить ОС сервера Wildfly", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton("", 2), "Обновить ОС сервера", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -108,11 +109,11 @@ public class WildFlyAstraPage extends IProductPage {
     @Step("Заменить Java Wildfly")
     public void changeJavaWildFly(String versionWildFly,String versionJava) {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getActionsMenuButton("", 2), "Заменить Java Wildfly", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton("", 2), "Заменить Java wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
             Dialog dlg = new Dialog("Заменить Java Wildfly");
-            dlg.setSelectValue("Текущая ерсия Wildfly",versionWildFly);
-            dlg.setSelectValue("Версия java",versionJava);
+            dlg.setSelectValue("Текущая версия Wildfly",versionWildFly);
+            dlg.setSelectValue("Версия java, на которую требуется заменить текущую java",versionJava);
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
