@@ -10,9 +10,14 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,6 +48,30 @@ public class ActionImportTest extends Tests {
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName), "Действие существует");
+    }
+
+    @DisplayName("Импорт действия с tag_list")
+    @TmsLink("")
+    @Test
+    public void importActionWithTagListTest() {
+        String actionName = "action_import_with_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithTags.json";
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        Graph graph = createGraph("graph_action_import_for_export_with_tags_test");
+        List<String> expectedTagList = Arrays.asList("import_test", "test_import");
+        JSONObject jsonObject = Action.builder()
+                .name(actionName)
+                .graphId(graph.getGraphId())
+                .tagList(expectedTagList)
+                .build()
+                .toJson();
+        Action action = createAction(jsonObject).extractAs(Action.class);
+        DataFileHelper.write(filePath, exportActionByIdWithTags(action.getActionId()).toString());
+        deleteActionByName(actionName);
+        importActionWithTagList(filePath);
+        assertEquals(expectedTagList, getActionByName(actionName).getTagList());
     }
 
     @DisplayName("Импорт нескольких действий")

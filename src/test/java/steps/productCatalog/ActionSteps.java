@@ -18,7 +18,6 @@ import steps.Steps;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -179,6 +178,16 @@ public class ActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(actionUrl + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
+    }
+
+    @Step("Импорт действия продуктового каталога с tag_list")
+    public static ImportObject importActionWithTagList(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(actionUrl + "obj_import/?with_tags=true", "file", new File(pathName))
                 .jsonPath()
                 .getList("imported_objects", ImportObject.class)
                 .get(0);
@@ -416,6 +425,14 @@ public class ActionSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(actionUrl + objectId + "/obj_export/?as_file=true")
+                .assertStatus(200);
+    }
+
+    @Step("Экспорт действия по Id c tag_list")
+    public static Response exportActionByIdWithTags(String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(actionUrl + objectId + "/obj_export/?as_file=true&with_tags=true")
                 .assertStatus(200);
     }
 
