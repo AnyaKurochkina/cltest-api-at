@@ -66,6 +66,7 @@ public class ApacheAirflow extends IProduct {
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         String accessGroup = getAccessGroup();
+        String accessGroupTech = getAccessGroup("service-accounts", "AT-ORDER");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -82,8 +83,7 @@ public class ApacheAirflow extends IProduct {
                 .set("$.order.attrs.postgresql_config.db_password", pgAdminPassword)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
-                //TODO: нужна тех группа!
-                .set("$.order.attrs.deploy_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.deploy_grants[0].groups[0]", accessGroupTech)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.label", getLabel())
