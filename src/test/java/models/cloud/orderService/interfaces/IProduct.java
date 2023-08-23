@@ -140,7 +140,7 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    public String getAccessGroup(String type, String desc) {
+    public String accessGroup(String type, String desc) {
         String accessGroupId;
         try {
             accessGroupId = PortalBackSteps.getAccessGroupByDesc(projectId, desc, type, domain);
@@ -151,8 +151,12 @@ public abstract class IProduct extends Entity {
         return accessGroupId;
     }
 
-    public String getAccessGroup() {
-        return getAccessGroup("personal", "AT-ORDER");
+    public String accessGroup() {
+        return accessGroup("personal", "AT-ORDER");
+    }
+
+    public String additionalAccessGroup() {
+        return accessGroup("personal", "AT-ORDER-2");
     }
 
     protected String state(String name){
@@ -200,7 +204,7 @@ public abstract class IProduct extends Entity {
     }
 
     public void checkUserGroupBySsh() {
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         assertContains(executeSsh("sudo -u root realm list"), accessGroup);
         assertContains(executeSsh("sudo -u root ls /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
     }

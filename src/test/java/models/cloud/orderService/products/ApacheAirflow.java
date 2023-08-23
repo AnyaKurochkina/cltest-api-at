@@ -65,8 +65,8 @@ public class ApacheAirflow extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = getAccessGroup();
-        String accessGroupTech = getAccessGroup("service-accounts", "AT-ORDER");
+        String accessGroup = accessGroup();
+        String accessGroupTech = accessGroup("service-accounts", "AT-ORDER");
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())

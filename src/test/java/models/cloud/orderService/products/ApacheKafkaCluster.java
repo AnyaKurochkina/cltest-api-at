@@ -12,13 +12,11 @@ import models.Entity;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import models.cloud.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
 
 import java.text.SimpleDateFormat;
@@ -89,7 +87,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
                 .set("$.order.attrs.layout", getIdGeoDistribution("kafka-4:zookeeper-3", envType().toUpperCase(), "kafka", org.getName()))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .remove("$.order.attrs.ad_logon_grants", !isDev())
                 //Fix

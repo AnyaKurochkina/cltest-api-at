@@ -9,7 +9,6 @@ import models.cloud.orderService.products.ApacheKafkaCluster;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
@@ -49,7 +48,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     void orderApacheKafkaCluster() {
         double preBillingProductPrice;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());

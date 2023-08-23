@@ -2,19 +2,16 @@ package ui.cloud.tests.orders.clickHouseCluster;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -55,7 +52,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void orderClickHouseCluster() {
         double prebillingCost;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -186,9 +183,9 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @DisplayName("UI ClickHouse Cluster. Группы. Добавить и удалить пользовательскую группу")
     void addGroupAD() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAD(accessGroup.getName()));
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteGroupAD(accessGroup.getPrefixName()));
+        String accessGroup = product.additionalAccessGroup();
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAD(accessGroup));
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteGroupAD(accessGroup));
     }
 
     @Test
@@ -197,9 +194,9 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @DisplayName("UI ClickHouse Cluster. Группы. Добавить и удалить группу администраторов")
     void addGroupAdmin() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAdmin(accessGroup.getName()));
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteGroupAdmin(accessGroup.getPrefixName()));
+        String accessGroup = product.additionalAccessGroup();
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAdmin(accessGroup));
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteGroupAdmin(accessGroup));
 
     }
 

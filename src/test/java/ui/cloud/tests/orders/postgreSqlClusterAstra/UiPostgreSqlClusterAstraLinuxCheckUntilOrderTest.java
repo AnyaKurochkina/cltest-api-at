@@ -10,7 +10,6 @@ import models.cloud.orderService.products.PostgresSQLCluster;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.NewOrderPage;
@@ -39,7 +38,7 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
     @TmsLink("1151310")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        String accessGroup = product.getAccessGroup();
+        String accessGroup = product.accessGroup();
         new IndexPage()
                 .clickOrderMore()
                 .expandProductsList()

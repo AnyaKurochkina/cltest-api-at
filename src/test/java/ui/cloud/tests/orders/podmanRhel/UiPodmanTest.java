@@ -1,19 +1,19 @@
 package ui.cloud.tests.orders.podmanRhel;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Podman;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -117,9 +117,8 @@ public class UiPodmanTest extends UiProductTest {
         PodmanPage podmanPage = new PodmanPage(product);
         podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
                 .deleteGroup("podman_admin", new Table("Роли узла").getRow(0).get()));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
         podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
-                .addGroup("podman_admin", Collections.singletonList(accessGroup.getPrefixName()),
+                .addGroup("podman_admin", Collections.singletonList(product.accessGroup()),
                         new Table("Роли узла").getRow(0).get()));
     }
 
@@ -129,11 +128,8 @@ public class UiPodmanTest extends UiProductTest {
     @DisplayName("UI Podman. Изменить состав группы")
     void changeGroup() {
         PodmanPage podmanPage = new PodmanPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random())
-                .projectName(product.getProjectId()).build().createObject();
         podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage.updateGroup("podman_admin",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName()),
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup()),
                 new Table("Роли узла").getRow(0).get()));
     }
 

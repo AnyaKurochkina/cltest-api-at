@@ -11,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
@@ -58,7 +57,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         flavorData = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:data:" + envType() + ":" + getEnv().toLowerCase()).get(0);
         flavorMaster = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:master:" + envType() + ":" + getEnv().toLowerCase()).get(0);
 //        flavorKibana = referencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:elasticsearch_kibana:DEV").get(0);
@@ -95,13 +94,12 @@ public class ElasticsearchOpensearchCluster extends IProduct {
 
     public void addKibana() {
         Flavor flavorKibana = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:elasticsearch:kibana:" + envType() + ":" + getEnv().toLowerCase()).get(0);
-        AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).build().createObject();
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.default_nic.net_segment", getSegment())
                 .set("$.data_center", getDataCentre())
                 .set("$.kibana_password", kibanaPassword)
-                .set("$.ad_logon_grants[0].groups[0]", accessGroup.getPrefixName())
+                .set("$.ad_logon_grants[0].groups[0]", accessGroup())
                 .remove("$.ad_logon_grants", !isDev())
                 .set("$.on_support", getSupport())
                 .build();

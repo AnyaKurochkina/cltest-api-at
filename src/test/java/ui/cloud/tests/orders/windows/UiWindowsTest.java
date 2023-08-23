@@ -1,19 +1,18 @@
 package ui.cloud.tests.orders.windows;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
@@ -48,7 +47,7 @@ public class UiWindowsTest extends UiProductTest {
     void orderWindows() {
         double prebillingCost;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectCategory("Базовые вычисления")
@@ -98,8 +97,7 @@ public class UiWindowsTest extends UiProductTest {
     void deleteGroup() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.deleteGroup("Administrators"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.addGroup("Administrators", Collections.singletonList(accessGroup.getPrefixName())));
+        winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.addGroup("Administrators", Collections.singletonList(product.additionalAccessGroup())));
     }
 
     @Test
@@ -107,11 +105,9 @@ public class UiWindowsTest extends UiProductTest {
     @Order(5)
     @DisplayName("UI Windows. Изменение группы доступа")
     void updateGroup() {
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.EQUALS, () -> winPage.updateGroup("Administrators",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test

@@ -1,14 +1,12 @@
 package ui.cloud.tests.orders.ubuntuLinux;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Ubuntu;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -129,8 +127,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     void addGroup() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.deleteGroup("user"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+        ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.addGroup("user", Collections.singletonList(product.accessGroup())));
     }
 
     @Test
@@ -139,10 +136,8 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     @DisplayName("UI UbuntuLinux. Изменить состав группы")
     void changeGroup() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.updateGroup("user",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test

@@ -1,18 +1,15 @@
 package ui.cloud.tests.orders.nginxAstra;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Nginx;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -48,7 +45,7 @@ public class UiNginxAstraTest extends UiProductTest {
     void orderNginxAstra() {
         double prebillingCost;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -112,11 +109,9 @@ public class UiNginxAstraTest extends UiProductTest {
     @DisplayName("UI NginxAstra. Удаление/Добавление/Изменение группы")
     void addGroup() {
         NginxAstraPage nginxAstraPage = new NginxAstraPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.addGroupInNode("user", Collections.singletonList(accessGroupOne.getPrefixName())));
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.updateGroupInNode("user", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
-        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.deleteGroupInNode("nginx_admin", accessGroupOne.getPrefixName()));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.addGroupInNode("user", Collections.singletonList(product.accessGroup())));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.updateGroupInNode("user", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
+        nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> nginxAstraPage.deleteGroupInNode("nginx_admin", product.accessGroup()));
     }
 
 

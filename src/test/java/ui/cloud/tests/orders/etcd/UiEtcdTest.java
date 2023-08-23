@@ -1,25 +1,26 @@
 package ui.cloud.tests.orders.etcd;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Etcd;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.*;
+import ui.cloud.pages.orders.EtcdOrderPage;
+import ui.cloud.pages.orders.EtcdPage;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.OrdersPage;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
+
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
@@ -50,7 +51,7 @@ public class UiEtcdTest extends UiProductTest {
     void orderEtcd() {
         double prebillingCost;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -128,11 +129,9 @@ public class UiEtcdTest extends UiProductTest {
     @DisplayName("UI Etcd. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         EtcdPage etcdPage = new EtcdPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.deleteGroupInNode("user", accessGroupOne.getPrefixName()));
-        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
-        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.updateGroupInNode("superuser", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.deleteGroupInNode("user", product.accessGroup()));
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.addGroupInNode("superuser", Collections.singletonList(product.accessGroup())));
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.updateGroupInNode("superuser", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
