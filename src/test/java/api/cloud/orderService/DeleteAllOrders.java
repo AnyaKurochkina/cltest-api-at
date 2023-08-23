@@ -40,7 +40,7 @@ public class DeleteAllOrders extends Tests {
         if(Configure.ENV.equals("blue")) {
             projects = Arrays.asList("proj-iv550odo9a", "proj-3wgrmny2yu", "proj-td00y68hfk",
                     "proj-anw4ujlh5u", "proj-bw5aabeuw1", "proj-2xdbtyzqs3", "proj-lww1vo6okh", "proj-7w4eov3old", "proj-99p4fdfs5c",
-                    "proj-ytwcbh7rlr", "proj-6sq3n30eh0");
+                    "proj-ytwcbh7rlr", "proj-6sq3n30eh0","proj-fnxokdmi0b", "proj-i6ul07p131", "proj-pr0n40cx1e", "proj-0c0ki636z5","proj-p9b5mtehhq");
         }
         for (String projectId : projects) {
             OrderServiceSteps.getProductsWithStatus(projectId, "changing", "damaged", "failure", "pending", "locked")
