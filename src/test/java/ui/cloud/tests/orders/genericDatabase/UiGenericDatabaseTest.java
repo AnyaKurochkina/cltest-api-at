@@ -146,6 +146,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.MORE, genericDatabasePage::changeConfiguration);
     }
+
     @Test
     @Order(8)
     @TmsLink("")
@@ -154,10 +155,11 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, genericDatabasePage::сreateSnapshot);
     }
+
     @Test
     @Order(9)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericDatabase. Удалить снапшот")
     void deleteSnapshot() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
@@ -167,8 +169,8 @@ public class UiGenericDatabaseTest extends UiProductTest {
     @Test
     @Order(10)
     @TmsLink("1687214")
-    @EnabledIfEnv("blue")
-    @DisplayName("UI GenericDatabase. Реинвентаризация ВМ (Linux)")
+    //@EnabledIfEnv("blue")
+    @DisplayName("UI GenericDatabase.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, genericDatabasePage::reInventory);
@@ -182,6 +184,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.checkMonitoringOs();
     }
+
     @Test
     @Order(12)
     @TmsLink("")

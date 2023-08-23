@@ -34,7 +34,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_generic_monitoring")})
 public class UiGenericMonitoringTest extends UiProductTest {
 
-    GenericMonitoring product ;//= GenericMonitoring.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/d227c66d-dbc0-4858-93e9-b0c597fb3d42/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    GenericMonitoring product;// = GenericMonitoring.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b7202e43-ca1a-4300-be33-8da921183d11/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -141,33 +141,36 @@ public class UiGenericMonitoringTest extends UiProductTest {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.MORE, genericMonitoringPage::changeConfiguration);
     }
+
     @Test
     @Order(8)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericMonitoring. Создать снапшот")
     void сreateSnapshot() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, genericMonitoringPage::сreateSnapshot);
     }
+
     @Test
     @Order(9)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericMonitoring. Удалить снапшот")
     void deleteSnapshot() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, genericMonitoringPage::deleteSnapshot);
     }
+
     @Test
     @Order(10)
     @TmsLink("1687129")
-    @DisplayName("UI GenericDatabase.  Реинвентаризация ВМ (Linux)")
+    @DisplayName("UI GenericMonitoring.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, genericMonitoringPage::reInventory);
     }
-
+//
     @Test
     @Order(11)
     @TmsLink("1687133")
@@ -176,7 +179,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.checkMonitoringOs();
     }
-
+//
     @Test
     @Order(100)
     @TmsLink("1687137")
