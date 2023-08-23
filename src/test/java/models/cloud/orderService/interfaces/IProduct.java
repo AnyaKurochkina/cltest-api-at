@@ -25,6 +25,7 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.portalBack.AccessGroup;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.subModels.Flavor;
@@ -139,8 +140,23 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    public String getAccessGroup() {
-        return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+    public String accessGroup(String type, String desc) {
+        String accessGroupId;
+        try {
+            accessGroupId = PortalBackSteps.getAccessGroupByDesc(projectId, desc, type, domain);
+        } catch (NullPointerException ignored) {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).description(desc).accountsType(type).domain(domain).build().createObject();
+            accessGroupId = accessGroup.getPrefixName();
+        }
+        return accessGroupId;
+    }
+
+    public String accessGroup() {
+        return accessGroup("personal", "AT-ORDER");
+    }
+
+    public String additionalAccessGroup() {
+        return accessGroup("personal", "AT-ORDER-2");
     }
 
     protected String state(String name){
@@ -188,7 +204,7 @@ public abstract class IProduct extends Entity {
     }
 
     public void checkUserGroupBySsh() {
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         assertContains(executeSsh("sudo -u root realm list"), accessGroup);
         assertContains(executeSsh("sudo -u root ls /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
     }

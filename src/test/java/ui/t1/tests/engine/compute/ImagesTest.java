@@ -21,7 +21,7 @@ public class ImagesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Образы")
     void snapshotList() {
         new IndexPage().goToImages();
-        assertHeaders(new ImageList.ImageTable(),"", "Имя", "Зона доступности", "Формат диска", "Размер, МБ", "");
+        assertHeaders(new ImageList.ImageTable(),"", "Имя", "Зона доступности", "Формат диска", "Размер, МБ", "Дата создания", "");
     }
 
     @Test

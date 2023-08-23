@@ -2,19 +2,18 @@ package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgresSQLCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -57,7 +56,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     void orderPostgreSqlCluster() {
         double preBillingProductPrice;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectCategory("Базы данных")
@@ -291,8 +290,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     void deleteGroup() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.deleteGroup("user");
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+        pSqlPage.addGroup("superuser", Collections.singletonList(product.accessGroup()));
     }
 
     @Test
@@ -302,10 +300,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменение группы доступа")
     void updateGroup() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateGroup("superuser",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test

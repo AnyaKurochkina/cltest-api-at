@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import java.time.Duration;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 import static api.Tests.activeCnd;
@@ -23,7 +22,7 @@ import static core.helper.StringUtils.$x;
 
 public class Select implements TypifiedElement {
     public static final String RANDOM_VALUE = "RANDOM_VALUE";
-    protected final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='Не найдено']");
+    protected final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='']");
     @Getter
     protected SelenideElement element;
 
@@ -47,6 +46,11 @@ public class Select implements TypifiedElement {
     @Step("Получение Select по name '{name}'")
     public static Select byName(String name) {
         return new Select($x("//div[select[@name='{}']]", name));
+    }
+
+    @Step("Получение Select по placeholder '{placeholder}'")
+    public static Select byPlaceholder(String placeholder) {
+        return new Select($x("//input[@placeholder='{}']", placeholder));
     }
 
     public static Select byInputName(String name) {
@@ -77,7 +81,7 @@ public class Select implements TypifiedElement {
             return value;
         element.click();
         if (value.equals(RANDOM_VALUE))
-            setItem(new Random().nextInt(getOptions().size()));
+            setItem(getRandomIndex());
         else
             getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
@@ -91,11 +95,16 @@ public class Select implements TypifiedElement {
         if (currentTitle.contains(value))
             return value;
         element.click();
-        if (value.equals(RANDOM_VALUE))
-            setItem(new Random().nextInt(getOptions().size()));
-        else
+        if (value.equals(RANDOM_VALUE)) {
+            setItem(getRandomIndex());
+        } else
             getOptions().filter(Condition.matchText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
+    }
+
+    private int getRandomIndex() {
+        int size = getOptions().size();
+        return (size == 0) ? -1 : new Random().nextInt(size);
     }
 
     @Step("Select. Выбрать элемент с названием начинающимся с '{value}'")
@@ -107,7 +116,7 @@ public class Select implements TypifiedElement {
             return value;
         element.click();
         if (value.equals(RANDOM_VALUE))
-            setItem(new Random().nextInt(getOptions().size()));
+            setItem(getRandomIndex());
         else
             getOptions().filter(Condition.matchText(value + "[^\\\\>]*")).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
@@ -129,8 +138,12 @@ public class Select implements TypifiedElement {
     }
 
     protected String setItem(int index) {
+        if(index == -1) {
+            element.click();
+            return getValue();
+        }
         List<String> texts = getOptions().texts();
-        if(getValue().equals(texts.get(index)))
+        if (getValue().equals(texts.get(index)))
             element.click();
         else
             getOptions().filter(Condition.exactText(texts.get(index))).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -138,7 +151,8 @@ public class Select implements TypifiedElement {
     }
 
     public ElementsCollection getOptions() {
-        return options.shouldBe(CollectionCondition.allMatch("All options visible", WebElement::isDisplayed));
+        return options.shouldBe(CollectionCondition.allMatch("All options visible", WebElement::isDisplayed))
+                .filter(Condition.not(Condition.exactText("Не найдено")));
     }
 
     @Step("Select. получить текущие значения")
@@ -149,7 +163,6 @@ public class Select implements TypifiedElement {
             titles = element.$$x("descendant::*[text() != '']").filter(Condition.visible).texts();
         if (titles.isEmpty())
             titles.add("");
-        String retStr = String.join(", ", titles.subList(fromIdx,titles.size()-1));
-        return retStr;
+        return String.join(", ", titles.subList(fromIdx, titles.size() - 1));
     }
 }

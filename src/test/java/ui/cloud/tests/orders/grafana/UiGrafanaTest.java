@@ -1,14 +1,12 @@
 package ui.cloud.tests.orders.grafana;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Grafana;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
@@ -119,8 +117,7 @@ public class UiGrafanaTest extends UiProductTest {
     void addGroup() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.deleteGroup("user"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.addGroup("user", Collections.singletonList(product.accessGroup())));
 
     }
 
@@ -131,10 +128,8 @@ public class UiGrafanaTest extends UiProductTest {
     @DisplayName("UI Grafana. Изменить состав группы")
     void changeGroup() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.updateGroup("user",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test

@@ -7,14 +7,12 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.orderService.products.Etcd;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
 import ui.cloud.pages.orders.EtcdOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
@@ -56,7 +54,7 @@ class UiEtcdCheckUntilOrderTest extends Tests {
         orderPage.getNumberNodes().set("3");
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
-        String accessGroup = product.getAccessGroup();
+        String accessGroup = product.accessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new EtcdOrderPage().checkOrderDetails();
     }
