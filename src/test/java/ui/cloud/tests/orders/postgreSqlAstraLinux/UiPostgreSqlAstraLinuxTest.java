@@ -59,7 +59,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(product.getAccessGroup());
+            orderPage.getGroupSelect().set(product.accessGroup());
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
