@@ -87,6 +87,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(3)
     @TmsLink("1687212")
     @DisplayName("UI GenericDatabase. Расширить точку монтирования")
@@ -97,6 +98,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1687208")
     @DisplayName("UI GenericDatabase. Проверить конфигурацию")
@@ -106,6 +108,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLinks({@TmsLink("1687207"), @TmsLink("1687211")})
     @DisplayName("UI GenericDatabase. Удалить и добавить группу доступа")
@@ -117,6 +120,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1687206")
     @DisplayName("UI GenericDatabase. Изменить состав группы")
@@ -127,6 +131,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(7)
     @TmsLink("1687209")
     @DisplayName("UI GenericDatabase. Изменить конфигурацию")
@@ -156,7 +161,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     @Order(10)
     @TmsLink("1687214")
     @EnabledIfEnv("blue")
-    @DisplayName("UI GenericDatabase.  Реинвентаризация ВМ (Linux)")
+    @DisplayName("UI GenericDatabase. Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, genericDatabasePage::reInventory);
@@ -164,7 +169,6 @@ public class UiGenericDatabaseTest extends UiProductTest {
 
     @Test
     @Order(11)
-    @EnabledIfEnv("prod")
     @TmsLink("1687213")
     @DisplayName("UI GenericDatabase. Мониторинг ОС")
     void monitoringOs() {
@@ -175,7 +179,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     @Order(12)
     @TmsLink("")
     @EnabledIfEnv("blue")
-    @DisplayName("UI GenericDatabase.  Выпустить клиентский сертификат")
+    @DisplayName("UI GenericDatabase. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, ()-> genericDatabasePage.issueClientCertificate("Certificate"));

@@ -91,6 +91,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("378042")
@@ -100,8 +101,8 @@ public class UiUbuntuLinuxTest extends UiProductTest {
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, ubuntuLinuxPage::restart);
     }
 
-
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("378050")
     @DisplayName("UI UbuntuLinux. Расширить точку монтирования")
@@ -112,6 +113,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1295829")
     @DisplayName("UI UbuntuLinux. Проверить конфигурацию")
@@ -121,6 +123,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(8)
     @TmsLinks({@TmsLink("1090952"), @TmsLink("1090957")})
     @DisplayName("UI UbuntuLinux. Удалить и добавить группу доступа")
@@ -131,6 +134,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("1090987")
     @DisplayName("UI UbuntuLinux. Изменить состав группы")
@@ -141,6 +145,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("378040")
     @DisplayName("UI UbuntuLinux. Изменить конфигурацию")
@@ -151,7 +156,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Order(12)
-    @EnabledIfEnv("prod")
     @TmsLink("1296749")
     @DisplayName("UI UbuntuLinux. Мониторинг ОС")
     void checkMonitoringOs() {

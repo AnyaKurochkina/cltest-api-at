@@ -109,4 +109,14 @@ public class ForbiddenActionSteps extends Steps {
                 .get(endPoint + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);
     }
+
+    @Step("Копирование запрещенного действия по id {id}")
+    public static ForbiddenAction copyForbiddenActionById(Integer id, JSONObject jsonObject) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(jsonObject)
+                .post(endPoint + "{}/copy/", id)
+                .assertStatus(200)
+                .extractAs(ForbiddenAction.class);
+    }
 }

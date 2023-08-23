@@ -18,6 +18,7 @@ import ui.models.Organization;
 import ui.t1.pages.ControlPanelIndexPage;
 import ui.t1.pages.T1LoginPage;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Epic("IAM и Управление")
@@ -34,13 +35,17 @@ public class OrganizationActionsTest extends Tests {
 
     @Test
     @DisabledIfEnv("t1prod")
-    @DisplayName("Создание организации")
+    @DisplayName("Создание организации/Удаление организации")
     public void createOrganizationTest() {
         new ControlPanelLoginPage().signIn(Role.SUPERADMIN);
         Organization organization = new Organization("org_for_ui_test", "airat.muzafarov@gmail.com", "1650000000");
         assertTrue(new ControlPanelIndexPage()
                 .goToOrganizationPage()
                 .createOrganization(organization)
+                .isOrgExist(organization.getName()));
+        assertFalse(new ControlPanelIndexPage()
+                .goToOrganizationPage()
+                .deleteOrganization(organization)
                 .isOrgExist(organization.getName()));
     }
 

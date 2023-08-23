@@ -107,7 +107,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Order(3)
     @TmsLink("330327")
     @Disabled
-    @DisplayName("UI ClickHouse. Перезагрузить по питанию")
+    @DisplayName("UI ClickHouse. Перезагрузить")
     void restart() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::restart);
@@ -115,6 +115,7 @@ public class UiClickHouseTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("330329")
     @DisplayName("UI ClickHouse. Расширить точку монтирования")
@@ -124,6 +125,7 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("1177396")
     @DisplayName("UI ClickHouse. Проверить конфигурацию")
@@ -244,7 +246,6 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("1536880")
-    @EnabledIfEnv("prod")
     @DisplayName("UI ClickHouse. Мониторинг ОС")
     void monitoringOs() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

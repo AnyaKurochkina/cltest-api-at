@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.scillaDbClusterAstra;
+package ui.cloud.tests.orders.scyllaDbClusterAstra;
 
 
 import api.Tests;

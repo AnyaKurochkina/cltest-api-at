@@ -42,7 +42,13 @@ public class DeleteDialog extends Dialog {
     }
 
     @Step("Проверка недоступности удаления и текста уведомления")
-    public void inputValidIdAndDeleteNotAvailable(String alertText) {
+    public void submitAndCheckNotDeletable(String alertText) {
+        deleteButton.shouldBe(Condition.enabled).click();
+        new Alert().check(Alert.Color.RED, alertText);
+    }
+
+    @Step("Проверка недоступности удаления и текста уведомления")
+    public void inputIdAndCheckNotDeletable(String alertText) {
         setInputValue("Идентификатор", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
         new Alert().check(Alert.Color.RED, alertText);

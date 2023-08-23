@@ -163,7 +163,6 @@ public class UiGenericMonitoringTest extends UiProductTest {
 
     @Test
     @Order(11)
-    @EnabledIfEnv("prod")
     @TmsLink("1687133")
     @DisplayName("UI GenericMonitoring. Мониторинг ОС")
     void monitoringOs() {

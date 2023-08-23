@@ -90,6 +90,7 @@ public class UiPodmanTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("851388")
     @DisplayName("UI Podman. Расширить точку монтирования")
@@ -100,6 +101,7 @@ public class UiPodmanTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1295870")
     @DisplayName("UI Podman. Проверить конфигурацию")
@@ -110,6 +112,7 @@ public class UiPodmanTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(8)
     @TmsLinks({@TmsLink("1091838"), @TmsLink("1091841")})
     @DisplayName("UI Podman. Удалить и добавить группу доступа")
@@ -123,6 +126,7 @@ public class UiPodmanTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("1091844")
     @DisplayName("UI Podman. Изменить состав группы")
@@ -136,7 +140,6 @@ public class UiPodmanTest extends UiProductTest {
     @Test
     @Order(10)
     @TmsLink("1296740")
-    @EnabledIfEnv("prod")
     @DisplayName("UI Podman. Мониторинг ОС")
     void monitoringOs() {
         PodmanPage podmanPage = new PodmanPage(product);

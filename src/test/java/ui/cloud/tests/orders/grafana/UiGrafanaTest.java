@@ -89,6 +89,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(3)
     @TmsLink("1688709")
     @DisplayName("UI Grafana. Расширить точку монтирования")
@@ -99,6 +100,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1688714")
     @DisplayName("UI Grafana. Проверить конфигурацию")
@@ -108,6 +110,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLinks({@TmsLink("1688713"), @TmsLink("1688716")})
     @DisplayName("UI Grafana. Удалить и добавить группу доступа")
@@ -119,6 +122,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1688707")
     @DisplayName("UI Grafana. Изменить состав группы")
@@ -129,6 +133,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(7)
     @TmsLink("1688710")
     @EnabledIfEnv("blue")
@@ -140,7 +145,6 @@ public class UiGrafanaTest extends UiProductTest {
 
     @Test
     @Order(8)
-    @EnabledIfEnv("prod")
     @TmsLink("1688705")
     @DisplayName("UI Grafana. Мониторинг ОС")
     void monitoringOs() {
@@ -169,7 +173,7 @@ public class UiGrafanaTest extends UiProductTest {
     @Order(11)
     @TmsLink("1688715")
     @EnabledIfEnv("blue")
-    @DisplayName("UI Grafana.  Реинвентаризация ВМ (Linux)")
+    @DisplayName("UI Grafana. Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::reInventory);
@@ -186,6 +190,7 @@ public class UiGrafanaTest extends UiProductTest {
     @Test
     @Order(13)
     @TmsLink("")
+    @EnabledIfEnv({"blue","prod"})
     @DisplayName("UI Grafana. Сбросить пароль")
     void resetPassword() {
         GrafanaPage grafanaPage = new GrafanaPage(product);

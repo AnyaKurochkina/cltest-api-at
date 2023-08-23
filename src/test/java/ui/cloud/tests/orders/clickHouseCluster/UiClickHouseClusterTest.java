@@ -107,7 +107,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("1138093")
-    @DisplayName("UI ClickHouse Cluster. Перезагрузить по питанию")
+    @DisplayName("UI ClickHouse Cluster. Перезагрузить")
     void restart() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::restart);
@@ -115,6 +115,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1138087")
     @DisplayName("UI ClickHouse Cluster. Расширить точку монтирования")
@@ -124,6 +125,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("1162629")
     @DisplayName("UI ClickHouse Cluster. Проверить конфигурацию")
@@ -223,7 +225,6 @@ public class UiClickHouseClusterTest extends UiProductTest {
 
     @Test
     @Order(15)
-    @EnabledIfEnv("prod")
     @TmsLink("1296753")
     @DisplayName("UI ClickHouse Cluster. Мониторинг ОС")
     void monitoringOs() {

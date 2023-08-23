@@ -95,6 +95,7 @@ public class UiNginxAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("847275")
     @DisplayName("UI NginxAstra. Расширить точку монтирования")
@@ -104,6 +105,7 @@ public class UiNginxAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLinks({@TmsLink("1644511"), @TmsLink("1644512"), @TmsLink("1644510")})
     @DisplayName("UI NginxAstra. Удаление/Добавление/Изменение группы")
@@ -116,6 +118,7 @@ public class UiNginxAstraTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1644508")
     @DisplayName("UI NginxAstra. Проверить конфигурацию")
@@ -124,8 +127,8 @@ public class UiNginxAstraTest extends UiProductTest {
         nginxAstraPage.runActionWithCheckCost(CompareType.EQUALS, nginxAstraPage::checkConfiguration);
     }
 
-
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(7)
     @TmsLink("1644505")
     @DisplayName("UI NginxAstra. Изменить конфигурацию")
@@ -136,7 +139,6 @@ public class UiNginxAstraTest extends UiProductTest {
 
     @Test
     @Order(8)
-    @EnabledIfEnv("prod")
     @TmsLink("1644504")
     @DisplayName("UI NginxAstra. Мониторинг ОС")
     void monitoringOs() {

@@ -97,7 +97,8 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(4)
+    @Disabled("Проверяется у Astra Linux")
+    @Order(3)
     @TmsLink("")
     @DisplayName("UI Etcd. Расширить точку монтирования")
     void expandDisk() {
@@ -106,7 +107,8 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(5)
+    @Disabled("Проверяется у Astra Linux")
+    @Order(4)
     @TmsLink("")
     @DisplayName("UI Etcd. Проверить конфигурацию")
     void vmActCheckConfig() {
@@ -115,7 +117,7 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(6)
+    @Order(5)
     @TmsLink("")
     @DisplayName("UI Etcd. Пользователь. Сброс пароля")
     void createLocalAccount() {
@@ -124,18 +126,38 @@ public class UiEtcdTest extends UiProductTest {
     }
 
     @Test
-    @Order(10)
+    @Order(6)
+    @TmsLink("")
+    @DisplayName("UI Etcd. Создать сертификаты для пользователя etcd")
+    void createCertificate() {
+        EtcdPage etcdPage = new EtcdPage(product);
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.createCertificate(nameUser));
+    }
+
+    @Test
+    @Disabled("Проверяется у Astra Linux")
+    @Order(7)
+    @TmsLink("")
+    @DisplayName("UI Etcd. Изменить конфигурацию")
+    void changeConfiguration() {
+        EtcdPage etcdPage = new EtcdPage(product);
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, etcdPage::changeConfiguration);
+    }
+
+    @Test
+    @Disabled("Проверяется у Astra Linux")
+    @Order(8)
     @TmsLinks({@TmsLink(""), @TmsLink(""), @TmsLink("")})
     @DisplayName("UI Etcd. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         EtcdPage etcdPage = new EtcdPage(product);
-        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.deleteGroupInNode("user", product.accessGroup()));
+        etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.deleteGroupInNode("superuser", product.accessGroup()));
         etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.addGroupInNode("superuser", Collections.singletonList(product.accessGroup())));
         etcdPage.runActionWithCheckCost(CompareType.EQUALS, () -> etcdPage.updateGroupInNode("superuser", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
-    @Order(15)
+    @Order(9)
     @EnabledIfEnv("prod")
     @TmsLink("")
     @DisplayName("UI Etcd. Мониторинг ОС")

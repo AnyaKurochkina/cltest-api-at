@@ -95,6 +95,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1060330")
     @DisplayName("UI RabbitMqClusterAstra. Расширить точку монтирования")
@@ -192,6 +193,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(14)
     @TmsLink("1060327")
     @DisplayName("UI RabbitMqClusterAstraPage. Проверить конфигурацию")
@@ -209,6 +211,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::openPointConnect);
     }
+
     @Test
     @Order(16)
     @TmsLink("")
@@ -238,7 +241,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @Order(19)
     @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Добавить роль")
+    @DisplayName("UI RabbitMqClusterAstra. Добавить роль на Web интерфейс")
     void addRole() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addRole("manager",product.additionalAccessGroup()));

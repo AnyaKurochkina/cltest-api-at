@@ -47,7 +47,7 @@ public class AddNodeTest extends GraphBaseTest {
     @Test
     @TmsLink("489507")
     @DisplayName("Добавление узла графа с подграфом")
-    public void addNodeSubgraphTest() {
+    public void addSubgraphNodeTest() {
         addSubgraphNodeWithRequiredParameters();
         addSubgraphNodeWithAllParameters();
         addSubgraphNodeWithoutRequiredParameters();

@@ -91,6 +91,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("1335489")
     @DisplayName("UI Scylla_db_cluster_astra. Расширить точку монтирования")
@@ -101,6 +102,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("1335485")
     @DisplayName("UI Scylla_db_cluster_astra. Проверить конфигурацию")
@@ -187,7 +189,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
     @Test
     @Order(22)
-    @EnabledIfEnv("prod")
     @TmsLink("1368052")
     @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
     void monitoringOs() {
@@ -196,6 +197,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink(""), @TmsLink("")})
     @Order(25)
     @DisplayName("UI Scylla_db_cluster_astra. Добавление/удаление группы доступа")
@@ -206,6 +208,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("")
     @Order(26)
     @DisplayName("UI Scylla_db_cluster_astra. Изменение группы доступа")
