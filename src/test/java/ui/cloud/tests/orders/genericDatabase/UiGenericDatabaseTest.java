@@ -34,7 +34,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_generic_database")})
 public class UiGenericDatabaseTest extends UiProductTest {
 
-    GenericDatabase product;// = GenericDatabase.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/a5204c6a-6f7e-4284-a432-1f79e88d7cfd/main?context=proj-iv550odo9a&type=project&org=vtb");
+    GenericDatabase product;// = GenericDatabase.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/9ac48835-1015-4ee4-ac82-cef03653cef9/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -141,6 +141,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.MORE, genericDatabasePage::changeConfiguration);
     }
+
     @Test
     @Order(8)
     @TmsLink("")
@@ -149,10 +150,11 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, genericDatabasePage::сreateSnapshot);
     }
+
     @Test
     @Order(9)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericDatabase. Удалить снапшот")
     void deleteSnapshot() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
@@ -162,7 +164,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     @Test
     @Order(10)
     @TmsLink("1687214")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericDatabase.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
@@ -177,6 +179,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.checkMonitoringOs();
     }
+
     @Test
     @Order(12)
     @TmsLink("")
