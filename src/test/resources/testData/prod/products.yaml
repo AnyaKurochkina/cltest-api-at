@@ -1,8 +1,10 @@
 S3Ceph:
   - options:
-      - { env: "DEV", segment: "DEV-DOS-SRV-DEV" }
-      - { env: "PROD", segment: "test-dos-srv-test" }
-      - { env: "PROD", segment: "prod-dos-srv-prod" }
+#      - { env: "DEV" }
+#      - { env: "IFT" }
+#      - { env: "HOTFIX" }
+#      - { env: "LT" }
+#      - { env: "PROD", dataCentre: "5" }
 
 OpenShiftProject:
   - options:
@@ -15,20 +17,20 @@ Vault:
 
 TarantoolDataGrid:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 
 Etcd:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 
 Grafana:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 
 GenericMonitoring:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -36,7 +38,7 @@ GenericMonitoring:
 
 GenericDatabase:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -44,7 +46,7 @@ GenericDatabase:
 
 ApacheAirflow:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -52,13 +54,14 @@ ApacheAirflow:
 
 ClickHouse:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "DEV-DOS-SRV-DEV" }
-      - { platform: "OpenStack", env: "PROD", segment: "test-dos-srv-test" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-dos-srv-prod" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
 
 ClickHouseCluster:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -66,7 +69,7 @@ ClickHouseCluster:
 
 WildFly:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -74,13 +77,15 @@ WildFly:
 
 PostgreSQL:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "DEV-DOS-SRV-DEV" }
-      - { platform: "OpenStack", env: "PROD", segment: "test-dos-srv-test" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-dos-srv-prod" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 RabbitMQClusterAstra:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -88,7 +93,7 @@ RabbitMQClusterAstra:
 
 Windows:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -96,7 +101,7 @@ Windows:
 
 Nginx:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -104,23 +109,27 @@ Nginx:
 
 Redis:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "DEV-DOS-SRV-DEV" }
-      - { platform: "OpenStack", env: "PROD", segment: "test-dos-srv-test" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-dos-srv-prod" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 KafkaService:
   - options:
-#      - { env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 
 ApacheKafkaCluster:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "DEV-DOS-SRV-DEV" }
-      - { platform: "OpenStack", env: "PROD", segment: "test-dos-srv-test" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-dos-srv-prod" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 Ubuntu:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -128,13 +137,15 @@ Ubuntu:
 
 Astra:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "DEV-DOS-SRV-DEV" }
-      - { platform: "OpenStack", env: "PROD", segment: "test-dos-srv-test" }
-      - { platform: "OpenStack", env: "PROD", segment: "prod-dos-srv-prod" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+#      - { platform: "OpenStack", env: "LT" }
+#      - { platform: "OpenStack", env: "IFT" }
+#      - { platform: "OpenStack", env: "HOTFIX" }
+#      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 LoadBalancer:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -142,7 +153,7 @@ LoadBalancer:
 
 PostgresSQLCluster:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -150,7 +161,7 @@ PostgresSQLCluster:
 
 ElasticsearchOpensearchCluster:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -158,7 +169,7 @@ ElasticsearchOpensearchCluster:
 
 ScyllaDbCluster:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
@@ -166,7 +177,7 @@ ScyllaDbCluster:
 
 Artemis:
   - options:
-#      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 #      - { platform: "OpenStack", env: "LT" }
 #      - { platform: "OpenStack", env: "IFT" }
 #      - { platform: "OpenStack", env: "HOTFIX" }
