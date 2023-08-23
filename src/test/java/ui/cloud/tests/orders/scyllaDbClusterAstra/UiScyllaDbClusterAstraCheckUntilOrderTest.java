@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.scillaDbClusterAstra;
+package ui.cloud.tests.orders.scyllaDbClusterAstra;
 
 
 import api.Tests;
@@ -16,8 +16,6 @@ import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.ScyllaDbClusterOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
-
-import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
 
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
@@ -61,7 +59,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        String accessGroup = product.getAccessGroup();
+        String accessGroup = product.accessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new ScyllaDbClusterOrderPage().checkOrderDetails();
     }

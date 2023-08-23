@@ -81,7 +81,7 @@ public class GrafanaPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new GrafanaPage.VirtualMachineTable(POWER).checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new GrafanaPage.VirtualMachineTable(STATUS).checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
     public void reInventory() {
         new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -111,15 +111,16 @@ public class GrafanaPage extends IProductPage {
         });
         btnGeneralInfo.click();
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
-        Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип","snapshot"));
+        Assertions.assertTrue(getTableByHeader(BLOCK_SNAPSHOT).isColumnValueContains("Тип","snapshot"));
     }
 
     public void deleteSnapshot() {
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(new Table("Имя").getFirstValueByColumn("Имя"), "Удалить снапшот");
+        new Table("Дата удаления").getRow(0).get().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new Table("Дата удаления").getFirstValueByColumn("Имя"), "Удалить снапшот");
         btnGeneralInfo.click();
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
+        Assertions.assertFalse(getTableByHeader(BLOCK_SNAPSHOT).isColumnValueContains("Тип", "snapshot"));
     }
 
     public void restart() {

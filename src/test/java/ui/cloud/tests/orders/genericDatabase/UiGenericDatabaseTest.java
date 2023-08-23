@@ -1,16 +1,12 @@
 package ui.cloud.tests.orders.genericDatabase;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.GenericDatabase;
-import models.cloud.portalBack.AccessGroup;
-import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
@@ -91,6 +87,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(3)
     @TmsLink("1687212")
     @DisplayName("UI GenericDatabase. Расширить точку монтирования")
@@ -101,6 +98,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1687208")
     @DisplayName("UI GenericDatabase. Проверить конфигурацию")
@@ -110,30 +108,30 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLinks({@TmsLink("1687207"), @TmsLink("1687211")})
     @DisplayName("UI GenericDatabase. Удалить и добавить группу доступа")
     void addGroup() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, () -> genericDatabasePage.deleteGroup("user"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, () -> genericDatabasePage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+        genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, () -> genericDatabasePage.addGroup("user", Collections.singletonList(product.accessGroup())));
 
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1687206")
     @DisplayName("UI GenericDatabase. Изменить состав группы")
     void changeGroup() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, () -> genericDatabasePage.updateGroup("user",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(7)
     @TmsLink("1687209")
     @DisplayName("UI GenericDatabase. Изменить конфигурацию")
@@ -141,6 +139,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.MORE, genericDatabasePage::changeConfiguration);
     }
+
     @Test
     @Order(8)
     @TmsLink("")
@@ -149,10 +148,11 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, genericDatabasePage::сreateSnapshot);
     }
+
     @Test
     @Order(9)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericDatabase. Удалить снапшот")
     void deleteSnapshot() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
@@ -162,7 +162,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     @Test
     @Order(10)
     @TmsLink("1687214")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericDatabase.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
@@ -177,11 +177,12 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.checkMonitoringOs();
     }
+
     @Test
     @Order(12)
     @TmsLink("")
     @EnabledIfEnv("blue")
-    @DisplayName("UI GenericDatabase.  Выпустить клиентский сертификат")
+    @DisplayName("UI GenericDatabase. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, ()-> genericDatabasePage.issueClientCertificate("Certificate"));

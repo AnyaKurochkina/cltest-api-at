@@ -1,7 +1,6 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -15,8 +14,6 @@ import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static core.utils.AssertUtils.assertContains;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -68,7 +65,7 @@ public class WildFly extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())

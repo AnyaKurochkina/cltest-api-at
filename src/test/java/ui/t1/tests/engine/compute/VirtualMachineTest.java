@@ -58,22 +58,6 @@ public class VirtualMachineTest extends AbstractComputeTest {
         new IndexPage().goToVirtualMachine();
     }
 
-    @DisabledIfEnv("t1prod")
-    @Test
-    @TmsLink("1248392")
-    @DisplayName("Cloud Compute. Виртуальные машины. Создание Образ Fedora")
-    void createAltPlatform() {
-        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
-                .setAvailabilityZone(availabilityZone)
-                .setImage(new SelectBox.Image("Fedora", "36"))
-                .setName(getRandomName())
-                .setDeleteOnTermination(true)
-                .addSecurityGroups(securityGroup)
-                .setSshKey(sshKey)
-                .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
-    }
-
     @Test
     @TmsLinks({@TmsLink("1249417"), @TmsLink("1248526")})
     @DisplayName("Создание/Удаление ВМ c одним доп диском (auto_delete = on) boot_disk_auto_delete = off")

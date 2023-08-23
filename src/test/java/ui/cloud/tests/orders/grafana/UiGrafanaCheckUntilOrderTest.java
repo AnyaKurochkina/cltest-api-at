@@ -6,7 +6,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.Grafana;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
@@ -38,7 +37,7 @@ class UiGrafanaCheckUntilOrderTest extends Tests {
     @TmsLink("1742981")
     @DisplayName("UI Grafana. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        String accessGroup = product.accessGroup();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -59,7 +58,7 @@ class UiGrafanaCheckUntilOrderTest extends Tests {
         orderPage.getCreateUser().setValue("user");
         orderPage.getGeneratePassButton().click();
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        orderPage.getGroupSelect().set(accessGroup);
         new GrafanaOrderPage().checkOrderDetails();
     }
 }

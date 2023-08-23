@@ -45,7 +45,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
     SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+    String accessGroup = product.accessGroup();
 
     public PostgreSqlClusterAstraPage(PostgresSQLCluster product) {
         super(product);
@@ -378,7 +378,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getActionsMenuButton(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
+        Assertions.assertFalse(getActionsMenuButton(accessGroup).exists(), "Ошибка удаления админ группы");
     }
 
     //Таблица ролей

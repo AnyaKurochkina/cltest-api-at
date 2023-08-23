@@ -240,7 +240,7 @@ public class ProductPage extends EntityPage {
     @Step("Удаление продукта")
     public void delete() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
     }
 
     @Step("Сохранение продукта со следующей патч-версией")

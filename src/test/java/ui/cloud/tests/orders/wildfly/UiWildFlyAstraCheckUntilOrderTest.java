@@ -6,7 +6,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.WildFly;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
@@ -53,7 +52,7 @@ class UiWildFlyAstraCheckUntilOrderTest extends Tests {
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         orderPage.getRoleSelect().set("user");
-        String accessGroup = product.getAccessGroup();
+        String accessGroup = product.accessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         orderPage.getGroupWildFly().set(accessGroup);
         new WildFlyAstraOrderPage().checkOrderDetails();

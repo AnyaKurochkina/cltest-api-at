@@ -6,7 +6,6 @@ import com.codeborne.selenide.SelenideElement;
 import core.helper.Configure;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.RabbitMQClusterAstra;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
@@ -43,7 +42,6 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     SelenideElement btnGroups = $x("//button[.='Группы']");
     SelenideElement usernameInput = Selenide.$x("//input[@name='username']");
     SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
-    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public RabbitMqClusterAstraPage(RabbitMQClusterAstra product) {
         super(product);

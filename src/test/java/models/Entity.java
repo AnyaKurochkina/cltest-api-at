@@ -22,9 +22,10 @@ import java.lang.annotation.*;
 public abstract class Entity implements AutoCloseable {
     public String objectClassName;
     public String uuid;
-    @Setter
-    @Getter
+    @Setter @Getter
     String configurationId;
+    @Getter @Setter
+    boolean skip;
 
     public abstract Entity init();
 
@@ -103,6 +104,10 @@ public abstract class Entity implements AutoCloseable {
 
     protected <T extends Entity> T createObject(boolean exclusiveAccess, boolean isPublic) {
         return ObjectPoolService.create(this, exclusiveAccess, isPublic);
+    }
+
+    public <T extends Entity> T onlyGetObject() {
+        return ObjectPoolService.onlyGetObject(this);
     }
 
     @SneakyThrows

@@ -67,7 +67,7 @@ public class RabbitMQClusterAstra extends IProduct {
     public JSONObject toJson() {
         Organization org = Organization.builder().build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())

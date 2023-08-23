@@ -16,8 +16,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.productCatalog.ActionSteps.getActionById;
-import static steps.productCatalog.ActionSteps.isActionExists;
+import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.AllowedActionSteps.*;
 
 @Tag("product_catalog")
@@ -96,16 +95,17 @@ public class AllowedActionTest extends Tests {
     }
 
     @DisplayName("Копирование разрешенного действия по id")
-    @TmsLink("")
+    @TmsLink("SOUL-7074")
     @Test
     public void copyByIdAllowedActionTest() {
         AllowedAction action = AllowedAction.builder()
                 .title("copy_by_id_allowed_action_test_api")
                 .build()
                 .createObject();
-        AllowedAction copiedAllowedAction = copyAllowedActionById(action.getId());
+        Action action1 = createAction();
+        AllowedAction copiedAllowedAction = copyAllowedActionById(action.getId(), new JSONObject().put("action_id", action1.getActionId()));
         assertTrue(isAllowedActionExists(copiedAllowedAction.getName()));
-        assertEquals(action.getName() + "-clone", copiedAllowedAction.getName());
+        assertEquals(action1.getName() + "__parent_to_child", copiedAllowedAction.getName());
     }
 
     @Test
