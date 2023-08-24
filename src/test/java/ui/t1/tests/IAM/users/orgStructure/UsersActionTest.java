@@ -14,6 +14,8 @@ import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
 
+import static ui.t1.tests.IAM.users.AbstractIAMTest.user;
+
 @Epic("IAM и Управление")
 @Feature("Действия с пользователями")
 @Tags({@Tag("ui_cloud_users_actions")})
@@ -32,11 +34,13 @@ public class UsersActionTest extends Tests {
 
     @Test
     @DisplayName("Добавление пользователя")
-    @Disabled("не готов")
+  //  @Disabled("не готов")
     public void addUserTest() {
         String folderName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         new IndexPage().goToOrgStructure()
                 .createFolder(folderName)
-                .openModalWindow(folderName);
+                .openModalWindow(folderName)
+                .setRole(user)
+                .isUserAdded(user);
     }
 }

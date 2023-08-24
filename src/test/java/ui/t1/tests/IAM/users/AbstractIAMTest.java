@@ -20,7 +20,7 @@ import java.util.Arrays;
 public abstract class AbstractIAMTest extends Tests {
     Project project;
     String folderId;
-    IamUser user;
+    public static IamUser user;
     IamUser user2;
     IamUser user3;
 
