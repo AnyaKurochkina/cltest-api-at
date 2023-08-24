@@ -120,7 +120,7 @@ public class TemplatePage extends EntityPage {
     @Step("Удаление шаблона")
     public void deleteTemplate() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete();
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
     }
 
     @Step("Возврат в список шаблонов")

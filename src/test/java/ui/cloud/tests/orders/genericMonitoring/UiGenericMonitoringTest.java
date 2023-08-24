@@ -1,16 +1,12 @@
 package ui.cloud.tests.orders.genericMonitoring;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.GenericMonitoring;
-import models.cloud.portalBack.AccessGroup;
-import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
@@ -34,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_generic_monitoring")})
 public class UiGenericMonitoringTest extends UiProductTest {
 
-    GenericMonitoring product ;//= GenericMonitoring.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/d227c66d-dbc0-4858-93e9-b0c597fb3d42/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    GenericMonitoring product;// = GenericMonitoring.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b7202e43-ca1a-4300-be33-8da921183d11/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -116,8 +112,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     void addGroup() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, () -> genericMonitoringPage.deleteGroup("user"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, () -> genericMonitoringPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+        genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, () -> genericMonitoringPage.addGroup("user", Collections.singletonList(product.accessGroup())));
 
     }
 
@@ -127,10 +122,8 @@ public class UiGenericMonitoringTest extends UiProductTest {
     @DisplayName("UI GenericMonitoring. Изменить состав группы")
     void changeGroup() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, () -> genericMonitoringPage.updateGroup("user",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
@@ -141,43 +134,45 @@ public class UiGenericMonitoringTest extends UiProductTest {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.MORE, genericMonitoringPage::changeConfiguration);
     }
+
     @Test
     @Order(8)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericMonitoring. Создать снапшот")
     void сreateSnapshot() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, genericMonitoringPage::сreateSnapshot);
     }
+
     @Test
     @Order(9)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI GenericMonitoring. Удалить снапшот")
     void deleteSnapshot() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, genericMonitoringPage::deleteSnapshot);
     }
+
     @Test
     @Order(10)
     @TmsLink("1687129")
-    @DisplayName("UI GenericDatabase.  Реинвентаризация ВМ (Linux)")
+    @DisplayName("UI GenericMonitoring.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, genericMonitoringPage::reInventory);
     }
-
+//
     @Test
     @Order(11)
-    @EnabledIfEnv("prod")
     @TmsLink("1687133")
     @DisplayName("UI GenericMonitoring. Мониторинг ОС")
     void monitoringOs() {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.checkMonitoringOs();
     }
-
+//
     @Test
     @Order(100)
     @TmsLink("1687137")

@@ -3,12 +3,11 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import lombok.AllArgsConstructor;
-import ui.elements.Radio;
+import ui.elements.Button;
+import ui.elements.Menu;
 import ui.elements.Select;
 import ui.elements.TypifiedElement;
 
-import static api.Tests.activeCnd;
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
 public class SelectBox implements TypifiedElement {
@@ -19,15 +18,25 @@ public class SelectBox implements TypifiedElement {
         this.select = element;
     }
 
-    public static void setMarketPlaceImage(Image image) {
-        Radio.byValue("MarketPlace").checked();
+    public static void setOsImage(Image image) {
+        Button.byText("Операционные системы").click();
+        SelectBox selectBox = new SelectBox($x("//*[.='{}']/parent::*//*[name()='svg']", image.os));
+        selectBox.select(image.version);
+    }
+
+    public static void setMarketplaceImage(Image image) {
+        Button.byText("Cloud Marketplace").click();
         SelectBox selectBox = new SelectBox($x("//*[.='{}']/parent::*//*[name()='svg']", image.os));
         selectBox.select(image.version);
     }
 
     public static void setUserImage(String image) {
-        Radio.byValue("Пользовательские").checked();
-        new Select(TypifiedElement.getNearElement("select", "*[.='Пользовательские']").parent()).setStart(image);
+        if (!Button.byText("Пользовательские").isVisible()) {
+            Menu.byElement($x("//*[@id = 'Cloud Marketplace']/following-sibling::div/button")).select("Пользовательские");
+        } else {
+            Button.byId("Пользовательские").click();
+        }
+        Select.byPlaceholder("выберите").setStart(image);
     }
 
     private void select(String text) {

@@ -63,7 +63,7 @@ public class GenericMonitoring extends IProduct {
                 .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)

@@ -10,8 +10,9 @@ import lombok.Getter;
 import org.intellij.lang.annotations.Language;
 import org.openqa.selenium.WebElement;
 
+import java.time.Duration;
 import java.util.List;
-import java.util.concurrent.ThreadLocalRandom;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 import static api.Tests.activeCnd;
@@ -21,7 +22,7 @@ import static core.helper.StringUtils.$x;
 
 public class Select implements TypifiedElement {
     public static final String RANDOM_VALUE = "RANDOM_VALUE";
-    protected final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='Не найдено']");
+    protected final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='']");
     @Getter
     protected SelenideElement element;
 
@@ -47,6 +48,11 @@ public class Select implements TypifiedElement {
         return new Select($x("//div[select[@name='{}']]", name));
     }
 
+    @Step("Получение Select по placeholder '{placeholder}'")
+    public static Select byPlaceholder(String placeholder) {
+        return new Select($x("//input[@placeholder='{}']", placeholder));
+    }
+
     public static Select byInputName(String name) {
         return new Select($x("//div[input[@name='{}']]", name));
     }
@@ -69,39 +75,50 @@ public class Select implements TypifiedElement {
     @Step("Select. Выбрать элемент с названием '{value}'")
     public String set(String value) {
         hover();
+        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
-        if (currentTitle.equals(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.equals(value))
             return value;
         element.click();
         if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
-        getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            setItem(getRandomIndex());
+        else
+            getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
     }
 
     @Step("Select. Выбрать элемент с названием содержащим '{value}'")
     public String setContains(String value) {
         hover();
+        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
-        if (currentTitle.contains(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.contains(value))
             return value;
         element.click();
-        if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
-        getOptions().filter(Condition.matchText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (value.equals(RANDOM_VALUE)) {
+            setItem(getRandomIndex());
+        } else
+            getOptions().filter(Condition.matchText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
+    }
+
+    private int getRandomIndex() {
+        int size = getOptions().size();
+        return (size == 0) ? -1 : new Random().nextInt(size);
     }
 
     @Step("Select. Выбрать элемент с названием начинающимся с '{value}'")
     public String setStart(String value) {
         hover();
+        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
         String currentTitle = getValue();
-        if (currentTitle.startsWith(value) || (value.equals(RANDOM_VALUE) && !currentTitle.equals("")))
+        if (currentTitle.startsWith(value))
             return value;
         element.click();
         if (value.equals(RANDOM_VALUE))
-            value = getRandomItem();
-        getOptions().filter(Condition.matchText(value + "[^\\\\>]*")).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            setItem(getRandomIndex());
+        else
+            getOptions().filter(Condition.matchText(value + "[^\\\\>]*")).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
     }
 
@@ -116,20 +133,26 @@ public class Select implements TypifiedElement {
         return titles.get(titles.size() - 1);
     }
 
-    private String random(List<String> list) {
-        return list.get(ThreadLocalRandom.current().nextInt(list.size()) % list.size());
-    }
-
     protected SelenideElement getClearBtn() {
         return element.scrollIntoView(scrollCenter).hover().$x("descendant::button[@aria-label='Clear']");
     }
 
-    protected String getRandomItem() {
-        return random(getOptions().texts());
+    protected String setItem(int index) {
+        if(index == -1) {
+            element.click();
+            return getValue();
+        }
+        List<String> texts = getOptions().texts();
+        if (getValue().equals(texts.get(index)))
+            element.click();
+        else
+            getOptions().filter(Condition.exactText(texts.get(index))).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        return texts.get(index);
     }
 
     public ElementsCollection getOptions() {
-        return options.shouldBe(CollectionCondition.allMatch("All options visible", WebElement::isDisplayed));
+        return options.shouldBe(CollectionCondition.allMatch("All options visible", WebElement::isDisplayed))
+                .filter(Condition.not(Condition.exactText("Не найдено")));
     }
 
     @Step("Select. получить текущие значения")
@@ -140,7 +163,6 @@ public class Select implements TypifiedElement {
             titles = element.$$x("descendant::*[text() != '']").filter(Condition.visible).texts();
         if (titles.isEmpty())
             titles.add("");
-        String retStr = String.join(", ", titles.subList(fromIdx,titles.size()-1));
-        return retStr;
+        return String.join(", ", titles.subList(fromIdx, titles.size() - 1));
     }
 }

@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.AbstractEntity;
 import org.junit.BlockTests;
 import org.junit.IgnoreInterceptTestExtension;
 import org.junit.jupiter.api.*;
@@ -38,7 +39,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Публичные IP-адреса")
     void publicIpList() {
         new IndexPage().goToPublicIps();
-        assertHeaders(new PublicIpList.IpTable(), "", "IP-адрес", "Регион", "Сетевой интерфейс", "");
+        assertHeaders(new PublicIpList.IpTable(), "", "IP-адрес", "Регион", "Сетевой интерфейс", "Дата создания", "");
     }
 
     @Test
@@ -49,9 +50,9 @@ public class PublicIpTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")
     void addIp() {
         ip = new IndexPage().goToPublicIps().addIp(region);
-        PublicIp ipPage = new PublicIpList().selectIp(ip).checkCreate(true);
+        PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new IpEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
         String orderId = ipPage.getOrderId();
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .filter(i -> i.getFloatingIpAddress().equals(ip))
                 .filter(i -> i.getSrcOrderId().equals(orderId))
@@ -71,14 +72,14 @@ public class PublicIpTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
 
         PublicIp ipPage =  new IndexPage().goToPublicIps().selectIp(ip);
         String orderIdIp = ipPage.getOrderId();
         ipPage.attachComputeIp(vm.getName());
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getSrcOrderId().equals(orderIdIp))
                 .filter(e -> e.getFloatingIpAddress().equals(ip))
@@ -91,7 +92,7 @@ public class PublicIpTest extends AbstractComputeTest {
                 .selectIp(ip);
         newIpPage.detachComputeIp();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdIp))
                 .filter(e -> e.getFloatingIpAddress().equals(ip))
                 .filter(e -> Objects.isNull(e.getParent()))
@@ -103,8 +104,8 @@ public class PublicIpTest extends AbstractComputeTest {
     @Order(100)
     @DisplayName("Cloud VPC. Публичные IP-адреса. Освободить")
     void deleteIp() {
-        PublicIp ipPage = new IndexPage().goToPublicIps().selectIp(ip).markForDeletion(new PublicIpEntity());
+        PublicIp ipPage = new IndexPage().goToPublicIps().selectIp(ip);
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
-        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
+        Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
     }
 }

@@ -44,7 +44,7 @@ public class Dialog implements TypifiedElement {
 
     public Dialog setSelectValue(String label, String value) {
         Select select = Select.byLabel(label);
-        select.setStart(value);
+        select.setContains(value);
         return this;
     }
 

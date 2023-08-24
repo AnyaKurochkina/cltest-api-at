@@ -7,7 +7,6 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import java.time.Duration;

@@ -17,6 +17,7 @@ import static core.helper.StringUtils.$x;
 public class VmCreate {
     private String name;
     private String description;
+    private String region;
     private String availabilityZone;
     private SelectBox.Image image;
     private String userImage;
@@ -67,13 +68,18 @@ public class VmCreate {
     }
 
     public VmCreate setSubnet(String subnet) {
-        this.subnet = Select.byLabel("Подсеть", 1).set(subnet);
+        this.subnet = Select.byLabel("Подсеть", 1).setContains(subnet);
         return this;
     }
 
     public VmCreate setAvailabilityZone(String availabilityZone) {
         this.availabilityZone = Select.byLabel("Зона доступности").set(availabilityZone);
         Waiting.sleep(1000);
+        return this;
+    }
+
+    public VmCreate setRegion(String region) {
+        this.region = Select.byLabel("Регион").set(region);
         return this;
     }
 
@@ -102,7 +108,7 @@ public class VmCreate {
 
     public VmCreate setImage(SelectBox.Image image) {
         this.image = image;
-        SelectBox.setMarketPlaceImage(image);
+        SelectBox.setOsImage(image);
         return this;
     }
 

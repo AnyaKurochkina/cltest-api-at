@@ -5,15 +5,12 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.GenericDatabase;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.AstraLinuxOrderPage;
 import ui.cloud.pages.orders.GenericDatabaseOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.extesions.ConfigExtension;
@@ -40,7 +37,7 @@ class UiGenericDatabaseCheckUntilOrderTest extends Tests {
     @TmsLink("1742156")
     @DisplayName("UI GenericDatabase. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+        String accessGroup = product.accessGroup();
         new IndexPage()
                 .clickOrderMore()
                 .selectProduct(product.getProductName());
@@ -60,7 +57,7 @@ class UiGenericDatabaseCheckUntilOrderTest extends Tests {
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        orderPage.getGroupSelect().set(accessGroup.getPrefixName());
+        orderPage.getGroupSelect().set(accessGroup);
         new GenericDatabaseOrderPage().checkOrderDetails();
     }
 }

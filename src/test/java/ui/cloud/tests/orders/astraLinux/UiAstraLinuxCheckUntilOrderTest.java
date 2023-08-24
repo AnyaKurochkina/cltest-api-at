@@ -16,8 +16,6 @@ import ui.cloud.pages.orders.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 
-import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
-
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(ProductInjector.class)
@@ -58,7 +56,7 @@ class UiAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        String accessGroup = product.getAccessGroup();
+        String accessGroup = product.accessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new AstraLinuxOrderPage().checkOrderDetails();
     }

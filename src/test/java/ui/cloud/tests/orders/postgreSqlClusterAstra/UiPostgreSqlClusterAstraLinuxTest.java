@@ -2,19 +2,18 @@ package ui.cloud.tests.orders.postgreSqlClusterAstra;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgresSQLCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -33,7 +32,8 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product;// = PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/d74bfaa5-1f3d-4ede-bb4d-22c4550bf665/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgresSQLCluster product;
+    //=PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/477825e1-c2cf-4992-82e5-f5582b494882/main?context=proj-iv550odo9a&type=project&org=vtb");
     String nameDb = "at_db";
     String nameSlot = "at_slot";
     String limit = "20";
@@ -56,7 +56,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     void orderPostgreSqlCluster() {
         double preBillingProductPrice;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectCategory("Базы данных")
@@ -89,7 +89,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         checkOrderCost(preBillingProductPrice, new PostgreSqlClusterAstraPage(product));
     }
 
-
     @Test
     @TmsLink("1236731")
     @Order(2)
@@ -105,7 +104,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Order(5)
     @TmsLink("851706")
     @Disabled
-    @DisplayName("UI PostgreSQL Cluster Astra Linux. Перезагрузить по питанию")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Перезагрузить")
     void restart() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
@@ -138,7 +137,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
     }
 
-
     @Test
     @Order(9)
     @TmsLink("851714")
@@ -149,6 +147,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("852936")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Проверить конфигурацию")
@@ -165,7 +164,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
     }
-
 
     @Test
     @Order(13)
@@ -285,26 +283,25 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink("1091089"), @TmsLink("1091067")})
     @Order(24)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Добавление/удаление группы доступа")
     void deleteGroup() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
         pSqlPage.deleteGroup("user");
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+        pSqlPage.addGroup("superuser", Collections.singletonList(product.accessGroup()));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("1091118")
     @Order(25)
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменение группы доступа")
     void updateGroup() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateGroup("superuser",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
@@ -337,7 +334,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @Test
     @Order(29)
     @TmsLink("1296732")
-    @EnabledIfEnv("prod")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Мониторинг ОС")
     void monitoringOs() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);

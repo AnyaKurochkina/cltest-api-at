@@ -27,7 +27,7 @@ public class SnapshotTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Снимки")
     void snapshotList() {
         new IndexPage().goToSnapshots();
-        assertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "");
+        assertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "Дата создания", "");
     }
 
     @Test
@@ -45,7 +45,7 @@ public class SnapshotTest extends AbstractComputeTest {
         Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
         String orderIdDisk = createdDisk.getOrderId();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> e.getSrcOrderId().equals(orderIdDisk))
                 .filter(e -> e.getParent().equals(""))
@@ -65,7 +65,7 @@ public class SnapshotTest extends AbstractComputeTest {
         snapshotPage.switchProtectOrder(true);
         snapshotPage.delete();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> Objects.equals(e.getSize(), disk.getSize()))
                 .count(), "Item disk не соответствует условиям или не найден");
     }

@@ -7,15 +7,12 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import redis.clients.jedis.Jedis;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -68,7 +65,7 @@ public class Redis extends IProduct {
     }
 
     public JSONObject toJson() {
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         JsonTemplate template = JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId);
         if (envType().contains("prod")) {

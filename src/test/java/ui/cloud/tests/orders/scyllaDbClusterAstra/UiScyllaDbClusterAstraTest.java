@@ -1,18 +1,15 @@
 package ui.cloud.tests.orders.scillaDbClusterAstra;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ScyllaDbCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -52,7 +49,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .expandProductsList()
@@ -94,6 +91,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("1335489")
     @DisplayName("UI Scylla_db_cluster_astra. Расширить точку монтирования")
@@ -104,6 +102,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("1335485")
     @DisplayName("UI Scylla_db_cluster_astra. Проверить конфигурацию")
@@ -190,7 +189,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
     @Test
     @Order(22)
-    @EnabledIfEnv("prod")
     @TmsLink("1368052")
     @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
     void monitoringOs() {
@@ -199,26 +197,25 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink(""), @TmsLink("")})
     @Order(25)
     @DisplayName("UI Scylla_db_cluster_astra. Добавление/удаление группы доступа")
     void deleteGroup() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.deleteGroup("superuser");
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        scyllaPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+        scyllaPage.addGroup("superuser", Collections.singletonList(product.accessGroup()));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("")
     @Order(26)
     @DisplayName("UI Scylla_db_cluster_astra. Изменение группы доступа")
     void updateGroup() {
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.updateGroup("superuser",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test

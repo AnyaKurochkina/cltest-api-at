@@ -15,8 +15,6 @@ import ui.cloud.pages.orders.RedisAstraOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 
-import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
-
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(ProductInjector.class)
@@ -60,7 +58,7 @@ class UiRedisAstraCheckUntilOrderTest extends Tests {
         orderPage.getCreateDefaultUserSwitch().setEnabled(true);
         orderPage.getGeneratePassButton().click();
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        String accessGroup = product.getAccessGroup();
+        String accessGroup = product.accessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new RedisAstraOrderPage().checkOrderDetails();
     }

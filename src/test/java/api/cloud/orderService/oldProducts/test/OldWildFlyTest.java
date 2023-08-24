@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.WildFly;
+import org.json.JSONObject;
 import org.junit.jupiter.api.*;
 import api.Tests;
 
@@ -91,7 +92,8 @@ public class OldWildFlyTest extends Tests {
         if (wildFly.productStatusIs(STOPPED)) {
             wildFly.start();
         }
-        wildFly.updateCerts();
+        JSONObject data = new JSONObject().put("accept_cert_updating", true).put("is_balancer", false).put("is_balancer", "default");
+        wildFly.updateCerts(data);
     }
 
     @Disabled

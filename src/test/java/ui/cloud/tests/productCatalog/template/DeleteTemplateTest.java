@@ -46,8 +46,7 @@ public class DeleteTemplateTest extends TemplateBaseTest {
         new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .openDeleteDialog()
-                .inputInvalidId("test")
-                .inputValidIdAndDelete();
+                .submitAndDelete("Удаление выполнено успешно");
         new TemplatesListPage()
                 .checkTemplateNotFound(NAME);
     }
@@ -78,13 +77,13 @@ public class DeleteTemplateTest extends TemplateBaseTest {
         new ControlPanelIndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template);
         EntityListPage.delete(nameColumn, template.getName());
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
+        new DeleteDialog().submitAndCheckNotDeletable(alertText);
         goToUsageButton.click();
         new Alert().close();
         TemplatePage page = new TemplatePage();
         page.checkTabIsSelected("Использование");
         page.getDeleteButton().click();
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
+        new DeleteDialog().submitAndCheckNotDeletable(alertText);
         goToUsageButton.click();
         page.checkTabIsSelected("Использование");
     }

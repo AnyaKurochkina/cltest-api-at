@@ -36,7 +36,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
-    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
+    String accessGroup = product.accessGroup();
 
     public ScyllaDbClusterPage(ScyllaDbCluster product) {
         super(product);
@@ -224,7 +224,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         generalInfoTab.switchTo();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getActionsMenuButton(accessGroup.getPrefixName()).exists(), "Ошибка удаления админ группы");
+        Assertions.assertFalse(getActionsMenuButton(accessGroup).exists(), "Ошибка удаления админ группы");
         //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }
 

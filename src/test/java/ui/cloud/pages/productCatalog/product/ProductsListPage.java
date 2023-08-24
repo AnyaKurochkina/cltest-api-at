@@ -72,7 +72,7 @@ public class ProductsListPage extends EntityListPage {
     public ProductsListPage delete(String name) {
         search(name);
         delete(nameColumn, name);
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         Assertions.assertTrue(new Table(nameColumn).isEmpty());
         return this;
     }

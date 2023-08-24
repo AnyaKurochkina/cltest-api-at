@@ -6,11 +6,9 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.cloud.pages.orders.ApacheKafkaClusterOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
@@ -53,7 +51,7 @@ class UiApacheKafkaClusterCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        String accessGroup = product.getAccessGroup();
+        String accessGroup = product.accessGroup();
         orderPage.getGroupSelect().set(accessGroup);
         new ApacheKafkaClusterOrderPage().checkOrderDetails();
     }
