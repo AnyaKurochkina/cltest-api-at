@@ -55,7 +55,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
             orderPage.getVersionWildfly().set(product.getWildFlyVersion());
-            orderPage.getVersionJava().set(product.getJavaVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getVersionJava().set(product.getJavaVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());

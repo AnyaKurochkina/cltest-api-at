@@ -51,7 +51,8 @@ public class WildFly extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (wildFlyVersion == null)
-            wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+            wildFlyVersion = "28.0.1.Final";
+            //wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
         if (javaVersion == null)
             javaVersion = "11.0.12";
         if(segment == null)
