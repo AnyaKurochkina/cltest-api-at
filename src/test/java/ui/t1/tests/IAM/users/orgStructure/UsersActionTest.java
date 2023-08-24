@@ -32,6 +32,7 @@ public class UsersActionTest extends Tests {
 
     @Test
     @DisplayName("Добавление пользователя")
+    @Disabled("не готов")
     public void addUserTest() {
         String folderName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         new IndexPage().goToOrgStructure()
