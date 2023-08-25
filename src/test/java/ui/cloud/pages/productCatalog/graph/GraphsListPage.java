@@ -6,8 +6,8 @@ import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.graph.Graph;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 

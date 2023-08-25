@@ -7,13 +7,13 @@ import models.t1.imageService.Logo;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.t1.imageService.ImageServiceSteps;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 import ui.t1.pages.ControlPanelIndexPage;
 
 import java.util.UUID;
 
 @Feature("Образы.Логотипы")
-public class LogoTest extends BaseTest {
+public class LogoTest extends ProductCatalogUITest {
 
     private final String logoUrl = "https://im.wampi.ru/2022/12/15/free-icon-angel-257559.png";
     private final String distro = "test";

@@ -13,6 +13,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductSteps;
 
 import java.util.Arrays;
 
@@ -29,8 +30,8 @@ public class ProductExportTest extends Tests {
 
     @BeforeAll
     public static void setUp() {
-        simpleProduct = createProductByName("export_product1_test_api");
-        simpleProduct2 = createProductByName("export_product2_test_api");
+        simpleProduct = ProductSteps.createProduct("export_product1_test_api");
+        simpleProduct2 = ProductSteps.createProduct("export_product2_test_api");
     }
 
     @SneakyThrows
@@ -47,7 +48,7 @@ public class ProductExportTest extends Tests {
     @TmsLink("642499")
     @Test
     public void exportProductByIdTest() {
-        Product product = createProductByName("product_export_test_api");
+        Product product = ProductSteps.createProduct("product_export_test_api");
         exportProductById(product.getProductId());
     }
 
@@ -55,7 +56,7 @@ public class ProductExportTest extends Tests {
     @TmsLink("1361371")
     @Test
     public void exportProductByNameTest() {
-        Product product = createProductByName("product_export_by_name_test_api");
+        Product product = ProductSteps.createProduct("product_export_by_name_test_api");
         exportProductByName(product.getName());
     }
 }

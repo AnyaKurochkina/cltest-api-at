@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.UUID;
 
@@ -29,7 +29,7 @@ import static steps.productCatalog.OrgDirectionSteps.*;
 @Epic("Конструктор")
 @Feature("Направления")
 @DisabledIfEnv("prod")
-public class OrgDirectionTest extends BaseTest {
+public class OrgDirectionTest extends ProductCatalogUITest {
     public static final String DIRECTION_TITLE = "at_ui_create_direction_title";
     public static final String DIRECTION_NAME = "at_ui_create_direction_name";
     public static final String DIRECTION_DESCRIPTION = "at_ui_create_direction_description";

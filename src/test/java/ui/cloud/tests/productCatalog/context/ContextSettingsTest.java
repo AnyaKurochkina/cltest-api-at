@@ -8,9 +8,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.ContextSettingsPage;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
-public class ContextSettingsTest extends BaseTest {
+public class ContextSettingsTest extends ProductCatalogUITest {
 
     private final String defaultDevProject = "proj-sandbox-dev";
     private final String defaultTestProject = "proj-sandbox-ift";

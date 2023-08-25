@@ -12,6 +12,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductSteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -49,7 +50,7 @@ public class ProductPrivateTest extends Tests {
     @Test
     public void updateProductPrivateTest() {
         String productName = "product_update_private_test_api";
-        Product product = createProductByName(productName);
+        Product product = ProductSteps.createProduct(productName);
         partialUpdatePrivateProduct(product.getProductId(), new JSONObject().put("max_count", 2));
         Product updatedProduct = getProductById(product.getProductId());
         assertEquals("1.0.1", updatedProduct.getVersion(), "Версии не совпадают");
@@ -80,7 +81,7 @@ public class ProductPrivateTest extends Tests {
     @Test
     public void updateProductPrivateByNameTest() {
         String productName = "product_update_private_by_name_test_api";
-        createProductByName(productName);
+        ProductSteps.createProduct(productName);
         partialUpdateProductPrivateByName(productName, new JSONObject().put("max_count", 2));
         Product updatedProduct = getProductPrivateByName(productName);
         assertEquals("1.0.1", updatedProduct.getVersion(), "Версии не совпадают");

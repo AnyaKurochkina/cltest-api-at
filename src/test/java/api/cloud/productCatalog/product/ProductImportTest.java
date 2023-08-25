@@ -15,6 +15,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductSteps;
 
 import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
@@ -109,7 +110,7 @@ public class ProductImportTest extends Tests {
     @TmsLink("1535300")
     @Test
     public void importExistProductTest() {
-        Product product = createProductByName("import_exist_product_test_api");
+        Product product = ProductSteps.createProduct("import_exist_product_test_api");
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/products/existProductImport.json";
         DataFileHelper.write(filePath, exportProductById(product.getProductId()).toString());
         ImportObject importObject = importProduct(filePath);

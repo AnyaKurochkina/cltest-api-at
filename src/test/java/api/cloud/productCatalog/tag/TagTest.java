@@ -47,7 +47,7 @@ public class TagTest extends Tests {
     public void createTagTest() {
         String tagName = "create_tag";
         tagList.add(tagName);
-        createTagByName(tagName);
+        createTag(tagName);
         assertEquals(tagName, getTagByName(tagName).getName());
     }
 
@@ -57,7 +57,7 @@ public class TagTest extends Tests {
     public void getTagsListTest() {
         String tagName = "get_tag_list_test_api";
         tagList.add(tagName);
-        createTagByName(tagName);
+        createTag(tagName);
         List<models.cloud.productCatalog.tag.Tag> tagList = getTagList();
         assertTrue(tagList.stream().anyMatch(x -> x.getName().equals(tagName)));
     }
@@ -68,7 +68,7 @@ public class TagTest extends Tests {
     public void checkTagExist() {
         String tagName = "exist_tag_test_api";
         tagList.add(tagName);
-        createTagByName(tagName);
+        createTag(tagName);
         assertTrue(isTagExists(tagName));
         assertFalse(isTagExists("not_exist"));
     }
@@ -78,7 +78,7 @@ public class TagTest extends Tests {
     @Test
     public void deleteTagTest() {
         String tagName = "delete_tag_test_api";
-        createTagByName(tagName);
+        createTag(tagName);
         String actionName = "action_delete_tag_test_api";
         JSONObject jsonObject = Action.builder()
                 .name(actionName)
@@ -103,7 +103,7 @@ public class TagTest extends Tests {
         String cloneTag = tagName + "-clone";
         tagList.add(tagName);
         tagList.add(cloneTag);
-        createTagByName(tagName);
+        createTag(tagName);
         models.cloud.productCatalog.tag.Tag tag = copyTagByName(tagName);
         assertEquals(cloneTag, tag.getName());
     }
@@ -170,7 +170,7 @@ public class TagTest extends Tests {
     @Test
     public void deleteUsedTagTest() {
         String tagName = "delete_used_tag_test_api";
-        createTagByName(tagName);
+        createTag(tagName);
         JSONObject jsonObject = Action.builder()
                 .name("action_delete_tag_test_api")
                 .graphId(createGraph().getGraphId())
@@ -191,7 +191,7 @@ public class TagTest extends Tests {
     @Test
     public void createTagWithExistNameTest() {
         String tagName = "create_with_exist_name_tag";
-        createTagByName(tagName);
+        createTag(tagName);
         String errorMsg = createTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("\"name\": tag с таким name уже существует.", errorMsg);
         deleteTagByName(tagName);

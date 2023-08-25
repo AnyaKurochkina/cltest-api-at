@@ -13,8 +13,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.elements.*;
 
 import java.time.Duration;
