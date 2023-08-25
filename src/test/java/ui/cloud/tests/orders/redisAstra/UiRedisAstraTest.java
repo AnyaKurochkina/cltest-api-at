@@ -55,7 +55,7 @@ public class UiRedisAstraTest extends UiProductTest {
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getUserInput().setValue(userNameRedisSentinel);
+            orderPage.getUserInput().setValue(RedisAstraOrderPage.userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -153,7 +153,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @Test
     @Order(27)
     @TmsLink("1296747")
-    @DisplayName("UI Windows. Мониторинг ОС")
+    @DisplayName("UI RedisAstra. Мониторинг ОС")
     void monitoringOs() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         redisPage.checkMonitoringOs();
@@ -161,7 +161,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @Test
     @Order(28)
     @TmsLink("1296747")
-    @DisplayName("UI Windows. Изменить параметр notify-keyspace-events")
+    @DisplayName("UI RedisAstra. Изменить параметр notify-keyspace-events")
     void changeParamNotify() {
         if (product.isProd()) {
             RedisAstraPage redisPage = new RedisAstraPage(product);

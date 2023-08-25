@@ -73,7 +73,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void resetPasswordSentinel(String name) {
-        runActionWithParameters(getActionsMenuButton(name), "Сбросить пароль", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -89,15 +89,17 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void deleteUser(String name){
-        runActionWithParameters(getActionsMenuButton(name), "Удалить пользователя", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton(name,2), "Удалить пользователя", "Подтвердить", () -> {
         });
         btnGeneralInfo.click();
-        Assertions.assertFalse(getActionsMenuButton(name).exists(), "Ошибка удаления пользователя БД");
+        Assertions.assertFalse(getActionsMenuButton(name,2).exists(), "Ошибка удаления пользователя БД");
     }
     public void createUser (String nameUser){
         runActionWithParameters(BLOCK_DB_USERS, "Создать пользователя", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Создать пользователя");
-            dlg.setInputValue("Имя пользователя", nameUser);
+            dlg.setInputValue("Пользователь", nameUser);
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
         });
         btnGeneralInfo.click();
         Assertions.assertTrue(getActionsMenuButton(nameUser).exists(), "Пользователь не существует");
@@ -164,10 +166,10 @@ public class RedisAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
     public void changeConfigurationSentinel() {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable().checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
+        runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () -> {
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
         });
@@ -281,17 +283,17 @@ public class RedisAstraPage extends IProductPage {
 
     @Step("Добавить новые группы {group} с ролью {role}")
     public void addGroup(String role, List<String> groups) {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").set(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     @Step("Изменить состав групп у роли {role} на {groups}")
@@ -303,10 +305,10 @@ public class RedisAstraPage extends IProductPage {
             groups.forEach(groupsElement::set);
         }, ActionParameters.builder().node(getRoleNode()).build());
         btnGeneralInfo.click();
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
-        currentProduct.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
 
     @Step("Удалить группу доступа с ролью {role}")
@@ -318,7 +320,6 @@ public class RedisAstraPage extends IProductPage {
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
-
     }
 
 
@@ -348,7 +349,11 @@ public class RedisAstraPage extends IProductPage {
         }
     }
 
+
     public class VirtualMachineTable extends VirtualMachine {
+        public VirtualMachineTable() {
+            super("Роли узла");
+        }
 
         public VirtualMachineTable(String columnName) {
             super(columnName);

@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import models.cloud.orderService.products.ScyllaDbCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
@@ -36,7 +37,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
-    String accessGroup = product.accessGroup();
+    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public ScyllaDbClusterPage(ScyllaDbCluster product) {
         super(product);
@@ -224,8 +225,7 @@ public class ScyllaDbClusterPage extends IProductPage {
         generalInfoTab.switchTo();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         getRoleNode().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getActionsMenuButton(accessGroup).exists(), "Ошибка удаления админ группы");
-        //Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
+        Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }
 
     //Таблица ролей
