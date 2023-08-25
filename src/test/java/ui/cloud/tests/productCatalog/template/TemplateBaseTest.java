@@ -5,7 +5,7 @@ import models.cloud.productCatalog.template.Template;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -17,7 +17,7 @@ import static steps.productCatalog.TemplateSteps.getTemplateByName;
 
 @Epic("Конструктор.Шаблоны узлов")
 @DisabledIfEnv("prod")
-public class TemplateBaseTest extends BaseTest {
+public class TemplateBaseTest extends ProductCatalogUITest {
 
     protected final static String TITLE = "AT UI Template";
     protected final static String DESCRIPTION = "Description";

@@ -12,6 +12,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductSteps;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class ProductOrderRestrictionTest extends Tests {
     @TmsLinks({@TmsLink("1536988"), @TmsLink("1536992"), @TmsLink("1536995"), @TmsLink("1536997")})
     @Test
     public void productOrderRestrictionTest() {
-        Product product = createProductByName("create_product_order_restriction_test_api");
+        Product product = ProductSteps.createProduct("create_product_order_restriction_test_api");
         ProductOrderRestriction orderRestriction = ProductOrderRestriction.builder()
                 .productName(product.getName())
                 .domains(Collections.emptyList())
@@ -71,7 +72,7 @@ public class ProductOrderRestrictionTest extends Tests {
     @TmsLinks({@TmsLink("1536999"), @TmsLink("1537001"), @TmsLink("1537004"), @TmsLink("1537008")})
     @Test
     public void productOrderRestrictionByNameTest() {
-        Product product = createProductByName("create_product_order_restriction_by_name_test_api");
+        Product product = ProductSteps.createProduct("create_product_order_restriction_by_name_test_api");
         String productName = product.getName();
         ProductOrderRestriction orderRestriction = ProductOrderRestriction.builder()
                 .productName(productName)
@@ -111,7 +112,7 @@ public class ProductOrderRestrictionTest extends Tests {
     @TmsLink("1537013")
     @Test
     public void createProductOrderRestrictionWithUsedWeight() {
-        Product product = createProductByName(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_test_api");
+        Product product = ProductSteps.createProduct(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_test_api");
         ProductOrderRestriction orderRestriction = ProductOrderRestriction.builder()
                 .productName(product.getName())
                 .domains(Collections.emptyList())

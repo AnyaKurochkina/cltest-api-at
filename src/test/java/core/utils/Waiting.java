@@ -25,11 +25,11 @@ public class Waiting {
     /**
      * Заснуть на таймаут
      *
-     * @param timeout Время ожидания.
+     * @param millis Время ожидания в мс
      */
-    public static void sleep(int timeout) {
+    public static void sleep(int millis) {
         try {
-            Thread.sleep(timeout);
+            Thread.sleep(millis);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

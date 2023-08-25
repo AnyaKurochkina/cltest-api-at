@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Assertions;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.productCatalog.TagSteps.*;
-import static steps.productCatalog.TemplateSteps.isTemplateExists;
 
 @Log4j2
 @Builder
@@ -23,7 +22,6 @@ import static steps.productCatalog.TemplateSteps.isTemplateExists;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-
 public class Tag extends Entity implements IProductCatalog {
 
     private Integer id;
@@ -51,14 +49,14 @@ public class Tag extends Entity implements IProductCatalog {
             Response response = getTagUsedObjectsByName(name);
             deleteTagByName(name);
         }
-        Tag createTemplate = createTagByName(name);
-        StringUtils.copyAvailableFields(createTemplate, this);
+        Tag tag = createTag(name);
+        StringUtils.copyAvailableFields(tag, this);
         Assertions.assertNotNull(id, "Тег с именем: " + name + ", не создался");
     }
 
     @Override
     protected void delete() {
         deleteTagByName(name);
-        assertFalse(isTemplateExists(name));
+        assertFalse(isTagExists(name));
     }
 }
