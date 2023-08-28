@@ -15,6 +15,7 @@ public class RedisAstraOrderPage extends NewOrderPage {
     private final Switch createDefaultUserSwitch = Switch.byText("Создать пользователя default");
     Select redisVersion = Select.byLabel("Версия Redis");
     public static String userNameRedisSentinel= "sentinel";
+    protected Select flavorSelectRedisSentinel = Select.byLabel("Конфигурация мастера и реплики (Core/RAM)");
     public RedisAstraOrderPage() {
         labelInput.setValue(labelValue);
         platformSelect.getElement().shouldBe(Condition.enabled);

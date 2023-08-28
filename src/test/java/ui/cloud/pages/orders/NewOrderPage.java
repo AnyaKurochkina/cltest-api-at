@@ -36,7 +36,6 @@ public class NewOrderPage {
     protected Select versionJava = Select.byLabel("Версия java");
     protected Select domain = Select.byLabel("Домен");
     protected Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
-    protected Select flavorSelectRedisSentinel = Select.byLabel("Конфигурация мастера и реплики (Core/RAM)");
     protected Select roleSelect = Select.byLabel("Роль");
     protected Select groupSelect = Select.byLabel("Группы");
     protected Select group2Select = Select.byLabel("Группы",2);
