@@ -10,13 +10,13 @@ import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.HashMap;
 import java.util.UUID;
 
 @Epic("Конструктор.Продукты")
-public class ProductBaseTest extends BaseTest {
+public class ProductBaseTest extends ProductCatalogUITest {
 
     final static String TITLE = "AT UI Product";
     final static String GRAPH_TITLE = "AT UI Graph for product";

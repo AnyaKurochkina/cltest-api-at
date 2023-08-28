@@ -54,7 +54,7 @@ public class TagSteps extends Steps {
     }
 
     @Step("Создание Тега")
-    public static Tag createTagByName(String name) {
+    public static Tag createTag(String name) {
         if (isTagExists(name)) {
             deleteTagByName(name);
         }

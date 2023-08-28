@@ -8,8 +8,8 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 

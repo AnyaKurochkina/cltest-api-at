@@ -6,12 +6,12 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
 import org.junit.DisabledIfEnv;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.Collections;
 
 @DisabledIfEnv("prod")
-public class ActionBaseTest extends BaseTest {
+public class ActionBaseTest extends ProductCatalogUITest {
 
     protected final String TITLE = "AT UI Action";
 

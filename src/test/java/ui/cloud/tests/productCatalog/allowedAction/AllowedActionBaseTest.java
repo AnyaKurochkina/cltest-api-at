@@ -6,14 +6,14 @@ import models.cloud.productCatalog.allowedAction.AllowedAction;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import static steps.productCatalog.ActionSteps.getActionById;
 import static steps.productCatalog.AllowedActionSteps.createAllowedAction;
 
 @Epic("Конструктор. Разрешенные действия")
 @DisabledIfEnv("prod")
-public class AllowedActionBaseTest extends BaseTest {
+public class AllowedActionBaseTest extends ProductCatalogUITest {
 
     protected final String TITLE = "AT UI Allowed Action";
     protected String NAME;
