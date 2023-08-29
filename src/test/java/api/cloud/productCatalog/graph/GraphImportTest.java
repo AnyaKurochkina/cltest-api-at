@@ -10,15 +10,20 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.graph.Graph;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.*;
-import static steps.productCatalog.ProductCatalogSteps.importObjects;
+import static steps.productCatalog.ProductCatalogSteps.*;
 import static steps.productCatalog.ProductSteps.importProduct;
+
 @Tag("product_catalog")
 @Tag("Graphs")
 @Epic("Продуктовый каталог")
@@ -106,6 +111,28 @@ public class GraphImportTest extends Tests {
         assertTrue(isGraphExists(graphName), "Граф не существует");
         deleteGraphByName(graphName);
         assertFalse(isGraphExists(graphName), "Граф существует");
+    }
 
+    @DisplayName("Импорт графа с tag_list")
+    @TmsLink("SOUL-7104")
+    @Test
+    public void importGraphWithTagListTest() {
+        String graphName = "graph_import_with_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraphWithTags.json";
+        if (isGraphExists(graphName)) {
+            deleteGraphByName(graphName);
+        }
+        List<String> expectedTagList = Arrays.asList("import_test", "test_import");
+        JSONObject jsonObject = Graph.builder()
+                .name(graphName)
+                .tagList(expectedTagList)
+                .build()
+                .toJson();
+        Graph graph = createGraph(jsonObject).extractAs(Graph.class);
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("graphs", graph.getGraphId()).toString());
+        deleteGraphByName(graphName);
+        importObjectWithTagList("graphs", filePath);
+        assertEquals(expectedTagList, getGraphByName(graphName).getTagList());
+        deleteGraphByName(graphName);
     }
 }

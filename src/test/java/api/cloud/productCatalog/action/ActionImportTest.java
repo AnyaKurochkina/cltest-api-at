@@ -23,7 +23,7 @@ import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
-import static steps.productCatalog.ProductCatalogSteps.importObjects;
+import static steps.productCatalog.ProductCatalogSteps.*;
 import static steps.productCatalog.ProductSteps.importProduct;
 
 @Tag("product_catalog")
@@ -51,7 +51,7 @@ public class ActionImportTest extends Tests {
     }
 
     @DisplayName("Импорт действия с tag_list")
-    @TmsLink("")
+    @TmsLink("SOUL-7102")
     @Test
     public void importActionWithTagListTest() {
         String actionName = "action_import_with_tag_list_test_api";
@@ -68,10 +68,11 @@ public class ActionImportTest extends Tests {
                 .build()
                 .toJson();
         Action action = createAction(jsonObject).extractAs(Action.class);
-        DataFileHelper.write(filePath, exportActionByIdWithTags(action.getActionId()).toString());
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("actions", action.getActionId()).toString());
         deleteActionByName(actionName);
-        importActionWithTagList(filePath);
+        importObjectWithTagList("actions", filePath);
         assertEquals(expectedTagList, getActionByName(actionName).getTagList());
+        deleteActionByName(actionName);
     }
 
     @DisplayName("Импорт нескольких действий")

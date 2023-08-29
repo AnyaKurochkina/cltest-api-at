@@ -22,6 +22,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
@@ -58,7 +59,7 @@ public class ActionExportTest extends Tests {
     }
 
     @DisplayName("Экспорт действия по Id с tag_list")
-    @TmsLink("")
+    @TmsLink("SOUL-7101")
     @Test
     public void exportActionByIdWithTagListTest() {
         String actionName = "action_export_with_tag_list_test_api";
@@ -74,7 +75,7 @@ public class ActionExportTest extends Tests {
                 .build()
                 .toJson();
         Action action = createAction(jsonObject).extractAs(Action.class);
-        List<String> actualTagList = exportActionByIdWithTags(action.getActionId()).jsonPath().getList("Action.tag_name_list");
+        List<String> actualTagList = exportObjectByIdWithTags("actions", action.getActionId()).jsonPath().getList("Action.tag_name_list");
         assertEquals(actualTagList, expectedTagList);
         deleteActionById(action.getActionId());
     }
