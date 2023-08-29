@@ -126,7 +126,7 @@ public class ProductImportTest extends Tests {
     }
 
     @DisplayName("Импорт продукта с tag_list")
-    @TmsLink("SOUL-")
+    @TmsLink("SOUL-7114")
     @Test
     public void importProductWithTagListTest() {
         String productName = "product_import_with_tag_list_test_api";

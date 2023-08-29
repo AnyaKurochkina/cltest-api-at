@@ -66,7 +66,7 @@ public class ProductExportTest extends Tests {
     }
 
     @DisplayName("Экспорт продукта по Id с tag_list")
-    @TmsLink("SOUL-")
+    @TmsLink("SOUL-7113")
     @Test
     public void exportProductByIdWithTagListTest() {
         String productName = "product_export_with_tag_list_test_api";
