@@ -7,13 +7,13 @@ import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.UUID;
 
 @Epic("Конструктор. Шаблоны Jinja2")
 @DisabledIfEnv("prod")
-public class Jinja2TemplateBaseTest extends BaseTest {
+public class Jinja2TemplateBaseTest extends ProductCatalogUITest {
 
     protected final String TITLE = "AT UI Jinja2 Template";
     protected final String NAME = UUID.randomUUID().toString().substring(29);

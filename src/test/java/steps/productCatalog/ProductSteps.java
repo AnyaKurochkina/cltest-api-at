@@ -95,7 +95,7 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Создание продукта")
-    public static Product createProductByName(String name) {
+    public static Product createProduct(String name) {
         return Product.builder()
                 .name(name)
                 .title("AtTestApiProduct")

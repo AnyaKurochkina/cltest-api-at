@@ -293,6 +293,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () ->pSqlPage.deleteQuotas("131072"));
     }
 
+
     @Test
     @Order(25)
     @TmsLink("982961")

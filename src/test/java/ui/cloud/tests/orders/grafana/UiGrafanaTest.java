@@ -151,33 +151,37 @@ public class UiGrafanaTest extends UiProductTest {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.checkMonitoringOs();
     }
+
     @Test
     @Order(9)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI Grafana. Создать снапшот")
     void сreateSnapshot() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::сreateSnapshot);
     }
+
     @Test
     @Order(10)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI Grafana. Удалить снапшот")
     void deleteSnapshot() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::deleteSnapshot);
     }
+
     @Test
     @Order(11)
     @TmsLink("1688715")
-    @EnabledIfEnv("blue")
-    @DisplayName("UI Grafana. Реинвентаризация ВМ (Linux)")
+    //@EnabledIfEnv("blue")
+    @DisplayName("UI Grafana.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::reInventory);
     }
+
     @Test
     @Order(12)
     @TmsLink("1714371")
@@ -196,6 +200,7 @@ public class UiGrafanaTest extends UiProductTest {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::resetPassword);
     }
+
     @Test
     @Order(14)
     @TmsLink("")

@@ -28,8 +28,16 @@ public class Button implements TypifiedElement {
         return byText(text, 1);
     }
 
+    public static Button byTextContains(String text) {
+        return byTextContains(text, 1);
+    }
+
     public static Button byText(String text, int index) {
         return new Button($x("(//button[.='{}'])" + postfix, text, TypifiedElement.getIndex(index)));
+    }
+
+    public static Button byTextContains(String text, int index) {
+        return new Button($x("(//button[contains(., '{}')])" + postfix, text, TypifiedElement.getIndex(index)));
     }
 
     public static Button byAriaLabel(String value) {

@@ -7,14 +7,14 @@ import models.t1.imageService.ImageGroup;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.t1.imageService.ImageServiceSteps;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 import ui.t1.pages.ControlPanelIndexPage;
 
 import java.util.Arrays;
 import java.util.UUID;
 
 @Feature("Образы.Группы образов")
-public class ImageGroupTest extends BaseTest {
+public class ImageGroupTest extends ProductCatalogUITest {
 
     private final String distro = UUID.randomUUID().toString();
     private final String title = "AT UI Group_" + UUID.randomUUID();

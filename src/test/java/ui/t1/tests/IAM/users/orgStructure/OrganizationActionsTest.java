@@ -2,6 +2,7 @@ package ui.t1.tests.IAM.users.orgStructure;
 
 import api.Tests;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import lombok.extern.log4j.Log4j2;
@@ -52,7 +53,12 @@ public class OrganizationActionsTest extends Tests {
     @Test
     @DisplayName("Переключение между организациями")
     public void switchBetweenOrganizationTest() {
-        String orgName = "QA IFT T1";
+        String orgName;
+        if (Configure.ENV.equals("t1prod")) {
+            orgName = "T1-CLOUD";
+        } else {
+            orgName = "QA IFT T1";
+        }
         assertTrue(new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN)
                 .changeContext()
