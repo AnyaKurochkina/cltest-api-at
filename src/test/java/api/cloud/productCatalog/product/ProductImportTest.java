@@ -9,17 +9,22 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.List;
+
 import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.createGraph;
-import static steps.productCatalog.ProductCatalogSteps.importObjects;
+import static steps.productCatalog.ProductCatalogSteps.*;
 import static steps.productCatalog.ProductSteps.*;
 
 @Tag("product_catalog")
@@ -118,5 +123,30 @@ public class ProductImportTest extends Tests {
         assertEquals( String.format("Error loading dump: Версия \"%s\" Product:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
                         product.getVersion(), product.getName()),
                 importObject.getMessages().get(0));
+    }
+
+    @DisplayName("Импорт продукта с tag_list")
+    @TmsLink("SOUL-")
+    @Test
+    public void importProductWithTagListTest() {
+        String productName = "product_import_with_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/products/importProductWithTags.json";
+        if (isProductExists(productName)) {
+            deleteProductByName(productName);
+        }
+        Graph graph = createGraph("graph_product_import_for_export_with_tags_test");
+        List<String> expectedTagList = Arrays.asList("import_test", "test_import");
+        JSONObject jsonObject = Product.builder()
+                .name(productName)
+                .graphId(graph.getGraphId())
+                .tagList(expectedTagList)
+                .build()
+                .toJson();
+        Product product = createProduct(jsonObject);
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("products", product.getProductId()).toString());
+        deleteProductByName(productName);
+        importObjectWithTagList("products", filePath);
+        assertEquals(expectedTagList, getProductByName(productName).getTagList());
+        deleteProductByName(productName);
     }
 }
