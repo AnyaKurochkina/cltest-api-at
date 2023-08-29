@@ -44,9 +44,8 @@ public class Waiting {
         return false;
     }
 
-    public static boolean find(Supplier<Boolean> b, Duration duration) {
+    public static void find(Supplier<Boolean> b, Duration duration) {
         find(b, duration, "Return false");
-        return false;
     }
 
     @SneakyThrows
