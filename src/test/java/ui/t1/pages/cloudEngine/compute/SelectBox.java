@@ -32,7 +32,7 @@ public class SelectBox implements TypifiedElement {
 
     public static void setUserImage(String image) {
         if (!Button.byText("Пользовательские").isVisible()) {
-            Menu.byElement($x("//*[@id = 'Cloud Marketplace']/following-sibling::div/button")).select("Пользовательские");
+            Select.byXpath("//*[@id = 'Cloud Marketplace']/following-sibling::div/button").set("Пользовательские");
         } else {
             Button.byId("Пользовательские").click();
         }

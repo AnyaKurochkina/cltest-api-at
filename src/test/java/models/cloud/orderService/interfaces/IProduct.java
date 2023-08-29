@@ -305,7 +305,7 @@ public abstract class IProduct extends Entity {
     @Step("Удаление продукта")
     protected void delete(String action) {
         if (envType().contains("prod")) {
-            OrderServiceSteps.switchProtect(this, false);
+            OrderServiceSteps.switchProtect(getOrderId(), getProjectId(), false);
         }
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");

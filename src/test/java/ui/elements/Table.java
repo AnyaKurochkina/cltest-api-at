@@ -207,6 +207,10 @@ public class Table implements TypifiedElement {
             return getValueByColumnInRow(index, column);
         }
 
+        public SelenideElement getElementLastColumn() {
+            return getElementByColumnIndex(rowSize() - 1);
+        }
+
         public SelenideElement getElementByColumnIndex(int column) {
             SelenideElement element;
             try {

@@ -2,6 +2,7 @@ package ui.t1.tests.engine.vpc;
 
 import core.helper.StringUtils;
 import core.helper.TableChecker;
+import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -9,18 +10,21 @@ import models.AbstractEntity;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
-import ui.elements.Table;
+import ui.elements.Menu;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.Column;
-import ui.t1.pages.cloudEngine.vpc.VirtualIp;
-import ui.t1.pages.cloudEngine.vpc.VirtualIpCreate;
+import ui.t1.pages.cloudEngine.vpc.Router;
+import ui.t1.pages.cloudEngine.vpc.RouterCreate;
+import ui.t1.pages.cloudEngine.vpc.RouterList;
 import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
 import ui.t1.tests.engine.AbstractComputeTest;
 
-import java.util.Objects;
+import java.util.Arrays;
+
+import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
+import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
@@ -29,7 +33,7 @@ import java.util.Objects;
 @Feature("Маршрутизаторы")
 @Epic("Cloud Compute")
 public class RouterTest extends AbstractComputeTest {
-    VirtualIpCreate ip;
+    RouterCreate router;
 
     @Test
     @Order(1)
@@ -37,33 +41,66 @@ public class RouterTest extends AbstractComputeTest {
     @Tag("smoke")
     @DisplayName("Cloud VPC. Маршрутизаторы. Создать маршрутизатор")
     void addRouter() {
-//        ip = new IndexPage().goToRouters().addRouter().setRegion(region).setNetwork(defaultNetwork).setL2(true).setName(getRandomName())
-//                .setMode("active-active").clickOrder();
-//        VirtualIp ipPage = new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
-//        String orderId = ipPage.getOrderId();
-//        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
-//                .filter(e -> e.getOrderId().equals(orderId))
-//                .filter(i -> i.getFloatingIpAddress().equals(ip.getIp()))
-//                .count(), "Поиск item, где orderId = srcOrderId & floatingIpAddress == " + ip.getIp());
+        router = new IndexPage().goToRouters().addRouter().setName(getRandomName()).setRegion(region).setDesc("desc").addNetwork(defaultNetwork).clickOrder();
+        new RouterList().selectRouter(router.getName()).markForDeletion(new VmEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
     }
 
     @Test
     @Order(2)
     @TmsLink("")
     @DisplayName("Cloud VPC. Маршрутизаторы")
-    void checkIp() {
-        new IndexPage().goToVirtualIps();
+    void checkRouterList() {
+        new IndexPage().goToRouters();
         new TableChecker()
                 .add("", String::isEmpty)
-                .add(Column.IP_ADDRESS, e -> e.equals(ip.getIp()))
-                .add("Регион", e -> e.equals(ip.getRegion()))
-                .add("Сеть",  e -> e.equals(ip.getNetwork()))
-                .add("Подсеть",  e -> e.length() > 5)
-                .add("поддержка L2", e -> e.equals("Да"))
-                .add("Режим", e -> e.equals(ip.getMode()))
+                .add(Column.NAME, e -> e.equals(router.getName()))
+                .add("Регион", e -> e.equals(router.getRegion()))
+                .add("Публичный IP",  e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
                 .add("Дата создания",  e -> e.length() > 4)
                 .add("", String::isEmpty)
-                .check(() -> new VirtualIpList.IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip.getIp()));
+                .check(() -> new RouterList.RouterTable().getRowByColumnValue(Column.NAME, router.getName()));
+    }
+
+    @Test
+    @Order(3)
+    @TmsLink("")
+    @DisplayName("Cloud VPC. Маршрутизатор. Действия")
+    void checkRouter() {
+        new IndexPage().goToRouters().selectRouter(router.getName());
+        new TableChecker()
+                .add(Column.NAME, e -> e.equals(router.getName()))
+                .add("Тип", e -> e.equals("Маршрутизатор"))
+                .add("Статус",  String::isEmpty)
+                .add("", String::isEmpty)
+                .check(() -> new Router.RouterTable().getRow(0));
+        new TableChecker()
+                .add(Column.IP, e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
+                .add(Column.NAME, e -> e.length() > 5)
+                .add("Тип", e -> e.equals("Сетевой интерфейс"))
+                .add("Статус",  String::isEmpty)
+                .add("Подсеть",  e -> e.equals(router.getNetworks().get(0)))
+                .add("Сеть",  e -> e.equals(router.getRegion()))
+                .add(Column.MAC,  e -> StringUtils.isMatch( "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
+                .add("", String::isEmpty)
+                .check(() -> new Router.RouterTable().getRow(0));
+        AssertUtils.assertEqualsList(Arrays.asList("Подключить сеть", "Скопировать ID", "Удалить"), new Menu(getActionsMenuButton(BLOCK_PARAMETERS)).getOptions());
+        AssertUtils.assertEqualsList(Arrays.asList("Удалить сетевой интерфейс", "Скопировать ID"), new Menu(getActionsMenuButton("Сетевые интерфейсы")).getOptions());
+    }
+
+    @Test
+    @Order(4)
+    @TmsLink("")
+    @DisplayName("Cloud VPC. Подключить сеть")
+    void connectNetwork() {
+        final String networkName = getRandomName();
+        new IndexPage().goToNetworks().addNetwork(networkName, "desc");
+        try {
+            new IndexPage().goToRouters()
+                    .getMenuRouter(new RouterList.RouterTable().getRowByColumnValue(Column.NAME, router.getName()).getElementLastColumn())
+                    .attachNetwork(networkName);
+        } finally {
+            new IndexPage().goToNetworks().deleteNetwork(networkName);
+        }
     }
 
     @Test
@@ -71,8 +108,7 @@ public class RouterTest extends AbstractComputeTest {
     @Order(100)
     @DisplayName("Cloud VPC. Маршрутизаторы. Удалить")
     void deleteRouter() {
-//        VirtualIp ipPage = new IndexPage().goToVirtualIps().selectIp(ip.getIp());
-//        ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
-//        Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip.getIp())));
+        Router routerPage = new IndexPage().goToRouters().selectRouter(router.getName());
+        routerPage.runActionWithCheckCost(CompareType.ZERO, routerPage::delete);
     }
 }

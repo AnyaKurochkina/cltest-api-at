@@ -83,7 +83,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", getSupport())
-                .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq-2", envType().toUpperCase(), "rabbitmq", org.getName()))
+                .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq-2", getSegment(), "rabbitmq", org.getName()))
                 .set("$.order.label", getLabel())
                 .build();
     }

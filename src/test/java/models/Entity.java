@@ -18,7 +18,7 @@ import java.lang.annotation.*;
 
 @NoArgsConstructor
 @SuperBuilder
-@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId"})
+@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId", "skip"})
 public abstract class Entity implements AutoCloseable {
     public String objectClassName;
     public String uuid;
