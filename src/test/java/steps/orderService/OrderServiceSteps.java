@@ -29,6 +29,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Predicate;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.enums.Role.ORDER_SERVICE_ADMIN;
@@ -203,11 +204,11 @@ public class OrderServiceSteps extends Steps {
         executeAction(action, product, jsonData, status, projectId, "");
     }
 
-    public static void switchProtect(IProduct product, boolean value) {
+    public static void switchProtect(String orderId, String projectId, boolean value) {
         Assertions.assertEquals(!value, new Http(OrderServiceURL)
-                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                 .body(new JSONObject().put("order", new JSONObject().put("deletable", !value)))
-                .patch("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
+                .patch("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
                 .jsonPath()
                 .getBoolean("deletable"));
@@ -544,7 +545,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Удаление всех заказов")
-    public static void deleteOrders(String env) {
+    public static void deleteOrders(String env, Predicate<String> label) {
         Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
         List<String> orders = new Http(OrderServiceURL)
@@ -557,14 +558,19 @@ public class OrderServiceSteps extends Steps {
         for (String order : orders) {
             try {
                 JsonPath jsonPath = new Http(OrderServiceURL)
-//                        .setProjectId(project.id)
                         .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
+                if(!label.test(jsonPath.getString("label")))
+                    continue;
                 String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
                 String action = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.actions.find{it.type == 'delete'}.name");
                 log.trace("item_id = " + itemId);
                 log.trace("action = " + action);
+
+                if(project.getProjectEnvironmentPrefix().getEnvType().equalsIgnoreCase("prod")){
+                    OrderServiceSteps.switchProtect(order, project.id, false);
+                }
 
                 JsonHelper.getJsonTemplate("/actions/template.json")
                         .set("$.item_id", itemId)

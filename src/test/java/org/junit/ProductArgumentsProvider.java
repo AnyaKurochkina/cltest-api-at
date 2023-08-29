@@ -44,6 +44,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         } else {
             List<Arguments> list = new ArrayList<>();
             orders.stream()
+                    .filter(p -> Objects.nonNull(p.getEnv()))
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
                     .forEach(entity -> list.add(Arguments.arguments(entity.getEnv())));
@@ -137,7 +138,9 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 Class<?> c = Class.forName("models.cloud.orderService.products." + e.getKey());
                 List listProduct = findListInMapByKey("options", e.getValue());
                 if (listProduct == null) {
-                    list.add((IProduct) objectMapper.convertValue(Collections.singletonMap("skip", true), c));
+                    final IProduct product = (IProduct) objectMapper.convertValue(new HashMap<>(), c);
+                    product.setSkip(true);
+                    list.add(product);
                     continue;
                 }
                 for (Object orderObj : listProduct) {

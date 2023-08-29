@@ -1,6 +1,7 @@
 package ui;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
 import models.cloud.authorizer.GlobalUser;
@@ -32,6 +33,12 @@ public abstract class LoginPage {
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
         TypifiedElement.checkProject();
+        final String theme = "\"light\"";
+        final String key = "themeType";
+        if(!Objects.equals(Selenide.sessionStorage().getItem(key), theme)) {
+            Selenide.sessionStorage().setItem(key, theme);
+            TypifiedElement.refresh();
+        }
     }
 
     protected void signInRole(Role role) {

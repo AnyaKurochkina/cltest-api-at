@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
+import steps.orderService.OrderServiceSteps;
 import steps.resourceManager.ResourceManagerSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
@@ -125,6 +126,7 @@ public abstract class AbstractComputeTest extends Tests {
             if(status.equals("changing") || status.equals("pending"))
                 Waiting.sleep(20000);
             if(status.equals("success")) {
+                OrderServiceSteps.switchProtect(id, projectId, false);
                 Http.builder().setRole(Role.CLOUD_ADMIN).api(deleteV1ProjectsProjectNameOrdersId, projectId, id);
                 Waiting.sleep(30000);
             }

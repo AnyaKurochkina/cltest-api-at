@@ -26,8 +26,8 @@ public class DeleteAllOrders extends Tests {
     @Tag("deleteAll")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Удаление всех успешных заказов из проекта")
-    public void DeleteOrders(String env)  {
-        OrderServiceSteps.deleteOrders(env);
+    public void deleteOrders(String env)  {
+        OrderServiceSteps.deleteOrders(env, label -> label.startsWith("AT-API"));
     }
 
     @Test
@@ -51,6 +51,8 @@ public class DeleteAllOrders extends Tests {
                     Configure.getAppProp("base.url"), order.id, order.projectId);
         }
     }
+
+
 
     @AllArgsConstructor
     private static class Order {

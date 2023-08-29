@@ -77,7 +77,7 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("Имя", e -> e.equals(ip.getName()))
                 .add("Тип",  e -> e.equals("Виртуальный IP адрес"))
                 .add("Статус",  e -> e.equals(""))
-                .add("MAC-адрес", e -> StringUtils.isMatch( "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
+                .add(Column.MAC, e -> StringUtils.isMatch( "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
                 .add("", String::isEmpty)
                 .check(() -> new Table(Column.IP).getRowByColumnValue(Column.IP, ip.getIp()));
     }

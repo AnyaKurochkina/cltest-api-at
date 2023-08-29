@@ -18,9 +18,9 @@ public class RouterList extends IProductListT1Page {
         return new RouterCreate();
     }
 
-    public VirtualIp selectRouter(String name) {
-        new RouterTable().getRowByColumnValue(Column.NAME, name).getElementByColumn(Column.IP_ADDRESS).shouldBe(Condition.visible).click();
-        return new VirtualIp();
+    public Router selectRouter(String name) {
+        new RouterTable().getRowByColumnValue(Column.NAME, name).getElementByColumn(Column.NAME).shouldBe(Condition.visible).click();
+        return new Router();
     }
 
     public Menu getMenuRouter(SelenideElement btn) {
@@ -34,18 +34,11 @@ public class RouterList extends IProductListT1Page {
             this.btn = btn;
         }
 
-        @Step("Подключить к сетевому интерфейсу {ip}")
-        public void attachComputeIp(String ip) {
-            runActionWithParameters(btn, "Подключить к сетевому интерфейсу", "Подтвердить", () ->
-                    Dialog.byTitle("Подключить к сетевому интерфейсу")
-                            .setSelectValue("Сетевой интерфейс", ip));
-        }
-
-        @Step("Отключить от сетевого интерфейса {ip}")
-        public void detachComputeIp(String ip) {
-            runActionWithParameters(btn, "Отключить от сетевого интерфейса", "Подтвердить", () ->
-                    Dialog.byTitle("Отключить от сетевого интерфейса")
-                            .setSelectValue("Сетевой интерфейс", ip));
+        @Step("Подключить сеть {network}")
+        public void attachNetwork(String network) {
+            runActionWithParameters(btn, "Подключить сеть", "Подтвердить", () ->
+                    Dialog.byTitle("Подключить сеть")
+                            .setSelectValue("Добавленные сети", network));
         }
     }
 

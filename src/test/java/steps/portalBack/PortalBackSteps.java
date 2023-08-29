@@ -107,7 +107,7 @@ public class PortalBackSteps extends Steps {
     public static String getAccessGroupByDesc(String projectId, String desc, String type, String domain) {
         String accessGroup = new Http(PortalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
-                .get("/v1/projects/{}/access_groups?f[purpose]={}&domain={}&page=1&per_page=25", projectId, type, domain)
+                .get("/v1/projects/{}/access_groups?f[accounts_type]={}&domain={}&page=1&per_page=25", projectId, type, domain)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("list.find{it.description == '" + desc + "'}.name");
