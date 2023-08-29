@@ -42,6 +42,7 @@ public class OrgStructurePage {
 
     @Step("Открыть модальное окно у папки/проекта/организации")
     public ModalWindow openModalWindow(String name) {
+        Waiting.sleep(2000);
         String type = new OrgTable().getRowByColumnValue("Название", name).getValueByColumn("Тип");
         new OrgTable().getRowByColumnValue("Название", name)
                 .get()
