@@ -25,6 +25,7 @@ import models.cloud.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
+import org.opentest4j.TestAbortedException;
 import ru.testit.junit5.StepsAspects;
 
 import java.lang.reflect.Field;
@@ -43,12 +44,14 @@ public class ObjectPoolService {
     public static final List<String> deleteClassesName = Collections.synchronizedList(new ArrayList<>());
     public static final ArrayDeque<String> createdEntities = new ArrayDeque<>();
 
-    private static boolean isNeedLock(ObjectPoolEntity e, boolean exclusive){
+    private static boolean isNeedLock(ObjectPoolEntity e, boolean exclusive) {
         return e.getStatus() == ObjectStatus.NOT_CREATED || exclusive;
     }
 
     @SneakyThrows
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess, boolean isPublic) {
+        if (e.isSkip())
+            throw new TestAbortedException("Нет конфигураций для объекта " + e.getClass().getSimpleName());
         ObjectPoolEntity objectPoolEntity;
         synchronized (ObjectPoolService.class) {
             objectPoolEntity = createObjectPoolEntity(e);
@@ -56,7 +59,7 @@ public class ObjectPoolService {
         }
         if (isNeedLock(objectPoolEntity, exclusiveAccess)) {
             objectPoolEntity.lock();
-            if(!exclusiveAccess && objectPoolEntity.getStatus().equals(ObjectStatus.CREATED))
+            if (!exclusiveAccess && objectPoolEntity.getStatus().equals(ObjectStatus.CREATED))
                 objectPoolEntity.release();
         }
 
@@ -97,7 +100,7 @@ public class ObjectPoolService {
                 throw throwable;
             }
             objectPoolEntity.setStatus(ObjectStatus.CREATED);
-            if(!exclusiveAccess)
+            if (!exclusiveAccess)
                 objectPoolEntity.release();
         }
 
@@ -123,7 +126,7 @@ public class ObjectPoolService {
         return writeEntityToMap(e);
     }
 
-    public static <T extends Entity> T getObject(Entity e) {
+    public static <T extends Entity> T onlyGetObject(Entity e) {
         for (ObjectPoolEntity objectPoolEntity : entities.values()) {
             if (objectPoolEntity.equalsEntity(e)) {
                 return objectPoolEntity.get();
@@ -171,7 +174,7 @@ public class ObjectPoolService {
         deleteAllVm(entityList);
 
         try {
-            while(createdEntities.peek()!=null){
+            while (createdEntities.peek() != null) {
                 String key = createdEntities.pop();
                 ObjectPoolEntity objectPoolEntity = entities.get(key);
                 if (objectPoolEntity.getClazz().isAssignableFrom(Token.class))

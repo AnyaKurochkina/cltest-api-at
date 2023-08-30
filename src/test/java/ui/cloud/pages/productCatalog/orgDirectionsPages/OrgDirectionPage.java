@@ -3,8 +3,8 @@ package ui.cloud.pages.productCatalog.orgDirectionsPages;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 

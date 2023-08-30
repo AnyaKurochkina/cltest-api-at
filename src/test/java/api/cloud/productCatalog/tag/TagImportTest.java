@@ -27,7 +27,7 @@ public class TagImportTest extends Tests {
     @TmsLink("1698521")
     @Test
     public void importTagTest() {
-        String importTagName = createTagByName("import_tag_test_api").getName();
+        String importTagName = createTag("import_tag_test_api").getName();
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/tag/importTag.json";
         DataFileHelper.write(filePath, exportTagByName(importTagName).toString());
         deleteTagByName(importTagName);
@@ -44,8 +44,8 @@ public class TagImportTest extends Tests {
     @TmsLink("1698534")
     @Test
     public void importTagsTest() {
-        String importTagName = createTagByName("multi_import_tag_test_api").getName();
-        String importTagName2 = createTagByName("multi_import_tag2_test_api").getName();
+        String importTagName = createTag("multi_import_tag_test_api").getName();
+        String importTagName2 = createTag("multi_import_tag2_test_api").getName();
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/tag/multiImportTag.json";
         String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/tag/multiImportTag2.json";
         DataFileHelper.write(filePath, exportTagByName(importTagName).toString());
@@ -65,7 +65,7 @@ public class TagImportTest extends Tests {
     @TmsLink("1698560")
     @Test
     public void importExistTagTest() {
-        String tagName = createTagByName("import_exist_tag_test_api").getName();
+        String tagName = createTag("import_exist_tag_test_api").getName();
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/tag/existTagImport.json";
         DataFileHelper.write(filePath, exportTagByName(tagName).toString());
         ImportObject importObject = importTag(filePath);
@@ -79,7 +79,7 @@ public class TagImportTest extends Tests {
     @DisplayName("Негативный тест импорт Тега в другой раздел")
     @TmsLink("")
     public void importTagToAnotherSection() {
-        String importTagName = createTagByName("import_tag_to_another_section_test_api").getName();
+        String importTagName = createTag("import_tag_to_another_section_test_api").getName();
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/tag/importTagToAnotherSection.json";
         DataFileHelper.write(filePath, exportTagByName(importTagName).toString());
         importProduct(filePath);

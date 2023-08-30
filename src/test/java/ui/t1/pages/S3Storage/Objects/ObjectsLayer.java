@@ -158,7 +158,7 @@ public class ObjectsLayer extends AbstractLayerS3<ObjectsLayer> {
         Menu.byElement(objectList.getRowByColumnValue(fObjectColumn, objectName)
                 .getElementByColumnIndex(delIdx)
                 .$x(".//button")).select("Скачать");
-
+        Alert.green("Объект успешно скачан");
         return this;
     }
 }

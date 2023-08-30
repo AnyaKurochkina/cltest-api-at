@@ -11,6 +11,8 @@ import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.tests.engine.AbstractComputeTest;
 
+import java.time.Duration;
+
 import static ui.elements.Select.RANDOM_VALUE;
 
 @Epic("Cloud Compute")
@@ -27,8 +29,9 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setImage(new SelectBox.Image("Windows Server", RANDOM_VALUE))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
+                .setBootSize(21)
+                .setCreateTimeout(Duration.ofMinutes(4))
                 .addSecurityGroups(securityGroup)
-                .setBootSize(20)
                 .setSshKey(sshKey)
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
@@ -44,8 +47,9 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setImage(new SelectBox.Image("usergate", RANDOM_VALUE))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
+                .setBootSize(21)
+                .setCreateTimeout(Duration.ofMinutes(4))
                 .addSecurityGroups(securityGroup)
-                .setBootSize(20)
                 .setSshKey(sshKey)
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
@@ -61,8 +65,9 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setImage(new SelectBox.Image("acronis", RANDOM_VALUE))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
+                .setBootSize(21)
+                .setCreateTimeout(Duration.ofMinutes(4))
                 .addSecurityGroups(securityGroup)
-                .setBootSize(20)
                 .setSshKey(sshKey)
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
@@ -78,8 +83,8 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setImage(new SelectBox.Image("skdpu", RANDOM_VALUE))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
+                .setCreateTimeout(Duration.ofMinutes(5))
                 .addSecurityGroups(securityGroup)
-                .setBootSize(20)
                 .setSshKey(sshKey)
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
@@ -95,9 +100,11 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setImage(new SelectBox.Image("ksmg", RANDOM_VALUE))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
+                .setBootSize(21)
+                .setCreateTimeout(Duration.ofMinutes(4))
                 .addSecurityGroups(securityGroup)
-                .setBootSize(20)
                 .setSshKey(sshKey)
+                .setCreateTimeout(Duration.ofMinutes(5))
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
     }
@@ -112,8 +119,9 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setImage(new SelectBox.Image("Альт Сервер", RANDOM_VALUE))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
+                .setBootSize(21)
+                .setCreateTimeout(Duration.ofMinutes(4))
                 .addSecurityGroups(securityGroup)
-                .setBootSize(20)
                 .setSshKey(sshKey)
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
@@ -129,8 +137,9 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setImage(new SelectBox.Image("Astra Linux SE", RANDOM_VALUE))
                 .setName(getRandomName())
                 .setDeleteOnTermination(true)
+                .setBootSize(21)
+                .setCreateTimeout(Duration.ofMinutes(4))
                 .addSecurityGroups(securityGroup)
-                .setBootSize(20)
                 .setSshKey(sshKey)
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();

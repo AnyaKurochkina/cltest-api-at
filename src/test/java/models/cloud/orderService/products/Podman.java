@@ -1,7 +1,6 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,9 +14,6 @@ import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
-
-import static core.utils.AssertUtils.assertContains;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -68,7 +64,7 @@ public class Podman extends IProduct {
                 .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.platform",  getPlatform())
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "podman_admin")
                 .set("$.order.attrs.on_support", getSupport())

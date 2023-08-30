@@ -1,6 +1,5 @@
 package ui.t1.pages.cloudEngine.vpc;
 
-import ui.elements.DataTable;
 import ui.elements.Table;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;

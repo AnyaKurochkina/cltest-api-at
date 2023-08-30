@@ -9,8 +9,8 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.template.Template;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.Alert;
 import ui.elements.Button;
 import ui.elements.FileImportDialog;
@@ -56,7 +56,7 @@ public class TemplatesListPage extends EntityListPage {
     public TemplatesListPage deleteTemplate(String name) {
         search(name);
         EntityListPage.delete(nameColumn, name);
-        new DeleteDialog().inputValidIdAndDelete();
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
 

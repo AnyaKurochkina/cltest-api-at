@@ -26,9 +26,9 @@ public class TagExportTest extends Tests {
 
     @BeforeAll
     public static void setUp() {
-        simpleTag = createTagByName("export_tag1_test_api");
-        simpleTag2 = createTagByName("export_tag2_test_api");
-        simpleTag3 = createTagByName("export_tag3_test_api");
+        simpleTag = createTag("export_tag1_test_api");
+        simpleTag2 = createTag("export_tag2_test_api");
+        simpleTag3 = createTag("export_tag3_test_api");
     }
 
     @AfterAll

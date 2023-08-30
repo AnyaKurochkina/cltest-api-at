@@ -2,6 +2,7 @@ package ui.t1.pages.cloudEngine.compute;
 
 import core.utils.Waiting;
 import lombok.Getter;
+import lombok.Setter;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
@@ -30,6 +31,13 @@ public class VmCreate {
     private String publicIp;
     private List<String> securityGroups;
     private String sshKey;
+
+    private Duration createTimeout = Duration.ofMinutes(3);
+
+    public VmCreate setCreateTimeout(Duration timeout) {
+        this.createTimeout = timeout;
+        return this;
+    }
 
     public VmCreate setName(String name) {
         this.name = name;
@@ -108,7 +116,7 @@ public class VmCreate {
 
     public VmCreate setImage(SelectBox.Image image) {
         this.image = image;
-        SelectBox.setMarketPlaceImage(image);
+        SelectBox.setOsImage(image);
         return this;
     }
 
@@ -140,7 +148,7 @@ public class VmCreate {
         OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.STATUS)
-                .contains("Включено"), Duration.ofMinutes(2)));
+                .contains("Включено"), createTimeout));
         return this;
     }
 }

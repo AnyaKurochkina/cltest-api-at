@@ -94,8 +94,7 @@ public class ActionTest extends ActionBaseTest {
         new ControlPanelIndexPage().goToActionsListPage()
                 .openActionForm(name)
                 .deleteFromActionForm()
-                .inputInvalidId("invalid")
-                .inputValidIdAndDelete();
+                .submitAndDelete("Удаление выполнено успешно");
         assertFalse(isActionExists(name));
     }
 
@@ -116,8 +115,7 @@ public class ActionTest extends ActionBaseTest {
         ActionSteps.createAction(json);
         new ControlPanelIndexPage().goToActionsListPage()
                 .deleteAction(name)
-                .inputInvalidId("invalid")
-                .inputValidIdAndDelete();
+                .submitAndDelete("Удаление выполнено успешно");
         assertFalse(isActionExists(name));
     }
 

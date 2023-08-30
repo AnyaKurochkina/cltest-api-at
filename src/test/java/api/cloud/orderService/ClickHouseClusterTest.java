@@ -6,7 +6,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -87,9 +86,8 @@ public class ClickHouseClusterTest extends Tests {
     @ParameterizedTest(name = "Группы пользователей AD, добавление/удаление {0}")
     void addGroupAd(ClickHouseCluster product) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
-            AccessGroup accessGroup = AccessGroup.builder().projectName(cluster.getProjectId()).build().createObject();
-            cluster.deleteGroupAd(accessGroup.getPrefixName());
-            cluster.addGroupAd(accessGroup.getPrefixName());
+            cluster.deleteGroupAd(cluster.accessGroup());
+            cluster.addGroupAd(cluster.accessGroup());
         }
     }
 
@@ -99,9 +97,8 @@ public class ClickHouseClusterTest extends Tests {
     @ParameterizedTest(name = "Группы прикладных администраторов AD, добавление/удаление {0}")
     void addGroupAdmin(ClickHouseCluster product) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
-            AccessGroup accessGroup = AccessGroup.builder().projectName(cluster.getProjectId()).build().createObject();
-            cluster.deleteGroupAdmin(accessGroup.getPrefixName());
-            cluster.addGroupAdmin(accessGroup.getPrefixName());
+            cluster.deleteGroupAdmin(cluster.accessGroup());
+            cluster.addGroupAdmin(cluster.accessGroup());
         }
     }
 

@@ -1,15 +1,11 @@
 package ui.t1.pages.cloudEngine.compute;
 
-import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import lombok.Getter;
 import ui.cloud.pages.orders.OrderUtils;
-import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.Switch;
-
-import java.time.Duration;
 
 @Getter
 public class DiskCreate {
@@ -47,7 +43,7 @@ public class DiskCreate {
 
     public DiskCreate setMarketPlaceImage(SelectBox.Image marketPlaceImage) {
         Switch.byText("Создать из образа").setEnabled(true);
-        SelectBox.setMarketPlaceImage(marketPlaceImage);
+        SelectBox.setOsImage(marketPlaceImage);
         this.marketPlaceImage = marketPlaceImage;
         return this;
     }

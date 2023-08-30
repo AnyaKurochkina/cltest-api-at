@@ -12,6 +12,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductSteps;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -32,8 +33,8 @@ public class ProductTagTest extends Tests {
     @Test
     public void addTagProductTest() {
         List<String> tagList = Arrays.asList("test_api", "test_api2");
-        Product product1 = createProductByName("add_tag1_test_api");
-        Product product2 = createProductByName("add_tag2_test_api");
+        Product product1 = ProductSteps.createProduct("add_tag1_test_api");
+        Product product2 = ProductSteps.createProduct("add_tag2_test_api");
         addTagListToProduct(tagList, product1.getName(), product2.getName());
         assertEquals(tagList, getProductById(product1.getProductId()).getTagList());
         assertEquals(tagList, getProductById(product2.getProductId()).getTagList());

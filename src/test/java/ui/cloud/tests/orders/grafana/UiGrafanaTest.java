@@ -1,14 +1,12 @@
 package ui.cloud.tests.orders.grafana;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Grafana;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
@@ -91,6 +89,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(3)
     @TmsLink("1688709")
     @DisplayName("UI Grafana. Расширить точку монтирования")
@@ -101,6 +100,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1688714")
     @DisplayName("UI Grafana. Проверить конфигурацию")
@@ -110,30 +110,30 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLinks({@TmsLink("1688713"), @TmsLink("1688716")})
     @DisplayName("UI Grafana. Удалить и добавить группу доступа")
     void addGroup() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.deleteGroup("user"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.addGroup("user", Collections.singletonList(product.accessGroup())));
 
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1688707")
     @DisplayName("UI Grafana. Изменить состав группы")
     void changeGroup() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.updateGroup("user",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(7)
     @TmsLink("1688710")
     @EnabledIfEnv("blue")
@@ -151,33 +151,37 @@ public class UiGrafanaTest extends UiProductTest {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.checkMonitoringOs();
     }
+
     @Test
     @Order(9)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI Grafana. Создать снапшот")
     void сreateSnapshot() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::сreateSnapshot);
     }
+
     @Test
     @Order(10)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI Grafana. Удалить снапшот")
     void deleteSnapshot() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::deleteSnapshot);
     }
+
     @Test
     @Order(11)
     @TmsLink("1688715")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv("blue")
     @DisplayName("UI Grafana.  Реинвентаризация ВМ (Linux)")
     void reInventory() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::reInventory);
     }
+
     @Test
     @Order(12)
     @TmsLink("1714371")
@@ -196,6 +200,7 @@ public class UiGrafanaTest extends UiProductTest {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::resetPassword);
     }
+
     @Test
     @Order(14)
     @TmsLink("")

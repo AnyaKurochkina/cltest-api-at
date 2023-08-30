@@ -36,8 +36,6 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
     @Override
     public void beforeEach(ExtensionContext extensionContext) {
         initDriver();
-        Selenide.open("");
-        Selenide.localStorage().setItem("themeType", "\"light\"");
     }
 
     public static Throwable attachFiles(Throwable throwable) {

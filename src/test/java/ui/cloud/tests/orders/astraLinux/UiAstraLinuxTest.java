@@ -1,20 +1,19 @@
 package ui.cloud.tests.orders.astraLinux;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Astra;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -24,7 +23,6 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Epic("UI Продукты")
@@ -48,7 +46,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     void orderAstra() {
         double prebillingCost;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -134,8 +132,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     void addGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.deleteGroup("user"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.addGroup("user", Collections.singletonList(product.accessGroup())));
 
     }
 
@@ -145,10 +142,8 @@ public class UiAstraLinuxTest extends UiProductTest {
     @DisplayName("UI AstraLinux. Изменить состав группы")
     void changeGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.updateGroup("user",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
@@ -168,6 +163,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.checkMonitoringOs();
     }
+
     @Test
     @Order(13)
     @TmsLink("1723134")
@@ -176,6 +172,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::сreateSnapshot);
     }
+
     @Test
     @Order(14)
     @TmsLink("1723138")

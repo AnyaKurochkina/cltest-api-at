@@ -19,7 +19,6 @@ import models.cloud.subModels.loadBalancer.Gslb;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
 
 import java.util.*;
@@ -91,7 +90,7 @@ public class LoadBalancer extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.password", password)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
                 .set("$.order.attrs.ad_logon_grants[0].role", "superuser")
                 .set("$.order.attrs.dns_zone", zone)
                 .set("$.order.attrs.ad_integration", true)

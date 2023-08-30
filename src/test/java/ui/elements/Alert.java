@@ -59,7 +59,7 @@ public class Alert implements TypifiedElement {
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
-        element = getElement().shouldBe(Condition.visible).hover();
+        element = getElement().shouldBe(Condition.visible);
         final String elementText = element.getText();
         Assertions.assertTrue(elementText.toLowerCase().contains(message.toLowerCase()),
                 String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));

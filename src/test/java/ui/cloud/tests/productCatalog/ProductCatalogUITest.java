@@ -8,7 +8,7 @@ import ui.cloud.pages.ControlPanelLoginPage;
 import ui.extesions.ConfigExtension;
 
 @ExtendWith(ConfigExtension.class)
-abstract public class BaseTest extends Tests {
+abstract public class ProductCatalogUITest extends Tests {
 
     @BeforeEach
     public void init() {

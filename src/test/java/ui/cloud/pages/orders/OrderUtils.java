@@ -61,7 +61,7 @@ public class OrderUtils {
 
     public static Double getCostValue(SelenideElement element) {
         element.shouldBe(Condition.visible);
-        final String text = element.getText();
+        final String text = TypifiedElement.findNotEmptyText(element, Duration.ofSeconds(5));
         if(text.equals("без изменений"))
             return null;
         log.debug("Стоимость '{}'", text);

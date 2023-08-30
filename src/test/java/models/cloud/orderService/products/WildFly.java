@@ -1,7 +1,6 @@
 package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
-import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -16,8 +15,6 @@ import steps.orderService.OrderServiceSteps;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static core.utils.AssertUtils.assertContains;
-
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -29,7 +26,7 @@ public class WildFly extends IProduct {
     String osVersion;
     @ToString.Include
     String wildFlyVersion;
-    private static String otherJavaVersion = "1.8.0";
+    private static String otherJavaVersion = "11.0.12";
     String javaVersion;
     Flavor flavor;
 
@@ -51,9 +48,10 @@ public class WildFly extends IProduct {
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (wildFlyVersion == null)
-            wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+//            wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
+            wildFlyVersion = "23.0.2.Final";
         if (javaVersion == null)
-            javaVersion = "11.0.12";
+            javaVersion = "1.8.0";
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
@@ -68,7 +66,7 @@ public class WildFly extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())

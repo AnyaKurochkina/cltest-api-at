@@ -11,8 +11,8 @@ import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.actions.ActionPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
@@ -164,7 +164,7 @@ public class GraphPage extends EntityPage {
     @Step("Проверка недоступности удаления используемого графа")
     public GraphPage checkDeleteUsedGraphUnavailable() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
+        new DeleteDialog().submitAndCheckNotDeletable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
         usageButton.click();
         checkTabIsSelected("Использование");

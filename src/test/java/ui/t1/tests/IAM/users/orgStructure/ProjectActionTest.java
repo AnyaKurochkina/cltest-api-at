@@ -64,6 +64,7 @@ public class ProjectActionTest extends Tests {
     @Test
     @DisplayName("Создание проекта в структуре папки")
     public void createProjectInFolderTest() {
+        //todo доделать
         Folder folder = Folder.builder().title("org_structure_ui_test")
                 .kind(Folder.DEFAULT).build().createObject();
         new IndexPage()

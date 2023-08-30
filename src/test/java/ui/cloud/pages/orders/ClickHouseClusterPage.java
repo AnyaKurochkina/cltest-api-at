@@ -29,7 +29,6 @@ public class ClickHouseClusterPage extends IProductPage {
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement btnGroups = $x("//button[.='Группы']");
-    AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public ClickHouseClusterPage(ClickHouseCluster product) {
         super(product);
