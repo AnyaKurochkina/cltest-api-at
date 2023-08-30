@@ -7,8 +7,8 @@
   },
   {
     "objectClassName": "models.cloud.authorizer.Organization",
-    "title": "QA IFT T1",
-    "name": "org-nzfrg964e8"
+    "title": "ИФТ",
+    "name": "ift"
   },
   {
     "objectClassName": "models.cloud.authorizer.Folder",
