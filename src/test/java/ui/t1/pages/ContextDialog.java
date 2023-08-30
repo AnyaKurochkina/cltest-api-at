@@ -2,6 +2,7 @@ package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Button;
 import ui.elements.Dialog;
 
@@ -19,10 +20,10 @@ public class ContextDialog extends Dialog {
 
     public IndexPage selectOrganization(String orgName) {
         $x("//*[@id='selectValueWrapper']").click();
-        $x("//div[text() = '{}']", orgName).shouldBe(Condition.visible).click();
+        $x("//div[contains(text(), '{}')]", orgName).shouldBe(Condition.visible).click();
         all.click();
         organization.shouldBe(Condition.visible).click();
-        assertTrue($x("//div[text()='{}']", orgName).isDisplayed());
+        assertTrue($x("//div[contains(text(), '{}')]", orgName).isDisplayed());
         return new IndexPage();
     }
 
