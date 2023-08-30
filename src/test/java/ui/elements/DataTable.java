@@ -76,9 +76,8 @@ public class DataTable extends Table {
             if (condition.test(this))
                 return this;
             if (!isNextPage())
-                break;
+                return this;
             nextPage();
         }
-        throw new NotFoundElementException("Не найдена страница с подходящим условием");
     }
 }

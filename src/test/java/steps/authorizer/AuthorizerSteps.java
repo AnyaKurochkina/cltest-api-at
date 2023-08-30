@@ -46,8 +46,10 @@ public class AuthorizerSteps extends Steps {
             url = "/v1/folders/" + target;
         } else if (target.startsWith("proj")) {
             url = "/v1/projects/" + target;
+        } else if (target.startsWith("org")) {
+            url = "/v1/organizations/" + target;
         } else {
-            throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
+            throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\" or \"org\"");
         }
         return Objects.requireNonNull(new Http(ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
