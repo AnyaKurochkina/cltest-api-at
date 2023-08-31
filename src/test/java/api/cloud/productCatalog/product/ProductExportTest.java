@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -19,6 +20,7 @@ import steps.productCatalog.ProductSteps;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -64,6 +66,21 @@ public class ProductExportTest extends Tests {
     public void exportProductByNameTest() {
         Product product = ProductSteps.createProduct("product_export_by_name_test_api");
         exportProductByName(product.getName());
+    }
+
+    @DisplayName("Проверка поля ExportedObjects при экспорте продукта")
+    @TmsLink("SOUL-")
+    @Test
+    public void checkExportedObjectsFieldProductTest() {
+        String productName = "product_exported_objects_test_api";
+        Product product = createProduct(productName);
+        Response response = exportProductById(product.getProductId());
+        LinkedHashMap r = response.jsonPath().get("exported_objects.Product.");
+        String result = r.keySet().stream().findFirst().get().toString();
+        JSONObject jsonObject = new JSONObject(result);
+        assertEquals(product.getLastVersion(), jsonObject.get("last_version_str").toString());
+        assertEquals(product.getName(), jsonObject.get("name").toString());
+        assertEquals(product.getVersion(), jsonObject.get("version").toString());
     }
 
     @DisplayName("Экспорт продукта по Id с tag_list")

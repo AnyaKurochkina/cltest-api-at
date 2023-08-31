@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.action;
 
 import api.Tests;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -56,6 +58,21 @@ public class ActionExportTest extends Tests {
         String actionName = "action_export_test_api";
         Action action = createAction(actionName);
         exportActionById(action.getActionId());
+    }
+
+    @DisplayName("Проверка поля ExportedObjects при экспорте действия")
+    @TmsLink("SOUL-7077")
+    @Test
+    public void checkExportedObjectsField() {
+        String actionName = "action_exported_objects_test_api";
+        Action action = createAction(actionName);
+        Response response = exportActionById(action.getActionId());
+        LinkedHashMap r = response.jsonPath().get("exported_objects.Action.");
+        String result = r.keySet().stream().findFirst().get().toString();
+        JSONObject jsonObject = new JSONObject(result);
+        assertEquals(action.getLastVersion(), jsonObject.get("last_version_str").toString());
+        assertEquals(action.getName(), jsonObject.get("name").toString());
+        assertEquals(action.getVersion(), jsonObject.get("version").toString());
     }
 
     @DisplayName("Экспорт действия по Id с tag_list")
