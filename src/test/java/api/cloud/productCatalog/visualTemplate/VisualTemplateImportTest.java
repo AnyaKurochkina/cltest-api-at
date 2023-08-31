@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -122,6 +123,34 @@ public class VisualTemplateImportTest extends Tests {
         deleteVisualTemplateByName(visualTemplateName);
         importObjectWithTagList("item_visual_templates", filePath);
         assertEquals(expectedTagList, getVisualTemplateByName(visualTemplateName).getTagList());
+        deleteVisualTemplateByName(visualTemplateName);
+    }
+
+    @DisplayName("Добавление новых tags при импорте шаблона визуализации")
+    @TmsLink("SOUL-7123")
+    @Test
+    public void checkNewTagsAddedWhenImportVisualTemplateTest() {
+        String visualTemplateName = "visual_template_import_with_new_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/itemVisualTemplate/importVisualTemplateWithNewTags.json";
+        List<String> addTagList = Collections.singletonList("new_tag");
+        ItemVisualTemplate visualTemplate = ItemVisualTemplate.builder()
+                .name(visualTemplateName)
+                .compactTemplate(compactTemplate)
+                .fullTemplate(fullTemplate)
+                .tagList(Arrays.asList("import_test", "test_import"))
+                .build()
+                .createObject();
+
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("item_visual_templates", visualTemplate.getId()).toString());
+        String updatedJsonForImport = JsonHelper.getJsonTemplate("/productCatalog/itemVisualTemplate/importVisualTemplateWithNewTags.json")
+                .set("ItemVisualisationTemplate.tag_name_list", addTagList)
+                .set("ItemVisualisationTemplate.version_arr", Arrays.asList(1, 0, 1))
+                .build()
+                .toString();
+        DataFileHelper.write(filePath, updatedJsonForImport);
+
+        importObjectWithTagList("item_visual_templates", filePath);
+        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getVisualTemplateByName(visualTemplateName).getTagList());
         deleteVisualTemplateByName(visualTemplateName);
     }
 }

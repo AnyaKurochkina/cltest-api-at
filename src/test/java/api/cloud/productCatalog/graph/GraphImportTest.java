@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -134,5 +135,28 @@ public class GraphImportTest extends Tests {
         importObjectWithTagList("graphs", filePath);
         assertEquals(expectedTagList, getGraphByName(graphName).getTagList());
         deleteGraphByName(graphName);
+    }
+
+    @DisplayName("Добавление новых tags при импорте графа")
+    @TmsLink("SOUL-7121")
+    @Test
+    public void checkNewTagsAddedWhenImportGraphTest() {
+        String graphName = "graph_import_with_new_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraphWithNewTags.json";
+        List<String> addTagList = Collections.singletonList("new_tag");
+        Graph graph = Graph.builder()
+                .name(graphName)
+                .tagList(Arrays.asList("import_test", "test_import"))
+                .build()
+                .createObject();
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("graphs", graph.getGraphId()).toString());
+        String updatedJsonForImport = JsonHelper.getJsonTemplate("/productCatalog/graphs/importGraphWithNewTags.json")
+                .set("Graph.tag_name_list", addTagList)
+                .set("Graph.version_arr", Arrays.asList(1, 0, 1))
+                .build()
+                .toString();
+        DataFileHelper.write(filePath, updatedJsonForImport);
+        importObjectWithTagList("graphs", filePath);
+        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getGraphByName(graphName).getTagList());
     }
 }

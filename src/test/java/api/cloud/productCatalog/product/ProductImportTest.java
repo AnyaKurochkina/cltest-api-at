@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
@@ -147,6 +148,37 @@ public class ProductImportTest extends Tests {
         deleteProductByName(productName);
         importObjectWithTagList("products", filePath);
         assertEquals(expectedTagList, getProductByName(productName).getTagList());
+        deleteProductByName(productName);
+    }
+
+    @DisplayName("Добавление новых tags при импорте продукта")
+    @TmsLink("SOUL-7122")
+    @Test
+    public void checkNewTagsAddedWhenImportProductTest() {
+        String productName = "product_import_with_new_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/products/importProductWithNewTags.json";
+        if (isProductExists(productName)) {
+            deleteProductByName(productName);
+        }
+        Graph graph = createGraph("graph_product_import_for_export_with_new_tags_test");
+        List<String> addTagList = Collections.singletonList("new_tag");
+        JSONObject jsonObject = Product.builder()
+                .name(productName)
+                .graphId(graph.getGraphId())
+                .tagList(Arrays.asList("import_test", "test_import"))
+                .build()
+                .toJson();
+        Product product = createProduct(jsonObject);
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("products", product.getProductId()).toString());
+        String updatedJsonForImport = JsonHelper.getJsonTemplate("/productCatalog/products/importProductWithNewTags.json")
+                .set("Product.tag_name_list", addTagList)
+                .set("Product.version_arr", Arrays.asList(1, 0, 1))
+                .build()
+                .toString();
+        DataFileHelper.write(filePath, updatedJsonForImport);
+
+        importObjectWithTagList("products", filePath);
+        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getProductByName(productName).getTagList());
         deleteProductByName(productName);
     }
 }

@@ -77,7 +77,7 @@ public class ActionImportTest extends Tests {
     }
 
     @DisplayName("Добавление новых tags при импорте действия")
-    @TmsLink("SOUL")
+    @TmsLink("SOUL-7120")
     @Test
     public void checkNewTagsAddedWhenImportTest() {
         String actionName = "action_import_with_new_tag_list_test_api";
