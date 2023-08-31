@@ -14,9 +14,11 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.utils.UniqueTest;
+import ui.t1.tests.engine.EntitySupplier;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @ExtendWith(TmsLinkExtension.class)
 @ExtendWith(EnvironmentCondition.class)
@@ -45,4 +47,8 @@ public class Tests {
         UniqueTest.writeStepLog(text);
     }
 
+    @SneakyThrows
+    protected static <T>EntitySupplier<T> lazy(Supplier<T> executable) {
+        return new EntitySupplier<T>(executable);
+    }
 }

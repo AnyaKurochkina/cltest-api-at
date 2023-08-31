@@ -6,6 +6,7 @@ import lombok.Setter;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
+import ui.t1.pages.cloudEngine.vpc.VirtualIpCreate;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class VmCreate {
     private String flavorName;
     private String flavor;
     private String subnet;
+    private String networkInterface;
     private String publicIp;
     private List<String> securityGroups;
     private String sshKey;
@@ -41,12 +43,19 @@ public class VmCreate {
 
     public VmCreate setName(String name) {
         this.name = name;
-        Input.byLabel("Имя виртуальной машины").setValue(name);
+        Input.byLabel("Имя сервера").setValue(name);
         return this;
     }
 
     public VmCreate setFlavorName(String flavorName) {
         this.flavorName = Select.byLabel("Серия").setContains(flavorName);
+        return this;
+    }
+
+    public VmCreate setNetworkInterface(String networkInterface) {
+        Switch.byText("Задать IP адрес сетевого интерфейса").setEnabled(true);
+        Input.byPlaceholder("0.0.0.0").setValue(networkInterface);
+        this.networkInterface = networkInterface;
         return this;
     }
 
@@ -60,7 +69,7 @@ public class VmCreate {
         Input.byLabel("Имя диска", -1).setValue(name);
         Input.byLabel("Размер диска, Гб", -1).setValue(size);
         Select.byLabel("Тип", -1).setContains(type);
-        CheckBox.byLabel("Удалять вместе с виртуальной машиной", -1).setChecked(deleteOnTermination);
+        CheckBox.byLabel("Удалять вместе с сервером", -1).setChecked(deleteOnTermination);
         return this;
     }
 
@@ -93,7 +102,7 @@ public class VmCreate {
 
     public VmCreate setDeleteOnTermination(boolean deleteOnTermination) {
         this.deleteOnTermination = deleteOnTermination;
-        CheckBox.byLabel("Удалять вместе с виртуальной машиной").setChecked(deleteOnTermination);
+        CheckBox.byLabel("Удалять вместе с сервером").setChecked(deleteOnTermination);
         return this;
     }
 

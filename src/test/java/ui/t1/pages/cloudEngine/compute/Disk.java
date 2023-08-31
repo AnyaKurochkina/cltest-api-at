@@ -12,10 +12,10 @@ public class Disk extends IProductT1Page<Disk> {
 
     @Step("Подключить диск {vmName} с автоудалением = {deleteOnTermination}")
     public void attachComputeVolume(String vmName, boolean deleteOnTermination) {
-        runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
-                        Dialog.byTitle("Подключить к виртуальной машине")
-                                .setSelectValue("Доступные виртуальные машины", vmName + ":")
-                                .setCheckBox(CheckBox.byLabel("Удалять вместе с виртуальной машиной"), deleteOnTermination));
+        runActionWithParameters(BLOCK_PARAMETERS, "Подключить к серверу", "Подтвердить", () ->
+                        Dialog.byTitle("Подключить к серверу")
+                                .setSelectValue("Доступные серверы", vmName + ":")
+                                .setCheckBox(CheckBox.byLabel("Удалять вместе с сервером"), deleteOnTermination));
     }
 
     @Step("Расширить диск на {size}ГБ")

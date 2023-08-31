@@ -10,6 +10,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.AbstractEntity;
 import org.junit.BlockTests;
+import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.By;
@@ -55,6 +56,8 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .setName(getRandomName())
                 .setBootSize(4)
                 .addSecurityGroups(securityGroup)
+                .setSubnet(defaultNetwork)
+                //.setNetworkInterface("10.0.3.2")
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
@@ -108,6 +111,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         new IndexPage().goToNetworkInterfaces();
             new TableChecker()
                     .add("", String::isEmpty)
+                    .add("", String::isEmpty)
                     .add("IP адрес", e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
                     .add("MAC адрес", e -> StringUtils.isMatch("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
                     .add("Сеть", e -> e.length() > 4)
@@ -153,6 +157,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
 
     @Test
     @Order(7)
+    @EnabledIfEnv("t1prod")
     @TmsLink("1248862")
     @DisplayName("Cloud Compute. Виртуальные машины. Консоль")
     void getConsoleLink() {

@@ -10,6 +10,7 @@ import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
 import models.cloud.authorizer.Folder;
@@ -25,6 +26,8 @@ import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
+import ui.t1.pages.cloudEngine.compute.VmCreate;
+import ui.t1.pages.cloudEngine.compute.VmList;
 
 import java.util.Map;
 import java.util.Objects;
@@ -107,7 +110,7 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
-    protected static class VmEntity extends ComputeEntity {
+    public static class VmEntity extends ComputeEntity {
         public VmEntity(String projectId, String id) {
             super(projectId, id);
         }
@@ -133,19 +136,43 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
+    @NoArgsConstructor
     public static class DiskEntity extends VmEntity {
+        public DiskEntity(String projectId, String id) {
+            super(projectId, id);
+        }
         @Override
         protected int getPriority() {
             return 2;
         }
     }
-    public static class SnapshotEntity extends VmEntity {}
-    public static class ImageEntity extends VmEntity {}
+    @NoArgsConstructor
+    public static class SnapshotEntity extends VmEntity {
+        public SnapshotEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+    }
+    @NoArgsConstructor
+    public static class ImageEntity extends VmEntity {
+        public ImageEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+    }
 
-    protected static class NetworkEntity extends ComputeEntity {
+    public static class NetworkEntity extends ComputeEntity {
         public NetworkEntity() {
             super(StringUtils.findByRegex("networks/([^?]*)", WebDriverRunner.getWebDriver().getCurrentUrl()));
         }
+
+        public NetworkEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+
+        @Override
+        protected int getPriority() {
+            return 2;
+        }
+
         @Override
         public void delete() {
             Http.builder().setRole(Role.CLOUD_ADMIN).api(deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete, projectId, id);
@@ -155,6 +182,10 @@ public abstract class AbstractComputeTest extends Tests {
     public static class SecurityGroupEntity extends ComputeEntity {
         public SecurityGroupEntity() {
             super(StringUtils.findByRegex("security-groups/([^?]*)", WebDriverRunner.getWebDriver().getCurrentUrl()));
+        }
+
+        public SecurityGroupEntity(String projectId, String id) {
+            super(projectId, id);
         }
 
         @Override
@@ -168,17 +199,39 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
+    @NoArgsConstructor
     public static class IpEntity extends VmEntity {
+        public IpEntity(String projectId, String id) {
+            super(projectId, id);
+        }
         @Override
         protected int getPriority() {
             return 3;
         }
     }
 
+    @NoArgsConstructor
     public static class VipEntity extends VmEntity {
+        public VipEntity(String projectId, String id) {
+            super(projectId, id);
+        }
         @Override
         protected int getPriority() {
             return 0;
         }
     }
+
+    protected final EntitySupplier<VmCreate> randomVm = lazy(() -> {
+        VmCreate v = new IndexPage().goToVirtualMachine().addVm()
+                .setAvailabilityZone(availabilityZone)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        new VmList().selectCompute(v.getName())
+                .markForDeletion(new VmEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        return v;
+    });
 }

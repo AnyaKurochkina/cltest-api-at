@@ -206,7 +206,8 @@ public class OrderServiceSteps extends Steps {
 
     public static void switchProtect(String orderId, String projectId, boolean value) {
         Assertions.assertEquals(!value, new Http(OrderServiceURL)
-                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+//                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .body(new JSONObject().put("order", new JSONObject().put("deletable", !value)))
                 .patch("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)

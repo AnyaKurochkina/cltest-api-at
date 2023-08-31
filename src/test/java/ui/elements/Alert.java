@@ -69,7 +69,7 @@ public class Alert implements TypifiedElement {
     }
 
     @Step("Проверка на отсутствие красных алертов")
-    public static void  checkNoRedAlerts() {
+    public static void checkNoRedAlerts() {
         SelenideElement element = new Alert().getElement();
         if (exist(element, Duration.ofSeconds(3)))
             Assertions.assertNotEquals(fromString(element.getCssValue("border-bottom-color")).asHex(), Color.RED.getColor());
@@ -79,7 +79,7 @@ public class Alert implements TypifiedElement {
     @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
         try {
-            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(5));
+            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(10));
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }

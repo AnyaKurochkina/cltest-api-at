@@ -17,9 +17,10 @@ public abstract class AbstractEntity {
     private static final Map<Long, Set<AbstractEntity>>[] entities = new ConcurrentHashMap[10];
     private Mode mode = AFTER_TEST;
 
-    public AbstractEntity setMode(Mode mode){
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractEntity> T setMode(Mode mode) {
         this.mode = mode;
-        return this;
+        return (T) this;
     }
 
     protected int getPriority() {
@@ -53,7 +54,7 @@ public abstract class AbstractEntity {
             Iterator<AbstractEntity> iterator = map.getOrDefault(Thread.currentThread().getId(), new HashSet<>()).iterator();
             while (iterator.hasNext()) {
                 AbstractEntity entity = iterator.next();
-                if(entity.mode != mode)
+                if (entity.mode != mode)
                     continue;
                 threadPool.submit(() -> deleteEntity(entity));
                 iterator.remove();

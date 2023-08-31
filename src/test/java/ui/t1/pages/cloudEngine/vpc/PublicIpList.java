@@ -15,20 +15,21 @@ public class PublicIpList {
 
     @Step("Добавить IP в зоне {region}")
     public String addIp(String region) {
-        new IpTable().clickAdd();
+        final IpTable ipTable = new IpTable();
+        ipTable.clickAdd();
         Select.byLabel("Регион").set(region);
         OrderUtils.clickOrder();
-        boolean isEmpty = new IpTable().isEmpty();
+        boolean isEmpty = ipTable.update().isEmpty();
         OrderUtils.waitCreate(() -> {
             if (!isEmpty) {
-                String oldIp = new IpTable().getFirstValueByColumn(Column.IP_ADDRESS);
-                Waiting.find(() -> !new IpTable().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofMinutes(1));
+                String oldIp = ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
+                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofMinutes(1));
             } else {
-                Waiting.find(() -> !new IpTable().isEmpty(), Duration.ofMinutes(1));
-                Waiting.find(() -> !new IpTable().getFirstValueByColumn(Column.IP_ADDRESS).equals("—"), Duration.ofMinutes(1));
+                Waiting.find(() -> !ipTable.update().isEmpty(), Duration.ofMinutes(1));
+                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).equals("—"), Duration.ofMinutes(1));
             }
         });
-        return new IpTable().getFirstValueByColumn(Column.IP_ADDRESS);
+        return ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
     }
 
     public PublicIp selectIp(String name) {
