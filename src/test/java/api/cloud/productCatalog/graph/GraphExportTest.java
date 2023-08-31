@@ -20,10 +20,12 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.GraphSteps.*;
+import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
@@ -84,5 +86,25 @@ public class GraphExportTest extends Tests {
         assertEquals(graph.getLastVersion(), jsonObject.get("last_version_str").toString());
         assertEquals(graph.getName(), jsonObject.get("name").toString());
         assertEquals(graph.getVersion(), jsonObject.get("version").toString());
+    }
+
+    @DisplayName("Экспорт графа по Id с tag_list")
+    @TmsLink("SOUL-7103")
+    @Test
+    public void exportGraphByIdWithTagListTest() {
+        String graphName = "graph_export_with_tag_list_test_api";
+        List<String> expectedTagList = Arrays.asList("export_test", "test2");
+        if (isGraphExists(graphName)) {
+            deleteGraphByName(graphName);
+        }
+        JSONObject json = Graph.builder()
+                .name(graphName)
+                .tagList(expectedTagList)
+                .build()
+                .toJson();
+        Graph graph = createGraph(json).assertStatus(201).extractAs(Graph.class);
+        List<String> actualTagList = exportObjectByIdWithTags("graphs", graph.getGraphId()).jsonPath().getList("Graph.tag_name_list");
+        assertEquals(actualTagList, expectedTagList);
+        deleteGraphByName(graphName);
     }
 }
