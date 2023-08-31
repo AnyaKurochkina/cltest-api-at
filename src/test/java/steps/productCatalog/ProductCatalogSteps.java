@@ -3,6 +3,7 @@ package steps.productCatalog;
 import api.cloud.productCatalog.IProductCatalog;
 import core.enums.Role;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import httpModels.productCatalog.GetImpl;
@@ -16,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
+import models.cloud.productCatalog.ImportObject;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
@@ -67,6 +69,24 @@ public class ProductCatalogSteps {
                 .body(json)
                 .post("/api/v1/{}/objects_export/", entityName)
                 .assertStatus(200);
+    }
+
+    @Step("Экспорт {entityName} по Id c tag_list")
+    public static Response exportObjectByIdWithTags(String entityName, String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/{}/{}/obj_export/?as_file=true&with_tags=true", entityName, objectId)
+                .assertStatus(200);
+    }
+
+    @Step("Импорт {entityName} продуктового каталога с tag_list")
+    public static ImportObject importObjectWithTagList(String entityName, String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(StringUtils.format("/api/v1/{}/obj_import/?with_tags=true", entityName), "file", new File(pathName))
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 
     @Step("Получение версии продуктового каталога")

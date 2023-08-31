@@ -18,7 +18,6 @@ import steps.Steps;
 import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 
 import java.io.File;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

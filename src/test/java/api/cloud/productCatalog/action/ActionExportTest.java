@@ -8,6 +8,8 @@ import lombok.SneakyThrows;
 import models.cloud.productCatalog.ExportData;
 import models.cloud.productCatalog.ExportEntity;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -15,9 +17,12 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.List;
 
-import static steps.productCatalog.ActionSteps.createAction;
-import static steps.productCatalog.ActionSteps.exportActionById;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
@@ -51,5 +56,27 @@ public class ActionExportTest extends Tests {
         String actionName = "action_export_test_api";
         Action action = createAction(actionName);
         exportActionById(action.getActionId());
+    }
+
+    @DisplayName("Экспорт действия по Id с tag_list")
+    @TmsLink("SOUL-7101")
+    @Test
+    public void exportActionByIdWithTagListTest() {
+        String actionName = "action_export_with_tag_list_test_api";
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        Graph graph = createGraph("graph_for_export_with_tags_test");
+        List<String> expectedTagList = Arrays.asList("export_test", "test2");
+        JSONObject jsonObject = Action.builder()
+                .name(actionName)
+                .graphId(graph.getGraphId())
+                .tagList(expectedTagList)
+                .build()
+                .toJson();
+        Action action = createAction(jsonObject).extractAs(Action.class);
+        List<String> actualTagList = exportObjectByIdWithTags("actions", action.getActionId()).jsonPath().getList("Action.tag_name_list");
+        assertEquals(actualTagList, expectedTagList);
+        deleteActionById(action.getActionId());
     }
 }
