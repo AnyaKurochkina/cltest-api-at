@@ -84,7 +84,7 @@ public class UiGrafanaTest extends UiProductTest {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.getGeneralInfoTab().switchTo();
         grafanaPage.checkHeadersHistory();
-        grafanaPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        grafanaPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[2]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
 
@@ -202,6 +202,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(14)
     @TmsLink("")
     @DisplayName("UI Grafana. Выпустить клиентский сертификат")
