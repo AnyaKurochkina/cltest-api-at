@@ -86,7 +86,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         wildFlyPage.getGeneralInfoTab().switchTo();
         wildFlyPage.checkHeadersHistory();
-        wildFlyPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        wildFlyPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[2]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
 

@@ -82,11 +82,12 @@ public class UiGenericMonitoringTest extends UiProductTest {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.getGeneralInfoTab().switchTo();
         genericMonitoringPage.checkHeadersHistory();
-        genericMonitoringPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        genericMonitoringPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[2]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(3)
     @TmsLink("1687139")
     @DisplayName("UI GenericMonitoring. Расширить точку монтирования")
@@ -97,6 +98,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1687130")
     @DisplayName("UI GenericMonitoring. Проверить конфигурацию")
@@ -106,6 +108,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLinks({@TmsLink("1687134"), @TmsLink("1687131")})
     @DisplayName("UI GenericMonitoring. Удалить и добавить группу доступа")
@@ -117,6 +120,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1687128")
     @DisplayName("UI GenericMonitoring. Изменить состав группы")
@@ -127,6 +131,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(7)
     @TmsLink("1687132")
     @DisplayName("UI GenericMonitoring. Изменить конфигурацию")
@@ -163,7 +168,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.runActionWithCheckCost(CompareType.EQUALS, genericMonitoringPage::reInventory);
     }
-//
+
     @Test
     @Order(11)
     @TmsLink("1687133")
@@ -172,7 +177,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
         GenericMonitoringPage genericMonitoringPage = new GenericMonitoringPage(product);
         genericMonitoringPage.checkMonitoringOs();
     }
-//
+
     @Test
     @Order(100)
     @TmsLink("1687137")

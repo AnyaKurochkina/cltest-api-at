@@ -16,7 +16,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class VisualTemplateSteps extends Steps {
 
@@ -60,12 +59,10 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение шаблона отображения по имени {name}")
     public static ItemVisualTemplate getVisualTemplateByName(String name) {
-        List<ItemVisualTemplate> itemVisualTemplateList = new Http(ProductCatalogURL)
+        return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(visualTemplateUrl + "?name={}", name)
-                .extractAs(GetVisualTemplateList.class).getList();
-        assertEquals(1, itemVisualTemplateList.size(), "Размер списка должен быть 1");
-        return itemVisualTemplateList.get(0);
+                .get(visualTemplateUrl2 + name + "/")
+                .extractAs(ItemVisualTemplate.class);
     }
 
     @Step("Получение шаблона визуализации по event_type и event_provider")
@@ -180,7 +177,7 @@ public class VisualTemplateSteps extends Steps {
     @Step("Удаление шаблона по имени {name}")
     public static void deleteVisualTemplateByName(String name) {
         new Http(ProductCatalogURL)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(visualTemplateUrl2 + name + "/")
                 .assertStatus(204);
     }
