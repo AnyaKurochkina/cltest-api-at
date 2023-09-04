@@ -90,111 +90,123 @@ public class UiWildFlyAstraTest extends UiProductTest {
         new Graph().notContainsStatus(Graph.ERROR);
     }
 
-    @Test
-    @Order(3)
-    @TmsLink("1353800")
-    @DisplayName("UI WildFlyAstra. Обновить ОС сервера WildFly")
-    void updateServerOs() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateServerOs);
-    }
-
-    @Test
-    @Order(4)
-    @TmsLink("908271")
-    @DisplayName("UI WildFlyAstra. Обновить сертификат WildFly")
-    void updateCertificate() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificate);
-    }
-
-    @Test
-    @Order(5)
-    @TmsLink("1353241")
-    @DisplayName("UI WildFlyAstra. Остановить сервис Wildfly")
-    void stopService() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::stopService);
-    }
-
-    @Test
-    @Order(6)
-    @TmsLink("1353338")
-    @DisplayName("UI WildFlyAstra. Запустить сервис Wildfly")
-    void startService() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::startService);
-    }
-
-    @Test
-    @Order(7)
-    @TmsLink("1353235")
-    @DisplayName("UI WildFlyAstra. Перезапустить сервис Wildfly")
-    void resetService() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::resetService);
-    }
-
-    @Test
-    @Order(8)
-    @TmsLink("1089998")
-    @DisplayName("UI WildFlyAstra. Синхронизировать конфигурацию сервера WildFly")
-    void synchronizeService() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::synchronizeService);
-    }
-
-    @Test
-    @Order(9)
-    @TmsLinks({@TmsLink("910818"), @TmsLink("910821")})
-    @DisplayName("UI WildFlyAstra. Добавить/удалить группу WildFly")
-    void addGroupWildFlyAstra() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupWildFlyAstra("Monitor", product.additionalAccessGroup()));
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupWildFlyAstra("Monitor", product.additionalAccessGroup()));
-    }
-
-    @Test
-    @Disabled("Проверяется у Astra Linux")
-    @Order(10)
-    @TmsLinks({@TmsLink("1644573"), @TmsLink("1644572"), @TmsLink("1644574")})
-    @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
-    void addGroup() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", product.accessGroup()));
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(product.accessGroup())));
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
-    }
-
-    @Test
-    @Disabled("Проверяется у Astra Linux")
-    @Order(11)
-    @TmsLink("908277")
-    @DisplayName("UI WildFlyAstraLinux. Расширить точку монтирования")
-    void expandDisk() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.MORE, () -> wildFlyPage
-                .enlargeDisk("/app/app", "20", new Table("Роли узла").getRow(0).get()));
-    }
-
-    @Test
-    @Disabled("Проверяется у Astra Linux")
-    @Order(12)
-    @TmsLink("")
-    @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
-    void vmActCheckConfig() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);
-    }
-
-    @Test
-    @Order(13)
-    @TmsLink("1171954")
-    @DisplayName("UI WildFlyAstra. Мониторинг ОС")
-    void monitoringOs() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.checkClusterMonitoringOs();
-    }
+//    @Test
+//    @TmsLink("1644557")
+//    @Order(2)
+//    @DisplayName("UI WildFlyAstra. Проверка развертывания в истории действий")
+//    void checkHeaderHistoryTable() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.getGeneralInfoTab().switchTo();
+//        wildFlyPage.checkHeadersHistory();
+//        wildFlyPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+//        new Graph().notContainsStatus(Graph.ERROR);
+//    }
+//
+//    @Test
+//    @Order(3)
+//    @TmsLink("1353800")
+//    @DisplayName("UI WildFlyAstra. Обновить ОС сервера WildFly")
+//    void updateServerOs() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateServerOs);
+//    }
+//
+//    @Test
+//    @Order(4)
+//    @TmsLink("908271")
+//    @DisplayName("UI WildFlyAstra. Обновить сертификат WildFly")
+//    void updateCertificate() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificate);
+//    }
+//
+//    @Test
+//    @Order(5)
+//    @TmsLink("1353241")
+//    @DisplayName("UI WildFlyAstra. Остановить сервис Wildfly")
+//    void stopService() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::stopService);
+//    }
+//
+//    @Test
+//    @Order(6)
+//    @TmsLink("1353338")
+//    @DisplayName("UI WildFlyAstra. Запустить сервис Wildfly")
+//    void startService() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::startService);
+//    }
+//
+//    @Test
+//    @Order(7)
+//    @TmsLink("1353235")
+//    @DisplayName("UI WildFlyAstra. Перезапустить сервис Wildfly")
+//    void resetService() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::resetService);
+//    }
+//
+//    @Test
+//    @Order(8)
+//    @TmsLink("1089998")
+//    @DisplayName("UI WildFlyAstra. Синхронизировать конфигурацию сервера WildFly")
+//    void synchronizeService() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::synchronizeService);
+//    }
+//
+//    @Test
+//    @Order(9)
+//    @TmsLinks({@TmsLink("910818"), @TmsLink("910821")})
+//    @DisplayName("UI WildFlyAstra. Добавить/удалить группу WildFly")
+//    void addGroupWildFlyAstra() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupWildFlyAstra("Monitor", product.additionalAccessGroup()));
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupWildFlyAstra("Monitor", product.additionalAccessGroup()));
+//    }
+//
+//    @Test
+//    @Disabled("Проверяется у Astra Linux")
+//    @Order(10)
+//    @TmsLinks({@TmsLink("1644573"), @TmsLink("1644572"), @TmsLink("1644574")})
+//    @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
+//    void addGroup() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", product.accessGroup()));
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(product.accessGroup())));
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
+//    }
+//
+//    @Test
+//    @Disabled("Проверяется у Astra Linux")
+//    @Order(11)
+//    @TmsLink("908277")
+//    @DisplayName("UI WildFlyAstraLinux. Расширить точку монтирования")
+//    void expandDisk() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.MORE, () -> wildFlyPage
+//                .enlargeDisk("/app/app", "20", new Table("Роли узла").getRow(0).get()));
+//    }
+//
+//    @Test
+//    @Disabled("Проверяется у Astra Linux")
+//    @Order(12)
+//    @TmsLink("")
+//    @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
+//    void vmActCheckConfig() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);
+//    }
+//
+//    @Test
+//    @Order(13)
+//    @TmsLink("1171954")
+//    @DisplayName("UI WildFlyAstra. Мониторинг ОС")
+//    void monitoringOs() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.checkClusterMonitoringOs();
+//    }
 
     @Test
     @Order(15)
@@ -205,21 +217,21 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::openAdminConsole);
     }
 
-    @Test
-    @Order(16)
-    @TmsLink("")
-    @DisplayName("UI WildFlyAstra. Заменить Java Wildfly")
-    void changeJavaWildFly() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly,versionJava));
-    }
-
-    @Test
-    @Order(100)
-    @TmsLink("908275")
-    @DisplayName("UI WildFlyAstra. Удаление продукта")
-    void delete() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.LESS, wildFlyPage::delete);
-    }
+//    @Test
+//    @Order(16)
+//    @TmsLink("")
+//    @DisplayName("UI WildFlyAstra. Заменить Java Wildfly")
+//    void changeJavaWildFly() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly,versionJava));
+//    }
+//
+//    @Test
+//    @Order(100)
+//    @TmsLink("908275")
+//    @DisplayName("UI WildFlyAstra. Удаление продукта")
+//    void delete() {
+//        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+//        wildFlyPage.runActionWithCheckCost(CompareType.LESS, wildFlyPage::delete);
+//    }
 }

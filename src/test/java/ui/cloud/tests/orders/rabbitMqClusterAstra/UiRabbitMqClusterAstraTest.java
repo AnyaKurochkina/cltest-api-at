@@ -52,7 +52,8 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            orderPage.getGroup2Select().set(accessGroup);
+            if (product.isDev())
+                    orderPage.getGroup2Select().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -253,6 +254,14 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     void changeGroup() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("manager", product.additionalAccessGroup()));
+    }
+    @Test
+    @Order(21)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Вертикальное масштабирование кластера")
+    void verticalScaling() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::verticalScaling);
     }
 
     @Test

@@ -233,6 +233,26 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
+    @DisabledIfEnv("prod")
+    @Order(16)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Обновить информацию о сертификатах Clickhouse Cluster")
+    void updateInformationCert() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateInformationCert);
+    }
+    @Test
+    @DisabledIfEnv("prod")
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Обновить сертификаты Clickhouse Cluster")
+    void updateCertificate() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateCertificate);
+    }
+
+
+    @Test
     @Order(100)
     @TmsLink("1138090")
     @DisplayName("UI ClickHouse Cluster. Удаление продукта")
