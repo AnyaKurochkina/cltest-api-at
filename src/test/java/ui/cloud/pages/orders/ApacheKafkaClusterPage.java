@@ -100,7 +100,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_CLUSTER, "Вертикальное масштабирование", "Подтвердить", () -> {
-            CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
+            CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю свое действие").setChecked(true);
             DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)); //,ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build()
         });
         btnGeneralInfo.click();
@@ -114,7 +114,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         runActionWithParameters(BLOCK_CLUSTER, "Изменить имя кластера", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Изменить имя кластера");
             dlg.setInputValue("Новое имя кластера", name);
-            CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю, что понимаю что делаю.").setChecked(true);
+            CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю, что понимаю что делаю.").setChecked(true);
         });
         btnGeneralInfo.click();
         Assertions.assertEquals(name, new Table(HEADER_NAME_CLUSTER).getRowByColumnValue(HEADER_NAME_CLUSTER, name).getValueByColumn(HEADER_NAME_CLUSTER), "БД не принадлежит пользователю");
@@ -123,7 +123,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateCertificate() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить кластерный сертификат", "Подтвердить", () -> {
-            CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
+            CheckBox.byLabel("Я прочитал предупреждение выше и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -131,7 +131,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateCertificateEmergency() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить кластерный сертификат (аварийно)", "Подтвердить", () -> {
-            CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
+            CheckBox.byLabel("Я прочитал предупреждение выше, и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -145,7 +145,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateDistributionVtb() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновление дистрибутива ВТБ-Kafka", "Подтвердить", () -> {
-            //CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю, что знаю что делаю.").setChecked(true);
+            CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю, что знаю что делаю.").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -153,7 +153,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateKernelVtb() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновление ядра Kafka до версии 2.8.2", "Подтвердить", () -> {
-           CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю.").setChecked(true);
+           CheckBox.byLabel("Я прочитал предупреждение выше и понимаю, что я делаю.").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }

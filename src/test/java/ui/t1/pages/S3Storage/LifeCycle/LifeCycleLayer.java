@@ -1,6 +1,7 @@
 package ui.t1.pages.S3Storage.LifeCycle;
 
 import io.qameta.allure.Step;
+import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.t1.pages.S3Storage.AbstractLayerS3;
 import ui.t1.pages.S3Storage.CORS.CORSLayer;
@@ -28,6 +29,7 @@ public class LifeCycleLayer extends AbstractLayerS3<LifeCycleLayer> {
     @Step("Открытие содального окна жизненного цикла")
     public LifeCycleModal addLifeCycle()
     {
+        TestUtils.wait(2000);
         Button.byText("Добавить").click();
         return new LifeCycleModal();
     }

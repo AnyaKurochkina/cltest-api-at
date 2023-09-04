@@ -82,6 +82,7 @@ public class ApacheAirflow extends IProduct {
                 .set("$.order.attrs.postgresql_config.db_database", dbUser.getNameDB())
                 .set("$.order.attrs.postgresql_config.db_password", pgAdminPassword)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.deploy_grants[0].groups[0]", accessGroupTech)
                 .set("$.order.project_name", project.id)
