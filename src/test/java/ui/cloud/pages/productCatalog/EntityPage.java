@@ -13,7 +13,7 @@ import static com.codeborne.selenide.Selenide.switchTo;
 @Getter
 public class EntityPage {
 
-    protected final Select versionDropDown = Select.byLabel("Выберите версию");
+    protected final Select versionSelect = Select.byLabel("Выберите версию");
     protected final SelenideElement selectedVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     protected final Button createButton = Button.byText("Создать");
     protected final Button saveButton = Button.byText("Сохранить");
