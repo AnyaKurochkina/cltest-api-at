@@ -5,6 +5,12 @@
     "name": "org-745ms323e2"
   },
   {
+    "objectClassName": "models.cloud.authorizer.Organization",
+    "title": "T1-CLOUD",
+    "name": "t1-cloud",
+    "type": "not_default"
+  },
+  {
     "objectClassName": "models.cloud.authorizer.Project",
     "id": "proj-h7jm0cj44h",
     "projectName": "AT",

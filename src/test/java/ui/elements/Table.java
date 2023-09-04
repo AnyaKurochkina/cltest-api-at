@@ -245,6 +245,7 @@ public class Table implements TypifiedElement {
     public List<String> getNotEmptyHeaders() {
         List<String> list = new ArrayList<>(headers);
         list.removeAll(Collections.singletonList(""));
+        list.removeAll(Collections.singletonList(" "));
         return list;
     }
 

@@ -16,6 +16,7 @@ import static core.helper.Configure.ResourceManagerURL;
 public class Organization extends Entity {
     String title;
     String name;
+    String type;
 
     @Override
     public Entity init() {

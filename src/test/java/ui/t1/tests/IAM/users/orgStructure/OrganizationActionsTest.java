@@ -2,7 +2,6 @@ package ui.t1.tests.IAM.users.orgStructure;
 
 import api.Tests;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import lombok.extern.log4j.Log4j2;
@@ -53,15 +52,15 @@ public class OrganizationActionsTest extends Tests {
     @Test
     @DisplayName("Переключение между организациями")
     public void switchBetweenOrganizationTest() {
-        String orgName;
-        if (Configure.ENV.equals("t1prod")) {
-            orgName = "T1-CLOUD";
-        } else {
-            orgName = "QA IFT T1";
-        }
+        models.cloud.authorizer.Organization org = models.cloud.authorizer.Organization
+                .builder()
+                .type("not_default")
+                .build()
+                .onlyGetObject();
+        String orgName = org.getName();
         assertTrue(new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN)
-                .changeContext()
+                .goToContextDialog()
                 .selectOrganization(orgName)
                 .isContextNameDisplayed(orgName));
     }

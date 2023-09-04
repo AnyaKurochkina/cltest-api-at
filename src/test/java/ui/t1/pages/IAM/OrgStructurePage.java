@@ -6,8 +6,11 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
+import ui.elements.Button;
 import ui.elements.Dialog;
 import ui.elements.Table;
+
+import java.util.List;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -17,6 +20,13 @@ public class OrgStructurePage {
     SelenideElement selectContextAction = $x("//div[text() = 'Выбрать контекст']");
     SelenideElement deleteAction = $x("//div[text() = 'Удалить']");
     SelenideElement editAction = $x("//div[text() = 'Редактировать']");
+    Button settings = Button.byXpath("//*[@data-dimension = 's']");
+
+    @Step("Открыть настройки таблицы")
+    public TableSettingsDialog openTableSettings() {
+        settings.click();
+        return new TableSettingsDialog("Настройки таблицы");
+    }
 
     @Step("Создание проекта с именем {name}")
     public OrgStructurePage createProject(String name) {
@@ -125,6 +135,11 @@ public class OrgStructurePage {
                 .inputInvalidId("dsfsdf")
                 .inputValidIdAndDelete(String.format("Проект \"%s\" удален", name));
         return this;
+    }
+
+    @Step("Получение заголовков таблицы")
+    public List<String> getTableHeaders() {
+        return new OrgTable().getNotEmptyHeaders();
     }
 
     @Step("Проверка существования проекта с именем {name}")

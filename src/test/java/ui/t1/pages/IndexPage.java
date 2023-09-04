@@ -193,7 +193,7 @@ public class IndexPage {
     }
 
     @Step("Переход в модальное окно изменения контекста")
-    public ContextDialog changeContext(){
+    public ContextDialog goToContextDialog(){
         changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
         return new ContextDialog();
     }
