@@ -1,10 +1,7 @@
 package api.cloud.references.pages;
 
 import api.Tests;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
 import models.cloud.references.Directories;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 
@@ -15,9 +12,6 @@ import static steps.references.ReferencesStep.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("references")
-@Epic("Справочники")
-@Feature("Pages")
-@DisabledIfEnv("prod")
 public class ReferencesPageBaseTest extends Tests {
 
     List<String> deleteList = new ArrayList<>();
