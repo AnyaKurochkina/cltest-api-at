@@ -28,9 +28,11 @@ public class SubscriptionsSteps extends Steps {
     String createThemeGroup = "admin/api/v1/theme-groups";
     String getUnreadIDs = "api/v1/notifications?read_date__isnull=true&channel=ws";
     String markAllRead = "api/v1/notifications/mark_read";
-    String unreadCount = "api/v1/notifications/unread-count?channel=ws";
+    String unreadCount = "api/v1/user/me";
     String createTemplate = "admin/api/v1/templates";
     String getNotifications = "api/v1/notifications?include=total_count&channel=ws&per_page=10";
+    String createUserSubscriptions = "api/v1/organizations/t1-cloud/subscriptions-admin/";
+    String deleteUsersSubscriptions = "api/v1/organizations/t1-cloud/admin/subscriptions-delete";
 
     @Step("Создаем подписку {themeID} и получаем ID подписки")
     public String createSubscription(String importance, String themeID, String ... channels){
@@ -212,7 +214,7 @@ public class SubscriptionsSteps extends Steps {
                 .get(unreadCount)
                 .assertStatus(200)
                 .jsonPath()
-                .get("unread_count");
+                .get("unread_count_ws");
     }
 
     @Step("Получаем ID шаблонов")
@@ -235,6 +237,32 @@ public class SubscriptionsSteps extends Steps {
         new Http(NCurl)
                 .setRole(Role.NOTIFICATIONS_ADMIN)
                 .delete(createTemplate + "/" + id)
+                .assertStatus(204);
+    }
+
+    @Step("Создаем подписки для других пользователей")
+    public List <String> createUsersSubscription(String importance, String themeID, String ... users){
+        JSONObject body = JsonHelper.getJsonTemplate("t1/notificationCenter/createSubscriptionsForUsers.json")
+                .set("$.importance", importance)
+                .set("$.theme_id", themeID)
+                .set("$.user_ids", users).build();
+       return new Http(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .body(body)
+                .post(createUserSubscriptions)
+                .assertStatus(201)
+                .jsonPath()
+                .getList("id");
+    }
+
+    @Step("Удаляем подписки для пользователей")
+    public void deleteUsersSubscriptions(List <String> ids){
+        JSONObject body = JsonHelper.getJsonTemplate("t1/notificationCenter/deleteUsersSubscriptions.json")
+                .set("$.subscription_ids", ids).build();
+        new Http(NCurl)
+                .setRole(Role.NOTIFICATIONS_ADMIN)
+                .body(body)
+                .delete(deleteUsersSubscriptions)
                 .assertStatus(204);
     }
 

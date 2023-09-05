@@ -11,6 +11,8 @@ public enum Role {
 
     @SerializedName("roles/notifications.admin")
     NOTIFICATIONS_ADMIN("roles/notifications.admin"),
+    @SerializedName("roles/notifications.user")
+    NOTIFICATIONS_USER("roles/notifications.user"),
 
     @SerializedName("roles/portal.access-group-admin")
     ACCESS_GROUP_ADMIN("roles/portal.access-group-admin"),

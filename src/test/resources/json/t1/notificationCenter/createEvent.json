@@ -1,12 +1,8 @@
 {
-  "event_type": "CONTEXT",
+  "event_type": "NONTARGET",
   "subject": "test subject",
   "body_data": { },
-  "context": {
-    "id": "t1-cloud",
-    "type": "folders",
-    "path": "t1-cloud"
-  },
+
   "url": "link",
   "new_tab": false,
   "theme_code": "test",

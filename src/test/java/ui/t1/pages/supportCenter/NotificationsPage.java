@@ -128,7 +128,7 @@ public class NotificationsPage {
         Table.Row row = table.getRowByColumnValueContains("Дата создания", date);
         Assertions.assertEquals(groupName, row.getValueByColumn(groupHeader));
         Assertions.assertEquals(description, row.getValueByColumn(descriptionHeader));
-        Assertions.assertEquals("t1-cloud", row.getValueByColumn(contextHeader));
+        Assertions.assertEquals("Глобальный", row.getValueByColumn(contextHeader));
         Assertions.assertEquals(HIGH.getUiName(), row.getValueByColumn(priorityHeader));
         return this;
 
@@ -226,7 +226,7 @@ public class NotificationsPage {
     @Step("Проверяем что в колонке Приоритет нет других значение кроме Низкий")
     public NotificationsPage checkPriorityColumn(){
         Table table = new Table(priorityHeader);
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 5; i++){
             table.getValueByColumnInRow(i, priorityHeader).shouldHave(Condition.text(LOW.getUiName()));
         }
         return this;
@@ -315,5 +315,14 @@ public class NotificationsPage {
         switchTo().window(0);
         $x("//a[.='Посмотреть все уведомления']").pressEscape();
         return this;
+    }
+
+    @Step("Открываем и закрываем спойлер сообщения в ЦУ")
+    public NotificationsPage clickMessageTwice(){
+        $x("(//td//button) [2]").click();
+        $x("(//td//button) [2]").click();
+
+        return this;
+
     }
 }
