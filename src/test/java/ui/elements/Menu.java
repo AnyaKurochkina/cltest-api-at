@@ -9,6 +9,7 @@ import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 
 import static api.Tests.activeCnd;
@@ -73,5 +74,9 @@ public class Menu implements TypifiedElement {
         return $$x("//li[.='{}']", title)
                 .filter(Condition.attribute("aria-disabled", "true"))
                 .first().isDisplayed();
+    }
+
+    public List<String> getOptions() {
+        return element.$$("li").texts();
     }
 }

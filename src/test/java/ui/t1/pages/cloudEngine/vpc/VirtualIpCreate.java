@@ -1,7 +1,5 @@
 package ui.t1.pages.cloudEngine.vpc;
 
-import com.codeborne.selenide.CollectionCondition;
-import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import lombok.Getter;
 import ui.cloud.pages.orders.OrderUtils;
@@ -28,7 +26,7 @@ public class VirtualIpCreate {
     }
 
     public VirtualIpCreate setName(String name) {
-        Input.byLabel("Имя VIP").setValue(name);
+        Input.byLabel("Имя виртуального IP адреса").setValue(name);
         this.name = name;
         return this;
     }

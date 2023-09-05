@@ -31,9 +31,7 @@ public class Dialog implements TypifiedElement {
     }
 
     public Dialog setInputValue(String label, String value) {
-        SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
-        new Input(element).clear();
-        new Input(element).setValue(value);
+        Input.byLabel(label).setValue(value);
         return this;
     }
 
@@ -68,8 +66,8 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public void clickButton(String btn) {
-        dialog.$x("descendant::button[.='" + btn + "']").shouldBe(Condition.enabled).click();
+    public void clickButton(String text) {
+        dialog.$x("descendant::button[.='" + text + "']").shouldBe(Condition.enabled).click();
         Waiting.sleep(200);
     }
 

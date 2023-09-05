@@ -61,7 +61,7 @@ public class Table implements TypifiedElement {
     public void init(SelenideElement table) {
         $x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
         table.$x("descendant::*[text()='Идет обработка данных']").shouldNot(Condition.exist);
-        headersCollection = table.$$x("thead/tr/th");
+        headersCollection = table.$$x("thead/tr/th | thead/tr/td");
         rows = table.$$x("tbody/tr[td]").filter(Condition.not(Condition.text("Нет данных для отображения")));
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
         headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
@@ -205,6 +205,10 @@ public class Table implements TypifiedElement {
 
         public SelenideElement getElementByColumn(String column) {
             return getValueByColumnInRow(index, column);
+        }
+
+        public SelenideElement getElementLastColumn() {
+            return getElementByColumnIndex(rowSize() - 1);
         }
 
         public SelenideElement getElementByColumnIndex(int column) {

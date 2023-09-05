@@ -9,8 +9,8 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 

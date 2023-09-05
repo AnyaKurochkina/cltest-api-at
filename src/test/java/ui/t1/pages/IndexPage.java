@@ -13,10 +13,7 @@ import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
-import ui.t1.pages.cloudEngine.vpc.NetworkList;
-import ui.t1.pages.cloudEngine.vpc.PublicIpList;
-import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
-import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
+import ui.t1.pages.cloudEngine.vpc.*;
 import ui.t1.pages.supportCenter.MySubscriptionsPage;
 import ui.t1.pages.supportCenter.NotificationsPage;
 import ui.t1.pages.supportCenter.SubscribeUsersPage;
@@ -45,6 +42,7 @@ public class IndexPage {
     Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
     Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
     Button linkVirtualIps = Button.byXpath("//a[.='Виртуальные IP-адреса']");
+    Button linkRouters = Button.byXpath("//a[.='Маршрутизаторы']");
     Button linkImages = Button.byXpath("//a[.='Образы']");
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
@@ -173,6 +171,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkVirtualIps.click();
         return new VirtualIpList();
+    }
+
+    @Step("Переход на страницу Маршрутизаторы")
+    public RouterList goToRouters() {
+        linkCloudEngine.click();
+        linkRouters.click();
+        return new RouterList();
     }
 
     @Step("Отключить Cloud Engine")

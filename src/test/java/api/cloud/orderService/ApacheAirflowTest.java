@@ -15,6 +15,7 @@ import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.orderService.OrderServiceSteps;
 
 
 @Epic("Продукты")
@@ -30,7 +31,8 @@ public class ApacheAirflowTest extends Tests {
         try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
             String dbName = "airflow";
             postgreSQL.createDb(dbName);
-            product.setDbServer(postgreSQL.getIp());
+            product.setPgAdminPassword(pgAdminPassword);
+            product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
             product.setDbUser(new DbUser(dbName, dbName + "_admin"));
         }
     }

@@ -9,13 +9,13 @@ import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import steps.productCatalog.ProductCatalogSteps;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.UUID;
 
 @Epic("Конструктор.Сервисы")
 @DisabledIfEnv("prod")
-public class ServiceBaseTest extends BaseTest {
+public class ServiceBaseTest extends ProductCatalogUITest {
     final static String TITLE = "AT UI Service";
     final static String GRAPH_TITLE = "AT UI Graph for service";
     final static String DESCRIPTION = "Description";

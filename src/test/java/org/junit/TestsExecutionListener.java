@@ -56,7 +56,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         else
             Configuration.startMaximized = Boolean.parseBoolean(Configure.getAppProp("webdriver.maximized", "false"));
         Configuration.pageLoadTimeout = 60000;
-        Configuration.timeout = 45000;
+        Configuration.timeout = 50000;
         Configuration.driverManagerEnabled = false;
         Configuration.browser = "chrome";
         Map<String, Object> prefs = new HashMap<>();

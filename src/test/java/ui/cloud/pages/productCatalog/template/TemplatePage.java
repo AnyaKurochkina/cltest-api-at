@@ -10,8 +10,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.Input;
@@ -84,7 +84,7 @@ public class TemplatePage extends EntityPage {
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(template.getDescription()));
         runQueueInput.getInput().shouldHave(Condition.exactValue(template.getRun()));
         rollbackQueueInput.getInput().shouldHave(Condition.exactValue(template.getRollback().toString()));
-        Assertions.assertTrue(typeSelect.getValue().equals(template.getType()));
+        assertEquals(typeSelect.getValue(), template.getType());
         timeoutInput.getInput().shouldHave(Condition.exactValue(String.valueOf(template.getTimeout())));
         checkTemplateVersion(template.getVersion());
         goToParamsTab();
@@ -120,7 +120,7 @@ public class TemplatePage extends EntityPage {
     @Step("Удаление шаблона")
     public void deleteTemplate() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete();
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
     }
 
     @Step("Возврат в список шаблонов")

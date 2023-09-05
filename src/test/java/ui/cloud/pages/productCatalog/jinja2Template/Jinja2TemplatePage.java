@@ -10,8 +10,8 @@ import lombok.Getter;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.elements.Button;
 import ui.elements.Tab;
 import ui.elements.TextArea;
@@ -103,7 +103,7 @@ public class Jinja2TemplatePage extends EntityPage {
                 () -> {
                     nameInput.getInput().sendKeys(Keys.SPACE);
                     nameInput.getInput().sendKeys(Keys.BACK_SPACE);
-                }, Duration.ofSeconds(3));
+                }, Duration.ofSeconds(5));
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();

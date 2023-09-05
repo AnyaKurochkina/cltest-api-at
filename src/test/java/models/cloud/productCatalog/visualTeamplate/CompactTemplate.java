@@ -34,6 +34,8 @@ public class CompactTemplate {
     private Object macAddress;
     private Object ip;
     private Object image;
+    @JsonProperty("mTLS Endpoint")
+    private Object mTLSEndpoint;
     private Object link;
     @JsonProperty("created_at")
     private Object createdAt;

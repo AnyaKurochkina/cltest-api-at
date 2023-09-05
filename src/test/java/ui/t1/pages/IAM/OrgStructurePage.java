@@ -1,13 +1,9 @@
 package ui.t1.pages.IAM;
 
-import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
-import org.intellij.lang.annotations.Language;
-import org.openqa.selenium.WebElement;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
 import ui.elements.Dialog;
@@ -46,11 +42,12 @@ public class OrgStructurePage {
 
     @Step("Открыть модальное окно у папки/проекта/организации")
     public ModalWindow openModalWindow(String name) {
+        Waiting.sleep(2000);
         String type = new OrgTable().getRowByColumnValue("Название", name).getValueByColumn("Тип");
         new OrgTable().getRowByColumnValue("Название", name)
                 .get()
                 .click();
-        return new ModalWindow(String.format("%s \"%s\"",type, name));
+        return new ModalWindow(String.format("%s  \"%s\"", type, name));
     }
 
     @Step("Выбрать контекст")
@@ -141,22 +138,9 @@ public class OrgStructurePage {
     }
 
     private static class OrgTable extends Table {
-        @Language("XPath")
-        private String xpath;
 
         public OrgTable() {
             super($x("//table[thead/tr/td[.='Название']]"));
-        }
-
-        @Override
-        public void init(SelenideElement table) {
-            xpath = table.getSearchCriteria().replaceAll("By.xpath: ", "");
-            StringUtils.$x("//div[contains(@style,'background-color: rgba(') and contains(@style,', 0.7)')]").shouldNot(Condition.exist);
-            table.$x("descendant::*[text()='Идет обработка данных']").shouldNot(Condition.exist);
-            headersCollection = table.$$x("thead/tr/td");
-            rows = table.$$x("tbody/tr[td]").filter(Condition.not(Condition.text("Нет данных для отображения")));
-            headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
-            headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
         }
     }
 }

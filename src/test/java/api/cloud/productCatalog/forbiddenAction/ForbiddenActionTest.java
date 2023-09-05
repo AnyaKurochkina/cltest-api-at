@@ -50,7 +50,7 @@ public class ForbiddenActionTest extends Tests {
                 .init()
                 .toJson();
         String message = createForbiddenAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Значение parent_to_self устарело. Пожалуйста, выберите другое.", message);
+        assertEquals("\"direction\": Значения parent_to_self нет среди допустимых вариантов.", message);
     }
 
     @DisplayName("Проверка имени forbidden action после создания с direction = parent_to_child")

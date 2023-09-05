@@ -13,9 +13,9 @@ import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -107,7 +107,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Order(3)
     @TmsLink("330327")
     @Disabled
-    @DisplayName("UI ClickHouse. Перезагрузить по питанию")
+    @DisplayName("UI ClickHouse. Перезагрузить")
     void restart() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::restart);
@@ -115,6 +115,7 @@ public class UiClickHouseTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("330329")
     @DisplayName("UI ClickHouse. Расширить точку монтирования")
@@ -124,6 +125,7 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("1177396")
     @DisplayName("UI ClickHouse. Проверить конфигурацию")
@@ -203,9 +205,9 @@ public class UiClickHouseTest extends UiProductTest {
     @DisplayName("UI ClickHouse . Добавить/удалиь пользовательскую группу")
     void addGroupAD() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAD(accessGroup.getName()));
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAD(accessGroup.getPrefixName()));
+        final String group = product.additionalAccessGroup();
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAD(group));
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAD(group));
     }
 
     @Test
@@ -214,9 +216,9 @@ public class UiClickHouseTest extends UiProductTest {
     @DisplayName("UI ClickHouse . Добавить/удалить группу администраторов")
     void addGroupAdmin() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAdmin(accessGroup.getName()));
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAdmin(accessGroup.getPrefixName()));
+        final String group = product.additionalAccessGroup();
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAdmin(group));
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAdmin(group));
     }
 
 

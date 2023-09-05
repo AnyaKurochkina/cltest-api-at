@@ -8,8 +8,8 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 

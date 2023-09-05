@@ -2,10 +2,15 @@ package ui.elements;
 
 import com.codeborne.selenide.*;
 import core.utils.Waiting;
+import lombok.SneakyThrows;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.concurrent.TimeoutException;
 
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
@@ -81,6 +86,19 @@ public interface TypifiedElement {
 
     static String getIndex(int index) {
         return (index == -1) ? "last()" : String.valueOf(index);
+    }
+
+    @SneakyThrows
+    //Для решения редкой проблемы динамически обновляемого контента (когда между Condition и getText() может обновиться элемент)
+    static String findNotEmptyText(SelenideElement element, Duration duration) {
+        Instant start = Instant.now();
+        element.shouldBe(Condition.visible);
+        while (duration.compareTo(Duration.between(start, Instant.now())) > 0) {
+            final String s = element.getText();
+            if (!s.isEmpty()) return s;
+            Waiting.sleep(300);
+        }
+        throw new TimeoutException("Return empty string, duration: " + duration);
     }
 
     //TODO: До фикса доступа к балансу учеток закрываем все окна
