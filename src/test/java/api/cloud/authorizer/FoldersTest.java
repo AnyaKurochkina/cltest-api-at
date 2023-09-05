@@ -13,7 +13,7 @@ import api.Tests;
 
 @Epic("Организационная структура")
 @Feature("Папки")
-@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod"), @Tag("health_check")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class FoldersTest extends Tests {

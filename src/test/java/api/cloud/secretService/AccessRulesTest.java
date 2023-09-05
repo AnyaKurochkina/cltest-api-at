@@ -14,6 +14,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 @Feature("Сервис секретов")
@@ -22,6 +23,7 @@ public class AccessRulesTest extends AbstractSecretTest {
     GlobalUser otherUser = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
 
     @Test
+    @Tag("health_check")
     @TmsLink("")
     @DisplayName("Создание правила доступа для секрета")
     void postV1SecretsSecretIdAccessRules() {
@@ -87,6 +89,7 @@ public class AccessRulesTest extends AbstractSecretTest {
     }
 
     @Test
+    @Tag("health_check")
     @TmsLink("")
     @DisplayName("Удаление правила доступа для секрета")
     void deleteV1SecretsSecretIdAccessRulesId() {

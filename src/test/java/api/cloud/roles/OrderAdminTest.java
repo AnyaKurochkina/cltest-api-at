@@ -13,7 +13,7 @@ import org.junit.jupiter.api.*;
 
 @Feature("Ролевая модель")
 @Epic("Администратор заказов")
-@Tags({@Tag("regress")})
+@Tags({@Tag("regress"), @Tag("health_check")})
 @Disabled
 public class OrderAdminTest extends Tests {
 

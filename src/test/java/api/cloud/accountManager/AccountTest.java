@@ -15,7 +15,7 @@ import api.Tests;
 
 @Epic("Финансы")
 @Feature("Счета")
-@Tags({@Tag("regress"), @Tag("accounts"), @Tag("smoke"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("accounts"), @Tag("smoke"), @Tag("prod"), @Tag("health_check")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class AccountTest extends Tests {

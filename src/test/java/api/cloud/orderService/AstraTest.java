@@ -16,7 +16,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 
 @Epic("Продукты")
 @Feature("Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra"), @Tag("prod"), @Tag("health_check")})
 public class AstraTest extends Tests {
 
     @TmsLink("391703")

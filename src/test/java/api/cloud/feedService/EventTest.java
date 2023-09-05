@@ -29,6 +29,7 @@ public class EventTest extends Tests {
     FeedTag tag;
 
     @DisplayName("Создание тестовых данных")
+    @Tag("health_check")
     @BeforeAll
     public void createTestData() {
         eventType = EventType.builder()
@@ -50,6 +51,7 @@ public class EventTest extends Tests {
     }
 
     @DisplayName("Создание события")
+    @Tag("health_check")
     @TmsLink("977377")
     @Test
     public void createEventTest() {
@@ -108,6 +110,7 @@ public class EventTest extends Tests {
     }
 
     @DisplayName("Обновление события")
+    @Tag("health_check")
     @TmsLink("977438")
     @Test
     public void updateEventTest() {
@@ -155,6 +158,7 @@ public class EventTest extends Tests {
     }
 
     @DisplayName("Удаление события")
+    @Tag("health_check")
     @TmsLink("977445")
     @Test
     public void deleteEventTest() {
