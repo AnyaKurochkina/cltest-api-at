@@ -57,7 +57,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
     }
 
     @Test
@@ -185,5 +185,10 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины. Удалить")
     void deleteVm() {
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).delete();
+    }
+
+    @AfterAll
+    void afterClass() {
+        AbstractEntity.deleteCurrentClassEntities();
     }
 }

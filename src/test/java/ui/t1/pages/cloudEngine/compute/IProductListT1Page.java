@@ -14,19 +14,22 @@ import ui.t1.pages.cloudEngine.Column;
 
 import java.time.Duration;
 
+import static ui.cloud.pages.orders.OrderUtils.getCurrentProjectId;
+import static ui.t1.tests.engine.AbstractComputeTest.historyMutex;
+
 public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     private String productLink;
 
     @Override
     protected void runActionWithoutParameters(SelenideElement button, String action, ActionParameters params) {
-        synchronized (IProductListT1Page.class) {
+        synchronized (historyMutex.get(getCurrentProjectId())) {
             super.runActionWithoutParameters(button, action, params);
         }
     }
 
     @Override
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
-        synchronized (IProductListT1Page.class) {
+        synchronized (historyMutex.get(getCurrentProjectId())) {
             super.runActionWithParameters(button, action, textButton, executable, params);
         }
     }
@@ -41,8 +44,12 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
 
     @Override
     public void checkLastAction(String action) {
-        Assertions.assertEquals(action, new ComputeHistory().getFirstValueByColumn(Column.OPERATION));
-        Assertions.assertEquals("Завершено", new ComputeHistory().getFirstValueByColumn(Column.STATUS));
+        checkActionByIndex(0, action);
         TypifiedElement.open(productLink);
+    }
+
+    public void checkActionByIndex(int index, String action) {
+        Assertions.assertEquals(action, new ComputeHistory().getRow(index).getValueByColumn(Column.OPERATION));
+        Assertions.assertEquals("Завершено", new ComputeHistory().getRow(index).getValueByColumn(Column.STATUS));
     }
 }

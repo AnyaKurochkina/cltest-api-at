@@ -1,7 +1,14 @@
 package api.cloud.orderService;
 
+import api.Tests;
+import core.enums.Role;
 import core.helper.Configure;
+import core.helper.http.Http;
+import core.helper.http.Path;
 import lombok.AllArgsConstructor;
+import lombok.SneakyThrows;
+import models.AbstractEntity;
+import models.cloud.authorizer.Folder;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
@@ -9,11 +16,14 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
-import api.Tests;
+import steps.resourceManager.ResourceManagerSteps;
+import ui.t1.tests.engine.AbstractComputeTest;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
+
+import static api.routes.OrderServiceApi.*;
+import static api.routes.VpcApi.getNetworksApiV1ProjectsProjectNameNetworksGet;
+import static api.routes.VpcApi.getSecurityGroupsApiV1ProjectsProjectNameSecurityGroupsGet;
 
 @DisplayName("Тестовый набор по удалению всех заказов из проекта")
 @Execution(ExecutionMode.CONCURRENT)
@@ -26,13 +36,13 @@ public class DeleteAllOrders extends Tests {
     @Tag("deleteAll")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Удаление всех успешных заказов из проекта")
-    public void deleteOrders(String env)  {
+    public void deleteOrders(String env) {
         OrderServiceSteps.deleteOrders(env, label -> label.startsWith("AT-API"));
     }
 
     @Test
     @DisplayName("Вывод всех ошибочных заказов")
-    void printAllErrorOrders()  {
+    void printAllErrorOrders() {
         List<Order> orders = new ArrayList<>();
         List<String> projects = Arrays.asList("proj-ln4zg69jek", "proj-rddf0uwi0q", "proj-ahjjqmlgnm",
                 "proj-bhbyhmik3a", "proj-zoz17np8rb", "proj-114wetem0c", "proj-1oob0zjo5h", "proj-6wpfrbes0g", "proj-aei4kz2yu4",
@@ -52,7 +62,56 @@ public class DeleteAllOrders extends Tests {
         }
     }
 
+    @Test
+    @DisplayName("Удаление всех успешных заказов T1 Engine")
+    void deleteOrdersCompute() {
+        Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> computeEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
+            put(getV1ProjectsProjectNameComputeInstances, AbstractComputeTest.InstanceEntity.class);
+            put(getV1ProjectsProjectNameComputeVolumes, AbstractComputeTest.VolumeEntity.class);
+            put(getV1ProjectsProjectNameComputeImages, AbstractComputeTest.ImageEntity.class);
+            put(getV1ProjectsProjectNameComputeSnapshots, AbstractComputeTest.SnapshotEntity.class);
+            put(getV1ProjectsProjectNameComputePublicIps, AbstractComputeTest.PublicIpEntity.class);
+            put(getV1ProjectsProjectNameComputeVips, AbstractComputeTest.VipEntity.class);
+            put(getV1ProjectsProjectNameComputeSnats, AbstractComputeTest.InstanceEntity.class);
+        }};
+        Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> vpcEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
+            put(getNetworksApiV1ProjectsProjectNameNetworksGet, AbstractComputeTest.NetworkEntity.class);
+            put(getSecurityGroupsApiV1ProjectsProjectNameSecurityGroupsGet, AbstractComputeTest.SecurityGroupEntity.class);
+        }};
 
+        Folder folderPollProject = Folder.builder().title("ProjectPool").build().onlyGetObject();
+        for (String projectId : ResourceManagerSteps.getChildren(folderPollProject.getName())) {
+            for (Map.Entry<Path, Class<? extends AbstractComputeTest.ComputeEntity>> entry : computeEntities.entrySet()) {
+                addComputeEntitiesForRemove(entry.getKey(), projectId, entry.getValue());
+            }
+            for (Map.Entry<Path, Class<? extends AbstractComputeTest.ComputeEntity>> entry : vpcEntities.entrySet()) {
+                addVpcEntitiesForRemove(entry.getKey(), projectId, entry.getValue());
+            }
+        }
+        AbstractEntity.deleteCurrentTestEntities();
+    }
+
+    @SneakyThrows
+    private static void addComputeEntitiesForRemove(Path path, String projectId, Class<? extends AbstractComputeTest.ComputeEntity> computeEntity) {
+        List<String> list = Http.builder()
+                .setRole(Role.CLOUD_ADMIN)
+                .api(path, projectId)
+                .jsonPath()
+                .getList("list.order_id");
+        for (String id : list)
+            AbstractEntity.addEntity(computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id));
+    }
+
+    @SneakyThrows
+    private static void addVpcEntitiesForRemove(Path path, String projectId, Class<? extends AbstractComputeTest.ComputeEntity> computeEntity) {
+        List<String> list = Http.builder()
+                .setRole(Role.CLOUD_ADMIN)
+                .api(path, projectId)
+                .jsonPath()
+                .getList("findAll{it.name != 'default'}.id");
+        for (String id : list)
+            AbstractEntity.addEntity(computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id));
+    }
 
     @AllArgsConstructor
     private static class Order {

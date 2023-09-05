@@ -10,6 +10,7 @@ import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
 import models.cloud.authorizer.Folder;
@@ -25,7 +26,10 @@ import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
+import ui.t1.pages.cloudEngine.compute.VmCreate;
+import ui.t1.pages.cloudEngine.compute.VmList;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,11 +61,15 @@ public abstract class AbstractComputeTest extends Tests {
     }
 
     private static final ThreadLocal<String> project = new ThreadLocal<>();
+    public static final Map<String, Object> historyMutex = new HashMap<>();
     private static final Map<String, Integer> projectCountMap = new ConcurrentHashMap<>();
 
     static {
         Folder folderPollProject = Folder.builder().title("ProjectPool").build().onlyGetObject();
-        ResourceManagerSteps.getChildren(folderPollProject.getName()).forEach(e -> projectCountMap.put(e, 0));
+        ResourceManagerSteps.getChildren(folderPollProject.getName()).forEach(e -> {
+            historyMutex.put(e, new Object());
+            projectCountMap.put(e, 0);
+        });
     }
 
     public static String getProjectId() {
@@ -107,8 +115,8 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
-    protected static class VmEntity extends ComputeEntity {
-        public VmEntity(String projectId, String id) {
+    protected static class InstanceEntity extends ComputeEntity {
+        public InstanceEntity(String projectId, String id) {
             super(projectId, id);
         }
 
@@ -117,7 +125,7 @@ public abstract class AbstractComputeTest extends Tests {
             return 1;
         }
 
-        public VmEntity() {
+        public InstanceEntity() {
             super(StringUtils.findByRegex("orders/([^/]*)/", WebDriverRunner.getWebDriver().getCurrentUrl()));
         }
         @Override
@@ -133,19 +141,43 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
-    public static class DiskEntity extends VmEntity {
+    @NoArgsConstructor
+    public static class VolumeEntity extends InstanceEntity {
+        public VolumeEntity(String projectId, String id) {
+            super(projectId, id);
+        }
         @Override
         protected int getPriority() {
             return 2;
         }
     }
-    public static class SnapshotEntity extends VmEntity {}
-    public static class ImageEntity extends VmEntity {}
+    @NoArgsConstructor
+    public static class SnapshotEntity extends InstanceEntity {
+        public SnapshotEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+    }
+    @NoArgsConstructor
+    public static class ImageEntity extends InstanceEntity {
+        public ImageEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+    }
 
-    protected static class NetworkEntity extends ComputeEntity {
+    public static class NetworkEntity extends ComputeEntity {
         public NetworkEntity() {
             super(StringUtils.findByRegex("networks/([^?]*)", WebDriverRunner.getWebDriver().getCurrentUrl()));
         }
+
+        public NetworkEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+
+        @Override
+        protected int getPriority() {
+            return 2;
+        }
+
         @Override
         public void delete() {
             Http.builder().setRole(Role.CLOUD_ADMIN).api(deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete, projectId, id);
@@ -155,6 +187,10 @@ public abstract class AbstractComputeTest extends Tests {
     public static class SecurityGroupEntity extends ComputeEntity {
         public SecurityGroupEntity() {
             super(StringUtils.findByRegex("security-groups/([^?]*)", WebDriverRunner.getWebDriver().getCurrentUrl()));
+        }
+
+        public SecurityGroupEntity(String projectId, String id) {
+            super(projectId, id);
         }
 
         @Override
@@ -168,17 +204,39 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
-    public static class IpEntity extends VmEntity {
+    @NoArgsConstructor
+    public static class PublicIpEntity extends InstanceEntity {
+        public PublicIpEntity(String projectId, String id) {
+            super(projectId, id);
+        }
         @Override
         protected int getPriority() {
             return 3;
         }
     }
 
-    public static class VipEntity extends VmEntity {
+    @NoArgsConstructor
+    public static class VipEntity extends InstanceEntity {
+        public VipEntity(String projectId, String id) {
+            super(projectId, id);
+        }
         @Override
         protected int getPriority() {
             return 0;
         }
     }
+
+    protected final EntitySupplier<VmCreate> randomVm = lazy(() -> {
+        VmCreate v = new IndexPage().goToVirtualMachine().addVm()
+                .setAvailabilityZone(availabilityZone)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setSshKey(sshKey)
+                .clickOrder();
+        new VmList().selectCompute(v.getName())
+                .markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        return v;
+    });
 }

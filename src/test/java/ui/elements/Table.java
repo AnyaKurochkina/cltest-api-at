@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
