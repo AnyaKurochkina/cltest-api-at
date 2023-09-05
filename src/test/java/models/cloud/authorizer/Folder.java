@@ -27,9 +27,9 @@ public class Folder extends Entity {
     public String parentId;
     public List<String> informationSystemIds;
 
-    transient static final public String BUSINESS_BLOCK = "business_block";
-    transient static final public String DEPARTMENT = "department";
-    transient static final public String DEFAULT = "default";
+    static final public String BUSINESS_BLOCK = "business_block";
+    static final public String DEPARTMENT = "department";
+    static final public String DEFAULT = "default";
 
     @Override
     public Entity init() {

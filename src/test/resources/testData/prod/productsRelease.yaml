@@ -24,7 +24,7 @@ Nginx:
 
 Redis:
   - options:
-      - { platform: "OpenStack", env: "IFT"}
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 ApacheKafkaCluster:
   - options:
