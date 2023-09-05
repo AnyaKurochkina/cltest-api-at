@@ -83,4 +83,9 @@ public class NetworkTest extends AbstractComputeTest {
     void deleteNetwork() {
         new IndexPage().goToNetworks().deleteNetwork(name);
     }
+
+    @AfterAll
+    void afterClass() {
+        AbstractEntity.deleteCurrentClassEntities();
+    }
 }

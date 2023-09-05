@@ -1,7 +1,6 @@
 package api.cloud.orderService;
 
 import api.Tests;
-import api.routes.VpcApi;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.http.Http;
@@ -67,13 +66,13 @@ public class DeleteAllOrders extends Tests {
     @DisplayName("Удаление всех успешных заказов T1 Engine")
     void deleteOrdersCompute() {
         Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> computeEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
-            put(getV1ProjectsProjectNameComputeInstances, AbstractComputeTest.VmEntity.class);
-            put(getV1ProjectsProjectNameComputeVolumes, AbstractComputeTest.DiskEntity.class);
+            put(getV1ProjectsProjectNameComputeInstances, AbstractComputeTest.InstanceEntity.class);
+            put(getV1ProjectsProjectNameComputeVolumes, AbstractComputeTest.VolumeEntity.class);
             put(getV1ProjectsProjectNameComputeImages, AbstractComputeTest.ImageEntity.class);
             put(getV1ProjectsProjectNameComputeSnapshots, AbstractComputeTest.SnapshotEntity.class);
-            put(getV1ProjectsProjectNameComputePublicIps, AbstractComputeTest.IpEntity.class);
+            put(getV1ProjectsProjectNameComputePublicIps, AbstractComputeTest.PublicIpEntity.class);
             put(getV1ProjectsProjectNameComputeVips, AbstractComputeTest.VipEntity.class);
-            put(getV1ProjectsProjectNameComputeSnats, AbstractComputeTest.VmEntity.class);
+            put(getV1ProjectsProjectNameComputeSnats, AbstractComputeTest.InstanceEntity.class);
         }};
         Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> vpcEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
             put(getNetworksApiV1ProjectsProjectNameNetworksGet, AbstractComputeTest.NetworkEntity.class);
@@ -90,8 +89,6 @@ public class DeleteAllOrders extends Tests {
             }
         }
         AbstractEntity.deleteCurrentTestEntities();
-
-
     }
 
     @SneakyThrows

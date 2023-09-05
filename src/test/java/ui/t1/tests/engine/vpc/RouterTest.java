@@ -18,31 +18,27 @@ import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.SshKeyList;
-import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.pages.cloudEngine.vpc.*;
 import ui.t1.tests.engine.AbstractComputeTest;
+import ui.t1.tests.engine.EntitySupplier;
 
 import java.util.Arrays;
 
 import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
-@BlockTests
-@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Маршрутизаторы")
 @Epic("Cloud Compute")
-
-
-
-@Disabled
-
-
 public class RouterTest extends AbstractComputeTest {
-    RouterCreate router;
+    protected final EntitySupplier<RouterCreate> randomRouter = lazy(() -> {
+        RouterCreate r = new IndexPage().goToRouters().addRouter().setName(getRandomName()).setRegion(region).setDesc("desc").addNetwork(defaultNetwork).clickOrder();
+        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        return r;
+    });
 
     @Test
     @Order(1)
@@ -50,8 +46,8 @@ public class RouterTest extends AbstractComputeTest {
     @Tag("smoke")
     @DisplayName("Cloud VPC. Маршрутизаторы. Создать маршрутизатор")
     void addRouter() {
-        router = new IndexPage().goToRouters().addRouter().setName(getRandomName()).setRegion(region).setDesc("desc").addNetwork(defaultNetwork).clickOrder();
-        new RouterList().selectRouter(router.getName()).markForDeletion(new VmEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        RouterCreate router = randomRouter.get();
+        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
     }
 
     @Test
@@ -59,6 +55,7 @@ public class RouterTest extends AbstractComputeTest {
     @TmsLink("")
     @DisplayName("Cloud VPC. Маршрутизаторы")
     void checkRouterList() {
+        RouterCreate router = randomRouter.get();
         new IndexPage().goToRouters();
         new TableChecker()
                 .add("", String::isEmpty)
@@ -75,6 +72,7 @@ public class RouterTest extends AbstractComputeTest {
     @TmsLink("")
     @DisplayName("Cloud VPC. Маршрутизатор. Действия")
     void checkRouter() {
+        RouterCreate router = randomRouter.get();
         new IndexPage().goToRouters().selectRouter(router.getName());
         new TableChecker()
                 .add(Column.NAME, e -> e.equals(router.getName()))
@@ -102,16 +100,17 @@ public class RouterTest extends AbstractComputeTest {
     @TmsLink("")
     @DisplayName("Cloud VPC. Подключение к интернету")
     void connectNetwork() {
+        randomRouter.get();
         String ip = new IndexPage().goToPublicIps().addIp(region);
-        new PublicIpList().selectIp(ip).markForDeletion(new IpEntity()).checkCreate(true);
+        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity()).checkCreate(true);
 
         VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
                 .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setPublicIp(ip).setSshKey(sshKey).clickOrder();
-        new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
 
         new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
                 .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setPublicIp(ip).setSshKey(sshKey).clickOrder();
-        String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new VmEntity()).checkCreate(true).getLocalIp();
+        String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).getLocalIp();
 
         SshClient.SshClientBuilder ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER);
         String checkConnectCmd = ssh.privateKey(SshKeyList.PRIVATE_KEY).build()
@@ -126,6 +125,7 @@ public class RouterTest extends AbstractComputeTest {
     @TmsLink("")
     @DisplayName("Cloud VPC. Подключить/отключить сеть")
     void checkConnect() {
+        RouterCreate router = randomRouter.get();
         final String networkName = getRandomName();
         new IndexPage().goToNetworks().addNetwork(networkName, "desc");
             new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity()).addSubnet()
@@ -154,7 +154,13 @@ public class RouterTest extends AbstractComputeTest {
     @Order(100)
     @DisplayName("Cloud VPC. Маршрутизаторы. Удалить")
     void deleteRouter() {
+        RouterCreate router = randomRouter.get();
         Router routerPage = new IndexPage().goToRouters().selectRouter(router.getName());
         routerPage.runActionWithCheckCost(CompareType.ZERO, routerPage::delete);
+    }
+
+    @AfterAll
+    void afterClass() {
+        AbstractEntity.deleteCurrentClassEntities();
     }
 }
