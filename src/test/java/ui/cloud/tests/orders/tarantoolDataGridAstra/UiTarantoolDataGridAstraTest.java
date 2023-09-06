@@ -43,7 +43,7 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
     @TmsLink("")
     @Order(1)
     @DisplayName("UI TarantoolDataGrid. Заказ")
-    void orderAstra() {
+    void orderTarantoolDataGrid() {
         double prebillingCost;
         try {
             String accessGroup = product.accessGroup();
