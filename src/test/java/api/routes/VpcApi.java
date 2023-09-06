@@ -21,22 +21,6 @@ public class VpcApi implements Api {
     @Route(method = Method.DELETE, path = "/api/v1/projects/{project_name}/networks/{network_id}", status = 200)
     public static Path deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete;
 
-    //Получить все подсети
-    @Route(method = Method.GET, path = "/api/v1/projects/{project_name}/subnets", status = 200)
-    public static Path getSubnetsApiV1ProjectsProjectNameSubnetsGet;
-
-    //Создать подсеть
-    @Route(method = Method.POST, path = "/api/v1/projects/{project_name}/subnets", status = 200)
-    public static Path createSubnetApiV1ProjectsProjectNameSubnetsPost;
-
-    //Получить подсеть по идентификатору
-    @Route(method = Method.GET, path = "/api/v1/projects/{project_name}/subnets/{subnet_id}", status = 200)
-    public static Path getSubnetApiV1ProjectsProjectNameSubnetsSubnetIdGet;
-
-    //Удалить подсеть по идентификатору
-    @Route(method = Method.DELETE, path = "/api/v1/projects/{project_name}/subnets/{subnet_id}", status = 200)
-    public static Path deleteSubnetApiV1ProjectsProjectNameSubnetsSubnetIdDelete;
-
     //Получить статистику по объектам VPC
     @Route(method = Method.GET, path = "/api/v1/projects/{project_name}/items/stats", status = 200)
     public static Path getStatisticsApiV1ProjectsProjectNameItemsStatsGet;
@@ -72,6 +56,26 @@ public class VpcApi implements Api {
     //Удалить правило группы безопасности по идентификатору
     @Route(method = Method.DELETE, path = "/api/v1/projects/{project_name}/security-groups/{security_group_id}/rules/{security_group_rule_id}", status = 200)
     public static Path deleteRuleApiV1ProjectsProjectNameSecurityGroupsSecurityGroupIdRulesSecurityGroupRuleIdDelete;
+
+    //Получить все подсети
+    @Route(method = Method.GET, path = "/api/v1/projects/{project_name}/subnets", status = 200)
+    public static Path getSubnetsApiV1ProjectsProjectNameSubnetsGet;
+
+    //Создать подсеть
+    @Route(method = Method.POST, path = "/api/v1/projects/{project_name}/subnets", status = 200)
+    public static Path createSubnetApiV1ProjectsProjectNameSubnetsPost;
+
+    //Получить подсеть по идентификатору
+    @Route(method = Method.GET, path = "/api/v1/projects/{project_name}/subnets/{subnet_id}", status = 200)
+    public static Path getSubnetApiV1ProjectsProjectNameSubnetsSubnetIdGet;
+
+    //Удалить подсеть по идентификатору
+    @Route(method = Method.DELETE, path = "/api/v1/projects/{project_name}/subnets/{subnet_id}", status = 200)
+    public static Path deleteSubnetApiV1ProjectsProjectNameSubnetsSubnetIdDelete;
+
+    //Получить все ip адреса
+    @Route(method = Method.GET, path = "/api/v1/projects/{project_name}/subnets/{subnet_id}/ip-addresses", status = 200)
+    public static Path getIpAddressesApiV1ProjectsProjectNameSubnetsSubnetIdIpAddressesGet;
 
     @Override
     public String url() {

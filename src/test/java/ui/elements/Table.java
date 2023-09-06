@@ -65,7 +65,7 @@ public class Table implements TypifiedElement {
         headersCollection = table.$$x("thead/tr/th | thead/tr/td");
         rows = table.$$x("tbody/tr[td]").filter(Condition.not(Condition.text("Нет данных для отображения")));
         headersCollection.shouldBe(CollectionCondition.allMatch("Table is loaded", WebElement::isDisplayed));
-        headers = headersCollection.shouldBe(CollectionCondition.allMatch("", WebElement::isDisplayed)).texts();
+        headers = headersCollection.texts();
     }
 
     @Deprecated
@@ -209,7 +209,7 @@ public class Table implements TypifiedElement {
         }
 
         public SelenideElement getElementLastColumn() {
-            return getElementByColumnIndex(rowSize() - 1);
+            return getElementByColumnIndex(headers.size() - 1);
         }
 
         public SelenideElement getElementByColumnIndex(int column) {

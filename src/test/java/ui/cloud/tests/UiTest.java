@@ -42,7 +42,7 @@ public class UiTest extends Tests {
     @Test
     void name() {
         new CloudLoginPage().signIn(Role.CLOUD_ADMIN);
-        Selenide.open("https://ift1-portal-front.apps.cloud.k8s.test.01.vmw.t1.loc/compute-instance/orders/new-order/e6fa78c9-2ee1-4f9e-b86c-5d7246f38526/?isHideChip=true&context=proj-votmndlfyh&type=project&org=ift");
+        Selenide.open("https://ift1-portal-front.apps.cloud.k8s.test.01.vmw.t1.loc/cloudcompute/networks?context=proj-y08lm6h7t9&type=project&org=ift");
         System.out.println(1);
         ((JavascriptExecutor) WebDriverRunner.getWebDriver()).executeScript("document.title = arguments[0]", UUID.randomUUID().toString());
     }
