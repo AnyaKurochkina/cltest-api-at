@@ -14,7 +14,7 @@ import static core.helper.StringUtils.$$x;
  *     Breadcrumb.click("Название элемента")
  * </blockquote></pre>
  * Ищет навигационную цепочку вида 'Родитель -> Ребенок -> ...',
- * находит в нем элемент соответствующий тексту label и делает по нему клик
+ * находит в ней элемент соответствующий тексту label и делает по нему клик
  **/
 public class Breadcrumb implements TypifiedElement {
     private final ElementsCollection breadcrumbItems = $$x("//a[contains(@class, 'BreadcrumbLabel')]");
