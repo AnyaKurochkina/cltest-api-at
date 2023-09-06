@@ -45,7 +45,7 @@ public class OrganizationTariffPlanTest extends Tests {
     @TmsLink("531445")
     @DisplayName("Создание тарифного плана")
     void createOrganizationTariffPlanFromActive() {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         TariffPlan activeTariff = TariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=true&f[status][]=active").get(0);
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
@@ -69,7 +69,7 @@ public class OrganizationTariffPlanTest extends Tests {
     @TmsLink("531453")
     @DisplayName("Уникальность названия ТП")
     void duplicateNameBaseTariffPlan() {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         TariffPlan tariffPlan = TariffPlan.builder()
                 .base(false)
                 .status(TariffPlanStatus.draft)
@@ -156,7 +156,7 @@ public class OrganizationTariffPlanTest extends Tests {
                     .status(TariffPlanStatus.draft)
                     .build()
                     .createObject();
-            Organization organization = Organization.builder().build().createObject();
+            Organization organization = Organization.builder().type("default").build().createObject();
             TariffPlan activeTariff = TariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
             tariffPlan.setStatus(TariffPlanStatus.planned);
@@ -187,7 +187,7 @@ public class OrganizationTariffPlanTest extends Tests {
                     .status(TariffPlanStatus.draft)
                     .build()
                     .createObject();
-            Organization organization = Organization.builder().build().createObject();
+            Organization organization = Organization.builder().type("default").build().createObject();
             TariffPlan activeTariff = TariffPlanSteps.getTariffPlanList("include=tariff_classes&f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=active").get(0);
 
             tariffPlan.setStatus(TariffPlanStatus.planned);
@@ -228,7 +228,7 @@ public class OrganizationTariffPlanTest extends Tests {
     @TmsLink("783797")
     @DisplayName("Фильтр по статусу таблицы ТП")
     public void filterTariffPlanByStatus() {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         List<TariffPlan> tariffPlans = TariffPlanSteps
                 .getTariffPlanList("f[base]=false&f[organization_name]=" + organization.getName() + "&f[status][]=" + TariffPlanStatus.draft);
         Assertions.assertAll(
