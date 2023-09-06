@@ -25,6 +25,7 @@ public class UsersPage {
 
     private final Button addUserBtn = Button.byElement($x("//*[@data-testid='user-management-add-button']//button"));
     private final Button closeDialog = Button.byText("Закрыть");
+    private final Button cancelDialog = Button.byText("Отмена");
     private final Button confirmChangesBtn = Button.byText("Применить", 2);
     private static final Button confirmSearchBtn = Button.byText("Применить");
     private final Button openRolesListBtn = Button.byXpath("//button[@title = 'Open']");
@@ -57,6 +58,7 @@ public class UsersPage {
         }
         addUserBtn.click();
         new AddUserDialog(WebDriverRunner.currentFrameUrl()).addUser(user);
+        Alert.green("Добавлены пользователи: {}", user.getEmail());
         assertTrue(isUserAdded(user), "Пользователь не найден");
         return this;
     }
@@ -67,6 +69,7 @@ public class UsersPage {
         $x("(//*[text()= 'Отозвать права'])[1]").click();
         new Dialog("Подтверждение").clickButton("Отозвать права");
         Alert.green("Удалены все роли у пользователя {}", user.getEmail());
+        cancelDialog.click();
         assertFalse(isUserAdded(user), "Пользователь найден");
         return this;
     }
@@ -101,8 +104,8 @@ public class UsersPage {
 
     @Step("Показать пользователей")
     public UsersPage showUsers(String text) {
-        StringUtils.$x("//div[@aria-labelledby = 'ancestors']").click();
-        StringUtils.$x("//li[text() = '{}']", text).click();
+        StringUtils.$x("//*[@id='selectValueWrapper']").click();
+        StringUtils.$x("//div[text() = '{}']", text).shouldBe(Condition.visible).click();
         return this;
     }
 

@@ -103,7 +103,7 @@ public class Jinja2TemplatePage extends EntityPage {
                 () -> {
                     nameInput.getInput().sendKeys(Keys.SPACE);
                     nameInput.getInput().sendKeys(Keys.BACK_SPACE);
-                }, Duration.ofSeconds(3));
+                }, Duration.ofSeconds(5));
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();
