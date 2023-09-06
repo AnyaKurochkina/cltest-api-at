@@ -21,6 +21,7 @@ import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
 
 public class ProductSteps extends Steps {
     private static final String productUrl = "/api/v1/products/";
+    private static final String productContextUrl = "/api/v1/projects/{}/products/{}/";
     private static final String productUrlV2 = "/api/v2/products/";
 
     @Step("Получение списка Продуктов")
@@ -525,6 +526,13 @@ public class ProductSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(productUrl + "remove_tag_list/?name__in=" + names)
+                .assertStatus(200);
+    }
+
+    public static Response getProductByContextProject(String projectId, String productId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(productContextUrl, projectId, productId)
                 .assertStatus(200);
     }
 }

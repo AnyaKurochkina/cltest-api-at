@@ -213,7 +213,7 @@ public class VisualTemplateTest extends Tests {
     @DisplayName("Экспорт шаблона визуализации по Id")
     @TmsLink("643667")
     @Test
-    public void exportVisualTemplateById() {
+    public void exportVisualTemplateByIdTest() {
         ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name("export_item_visual_template_test_api")
                 .eventProvider(Collections.singletonList("docker"))
@@ -223,7 +223,7 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        steps.exportById(visualTemplates.getId());
+        exportVisualTemplateById(visualTemplates.getId());
     }
 
     @DisplayName("Частичное обновление шаблона визуализации по Id")
@@ -441,9 +441,9 @@ public class VisualTemplateTest extends Tests {
         deleteVisualTemplateByName(visualTemplateName);
         String path = "itemvisualisationtemplate_" + visualTemplateName;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(visualTemplateName));
+        assertTrue(isVisualTemplateExists(visualTemplateName));
         deleteVisualTemplateByName(visualTemplateName);
-        assertFalse(steps.isExists(visualTemplateName));
+        assertFalse(isVisualTemplateExists(visualTemplateName));
     }
 
     @DisplayName("Проверка отсутствия поля default_item в шаблона визуализации по event_provider, event_type")

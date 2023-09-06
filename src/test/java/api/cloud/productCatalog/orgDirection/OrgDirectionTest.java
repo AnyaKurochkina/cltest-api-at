@@ -2,9 +2,6 @@ package api.cloud.productCatalog.orgDirection;
 
 import api.Tests;
 import core.helper.http.Response;
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.orgDirection.getOrgDirection.response.GetOrgDirectionResponse;
-import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -18,9 +15,6 @@ import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
-
-import java.time.ZonedDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.OrgDirectionSteps.*;
@@ -38,7 +32,7 @@ public class OrgDirectionTest extends Tests {
     @DisplayName("Создание направления в продуктовом каталоге")
     @TmsLink("643303")
     @Test
-    public void createOrgDirection() {
+    public void createOrgDirectionTest() {
         String orgName = "org_direction_at_test-:2022.";
         OrgDirection orgDirection = createOrgDirectionByName(orgName);
         OrgDirection getOrgDirection = getOrgDirectionById(orgDirection.getId());
@@ -145,30 +139,16 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("807561")
     @Test
     public void orderingByCreateData() {
-        List<ItemImpl> list = steps
-                .orderingByCreateData(GetOrgDirectionListResponse.class).getItemsList();
-        for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
-            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
+            assertTrue(orderingOrgDirectionByCreateData(),
                     "Даты должны быть отсортированы по возрастанию");
         }
-    }
 
     @DisplayName("Проверка сортировки по дате обновления в направлениях")
     @TmsLink("742465")
     @Test
     public void orderingByUpDateData() {
-        List<ItemImpl> list = steps
-                .orderingByUpDateData(GetOrgDirectionListResponse.class).getItemsList();
-        for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
-            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
-                    String.format("Даты обновлений направлений с именами %s и %s не соответсвуют условию сортировки."
-                            , list.get(i).getName(), list.get(i + 1).getName()));
+            assertTrue(orderingOrgDirectionByUpdateData(), "Даты должны быть отсортированы по возрастанию");
         }
-    }
 
     @DisplayName("Проверка доступа для методов с публичным ключом в направлениях")
     @TmsLink("742468")
@@ -195,12 +175,13 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("643348")
     @Test
     public void deleteOrgDirection() {
-        OrgDirection orgDirection = OrgDirection.builder()
+        JSONObject json = OrgDirection.builder()
                 .name("delete_org_direction_test_api")
                 .title("title_org_direction_at_test-:2022.")
                 .build()
-                .createObject();
-        orgDirection.deleteObject();
+                .toJson();
+        OrgDirection orgDirection = createOrgDirection(json).assertStatus(201).extractAs(OrgDirection.class);
+        deleteOrgDirectionById(orgDirection.getId());
     }
 
     @DisplayName("Удаление направления используемого в сервисе")
@@ -247,19 +228,14 @@ public class OrgDirectionTest extends Tests {
     @TmsLink("1028957")
     public void loadFromGitlabOrgDirection() {
         String orgDirectionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        JSONObject jsonObject = OrgDirection.builder()
-                .name(orgDirectionName)
-                .title(orgDirectionName)
-                .build()
-                .init().toJson();
-        GetOrgDirectionResponse jinja = steps.createProductObject(jsonObject).extractAs(GetOrgDirectionResponse.class);
-        Response response = steps.dumpToBitbucket(jinja.getId());
+        OrgDirection orgDirection = createOrgDirectionByName(orgDirectionName);
+        Response response = steps.dumpToBitbucket(orgDirection.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        steps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
+        deleteOrgDirectionByName(orgDirectionName);
         String path = "orgdirection_" + orgDirectionName;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(orgDirectionName));
-        steps.deleteByName(orgDirectionName, GetOrgDirectionListResponse.class);
-        assertFalse(steps.isExists(orgDirectionName));
+        assertTrue(isOrgDirectionExists(orgDirectionName));
+        deleteOrgDirectionByName(orgDirectionName);
+        assertFalse(isOrgDirectionExists(orgDirectionName));
     }
 }

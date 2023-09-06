@@ -1,7 +1,6 @@
 package api.cloud.productCatalog.template;
 
 import api.Tests;
-import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -46,7 +45,7 @@ public class TemplatesListTest extends Tests {
     @TmsLink("682827")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetTemplateListResponse.class).getNext();
+        String str = getTemplatesList().getMeta().getNext();
         String url = getAppProp("url.kong");
         if (!(str == null)) {
             assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
