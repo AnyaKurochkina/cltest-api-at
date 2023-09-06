@@ -15,6 +15,7 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -56,6 +57,7 @@ public class UiGrafanaTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getCreateUser().setValue("user");
             orderPage.getGeneratePassButton().click();
+            Alert.green("Значение скопировано");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -212,6 +214,14 @@ public class UiGrafanaTest extends UiProductTest {
     void issueClientCertificate() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS,  () -> grafanaPage.issueClientCertificate("Cert"));
+    }
+    @Test
+    @Order(15)
+    @TmsLink("")
+    @DisplayName("UI Grafana. Обновить ОС")
+    void updateOs() {
+        GrafanaPage grafanaPage = new GrafanaPage(product);
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS,  grafanaPage::updateOs);
     }
 
     @Test

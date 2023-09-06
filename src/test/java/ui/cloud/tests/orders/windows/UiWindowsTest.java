@@ -256,6 +256,14 @@ public class UiWindowsTest extends UiProductTest {
         WindowsPage winPage = new WindowsPage(product);
         winPage.deleteKeyAstrom();
     }
+    @Test
+    @Order(20)
+    @TmsLink("")
+    @DisplayName("UI Windows. Обновить ОС")
+    void updateOs() {
+        WindowsPage winPage = new WindowsPage(product);
+        winPage.updateOs();
+    }
 
     @Test
     @Order(100)

@@ -59,6 +59,10 @@ public class GrafanaPage extends IProductPage {
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
+    public void updateOs() {
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
+    }
 
     public void changeConfiguration() {
         new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);

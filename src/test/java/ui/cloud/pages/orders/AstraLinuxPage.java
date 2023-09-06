@@ -92,6 +92,10 @@ public class AstraLinuxPage extends IProductPage {
         btnGeneralInfo.click();
         Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
     }
+    public void updateOs() {
+            checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+            runActionWithoutParameters(BLOCK_VM, "Обновить ОС");
+    }
 
     private SelenideElement getSnapshotMenuElement(String name) {
         return new Table(BLOCK_SNAPSHOT).getValueByColumnInFirstRow("Тип").$("button");
