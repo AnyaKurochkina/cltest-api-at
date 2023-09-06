@@ -9,8 +9,8 @@ public class PublicIp extends IProductT1Page<PublicIp> {
 
     @Step("Подключить IP к ВМ {vmName}")
     public void attachComputeIp(String vmName) {
-        runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
-                        Dialog.byTitle("Подключить к виртуальной машине")
+        runActionWithParameters(BLOCK_PARAMETERS, "Подключить к серверу", "Подтвердить", () ->
+                        Dialog.byTitle("Доступные серверы")
                                 .setSelectValue("Сетевой интерфейс", vmName));
     }
 

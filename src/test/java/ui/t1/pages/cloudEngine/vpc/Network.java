@@ -4,9 +4,11 @@ import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import models.AbstractEntity;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
+import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.time.Duration;
 
@@ -24,6 +26,11 @@ public class Network {
     public void deleteSubnet(String subnet) {
         SubnetListInfo.getMenuSubnet(subnet).select("Удалить");
         Waiting.findWithRefresh(() -> !new SubnetListInfo().isColumnValueEquals(Column.NOMINATION, subnet), Duration.ofMinutes(1));
+    }
+
+    public Network markForDeletion(AbstractComputeTest.NetworkEntity entity) {
+        AbstractEntity.addEntity(entity);
+        return this;
     }
 
     @Getter

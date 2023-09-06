@@ -38,7 +38,7 @@ public class VirtualIpTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Виртуальные IP-адреса. Создать IP-адрес")
     void addIp() {
         ip = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true).setName(getRandomName())
-                .setMode("active-active").clickOrder();
+                /* .setNetworkInterface("10.0.3.2")*/.setMode("active-active").clickOrder();
         VirtualIp ipPage = new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
         String orderId = ipPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
@@ -57,11 +57,11 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("", String::isEmpty)
                 .add(Column.IP_ADDRESS, e -> e.equals(ip.getIp()))
                 .add("Регион", e -> e.equals(ip.getRegion()))
-                .add("Сеть",  e -> e.equals(ip.getNetwork()))
-                .add("Подсеть",  e -> e.length() > 5)
-                .add("поддержка L2", e -> e.equals("Да"))
+                .add("Сеть", e -> e.equals(ip.getNetwork()))
+                .add("Подсеть", e -> e.length() > 5)
+                .add("Поддержка L2", e -> e.equals("Да"))
                 .add("Режим", e -> e.equals(ip.getMode()))
-                .add("Дата создания",  e -> e.length() > 4)
+                .add("Дата создания", e -> e.length() > 4)
                 .add("", String::isEmpty)
                 .check(() -> new VirtualIpList.IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip.getIp()));
     }
@@ -75,9 +75,9 @@ public class VirtualIpTest extends AbstractComputeTest {
         new TableChecker()
                 .add(Column.IP, e -> e.equals(ip.getIp()))
                 .add("Имя", e -> e.equals(ip.getName()))
-                .add("Тип",  e -> e.equals("Виртуальный IP адрес"))
-                .add("Статус",  e -> e.equals(""))
-                .add(Column.MAC, e -> StringUtils.isMatch( "^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
+                .add("Тип", e -> e.equals("Виртуальный IP адрес"))
+                .add("Статус", String::isEmpty)
+                .add(Column.MAC, e -> StringUtils.isMatch("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
                 .add("", String::isEmpty)
                 .check(() -> new Table(Column.IP).getRowByColumnValue(Column.IP, ip.getIp()));
     }
@@ -90,5 +90,10 @@ public class VirtualIpTest extends AbstractComputeTest {
         VirtualIp ipPage = new IndexPage().goToVirtualIps().selectIp(ip.getIp());
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip.getIp())));
+    }
+
+    @AfterAll
+    void afterClass() {
+        AbstractEntity.deleteCurrentClassEntities();
     }
 }

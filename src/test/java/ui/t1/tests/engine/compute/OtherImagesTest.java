@@ -34,7 +34,7 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).delete();
     }
 
     @Test
@@ -52,7 +52,7 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).delete();
     }
 
     @Test
@@ -70,7 +70,7 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).delete();
     }
 
     @Test
@@ -87,7 +87,7 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).delete();
     }
 
     @Test
@@ -106,7 +106,7 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .setCreateTimeout(Duration.ofMinutes(5))
                 .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).delete();
     }
 
     @Test
@@ -124,7 +124,7 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).delete();
     }
 
     @Test
@@ -142,6 +142,6 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).delete();
     }
 }

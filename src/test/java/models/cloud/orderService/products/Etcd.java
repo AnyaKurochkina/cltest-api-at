@@ -81,7 +81,7 @@ public class Etcd extends IProduct {
                 .set("$.order.label", getLabel())
                 .set("$.order.attrs.on_support", getSupport())
 //                .set("$.order.attrs.tarantool_version", getTarantoolVersion())
-                .set("$.order.attrs.layout", getIdGeoDistribution("rps-2000", String.format("%s:%s:%s","cluster", "tdg", envType().toUpperCase())))
+                .set("$.order.attrs.layout", getIdGeoDistribution("rps-2000"))
                 .build();
     }
 
