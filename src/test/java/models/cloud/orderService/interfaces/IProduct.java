@@ -409,8 +409,8 @@ public abstract class IProduct extends Entity {
     public String getFilter() {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
-        return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
-                .getString("'ui:options'.filter").replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase());
+        return replaceGraphParams(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
+                .getString("'ui:options'.filter"));
     }
 
     @SneakyThrows
