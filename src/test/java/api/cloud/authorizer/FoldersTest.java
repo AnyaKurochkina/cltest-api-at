@@ -13,7 +13,7 @@ import api.Tests;
 
 @Epic("Организационная структура")
 @Feature("Папки")
-@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod"), @Tag("health_check")})
+@Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Execution(ExecutionMode.SAME_THREAD)
 public class FoldersTest extends Tests {
@@ -37,6 +37,7 @@ public class FoldersTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(3)
     @TmsLink("377752")
     @DisplayName("Создание Папки")
@@ -56,6 +57,7 @@ public class FoldersTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(5)
     @TmsLink("377753")
     @DisplayName("Удаление Папки")

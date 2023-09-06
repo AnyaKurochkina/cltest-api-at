@@ -16,11 +16,12 @@ import org.junit.jupiter.params.ParameterizedTest;
 
 @Epic("Продукты")
 @Feature("Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra"), @Tag("prod"), @Tag("health_check")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("astra"), @Tag("prod")})
 public class AstraTest extends Tests {
 
     @TmsLink("391703")
     @Tag("actions")
+    @Tag("health_check")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создать {0}")
     void create(Astra product) {
@@ -123,6 +124,7 @@ public class AstraTest extends Tests {
     }
 
     @TmsLink("391698")
+    @Tag("health_check")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Удалить {0}")
     @MarkDelete
