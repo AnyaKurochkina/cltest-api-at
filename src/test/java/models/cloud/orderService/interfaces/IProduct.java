@@ -526,14 +526,13 @@ public abstract class IProduct extends Entity {
     }
 
     public boolean isDev() {
-        return envType().contains("dev");
+        return envType().equalsIgnoreCase("dev");
     }
     public boolean isTest() {
-        return envType().contains("test");
+        return envType().equalsIgnoreCase("test");
     }
-
     public boolean isProd() {
-        return envType().contains("prod");
+        return envType().equalsIgnoreCase("prod");
     }
 
     public String envType() {
