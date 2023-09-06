@@ -4,7 +4,6 @@ import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import kotlin.collections.ArrayDeque;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Organization;
@@ -24,9 +23,9 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.helper.StringUtils.format;
 import static models.cloud.authorizer.Folder.BUSINESS_BLOCK;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.authorizer.AuthorizerSteps.createFolder;
 import static steps.authorizer.AuthorizerSteps.deleteFolderByNameT1;
 
@@ -49,7 +48,7 @@ public class UsersActionTest extends Tests {
     @Test
     @DisplayName("Добавление/удаление пользователя")
     public void addUserTest() {
-        IamUser user = new IamUser("airat.muzafarov@gmail.com", new ArrayDeque<>(Collections.singletonList("Администратор")));
+        IamUser user = new IamUser("airat.muzafarov@gmail.com", Collections.singletonList("Администратор"));
         String folderTitle = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         String folderName = createFolder(folderTitle);
         try {
@@ -95,13 +94,14 @@ public class UsersActionTest extends Tests {
                 .type("not_default")
                 .build()
                 .onlyGetObject();
+        String orgTitle = org.getTitle();
         Folder folder = Folder.builder()
                 .kind(BUSINESS_BLOCK)
                 .title("1folder-for-user-context-test")
                 .build()
                 .createObject();
         String folderName = folder.getName();
-        new IndexPage()
+        assertTrue(new IndexPage()
                 .goToContextDialog()
                 .goToAllTab()
                 .addToFavorite(folderName)
@@ -109,7 +109,21 @@ public class UsersActionTest extends Tests {
                 .removeFromFavorite(folderName)
                 .goToRecentTab()
                 .goToAllTab()
+                .changeContext(folder.getTitle())
+                .goToContextDialog()
+                .goToOrgStructure()
+                .goToContextDialog()
+                .selectOrganization(orgTitle)
+                .changeContext(orgTitle)
+                .isContextNameDisplayed(orgTitle), format("Текущий контекст отличается от ожидаемого {}", orgTitle));
+    }
 
-                .selectOrganization(org.getTitle());
+    @Test
+    @DisplayName("История переводов")
+    public void transferHistoryTest() {
+        assertFalse(new IndexPage()
+                .goToOrgStructure()
+                .expandOrgActions()
+                .isActionExist("История переводов"), "Действие присутствует");
     }
 }

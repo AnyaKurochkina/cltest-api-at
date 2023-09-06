@@ -20,7 +20,7 @@ public class CloudDirectorPage {
 
     public CloudDirectorPage() {
         createButton = new Button($x("//button[.='создать VMware организацию']"));
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         PREFIX = org.getName() + "-";
     }
 

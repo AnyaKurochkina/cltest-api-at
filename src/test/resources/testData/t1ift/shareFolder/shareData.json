@@ -8,7 +8,8 @@
   {
     "objectClassName": "models.cloud.authorizer.Organization",
     "title": "ИФТ",
-    "name": "ift"
+    "name": "ift",
+    "type": "default"
   },
   {
     "objectClassName": "models.cloud.authorizer.Organization",

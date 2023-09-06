@@ -61,7 +61,7 @@ public class OrganizationActionsTest extends Tests {
         assertTrue(new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN)
                 .goToContextDialog()
-                .selectOrganization(orgName)
+                .changeOrganization(orgName)
                 .isContextNameDisplayed(orgName));
     }
 }
