@@ -26,7 +26,7 @@ import static core.helper.StringUtils.*;
 @Getter
 public class Table implements TypifiedElement {
     @Language("XPath")
-    private static final String tableXpath = "//table[thead/tr/th[.='{}']]";
+    private static final String tableXpath = "//table[thead/tr/th[.='{}'] | thead/tr/td[.='{}']]";
     protected List<String> headers;
     protected ElementsCollection rows;
     protected ElementsCollection headersCollection;
@@ -37,13 +37,13 @@ public class Table implements TypifiedElement {
 
     public Table(String columnName) {
         open();
-        xpath = format(tableXpath, columnName);
+        xpath = format(tableXpath, columnName, columnName);
         init($x(xpath).shouldBe(Condition.visible));
     }
 
     public Table(String columnName, int index) {
         open();
-        xpath = format( "(" + tableXpath + ")" + TypifiedElement.postfix, columnName, TypifiedElement.getIndex(index));
+        xpath = format( "(" + tableXpath + ")" + TypifiedElement.postfix, columnName, columnName, TypifiedElement.getIndex(index));
         init($x(xpath).shouldBe(Condition.visible));
     }
 
@@ -245,6 +245,7 @@ public class Table implements TypifiedElement {
     public List<String> getNotEmptyHeaders() {
         List<String> list = new ArrayList<>(headers);
         list.removeAll(Collections.singletonList(""));
+        list.removeAll(Collections.singletonList(" "));
         return list;
     }
 

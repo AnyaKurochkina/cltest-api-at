@@ -19,7 +19,7 @@ public abstract class LoginPage {
     protected SelenideElement submitBtn = $x("//button[@type='submit']");
 
     public LoginPage(String project) {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         open(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
         submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
     }

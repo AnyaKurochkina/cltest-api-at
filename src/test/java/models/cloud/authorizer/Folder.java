@@ -36,7 +36,7 @@ public class Folder extends Entity {
         if (parentId == null) {
             switch (kind) {
                 case BUSINESS_BLOCK:
-                    Organization organization = Organization.builder().build().createObject();
+                    Organization organization = Organization.builder().type("default").build().createObject();
                     parentId = organization.getName();
                     break;
                 case DEPARTMENT: {
@@ -102,7 +102,7 @@ public class Folder extends Entity {
     @Override
     @Step("Создание папки")
     protected void create() {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         String url = kind.equals(BUSINESS_BLOCK) ? String.format("/v1/organizations/%s/folders", org.getName()) : String.format("/v1/folders/%s/folders", parentId);
         name = new Http(Configure.ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)

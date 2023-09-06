@@ -8,10 +8,7 @@ import models.cloud.orderService.products.GenericDatabase;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
-import ui.elements.CheckBox;
-import ui.elements.Dialog;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.util.List;
 
@@ -137,6 +134,7 @@ public class GenericDatabasePage extends IProductPage {
             Dialog dlg = Dialog.byTitle("Выпустить клиентский сертификат");
             dlg.setInputValue("Клиентская часть имени сертификата", nameCertificate);
             generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано").close();
         });
     }
 

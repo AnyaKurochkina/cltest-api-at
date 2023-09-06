@@ -141,6 +141,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(8)
     @TmsLink("")
     @DisplayName("UI GenericDatabase. Создать снапшот")
@@ -150,6 +151,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(9)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -160,6 +162,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(10)
     @TmsLink("1687214")
     //@EnabledIfEnv("blue")
@@ -179,10 +182,10 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
-    @Disabled("Действие отсутствует")
+    //@Disabled("Действие отсутствует")
     @Order(12)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv({"prod", "blue"})
     @DisplayName("UI GenericDatabase. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);

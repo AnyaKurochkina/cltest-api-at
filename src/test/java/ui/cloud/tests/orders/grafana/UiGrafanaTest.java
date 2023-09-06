@@ -151,10 +151,11 @@ public class UiGrafanaTest extends UiProductTest {
     @DisplayName("UI Grafana. Мониторинг ОС")
     void monitoringOs() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
-        grafanaPage.checkMonitoringOs();
+        grafanaPage.checkClusterMonitoringOs();
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(9)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -165,6 +166,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(10)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -175,6 +177,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(11)
     @TmsLink("1688715")
     //@EnabledIfEnv("blue")
@@ -196,7 +199,7 @@ public class UiGrafanaTest extends UiProductTest {
     @Test
     @Order(13)
     @TmsLink("")
-    @EnabledIfEnv({"blue","prod"})
+    //@EnabledIfEnv({"blue","prod"})
     @DisplayName("UI Grafana. Сбросить пароль")
     void resetPassword() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
@@ -204,7 +207,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
-    @Disabled("Действие отсутствует")
+    //@Disabled("Действие отсутствует")
     @Order(14)
     @TmsLink("")
     @DisplayName("UI Grafana. Выпустить клиентский сертификат")

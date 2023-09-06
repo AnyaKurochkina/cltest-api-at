@@ -89,7 +89,7 @@ public class CalculatorTest extends Tests {
     @Disabled
 //    @Source(ProductArgumentsProvider.ONE_PRODUCT)
     public void bigIntegrationCalculatorTest() {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         String accountOrganizationId = AccountSteps.getAccountIdByContext(organization.getName());
         Account accountOrganization = Account.builder().accountId(accountOrganizationId).folderId(organization.getName()).build();
         Folder businessBlock = Folder.builder().kind(Folder.BUSINESS_BLOCK).build().createObjectPrivateAccess();
