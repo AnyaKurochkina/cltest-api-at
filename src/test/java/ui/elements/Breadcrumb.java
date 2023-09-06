@@ -7,6 +7,15 @@ import io.qameta.allure.Step;
 
 import static core.helper.StringUtils.$$x;
 
+/**
+ * Элемент навигационная цепочка
+ * Пример:
+ * <blockquote><pre>
+ *     Breadcrumb.click("Название элемента")
+ * </blockquote></pre>
+ * Ищет навигационную цепочку вида 'Родитель -> Ребенок -> ...',
+ * находит в нем элемент соответствующий тексту label и делает по нему клик
+ **/
 public class Breadcrumb implements TypifiedElement {
     private final ElementsCollection breadcrumbItems = $$x("//a[contains(@class, 'BreadcrumbLabel')]");
 

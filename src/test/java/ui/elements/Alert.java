@@ -14,6 +14,14 @@ import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.exist;
 import static org.openqa.selenium.support.Color.fromString;
 
+/**
+ * Элемент всплывающее окно
+ * Пример:
+ * <blockquote><pre>
+ *     Alert.green("Текст")
+ * </blockquote></pre>
+ * Дождется всплывающее окно, проверит его зеленый цвет окна, соответствие тексту и закроет его
+ **/
 public class Alert implements TypifiedElement {
     SelenideElement element;
 
@@ -87,11 +95,11 @@ public class Alert implements TypifiedElement {
         }
     }
 
+    @Getter
     public enum Color {
         RED("#d92020"),
         GREEN("#1ba049");
-        @Getter
-        String color;
+        final String color;
 
         public String getValue() {
             return color;
