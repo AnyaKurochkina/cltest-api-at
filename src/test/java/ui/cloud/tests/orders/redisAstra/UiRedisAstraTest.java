@@ -58,11 +58,11 @@ public class UiRedisAstraTest extends UiProductTest {
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getUserInput().setValue(RedisAstraOrderPage.userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();
+            Alert.green("Значение скопировано");
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getRoleSelect().set("superuser");
             orderPage.getGroupSelect().set(accessGroup);
-            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()

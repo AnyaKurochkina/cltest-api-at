@@ -57,9 +57,9 @@ public class UiGrafanaTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getCreateUser().setValue("user");
             orderPage.getGeneratePassButton().click();
+            Alert.green("Значение скопировано");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
-            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()

@@ -61,7 +61,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
             orderPage.getRoleSelect().set("user");
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroupWildFly().set(accessGroup);
-            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
