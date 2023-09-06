@@ -143,7 +143,7 @@ public class UiNginxAstraTest extends UiProductTest {
     @DisplayName("UI NginxAstra. Мониторинг ОС")
     void monitoringOs() {
         NginxAstraPage nginxAstraPage = new NginxAstraPage(product);
-        nginxAstraPage.checkMonitoringOs();
+        nginxAstraPage.checkClusterMonitoringOs();
     }
 
     @Test

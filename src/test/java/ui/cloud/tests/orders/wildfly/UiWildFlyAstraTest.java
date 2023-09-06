@@ -28,9 +28,9 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("WildFlyAstra")
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
-    String versionWildFly = "28.0.1.Final";
-    String versionJava = "17.0.6";
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ce9e3c27-ca51-491d-a355-5e4eb8870a51/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
+    String versionWildFly = "23.0.2.Final";
+    String versionJava = "11.0.12";
+    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba4245b1-c393-4ae6-bdf9-c846411edfcc/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
