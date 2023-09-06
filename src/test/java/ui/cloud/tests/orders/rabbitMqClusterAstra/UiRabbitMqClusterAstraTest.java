@@ -55,7 +55,6 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
             orderPage.getGroupSelect().set(accessGroup);
             if (product.isDev())
                     orderPage.getGroup2Select().set(accessGroup);
-            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

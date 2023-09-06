@@ -62,8 +62,10 @@ public class UiClickHouseTest extends UiProductTest {
             if(product.isDev())
                 orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
             if(product.isDev())
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+                Alert.green("Значение скопировано");
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
@@ -73,7 +75,6 @@ public class UiClickHouseTest extends UiProductTest {
                 orderPage.getGroup3().set(accessGroup);
                 orderPage.getGroup4().set(accessGroup);
             }
-            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

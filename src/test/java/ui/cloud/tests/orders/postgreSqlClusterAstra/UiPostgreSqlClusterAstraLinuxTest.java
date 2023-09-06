@@ -73,7 +73,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             if (product.isDev())
                 orderPage.getRoleSelect().set("user");
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
-            Alert.closeAll();
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

@@ -61,11 +61,11 @@ public class UiEtcdTest extends UiProductTest {
             orderPage.getNameCluster().setValue("cluster");
             orderPage.getNameUser().setValue(nameUser);
             orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
             orderPage.getNumberNodes().set("3");
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
-            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
