@@ -30,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
 public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
-    ScyllaDbCluster product =ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba6960f7-b68c-4920-8d14-d2819060424f/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    ScyllaDbCluster product; // =ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba6960f7-b68c-4920-8d14-d2819060424f/main?context=proj-ln4zg69jek&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 
