@@ -115,7 +115,7 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
-    protected static class InstanceEntity extends ComputeEntity {
+    public static class InstanceEntity extends ComputeEntity {
         public InstanceEntity(String projectId, String id) {
             super(projectId, id);
         }
