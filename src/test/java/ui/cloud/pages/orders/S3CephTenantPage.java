@@ -179,7 +179,9 @@ public class S3CephTenantPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Добавить пользователя");
             dlgActions.setInputValue("Имя", name);
             generatePassButton1.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано").close();
             generatePassButton2.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано").close();
         });
         btnUsers.click();
         Assertions.assertTrue(new Table(HEADER_NAME_USER).isColumnValueEquals(HEADER_NAME_USER, name), "Ошибка создания");

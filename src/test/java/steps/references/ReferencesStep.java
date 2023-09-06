@@ -96,14 +96,17 @@ public class ReferencesStep extends Steps {
 
     @Step("Получение списка directories")
     public static List<Directories> getDirectoriesList() {
-        String jsonArray = new Http(ReferencesURL)
+        return new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/directories/")
                 .assertStatus(200)
-                .toString();
-        Type type = new TypeToken<List<Directories>>() {
-        }.getType();
-        return new Gson().fromJson(jsonArray, type);
+                .jsonPath()
+                .getList("", Directories.class);
+
+//                .toString();
+//        Type type = new TypeToken<List<Directories>>() {
+//        }.getType();
+//        return new Gson().fromJson(jsonArray, type);
     }
 
     @Step("Получение directory по имени")
@@ -117,14 +120,15 @@ public class ReferencesStep extends Steps {
 
     @Step("Получение списка page_filters")
     public static List<PageFilter> getPageFiltersList() {
-        String jsonArray = new Http(ReferencesURL)
+        return new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/page_filters/")
                 .assertStatus(200)
-                .toString();
-        Type type = new TypeToken<List<PageFilter>>() {
-        }.getType();
-        return new Gson().fromJson(jsonArray, type);
+                .jsonPath()
+                .getList("", PageFilter.class);
+//        Type type = new TypeToken<List<PageFilter>>() {
+//        }.getType();
+//        return new Gson().fromJson(jsonArray, type);
     }
 
     @Step("Получение page_filters по ключу")
@@ -138,14 +142,15 @@ public class ReferencesStep extends Steps {
 
     @Step("Получение списка Pages")
     public static List<Pages> getPagesList() {
-        String jsonArray = new Http(ReferencesURL)
+        return new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/pages/")
                 .assertStatus(200)
-                .toString();
-        Type type = new TypeToken<List<Pages>>() {
-        }.getType();
-        return new Gson().fromJson(jsonArray, type);
+                .jsonPath()
+                .getList("", Pages.class);
+//        Type type = new TypeToken<List<Pages>>() {
+//        }.getType();
+//        return new Gson().fromJson(jsonArray, type);
     }
 
     @Step("Получение списка Pages по фильтру")
@@ -304,15 +309,6 @@ public class ReferencesStep extends Steps {
                 .patch("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
                 .assertStatus(200)
                 .extractAs(Pages.class);
-    }
-
-    @Step("Частичное обновление Pages по Id для приватных ролей")
-    public void partUpdatePrivatePagesById(String directoryName, String pageId, JSONObject object) {
-        new Http(ReferencesURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(object)
-                .patch("/api/v1/private/directories/" + directoryName + "/pages/" + pageId)
-                .assertStatus(200);
     }
 
     @Step("Удаление Pages по Id для приватных ролей")

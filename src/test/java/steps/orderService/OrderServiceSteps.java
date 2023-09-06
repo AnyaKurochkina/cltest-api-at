@@ -358,7 +358,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение домена для сегмента сети")
     public static String getDomain(IProduct product) {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
@@ -372,7 +372,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение домена для проекта {project}")
     public static String getDomainByProject(String project) {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         if (Configure.ENV.equals("ift")) {
             return new Http(OrderServiceURL)
                     .setRole(ORDER_SERVICE_ADMIN)
@@ -393,7 +393,7 @@ public class OrderServiceSteps extends Steps {
     public static String getDataCentre(IProduct product) {
         String dc = "5";
         log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
@@ -413,7 +413,7 @@ public class OrderServiceSteps extends Steps {
     public static String getPlatform(IProduct product) {
         String platform = "OpenStack";
         log.info("Получение Платформы для ДЦ {} и сегмента {}", product.getDataCentre(), product.getSegment());
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/platforms?net_segment_code={}&data_center_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",

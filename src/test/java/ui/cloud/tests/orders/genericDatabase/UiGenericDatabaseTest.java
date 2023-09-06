@@ -82,7 +82,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
         genericDatabasePage.getGeneralInfoTab().switchTo();
         genericDatabasePage.checkHeadersHistory();
-        genericDatabasePage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        genericDatabasePage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[2]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
 
@@ -141,6 +141,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(8)
     @TmsLink("")
     @DisplayName("UI GenericDatabase. Создать снапшот")
@@ -150,6 +151,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(9)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -160,6 +162,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(10)
     @TmsLink("1687214")
     //@EnabledIfEnv("blue")
@@ -179,9 +182,10 @@ public class UiGenericDatabaseTest extends UiProductTest {
     }
 
     @Test
+    //@Disabled("Действие отсутствует")
     @Order(12)
     @TmsLink("")
-    @EnabledIfEnv("blue")
+    //@EnabledIfEnv({"prod", "blue"})
     @DisplayName("UI GenericDatabase. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);

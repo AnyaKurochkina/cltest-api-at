@@ -75,7 +75,7 @@ public class ProductPage extends EntityPage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(10));
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(15));
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
         goToAdditionalParamsTab();

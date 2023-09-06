@@ -112,8 +112,11 @@ public class GraphNegativeTest extends Tests {
                 .build()
                 .init()
                 .toJson();
-        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
-        assertEquals(String.format("Значения поля (envs) неуникальные: (%s)", env.getValue()), error);
+        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0]");
+        assertEquals(String.format("{\"modifications\": [{\"err_message\": [\"Значения поля (envs) неуникальные: (%s)\"]," +
+                " \"err_details\": {\"fields\": [\"envs\"], \"objects\": [{\"name\": \"json_schema_dev_mod\", \"envs\":" +
+                " [\"dev\"]}], \"entity\": \"GraphModification\", \"error_code\": \"VALUES_OF_LIST_ARE_NOT_UNIQUE\"}}]}",
+                env.getValue()), error);
     }
 
     @DisplayName("Негативный тест на создание графа с не валидным значением поля envs в модификациях")
@@ -137,7 +140,9 @@ public class GraphNegativeTest extends Tests {
                 .build()
                 .init()
                 .toJson();
-        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].err_message[0]");
-        assertEquals("Тип среды отсутствует в справочнике", error);
+        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0]");
+        assertEquals("{\"modifications\": [{\"err_message\": [\"Тип среды отсутствует в справочнике\"], \"err_details\":" +
+                " {\"fields\": [\"envs\"], \"objects\": [{\"envs\": [\"dsfsdfsdf\"]}], \"entity\": \"GraphModification\"," +
+                " \"error_code\": \"ENV_DOES_NOT_EXISTS\"}}]}", error);
     }
 }

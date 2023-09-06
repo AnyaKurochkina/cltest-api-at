@@ -28,7 +28,7 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .setUser("ilkaboomboom@rambler.ru")
                 .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
                 .createAccessRule()
-                .checkRule("ilkaboomboom@rambler.ru", true);
+                .checkRule("Илья Федосов", true);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -49,12 +49,12 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .setUser("ilkaboomboom@rambler.ru")
                 .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .createAccessRule()
-                .checkRule("ilkaboomboom@rambler.ru", true)
-                .editAccessRule("ilkaboomboom@rambler.ru")
+                .checkRule("Илья Федосов", true)
+                .editAccessRule("Илья Федосов")
                 .setRules(false, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
                 .saveAccessRule()
-                .editAccessRule("ilkaboomboom@rambler.ru")
+                .editAccessRule("Илья Федосов")
                 .checkRule(false, AccessRulesTypes.WRITE)
                 .checkRule(false, AccessRulesTypes.READACL)
                 .checkRule(true, AccessRulesTypes.READ)
@@ -80,8 +80,8 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .setUser("ilkaboomboom@rambler.ru")
                 .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .createAccessRule()
-                .deleteAccessRule("ilkaboomboom@rambler.ru")
-                .checkRule("ilkaboomboom@rambler.ru", false);
+                .deleteAccessRule("Илья Федосов")
+                .checkRule("Илья Федосов", false);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);

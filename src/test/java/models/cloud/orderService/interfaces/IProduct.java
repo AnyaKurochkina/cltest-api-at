@@ -239,7 +239,7 @@ public abstract class IProduct extends Entity {
     public void addLinkProduct() {
         if (Objects.nonNull(getOrderId())) {
             if (StepsAspects.getCurrentStep().get() != null) {
-                Organization org = Organization.builder().build().createObject();
+                Organization org = Organization.builder().type("default").build().createObject();
                 StepsAspects.getCurrentStep().get().addLinkItem(
                         new LinkItem("Product URL", String.format("%s/vm/orders/%s/main?context=%s&type=project&org=%s",
                                 Configure.getAppProp("base.url"), getOrderId(), getProjectId(), org.getName()), "", LinkType.RELATED));

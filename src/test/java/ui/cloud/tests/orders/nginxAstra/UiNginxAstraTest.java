@@ -81,7 +81,7 @@ public class UiNginxAstraTest extends UiProductTest {
         NginxAstraPage nginxAstraPage = new NginxAstraPage(product);
         nginxAstraPage.getGeneralInfoTab().switchTo();
         nginxAstraPage.checkHeadersHistory();
-        nginxAstraPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        nginxAstraPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[2]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
 
@@ -143,7 +143,7 @@ public class UiNginxAstraTest extends UiProductTest {
     @DisplayName("UI NginxAstra. Мониторинг ОС")
     void monitoringOs() {
         NginxAstraPage nginxAstraPage = new NginxAstraPage(product);
-        nginxAstraPage.checkMonitoringOs();
+        nginxAstraPage.checkClusterMonitoringOs();
     }
 
     @Test

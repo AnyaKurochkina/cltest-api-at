@@ -47,7 +47,7 @@ public class AuthorizerSteps extends Steps {
         } else if (target.startsWith("proj")) {
             url = "/v1/projects/" + target;
         } else {
-            throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
+            url = "/v1/organizations/" + target;
         }
         return Objects.requireNonNull(new Http(ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
@@ -82,7 +82,7 @@ public class AuthorizerSteps extends Steps {
 
     @Step("Создание папки")
     public static String createFolder(String title) {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         JSONObject jsonObject = Folder.builder()
                 .title(title)
                 .build()

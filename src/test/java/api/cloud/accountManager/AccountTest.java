@@ -55,7 +55,7 @@ public class AccountTest extends Tests {
     @TmsLink("377444")
     @DisplayName("Перевод средств между организацией и любой другой папкой")
     void transferMoneyFromAccountOrganizationToBusinessBlock() {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         String accountFromId = AccountSteps.getAccountIdByContext(organization.getName());
         Account accountFrom = Account.builder().accountId(accountFromId).folderId(organization.getName()).build();
         Folder folderTo = Folder.builder().kind(Folder.DEFAULT).build().createObject();
