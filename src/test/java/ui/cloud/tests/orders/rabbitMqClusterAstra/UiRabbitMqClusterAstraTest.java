@@ -12,6 +12,7 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -54,6 +55,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
             orderPage.getGroupSelect().set(accessGroup);
             if (product.isDev())
                     orderPage.getGroup2Select().set(accessGroup);
+            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -230,22 +232,23 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::synchronizeData);
     }
 
-    @Test
-    @Order(18)
-    @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Удалить группу доступа на WEB интерфейс")
-    void deleteGroup() {
-        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("manager"));
-    }
+
 
     @Test
-    @Order(19)
+    @Order(18)
     @TmsLink("")
     @DisplayName("UI RabbitMqClusterAstra. Добавить роль на Web интерфейс")
     void addRole() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addRole("manager",product.additionalAccessGroup()));
+    }
+    @Test
+    @Order(19)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Удалить группу доступа на WEB интерфейс")
+    void deleteGroup() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("manager"));
     }
     @Test
     @Order(20)

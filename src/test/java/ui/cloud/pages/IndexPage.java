@@ -40,6 +40,7 @@ public class IndexPage {
     @Step("Переход на страницу заказа продуктов")
     public ProductsPage clickOrderMore() {
         ordersListMenuItem.click();
+        Waiting.sleep(5000);
         createOrderButton.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
         return new ProductsPage();
     }

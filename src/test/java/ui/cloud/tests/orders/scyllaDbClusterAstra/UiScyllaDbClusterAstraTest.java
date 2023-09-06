@@ -14,6 +14,7 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -29,8 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
 public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
-    ScyllaDbCluster product;
-    //=ScyllaDbCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/ca4a3e5b-17f9-4d19-9c40-9fc3bae634af/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ScyllaDbCluster product =ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba6960f7-b68c-4920-8d14-d2819060424f/main?context=proj-ln4zg69jek&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 
@@ -61,6 +61,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             if(product.isDev())
                 orderPage.getGroupSelect().set(accessGroup);
+            Alert.closeAll();
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()

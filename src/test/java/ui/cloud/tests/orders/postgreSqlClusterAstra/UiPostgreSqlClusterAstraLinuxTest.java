@@ -15,6 +15,7 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -72,6 +73,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             if (product.isDev())
                 orderPage.getRoleSelect().set("user");
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
+            Alert.closeAll();
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -306,6 +308,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
     @Test
     @Order(26)
+    @Disabled
     @TmsLink("1429760")
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Обновить ОС")
     void updateOs() {

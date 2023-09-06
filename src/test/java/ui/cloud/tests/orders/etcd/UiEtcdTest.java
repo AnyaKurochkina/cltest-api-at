@@ -17,6 +17,7 @@ import ui.cloud.pages.orders.EtcdOrderPage;
 import ui.cloud.pages.orders.EtcdPage;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.OrdersPage;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -64,6 +65,7 @@ public class UiEtcdTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
+            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

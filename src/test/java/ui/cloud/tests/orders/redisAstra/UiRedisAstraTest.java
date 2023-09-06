@@ -15,6 +15,7 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -61,6 +62,7 @@ public class UiRedisAstraTest extends UiProductTest {
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getRoleSelect().set("superuser");
             orderPage.getGroupSelect().set(accessGroup);
+            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()

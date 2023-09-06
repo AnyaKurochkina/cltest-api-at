@@ -16,6 +16,7 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -55,7 +56,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
                     .expandProductsList()
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
-            orderPage.getSegmentSelect().set("B2B-HCE-TS-DEV-SRV-APP");
+            orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getUserInput().setValue(userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();
@@ -63,6 +64,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
             orderPage.getFlavorSelectRedisSentinel().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getRoleSelect().set("user");
             orderPage.getGroupSelect().set(accessGroup);
+            Alert.closeAll();
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();
             new OrdersPage()
