@@ -30,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_tarantool_data_grid_astra")})
 public class UiTarantoolDataGridAstraTest extends UiProductTest {
 
-    TarantoolDataGrid product = TarantoolDataGrid.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/9424e5bc-d798-478e-8ab0-2770b68c60d3/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    TarantoolDataGrid product; // = TarantoolDataGrid.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/9424e5bc-d798-478e-8ab0-2770b68c60d3/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -39,118 +39,118 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-//    @Test
-//    @TmsLink("")
-//    @Order(1)
-//    @DisplayName("UI TarantoolDataGrid. Заказ")
-//    void orderAstra() {
-//        double prebillingCost;
-//        try {
-//            String accessGroup = product.accessGroup();
-//            new IndexPage()
-//                    .clickOrderMore()
-//                    .selectProduct(product.getProductName());
-//            TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
-//            orderPage.getSegmentSelect().set(product.getSegment());
-//            orderPage.getPlatformSelect().set(product.getPlatform());
-//            //orderPage.getFlavorSelectCluster().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-//            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-//            orderPage.getGroupSelect().set(accessGroup);
-//            orderPage.getGroupSelectTarantool().set(accessGroup);
-//            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
-//            orderPage.orderClick();
-//            new OrdersPage()
-//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-//                    .getElementByColumn("Продукт")
-//                    .hover()
-//                    .click();
-//            TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//            tarantoolDataGridAstraPage.waitChangeStatus(Duration.ofMinutes(25));
-//            tarantoolDataGridAstraPage.checkLastAction("Развертывание");
-//        } catch (Throwable e) {
-//            product.setError(e.toString());
-//            throw e;
-//        }
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        checkOrderCost(prebillingCost, tarantoolDataGridAstraPage);
-//    }
-//
-//    @Test
-//    @TmsLink("")
-//    @Order(2)
-//    @DisplayName("UI TarantoolDataGrid. Проверка развертывания в истории действий")
-//    void checkHeaderHistoryTable() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.getGeneralInfoTab().switchTo();
-//        tarantoolDataGridAstraPage.checkHeadersHistory();
-//        tarantoolDataGridAstraPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-//        new Graph().notContainsStatus(Graph.ERROR);
-//    }
-//
-//    @Test
-//    @Order(3)
-//    @Disabled
-//    @TmsLink("")
-//    @DisplayName("UI TarantoolDataGrid. Обновить версию приложения Tarantool Data Grid")
-//    void updateVersionApp() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::updateVersionApp);
-//    }
-//
-//    @Test
-//    @Order(4)
-//    @TmsLink("")
-//    @DisplayName("UI TarantoolDataGrid. Обновить сертификаты Tarantool Data Grid")
-//    void updateCertificate() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::updateCertificate);
-//    }
-//
-//    @Test
-//    @Order(5)
-//    @TmsLink("")
-//    @DisplayName("UI TarantoolDataGrid. Создать резервную копию")
-//    void createReserveCopy() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::createReserveCopy);
-//    }
-//
-//    @Test
-//    @Order(6)
-//    @TmsLink("")
-//    @DisplayName("UI TarantoolDataGrid. Остановка сервисов TDG")
-//    void stopTdg() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::stopTdg);
-//    }
+    @Test
+    @TmsLink("")
+    @Order(1)
+    @DisplayName("UI TarantoolDataGrid. Заказ")
+    void orderAstra() {
+        double prebillingCost;
+        try {
+            String accessGroup = product.accessGroup();
+            new IndexPage()
+                    .clickOrderMore()
+                    .selectProduct(product.getProductName());
+            TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            //orderPage.getFlavorSelectCluster().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getGroupSelect().set(accessGroup);
+            orderPage.getGroupSelectTarantool().set(accessGroup);
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            orderPage.orderClick();
+            new OrdersPage()
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
+                    .hover()
+                    .click();
+            TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+            tarantoolDataGridAstraPage.waitChangeStatus(Duration.ofMinutes(25));
+            tarantoolDataGridAstraPage.checkLastAction("Развертывание");
+        } catch (Throwable e) {
+            product.setError(e.toString());
+            throw e;
+        }
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        checkOrderCost(prebillingCost, tarantoolDataGridAstraPage);
+    }
 
-//    @Test
-//    @Order(7)
-//    @TmsLink("")
-//    @DisplayName("UI TarantoolDataGrid. Запуск сервисов TDG")
-//    void startTdg() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::startTdg);
-//    }
-//
-//    @Test
-//    @Order(8)
-//    @TmsLink("")
-//    @DisplayName("UI TarantoolDataGrid. Перезапуск сервисов TDG")
-//    void resetTdg() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::resetTdg);
-//    }
+    @Test
+    @TmsLink("")
+    @Order(2)
+    @DisplayName("UI TarantoolDataGrid. Проверка развертывания в истории действий")
+    void checkHeaderHistoryTable() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.getGeneralInfoTab().switchTo();
+        tarantoolDataGridAstraPage.checkHeadersHistory();
+        tarantoolDataGridAstraPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        new Graph().notContainsStatus(Graph.ERROR);
+    }
+
+    @Test
+    @Order(3)
+    @Disabled
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Обновить версию приложения Tarantool Data Grid")
+    void updateVersionApp() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::updateVersionApp);
+    }
+
+    @Test
+    @Order(4)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Обновить сертификаты Tarantool Data Grid")
+    void updateCertificate() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::updateCertificate);
+    }
+
+    @Test
+    @Order(5)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Создать резервную копию")
+    void createReserveCopy() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::createReserveCopy);
+    }
+
+    @Test
+    @Order(6)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Остановка сервисов TDG")
+    void stopTdg() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::stopTdg);
+    }
+
+    @Test
+    @Order(7)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Запуск сервисов TDG")
+    void startTdg() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::startTdg);
+    }
+
+    @Test
+    @Order(8)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Перезапуск сервисов TDG")
+    void resetTdg() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.EQUALS, tarantoolDataGridAstraPage::resetTdg);
+    }
 
 
-//    @Test
-//    @Order(9)
-//    @TmsLink("")
-//    @DisplayName("UI TarantoolDataGrid. Мониторинг ОС")
-//    void monitoringOs() {
-//        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
-//        tarantoolDataGridAstraPage.checkMonitoringOs();
-//    }
+    @Test
+    @Order(9)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Мониторинг ОС")
+    void monitoringOs() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.checkMonitoringOs();
+    }
 
     @Test
     @Order(100)
