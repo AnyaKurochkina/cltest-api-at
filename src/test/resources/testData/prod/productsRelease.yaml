@@ -38,3 +38,39 @@ Artemis:
   - options:
       - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
+S3Ceph:
+  - options:
+OpenShiftProject:
+  - options:
+Vault:
+  - options:
+TarantoolDataGrid:
+  - options:
+Etcd:
+  - options:
+Grafana:
+  - options:
+GenericMonitoring:
+  - options:
+GenericDatabase:
+  - options:
+ApacheAirflow:
+  - options:
+ClickHouse:
+  - options:
+ClickHouseCluster:
+  - options:
+KafkaService:
+  - options:
+Ubuntu:
+  - options:
+LoadBalancer:
+  - options:
+ElasticsearchOpensearchCluster:
+  - options:
+ScyllaDbCluster:
+  - options:
+Moon:
+  - options:
+GitLab:
+  - options:
