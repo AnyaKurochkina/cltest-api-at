@@ -395,15 +395,17 @@ public class OrderServiceSteps extends Steps {
         Organization org = Organization.builder().build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
                         product.getSegment(),
                         org.getName(),
-                        product.getProductCatalogName())
+                        product.getProductCatalogName(),
+                        product.getProjectId())
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list.findAll{it.status == 'available'}.code");
         if (list.contains(dc))
             return dc;
+        Assertions.assertFalse(list.isEmpty(), "Список available ДЦ пуст");
         return list.get(new Random().nextInt(list.size()));
     }
 
