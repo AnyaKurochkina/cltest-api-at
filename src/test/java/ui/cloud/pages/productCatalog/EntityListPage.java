@@ -42,6 +42,7 @@ public class EntityListPage {
     protected final Input searchInput = Input.byPlaceholder("Поиск");
     private final Select recordsPerPageSelect = Select.byXpath("//div[div[contains(text(),'строк на странице ')]]");
     private final Select recordsPerPageSelectV2 = Select.byXpath("//div[text()='Записей на странице:']");
+    private final Button groupOperationsButton = Button.byText("Групповые операции");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {

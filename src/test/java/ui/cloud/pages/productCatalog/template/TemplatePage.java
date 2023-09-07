@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Getter
 public class TemplatePage extends EntityPage {
-    private static final String saveTemplateAlertText = "Шаблон успешно изменен";
+    private final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
     private final SelenideElement templateVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     private final TextArea descriptionTextArea = TextArea.byName("description");

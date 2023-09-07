@@ -3,13 +3,32 @@ package ui.cloud.tests.productCatalog.template;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
+import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.cloud.pages.productCatalog.template.TemplatePage;
+import ui.elements.Table;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.TagSteps.deleteTagByName;
 
 @Feature("Редактирование шаблона")
 public class EditTemplateTest extends TemplateBaseTest {
+
+    private static final List<String> tagList = new ArrayList<>();
+
+    @AfterAll
+    public static void deleteTags() {
+        for (String name : tagList) {
+            deleteTagByName(name);
+        }
+    }
 
     @Test
     @TmsLinks({@TmsLink("506509"), @TmsLink("972523")})
@@ -97,5 +116,19 @@ public class EditTemplateTest extends TemplateBaseTest {
                 .findAndOpenTemplatePage(NAME)
                 .checkUnsavedChangesAlertAccept(template)
                 .checkUnsavedChangesAlertDismiss();
+    }
+
+    @Test
+    @TmsLink("SOUL-5941")
+    @DisplayName("Добавить и удалить новый тег со страницы шаблона")
+    public void addAndDeleteNewTagOnPage() {
+        String name = "qa_at_tag_" + RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+        tagList.add(name);
+        TemplatePage page = new ControlPanelIndexPage().goToTemplatesPage().findAndOpenTemplatePage(template.getName());
+        page.addNewTag(name);
+        page.saveWithoutPatchVersion(page.getSaveTemplateAlertText());
+        page.deleteTag(name);
+        page.saveWithoutPatchVersion(page.getSaveTemplateAlertText());
+        assertTrue(new Table("Наименование").isEmpty());
     }
 }

@@ -65,8 +65,8 @@ public class ActionsListPage extends EntityListPage {
         return new DeleteDialog();
     }
 
-    @Step("Открытие формы действия {name}")
-    public ActionPage openActionForm(String name) {
+    @Step("Открытие страницы действия {name}")
+    public ActionPage openActionPage(String name) {
         new Table(NAME_COLUMN).getRowByColumnValue(NAME_COLUMN, name).get().click();
         Waiting.sleep(2000);
         return new ActionPage();
