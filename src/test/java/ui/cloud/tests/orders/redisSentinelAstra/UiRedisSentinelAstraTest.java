@@ -43,84 +43,84 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-//    @Test
-//    @TmsLink("")
-//    @Order(1)
-//    @DisplayName("UI Redis Sentinel Astra. Заказ")
-//    void orderRedisAstra() {
-//        double prebillingCost;
-//        try {
-//            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
-//            new IndexPage()
-//                    .clickOrderMore()
-//                    .expandProductsList()
-//                    .selectProduct(product.getProductName());
-//            RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
-//            orderPage.getSegmentSelect().set(product.getSegment());
-//            orderPage.getOsVersionSelect().set(product.getOsVersion());
-//            orderPage.getUserInput().setValue(userNameRedisSentinel);
-//            orderPage.getGeneratePassButton().click();
-//            Alert.green("Значение скопировано");
-//            orderPage.getPlatformSelect().set(product.getPlatform());
-//            orderPage.getFlavorSelectRedisSentinel().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-//            orderPage.getRoleSelect().set("user");
-//            orderPage.getGroupSelect().set(accessGroup);
-//            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
-//            orderPage.orderClick();
-//            new OrdersPage()
-//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-//                    .getElementByColumn("Продукт")
-//                    .hover()
-//                    .click();
-//            RedisAstraPage redisPage = new RedisAstraPage(product);
-//            redisPage.waitChangeStatus(Duration.ofMinutes(25));
-//            redisPage.checkLastAction("Развертывание");
-//        } catch (Throwable e) {
-//            product.setError(e.toString());
-//            throw e;
-//        }
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        checkOrderCost(prebillingCost, redisPage);
-//    }
+    @Test
+    @TmsLink("")
+    @Order(1)
+    @DisplayName("UI Redis Sentinel Astra. Заказ")
+    void orderRedisAstra() {
+        double prebillingCost;
+        try {
+            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            new IndexPage()
+                    .clickOrderMore()
+                    .expandProductsList()
+                    .selectProduct(product.getProductName());
+            RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
+            orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getUserInput().setValue(userNameRedisSentinel);
+            orderPage.getGeneratePassButton().click();
+            Alert.green("Значение скопировано");
+            orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getFlavorSelectRedisSentinel().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getRoleSelect().set("user");
+            orderPage.getGroupSelect().set(accessGroup);
+            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+            orderPage.orderClick();
+            new OrdersPage()
+                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+                    .getElementByColumn("Продукт")
+                    .hover()
+                    .click();
+            RedisAstraPage redisPage = new RedisAstraPage(product);
+            redisPage.waitChangeStatus(Duration.ofMinutes(25));
+            redisPage.checkLastAction("Развертывание");
+        } catch (Throwable e) {
+            product.setError(e.toString());
+            throw e;
+        }
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        checkOrderCost(prebillingCost, redisPage);
+    }
 
-//    @Test
-//    @TmsLink("")
-//    @Order(2)
-//    @DisplayName("UI Redis Sentinel Astra. Проверка полей заказа")
-//    void checkHeaderHistoryTable() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.checkHeadersHistory();
-//        redisPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-//        new Graph().notContainsStatus(Graph.ERROR);
-//    }
-//
-//    @Test
-//    @Order(9)
-//    @TmsLink("")
-//    @DisplayName("UI Redis Sentinel Astra. Расширить точку монтирования")
-//    void expandDisk() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis/data", "20", new Table("Роли узла").getRowByIndex(0)));
-//    }
-//
-//    @Test
-//    @Order(10)
-//    @Disabled
-//    @TmsLink("")
-//    @DisplayName("UI Redis Sentinel Astra. Изменить конфигурацию")
-//    void changeConfiguration() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.runActionWithCheckCost(CompareType.MORE, redisPage::changeConfigurationSentinel);
-//    }
-//
-//    @Test
-//    @Order(11)
-//    @TmsLink("")
-//    @DisplayName("UI Redis Sentinel Astra. Проверить конфигурацию")
-//    void vmActCheckConfig() {
-//        RedisAstraPage redisPage = new RedisAstraPage(product);
-//        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::checkConfiguration);
-//    }
+    @Test
+    @TmsLink("")
+    @Order(2)
+    @DisplayName("UI Redis Sentinel Astra. Проверка полей заказа")
+    void checkHeaderHistoryTable() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.checkHeadersHistory();
+        redisPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        new Graph().notContainsStatus(Graph.ERROR);
+    }
+
+    @Test
+    @Order(9)
+    @TmsLink("")
+    @DisplayName("UI Redis Sentinel Astra. Расширить точку монтирования")
+    void expandDisk() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis/data", "20", new Table("Роли узла").getRowByIndex(0)));
+    }
+
+    @Test
+    @Order(10)
+    @Disabled
+    @TmsLink("")
+    @DisplayName("UI Redis Sentinel Astra. Изменить конфигурацию")
+    void changeConfiguration() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.MORE, redisPage::changeConfigurationSentinel);
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI Redis Sentinel Astra. Проверить конфигурацию")
+    void vmActCheckConfig() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::checkConfiguration);
+    }
 
 
     @Test
