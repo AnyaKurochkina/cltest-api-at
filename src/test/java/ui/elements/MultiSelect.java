@@ -4,9 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
@@ -27,7 +24,6 @@ public class MultiSelect extends Select {
         hover();
         clear();
         element.click();
-        if (value.equals(RANDOM_VALUE)) value = getRandomItem();
         getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
                 .click();
         hideOptions();
@@ -39,7 +35,6 @@ public class MultiSelect extends Select {
         hover();
         if (clear) clear();
         element.click();
-        if (value.equals(RANDOM_VALUE)) value = getRandomItem();
         element.$x(".//input").setValue(value);
         Button.byText("Добавить " + value).click();
         hideOptionsByLastSvg();
@@ -60,7 +55,6 @@ public class MultiSelect extends Select {
         clear();
         element.click();
         for (String value : values) {
-            if (value.equals(RANDOM_VALUE)) value = getRandomItem();
             getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
                     .click();
         }

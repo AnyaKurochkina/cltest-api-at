@@ -6,6 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.WildFly;
+import org.json.JSONObject;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -107,7 +108,8 @@ public class WildFlyAstraTest extends Tests {
     @ParameterizedTest(name = "Обновить сертификаты {0}")
     void updateCerts(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
-            wildFly.updateCerts();
+            JSONObject data = new JSONObject().put("accept_cert_updating", true).put("is_balancer", false).put("is_balancer", "default");
+            wildFly.updateCerts(data);
         }
     }
 

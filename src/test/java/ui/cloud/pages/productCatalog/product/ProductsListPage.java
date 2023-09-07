@@ -6,8 +6,8 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.Alert;
 import ui.elements.FileImportDialog;
@@ -72,7 +72,7 @@ public class ProductsListPage extends EntityListPage {
     public ProductsListPage delete(String name) {
         search(name);
         delete(nameColumn, name);
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         Assertions.assertTrue(new Table(nameColumn).isEmpty());
         return this;
     }

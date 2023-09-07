@@ -1,19 +1,19 @@
 package ui.cloud.tests.orders.postgreSqlAstraLinux;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgreSQL;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
 import ui.elements.Table;
@@ -51,7 +51,6 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     void orderPostgreSQL() {
         double preBillingProductPrice;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -60,7 +59,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
+            orderPage.getGroupSelect().set(product.accessGroup());
             orderPage.getPrebillingCostElement().shouldBe(Condition.visible);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
@@ -95,7 +94,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Order(5)
     @TmsLink("993396")
     @Disabled
-    @DisplayName("UI PostgreSQLAstra. Перезагрузить по питанию")
+    @DisplayName("UI PostgreSQLAstra. Перезагрузить")
     void restart() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::restart);
@@ -147,6 +146,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("994656")
     @DisplayName("UI PostgreSQLAstra. Проверить конфигурацию")
@@ -249,26 +249,25 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink("1091014"), @TmsLink("1091010")})
     @Order(23)
     @DisplayName("UI PostgreSQLAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.deleteGroup("user");
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        pSqlPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+        pSqlPage.addGroup("superuser", Collections.singletonList(product.accessGroup()));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("1091055")
     @Order(24)
     @DisplayName("UI PostgreSQLAstra. Изменить состав группы доступа")
     void updateGroup() {
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.updateGroup("superuser",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
@@ -289,11 +288,9 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.showDeleteDB(nameDb);
     }
 
-
     @Test
     @Order(27)
     @TmsLink("1296731")
-    @EnabledIfEnv("prod")
     @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
     void monitoringOs() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);

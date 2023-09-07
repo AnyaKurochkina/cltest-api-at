@@ -28,12 +28,15 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static ru.testit.properties.AppProperties.TEST_IT_TOKEN;
+
 @Log4j2
 public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Source> {
     public final static int PRODUCTS = 0;
     public final static int ONE_PRODUCT = 1;
     public final static int ENV = 2;
     private final static List<IProduct> orders = getProductList();
+    private final static Map<String, List<String>> filter = stringToMap(System.getProperty("ParametrizedFilter"));
     private int variableName;
 
     @SneakyThrows
@@ -44,6 +47,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         } else {
             List<Arguments> list = new ArrayList<>();
             orders.stream()
+                    .filter(p -> Objects.nonNull(p.getEnv()))
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
                     .forEach(entity -> list.add(Arguments.arguments(entity.getEnv())));
@@ -56,6 +60,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
     private List<Arguments> getProducts(ExtensionContext context) {
         List<Arguments> list = new ArrayList<>();
         final Class<?>[] parameterTypes = context.getRequiredTestMethod().getParameterTypes();
+        String className = context.getRequiredTestMethod().getDeclaringClass().getSimpleName();
+        String methodName = context.getRequiredTestMethod().getName();
         if (Configure.isIntegrationTestIt()) {
             List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
             Class<?> argument = Arrays.stream(parameterTypes)
@@ -87,10 +93,20 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 }
             }
             Class<?> finalClazz = clazz;
+            int counter = 0;
             for (Entity entity : orders) {
                 Class<?> c = entity.getClass();
                 if (finalClazz.isInstance(entity)) {
-                    list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length));
+                    final String key = className + "#" + methodName;
+                    if(filter.containsKey(key)) {
+                        counter++;
+                        if(filter.get(key).contains(String.valueOf(counter))) {
+                            list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length));
+                            if (variableName == ONE_PRODUCT)
+                                break;
+                        }
+                    }
+                    else list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length));
                     if (variableName == ONE_PRODUCT)
                         break;
                 }
@@ -136,8 +152,12 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             try {
                 Class<?> c = Class.forName("models.cloud.orderService.products." + e.getKey());
                 List listProduct = findListInMapByKey("options", e.getValue());
-                if (listProduct == null)
+                if (listProduct == null) {
+                    final IProduct product = (IProduct) objectMapper.convertValue(new HashMap<>(), c);
+                    product.setSkip(true);
+                    list.add(product);
                     continue;
+                }
                 for (Object orderObj : listProduct) {
                     IProduct product = (IProduct) objectMapper.convertValue(orderObj, c);
                     list.add(product);
@@ -165,4 +185,24 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         return null;
     }
 
+    private static Map<String, List<String>> stringToMap(String input) {
+        if(Objects.isNull(input))
+            return new HashMap<>();
+        if(input.isEmpty())
+            return new HashMap<>();
+        Map<String, List<String>> resultMap = new HashMap<>();
+        String[] keyValuePairs = input.split(";");
+        for (String pair : keyValuePairs) {
+            String[] parts = pair.split("=");
+            if (parts.length == 2) {
+                String key = parts[0];
+                String[] values = parts[1].split(",");
+                List<String> valueList = Stream.of(values)
+                        .collect(Collectors.toList());
+
+                resultMap.put(key, valueList);
+            }
+        }
+        return resultMap;
+    }
 }

@@ -59,11 +59,12 @@ public class AllowedActionSteps extends Steps {
     }
 
     @Step("Копирование разрешенного действия по id {id}")
-    public static AllowedAction copyAllowedActionById(Integer id) {
+    public static AllowedAction copyAllowedActionById(Integer id, JSONObject jsonObject) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(allowedUrl + "{}/", id)
-                .assertStatus(201)
+                .body(jsonObject)
+                .post(allowedUrl + "{}/copy/", id)
+                .assertStatus(200)
                 .extractAs(AllowedAction.class);
     }
 

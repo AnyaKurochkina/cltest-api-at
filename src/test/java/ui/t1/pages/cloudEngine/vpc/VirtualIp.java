@@ -1,22 +1,23 @@
 package ui.t1.pages.cloudEngine.vpc;
 
-import io.qameta.allure.Step;
-import ui.elements.Dialog;
+import ui.elements.Table;
 import ui.t1.pages.IProductT1Page;
+import ui.t1.pages.cloudEngine.Column;
 
 public class VirtualIp extends IProductT1Page<VirtualIp> {
 
-    @Step("Подключить к сетевому интерфейсу {networkInterface}")
-    public void attachComputeIp(String networkInterface) {
-        runActionWithParameters(BLOCK_PARAMETERS, "Подключить к виртуальной машине", "Подтвердить", () ->
-                        Dialog.byTitle("Подключить к виртуальной машине")
-                                .setSelectValue("Сетевой интерфейс", networkInterface));
+    public VirtualIpList.Menu getMenu() {
+        return new VirtualIpList().getMenuVirtualIp(getActionsMenuButton(BLOCK_PARAMETERS));
     }
 
-    @Step("Отключить от сетевого интерфейса {ip}")
-    public void detachComputeIp(String ip) {
-        runActionWithParameters(BLOCK_PARAMETERS, "Отключить от сетевого интерфейса", "Подтвердить", () ->
-                Dialog.byTitle("Отключить от сетевого интерфейса")
-                        .setSelectValue("Сетевой интерфейс", ip));
+    public static class InterfacesTable extends Table {
+
+        public InterfacesTable() {
+            super(Column.DIRECTION);
+        }
+
+        public static boolean isAttachIp(String ip) {
+            return new InterfacesTable().isColumnValueEquals(Column.IP, ip);
+        }
     }
 }

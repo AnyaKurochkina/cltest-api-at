@@ -193,7 +193,7 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "Редактировать группу доступа {0}")
     void accessGroupsOnTheWeb(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
-            String group = rabbit.getAccessGroup();
+            String group = rabbit.accessGroup();
             rabbit.editAccessGroupsOnTheWeb(group, rabbit.getRole());
         }
     }

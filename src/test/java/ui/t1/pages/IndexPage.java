@@ -13,10 +13,7 @@ import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
-import ui.t1.pages.cloudEngine.vpc.NetworkList;
-import ui.t1.pages.cloudEngine.vpc.PublicIpList;
-import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
-import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
+import ui.t1.pages.cloudEngine.vpc.*;
 import ui.t1.pages.supportCenter.NotificationsPage;
 
 import java.time.Duration;
@@ -41,6 +38,7 @@ public class IndexPage {
     Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
     Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
     Button linkVirtualIps = Button.byXpath("//a[.='Виртуальные IP-адреса']");
+    Button linkRouters = Button.byXpath("//a[.='Маршрутизаторы']");
     Button linkImages = Button.byXpath("//a[.='Образы']");
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkHistory = Button.byXpath("//a[.='История действий']");
@@ -171,6 +169,13 @@ public class IndexPage {
         return new VirtualIpList();
     }
 
+    @Step("Переход на страницу Маршрутизаторы")
+    public RouterList goToRouters() {
+        linkCloudEngine.click();
+        linkRouters.click();
+        return new RouterList();
+    }
+
     @Step("Отключить Cloud Engine")
     public void disconnectCloudEngine() {
         SelenideElement btnAction = getActionsMenuButton("T1 Cloud Engine");
@@ -188,7 +193,7 @@ public class IndexPage {
     }
 
     @Step("Переход в модальное окно изменения контекста")
-    public ContextDialog changeContext(){
+    public ContextDialog goToContextDialog(){
         changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
         return new ContextDialog();
     }

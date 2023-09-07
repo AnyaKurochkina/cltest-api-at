@@ -1,22 +1,20 @@
 package ui.cloud.tests.orders.wildfly;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.WildFly;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -31,9 +29,9 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("WildFlyAstra")
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
-    String versionWildFly = "28.0.1.Final";
-    String versionJava = "17.0.6";
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ce9e3c27-ca51-491d-a355-5e4eb8870a51/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
+    String versionWildFly = "23.0.2.Final";
+    String versionJava = "11.0.12";
+    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba4245b1-c393-4ae6-bdf9-c846411edfcc/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -49,13 +47,12 @@ public class UiWildFlyAstraTest extends UiProductTest {
     void orderWildFlyAstra() {
         double prebillingCost;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
             orderPage.getVersionWildfly().set(product.getWildFlyVersion());
-            orderPage.getVersionJava().set(product.getJavaVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getVersionJava().set(product.getJavaVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
@@ -90,7 +87,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         wildFlyPage.getGeneralInfoTab().switchTo();
         wildFlyPage.checkHeadersHistory();
-        wildFlyPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        wildFlyPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[2]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
 
@@ -154,25 +151,24 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Добавить/удалить группу WildFly")
     void addGroupWildFlyAstra() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupWildFlyAstra("Monitor", accessGroup.getPrefixName()));
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupWildFlyAstra("Monitor", accessGroup.getPrefixName()));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupWildFlyAstra("Monitor", product.additionalAccessGroup()));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupWildFlyAstra("Monitor", product.additionalAccessGroup()));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(10)
     @TmsLinks({@TmsLink("1644573"), @TmsLink("1644572"), @TmsLink("1644574")})
     @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", accessGroupOne.getPrefixName()));
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(accessGroupOne.getPrefixName())));
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", product.accessGroup()));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(product.accessGroup())));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("908277")
     @DisplayName("UI WildFlyAstraLinux. Расширить точку монтирования")
@@ -183,6 +179,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(12)
     @TmsLink("")
     @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
@@ -191,10 +188,8 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);
     }
 
-
     @Test
     @Order(13)
-    @EnabledIfEnv("prod")
     @TmsLink("1171954")
     @DisplayName("UI WildFlyAstra. Мониторинг ОС")
     void monitoringOs() {

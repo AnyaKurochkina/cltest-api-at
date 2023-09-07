@@ -3,17 +3,21 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.Etcd;
+import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Alert;
-import ui.elements.Dialog;
-import ui.elements.Table;
+import ui.elements.*;
+
+import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class EtcdPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
+    SelenideElement cpu = $x("(//h5)[1]");
+    SelenideElement ram = $x("(//h5)[2]");
 
 
     public EtcdPage(Etcd product) {
@@ -79,7 +83,6 @@ public class EtcdPage extends IProductPage {
                 "Неверный размер диска");
         Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
                 sizeComonAfterChange));
-
     }
 
     public void resetPassword(String name) {
@@ -88,6 +91,25 @@ public class EtcdPage extends IProductPage {
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");
         });
+    }
+    public void changeConfiguration() {
+        btnGeneralInfo.click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Flavor maxFlavor = product.getMaxFlavor();
+        runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () -> {
+            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+        });
+        btnGeneralInfo.click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
+        Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
+    }
+    public void createCertificate(String name) {
+        runActionWithoutParameters(getActionsMenuButton(name), "Создать сертификаты для пользователя etcd");
+        }
+    public SelenideElement getRoleNode() {
+        return new Table("Роли узла").getRow(0).get();
     }
 
     public class VirtualMachineTable extends VirtualMachine {

@@ -23,9 +23,8 @@ import static core.utils.AssertUtils.assertContains;
 
 @Epic("Продукты")
 @Feature("PostgresSQL Cluster Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresSqlClusterAstra"), @Tag("prod")})
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgres_sql_cluster_astra"), @Tag("prod")})
 public class PostgresSQLClusterAstraTest extends Tests {
-    public static final String adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
     static final String dbName = "db_name";
 
     @TmsLink("810039")
@@ -69,7 +68,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Добавить БД {0}")
     void createDb(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
         }
     }
 
@@ -79,7 +78,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Проверить подключение к БД PostgresSQLCluster {0}")
     void checkBdConnection(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             postgres.checkConnection(dbName);
         }
     }
@@ -90,7 +89,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Добавить пользователя {0}")
     void createDbmsUser(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             postgres.createDbmsUser("testchelik1", "user", dbName);
         }
     }
@@ -101,7 +100,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль пользователя {0}")
     void resetPassword(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             postgres.createDbmsUser("chelikforreset1", "user", dbName);
             postgres.resetPassword("chelikforreset1");
         }
@@ -113,7 +112,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить пользователя {0}")
     void removeDbmsUser(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             postgres.createDbmsUser("chelikforremove2", "user", dbName);
             postgres.removeDbmsUser("chelikforremove2", dbName);
 //            postgres.removeDb("cached_bd");
@@ -126,7 +125,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             postgres.resetDbOwnerPassword(dbName);
         }
     }
@@ -137,7 +136,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Удалить БД {0}")
     void removeDb(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             postgres.removeDb(dbName);
         }
     }
@@ -182,7 +181,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void setConnLimit(PostgresSQLCluster product) {
 //        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             postgres.setConnLimit(dbName, 30);
         }
     }
@@ -204,7 +203,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "AD Проверка прав у ролей пользователя {0}")
     void checkCreate(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
-            postgres.createDb(dbName, adminPassword);
+            postgres.createDb(dbName);
             String ip = (String) OrderServiceSteps.getProductsField(postgres, "product_data.find{it.hostname.contains('-pgc')}.ip");
             postgres.checkUseSsh(ip, dbName);
         }
@@ -216,7 +215,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     void checkActiveHost(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             String ip = (String) OrderServiceSteps.getProductsField(postgres, "product_data.find{it.hostname.contains('-pgc')}.ip");
-            assertContains(postgres.executeSsh(new SshClient(ip, postgres.envType()),
+            assertContains(postgres.executeSsh(SshClient.builder().host(ip).env(postgres.envType()).build(),
                     "sudo patronictl -c /etc/patroni/patroni.yml list"), "Leader");
         }
     }
@@ -227,7 +226,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Изменить extensions {0}")
     void updateExtensions(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.createDb(dbName);
             postgreSQL.updateExtensions(dbName, Arrays.asList("pg_trgm", "hstore"));
         }
     }
@@ -238,7 +237,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Актуализировать extensions {0}")
     void getExtensions(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.createDb(dbName);
             postgreSQL.getExtensions(dbName, "ltree");
         }
     }
@@ -319,7 +318,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Настроить БД для интеграции с Debezium {0}")
     void configureDebeziumDb(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.createDb(dbName);
             postgreSQL.configureDebeziumDb();
         }
     }
@@ -330,7 +329,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Создать/удалить логический слот {0}")
     void createLogicalSlot(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.createDb(dbName);
             postgreSQL.createLogicalSlot("slot_name");
             postgreSQL.removeLogicalSlot("slot_name");
         }
@@ -342,7 +341,7 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "Создать/удалить публикацию {0}")
     void createPublication(PostgresSQLCluster product) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName, adminPassword);
+            postgreSQL.createDb(dbName);
             postgreSQL.createPublication("pub_dbzm");
             postgreSQL.removePublication("pub_dbzm");
         }

@@ -5,14 +5,15 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.SaveDialog;
 import ui.cloud.pages.productCatalog.actions.ActionPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
@@ -23,9 +24,11 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 
+@Getter
 public class GraphPage extends EntityPage {
     protected final String saveGraphAlertText = "Граф успешно сохранен";
     protected final Tab generalInfoTab = Tab.byText("Общая информация");
+    private final Tab orderParamsTab = Tab.byText("Параметры заказа");
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
     private final Input authorInput = Input.byName("author");
@@ -60,7 +63,7 @@ public class GraphPage extends EntityPage {
 
     @Step("Проверка, что отображаемая версия графа равна '{version}'")
     public GraphPage checkGraphVersion(String version) {
-        Waiting.find(() -> versionDropDown.getValue().equals(version), Duration.ofSeconds(5));
+        Waiting.find(() -> versionSelect.getValue().equals(version), Duration.ofSeconds(5));
         return new GraphPage();
     }
 
@@ -164,7 +167,7 @@ public class GraphPage extends EntityPage {
     @Step("Проверка недоступности удаления используемого графа")
     public GraphPage checkDeleteUsedGraphUnavailable() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable("Нельзя удалить граф, который используется другими" +
+        new DeleteDialog().submitAndCheckNotDeletable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
         usageButton.click();
         checkTabIsSelected("Использование");

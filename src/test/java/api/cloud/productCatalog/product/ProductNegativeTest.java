@@ -12,6 +12,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.ProductSteps;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductSteps.*;
@@ -26,7 +27,7 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643397")
     @Test
     public void getProductByIdWithOutTokenTest() {
-        Product product = createProductByName("get_by_id_product_without_token_test_api");
+        Product product = ProductSteps.createProduct("get_by_id_product_without_token_test_api");
         String errorMessage = getProductByIdWithOutToken(product.getProductId()).jsonPath().get("error.message");
         assertEquals("Unauthorized", errorMessage);
     }
@@ -35,7 +36,7 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643407")
     @Test
     public void updateProductByIdWithOutToken() {
-        Product product = createProductByName("update_product_without_token_test_api");
+        Product product = ProductSteps.createProduct("update_product_without_token_test_api");
         String errorMessage = partialUpdateProductWithOutToken(product.getProductId(), new JSONObject()
                 .put("description", "UpdateDescription")).jsonPath().get("error.message");
         assertEquals("Unauthorized", errorMessage);
@@ -45,7 +46,7 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643409")
     @Test
     public void partialUpdateProductForCurrentVersion() {
-        Product product = createProductByName("update_to_current_version_product_test_api");
+        Product product = ProductSteps.createProduct("update_to_current_version_product_test_api");
         String currentVersion = product.getVersion();
         String errorMessage = partialUpdateProduct(product.getProductId(), new JSONObject().put("description", "update")
                 .put("version", currentVersion)).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
@@ -57,7 +58,7 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643416")
     @Test
     public void copyProductByIdWithOutTokenTest() {
-        Product product = createProductByName("clone_product_negative_test_api");
+        Product product = ProductSteps.createProduct("clone_product_negative_test_api");
         String errorMessage = copyProductByIdWithOutToken(product.getProductId()).jsonPath().get("error.message");
         assertEquals("Unauthorized", errorMessage);
     }
@@ -66,7 +67,7 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643420")
     @Test
     public void createProductWithSameName() {
-        Product product = createProductByName("create_product_with_same_name_test_api");
+        Product product = ProductSteps.createProduct("create_product_with_same_name_test_api");
         String errorMessage = getCreateProductResponse(product.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("\"name\": product с таким name уже существует.", errorMessage);
     }
@@ -88,7 +89,7 @@ public class ProductNegativeTest extends Tests {
     @TmsLink("643433")
     @Test
     public void deleteProductWithOutToken() {
-        Product product = createProductByName("delete_product_without_token_test_api");
+        Product product = ProductSteps.createProduct("delete_product_without_token_test_api");
         String errorMessage = deleteProductByIdWithOutToken(product.getProductId()).jsonPath().get("error.message");
         assertEquals("Unauthorized", errorMessage);
     }
@@ -97,7 +98,7 @@ public class ProductNegativeTest extends Tests {
     @DisplayName("Негативный тест на передачу невалидного значения current_version в продуктах")
     @TmsLink("821980")
     public void setInvalidCurrentVersionProduct() {
-        Product product = createProductByName("invalid_current_version_product_test_api");
+        Product product = ProductSteps.createProduct("invalid_current_version_product_test_api");
         String productId = product.getProductId();
         String error = partialUpdateProduct(productId, new JSONObject().put("current_version", "2")).assertStatus(400)
                 .extractAs(ErrorMessage.class).getMessage();
@@ -108,7 +109,7 @@ public class ProductNegativeTest extends Tests {
     @DisplayName("Негативный тест на передачу значения поля category_v2 не из справочника")
     @TmsLink("978310")
     public void getInvalidValueCategoryV2() {
-        Product product = createProductByName("get_invalid_value_category_v2_product_test_api");
+        Product product = ProductSteps.createProduct("get_invalid_value_category_v2_product_test_api");
         String error = partialUpdateProduct(product.getProductId(), new JSONObject().put("category_v2", "test"))
                 .extractAs(ErrorMessage.class).getMessage();
         assertEquals("Значения (test) нет среди допустимых вариантов в ProductCategoriesV2", error);

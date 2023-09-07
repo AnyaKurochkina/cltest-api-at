@@ -133,9 +133,9 @@ public class InventoryFilterByDateV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), Collections.singletonList(RequiredValue))))
                 .inventoryFilter("updated_at", new Filter.InventoryAttrs(Arrays.asList(
                         Filter.InventoryAttrs.InventoryFilter.builder().lookup("lt")
-                                .value(inventoryThird.inventoryListItemV2(filterResult).getCreatedAt().toString()).build(),
+                                .value(inventoryThird.inventoryListItemV2(filterResult).getUpdatedAt().toString()).build(),
                         Filter.InventoryAttrs.InventoryFilter.builder().lookup("gte")
-                                .value(inventoryFirst.inventoryListItemV2(filterResult).getCreatedAt().toString()).build()
+                                .value(inventoryFirst.inventoryListItemV2(filterResult).getUpdatedAt().toString()).build()
                 )))
                 .build();
 
@@ -173,9 +173,9 @@ public class InventoryFilterByDateV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), Collections.singletonList(RequiredValue))))
                 .inventoryFilter("updated_at", new Filter.InventoryAttrs(Arrays.asList(
                         Filter.InventoryAttrs.InventoryFilter.builder().lookup("lte")
-                                .value(inventoryThird.inventoryListItemV2(filterResult).getCreatedAt().toString()).build(),
+                                .value(inventoryThird.inventoryListItemV2(filterResult).getUpdatedAt().toString()).build(),
                         Filter.InventoryAttrs.InventoryFilter.builder().lookup("gt")
-                                .value(inventoryFirst.inventoryListItemV2(filterResult).getCreatedAt().toString()).build()
+                                .value(inventoryFirst.inventoryListItemV2(filterResult).getUpdatedAt().toString()).build()
                 )))
                 .build();
 

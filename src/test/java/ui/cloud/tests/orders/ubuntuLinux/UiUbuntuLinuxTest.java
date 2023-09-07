@@ -1,14 +1,12 @@
 package ui.cloud.tests.orders.ubuntuLinux;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Ubuntu;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -33,8 +31,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
 public class UiUbuntuLinuxTest extends UiProductTest {
 
-    Ubuntu product;
-    //= Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/bed207dc-ccbc-49fb-92fa-d889fc22e2c3/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Ubuntu product; //= Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/bed207dc-ccbc-49fb-92fa-d889fc22e2c3/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -93,6 +90,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("378042")
@@ -102,8 +100,8 @@ public class UiUbuntuLinuxTest extends UiProductTest {
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, ubuntuLinuxPage::restart);
     }
 
-
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("378050")
     @DisplayName("UI UbuntuLinux. Расширить точку монтирования")
@@ -114,6 +112,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(6)
     @TmsLink("1295829")
     @DisplayName("UI UbuntuLinux. Проверить конфигурацию")
@@ -123,29 +122,29 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(8)
     @TmsLinks({@TmsLink("1090952"), @TmsLink("1090957")})
     @DisplayName("UI UbuntuLinux. Удалить и добавить группу доступа")
     void addGroup() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.deleteGroup("user"));
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.addGroup("user", Collections.singletonList(accessGroup.getPrefixName())));
+        ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.addGroup("user", Collections.singletonList(product.accessGroup())));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("1090987")
     @DisplayName("UI UbuntuLinux. Изменить состав группы")
     void changeGroup() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         ubuntuLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> ubuntuLinuxPage.updateGroup("user",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("378040")
     @DisplayName("UI UbuntuLinux. Изменить конфигурацию")
@@ -156,7 +155,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Order(12)
-    @EnabledIfEnv("prod")
     @TmsLink("1296749")
     @DisplayName("UI UbuntuLinux. Мониторинг ОС")
     void checkMonitoringOs() {

@@ -173,6 +173,11 @@ public class WindowsPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Удалить ключ Астром");
         checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
+    public void updateOs() {
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Обновить ОС");
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
+    }
 
 
     private SelenideElement getDiskMenuElement(String name) {

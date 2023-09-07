@@ -1,5 +1,6 @@
 package ui.t1.pages.cloudEngine.compute;
 
+import core.helper.DataFileHelper;
 import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
@@ -9,7 +10,10 @@ import ui.t1.pages.cloudEngine.Column;
 import java.util.List;
 
 public class SshKeyList {
-    public static final String SSH_KEY = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCSI82vsEXJoV4Co1HPjUd8ldwjTRbJsE27yzpc3rcxfqIrB9vte7J0YkCCXuZZsYEufIMYWXcXHOLJEqLnoJsp0EjJ5wOVBc6I10WozLm458P0mwPEbc6N5Z0MQ8gZk3i3yOap+G9owWMirlfArz2afKL4E+6rXfY+XpfPceGPJ8dGDWvuMnvwIYWenz8HwBRvQwR8FtJyUOP7sOdsuTz6T+E+qQiuvBY0ciUwAaFbGWhKtgk7dJd73ZxZIZFg3jFxySScePcEsf4nC+61siqqaSBzLk+jyNbrURTeQ0ZYoYR3jMexgUAY/8cNki89U/OfWNBG6jqCWn/K2BcgX1cl";
+    public static final String PUBLIC_KEY = DataFileHelper.read("src/test/resources/testData/id_rsa.pub");
+    public static final String PRIVATE_KEY = "src/test/resources/testData/id_rsa";
+    public static final String SSH_USER = "root";
+
     private final Input inputName = Input.byPlaceholder("введите название");
     private final Input inputLogin = Input.byPlaceholder("введите логин");
     private final Input inputKey = Input.byPlaceholder("введите или вставьте свой ключ");
@@ -22,7 +26,7 @@ public class SshKeyList {
         Dialog.byTitle("Добавить SSH-ключ");
         inputName.setValue(nameKey);
         inputLogin.setValue(login);
-        inputKey.setValue(SSH_KEY);
+        inputKey.setValue(PUBLIC_KEY);
         Button.byText("Добавить", -1).click();
         Alert.green("SSH-ключ {} создан успешно", nameKey);
         Assertions.assertTrue(new KeysTable().isColumnValueEquals(Column.TITLE, nameKey));
@@ -32,7 +36,7 @@ public class SshKeyList {
     public void copyKey(String nameKey) {
         KeysTable.getMenuKey(nameKey).select("Скопировать");
         Alert.green("SSH-ключ {} скопирован", nameKey);
-        Assertions.assertEquals(SSH_KEY, StringUtils.getClipBoardText());
+        Assertions.assertEquals(PUBLIC_KEY, StringUtils.getClipBoardText());
     }
 
     @Step("Удалить ключ {nameKey}")

@@ -61,7 +61,7 @@ public class OrderUtils {
 
     public static Double getCostValue(SelenideElement element) {
         element.shouldBe(Condition.visible);
-        final String text = element.getText();
+        final String text = TypifiedElement.findNotEmptyText(element, Duration.ofSeconds(5));
         if(text.equals("без изменений"))
             return null;
         log.debug("Стоимость '{}'", text);
@@ -86,7 +86,7 @@ public class OrderUtils {
 
     public static void waitStatus(Table table, String status, Duration duration) {
         table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
-                .shouldBe(CollectionCondition.anyMatch("Ожидание заверешения действия", e ->
+                .shouldBe(CollectionCondition.anyMatch("Ожидание завершения действия", e ->
                         new OrderStatus(e).getStatus().equals(status)), duration);
     }
 

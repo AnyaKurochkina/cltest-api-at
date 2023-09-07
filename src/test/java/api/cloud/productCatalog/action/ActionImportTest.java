@@ -10,15 +10,21 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
-import static steps.productCatalog.ProductCatalogSteps.importObjects;
+import static steps.productCatalog.ProductCatalogSteps.*;
 import static steps.productCatalog.ProductSteps.importProduct;
 
 @Tag("product_catalog")
@@ -43,6 +49,62 @@ public class ActionImportTest extends Tests {
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName), "Действие существует");
+    }
+
+    @DisplayName("Импорт действия с tag_list")
+    @TmsLink("SOUL-7102")
+    @Test
+    public void importActionWithTagListTest() {
+        String actionName = "action_import_with_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithTags.json";
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        Graph graph = createGraph("graph_action_import_for_export_with_tags_test");
+        List<String> expectedTagList = Arrays.asList("import_test", "test_import");
+        JSONObject jsonObject = Action.builder()
+                .name(actionName)
+                .graphId(graph.getGraphId())
+                .tagList(expectedTagList)
+                .build()
+                .toJson();
+        Action action = createAction(jsonObject).extractAs(Action.class);
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("actions", action.getActionId()).toString());
+        deleteActionByName(actionName);
+        importObjectWithTagList("actions", filePath);
+        assertEquals(expectedTagList, getActionByName(actionName).getTagList());
+        deleteActionByName(actionName);
+    }
+
+    @DisplayName("Добавление новых tags при импорте действия")
+    @TmsLink("SOUL-7120")
+    @Test
+    public void checkNewTagsAddedWhenImportTest() {
+        String actionName = "action_import_with_new_tag_list_test_api";
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithNewTags.json";
+        if (isActionExists(actionName)) {
+            deleteActionByName(actionName);
+        }
+        Graph graph = createGraph("graph_action_import_for_export_with_new_tags_test");
+        List<String> addTagList = Collections.singletonList("new_tag");
+        JSONObject jsonObject = Action.builder()
+                .name(actionName)
+                .graphId(graph.getGraphId())
+                .tagList(Arrays.asList("import_test", "test_import"))
+                .build()
+                .toJson();
+        Action action = createAction(jsonObject).extractAs(Action.class);
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("actions", action.getActionId()).toString());
+        String updatedJsonForImport = JsonHelper.getJsonTemplate("/productCatalog/actions/importActionWithNewTags.json")
+                .set("Action.tag_name_list", addTagList)
+                .set("Action.version_arr", Arrays.asList(1, 0, 1))
+                .build()
+                .toString();
+        DataFileHelper.write(filePath, updatedJsonForImport);
+
+        importObjectWithTagList("actions", filePath);
+        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getActionByName(actionName).getTagList());
+        deleteActionByName(actionName);
     }
 
     @DisplayName("Импорт нескольких действий")
@@ -98,7 +160,7 @@ public class ActionImportTest extends Tests {
         ImportObject importObject = importAction(filePath);
         DataFileHelper.delete(filePath);
         assertEquals("error", importObject.getStatus());
-        assertEquals( String.format("Error loading dump: Версия \"%s\" %s:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
+        assertEquals(String.format("Error loading dump: Версия \"%s\" %s:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
                         action.getVersion(), importObject.getModelName(), action.getName()),
                 importObject.getMessages().get(0));
     }
@@ -135,6 +197,6 @@ public class ActionImportTest extends Tests {
         assertTrue(isActionExists(actionName), "Действие не существует");
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName), "Действие существует");
-
     }
 }
+

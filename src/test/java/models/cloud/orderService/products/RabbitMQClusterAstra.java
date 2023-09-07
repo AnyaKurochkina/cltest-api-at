@@ -65,9 +65,9 @@ public class RabbitMQClusterAstra extends IProduct {
 
     @Override
     public JSONObject toJson() {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -83,7 +83,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", getSupport())
-                .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq-2", envType().toUpperCase(), "rabbitmq", org.getName()))
+                .set("$.order.attrs.layout", getIdGeoDistribution("rabbitmq-2", getSegment(), "rabbitmq", org.getName()))
                 .set("$.order.label", getLabel())
                 .build();
     }

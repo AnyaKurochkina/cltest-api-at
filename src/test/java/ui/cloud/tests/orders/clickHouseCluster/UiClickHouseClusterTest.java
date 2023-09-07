@@ -2,19 +2,16 @@ package ui.cloud.tests.orders.clickHouseCluster;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.DisabledIfEnv;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -22,6 +19,7 @@ import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
 import ui.cloud.pages.orders.ClickHouseClusterPage;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.OrdersPage;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.extesions.UiProductTest;
 
@@ -55,7 +53,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void orderClickHouseCluster() {
         double prebillingCost;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -65,8 +63,10 @@ public class UiClickHouseClusterTest extends UiProductTest {
             if(product.isDev())
                 orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
             if(product.isDev())
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+                Alert.green("Значение скопировано");
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
@@ -110,7 +110,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     @DisabledIfEnv("prod")
     @Order(3)
     @TmsLink("1138093")
-    @DisplayName("UI ClickHouse Cluster. Перезагрузить по питанию")
+    @DisplayName("UI ClickHouse Cluster. Перезагрузить")
     void restart() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::restart);
@@ -118,6 +118,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("1138087")
     @DisplayName("UI ClickHouse Cluster. Расширить точку монтирования")
@@ -127,6 +128,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("1162629")
     @DisplayName("UI ClickHouse Cluster. Проверить конфигурацию")
@@ -154,85 +156,22 @@ public class UiClickHouseClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(8)
-    @TmsLink("1152774")
-    @DisplayName("UI ClickHouse Cluster. Пользователи. Добавить ТУЗ AD")
-    void addAccountAD() {
+    @Order(16)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Обновить информацию о сертификатах Clickhouse Cluster")
+    void updateInformationCert() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addAccountAD(nameAD));
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateInformationCert);
     }
-
     @Test
-    @Order(9)
-    @TmsLink("1152773")
-    @DisplayName("UI ClickHouse Cluster. Пользователи. Удалить локальную УЗ")
-    void deleteLocalAccount() {
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Обновить сертификаты Clickhouse Cluster")
+    void updateCertificate() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteLocalAccount(nameLocalAD));
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateCertificate);
     }
 
-    @Test
-    @Order(10)
-    @TmsLink("1152780")
-    @DisplayName("UI ClickHouse Cluster. Пользователи. Удалить ТУЗ AD")
-    void deleteAccountAD() {
-        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteAccountAD(nameAD));
-    }
-
-    @Test
-    @Order(11)
-    @TmsLinks({@TmsLink("1152788"), @TmsLink("1152789")})
-    @DisplayName("UI ClickHouse Cluster. Группы. Добавить и удалить пользовательскую группу")
-    void addGroupAD() {
-        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAD(accessGroup.getName()));
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteGroupAD(accessGroup.getPrefixName()));
-    }
-
-    @Test
-    @Order(12)
-    @TmsLinks({@TmsLink("1152793"), @TmsLink("1152794")})
-    @DisplayName("UI ClickHouse Cluster. Группы. Добавить и удалить группу администраторов")
-    void addGroupAdmin() {
-        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.addGroupAdmin(accessGroup.getName()));
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.deleteGroupAdmin(accessGroup.getPrefixName()));
-
-    }
-
-    @Test
-    @Order(13)
-    @TmsLinks({@TmsLink("1138086"), @TmsLink("1138091")})
-    @Disabled
-    @DisplayName("UI ClickHouse Cluster. Выключить принудительно / Включить")
-    void stopHard() {
-        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.LESS, clickHouseClusterPage::stopHard);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.MORE, clickHouseClusterPage::start);
-    }
-
-    @Test
-    @Order(14)
-    @TmsLink("1138092")
-    @Disabled
-    @DisplayName("UI ClickHouse Cluster. Выключить")
-    void stopSoft() {
-        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.runActionWithCheckCost(CompareType.LESS, clickHouseClusterPage::stopSoft);
-    }
-
-    @Test
-    @Order(15)
-    @EnabledIfEnv("prod")
-    @TmsLink("1296753")
-    @DisplayName("UI ClickHouse Cluster. Мониторинг ОС")
-    void monitoringOs() {
-        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
-        clickHouseClusterPage.checkClusterMonitoringOs();
-    }
 
     @Test
     @Order(100)

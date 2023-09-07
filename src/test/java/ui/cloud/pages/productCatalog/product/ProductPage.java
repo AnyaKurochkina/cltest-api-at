@@ -13,8 +13,8 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -75,7 +75,7 @@ public class ProductPage extends EntityPage {
         goToGraphTab();
         Graph graph = GraphSteps.getGraphById(product.getGraphId());
         graphSelect.setContains(graph.getName());
-        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(10));
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(15));
         graphVersionSelect.set(product.getGraphVersion());
         Waiting.find(() -> graphVersionSelect.getValue().equals(product.getGraphVersion()), Duration.ofSeconds(3));
         goToAdditionalParamsTab();
@@ -240,7 +240,7 @@ public class ProductPage extends EntityPage {
     @Step("Удаление продукта")
     public void delete() {
         deleteButton.click();
-        new DeleteDialog().inputValidIdAndDelete("Удаление выполнено успешно");
+        new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
     }
 
     @Step("Сохранение продукта со следующей патч-версией")

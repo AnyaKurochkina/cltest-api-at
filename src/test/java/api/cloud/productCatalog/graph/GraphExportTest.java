@@ -3,6 +3,7 @@ package api.cloud.productCatalog.graph;
 import api.Tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -18,9 +19,13 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.GraphSteps.*;
+import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
@@ -66,5 +71,40 @@ public class GraphExportTest extends Tests {
         ExportEntity e = new ExportEntity(simpleGraph.getGraphId(), simpleGraph.getVersion());
         ExportEntity e2 = new ExportEntity(simpleGraph2.getGraphId(), simpleGraph2.getVersion());
         exportObjectsById("graphs", new ExportData(Arrays.asList(e, e2)).toJson());
+    }
+
+    @DisplayName("Проверка поля ExportedObjects при экспорте графа")
+    @TmsLink("SOUL-")
+    @Test
+    public void checkExportedObjectsFieldGraphTest() {
+        String graphName = "graph_exported_objects_test_api";
+        Graph graph = createGraph(graphName);
+        Response response = exportGraphById(graph.getGraphId());
+        LinkedHashMap r = response.jsonPath().get("exported_objects.Graph.");
+        String result = r.keySet().stream().findFirst().get().toString();
+        JSONObject jsonObject = new JSONObject(result);
+        assertEquals(graph.getLastVersion(), jsonObject.get("last_version_str").toString());
+        assertEquals(graph.getName(), jsonObject.get("name").toString());
+        assertEquals(graph.getVersion(), jsonObject.get("version").toString());
+    }
+
+    @DisplayName("Экспорт графа по Id с tag_list")
+    @TmsLink("SOUL-7103")
+    @Test
+    public void exportGraphByIdWithTagListTest() {
+        String graphName = "graph_export_with_tag_list_test_api";
+        List<String> expectedTagList = Arrays.asList("export_test", "test2");
+        if (isGraphExists(graphName)) {
+            deleteGraphByName(graphName);
+        }
+        JSONObject json = Graph.builder()
+                .name(graphName)
+                .tagList(expectedTagList)
+                .build()
+                .toJson();
+        Graph graph = createGraph(json).assertStatus(201).extractAs(Graph.class);
+        List<String> actualTagList = exportObjectByIdWithTags("graphs", graph.getGraphId()).jsonPath().getList("Graph.tag_name_list");
+        assertEquals(actualTagList, expectedTagList);
+        deleteGraphByName(graphName);
     }
 }

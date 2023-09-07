@@ -3,12 +3,32 @@ package ui.cloud.tests.productCatalog.graph;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
+import ui.cloud.pages.productCatalog.graph.GraphPage;
+import ui.elements.Table;
 
-@Feature("Сохранение графа")
-public class SaveGraphTest extends GraphBaseTest {
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.TagSteps.createTag;
+import static steps.productCatalog.TagSteps.deleteTagByName;
+
+@Feature("Редактирование графа")
+public class EditGraphTest extends GraphBaseTest {
+
+    private static final List<String> tagList = new ArrayList<>();
+
+    @AfterAll
+    public static void deleteTags() {
+        for (String name : tagList) {
+            deleteTagByName(name);
+        }
+    }
 
     @Test
     @TmsLink("487709")
@@ -84,5 +104,34 @@ public class SaveGraphTest extends GraphBaseTest {
                 .setAuthor("QA-5")
                 .saveGraphWithManualVersion("999.999.999")
                 .checkVersionLimit();
+    }
+
+    @Test
+    @TmsLink("SOUL-836")
+    @DisplayName("Добавить и удалить существующий тег со страницы графа")
+    public void addAndDeleteTagOnPage() {
+        String name = "qa_at_tag_" + RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+        createTag(name);
+        tagList.add(name);
+        GraphPage page = new ControlPanelIndexPage().goToGraphsPage().findAndOpenGraphPage(graph.getName());
+        page.addExistingTag(name);
+        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        page.deleteTag(name);
+        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        assertTrue(new Table("Наименование").isEmpty());
+    }
+
+    @Test
+    @TmsLink("SOUL-7157")
+    @DisplayName("Добавить и удалить новый тег со страницы графа")
+    public void addAndDeleteNewTagOnPage() {
+        String name = "qa_at_tag_" + RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+        tagList.add(name);
+        GraphPage page = new ControlPanelIndexPage().goToGraphsPage().findAndOpenGraphPage(graph.getName());
+        page.addNewTag(name);
+        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        page.deleteTag(name);
+        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        assertTrue(new Table("Наименование").isEmpty());
     }
 }

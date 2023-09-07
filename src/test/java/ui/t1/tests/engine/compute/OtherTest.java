@@ -44,12 +44,12 @@ public class OtherTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
         String orderId = vmPage.getOrderId();
 
-        final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
+        final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(getProjectId());
         Assertions.assertEquals(4, items.stream().filter(e -> e.getOrderId().equals(orderId))
-                .filter(e -> e.getSrcOrderId().equals(""))
+                .filter(e -> e.getSrcOrderId().isEmpty())
                 .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance"))
                         .filter(i -> i.getOrderId().equals(orderId))
                         .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
@@ -58,7 +58,7 @@ public class OtherTest extends AbstractComputeTest {
 
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
 
-        final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(project.getId());
+        final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(getProjectId());
         Assertions.assertTrue(items2.stream().noneMatch(e -> e.getOrderId().equals(orderId)), "Существуют item's с orderId=" + orderId);
         List<StateServiceSteps.ShortItem> list = items2.stream().filter(i -> Objects.nonNull(i.getName()))
                 .filter(i -> i.getName().startsWith(vm.getName()))
@@ -71,7 +71,7 @@ public class OtherTest extends AbstractComputeTest {
                 }).collect(Collectors.toList());
 
         Assertions.assertEquals(1, list.size(), "Должен быть один item с новым orderId, size=3 и parent=null");
-        AbstractEntity.addEntity(new VmEntity(project.getId(), list.get(0).getOrderId()));
+        AbstractEntity.addEntity(new InstanceEntity(getProjectId(), list.get(0).getOrderId()));
     }
 
     @Test
@@ -92,21 +92,21 @@ public class OtherTest extends AbstractComputeTest {
                 .setPublicIp(ip)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(false);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(false);
         String orderIdVm = vmPage.getOrderId();
 
-        String instanceId = StateServiceSteps.getItems(project.getId()).stream()
+        String instanceId = StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getType().equals("instance"))
                 .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=instance")).getItemId();
 
-        String nicId = StateServiceSteps.getItems(project.getId()).stream()
+        String nicId = StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getType().equals("nic"))
                 .filter(e -> e.getParent().equals(instanceId))
                 .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=nic")).getItemId();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getSrcOrderId().equals(orderIdIp))
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(i -> i.getFloatingIpAddress().equals(ip))
@@ -114,13 +114,13 @@ public class OtherTest extends AbstractComputeTest {
                 .count(), "Item publicIp не соответствует условиям или не найден");
 
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdIp))
                 .filter(e -> Objects.isNull(e.getParent()))
                 .count(), "Item publicIp должен вернуть свой OrderId + Parent=null");
 
         new IndexPage().goToPublicIps().selectIp(ip).runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
-        Assertions.assertTrue(StateServiceSteps.getItems(project.getId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
+        Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
     }
 
     @Test
@@ -135,20 +135,20 @@ public class OtherTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(vm.getName()).setSize(4L).clickOrder();
 
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
         String orderIdDisk = diskPage.getOrderId();
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
         new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity())/*.checkCreate(true)*/;
 
-        String volumeId = StateServiceSteps.getItems(project.getId()).stream()
+        String volumeId = StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> e.getType().equals("volume"))
                 .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=volume")).getItemId();
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> e.getSize().equals(disk.getSize()))
                 .filter(e -> e.getParent().equals(volumeId))
@@ -158,17 +158,17 @@ public class OtherTest extends AbstractComputeTest {
         new IndexPage().goToDisks().selectDisk(disk.getName());
         diskPage.attachComputeVolume(vm.getName(), false);
 
-        String instanceId = StateServiceSteps.getItems(project.getId()).stream()
+        String instanceId = StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getType().equals("instance"))
                 .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=instance")).getItemId();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getType().equals("snapshot"))
                 .filter(e -> e.getParent().equals(volumeId))
                 .count(), "Item snapshot не соответствует условиям или не найден");
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getType().equals("volume"))
                 .filter(e -> e.getParent().equals(instanceId))
@@ -181,18 +181,18 @@ public class OtherTest extends AbstractComputeTest {
                 .selectDisk(disk.getName())
                 .runActionWithCheckCost(CompareType.LESS, diskPage::detachComputeVolume);
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> Objects.isNull(e.getParent()))
                 .count(), "Item volume не соответствует условиям или не найден");
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> Objects.equals(e.getParent(), volumeId))
                 .count(), "Item snapshot не соответствует условиям или не найден");
 
         new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.LESS, diskPage::delete);
-        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(0, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .count());
     }
@@ -211,29 +211,29 @@ public class OtherTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
         Disk disk = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         String orderIdDisk = disk.getOrderId();
         disk.createSnapshot(vm.getName());
         new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity()).checkCreate(true);
 
-        String volumeId = StateServiceSteps.getItems(project.getId()).stream()
+        String volumeId = StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> e.getType().equals("volume"))
                 .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=volume")).getItemId();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getType().equals("snapshot"))
                 .filter(e -> e.getParent().equals(volumeId))
                 .count(), "Item snapshot не соответствует условиям или не найден");
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.ZERO, vmPage::delete);
         Waiting.sleep(10000);
-        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(0, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .count());
-        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(0, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> Objects.equals(e.getSize(), vm.getBootSize()))
                 .count());
     }
@@ -252,15 +252,15 @@ public class OtherTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
         Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         diskPage.createSnapshot(vm.getName());
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity()).checkCreate(true);
         snapshot.createDisk(vm.getName());
-        Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
+        Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
         String orderIdDisk = createdDisk.getOrderId();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))
                 .filter(e -> e.getSrcOrderId().equals(orderIdDisk))
                 .filter(e -> e.getParent().equals(""))
@@ -280,16 +280,16 @@ public class OtherTest extends AbstractComputeTest {
                 .setSize(5L)
                 .clickOrder();
 
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
         String orderId = diskPage.getOrderId();
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .filter(i -> Objects.equals(i.getSize(), disk.getSize()))
                 .filter(i -> i.getSrcOrderId().equals(orderId))
                 .count(), "Поиск item, где orderId = srcOrderId & size == " + disk.getSize());
 
         new IndexPage().goToDisks().selectDisk(disk.getName()).runActionWithCheckCost(CompareType.ZERO, diskPage::delete);
-        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(0, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .count(), "Item disk не соответствует условиям или не найден");
     }
@@ -306,7 +306,7 @@ public class OtherTest extends AbstractComputeTest {
                 .setSize(2L)
                 .clickOrder();
 
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(disk.getName()));
         new IndexPage().goToImages().selectImage(disk.getName()).markForDeletion(new ImageEntity()).checkCreate(true);
 
@@ -320,10 +320,10 @@ public class OtherTest extends AbstractComputeTest {
                 .setSize(5L)
                 .clickOrder();
 
-        Disk newDiskPage = new DiskList().selectDisk(newDisk.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
+        Disk newDiskPage = new DiskList().selectDisk(newDisk.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
         String orderId = newDiskPage.getOrderId();
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .filter(i -> Objects.equals(i.getSize(), newDisk.getSize()))
                 .filter(i -> i.getSrcOrderId().equals(orderId))
@@ -334,7 +334,7 @@ public class OtherTest extends AbstractComputeTest {
                 .selectDisk(newDisk.getName())
                 .runActionWithCheckCost(CompareType.ZERO, newDiskPage::delete);
 
-        Assertions.assertEquals(0, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(0, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .count(), "Item disk не соответствует условиям или не найден");
     }
@@ -351,10 +351,10 @@ public class OtherTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
 
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(vm.getName()).setSize(4L).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
 
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
         new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity());

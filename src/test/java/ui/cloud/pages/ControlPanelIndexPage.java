@@ -15,6 +15,7 @@ import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.pages.productCatalog.orgDirectionsPages.OrgDirectionsListPage;
 import ui.cloud.pages.productCatalog.product.ProductsListPage;
 import ui.cloud.pages.productCatalog.service.ServicesListPagePC;
+import ui.cloud.pages.productCatalog.tag.TagsListPage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
 import ui.elements.Button;
 import ui.elements.Tab;
@@ -39,6 +40,7 @@ public class ControlPanelIndexPage {
     private final Button mainMenuButton = Button.byXpath("//div[contains(@class, 'MainMenu')]//button");
     private final SelenideElement utilsMenuItem = $x("//div[text()='Утилиты']");
     private final SelenideElement accountSettingsMenuItem = $x("//div[text()='Настройки аккаунта']");
+    private final SelenideElement tagsMenuItem = $x("//div[text()='Теги']");
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
@@ -114,5 +116,11 @@ public class ControlPanelIndexPage {
         accountSettingsMenuItem.click();
         Tab.byText("Настройки контекста").switchTo();
         return new ContextSettingsPage();
+    }
+
+    @Step("Переход в раздел 'Теги'")
+    public TagsListPage goToTagsPage() {
+        tagsMenuItem.click();
+        return new TagsListPage();
     }
 }

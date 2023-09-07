@@ -15,8 +15,8 @@ import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.orderService.OrderServiceSteps;
 
-import static api.cloud.orderService.PostgreSQLAstraTest.adminPassword;
 
 @Epic("Продукты")
 @Feature("Apache Airflow")
@@ -25,12 +25,14 @@ public class ApacheAirflowTest extends Tests {
 
     private static void createPostgres(ApacheAirflow product) {
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
+        String pgAdminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         if("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
-            abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
+            abstractPostgreSQL = PostgresSQLCluster.builder().adminPassword(pgAdminPassword).env(product.getEnv()).build();
         try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
             String dbName = "airflow";
-            postgreSQL.createDb(dbName, adminPassword);
-            product.setDbServer(postgreSQL.getIp());
+            postgreSQL.createDb(dbName);
+            product.setPgAdminPassword(pgAdminPassword);
+            product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
             product.setDbUser(new DbUser(dbName, dbName + "_admin"));
         }
     }

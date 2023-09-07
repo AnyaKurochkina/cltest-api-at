@@ -2,12 +2,14 @@ package ui.t1.pages.IAM.users;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import ui.elements.*;
 import ui.models.IamUser;
+import ui.t1.tests.IAM.users.AddUserDialog;
 
 import java.util.Arrays;
 import java.util.List;
@@ -22,8 +24,8 @@ import static ui.cloud.pages.productCatalog.EntityListPage.openActionMenu;
 public class UsersPage {
 
     private final Button addUserBtn = Button.byElement($x("//*[@data-testid='user-management-add-button']//button"));
-    private final Button confirmAddUserBtn = Button.byText("Добавить");
     private final Button closeDialog = Button.byText("Закрыть");
+    private final Button cancelDialog = Button.byText("Отмена");
     private final Button confirmChangesBtn = Button.byText("Применить", 2);
     private static final Button confirmSearchBtn = Button.byText("Применить");
     private final Button openRolesListBtn = Button.byXpath("//button[@title = 'Open']");
@@ -55,14 +57,8 @@ public class UsersPage {
             removeUser(user);
         }
         addUserBtn.click();
-        TextArea.byName("userList").setValueAndPressEnter(user.getEmail());
-        openRolesListBtn.click();
-        StringUtils.$x("//li[@role = 'menuitem' and text() = 'Базовые']").click();
-        StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", user.getRole().get(0)).click();
-        assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", user.getRole().get(0)).isDisplayed());
-        closeRolesListBtn.click();
-        confirmAddUserBtn.click();
-        Waiting.sleep(1000);
+        new AddUserDialog(WebDriverRunner.currentFrameUrl()).addUser(user);
+        Alert.green("Добавлены пользователи: {}", user.getEmail());
         assertTrue(isUserAdded(user), "Пользователь не найден");
         return this;
     }
@@ -73,6 +69,7 @@ public class UsersPage {
         $x("(//*[text()= 'Отозвать права'])[1]").click();
         new Dialog("Подтверждение").clickButton("Отозвать права");
         Alert.green("Удалены все роли у пользователя {}", user.getEmail());
+        cancelDialog.click();
         assertFalse(isUserAdded(user), "Пользователь найден");
         return this;
     }
@@ -107,8 +104,8 @@ public class UsersPage {
 
     @Step("Показать пользователей")
     public UsersPage showUsers(String text) {
-        StringUtils.$x("//div[@aria-labelledby = 'ancestors']").click();
-        StringUtils.$x("//li[text() = '{}']", text).click();
+        StringUtils.$x("//*[@id='selectValueWrapper']").click();
+        StringUtils.$x("//div[text() = '{}']", text).shouldBe(Condition.visible).click();
         return this;
     }
 

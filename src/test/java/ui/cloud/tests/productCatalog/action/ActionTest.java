@@ -92,10 +92,9 @@ public class ActionTest extends ActionBaseTest {
                 .init().toJson();
         ActionSteps.createAction(json);
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .deleteFromActionForm()
-                .inputInvalidId("invalid")
-                .inputValidIdAndDelete();
+                .submitAndDelete("Удаление выполнено успешно");
         assertFalse(isActionExists(name));
     }
 
@@ -116,8 +115,7 @@ public class ActionTest extends ActionBaseTest {
         ActionSteps.createAction(json);
         new ControlPanelIndexPage().goToActionsListPage()
                 .deleteAction(name)
-                .inputInvalidId("invalid")
-                .inputValidIdAndDelete();
+                .submitAndDelete("Удаление выполнено успешно");
         assertFalse(isActionExists(name));
     }
 
@@ -139,7 +137,7 @@ public class ActionTest extends ActionBaseTest {
         partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1));
         String version = getActionById(action.getActionId()).getVersion();
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .setPriority(2)
                 .checkSaveWithInvalidVersion("1.0.1", version)
                 .checkSaveWithInvalidVersion("1.0.0", version)
@@ -164,7 +162,7 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .createObject();
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .changeGraphVersion("1.0.0")
                 .saveWithNextPatchVersion()
                 .checkVersion("1.0.1");
@@ -192,11 +190,11 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .createObject();
         assertFalse(new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .deleteIcon()
                 .saveWithoutPatchVersion()
                 .backToActionsList()
-                .openActionForm(name)
+                .openActionPage(name)
                 .isIconExist());
     }
 
@@ -216,7 +214,7 @@ public class ActionTest extends ActionBaseTest {
         new ControlPanelIndexPage()
                 .goToActionsListPage()
                 .importAction("src/test/resources/json/productCatalog/actions/importAction.json")
-                .openActionForm(name)
+                .openActionPage(name)
                 .compareFields(name, title, version);
         deleteActionByName(name);
     }
@@ -242,7 +240,7 @@ public class ActionTest extends ActionBaseTest {
         String name = UUID.randomUUID().toString();
         Action action = createActionByApi(name);
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .checkUnsavedChangesAlertAccept(action)
                 .checkUnsavedChangesAlertDismiss();
     }
@@ -254,7 +252,7 @@ public class ActionTest extends ActionBaseTest {
         String name = UUID.randomUUID().toString();
         createActionByApi(name);
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .checkVersion("1.0.0")
                 .setPriority(1)
                 .saveWithManualVersion("1.0.999")
@@ -280,7 +278,7 @@ public class ActionTest extends ActionBaseTest {
         String name = UUID.randomUUID().toString();
         createActionByApi(name);
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .checkVersion("1.0.0")
                 .setPriority(1)
                 .saveWithManualVersion("1.0.999")
@@ -306,7 +304,7 @@ public class ActionTest extends ActionBaseTest {
         String name = UUID.randomUUID().toString();
         createActionByApi(name);
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .setPriority(1)
                 .saveWithPatchVersion()
                 .goToVersionComparisonTab();
@@ -326,7 +324,7 @@ public class ActionTest extends ActionBaseTest {
         String name = UUID.randomUUID().toString();
         Action action = createActionByApi(name);
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .checkJSONcontains(action.getActionId());
     }
 
@@ -339,7 +337,7 @@ public class ActionTest extends ActionBaseTest {
         GlobalUser user = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(name)
+                .openActionPage(name)
                 .goToAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", "actions", "201", "создан");
     }
@@ -367,7 +365,7 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .createObject();
         new ControlPanelIndexPage().goToActionsListPage()
-                .openActionForm(actionName)
+                .openActionPage(actionName)
                 .setGraph(actionGraph.getName())
                 .checkGraphNotFound(creatingGraph.getName());
     }

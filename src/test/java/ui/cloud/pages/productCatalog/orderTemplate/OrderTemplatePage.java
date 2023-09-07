@@ -3,17 +3,19 @@ package ui.cloud.pages.productCatalog.orderTemplate;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@Getter
 public class OrderTemplatePage extends EntityPage {
 
     private final SelenideElement previewButton = $x("//button[.//span[text()='Просмотр']]");
@@ -24,6 +26,7 @@ public class OrderTemplatePage extends EntityPage {
     private final MultiSelect providerSelect = MultiSelect.byLabel("Провайдер");
     private final SelenideElement orderTemplatesLink = $x("//a[text()='Шаблоны отображения' and not(@href)]");
     private final Switch isEnabled = Switch.byInputName("is_active");
+    private final String saveTemplateAlertText = "Шаблон отредактирован";
 
     public OrderTemplatePage() {
         previewButton.shouldBe(Condition.visible);

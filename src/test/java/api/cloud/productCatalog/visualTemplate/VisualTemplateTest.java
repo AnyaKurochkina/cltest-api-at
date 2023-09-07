@@ -44,7 +44,7 @@ public class VisualTemplateTest extends Tests {
     @DisplayName("Создание шаблона визуализации в продуктовом каталоге")
     @TmsLink("643631")
     @Test
-    public void createVisualTemplate() {
+    public void createVisualTemplateTest() {
         String name = "item_visual_template_test_api-:2022.";
         ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
                 .name(name)
@@ -224,6 +224,19 @@ public class VisualTemplateTest extends Tests {
                 .build()
                 .createObject();
         exportVisualTemplateById(visualTemplates.getId());
+    }
+
+    @DisplayName("Проверка поля ExportedObjects при экспорте шаблона визуализации")
+    @TmsLink("SOUL-7086")
+    @Test
+    public void checkExportedObjectsFieldVisualTemplateTest() {
+        String visualTemplateName = "visual_template_exported_objects_test_api";
+        ItemVisualTemplate visualTemplate = createVisualTemplate(visualTemplateName);
+        Response response = exportVisualTemplateById(visualTemplate.getId());
+        LinkedHashMap r = response.jsonPath().get("exported_objects.ItemVisualisationTemplate.");
+        String result = r.keySet().stream().findFirst().get().toString();
+        JSONObject jsonObject = new JSONObject(result);
+        assertEquals(visualTemplate.getName(), jsonObject.get("name").toString());
     }
 
     @DisplayName("Частичное обновление шаблона визуализации по Id")

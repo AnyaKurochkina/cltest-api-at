@@ -11,9 +11,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
-import ui.cloud.tests.productCatalog.BaseTest;
+import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.TemplateSteps.deleteTemplateById;
@@ -21,7 +24,7 @@ import static steps.productCatalog.TemplateSteps.getTemplateByName;
 
 @Epic("Конструктор.Графы")
 @DisabledIfEnv("prod")
-public class GraphBaseTest extends BaseTest {
+public class GraphBaseTest extends ProductCatalogUITest {
 
     protected final static String TITLE = "AT UI Graph";
     protected final static String SUBGRAPH_TITLE = "AT UI Subgraph";

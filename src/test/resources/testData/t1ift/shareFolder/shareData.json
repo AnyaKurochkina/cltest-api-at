@@ -8,6 +8,18 @@
   {
     "objectClassName": "models.cloud.authorizer.Organization",
     "title": "ИФТ",
-    "name": "ift"
+    "name": "ift",
+    "type": "default"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Organization",
+    "title": "QA IFT T1",
+    "name": "org-nzfrg964e8",
+    "type": "not_default"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Folder",
+    "title": "ProjectPool",
+    "name": "fold-1ssni7vbut"
   }
 ]

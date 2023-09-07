@@ -74,15 +74,15 @@ public class TarantoolDataGrid extends IProduct {
                 .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.access_group[0]", getAccessGroup())
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.access_group[0]", accessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.tarantool_version", getTarantoolVersion())
-                .set("$.order.attrs.layout", getIdGeoDistribution("rps-2000", String.format("%s:%s:%s","cluster", "tdg", envType().toUpperCase())))
+                .set("$.order.attrs.layout", getIdGeoDistribution("rps-2000"))
                 .build();
     }
 

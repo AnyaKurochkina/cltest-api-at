@@ -50,6 +50,10 @@ public class Vm extends IProductT1Page<Vm> {
         return new NetworkInterfaceList().getMenuNetworkInterface(new NetworkInfo().getRow(0).get().$("button"));
     }
 
+    public String getLocalIp() {
+        return new NetworkInfo().getFirstValueByColumn(Column.IP);
+    }
+
     public static class NetworkInfo extends Table {
         public NetworkInfo() {
             super(Column.IP);

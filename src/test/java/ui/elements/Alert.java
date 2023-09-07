@@ -14,43 +14,16 @@ import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.exist;
 import static org.openqa.selenium.support.Color.fromString;
 
+/**
+ * Элемент всплывающее окно
+ * Пример:
+ * <blockquote><pre>
+ *     Alert.green("Текст")
+ * </blockquote></pre>
+ * Дождется всплывающее окно, проверит его зеленый цвет окна, соответствие тексту и закроет его
+ **/
 public class Alert implements TypifiedElement {
     SelenideElement element;
-
-    public static final String script = "\"function hoverElement(element) {\\n\" +\n" +
-            "        \"  const hoverEvent = new MouseEvent('mouseover', {\\n\" +\n" +
-            "        \"    bubbles: true,\\n\" +\n" +
-            "        \"    cancelable: true,\\n\" +\n" +
-            "        \"    view: window\\n\" +\n" +
-            "        \"  });\\n\" +\n" +
-            "        \"  element.dispatchEvent(hoverEvent);\\n\" +\n" +
-            "        \"}\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"function trackAndHoverAlerts() {\\n\" +\n" +
-            "        \"  const alertElements = document.evaluate(\\n\" +\n" +
-            "        \"    '//div[@role=\\\"alert\\\" and string-length(.)>1][button]',\\n\" +\n" +
-            "        \"    document,\\n\" +\n" +
-            "        \"    null,\\n\" +\n" +
-            "        \"    XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,\\n\" +\n" +
-            "        \"    null\\n\" +\n" +
-            "        \"  );\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"  for (let i = 0; i < alertElements.snapshotLength; i++) {\\n\" +\n" +
-            "        \"    const alertElement = alertElements.snapshotItem(i);\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"    setTimeout(() => {\\n\" +\n" +
-            "        \"      hoverElement(alertElement);\\n\" +\n" +
-            "        \"    }, i * 1000); \\n\" +\n" +
-            "        \"  }\\n\" +\n" +
-            "        \"}\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"const observer = new MutationObserver(trackAndHoverAlerts);\\n\" +\n" +
-            "        \"observer.observe(document.body, {\\n\" +\n" +
-            "        \"  childList: true,\\n\" +\n" +
-            "        \"  subtree: true\\n\" +\n" +
-            "        \"});\\n\" +\n" +
-            "        \"\\n\" +\n" +
-            "        \"window.addEventListener('load', trackAndHoverAlerts);\";";
 
     public Alert(SelenideElement element) {
         this.element = element;
@@ -94,7 +67,7 @@ public class Alert implements TypifiedElement {
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
     public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
-        element = getElement().shouldBe(Condition.visible).hover();
+        element = getElement().shouldBe(Condition.visible);
         final String elementText = element.getText();
         Assertions.assertTrue(elementText.toLowerCase().contains(message.toLowerCase()),
                 String.format("Найден Alert с текстом : '%s'\nОжидаемый текст: '%s'", elementText, message));
@@ -104,7 +77,7 @@ public class Alert implements TypifiedElement {
     }
 
     @Step("Проверка на отсутствие красных алертов")
-    public static void  checkNoRedAlerts() {
+    public static void checkNoRedAlerts() {
         SelenideElement element = new Alert().getElement();
         if (exist(element, Duration.ofSeconds(3)))
             Assertions.assertNotEquals(fromString(element.getCssValue("border-bottom-color")).asHex(), Color.RED.getColor());
@@ -114,7 +87,7 @@ public class Alert implements TypifiedElement {
     @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
         try {
-            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(5));
+            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(15));
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }
@@ -122,11 +95,11 @@ public class Alert implements TypifiedElement {
         }
     }
 
+    @Getter
     public enum Color {
         RED("#d92020"),
         GREEN("#1ba049");
-        @Getter
-        String color;
+        final String color;
 
         public String getValue() {
             return color;

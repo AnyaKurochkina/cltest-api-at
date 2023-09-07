@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Project;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
@@ -58,16 +59,23 @@ public class ProjectActionTest extends Tests {
                     .changeNameProject(name, updatedName)
                     .isProjectExist(updatedName));
             new OrgStructurePage()
-                    .deleteProject(name);
+                    .deleteProject(updatedName);
     }
 
     @Test
     @DisplayName("Создание проекта в структуре папки")
     public void createProjectInFolderTest() {
-        Folder folder = Folder.builder().title("org_structure_ui_test")
-                .kind(Folder.DEFAULT).build().createObject();
+        String folderName = "org_structure_ui_test";
+        Folder folder = Folder
+                .builder().
+                title(folderName)
+                .kind(Folder.DEFAULT)
+                .build()
+                .createObject();
+        String projectName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         new IndexPage()
                 .goToOrgStructure()
-                .createProjectInFolder(folder.getName(), "dsfsdf");
+                .createProjectInFolder(folder.getName(), projectName)
+                .isProjectExist(projectName);
     }
 }

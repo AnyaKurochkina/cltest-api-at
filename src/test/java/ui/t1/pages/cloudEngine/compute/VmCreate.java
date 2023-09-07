@@ -2,9 +2,11 @@ package ui.t1.pages.cloudEngine.compute;
 
 import core.utils.Waiting;
 import lombok.Getter;
+import lombok.Setter;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
+import ui.t1.pages.cloudEngine.vpc.VirtualIpCreate;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ import static core.helper.StringUtils.$x;
 public class VmCreate {
     private String name;
     private String description;
+    private String region;
     private String availabilityZone;
     private SelectBox.Image image;
     private String userImage;
@@ -26,18 +29,33 @@ public class VmCreate {
     private String flavorName;
     private String flavor;
     private String subnet;
+    private String networkInterface;
     private String publicIp;
     private List<String> securityGroups;
     private String sshKey;
 
+    private Duration createTimeout = Duration.ofMinutes(3);
+
+    public VmCreate setCreateTimeout(Duration timeout) {
+        this.createTimeout = timeout;
+        return this;
+    }
+
     public VmCreate setName(String name) {
         this.name = name;
-        Input.byLabel("Имя виртуальной машины").setValue(name);
+        Input.byLabel("Имя сервера").setValue(name);
         return this;
     }
 
     public VmCreate setFlavorName(String flavorName) {
         this.flavorName = Select.byLabel("Серия").setContains(flavorName);
+        return this;
+    }
+
+    public VmCreate setNetworkInterface(String networkInterface) {
+        Switch.byText("Задать IP адрес сетевого интерфейса").setEnabled(true);
+        Input.byPlaceholder("0.0.0.0").setValue(networkInterface);
+        this.networkInterface = networkInterface;
         return this;
     }
 
@@ -51,7 +69,7 @@ public class VmCreate {
         Input.byLabel("Имя диска", -1).setValue(name);
         Input.byLabel("Размер диска, Гб", -1).setValue(size);
         Select.byLabel("Тип", -1).setContains(type);
-        CheckBox.byLabel("Удалять вместе с виртуальной машиной", -1).setChecked(deleteOnTermination);
+        CheckBox.byLabel("Удалять вместе с сервером", -1).setChecked(deleteOnTermination);
         return this;
     }
 
@@ -67,7 +85,7 @@ public class VmCreate {
     }
 
     public VmCreate setSubnet(String subnet) {
-        this.subnet = Select.byLabel("Подсеть", 1).set(subnet);
+        this.subnet = Select.byLabel("Подсеть", 1).setContains(subnet);
         return this;
     }
 
@@ -77,9 +95,14 @@ public class VmCreate {
         return this;
     }
 
+    public VmCreate setRegion(String region) {
+        this.region = Select.byLabel("Регион").set(region);
+        return this;
+    }
+
     public VmCreate setDeleteOnTermination(boolean deleteOnTermination) {
         this.deleteOnTermination = deleteOnTermination;
-        CheckBox.byLabel("Удалять вместе с виртуальной машиной").setChecked(deleteOnTermination);
+        CheckBox.byLabel("Удалять вместе с сервером").setChecked(deleteOnTermination);
         return this;
     }
 
@@ -102,7 +125,7 @@ public class VmCreate {
 
     public VmCreate setImage(SelectBox.Image image) {
         this.image = image;
-        SelectBox.setMarketPlaceImage(image);
+        SelectBox.setOsImage(image);
         return this;
     }
 
@@ -134,7 +157,7 @@ public class VmCreate {
         OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.STATUS)
-                .contains("Включено"), Duration.ofMinutes(2)));
+                .contains("Включено"), createTimeout));
         return this;
     }
 }

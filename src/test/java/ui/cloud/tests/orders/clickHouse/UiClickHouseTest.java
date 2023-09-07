@@ -13,10 +13,11 @@ import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
+import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -61,8 +62,10 @@ public class UiClickHouseTest extends UiProductTest {
             if(product.isDev())
                 orderPage.getNameUser().setValue("at_user");
             orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
             if(product.isDev())
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+                Alert.green("Значение скопировано");
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
@@ -107,7 +110,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Order(3)
     @TmsLink("330327")
     @Disabled
-    @DisplayName("UI ClickHouse. Перезагрузить по питанию")
+    @DisplayName("UI ClickHouse. Перезагрузить")
     void restart() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::restart);
@@ -115,6 +118,7 @@ public class UiClickHouseTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(4)
     @TmsLink("330329")
     @DisplayName("UI ClickHouse. Расширить точку монтирования")
@@ -124,6 +128,7 @@ public class UiClickHouseTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(5)
     @TmsLink("1177396")
     @DisplayName("UI ClickHouse. Проверить конфигурацию")
@@ -203,9 +208,9 @@ public class UiClickHouseTest extends UiProductTest {
     @DisplayName("UI ClickHouse . Добавить/удалиь пользовательскую группу")
     void addGroupAD() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAD(accessGroup.getName()));
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAD(accessGroup.getPrefixName()));
+        final String group = product.additionalAccessGroup();
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAD(group));
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAD(group));
     }
 
     @Test
@@ -214,9 +219,9 @@ public class UiClickHouseTest extends UiProductTest {
     @DisplayName("UI ClickHouse . Добавить/удалить группу администраторов")
     void addGroupAdmin() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        AccessGroup accessGroup = AccessGroup.builder().name(new Generex("vtb-[a-z]{5,15}").random()).projectName(product.getProjectId()).build().createObject();
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAdmin(accessGroup.getName()));
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAdmin(accessGroup.getPrefixName()));
+        final String group = product.additionalAccessGroup();
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.addGroupAdmin(group));
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAdmin(group));
     }
 
 
@@ -244,7 +249,6 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("1536880")
-    @EnabledIfEnv("prod")
     @DisplayName("UI ClickHouse. Мониторинг ОС")
     void monitoringOs() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

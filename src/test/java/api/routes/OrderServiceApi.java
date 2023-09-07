@@ -25,6 +25,9 @@ public class OrderServiceApi implements Api {
     @Route(method = Method.GET, path = "/v1/projects/{project_name}/orders/{id}", status = 200)
     public static Path getV1ProjectsProjectNameOrdersId;
 
+    @Route(method = Method.POST, path = "/v1/projects/{project_name}/orders/set_item_order", status = 201)
+    public static Path postV1ProjectsProjectNameOrdersSetItemOrder;
+
     @Route(method = Method.POST, path = "/v1/projects/{project_name}/orders/{order_id}/create_similar", status = 201)
     public static Path postV1ProjectsProjectNameOrdersOrderIdCreateSimilar;
 
@@ -113,6 +116,12 @@ public class OrderServiceApi implements Api {
     @Route(method = Method.GET, path = "/v1/projects/{project_name}/order_actions", status = 200)
     public static Path getV1ProjectsProjectNameOrderActions;
 
+    @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/snats/{id}", status = 200)
+    public static Path getV1ProjectsProjectNameComputeSnatsId;
+
+    @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/vips/{id}", status = 200)
+    public static Path getV1ProjectsProjectNameComputeVipsId;
+
     @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/backups/{id}", status = 200)
     public static Path getV1ProjectsProjectNameComputeBackupsId;
 
@@ -133,6 +142,12 @@ public class OrderServiceApi implements Api {
 
     @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/volumes/{id}", status = 200)
     public static Path getV1ProjectsProjectNameComputeVolumesId;
+
+    @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/snats", status = 200)
+    public static Path getV1ProjectsProjectNameComputeSnats;
+
+    @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/vips", status = 200)
+    public static Path getV1ProjectsProjectNameComputeVips;
 
     @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/backups", status = 200)
     public static Path getV1ProjectsProjectNameComputeBackups;
@@ -185,6 +200,9 @@ public class OrderServiceApi implements Api {
     @Route(method = Method.POST, path = "/v1/orders/run_maintenance", status = 201)
     public static Path postV1OrdersRunMaintenance;
 
+    @Route(method = Method.POST, path = "/v1/orders/update_tariff_plan_id", status = 201)
+    public static Path postV1OrdersUpdateTariffPlanId;
+
     @Route(method = Method.GET, path = "/v1/orders/geo_distribution_info", status = 200)
     public static Path getV1OrdersGeoDistributionInfo;
 
@@ -193,6 +211,9 @@ public class OrderServiceApi implements Api {
 
     @Route(method = Method.GET, path = "/v1/orders/product_label", status = 200)
     public static Path getV1OrdersProductLabel;
+
+    @Route(method = Method.GET, path = "/v1/orders/check_ip", status = 200)
+    public static Path getV1OrdersCheckIp;
 
     @Route(method = Method.GET, path = "/v1/orders/check_field_uniqueness", status = 200)
     public static Path getV1OrdersCheckFieldUniqueness;
@@ -226,6 +247,9 @@ public class OrderServiceApi implements Api {
     @Route(method = Method.PATCH, path = "/v1/orders/project_orders/{product_name}/actions/{action_name}", status = 200)
     public static Path patchV1OrdersProjectOrdersProductNameActionsActionName;
 
+    @Route(method = Method.POST, path = "/v1/orders/actions", status = 201)
+    public static Path postV1OrdersActions;
+
     @Route(method = Method.GET, path = "/v1/platforms", status = 200)
     public static Path getV1Platforms;
 
@@ -240,6 +264,9 @@ public class OrderServiceApi implements Api {
 
     @Route(method = Method.PATCH, path = "/v1/order_actions", status = 200)
     public static Path patchV1OrderActions;
+
+    @Route(method = Method.GET, path = "/v1/order_actions", status = 200)
+    public static Path getV1OrderActions;
 
     @Route(method = Method.GET, path = "/v1/version", status = 200)
     public static Path getV1Version;

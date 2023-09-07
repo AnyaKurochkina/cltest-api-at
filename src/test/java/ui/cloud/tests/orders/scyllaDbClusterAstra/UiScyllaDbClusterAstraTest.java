@@ -1,22 +1,20 @@
 package ui.cloud.tests.orders.scillaDbClusterAstra;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ScyllaDbCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -32,8 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
 public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
-    ScyllaDbCluster product;
-    //=ScyllaDbCluster.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/ca4a3e5b-17f9-4d19-9c40-9fc3bae634af/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ScyllaDbCluster product; // =ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba6960f7-b68c-4920-8d14-d2819060424f/main?context=proj-ln4zg69jek&type=project&org=vtb");
     String nameDb = "at_db";
     String shortNameUserDB = "at_user";
 
@@ -52,7 +49,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     void orderScyllaDB() {
         double preBillingProductPrice;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .expandProductsList()
@@ -94,6 +91,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("1335489")
     @DisplayName("UI Scylla_db_cluster_astra. Расширить точку монтирования")
@@ -104,6 +102,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("1335485")
     @DisplayName("UI Scylla_db_cluster_astra. Проверить конфигурацию")
@@ -190,7 +189,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
     @Test
     @Order(22)
-    @EnabledIfEnv("prod")
     @TmsLink("1368052")
     @DisplayName("UI Scylla_db_cluster_astra. Мониторинг ОС")
     void monitoringOs() {
@@ -199,26 +197,25 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink(""), @TmsLink("")})
     @Order(25)
     @DisplayName("UI Scylla_db_cluster_astra. Добавление/удаление группы доступа")
     void deleteGroup() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.deleteGroup("superuser");
-        AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        scyllaPage.addGroup("superuser", Collections.singletonList(accessGroup.getPrefixName()));
+        scyllaPage.addGroup("superuser", Collections.singletonList(product.accessGroup()));
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("")
     @Order(26)
     @DisplayName("UI Scylla_db_cluster_astra. Изменение группы доступа")
     void updateGroup() {
-        AccessGroup accessGroupOne = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
-        AccessGroup accessGroupTwo = AccessGroup.builder().name(new Generex("win[a-z]{5,10}").random()).projectName(product.getProjectId()).build().createObject();
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.runActionWithCheckCost(CompareType.EQUALS, () -> scyllaPage.updateGroup("superuser",
-                Arrays.asList(accessGroupOne.getPrefixName(), accessGroupTwo.getPrefixName())));
+                Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
 
     @Test

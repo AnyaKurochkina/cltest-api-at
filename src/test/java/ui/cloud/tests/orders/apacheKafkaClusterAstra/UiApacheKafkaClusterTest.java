@@ -9,7 +9,6 @@ import models.cloud.orderService.products.ApacheKafkaCluster;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.*;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
@@ -49,7 +48,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     void orderApacheKafkaCluster() {
         double preBillingProductPrice;
         try {
-            String accessGroup = product.getAccessGroup();
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
@@ -184,7 +183,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/app", "20", new Table("Роли узла").getRow(0).get()));
     }
 
-
     @Test
     @Order(14)
     @TmsLink("851993")
@@ -306,6 +304,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(26)
     @TmsLink("852012")
     @DisplayName("UI ApacheKafkaCluster.Проверить конфигурацию")
@@ -317,7 +316,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @Order(27)
     @TmsLink("1216972")
-    @EnabledIfEnv("prod")
     @DisplayName("UI ApacheKafkaCluster. Мониторинг ОС")
     void monitoringOs() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);

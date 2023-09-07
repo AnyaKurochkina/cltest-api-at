@@ -8,8 +8,8 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -65,8 +65,8 @@ public class ActionsListPage extends EntityListPage {
         return new DeleteDialog();
     }
 
-    @Step("Открытие формы действия {name}")
-    public ActionPage openActionForm(String name) {
+    @Step("Открытие страницы действия {name}")
+    public ActionPage openActionPage(String name) {
         new Table(NAME_COLUMN).getRowByColumnValue(NAME_COLUMN, name).get().click();
         Waiting.sleep(2000);
         return new ActionPage();

@@ -14,9 +14,9 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.createAction;
-import static steps.productCatalog.ForbiddenActionSteps.createForbiddenAction;
-import static steps.productCatalog.ForbiddenActionSteps.getForbiddenActionById;
+import static steps.productCatalog.ForbiddenActionSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -50,7 +50,7 @@ public class ForbiddenActionTest extends Tests {
                 .init()
                 .toJson();
         String message = createForbiddenAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Значение parent_to_self устарело. Пожалуйста, выберите другое.", message);
+        assertEquals("\"direction\": Значения parent_to_self нет среди допустимых вариантов.", message);
     }
 
     @DisplayName("Проверка имени forbidden action после создания с direction = parent_to_child")
@@ -83,5 +83,22 @@ public class ForbiddenActionTest extends Tests {
                 .toJson();
         ForbiddenAction forbiddenAction = createForbiddenAction(json).assertStatus(201).extractAs(ForbiddenAction.class);
         assertEquals(action.getName() + "__" + forbiddenAction.getDirection(), forbiddenAction.getName());
+    }
+
+    @DisplayName("Копирование forbidden action по id")
+    @TmsLink("SOUL-7075")
+    @Test
+    public void copyByIdForbiddenActionTest() {
+        ForbiddenAction forbiddenAction = ForbiddenAction.builder()
+                .title("copy_by_id_forbidden_action_test_api")
+                .build()
+                .createObject();
+        String direction = "child_to_parent";
+        Action action1 = createAction();
+        ForbiddenAction copiedForbiddenAction = copyForbiddenActionById(forbiddenAction.getId(), new JSONObject()
+                .put("action_id", action1.getActionId())
+                .put("direction", direction));
+        assertTrue(isForbiddenActionExists(copiedForbiddenAction.getName()));
+        assertEquals(action1.getName() + "__" + direction, copiedForbiddenAction.getName());
     }
 }

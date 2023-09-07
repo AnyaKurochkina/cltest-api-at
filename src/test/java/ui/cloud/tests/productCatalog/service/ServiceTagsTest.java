@@ -39,7 +39,7 @@ public class ServiceTagsTest extends ServiceBaseTest {
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME);
         addTag(tagName, new String[]{"10.226.3.74", "10.226.3.75"});
-        deleteTag(tagName);
+        deleteServiceTag(tagName);
         addExcludeTag(excludeTagName, new String[]{"windows", "linux"});
         deleteExcludeTag(excludeTagName);
     }
@@ -76,9 +76,9 @@ public class ServiceTagsTest extends ServiceBaseTest {
                 .saveWithPatchVersion();
     }
 
-    private void deleteTag(String tagName) {
+    private void deleteServiceTag(String tagName) {
         new ServicePage()
-                .deleteTag(tagName)
+                .deleteServiceTag(tagName)
                 .checkTagsTableIsEmpty()
                 .checkDataSourceDoesNotContainValue(tagName)
                 .saveWithPatchVersion();

@@ -11,9 +11,7 @@ import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.opentest4j.TestAbortedException;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 import steps.references.ReferencesStep;
 
 import java.net.ConnectException;
@@ -106,7 +104,7 @@ public class ClickHouseCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         Flavor flavorCh = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:clickhouse:" + envType() + ":" + getEnv().toLowerCase()).get(0);
         Flavor flavorZk = ReferencesStep.getFlavorsByPageFilterLinkedList(this, "flavor:cluster:zookeeper:" + envType() + ":" + getEnv().toLowerCase()).get(0);
         return JsonHelper.getJsonTemplate(jsonTemplate)

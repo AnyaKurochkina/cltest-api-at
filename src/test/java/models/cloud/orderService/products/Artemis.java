@@ -20,7 +20,6 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -82,7 +81,7 @@ public class Artemis extends IProduct {
     }
 
     public JSONObject toJson() {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -93,7 +92,7 @@ public class Artemis extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.artemis_version", artemisVersion)
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
                 .set("$.order.project_name", getProjectId())
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.layout", getIdGeoDistribution("artemis-2:artemis-2", envType().toUpperCase(), "artemis", org.getName()))

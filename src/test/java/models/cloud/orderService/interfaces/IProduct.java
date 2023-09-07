@@ -25,13 +25,13 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.portalBack.AccessGroup;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.function.Executable;
 import org.opentest4j.TestAbortedException;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
@@ -140,19 +140,52 @@ public abstract class IProduct extends Entity {
         save();
     }
 
-    public String getAccessGroup() {
-        return PortalBackSteps.getAccessGroupByDesc(projectId, "AT-ORDER");
+    public String accessGroup(String type, String desc) {
+        String accessGroupId;
+        try {
+            accessGroupId = PortalBackSteps.getAccessGroupByDesc(projectId, desc, type, domain);
+        } catch (NullPointerException ignored) {
+            AccessGroup accessGroup = AccessGroup.builder().projectName(projectId).description(desc).accountsType(type).domain(domain).build().createObject();
+            accessGroupId = accessGroup.getPrefixName();
+        }
+        return accessGroupId;
+    }
+
+    public String accessGroup() {
+        return accessGroup("personal", "AT-ORDER");
+    }
+
+    public String additionalAccessGroup() {
+        return accessGroup("personal", "AT-ORDER-2");
     }
 
     protected String state(String name){
         return (String) OrderServiceSteps.getProductsField(this, String.format(STATE_PATH, name));
     }
 
-    @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
+    @Step("Получение Id geoDistribution у продукта '{name}' с тегами '{tags}'")
     protected String getIdGeoDistribution(String name, String... tags) {
         StringJoiner tagsJoiner = new StringJoiner(",");
         Arrays.stream(tags).forEach(tagsJoiner::add);
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tagsJoiner))
+                .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
+    }
+
+    private String replaceGraphParams(String str){
+        return str.replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
+                .replace("${context::formData.platform}", getPlatform())
+                .replace("${context::projectInfo.organization}", ((Organization) Organization.builder().build().createObject()).getName())
+                .replace("${context::formData.default_nic.net_segment}", getSegment());
+    }
+
+    @SneakyThrows
+    @Step("Получение Id geoDistribution у продукта '{name}'")
+    protected String getIdGeoDistribution(String name) {
+        Product productResponse = getProductByCloudAdmin(getProductId());
+        Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
+        String tags = replaceGraphParams(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("layout")))
+                .getString("'ui:options'.attrs.tags__contains"));
+        return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tags))
                 .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
     }
 
@@ -189,7 +222,7 @@ public abstract class IProduct extends Entity {
     }
 
     public void checkUserGroupBySsh() {
-        String accessGroup = getAccessGroup();
+        String accessGroup = accessGroup();
         assertContains(executeSsh("sudo -u root realm list"), accessGroup);
         assertContains(executeSsh("sudo -u root ls /etc/sudoers.d"), String.format("group_superuser_%s", accessGroup));
     }
@@ -200,13 +233,13 @@ public abstract class IProduct extends Entity {
     }
 
     public String executeSsh(String cmd) {
-        return executeSsh(new SshClient((String) OrderServiceSteps.getProductsField(this, VM_IP_PATH), envType()), cmd);
+        return executeSsh(SshClient.builder().host(OrderServiceSteps.getProductsField(this, VM_IP_PATH).toString()).env(envType()).build(), cmd);
     }
 
     public void addLinkProduct() {
         if (Objects.nonNull(getOrderId())) {
             if (StepsAspects.getCurrentStep().get() != null) {
-                Organization org = Organization.builder().build().createObject();
+                Organization org = Organization.builder().type("default").build().createObject();
                 StepsAspects.getCurrentStep().get().addLinkItem(
                         new LinkItem("Product URL", String.format("%s/vm/orders/%s/main?context=%s&type=project&org=%s",
                                 Configure.getAppProp("base.url"), getOrderId(), getProjectId(), org.getName()), "", LinkType.RELATED));
@@ -290,7 +323,7 @@ public abstract class IProduct extends Entity {
     @Step("Удаление продукта")
     protected void delete(String action) {
         if (envType().contains("prod")) {
-            OrderServiceSteps.switchProtect(this, false);
+            OrderServiceSteps.switchProtect(getOrderId(), getProjectId(), false);
         }
         OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
@@ -328,12 +361,11 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action, Flavor flavor) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + "}"), this.getProjectId());
+        OrderServiceSteps.executeAction(action, this, new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true), this.getProjectId());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
         Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
-
     }
 
     //example: https://cloud.vtb.ru/vm/orders/ecb3567b-afa6-43a4-8a49-6e0ef5b1a952/topics?context=proj-7ll0yy5zsc&type=project&org=vtb
@@ -494,14 +526,13 @@ public abstract class IProduct extends Entity {
     }
 
     public boolean isDev() {
-        return envType().contains("dev");
+        return envType().equalsIgnoreCase("dev");
     }
     public boolean isTest() {
-        return envType().contains("test");
+        return envType().equalsIgnoreCase("test");
     }
-
     public boolean isProd() {
-        return envType().contains("prod");
+        return envType().equalsIgnoreCase("prod");
     }
 
     public String envType() {

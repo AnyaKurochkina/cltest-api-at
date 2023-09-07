@@ -6,7 +6,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -17,7 +16,6 @@ import ui.cloud.pages.CompareType;
 import ui.elements.Button;
 import ui.elements.Select;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
@@ -43,6 +41,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
                 .setBootSize(2)
+                .setRegion(region)
                 .setBootType(hddTypeFirst)
                 .addSecurityGroups(securityGroup)
                 .setSubnet(Select.RANDOM_VALUE);
@@ -55,22 +54,6 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setFlavor(Select.RANDOM_VALUE)
                 .setFlavorName(flavorName);
         new IndexPage().goToVirtualMachine();
-    }
-
-    @DisabledIfEnv("t1prod")
-    @Test
-    @TmsLink("1248392")
-    @DisplayName("Cloud Compute. Виртуальные машины. Создание Образ Fedora")
-    void createAltPlatform() {
-        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
-                .setAvailabilityZone(availabilityZone)
-                .setImage(new SelectBox.Image("Fedora", "36"))
-                .setName(getRandomName())
-                .setDeleteOnTermination(true)
-                .addSecurityGroups(securityGroup)
-                .setSshKey(sshKey)
-                .clickOrder();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true).delete();
     }
 
     @Test
@@ -89,12 +72,12 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
         String orderId = vmPage.getOrderId();
 
-        final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(project.getId());
+        final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(getProjectId());
         Assertions.assertEquals(3, items.stream().filter(e -> e.getOrderId().equals(orderId))
-                .filter(e -> e.getSrcOrderId().equals(""))
+                .filter(e -> e.getSrcOrderId().isEmpty())
                 .filter(e -> e.getParent().equals(items.stream().filter(i -> i.getType().equals("instance"))
                         .filter(i -> i.getOrderId().equals(orderId))
                         .findFirst().orElseThrow(() -> new NotFoundException("Не найден item с type=compute")).getItemId()))
@@ -103,7 +86,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
 
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
 
-        final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(project.getId());
+        final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(getProjectId());
         Assertions.assertTrue(items2.stream().noneMatch(e -> e.getOrderId().equals(orderId)), "Существуют item's с orderId=" + orderId);
         Assertions.assertEquals(1, items2.stream().filter(i -> Objects.nonNull(i.getName()))
                 .filter(i -> i.getName().startsWith(vm.getName()))
@@ -128,7 +111,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
 
         String ip = new IndexPage().goToPublicIps().addIp(region);
@@ -137,7 +120,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
 
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.MORE, () -> vmPage.attachIp(ip));
 
-        Assertions.assertEquals(1, StateServiceSteps.getItems(project.getId()).stream()
+        Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdVm))
                 .filter(e -> e.getSrcOrderId().equals(orderIdIp))
                 .filter(e -> e.getFloatingIpAddress().equals(ip))

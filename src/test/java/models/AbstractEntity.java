@@ -8,11 +8,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static models.AbstractEntity.Mode.AFTER_CLASS;
+import static models.AbstractEntity.Mode.AFTER_TEST;
 import static models.ObjectPoolService.awaitTerminationAfterShutdown;
 
 public abstract class AbstractEntity {
     @SuppressWarnings("unchecked")
     private static final Map<Long, Set<AbstractEntity>>[] entities = new ConcurrentHashMap[10];
+    private Mode mode = AFTER_TEST;
+
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractEntity> T setMode(Mode mode) {
+        this.mode = mode;
+        return (T) this;
+    }
 
     protected int getPriority() {
         return 0;
@@ -39,12 +48,14 @@ public abstract class AbstractEntity {
 
     abstract public void delete();
 
-    public static void deleteCurrentTestEntities() {
+    private static void deleteCurrentThreadEntities(Mode mode) {
         for (Map<Long, Set<AbstractEntity>> map : entities) {
             ExecutorService threadPool = Executors.newFixedThreadPool(5);
             Iterator<AbstractEntity> iterator = map.getOrDefault(Thread.currentThread().getId(), new HashSet<>()).iterator();
             while (iterator.hasNext()) {
                 AbstractEntity entity = iterator.next();
+                if (entity.mode != mode)
+                    continue;
                 threadPool.submit(() -> deleteEntity(entity));
                 iterator.remove();
             }
@@ -52,7 +63,24 @@ public abstract class AbstractEntity {
         }
     }
 
+    /**
+     * Только для SAME_THREAD классов
+     */
+    public static void deleteCurrentClassEntities() {
+        deleteCurrentThreadEntities(AFTER_CLASS);
+    }
+
+    public static void deleteCurrentTestEntities() {
+        deleteCurrentThreadEntities(AFTER_TEST);
+    }
+
     public static void addEntity(AbstractEntity e) {
         entities[e.getPriority()].computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(e);
+    }
+
+    public enum Mode {
+        AFTER_TEST,
+        AFTER_CLASS,
+        AFTER_RUN
     }
 }

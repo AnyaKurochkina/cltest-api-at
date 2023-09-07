@@ -7,7 +7,6 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -23,12 +22,12 @@ import static core.helper.StringUtils.format;
 @Getter
 public class EntityListPage {
 
-    protected static final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
-    protected static final SelenideElement importButton = $x("//button[.='Импорт']");
-    protected static final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
     private static final SelenideElement lastPageButton = $x("//span[@title='В конец']/button");
     private static final SelenideElement copyAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Создать копию']");
     private static final SelenideElement deleteAction = $x("//div[@role='list'][not(@aria-hidden)]//li[.='Удалить']");
+    protected final SelenideElement importButton = $x("//button[.='Импорт']");
+    protected final SelenideElement nextPageButton = $x("//span[@title='Вперед']/button");
+    protected final Button addNewObjectButton = Button.byXpath("//div[@data-testid = 'add-button']//button");
     protected final Button nextPageButtonV2 = Button.byAriaLabel("Следующая страница, выбрать");
     protected final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
     protected final Button createButton = Button.byText("Создать");
@@ -43,6 +42,7 @@ public class EntityListPage {
     protected final Input searchInput = Input.byPlaceholder("Поиск");
     private final Select recordsPerPageSelect = Select.byXpath("//div[div[contains(text(),'строк на странице ')]]");
     private final Select recordsPerPageSelectV2 = Select.byXpath("//div[text()='Записей на странице:']");
+    private final Button groupOperationsButton = Button.byText("Групповые операции");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -189,8 +189,17 @@ public class EntityListPage {
     }
 
     @Step("Задание в строке поиска значения '{value}'")
-    protected void search(String value) {
+    public void search(String value) {
         searchInput.setValue(value);
         Waiting.sleep(1000);
+    }
+
+    @Step("Импорт объекта из файла '{path}'")
+    public EntityListPage importObject(String path) {
+        importButton.click();
+        new FileImportDialog(path).importFileAndSubmit();
+        Alert.green("Импорт выполнен успешно");
+        closeButton.click();
+        return this;
     }
 }

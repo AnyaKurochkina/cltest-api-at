@@ -9,8 +9,8 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.template.TemplatePage;
 import ui.cloud.pages.productCatalog.template.TemplatesListPage;
@@ -46,8 +46,7 @@ public class DeleteTemplateTest extends TemplateBaseTest {
         new ControlPanelIndexPage().goToTemplatesPage()
                 .findAndOpenTemplatePage(NAME)
                 .openDeleteDialog()
-                .inputInvalidId("test")
-                .inputValidIdAndDelete();
+                .submitAndDelete("Удаление выполнено успешно");
         new TemplatesListPage()
                 .checkTemplateNotFound(NAME);
     }
@@ -78,13 +77,13 @@ public class DeleteTemplateTest extends TemplateBaseTest {
         new ControlPanelIndexPage().goToTemplatesPage()
                 .findTemplateByValue(NAME, template);
         EntityListPage.delete(nameColumn, template.getName());
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
+        new DeleteDialog().submitAndCheckNotDeletable(alertText);
         goToUsageButton.click();
         new Alert().close();
         TemplatePage page = new TemplatePage();
         page.checkTabIsSelected("Использование");
         page.getDeleteButton().click();
-        new DeleteDialog().inputValidIdAndDeleteNotAvailable(alertText);
+        new DeleteDialog().submitAndCheckNotDeletable(alertText);
         goToUsageButton.click();
         page.checkTabIsSelected("Использование");
     }

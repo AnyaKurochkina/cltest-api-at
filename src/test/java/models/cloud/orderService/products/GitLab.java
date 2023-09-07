@@ -78,7 +78,7 @@ public class GitLab extends IProduct {
 
     @Step("Добавить участника к группе GitLab")
     public void addUser(String userName, String accessLevel) {
-        JSONArray users = new JSONArray(AuthorizerSteps.findUsers(userName, Organization.builder().build().createObject()));
+        JSONArray users = new JSONArray(AuthorizerSteps.findUsers(userName, Organization.builder().type("default").build().createObject()));
         Iterator<Object> iterator = users.iterator();
         while (iterator.hasNext()) {
             JSONObject user = (JSONObject) iterator.next();

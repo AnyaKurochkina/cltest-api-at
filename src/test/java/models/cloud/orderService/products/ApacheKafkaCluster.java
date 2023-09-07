@@ -12,13 +12,12 @@ import models.Entity;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import models.cloud.subModels.KafkaTopic;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
-import steps.portalBack.PortalBackSteps;
+import steps.references.ReferencesStep;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -78,7 +77,7 @@ public class ApacheKafkaCluster extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -87,8 +86,8 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)
-                .set("$.order.attrs.layout", getIdGeoDistribution("kafka-4:zookeeper-3", envType().toUpperCase(), "kafka", org.getName()))
-                .set("$.order.attrs.ad_logon_grants[0].groups[0]", getAccessGroup())
+                .set("$.order.attrs.layout", getIdGeoDistribution("kafka-4:zookeeper-3"))
+                .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .remove("$.order.attrs.ad_logon_grants", !isDev())
                 //Fix
@@ -164,6 +163,18 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void resize() {
         resize("kafka_resize_cluster_vms");
+    }
+
+    @Override
+    protected void resize(String action) {
+        List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
+        Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
+        Flavor flavor = list.get(list.size() - 1);
+        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
+        int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
+        int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
+        Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
+        Assertions.assertEquals(flavor.data.memory, memoryAfter, "Конфигурация ram не изменилась или изменилась неверно");
     }
 
     public void createAcl(String topicName, KafkaRoles role) {

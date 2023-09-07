@@ -1,7 +1,10 @@
 package ui.cloud.tests;
 
 import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.enums.Role;
+import core.helper.DataFileHelper;
 import io.qameta.allure.TmsLink;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,10 +13,12 @@ import models.cloud.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import api.Tests;
+import org.openqa.selenium.JavascriptExecutor;
 import ui.cloud.pages.CloudLoginPage;
 import ui.extesions.ConfigExtension;
 
 import java.awt.*;
+import java.util.UUID;
 
 @Log4j2
 //@ExtendWith(CustomBeforeAllAndAfterAll.class)
@@ -32,20 +37,14 @@ public class UiTest extends Tests {
     }
 
 
+
+
     @Test
     void name() {
         new CloudLoginPage().signIn(Role.CLOUD_ADMIN);
-//        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
-        Selenide.open("https://prod-portal-front.cloud.vtb.ru/compute/orders/85b89f80-e889-490a-8cea-e144e6fe664d/monitoring?context=proj-1oob0zjo5h&type=project&org=vtb");
-//        Table.getTableByColumnName("Дата запуска");
+        Selenide.open("https://ift1-portal-front.apps.cloud.k8s.test.01.vmw.t1.loc/cloudcompute/networks?context=proj-y08lm6h7t9&type=project&org=ift");
         System.out.println(1);
-
-//        Selenide.$x("//canvas");
-//        new Graph().getNodeCoordinates();
-
-
-        System.out.println(1);
-
+        ((JavascriptExecutor) WebDriverRunner.getWebDriver()).executeScript("document.title = arguments[0]", UUID.randomUUID().toString());
     }
 
     @Test

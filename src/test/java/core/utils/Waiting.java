@@ -2,6 +2,7 @@ package core.utils;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.openqa.selenium.StaleElementReferenceException;
 import ui.elements.TypifiedElement;
 
 import java.time.Duration;
@@ -24,11 +25,11 @@ public class Waiting {
     /**
      * Заснуть на таймаут
      *
-     * @param timeout Время ожидания.
+     * @param millis Время ожидания в мс
      */
-    public static void sleep(int timeout) {
+    public static void sleep(int millis) {
         try {
-            Thread.sleep(timeout);
+            Thread.sleep(millis);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -51,7 +52,9 @@ public class Waiting {
     public static void find(Supplier<Boolean> b, Duration duration, String message) {
         Instant start = Instant.now();
         while (duration.compareTo(Duration.between(start, Instant.now())) > 0) {
-            if (b.get()) return;
+            try {
+                if (b.get()) return;
+            } catch (StaleElementReferenceException ignore) {}
             Waiting.sleep(300);
         }
         throw new TimeoutException(message + ", duration: " + duration);

@@ -7,6 +7,7 @@ import core.utils.Waiting;
 import io.restassured.RestAssured;
 import io.restassured.builder.MultiPartSpecBuilder;
 import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.config.HttpClientConfig;
 import io.restassured.config.SSLConfig;
 import io.restassured.specification.RequestSpecification;
 import io.restassured.specification.SpecificationQuerier;
@@ -15,6 +16,7 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URLEncodedUtils;
 import org.apache.http.conn.ssl.TrustAllStrategy;
+import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.json.JSONObject;
 import org.junit.TestsExecutionListener;
@@ -251,7 +253,7 @@ public class Http {
     @SneakyThrows
     @SuppressWarnings("deprecation")
     Response filterRequest() {
-        Assertions.assertTrue(host.length() > 0, "Не задан host");
+        Assertions.assertFalse(host.isEmpty(), "Не задан host");
         int status = 0;
 //        host = StringUtils.findByRegex("(.*//[^/]*)/", host + path);
 //        path = url.getFile();
@@ -265,7 +267,9 @@ public class Http {
             specification = RestAssured.given()
                     .spec(build.build())
                  //   .filter(new SwaggerCoverage())
-                    .config(RestAssured.config().sslConfig(sslConfig))
+                    .config(RestAssured.config().sslConfig(sslConfig).httpClient(HttpClientConfig.httpClientConfig()
+                            .setParam(CoreConnectionPNames.CONNECTION_TIMEOUT, 120000)
+                            .setParam(CoreConnectionPNames.SO_TIMEOUT, 120000)))
                     .contentType(contentType)
                     .headers(headers)
                     .header("Accept", "application/json, text/plain, */*");
@@ -273,14 +277,14 @@ public class Http {
             if (isUsedToken) {
                 if (isFixedRole())
                     token = "bearer " + KeyCloakSteps.getUserToken(fixedRole.get());
-                if (token.length() == 0) {
+                if (token.isEmpty()) {
                     Assertions.assertNotNull(role, "Не задана роль для запроса");
                     token = "bearer " + KeyCloakSteps.getUserToken(role);
                 }
                 specification.header("Authorization", token);
             }
             SEMAPHORE.tryAcquire(1, TimeUnit.MINUTES);
-            if (field.length() > 0) {
+            if (!field.isEmpty()) {
                 String mimeType = URLConnection.guessContentTypeFromName(fileName);
                 if (Objects.isNull(mimeType))
                     mimeType = "application/octet-stream";
