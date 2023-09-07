@@ -70,6 +70,7 @@ public class FolderActionTest extends Tests {
                 .createFolder(folderName)
                 .selectContext(folderName)
                 .deleteFolder(folderName);
-        new Alert().check(Alert.Color.GREEN, "Выбран контекст:");
+        Alert.green("Выбран контекст:");
+
     }
 }
