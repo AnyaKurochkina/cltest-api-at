@@ -11,6 +11,7 @@ import java.util.List;
 import static steps.references.ReferencesStep.*;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tag("health_check")
 @Tag("references")
 public class ReferencesPageBaseTest extends Tests {
 

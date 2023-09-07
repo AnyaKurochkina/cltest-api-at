@@ -38,6 +38,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(2)
     @TmsLink("996161")
     @DisplayName("Создание Группы доступа vlt")
@@ -46,6 +47,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(3)
     @TmsLink("648626")
     @DisplayName("Редактирование группы доступа")
@@ -66,6 +68,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(5)
     @TmsLink("377440")
     @DisplayName("Добавление пользователя в группу доступа для среды DEV")
@@ -75,6 +78,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(6)
     @TmsLink("377441")
     @DisplayName("Удаление пользователя из группы доступа")
@@ -86,6 +90,7 @@ public class AccessGroupTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(7)
     @TmsLink("377439")
     @MarkDelete

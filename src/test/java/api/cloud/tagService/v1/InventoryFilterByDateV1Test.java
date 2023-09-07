@@ -29,6 +29,7 @@ public class InventoryFilterByDateV1Test extends AbstractTagServiceTest {
 
     //GTE(">="), GT(">"), LT("<"), LTE("<=");
     @Test
+    @org.junit.jupiter.api.Tag("health_check")
     @TmsLink("1623788")
     @DisplayName("Inventory. Фильтр V1. created_at = lt & gte")
     void findInventoriesByCreatedAtLtAndGte() {
