@@ -380,7 +380,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
 
     public void openWebInterface() throws MalformedURLException, InterruptedException {
         Selenide.open("https://dlzorg-wfc001lk.corp.dev.vtb:9993/management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
-        Selenide.open("https://dlzorg-wfc001lk.corp.dev.vtb:9993/");
+        TypifiedElement.open("https://dlzorg-wfc001lk.corp.dev.vtb:9993/");
         assertContains("Deployments");
     }
 
