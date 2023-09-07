@@ -56,8 +56,6 @@ public class ApacheKafkaCluster extends IProduct {
             productName = "Apache Kafka Cluster Astra";
         }
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (kafkaVersion == null)
@@ -71,6 +69,8 @@ public class ApacheKafkaCluster extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

@@ -57,8 +57,6 @@ public class Artemis extends IProduct {
         if (productName == null)
             productName = "VTB Artemis";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (artemisVersion == null)
@@ -71,6 +69,8 @@ public class Artemis extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

@@ -48,8 +48,6 @@ public class RabbitMQClusterAstra extends IProduct {
         productName = "RabbitMQ Cluster Astra";
         role = "manager";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if(segment == null)
@@ -60,6 +58,8 @@ public class RabbitMQClusterAstra extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 
