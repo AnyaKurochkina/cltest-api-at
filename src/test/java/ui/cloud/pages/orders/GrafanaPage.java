@@ -59,6 +59,10 @@ public class GrafanaPage extends IProductPage {
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
+    public void updateOs() {
+        new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
+    }
 
     public void changeConfiguration() {
         new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -75,8 +79,8 @@ public class GrafanaPage extends IProductPage {
     }
 
     public void delete() {
-        new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
-        runActionWithParameters(BLOCK_VM, "Удалить", "Удалить", () ->
+        //new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
+        runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
@@ -175,7 +179,7 @@ public class GrafanaPage extends IProductPage {
     }
     public void resetPassword() {
         new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getActionsMenuButton("default",2), "Сбросить пароль", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("Пользователи",1), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -190,6 +194,7 @@ public class GrafanaPage extends IProductPage {
             Dialog dlg = Dialog.byTitle("Выпустить клиентский сертификат");
             dlg.setInputValue("Клиентская часть имени сертификата", nameCertificate);
             generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
         });
     }
 

@@ -14,6 +14,14 @@ import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.exist;
 import static org.openqa.selenium.support.Color.fromString;
 
+/**
+ * Элемент всплывающее окно
+ * Пример:
+ * <blockquote><pre>
+ *     Alert.green("Текст")
+ * </blockquote></pre>
+ * Дождется всплывающее окно, проверит его зеленый цвет окна, соответствие тексту и закроет его
+ **/
 public class Alert implements TypifiedElement {
     SelenideElement element;
 
@@ -69,7 +77,7 @@ public class Alert implements TypifiedElement {
     }
 
     @Step("Проверка на отсутствие красных алертов")
-    public static void  checkNoRedAlerts() {
+    public static void checkNoRedAlerts() {
         SelenideElement element = new Alert().getElement();
         if (exist(element, Duration.ofSeconds(3)))
             Assertions.assertNotEquals(fromString(element.getCssValue("border-bottom-color")).asHex(), Color.RED.getColor());
@@ -79,7 +87,7 @@ public class Alert implements TypifiedElement {
     @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
         try {
-            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(5));
+            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(15));
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }
@@ -87,11 +95,11 @@ public class Alert implements TypifiedElement {
         }
     }
 
+    @Getter
     public enum Color {
         RED("#d92020"),
         GREEN("#1ba049");
-        @Getter
-        String color;
+        final String color;
 
         public String getValue() {
             return color;

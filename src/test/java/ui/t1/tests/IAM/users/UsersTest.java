@@ -5,7 +5,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
-import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -39,7 +38,6 @@ public class UsersTest extends AbstractIAMTest {
     @TmsLinks({@TmsLink("538813"), @TmsLink("536159")})
     @DisplayName("Пользователи. Добавление/Отзыв прав в организацию.")
     void addUserToOrganizationTest() {
-        Organization organization = Organization.builder().build().createObject();
         new IndexPage()
                 .goToUsers()
                 .changeContext("organization", organization.getName(), organization.getTitle())
@@ -91,7 +89,6 @@ public class UsersTest extends AbstractIAMTest {
     @TmsLink("511113")
     @DisplayName("Пользователи. Просмотр списка пользователей в контексте организации.")
     void userListByOrganizationContextTest() {
-        Organization organization = Organization.builder().build().createObject();
         new IndexPage()
                 .goToUsers()
                 .changeContext("organization", organization.getName(), organization.getTitle())

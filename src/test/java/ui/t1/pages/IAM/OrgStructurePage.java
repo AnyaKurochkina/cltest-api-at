@@ -2,21 +2,58 @@ package ui.t1.pages.IAM;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.Alert;
+import ui.elements.Button;
 import ui.elements.Dialog;
 import ui.elements.Table;
+import ui.t1.pages.ContextDialog;
 
-import static com.codeborne.selenide.Selenide.$x;
+import java.util.List;
+
+import static api.Tests.activeCnd;
+import static api.Tests.clickableCnd;
 
 public class OrgStructurePage {
-    SelenideElement createAction = $x("//div[text() = 'Создать проект']");
-    SelenideElement createFolderAction = $x("//div[text() = 'Создать папку']");
-    SelenideElement selectContextAction = $x("//div[text() = 'Выбрать контекст']");
-    SelenideElement deleteAction = $x("//div[text() = 'Удалить']");
-    SelenideElement editAction = $x("//div[text() = 'Редактировать']");
+    SelenideElement createAction = StringUtils.$x("//div[text() = 'Создать проект']");
+    SelenideElement createFolderAction = StringUtils.$x("//div[text() = 'Создать папку']");
+    SelenideElement selectContextAction = StringUtils.$x("//div[text() = 'Выбрать контекст']");
+    SelenideElement deleteAction = StringUtils.$x("//div[text() = 'Удалить']");
+    SelenideElement editAction = StringUtils.$x("//div[text() = 'Редактировать']");
+    Button settings = Button.byXpath("//*[@data-dimension = 's']");
+    SelenideElement changeContext = StringUtils.$x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
+
+    public OrgStructurePage() {
+        StringUtils.$x("//span[text() = 'Организационная структура']")
+                .shouldBe(Condition.visible);
+    }
+
+    @Step("Открыть настройки таблицы")
+    public TableSettingsDialog openTableSettings() {
+        settings.click();
+        return new TableSettingsDialog("Настройки таблицы");
+    }
+
+    @Step("Переход в модальное окно изменения контекста")
+    public ContextDialog goToContextDialog() {
+        changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
+        return new ContextDialog();
+    }
+
+    @Step("Раскрытие списка действий у организации")
+    public OrgStructurePage expandOrgActions() {
+        new OrgTable().getRow(0).get().$x(".//button[@id='actions-menu-button']").click();
+        createAction.shouldBe(Condition.visible).click();
+        return this;
+    }
+
+    @Step("Проверка отсутсвия действия {actionName} у организации")
+    public Boolean isActionExist(String actionName) {
+        return StringUtils.$x("//div[text() = '{}']", actionName).exists();
+    }
 
     @Step("Создание проекта с именем {name}")
     public OrgStructurePage createProject(String name) {
@@ -127,6 +164,11 @@ public class OrgStructurePage {
         return this;
     }
 
+    @Step("Получение заголовков таблицы")
+    public List<String> getTableHeaders() {
+        return new OrgTable().getNotEmptyHeaders();
+    }
+
     @Step("Проверка существования проекта с именем {name}")
     public boolean isProjectExist(String name) {
         return new OrgTable().isColumnValueEquals("Название", name);
@@ -140,7 +182,7 @@ public class OrgStructurePage {
     private static class OrgTable extends Table {
 
         public OrgTable() {
-            super($x("//table[thead/tr/td[.='Название']]"));
+            super("Название");
         }
     }
 }

@@ -206,7 +206,8 @@ public class OrderServiceSteps extends Steps {
 
     public static void switchProtect(String orderId, String projectId, boolean value) {
         Assertions.assertEquals(!value, new Http(OrderServiceURL)
-                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+//                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                .setRole(CLOUD_ADMIN)
                 .body(new JSONObject().put("order", new JSONObject().put("deletable", !value)))
                 .patch("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
@@ -357,7 +358,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение домена для сегмента сети")
     public static String getDomain(IProduct product) {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         return new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
@@ -371,7 +372,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение домена для проекта {project}")
     public static String getDomainByProject(String project) {
-        Organization organization = Organization.builder().build().createObject();
+        Organization organization = Organization.builder().type("default").build().createObject();
         if (Configure.ENV.equals("ift")) {
             return new Http(OrderServiceURL)
                     .setRole(ORDER_SERVICE_ADMIN)
@@ -392,25 +393,27 @@ public class OrderServiceSteps extends Steps {
     public static String getDataCentre(IProduct product) {
         String dc = "5";
         log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
                         product.getSegment(),
                         org.getName(),
-                        product.getProductCatalogName())
+                        product.getProductCatalogName(),
+                        product.getProjectId())
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list.findAll{it.status == 'available'}.code");
         if (list.contains(dc))
             return dc;
+        Assertions.assertFalse(list.isEmpty(), "Список available ДЦ пуст");
         return list.get(new Random().nextInt(list.size()));
     }
 
     public static String getPlatform(IProduct product) {
         String platform = "OpenStack";
         log.info("Получение Платформы для ДЦ {} и сегмента {}", product.getDataCentre(), product.getSegment());
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/platforms?net_segment_code={}&data_center_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",

@@ -23,8 +23,12 @@ public class RouterList extends IProductListT1Page {
         return new Router();
     }
 
-    public Menu getMenuRouter(SelenideElement btn) {
-        return new Menu(btn);
+    public Menu getMenuRouter(String name) {
+        return getMenuRouter(new RouterTable().getRowByColumnValue(Column.NAME, name).getElementLastColumn().$("button"));
+    }
+
+    public Menu getMenuRouter(SelenideElement element) {
+        return new Menu(element);
     }
 
     public class Menu {

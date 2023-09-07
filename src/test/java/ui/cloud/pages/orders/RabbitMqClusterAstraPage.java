@@ -6,6 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.helper.Configure;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.RabbitMQClusterAstra;
+import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
@@ -36,6 +37,8 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String HEADER_DB_USERS = "ch_customer";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
+    SelenideElement cpu = $x("(//h5)[1]");
+    SelenideElement ram = $x("(//h5)[2]");
 
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
@@ -128,13 +131,29 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         });
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+    @Step("Вертикальное масштабирование")
+    public void verticalScaling() {
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        Flavor maxFlavor = product.getMaxFlavor();
+        runActionWithParameters(BLOCK_CLUSTER, "Вертикальное масштабирование", "Подтвердить", () -> {
+            Dialog dlg = Dialog.byTitle("Вертикальное масштабирование");
+            dlg.setInputValue("Размер, Гб", "50");
+            Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
+            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+        });
+        btnGeneralInfo.click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
+        Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
+        Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
+        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
 
     public void addUser(String nameUser) {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser))) {
             runActionWithParameters(BLOCK_USERS, "Создать пользователя", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Создать пользователя");
-                dlg.setInputValue("Имя пользователя", nameUser);
+                dlg.setInputValue("Введите имя пользователя", nameUser);
             });
             btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser), "Пользователь не существует");
@@ -145,7 +164,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_USERS, "Создать пользователя", "Отмена", () -> {
             Dialog dlg = Dialog.byTitle("Создать пользователя");
-            dlg.setInputValue("Имя пользователя", nameUser);
+            dlg.setInputValue("Введите имя пользователя", nameUser);
             assertContains("Имя пользователя должно быть уникальным");
         }, ActionParameters.builder().checkAlert(false).build());
     }
@@ -162,7 +181,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         if (!(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost))) {
             runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Создать виртуальные хосты", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Создать виртуальные хосты");
-                dlg.setInputValue("Имя виртуального хоста", nameHost);
+                dlg.setInputValue("Введите имя виртуального хоста", nameHost);
             });
             btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost), "Ошибка создания вируалного хоста");
@@ -173,7 +192,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Создать виртуальные хосты", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Создать виртуальные хосты");
-            dlg.setInputValue("Имя виртуального хоста", nameHost);
+            dlg.setInputValue("Введите имя виртуального хоста", nameHost);
         });
         btnGeneralInfo.click();
         Assertions.assertTrue(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost), "Ошибка создания вируалного хоста");
@@ -183,7 +202,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Удалить виртуальные хосты", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Удалить виртуальные хосты");
-            Select.byXpath("descendant::div[label[starts-with(.,'Удаление виртуальных хостов')]]/div/input").set(nameHost);
+            Select.byLabel("Выберите хосты для удаления").set(nameHost);
         });
         btnGeneralInfo.click();
         Assertions.assertFalse(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost), "Ошибка удаления вируалного хоста");

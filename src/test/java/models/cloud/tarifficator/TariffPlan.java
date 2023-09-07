@@ -61,7 +61,7 @@ public class TariffPlan extends Entity {
             oldTariffPlanId = activeTariff.getId();
         }
         if (!base && organizationName == null) {
-            organizationName = ((Organization) Organization.builder().build().createObject()).getName();
+            organizationName = ((Organization) Organization.builder().type("default").build().createObject()).getName();
         }
         return this;
     }

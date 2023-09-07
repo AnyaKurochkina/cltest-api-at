@@ -41,7 +41,7 @@ public class Account extends Entity {
             }
         }
         if(organization == null){
-            organization = ((Organization) Organization.builder().build().createObject()).getName();
+            organization = ((Organization) Organization.builder().type("default").build().createObject()).getName();
         }
         return this;
     }

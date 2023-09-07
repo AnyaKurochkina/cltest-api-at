@@ -79,7 +79,7 @@ public class LoadBalancer extends IProduct {
 
     @Override
     public JSONObject toJson() {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)

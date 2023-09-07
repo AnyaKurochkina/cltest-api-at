@@ -2,11 +2,13 @@ package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
 import org.junit.jupiter.api.Assertions;
+import org.openqa.selenium.NoSuchElementException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.orders.IProductPage;
 import ui.cloud.pages.orders.OrderStatus;
@@ -73,8 +75,11 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     @Override
     public void waitChangeStatus(Duration duration) {
-        if (Waiting.sleep(waitStatus::exists, Duration.ofSeconds(5)))
-            waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
+        if (Waiting.sleep(waitStatus::exists, Duration.ofSeconds(5))) {
+            try {
+                waitStatus.scrollIntoView(TypifiedElement.scrollCenter).shouldNot(Condition.visible, duration);
+            } catch (ElementNotFound ignored) {}
+        }
     }
 
     @Override

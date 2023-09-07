@@ -2,7 +2,14 @@
   {
     "objectClassName": "models.cloud.authorizer.Organization",
     "title": "T1-CLOUD-INFRA",
-    "name": "org-745ms323e2"
+    "name": "org-745ms323e2",
+    "type": "default"
+  },
+  {
+    "objectClassName": "models.cloud.authorizer.Organization",
+    "title": "T1-CLOUD",
+    "name": "t1-cloud",
+    "type": "not_default"
   },
   {
     "objectClassName": "models.cloud.authorizer.Project",

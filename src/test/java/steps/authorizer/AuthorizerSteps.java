@@ -82,7 +82,7 @@ public class AuthorizerSteps extends Steps {
 
     @Step("Создание папки")
     public static String createFolder(String title) {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         JSONObject jsonObject = Folder.builder()
                 .title(title)
                 .build()

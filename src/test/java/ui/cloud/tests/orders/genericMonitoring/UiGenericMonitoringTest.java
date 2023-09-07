@@ -141,6 +141,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(8)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -151,6 +152,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(9)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -161,6 +163,7 @@ public class UiGenericMonitoringTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(10)
     @TmsLink("1687129")
     @DisplayName("UI GenericMonitoring.  Реинвентаризация ВМ (Linux)")

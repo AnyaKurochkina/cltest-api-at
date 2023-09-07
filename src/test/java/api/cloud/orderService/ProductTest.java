@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -18,7 +19,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.accountManager.AccountSteps;
 import steps.authorizer.AuthorizerSteps;
 import steps.orderService.OrderServiceSteps;
-import api.Tests;
 
 @Log4j2
 @Epic("Продукты")
@@ -117,5 +117,4 @@ public class ProductTest extends Tests {
 //            OrderServiceSteps.changeProjectForOrder(product, projectSource);
 //        }
 //    }
-
 }
