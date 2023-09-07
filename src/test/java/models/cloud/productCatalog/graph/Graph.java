@@ -4,24 +4,23 @@ import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.productCatalog.product.Product;
+import models.cloud.productCatalog.service.Service;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.List;
 import java.util.Map;
 
-import static core.helper.Configure.ProductCatalogURL;
 import static steps.productCatalog.ActionSteps.deleteActionById;
 import static steps.productCatalog.ActionSteps.isActionExists;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductSteps.*;
+import static steps.productCatalog.ServiceSteps.*;
 
 @Log4j2
 @Builder
@@ -91,7 +90,6 @@ public class Graph extends Entity implements IProductCatalog {
     private Object defaultItem;
     @JsonProperty("tag_list")
     private List<String> tagList;
-
 
     @Override
     public Entity init() {
@@ -165,13 +163,12 @@ public class Graph extends Entity implements IProductCatalog {
                         }
                         break;
                     case ("Service"):
-                        ProductCatalogSteps serviceSteps = new ProductCatalogSteps("/services/", ProductCatalogURL + "/api/v1/");
-                        if (serviceSteps.isExists(resp.getName())) {
-                            GetServiceResponse getService = (GetServiceResponse) serviceSteps.getById(resp.getId(), GetServiceResponse.class);
+                                                if (isServiceExists(resp.getName())) {
+                            Service getService = getServiceById(resp.getId());
                             if (getService.getIsPublished()) {
-                                serviceSteps.partialUpdateObject(getService.getId(), new JSONObject().put("is_published", false));
+                                partialUpdateServiceById(getService.getId(), new JSONObject().put("is_published", false));
                             }
-                            serviceSteps.deleteById(resp.getId());
+                            deleteServiceById(resp.getId());
                         }
                         break;
                     case ("Graph"):
