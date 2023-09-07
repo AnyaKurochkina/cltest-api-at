@@ -41,7 +41,7 @@ public class ApacheKafkaCluster extends IProduct {
     public static final String KAFKA_CREATE_TOPICS = "kafka_create_topics";
     public static final String KAFKA_CLUSTER_RETENTION_MS = "data.find{it.type=='cluster'}.data.config.topics.any{it.topic_name=='%s' && it.retention_ms=='%s'}";
     public static final String KAFKA_CLUSTER_ACL_IDEMPOTENT = "data.find{it.type=='cluster'}.data.config.idempotent_acls.any{it.client_cn=='%s'}";
-    public static final String KAFKA_CLUSTER_QUOTAS = "data.find{it.type=='cluster'}.data.config.quotas.any{it.client_cn=='<default>' && it.producer_byte_rate=='%d'}";
+    public static final String KAFKA_CLUSTER_QUOTAS = "data.find{it.type=='cluster'}.data.config.quotas.any{it.client_cn=='<default>' && it.producer_byte_rate==%d}";
 
     @Override
     @Step("Заказ продукта")
