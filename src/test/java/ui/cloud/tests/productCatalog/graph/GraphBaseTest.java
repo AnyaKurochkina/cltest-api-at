@@ -13,7 +13,10 @@ import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.TemplateSteps.deleteTemplateById;

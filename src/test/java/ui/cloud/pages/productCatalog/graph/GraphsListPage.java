@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityListPage;
@@ -16,6 +17,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.$x;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+@Getter
 public class GraphsListPage extends EntityListPage {
 
     private static final String nameColumn = "Код графа";

@@ -30,7 +30,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
 public class ActionPage extends EntityPage {
-    private static final String saveActionAlertText = "Действие успешно изменено";
+    private final String saveActionAlertText = "Действие успешно изменено";
     private final SelenideElement actionsListLink = $x("//a[text() = 'Список действий']");
     private final SelenideElement info = $x("//div[@role = 'status']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
@@ -291,22 +291,22 @@ public class ActionPage extends EntityPage {
         titleInput.setValue(newValue);
         back();
         acceptAlert(unsavedChangesAlertText);
-        new ActionsListPage().openActionForm(action.getName());
+        new ActionsListPage().openActionPage(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         titleInput.setValue(newValue);
         actionsListLink.scrollIntoView(false).click();
         acceptAlert(unsavedChangesAlertText);
-        new ActionsListPage().openActionForm(action.getName());
+        new ActionsListPage().openActionPage(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         titleInput.setValue(newValue);
         backButton.click();
         acceptAlert(unsavedChangesAlertText);
-        new ActionsListPage().openActionForm(action.getName());
+        new ActionsListPage().openActionPage(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         titleInput.setValue(newValue);
         mainPage.click();
         acceptAlert(unsavedChangesAlertText);
-        new ControlPanelIndexPage().goToActionsListPage().openActionForm(action.getName());
+        new ControlPanelIndexPage().goToActionsListPage().openActionPage(action.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         return this;
     }

@@ -13,13 +13,13 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
-import java.util.Arrays;
 import java.util.Collections;
 
 @Feature("Удаление модификатора")
 public class DeleteModifierTest extends GraphBaseTest {
     Modification modifier;
 
+    @Override
     @BeforeEach
     @DisplayName("Создание графов через API")
     public void setUpForGraphsTest() {
