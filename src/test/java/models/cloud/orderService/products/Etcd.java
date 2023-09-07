@@ -36,8 +36,6 @@ public class Etcd extends IProduct {
         jsonTemplate = "/orders/etcd.json";
         productName = "Etcd";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (segment == null)
@@ -54,6 +52,8 @@ public class Etcd extends IProduct {
             etcdUser = "user";
         if (etcdPassword == null)
             etcdPassword = "vdcFpCO7UCMMdAVIErDZcxouaOVdR1rKInlpyLToP96GITyrvbo0Zg";
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 
