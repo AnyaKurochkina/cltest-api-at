@@ -35,6 +35,11 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
+    public Dialog setInputValueV2(String label, String value) {
+        Input.byLabelV2(label).setValue(value);
+        return this;
+    }
+
     public String getInputValue(String label) {
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
         return new Input(element).getValue();

@@ -9,6 +9,7 @@ import lombok.Getter;
 import ui.elements.Button;
 import ui.elements.Menu;
 import ui.t1.pages.IAM.OrgStructurePage;
+import ui.t1.pages.IAM.serviceAccounts.ServiceAccountsListPage;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
@@ -47,6 +48,7 @@ public class IndexPage {
     Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
     Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
+    Button linkServiceAccounts = Button.byXpath("//a[.='Сервисные аккаунты']");
     SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
     SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
 
@@ -104,6 +106,13 @@ public class IndexPage {
         linkIAM.click();
         linkOrgStructure.click();
         return new OrgStructurePage();
+    }
+
+    @Step("Переход на страницу Сервисные аккаунты")
+    public ServiceAccountsListPage goToServiceAccounts() {
+        linkIAM.click();
+        linkServiceAccounts.click();
+        return new ServiceAccountsListPage();
     }
 
     @Step("Переход на страницу Виртуальные машины")
