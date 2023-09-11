@@ -17,6 +17,8 @@ import ui.t1.pages.T1LoginPage;
 import java.util.Arrays;
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 @Epic("IAM и Управление")
 @Feature("Сервисные аккаунты")
 @Tags({@Tag("serviceAccounts_ui_t1")})
@@ -44,7 +46,7 @@ public class ServiceAccountsTests extends Tests {
                 .goToServiceAccounts()
                 .createServiceAccount(account)
                 .checkHeadersAndTabs()
-                .checkAccountData(account)
+                .checkAccountDataInServiceAccountPage(account)
                 .goToServiceAccountList()
                 .isServiceAccountExist(account.getTitle());
     }
@@ -53,13 +55,18 @@ public class ServiceAccountsTests extends Tests {
     @DisplayName("Редактирование сервисного аккаунта")
     public void editServiceAccount() {
         ServiceAccount account = ServiceAccount.builder()
-                .title("create_service_account_ui_test")
+                .title("edit_service_account_ui_test")
                 .roles(Collections.singletonList("Администратор"))
                 .build()
                 .createObject();
-        new IndexPage()
+        ServiceAccount updatedAccount = ServiceAccount.builder()
+                .title("updated_edit_service_account_ui_test")
+                .roles(Arrays.asList("Администратор", "Наблюдатель", "Редактор"))
+                .build();
+        assertTrue(new IndexPage()
                 .goToServiceAccounts()
-                .
-               ;
+                .editServiceAccount(account.getTitle(), updatedAccount)
+                .checkAccountData(updatedAccount)
+                .isServiceAccountExist(updatedAccount.getTitle()));
     }
 }

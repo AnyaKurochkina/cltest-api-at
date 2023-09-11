@@ -33,20 +33,16 @@ public class ServiceAccountPage {
         return this;
     }
 
-    public ServiceAccountPage checkAccountData(ServiceAccount account) {
+    public ServiceAccountPage checkAccountDataInServiceAccountPage(ServiceAccount account) {
         GlobalUser user = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
         Table table = new Table("Роли");
-        String expectedRoles = table.getValueByColumnInFirstRow("Роли").getText();
-        StringBuilder roles = new StringBuilder();
-        for (String s : account.getRoles()) {
-            roles.append(s).append("\n");
-        }
-        String actualRoles = roles.toString().trim();
+        List<String> actualRoles = Arrays.asList(table.getValueByColumnInFirstRow("Роли").getText().split(",\n"));
+        List<String> expectedRoles = account.getRoles();
         String userName = table.getValueByColumnInFirstRow("Создатель").getText();
         String id = table.getValueByColumnInFirstRow("Идентификатор").getText();
         assertTrue(id.startsWith("sa_proj-"));
-        assertEquals(user.getUsername(), userName);
-        assertEquals(expectedRoles, actualRoles);
+        assertEquals(user.getEmail(), userName);
+        assertTrue(actualRoles.containsAll(expectedRoles) && expectedRoles.containsAll(actualRoles));
         return this;
     }
 
