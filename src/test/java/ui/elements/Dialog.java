@@ -14,7 +14,7 @@ import static core.helper.StringUtils.$x;
 @NoArgsConstructor
 public class Dialog implements TypifiedElement {
     @Language("XPath")
-    protected final String xpath = "//h2[.='{}']/ancestor::div[@role='dialog']";
+    protected final String xpath = "//*[self::h2 or self::h5][.='{}']/ancestor::div[@role='dialog']";
     protected SelenideElement dialog;
 
     public Dialog(SelenideElement dialog) {

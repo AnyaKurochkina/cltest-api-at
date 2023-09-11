@@ -69,7 +69,6 @@ public class UsersPage {
         $x("(//*[text()= 'Отозвать права'])[1]").click();
         new Dialog("Подтверждение").clickButton("Отозвать права");
         Alert.green("Удалены все роли у пользователя {}", user.getEmail());
-        cancelDialog.click();
         assertFalse(isUserAdded(user), "Пользователь найден");
         return this;
     }
