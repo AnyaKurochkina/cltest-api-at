@@ -17,6 +17,7 @@ import java.util.List;
 import static api.Tests.activeCnd;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
+import static core.helper.StringUtils.getContextType;
 import static org.junit.jupiter.api.Assertions.*;
 import static ui.cloud.pages.productCatalog.EntityListPage.openActionMenu;
 
@@ -38,14 +39,9 @@ public class UsersPage {
         selenideElement.shouldBe(Condition.visible);
     }
 
-    public UsersPage changeContext(String contextType, String contextValue) {
-        open(String.format("/management/users?context=%s&type=%s", contextValue, contextType));
-        addUserBtn.getButton().shouldBe(activeCnd);
-        return this;
-    }
-
     public UsersPage changeContext(String contextType, String contextValue, String contextName) {
         open(String.format("/management/users?context=%s&type=%s", contextValue, contextType));
+        Alert.green("Выбран контекст: {} \"{}\"", getContextType(contextType), contextName);
         addUserBtn.getButton().shouldBe(activeCnd);
         StringUtils.$x("//div[text() = '{}']", contextName).shouldBe(Condition.visible);
         return this;

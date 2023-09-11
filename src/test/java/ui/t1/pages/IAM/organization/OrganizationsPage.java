@@ -6,6 +6,8 @@ import io.qameta.allure.Step;
 import ui.elements.*;
 import ui.models.Organization;
 
+import java.util.Arrays;
+
 import static com.codeborne.selenide.Selenide.$x;
 
 public class OrganizationsPage {
@@ -54,6 +56,7 @@ public class OrganizationsPage {
             result = table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, name))
                     .isColumnValueEquals(OrganizationTable.COLUMN_NAME, name);
         } catch (NotFoundElementException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
         }
         return result;
     }
