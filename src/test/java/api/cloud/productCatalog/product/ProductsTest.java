@@ -43,7 +43,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Создание продукта в продуктовом каталоге")
     @TmsLink("643375")
     @Test
-    public void createProduct() {
+    public void createProductTest() {
         Product product = Product.builder()
                 .name("create_product_test_api")
                 .title("AtTestApiProduct")
@@ -207,7 +207,7 @@ public class ProductsTest extends Tests {
         createProductWithPublicToken(createProduct).assertStatus(403);
         partialUpdateProductWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
                 .assertStatus(403);
-        putProductByIdWithPublicToken(productId, createProductByName("update_object_with_public_token_api").toJson())
+        putProductByIdWithPublicToken(productId, createProduct("update_object_with_public_token_api").toJson())
                 .assertStatus(403);
         deleteProductWithPublicToken(productId).assertStatus(403);
     }

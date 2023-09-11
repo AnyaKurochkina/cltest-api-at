@@ -1,14 +1,14 @@
 package models.cloud.authorizer;
 
+import com.fasterxml.jackson.annotation.JsonIncludeProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import models.Entity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -20,10 +20,14 @@ import java.util.List;
 @Builder
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
+@JsonIncludeProperties({"name", "title"})
 public class Folder extends Entity {
     public String name;
     public String kind;
     public String title;
+    @JsonProperty("parent")
     public String parentId;
     public List<String> informationSystemIds;
 

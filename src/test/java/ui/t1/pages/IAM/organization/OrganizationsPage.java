@@ -1,9 +1,12 @@
 package ui.t1.pages.IAM.organization;
 
 import com.codeborne.selenide.Condition;
+import core.exception.NotFoundElementException;
 import io.qameta.allure.Step;
 import ui.elements.*;
 import ui.models.Organization;
+
+import java.util.Arrays;
 
 import static com.codeborne.selenide.Selenide.$x;
 
@@ -35,7 +38,7 @@ public class OrganizationsPage {
         String orgName = org.getName();
         OrganizationTable table = new OrganizationTable();
         Menu.byElement(table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, orgName))
-                .getRowByColumnValue(OrganizationTable.COLUMN_NAME, orgName)
+                        .getRowByColumnValue(OrganizationTable.COLUMN_NAME, orgName)
                         .getElementByColumnIndex(3)
                         .$("button"))
                 .select("Удалить");
@@ -46,10 +49,16 @@ public class OrganizationsPage {
     }
 
     @Step("Проверка существования организации")
-    public boolean isOrgExist(String name) {
+    public boolean isOrgExist(String name) throws NotFoundElementException {
         OrganizationTable table = new OrganizationTable();
-        return table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, name))
-                .isColumnValueEquals(OrganizationTable.COLUMN_NAME, name);
+        boolean result = false;
+        try {
+            result = table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, name))
+                    .isColumnValueEquals(OrganizationTable.COLUMN_NAME, name);
+        } catch (NotFoundElementException e) {
+            System.out.println(Arrays.toString(e.getStackTrace()));
+        }
+        return result;
     }
 
     private static class OrganizationTable extends DataTable {
