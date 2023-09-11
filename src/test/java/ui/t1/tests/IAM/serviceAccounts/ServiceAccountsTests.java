@@ -69,4 +69,19 @@ public class ServiceAccountsTests extends Tests {
                 .checkAccountData(updatedAccount)
                 .isServiceAccountExist(updatedAccount.getTitle()));
     }
+
+    @Test
+    @DisplayName("Создание Api ключа")
+    public void createApiKey() {
+        ServiceAccount account = ServiceAccount.builder()
+                .title("create_api_key_ui_test")
+                .secret("without")
+                .roles(Collections.singletonList("Администратор"))
+                .build()
+                .createObject();
+        new IndexPage()
+                .goToServiceAccounts()
+                .goToServiceAccountPage(account)
+                .createApiKey();
+    }
 }

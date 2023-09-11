@@ -1,9 +1,12 @@
 package ui.t1.pages.IAM.serviceAccounts;
 
+import com.codeborne.selenide.Clipboard;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import core.enums.Role;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.ServiceAccount;
+import ui.elements.Alert;
 import ui.elements.Breadcrumb;
 import ui.elements.Button;
 import ui.elements.Table;
@@ -20,6 +23,7 @@ public class ServiceAccountPage {
     List<String> headers = Arrays.asList("Роли", "Дата создания", "Создатель", "Идентификатор");
     Button apiKeysTab = Button.byId("api_keys");
     Button s3KeysTab = Button.byId("ceph_public_keys");
+    Button create = Button.byText("Создать");
 
     public ServiceAccountPage(String name) {
         $x("//span[text() = '{}']", name).shouldBe(Condition.visible);
@@ -49,5 +53,16 @@ public class ServiceAccountPage {
     public ServiceAccountsListPage goToServiceAccountList() {
         Breadcrumb.click("Сервисные аккаунты");
         return new ServiceAccountsListPage();
+    }
+
+    public ServiceAccountPage createApiKey() {
+        create.click();
+        Alert.green("API ключ успешно создан");
+        Button.byText("Скопировать данные формы").click();
+        Alert.green("Данные успешно скопированы");
+        Clipboard clipboard = Selenide.clipboard();
+        String foo = clipboard.getText();
+        Button.byText("Подтверждаю, что данные мной сохранены").click();
+        return this;
     }
 }

@@ -18,6 +18,7 @@ public class ServiceAccountsListPage {
 
     private final Button createServiceAccountButton = Button.byXpath("//div[@data-testid = 'service-accounts-add-button']//button");
     MultiSelect roles = MultiSelect.byLabel("Роли в каталоге");
+    Table serviceAccountsTable = new Table("Название");
 
     public ServiceAccountsListPage() {
         $x("//div[text() = 'Сервисные аккаунты' and @type]").shouldBe(Condition.visible);
@@ -35,7 +36,7 @@ public class ServiceAccountsListPage {
     }
 
     public ServiceAccountsListPage editServiceAccount(String title, ServiceAccount account) {
-        Menu.byElement(new Table("Название").getRowByColumnValue("Название", title)
+        Menu.byElement(serviceAccountsTable.getRowByColumnValue("Название", title)
                         .getElementLastColumn())
                 .select("Редактировать");
         Dialog editDialog = Dialog.byTitle("Редактировать сервисный аккаунт");
@@ -49,8 +50,7 @@ public class ServiceAccountsListPage {
 
     public ServiceAccountsListPage checkAccountData(ServiceAccount account) {
         GlobalUser user = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
-        Table table = new Table("Название");
-        Table.Row row = table.getRowByColumnValue("Название", account.getTitle());
+        Table.Row row = serviceAccountsTable.getRowByColumnValue("Название", account.getTitle());
         String actualTitle = row.getValueByColumn("Название");
         List<String> actualRoles = Arrays.asList(row.getValueByColumn("Роли").split(",\n"));
         List<String> expectedRoles = account.getRoles();
@@ -61,6 +61,11 @@ public class ServiceAccountsListPage {
         assertEquals(account.getTitle(), actualTitle);
         assertTrue(actualRoles.containsAll(expectedRoles) && expectedRoles.containsAll(actualRoles));
         return this;
+    }
+
+    public ServiceAccountPage goToServiceAccountPage(ServiceAccount account) {
+        serviceAccountsTable.getRowByColumnValue("Название", account.getTitle()).get().click();
+        return new ServiceAccountPage(account.getTitle());
     }
 
     public Boolean isServiceAccountExist(String title) {

@@ -132,13 +132,15 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         Assertions.assertEquals(title, jsonPath.get("data.title"));
         id = jsonPath.get("data.name");
 
-        jsonPath = new Http(Configure.IamURL)
-                .setRole(Role.CLOUD_ADMIN)
-                .body(toJson())
-                .post("/v1/projects/{}/service_accounts/{}/api_keys", projectId, id)
-                .assertStatus(201)
-                .jsonPath();
-        secret = jsonPath.get("data.client_secret");
+        if (!secret.equals("without")) {
+            jsonPath = new Http(Configure.IamURL)
+                    .setRole(Role.CLOUD_ADMIN)
+                    .body(toJson())
+                    .post("/v1/projects/{}/service_accounts/{}/api_keys", projectId, id)
+                    .assertStatus(201)
+                    .jsonPath();
+            secret = jsonPath.get("data.client_secret");
+        }
     }
 
     @Override
