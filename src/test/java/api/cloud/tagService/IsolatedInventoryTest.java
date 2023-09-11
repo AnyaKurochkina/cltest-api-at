@@ -19,6 +19,7 @@ import org.junit.jupiter.api.parallel.Isolated;
 public class IsolatedInventoryTest extends AbstractTagServiceTest {
 
     @Test
+    @org.junit.jupiter.api.Tag("health_check")
     @TmsLink("1623789")
     @DisplayName("Inventory. Фильтр v1 по context_path_isnull")
     void findInventoriesByContextPathIsnullV1() {

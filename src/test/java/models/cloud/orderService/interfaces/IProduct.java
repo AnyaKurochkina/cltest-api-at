@@ -163,11 +163,29 @@ public abstract class IProduct extends Entity {
         return (String) OrderServiceSteps.getProductsField(this, String.format(STATE_PATH, name));
     }
 
-    @Step("Получение Id geoDistribution у продукта '{product}' с тегами '{tags}'")
+    @Step("Получение Id geoDistribution у продукта '{name}' с тегами '{tags}'")
     protected String getIdGeoDistribution(String name, String... tags) {
         StringJoiner tagsJoiner = new StringJoiner(",");
         Arrays.stream(tags).forEach(tagsJoiner::add);
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tagsJoiner))
+                .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
+    }
+
+    private String replaceGraphParams(String str){
+        return str.replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
+                .replace("${context::formData.platform}", getPlatform())
+                .replace("${context::projectInfo.organization}", ((Organization) Organization.builder().build().createObject()).getName())
+                .replace("${context::formData.default_nic.net_segment}", getSegment());
+    }
+
+    @SneakyThrows
+    @Step("Получение Id geoDistribution у продукта '{name}'")
+    protected String getIdGeoDistribution(String name) {
+        Product productResponse = getProductByCloudAdmin(getProductId());
+        Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
+        String tags = replaceGraphParams(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("layout")))
+                .getString("'ui:options'.attrs.tags__contains"));
+        return Objects.requireNonNull(ReferencesStep.getJsonPathList(String.format("tags__contains=%s&directory__name=geo_distribution", tags))
                 .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
     }
 
@@ -508,14 +526,13 @@ public abstract class IProduct extends Entity {
     }
 
     public boolean isDev() {
-        return envType().contains("dev");
+        return envType().equalsIgnoreCase("dev");
     }
     public boolean isTest() {
-        return envType().contains("test");
+        return envType().equalsIgnoreCase("test");
     }
-
     public boolean isProd() {
-        return envType().contains("prod");
+        return envType().equalsIgnoreCase("prod");
     }
 
     public String envType() {

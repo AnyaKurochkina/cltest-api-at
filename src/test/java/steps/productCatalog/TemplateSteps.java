@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import steps.Steps;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -27,6 +28,14 @@ public class TemplateSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(templateUrl);
+    }
+
+    @Step("Копирование направления по Id")
+    public static void copyTemplateById(Integer objectId) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(templateUrl + objectId + "/copy/")
+                .assertStatus(200);
     }
 
     @Step("Создание шаблона по имени {name}")
@@ -54,6 +63,14 @@ public class TemplateSteps extends Steps {
                 .get(templateUrl)
                 .assertStatus(200)
                 .extractAs(GetTemplateList.class).getList();
+    }
+
+    public static GetTemplateList getTemplatesList() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl)
+                .assertStatus(200)
+                .extractAs(GetTemplateList.class);
     }
 
     @Step("Проверка существования шаблона по имени")
@@ -172,5 +189,57 @@ public class TemplateSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetTemplateList.class)
                 .getList();
+    }
+
+    @Step("Сортировка шаблонов по дате создания")
+    public static boolean orderingTemplateByCreateData() {
+        List<Template> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl + "?ordering=create_dt")
+                .assertStatus(200)
+                .extractAs(GetTemplateList.class).getList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
+            if (!(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Step("Сортировка шаблонов по дате создания")
+    public static boolean orderingTemplateByUpdateData() {
+        List<Template> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(templateUrl + "?ordering=update_dt")
+                .assertStatus(200)
+                .extractAs(GetTemplateList.class).getList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpdateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpdateDt());
+            if (!(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Step("Загрузка шаблона в Gitlab")
+    public static Response dumpTemplateToBitbucket(Integer id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(templateUrl + id + "/dump_to_bitbucket/")
+                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
+                .assertStatus(201);
+    }
+
+    @Step("Выгрузка шаблона из Gitlab")
+    public static Response loadTemplateFromBitbucket(JSONObject body) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(body)
+                .post(templateUrl + "load_from_bitbucket/")
+                .assertStatus(200);
     }
 }

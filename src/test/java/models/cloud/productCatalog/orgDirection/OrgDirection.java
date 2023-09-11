@@ -4,7 +4,6 @@ import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
-import httpModels.productCatalog.orgDirection.getOrgDirection.response.ExtraData;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -25,7 +24,7 @@ import static steps.productCatalog.ServiceSteps.*;
 @EqualsAndHashCode(callSuper = false)
 public class OrgDirection extends Entity implements IProductCatalog {
     @JsonProperty("extra_data")
-    private ExtraData extraData;
+    private Object extraData;
     private String icon;
     @JsonProperty("icon_url")
     private String iconUrl;

@@ -36,6 +36,10 @@ public class SecurityGroupList {
         AbstractEntity.addEntity(new AbstractComputeTest.SecurityGroupEntity());
     }
 
+    public void markForDeletion(AbstractEntity.Mode mode){
+        AbstractEntity.addEntity(new AbstractComputeTest.SecurityGroupEntity().setMode(mode));
+    }
+
     public void deleteGroup(String name) {
         getSecurityGroup(name).get().$("button").click();
         Waiting.findWithRefresh(() -> !new SecurityGroupsTable().isColumnValueEquals(Column.NOMINATION, name), Duration.ofMinutes(1));

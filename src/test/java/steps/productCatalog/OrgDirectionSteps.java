@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import steps.Steps;
 
 import java.io.File;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -37,6 +38,14 @@ public class OrgDirectionSteps extends Steps {
                 .get(orgDirUrl)
                 .assertStatus(200)
                 .extractAs(GetOrgDirectionList.class).getList();
+    }
+
+    public static GetOrgDirectionList getOrgDirectionsList() {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(orgDirUrl)
+                .assertStatus(200)
+                .extractAs(GetOrgDirectionList.class);
     }
 
     @Step("Проверка существования направления по имени")
@@ -138,5 +147,39 @@ public class OrgDirectionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(orgDirUrl + objectId + "/copy/")
                 .assertStatus(200);
+    }
+
+    @Step("Сортировка направлений по дате создания")
+    public static boolean orderingOrgDirectionByCreateData() {
+        List<OrgDirection> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(orgDirUrl + "?ordering=create_dt")
+                .assertStatus(200)
+                .extractAs(GetOrgDirectionList.class).getList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateDt());
+            if (!(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Step("Сортировка направлений по дате создания")
+    public static boolean orderingOrgDirectionByUpdateData() {
+        List<OrgDirection> list = new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(orgDirUrl + "?ordering=update_dt")
+                .assertStatus(200)
+                .extractAs(GetOrgDirectionList.class).getList();
+        for (int i = 0; i < list.size() - 1; i++) {
+            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpdateDt());
+            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpdateDt());
+            if (!(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime))) {
+                return false;
+            }
+        }
+        return true;
     }
 }

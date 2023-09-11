@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
@@ -23,9 +24,11 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 
+@Getter
 public class GraphPage extends EntityPage {
     protected final String saveGraphAlertText = "Граф успешно сохранен";
     protected final Tab generalInfoTab = Tab.byText("Общая информация");
+    private final Tab orderParamsTab = Tab.byText("Параметры заказа");
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
     private final Input authorInput = Input.byName("author");
@@ -60,7 +63,7 @@ public class GraphPage extends EntityPage {
 
     @Step("Проверка, что отображаемая версия графа равна '{version}'")
     public GraphPage checkGraphVersion(String version) {
-        Waiting.find(() -> versionDropDown.getValue().equals(version), Duration.ofSeconds(5));
+        Waiting.find(() -> versionSelect.getValue().equals(version), Duration.ofSeconds(5));
         return new GraphPage();
     }
 

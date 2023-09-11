@@ -3,6 +3,7 @@ package ui.t1.tests.engine.vpc;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.AbstractEntity;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,6 +31,7 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети. Добавление сети")
     void addNetwork() {
         new IndexPage().goToNetworks().addNetwork(name, "desc");
+        new NetworkList().selectNetwork(name).markForDeletion(new NetworkEntity().setMode(AbstractEntity.Mode.AFTER_CLASS));
     }
 
     @Test
@@ -80,5 +82,10 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети. Удаление сети")
     void deleteNetwork() {
         new IndexPage().goToNetworks().deleteNetwork(name);
+    }
+
+    @AfterAll
+    void afterClass() {
+        AbstractEntity.deleteCurrentClassEntities();
     }
 }
