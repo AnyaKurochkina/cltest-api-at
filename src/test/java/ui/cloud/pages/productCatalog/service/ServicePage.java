@@ -32,7 +32,7 @@ public class ServicePage extends EntityPage {
     private final TextArea extraData = TextArea.byLabel("Extra data");
     private final String tagsTableTitle = "Теги";
     private final String excludeTagsTableTitle = "Исключающие теги";
-    private final SelenideElement addTagButton = $x("//div[text()='" + tagsTableTitle + "']/following::button[@label='Добавить'][1]");
+    private final SelenideElement addServiceTagButton = $x("//div[text()='" + tagsTableTitle + "']/following::button[@label='Добавить'][1]");
     private final SelenideElement addExcludeTagButton = $x("//div[text()='" + excludeTagsTableTitle + "']/following::button[@label='Добавить'][1]");
     private final Select tagDropDown = Select.byLabel("Тег");
     private final Input tagValueInput = Input.byPlaceholder("Введите значение");
@@ -187,7 +187,7 @@ public class ServicePage extends EntityPage {
     @Step("Добавление тега {tagName} со значениями {values}")
     public ServicePage addTag(String tagName, String[] values) {
         goToTagsTab();
-        addTagButton.click();
+        addServiceTagButton.click();
         tagDropDown.set(tagName);
         for (String value : values) {
             tagValueInput.setValue(value);
@@ -250,7 +250,7 @@ public class ServicePage extends EntityPage {
     }
 
     @Step("Удаление тега {tagName}")
-    public ServicePage deleteTag(String tagName) {
+    public ServicePage deleteServiceTag(String tagName) {
         goToTagsTab();
         Table table = new Table($x("//div[text()='" + tagsTableTitle + "']/following::table[1]"));
         table.getRowByColumnValue(tagTitleColumn, tagName).get()

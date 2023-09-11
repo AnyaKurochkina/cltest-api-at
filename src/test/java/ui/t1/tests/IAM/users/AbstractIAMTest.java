@@ -4,6 +4,7 @@ import api.Tests;
 import core.enums.Role;
 import kotlin.collections.ArrayDeque;
 import lombok.extern.log4j.Log4j2;
+import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,11 +21,13 @@ import java.util.Arrays;
 public abstract class AbstractIAMTest extends Tests {
     Project project;
     String folderId;
+    Organization organization;
     IamUser user;
     IamUser user2;
     IamUser user3;
 
     public AbstractIAMTest() {
+        organization = Organization.builder().type("default").build().createObject();
         project = Project.builder().isForOrders(true).build().createObject();
         folderId = AuthorizerSteps.getParentProject(project.getId());;
         user = new IamUser("airat.muzafarov@gmail.com", new ArrayDeque<>(Arrays.asList("Администратор")));

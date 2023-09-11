@@ -223,7 +223,7 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        steps.exportById(visualTemplates.getId());
+        exportVisualTemplateById(visualTemplates.getId());
     }
 
     @DisplayName("Проверка поля ExportedObjects при экспорте шаблона визуализации")
@@ -454,9 +454,9 @@ public class VisualTemplateTest extends Tests {
         deleteVisualTemplateByName(visualTemplateName);
         String path = "itemvisualisationtemplate_" + visualTemplateName;
         steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(visualTemplateName));
+        assertTrue(isVisualTemplateExists(visualTemplateName));
         deleteVisualTemplateByName(visualTemplateName);
-        assertFalse(steps.isExists(visualTemplateName));
+        assertFalse(isVisualTemplateExists(visualTemplateName));
     }
 
     @DisplayName("Проверка отсутствия поля default_item в шаблона визуализации по event_provider, event_type")

@@ -1,11 +1,13 @@
 {
-  "order_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "action_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "graph_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "type": "string",
-  "subtype": "string",
-  "status": "string",
-  "data": {},
-  "item_id": "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  "update_data": {}
+  "created_row_dt": "2023-09-04T12:38:49.994617+03:00",
+  "create_dt": "2023-09-04T12:38:49.994633+03:00",
+  "order_id": "89b6a59e-b4a6-4cbb-8249-493812e80285",
+  "action_id": "00000001-0001-0001-0001-000000000001",
+  "graph_id": "00000001-0001-0001-0001-000000000001",
+  "type": "vm",
+  "subtype": "state",
+  "status": "deleted",
+  "data": null,
+  "item_id": "9344307a-089b-40c1-a0a6-d8791f0e5070",
+  "update_data": null
 }

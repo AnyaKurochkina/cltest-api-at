@@ -29,7 +29,7 @@ public class ImagesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Образы. Виртуальная машина с диском с образа")
     void createVmWidthUserImage() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new DiskEntity()).checkCreate(true);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createImage(disk.getName()));
         new IndexPage().goToImages().selectImage(disk.getName()).markForDeletion(new ImageEntity()).checkCreate(true);
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
@@ -40,6 +40,6 @@ public class ImagesTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).markForDeletion(new VmEntity()).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
     }
 }

@@ -1,12 +1,11 @@
 package api.cloud.productCatalog.orgDirection;
 
 import api.Tests;
-import httpModels.productCatalog.orgDirection.getOrgDirectionList.response.GetOrgDirectionListResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
+import models.cloud.productCatalog.service.Service;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -18,8 +17,7 @@ import java.util.List;
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.productCatalog.OrgDirectionSteps.getOrgDirectionList;
-import static steps.productCatalog.OrgDirectionSteps.getServiceUsedOrgDirection;
+import static steps.productCatalog.OrgDirectionSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.isSorted;
 
 @Tag("product_catalog")
@@ -42,7 +40,7 @@ public class OrgDirectionListTest extends Tests {
     @TmsLink("679060")
     @Test
     public void getMeta() {
-        String nextPage = steps.getMeta(GetOrgDirectionListResponse.class).getNext();
+        String nextPage = getOrgDirectionsList().getMeta().getNext();
         String url = getAppProp("url.kong");
         if (!(nextPage == null)) {
             assertTrue(nextPage.startsWith(url), "Значение поля next несоответсвует ожидаемому");

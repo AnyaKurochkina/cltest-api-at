@@ -1,9 +1,6 @@
 package api.cloud.productCatalog.service;
 
-import httpModels.productCatalog.GetListImpl;
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.service.getServiceList.response.GetServiceListResponse;
-import httpModels.productCatalog.service.getServiceList.response.ListItem;
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -14,15 +11,15 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ProductCatalogSteps.isSorted;
-import static steps.productCatalog.ServiceSteps.getServiceList;
+import static steps.productCatalog.ServiceSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -45,7 +42,7 @@ public class ServiceListTest extends Tests {
     @TmsLink("682758")
     @Test
     public void getMeta() {
-        String str = steps.getMeta(GetServiceListResponse.class).getNext();
+        String str = getServicesList().getMeta().getNext();
         String url = getAppProp("url.kong");
         if (!(str == null)) {
             assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
@@ -63,10 +60,9 @@ public class ServiceListTest extends Tests {
                 .description("ServiceForAT")
                 .build()
                 .createObject();
-        GetListImpl list = steps.getObjectByTitle(service.getTitle(), GetServiceListResponse.class);
-        for (ItemImpl item : list.getItemsList()) {
-            ListItem listItem = (ListItem) item;
-            assertEquals(serviceTitle, listItem.getTitle(), "Title не совпадают");
+        List<Service> list = getServiceByFilter(format( "title={}", service.getTitle()));
+        for (Service s : list) {
+            assertEquals(serviceTitle, s.getTitle(), "Title не совпадают");
         }
     }
 
@@ -81,11 +77,10 @@ public class ServiceListTest extends Tests {
                 .isPublished(true)
                 .build()
                 .createObject();
-        List<ItemImpl> serviceList = steps.getObjectsList(GetServiceListResponse.class, "?is_published=true");
-        steps.partialUpdateObject(service.getId(), new JSONObject().put("is_published", false));
-        for (ItemImpl item : serviceList) {
-            ListItem listItem = (ListItem) item;
-            assertTrue(listItem.getIsPublished());
+        List<Service> list = getServiceByFilter("is_published=true");
+        partialUpdateServiceById(service.getId(), new JSONObject().put("is_published", false));
+        for (Service s : list) {
+            assertTrue(s.getIsPublished());
         }
     }
 }

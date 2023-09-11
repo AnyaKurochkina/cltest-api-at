@@ -15,6 +15,7 @@ public class VirtualIpCreate {
     private String network;
     private String mode;
     private Boolean l2;
+    private Boolean internet;
     private String networkInterface;
 
     private String ip;
@@ -46,6 +47,12 @@ public class VirtualIpCreate {
     public VirtualIpCreate setL2(Boolean l2) {
         Switch.byText("Задействовать L2").setEnabled(l2);
         this.l2 = l2;
+        return this;
+    }
+
+    public VirtualIpCreate setInternet(Boolean internet) {
+        Switch.byText("Разрешить доступ в интернет").setEnabled(internet);
+        this.internet = internet;
         return this;
     }
 

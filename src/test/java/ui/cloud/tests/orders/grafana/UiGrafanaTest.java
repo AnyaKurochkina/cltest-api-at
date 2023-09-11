@@ -15,6 +15,7 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -56,6 +57,7 @@ public class UiGrafanaTest extends UiProductTest {
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getCreateUser().setValue("user");
             orderPage.getGeneratePassButton().click();
+            Alert.green("Значение скопировано");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -149,10 +151,11 @@ public class UiGrafanaTest extends UiProductTest {
     @DisplayName("UI Grafana. Мониторинг ОС")
     void monitoringOs() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
-        grafanaPage.checkMonitoringOs();
+        grafanaPage.checkClusterMonitoringOs();
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(9)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -163,6 +166,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(10)
     @TmsLink("")
     //@EnabledIfEnv("blue")
@@ -173,6 +177,7 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Действие отсутствует")
     @Order(11)
     @TmsLink("1688715")
     //@EnabledIfEnv("blue")
@@ -194,7 +199,7 @@ public class UiGrafanaTest extends UiProductTest {
     @Test
     @Order(13)
     @TmsLink("")
-    @EnabledIfEnv({"blue","prod"})
+    //@EnabledIfEnv({"blue","prod"})
     @DisplayName("UI Grafana. Сбросить пароль")
     void resetPassword() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
@@ -202,13 +207,21 @@ public class UiGrafanaTest extends UiProductTest {
     }
 
     @Test
-    @Disabled("Действие отсутствует")
+    //@Disabled("Действие отсутствует")
     @Order(14)
     @TmsLink("")
     @DisplayName("UI Grafana. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
         grafanaPage.runActionWithCheckCost(CompareType.EQUALS,  () -> grafanaPage.issueClientCertificate("Cert"));
+    }
+    @Test
+    @Order(15)
+    @TmsLink("")
+    @DisplayName("UI Grafana. Обновить ОС")
+    void updateOs() {
+        GrafanaPage grafanaPage = new GrafanaPage(product);
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS,  grafanaPage::updateOs);
     }
 
     @Test

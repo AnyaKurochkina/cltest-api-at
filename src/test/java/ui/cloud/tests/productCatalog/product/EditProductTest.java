@@ -3,20 +3,34 @@ package ui.cloud.tests.productCatalog.product;
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.product.ProductPage;
+import ui.elements.Table;
 
 import java.io.File;
-import java.util.Collection;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ProductSteps.partialUpdateProductByName;
+import static steps.productCatalog.TagSteps.deleteTagByName;
 
 @Feature("Редактирование продукта")
 public class EditProductTest extends ProductBaseTest {
+
+    private static final List<String> tagList = new ArrayList<>();
+
+    @AfterAll
+    public static void deleteTags() {
+        for (String name : tagList) {
+            deleteTagByName(name);
+        }
+    }
 
     @Test
     @TmsLink("602293")
@@ -136,5 +150,19 @@ public class EditProductTest extends ProductBaseTest {
                 .findAndOpenProductPage(NAME)
                 .checkUnsavedChangesAlertAccept(product)
                 .checkUnsavedChangesAlertDismiss();
+    }
+
+    @Test
+    @TmsLink("SOUL-5047")
+    @DisplayName("Добавить и удалить новый тег со страницы продукта")
+    public void addAndDeleteNewTagOnPage() {
+        String name = "qa_at_tag_" + RandomStringUtils.randomAlphanumeric(8).toLowerCase();
+        tagList.add(name);
+        ProductPage page = new ControlPanelIndexPage().goToProductsListPage().findAndOpenProductPage(product.getName());
+        page.addNewTag(name);
+        page.saveWithoutPatchVersion(page.getSaveProductAlertText());
+        page.deleteTag(name);
+        page.saveWithoutPatchVersion(page.getSaveProductAlertText());
+        assertTrue(new Table("Наименование").isEmpty());
     }
 }

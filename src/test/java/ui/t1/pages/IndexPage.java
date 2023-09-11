@@ -214,7 +214,7 @@ public class IndexPage {
         return new SubscribeUsersPage();
     }
     @Step("Переход в модальное окно изменения контекста")
-    public ContextDialog changeContext(){
+    public ContextDialog goToContextDialog(){
         changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
         return new ContextDialog();
     }

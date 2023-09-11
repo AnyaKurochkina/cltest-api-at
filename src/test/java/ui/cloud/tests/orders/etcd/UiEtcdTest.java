@@ -17,6 +17,7 @@ import ui.cloud.pages.orders.EtcdOrderPage;
 import ui.cloud.pages.orders.EtcdPage;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.OrdersPage;
+import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -60,6 +61,7 @@ public class UiEtcdTest extends UiProductTest {
             orderPage.getNameCluster().setValue("cluster");
             orderPage.getNameUser().setValue(nameUser);
             orderPage.getGeneratePassButton().shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
             orderPage.getNumberNodes().set("3");
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());

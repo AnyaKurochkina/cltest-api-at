@@ -8,8 +8,8 @@ import org.junit.jupiter.api.Assertions;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
+@Getter
 public class CheckBox implements TypifiedElement {
-    @Getter
     SelenideElement element;
 
     public CheckBox(SelenideElement input) {
@@ -35,7 +35,7 @@ public class CheckBox implements TypifiedElement {
 
     @Step("CheckBox. Получение значения")
     public boolean getChecked() {
-        return Boolean.valueOf(element.$x("..//input").getAttribute("checked"));
+        return Boolean.parseBoolean(element.$x("..//input").getAttribute("checked"));
     }
 
     @Step("CheckBox. Установка в положение {checked}")

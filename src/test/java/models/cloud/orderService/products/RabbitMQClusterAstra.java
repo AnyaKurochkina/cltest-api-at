@@ -65,7 +65,7 @@ public class RabbitMQClusterAstra extends IProduct {
 
     @Override
     public JSONObject toJson() {
-        Organization org = Organization.builder().build().createObject();
+        Organization org = Organization.builder().type("default").build().createObject();
         Project project = Project.builder().id(projectId).build().createObject();
         String accessGroup = accessGroup();
         return JsonHelper.getJsonTemplate(jsonTemplate)

@@ -3,11 +3,11 @@ package ui.t1.pages.cloudEngine.compute;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import ui.elements.DataTable;
-import ui.elements.Dialog;
-import ui.elements.Select;
+import ui.elements.*;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static ui.t1.pages.cloudEngine.compute.NetworkInterfaceList.NetworkInterfaceTable.COLUMN_VM;
 import static ui.t1.pages.cloudEngine.compute.NetworkInterfaceList.NetworkInterfaceTable.getMenuElement;
@@ -15,7 +15,7 @@ import static ui.t1.pages.cloudEngine.compute.NetworkInterfaceList.NetworkInterf
 public class NetworkInterfaceList extends IProductListT1Page {
 
     public Menu getMenuNetworkInterface(String vm) {
-        return new Menu(getMenuElement(new NetworkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getIndex()));
+        return new Menu(getMenuElement(networkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getIndex()));
     }
 
     public Menu getMenuNetworkInterface(SelenideElement btn) {
@@ -25,6 +25,21 @@ public class NetworkInterfaceList extends IProductListT1Page {
     public NetworkInterface selectNetworkInterfaceByVm(String vm) {
         new NetworkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getElementByColumn("IP адрес").shouldBe(Condition.visible).click();
         return new NetworkInterface();
+    }
+
+    public NetworkInterfaceTable networkInterfaceTable() {
+        return new NetworkInterfaceTable();
+    }
+
+    public NetworkInterfaceList setInterfaceCheckbox(String name){
+        new CheckBox(networkInterfaceTable().getRowByColumnValue(COLUMN_VM, name).getElementByColumnIndex(0).$("input")).setChecked(true);
+        return this;
+    }
+
+    public void addInSecurityGroup(String group){
+        final String action = "Добавить в группу безопасности";
+        Button.byText(action).click();
+        Dialog.byTitle(action).setSelectValue("Название", group).clickButton("Добавить");
     }
 
     public class Menu {
@@ -67,6 +82,10 @@ public class NetworkInterfaceList extends IProductListT1Page {
 
         public static SelenideElement getMenuElement(int index) {
             return new NetworkInterfaceTable().getRow(index).get().$("button");
+        }
+
+        public static List<String> getSecurityGroups(String vm) {
+            return Arrays.asList(new NetworkInterfaceTable().getRowByColumnValue(COLUMN_VM, vm).getValueByColumn("Группы безопасности").split(", "));
         }
     }
 }
