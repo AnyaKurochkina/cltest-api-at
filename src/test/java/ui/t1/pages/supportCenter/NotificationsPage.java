@@ -299,6 +299,7 @@ public class NotificationsPage {
         return this;
     }
 
+
     @Step("Проверяем ссылку в колокольчике")
     public NotificationsPage checkMessageLink(){
         $x("//a[.='Подробнее']").click();

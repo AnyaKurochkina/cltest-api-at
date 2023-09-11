@@ -1,10 +1,8 @@
 package ui.t1.pages.supportCenter;
 
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.NotFoundException;
 import ui.elements.*;
 
 import static core.helper.StringUtils.$x;
@@ -12,14 +10,16 @@ import static core.helper.StringUtils.$x;
 public class MySubscriptionsPage {
     String tableHeader = "Группа тем";
     SelenideElement setPage = $x("//button[starts-with(@aria-label,'Страница')]");
-
-    Alert alert = new Alert();
+    String actionColumn = "Действие";
+    String contextColumn = "Контекст";
+    String themeColumn = "Тема";
+    String globalContext = "Глобальный";
 
 
 
     @Step("Нажимаем Создать подписку")
     public MySubscriptionsPage clickCreateSubscription(){
-        $x("//div[@data-testid='add-button']").shouldBe(Condition.visible).click();
+        new DataTable(contextColumn).clickAdd();
         return this;
     }
 
@@ -31,67 +31,31 @@ public class MySubscriptionsPage {
 
     @Step("Переходим на страницу {page}")
     public MySubscriptionsPage setPage(int page){
-        setPage.click();
-        $x("//div[@role='listbox']").shouldBe(Condition.visible);
-        $x("//div[@role='listbox']//div[contains(text(), '{}')]", page).click();
+        new DataTable(tableHeader).selectPage(page);
         return this;
-    }
-
-    public int getRowIndex(String groupName){
-        int index = -1;
-        int page = 0;
-        while (index < 0){
-        Table table = new Table(tableHeader);
-        for (int i = 0; i < table.rowSize(); i++){
-            if(table.getValueByColumnInRow(i, tableHeader).getText().equals(groupName)){
-                index = i;
-            }
-        }
-        if($x("//button[@aria-label='Следующая страница, выбрать']").isEnabled() && index == -1) {
-            Button.byAriaLabel("Следующая страница, выбрать").click();
-            page++;
-         }
-        else break;
-        }
-        if(index == -1){
-            throw new RuntimeException("Группа тем не найдена");
-        }
-        setPage(page + 1);
-        return (index + 2);
     }
 
     @Step("Нажимаем 'Подписаться' напротив Группы тем {groupName}")
    public MySubscriptionsPage clickSubscribeThemeGroup(String groupName) {
-     int rowIndex = getRowIndex(groupName);
-        if (rowIndex > 0){
-            $x("(//td[.='{}']//..//button)[1]", groupName).click();
-            alert.check(Alert.Color.GREEN, "Подписки успешно созданы");
-            alert.waitClose();
-        }
-        else {
-            throw new NotFoundException("В таблице нет такой группы тем");
-        }
+        DataTable themeGroupsTable = new DataTable(tableHeader);
+        themeGroupsTable.searchAllPages(t-> themeGroupsTable.isColumnValueEquals(tableHeader, groupName))
+                .getRowByColumnValue(tableHeader, groupName)
+                .getElementByColumn(actionColumn).$x("..//button").click();
+            Alert.green("Подписки успешно созданы");
 
-
-        return this;
+            return this;
     }
 
     @Step("Нажимаем 'Отписаться' напротив Группы тем {groupName}")
     public MySubscriptionsPage clickUnSubscribeThemeGroup(String groupName){
-        int rowIndex = getRowIndex(groupName);
-        if (rowIndex > 0){
-            $x("(//td[.='{}']//..//button)[1]", groupName).click();
-            Dialog dialog = Dialog.byTitle("Подтверждение удаления подписок на группу тем");
-            dialog.clickButton("Да");
-            alert.check(Alert.Color.GREEN, "Подписки удалены");
-            alert.waitClose();
-        }
-        else {
-            throw new NotFoundException("В таблице нет такой группы тем");
-        }
+        DataTable themeGroupsTable = new DataTable(tableHeader);
+        themeGroupsTable.searchAllPages(t-> themeGroupsTable.isColumnValueEquals(tableHeader, groupName))
+                .getRowByColumnValue(tableHeader, groupName)
+                .getElementByColumn(actionColumn).$x("..//button").click();
+            Dialog.byTitle("Подтверждение удаления подписок на группу тем").clickButton("Да");
+            Alert.green("Подписки удалены");
 
-
-        return this;
+            return this;
     }
 
     @Step("Подписываемся на группу тем {groupName}")
@@ -105,10 +69,10 @@ public class MySubscriptionsPage {
 
     @Step("Проверяем что Группа тем появилась в подписках")
     public MySubscriptionsPage checkThemeGroupSubscription(String context, String ... themes){
-        $x("//div[.='Мои подписки']").click();
-        $x("//td[.='{}']//..//button", context).click();
-        Table table = new Table(tableHeader);
+        returnToMySubscriptionPage();
+        clickContextButton(context);
         for(String theme : themes){
+            Table table = new Table(tableHeader);
             Assertions.assertTrue(table.isColumnValueEquals("Тема", theme));
         }
         return this;
@@ -116,7 +80,10 @@ public class MySubscriptionsPage {
 
     @Step("Раскрываем спойлер контекста")
     public MySubscriptionsPage clickContextButton(String context){
-        $x("//td[.='{}']//..//button", context).shouldBe(Condition.visible).click();
+        DataTable mySubscriptions = new DataTable(contextColumn);
+        mySubscriptions.searchAllPages(t -> mySubscriptions.isColumnValueEquals(contextColumn, context))
+                .getRowByColumnValue(contextColumn, context)
+                .getElementLastColumn().$x("..//button").click();
         return this;
     }
 
@@ -130,9 +97,8 @@ public class MySubscriptionsPage {
     public MySubscriptionsPage checkThemeSubscription(String theme, String context){
         returnToMySubscriptionPage();
         clickContextButton(context);
-        $x("//td[.='{}']", theme).shouldBe(Condition.visible);
-
-        return this;
+      Assertions.assertTrue(new Table(tableHeader).isColumnValueContains(themeColumn, theme));
+      return this;
     }
 
     @Step("Отписываемся от группы тем {groupName}")
@@ -140,48 +106,41 @@ public class MySubscriptionsPage {
         clickCreateSubscription();
         clickGlobal();
         clickUnSubscribeThemeGroup(groupName);
-
-
         return this;
     }
 
     @Step("Проверяем что Группа тем исчезла из подписок")
-    public MySubscriptionsPage checkNoThemeGroupSubscription(String context){
-        $x("//div[.='Мои подписки']").click();
-        $x("//span[contains(text(), '{}')]//..//..//button", context).shouldNotBe(Condition.visible);
+    public MySubscriptionsPage checkNoThemeGroupSubscription(String context, String themeGroup){
+        returnToMySubscriptionPage();
+        if(new Table(contextColumn).isColumnValueEquals(contextColumn, globalContext)){
+            clickContextButton(context);
+            Assertions.assertFalse(new Table(tableHeader).isColumnValueContains(tableHeader, themeGroup));
+        }
         return this;
-
     }
 
     @Step("Подписываемся на тему")
     public MySubscriptionsPage createThemeSubscription(String theme, String groupName){
         clickCreateSubscription();
         clickGlobal();
-        int rowIndex = getRowIndex(groupName);
-        if (rowIndex > 0){
-            $x("(//td[.='{}']//..//button)[2]", groupName).click();
-            $x("//td[.='{}']//..//button", theme).click();
-            new Dialog("Создать подписку").setSelectValue("Приоритет", "Средний").clickButton("Создать");
-            alert.check(Alert.Color.GREEN, "Подписка успешно создана");
-            alert.waitClose();
-        }
-        else {
-            throw new NotFoundException("В таблице нет такой группы тем");
-        }
-
-
-
-
-        return this;
+        DataTable themeGroupTable = new DataTable(tableHeader);
+        themeGroupTable.searchAllPages(t -> themeGroupTable.isColumnValueEquals(tableHeader, groupName))
+                .getRowByColumnValue(tableHeader, groupName)
+                .getElementByColumn("").$x(".//button").click();
+        new DataTable(themeColumn).getRowByColumnValue(themeColumn, theme)
+                .getElementByColumn("Действие").$x("button").click();
+        new Dialog("Создать подписку").setSelectValue("Приоритет", "Средний").clickButton("Создать");
+            Alert.green("Подписка успешно создана");
+            return this;
     }
 
     @Step("Редактируем подписку")
     public MySubscriptionsPage editSubscription(String theme){
         Menu.byElement($x("//td[.='{}']//..//button", theme)).select("Настроить подписку");
         new Dialog("Настроить подписку").setSelectValue("Приоритет", "Низкий").clickButton("Сохранить");
-        alert.check(Alert.Color.GREEN, "Подписка успешно изменена");
+        Alert.green("Подписка успешно изменена");
         new Table("Группа тем").isColumnValueContains("Приоритет", "Низкий");
-        alert.waitClose();
+
 
         return this;
     }
@@ -190,8 +149,7 @@ public class MySubscriptionsPage {
     public MySubscriptionsPage unSubscribe(String theme){
         Menu.byElement($x("//td[.='{}']//..//button", theme)).select("Отписаться");
         new Dialog("Подтверждение удаления подписки").clickButton("Да");
-        alert.check(Alert.Color.GREEN, "Подписка удалена");
-        alert.waitClose();
+        Alert.green("Подписка удалена");
 
         return this;
     }

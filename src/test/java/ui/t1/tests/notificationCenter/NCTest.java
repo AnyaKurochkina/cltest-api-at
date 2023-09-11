@@ -97,7 +97,7 @@ public class NCTest {
             int counterValue = subscriptionSteps.getUnreadCount();
             notificationsPage.checkUnreadCounter(counterValue)
                     .clickTopBarNotification()
-                    .checkNumberOfMessagesTopBar(subject, 5)    //переписать под новую логику(сообщение прочитано после клика)
+                    .checkNumberOfMessagesTopBar(subject, 5)
                     .checkMessageHeader(subject)
                     .checkImportant()
                     .checkMessageLink()
@@ -124,7 +124,7 @@ public class NCTest {
                     .createThemeGroupSubscription(uiTestsGroup)
                     .checkThemeGroupSubscription("Глобальный", uiTestCodeOne, uiTestCodeTwo)
                     .deleteThemeGroupSubscription(uiTestsGroup)
-                    .checkNoThemeGroupSubscription("Глобальный");
+                    .checkNoThemeGroupSubscription("Глобальный", uiTestsGroup);
         }
 
         @Test
@@ -142,23 +142,21 @@ public class NCTest {
         @Title("Создаем подписку для другого пользователя на Группу тем ")
         void subscribeOtherTest() {
             SubscribeUsersPage subscribeUsersPage = new IndexPage().goToUsersSubscriptions();
-            String context = "Глобальный";
             subscribeUsersPage.clickCreateSubscription()
                     .clickGlobal();
-            int rowIndex = subscribeUsersPage.getRowIndex(themeGroupNameThree);
-            subscribeUsersPage.clickSubscribeThemeGroup(rowIndex);
+            subscribeUsersPage.clickSubscribeThemeGroup(themeGroupNameThree);
             subscribeUsersPage
                     .createAdminThemeGroupSubscription("test@t1cloud.dev")
                     .backToAdminSubscriptionMain()
                     .checkAdminSubscriptions(
                             "test@t1cloud.dev",
+                            userEmail,
                             themeCodeThree,
                             themeCodeFour,
                             themeCodeFive,
                             emailTestOne,
                             emailTestTwo);
             subscribeUsersPage.unSubscribeThemeGroup(
-                    context,
                     "test@t1cloud.dev",
                     themeCodeThree,
                     themeCodeFour,
@@ -175,7 +173,6 @@ public class NCTest {
         @Test
         @Title("Проверяем подписку администратора со стороны пользователя")
         void checkAdminSubscriptionTest() {
-
             MySubscriptionsPage mySubscriptionsPage = new IndexPage().goToMySubscriptions();
             mySubscriptionsPage.clickContextButton("Глобальный");
             Table table = new Table("Группа тем");

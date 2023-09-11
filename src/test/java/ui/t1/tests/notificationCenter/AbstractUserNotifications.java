@@ -1,5 +1,6 @@
 package ui.t1.tests.notificationCenter;
 
+import api.Tests;
 import core.enums.Role;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.GlobalUser;
@@ -21,7 +22,7 @@ import static core.enums.NotificationCenterPriorities.*;
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AbstractUserNotifications {
+public class AbstractUserNotifications extends Tests {
 
     Project project;
     GlobalUser user = GlobalUser.builder().role(Role.NOTIFICATIONS_USER).build().createObject();
