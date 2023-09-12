@@ -14,7 +14,9 @@ import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.*;
+import ui.t1.pages.supportCenter.MySubscriptionsPage;
 import ui.t1.pages.supportCenter.NotificationsPage;
+import ui.t1.pages.supportCenter.SubscribeUsersPage;
 
 import java.time.Duration;
 
@@ -29,6 +31,8 @@ public class IndexPage {
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
+    Button linkMySubscriptions = Button.byXpath("//a[.='Мои подписки']");
+    Button linkSubscriptionsByAdmin = Button.byXpath("//a[.='Подписки пользователей организации']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
@@ -185,13 +189,30 @@ public class IndexPage {
         btnAction.shouldNotBe(Condition.exist);
     }
 
-    @Step("Переход в Центр уведомлений")
+    @Step("Переход в Центр уведомлений на страницу Мои уведомления")
     public NotificationsPage goToNotificationCenter(){
         linkSupportCenter.click();
         linkNotifications.click();
         return new NotificationsPage();
     }
 
+    @Step("Переход в Центр уведомлений на страницу Мои подписки")
+    public MySubscriptionsPage goToMySubscriptions(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        linkMySubscriptions.click();
+
+        return new MySubscriptionsPage();
+    }
+
+    @Step("Переходим в Центр уведомлений на страницу Подписки пользователей организации")
+    public SubscribeUsersPage goToUsersSubscriptions(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        linkSubscriptionsByAdmin.click();
+
+        return new SubscribeUsersPage();
+    }
     @Step("Переход в модальное окно изменения контекста")
     public ContextDialog goToContextDialog(){
         changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
