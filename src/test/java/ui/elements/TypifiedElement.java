@@ -1,5 +1,6 @@
 package ui.elements;
 
+import api.Tests;
 import com.codeborne.selenide.*;
 import core.utils.Waiting;
 import lombok.SneakyThrows;
@@ -32,11 +33,6 @@ public interface TypifiedElement {
             Waiting.sleep(ms);
             return true;
         }
-    }
-
-    static void refresh() {
-        Selenide.refresh();
-        checkProject();
     }
 
     /**
@@ -107,8 +103,15 @@ public interface TypifiedElement {
         Alert.closeAll();
     }
 
-    static void open(String url) {
+    static void refreshPage() {
+        Selenide.refresh();
+        Tests.getPostLoadPage().run();
+        checkProject();
+    }
+
+    static void openPage(String url) {
         Selenide.open(url);
+        Tests.getPostLoadPage().run();
         checkProject();
     }
 }
