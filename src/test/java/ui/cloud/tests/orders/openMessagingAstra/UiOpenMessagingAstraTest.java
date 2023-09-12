@@ -24,7 +24,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_openmessaging_astra")})
 public class UiOpenMessagingAstraTest extends UiProductTest {
 
-    OpenMessagingAstra product = OpenMessagingAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/323af104-d7ee-4f4c-8c2c-f57805328c98/main?context=proj-iv550odo9a&type=project&org=vtb");
+    OpenMessagingAstra product;// = OpenMessagingAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/323af104-d7ee-4f4c-8c2c-f57805328c98/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
