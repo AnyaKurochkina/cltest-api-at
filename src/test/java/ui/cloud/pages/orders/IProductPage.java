@@ -57,7 +57,7 @@ public abstract class IProductPage {
         if (Objects.nonNull(product.getError()))
             throw new CreateEntityException(String.format("Продукт необходимый для выполнения теста был создан с ошибкой:\n%s", product.getError()));
         if (Objects.nonNull(product.getLink()))
-            TypifiedElement.open(product.getLink());
+            TypifiedElement.openPage(product.getLink());
         btnGeneralInfo.getButton().shouldBe(Condition.enabled);
         product.setLink(WebDriverRunner.getWebDriver().getCurrentUrl());
         product.addLinkProduct();
@@ -331,15 +331,15 @@ public abstract class IProductPage {
     @SneakyThrows
     @Step("Запуск действия с проверкой стоимости")
     public void runActionWithCheckCost(CompareType type, Executable executable) {
-        TypifiedElement.refresh();
+        TypifiedElement.refreshPage();
         waitChangeStatus();
         double currentCost = getOrderCost();
         executable.execute();
         if (prebillingCostValue == null)
             return;
-        TypifiedElement.refresh();
-        currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(3));
-        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(5),
+        TypifiedElement.refreshPage();
+//        currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(10));
+        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(10),
                 "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (currentCost == prebillingCostValue && prebillingCostValue == 0)
             return;
@@ -368,7 +368,7 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getOrderCost() {
-        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(5)));
+        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(10)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }

@@ -39,8 +39,6 @@ public class Nginx extends IProduct {
         if(productName == null)
             productName = "Nginx Astra";
         initProduct();
-        if(flavor == null)
-            flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(segment == null)
@@ -51,6 +49,8 @@ public class Nginx extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if(flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

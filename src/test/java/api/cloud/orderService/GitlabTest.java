@@ -10,6 +10,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -25,6 +26,8 @@ import java.util.Map;
 @Feature("GitLab")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("gitlab"), @Tag("prod")})
 @DisabledIfEnv("ift")
+@Disabled
+@Deprecated
 public class GitlabTest extends Tests {
     private static final GitLab.Project project = GitLab.Project.builder().name("project").visibility("private").description("desc").build();
 

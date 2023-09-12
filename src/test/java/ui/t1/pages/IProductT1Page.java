@@ -8,7 +8,6 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.NoSuchElementException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.orders.IProductPage;
 import ui.cloud.pages.orders.OrderStatus;
@@ -87,7 +86,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     public void checkLastAction(String action) {
         getBtnGeneralInfo().getButton().shouldBe(Condition.visible);
         if (historyTab.getElement().exists()) {
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
             historyTab.switchTo();
             History history = new History();
             checkErrorByStatus(history.lastActionStatus());

@@ -45,8 +45,6 @@ public class PostgreSQL extends AbstractPostgreSQL {
         if (productName == null)
             productName = "PostgreSQL (Astra Linux)";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (postgresqlVersion == null)
@@ -59,6 +57,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

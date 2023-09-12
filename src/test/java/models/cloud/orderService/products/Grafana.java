@@ -34,8 +34,6 @@ public class Grafana extends IProduct {
         jsonTemplate = "/orders/grafana.json";
         productName = "Grafana";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (segment == null)
@@ -52,6 +50,8 @@ public class Grafana extends IProduct {
             usersPassword = "Ya30GpR49Dget4yY6v3DBBNjJOwcd";
         if (users == null)
             users = "grafana_user";
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

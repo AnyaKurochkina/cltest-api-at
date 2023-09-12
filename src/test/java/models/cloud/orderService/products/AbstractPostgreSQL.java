@@ -4,6 +4,7 @@ import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -22,7 +23,7 @@ import static core.utils.AssertUtils.assertContains;
 
 @SuperBuilder
 @NoArgsConstructor
-//@ToString(onlyExplicitlyIncluded = true, includeFieldNames = false)
+@Setter
 @Log4j2
 public abstract class AbstractPostgreSQL extends IProduct {
     public final static String DB_NAME_PATH = "data.any{it.data.config.db_name=='%s' && it.data.state=='on'}";
