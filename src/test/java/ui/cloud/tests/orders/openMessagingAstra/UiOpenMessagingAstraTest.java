@@ -34,7 +34,7 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
     }
 
     @Test
-    @TmsLink("847274")
+    @TmsLink("")
     @Order(1)
     @DisplayName("UI OpenMessaging Astra. Заказ")
     void orderOpenMessagingAstra() {
@@ -68,7 +68,7 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
         checkOrderCost(prebillingCost, openMessagingAstraPage);
     }
     @Test
-    @TmsLink("1644514")
+    @TmsLink("")
     @Order(2)
     @DisplayName("UI OpenMessaging Astra. Проверка развертывания в истории действий")
     void checkHeaderHistoryTable() {
@@ -79,16 +79,16 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
         new Graph().notContainsStatus(Graph.ERROR);
     }
     @Test
-    @Order(6)
-    @TmsLink("1644508")
+    @Order(3)
+    @TmsLink("")
     @DisplayName("UI OpenMessaging Astra. Обновление установки")
     void updateInstallation() {
         OpenMessagingAstraPage openMessagingAstraPage = new OpenMessagingAstraPage(product);
         openMessagingAstraPage.runActionWithCheckCost(CompareType.EQUALS, openMessagingAstraPage::updateInstallation);
     }
     @Test
-    @Order(8)
-    @TmsLink("1644504")
+    @Order(4)
+    @TmsLink("")
     @DisplayName("UI OpenMessaging Astra. Мониторинг ОС")
     void monitoringOs() {
         OpenMessagingAstraPage openMessagingAstraPage = new OpenMessagingAstraPage(product);
@@ -96,7 +96,7 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
     }
     @Test
     @Order(100)
-    @TmsLink("847280")
+    @TmsLink("")
     @DisplayName("UI OpenMessaging Astra. Удаление продукта")
     void delete() {
         OpenMessagingAstraPage openMessagingAstraPage = new OpenMessagingAstraPage(product);
