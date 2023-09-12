@@ -6,7 +6,6 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.openqa.selenium.ElementClickInterceptedException;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -15,7 +14,6 @@ import java.util.Objects;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
-import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 
