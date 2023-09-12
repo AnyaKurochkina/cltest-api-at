@@ -1,8 +1,6 @@
 package ui.extesions;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.Selenide;
-import core.helper.AttachUtils;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.logging.LogType;
@@ -13,6 +11,7 @@ import java.lang.reflect.Method;
 import java.util.logging.Level;
 
 import static com.codeborne.selenide.Selenide.closeWebDriver;
+import static core.helper.AttachUtils.UImodifyThrowable;
 import static org.junit.TestsExecutionListener.initDriver;
 
 public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, BeforeAllCallback, InvocationInterceptor {
@@ -38,23 +37,12 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
         initDriver();
     }
 
-    public static Throwable attachFiles(Throwable throwable) {
-        try {
-            AttachUtils.attachLinkVideo();
-            AttachUtils.attachRequests();
-            AttachUtils.attachFiles();
-        } catch (Throwable ex) {
-            throwable.addSuppressed(ex);
-        }
-        return throwable;
-    }
-
     @SneakyThrows
     public void interceptTestMethod(final InvocationInterceptor.Invocation<Void> invocation, final ReflectiveInvocationContext<Method> invocationContext, final ExtensionContext extensionContext) {
         try {
             invocation.proceed();
         } catch (Throwable e) {
-            throw attachFiles(e);
+            throw UImodifyThrowable(e);
         }
 //        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
 //            if(Boolean.parseBoolean(getAppProp("webdriver.capabilities.enableVideo", "false"))) {
@@ -66,5 +54,6 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
 //            }
 //        }
     }
+
 
 }

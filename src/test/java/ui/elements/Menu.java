@@ -33,9 +33,14 @@ public class Menu implements TypifiedElement {
     }
 
     public void select(String item) {
-        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        click();
         waitItem(item);
         getItem(item).hover().shouldBe(clickableCnd).click();
+    }
+
+    public Menu click() {
+        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        return this;
     }
 
     private SelenideElement getItem(String item) {
@@ -56,13 +61,13 @@ public class Menu implements TypifiedElement {
 
     @Step("Проверка отображения пункта '{title}'")
     public boolean isItemDisplayed(String title) {
-        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        click();
         return $$x("//li[.='{}']", title).first().isDisplayed();
     }
 
     @Step("Проверка отображения доступного пункта '{title}'")
     public boolean isItemDisplayedEnabled(String title) {
-        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        click();
         return $$x("//li[.='{}']", title)
                 .filter(Condition.attribute("aria-disabled", "false"))
                 .first().isDisplayed();
@@ -70,13 +75,13 @@ public class Menu implements TypifiedElement {
 
     @Step("Проверка отображения недоступного пункта '{title}'")
     public boolean isItemDisplayedDisabled(String title) {
-        element.scrollIntoView(scrollCenter).hover().shouldBe(clickableCnd).click();
+        click();
         return $$x("//li[.='{}']", title)
                 .filter(Condition.attribute("aria-disabled", "true"))
                 .first().isDisplayed();
     }
 
     public List<String> getOptions() {
-        return element.$$("li").texts();
+        return $$x("//*[@role = 'menu']").filter(Condition.visible).get(0).$$("li").texts();
     }
 }

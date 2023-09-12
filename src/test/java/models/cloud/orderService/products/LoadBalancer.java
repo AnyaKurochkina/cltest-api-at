@@ -50,8 +50,6 @@ public class LoadBalancer extends IProduct {
         jsonTemplate = "/orders/load_balancer.json";
         productName = "Load Balancer";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (password == null)
@@ -68,6 +66,8 @@ public class LoadBalancer extends IProduct {
             setZone(ReferencesStep.getJsonPathList(String
                     .format("tags__contains=%s,%s,available&directory__name=gslb_servers", envType().toUpperCase(), segment))
                     .getString("[0].data.name"));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

@@ -35,7 +35,7 @@ class UiNginxAstraCheckUntilOrderTest extends Tests {
 
     @Test
     @TmsLink("")
-    @DisplayName("UI WildFlyAstra. Проверка полей при заказе продукта")
+    @DisplayName("UI Nginx Astra. Проверка полей при заказе продукта")
     void checkFieldVmNumber() {
         new IndexPage()
                 .clickOrderMore()

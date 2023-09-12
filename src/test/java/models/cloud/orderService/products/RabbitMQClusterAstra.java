@@ -48,8 +48,6 @@ public class RabbitMQClusterAstra extends IProduct {
         productName = "RabbitMQ Cluster Astra";
         role = "manager";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if(segment == null)
@@ -60,6 +58,8 @@ public class RabbitMQClusterAstra extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 
@@ -129,7 +129,7 @@ public class RabbitMQClusterAstra extends IProduct {
     }
 
     public void deleteVhost(List<String> collect) {
-        OrderServiceSteps.executeAction("rabbitmq_delete_vhosts_release", this, new JSONObject("{\"vhosts\": " + JsonHelper.toJson(collect) + "}"), projectId);
+        OrderServiceSteps.executeAction("rabbitmq_delete_vhosts_release", this, new JSONObject("{\"rabbitmq_vhosts_to_delete\": " + JsonHelper.toJson(collect) + "}"), projectId);
         for (String name : collect)
             Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
                     String.format(RABBIT_CLUSTER_VHOST, name)), "Присутствует vhost " + name);

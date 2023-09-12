@@ -62,8 +62,6 @@ public class Windows extends IProduct {
         if(role == null){
             role = (String) roles.keySet().toArray()[(int) (Math.random() * roles.size())];
         }
-        if(flavor == null)
-            flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(segment == null)
@@ -74,6 +72,8 @@ public class Windows extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if(flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

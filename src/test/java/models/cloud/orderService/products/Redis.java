@@ -43,8 +43,6 @@ public class Redis extends IProduct {
         if (appUser == null)
             appUser = "appuser";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null) {
             osVersion = getRandomOsVersion();
         }
@@ -61,6 +59,8 @@ public class Redis extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

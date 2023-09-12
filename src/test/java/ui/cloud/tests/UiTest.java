@@ -41,7 +41,7 @@ public class UiTest extends Tests {
 
     @Test
     void name() {
-        new CloudLoginPage().signIn(Role.CLOUD_ADMIN);
+        new CloudLoginPage("proj-y08lm6h7t9").signIn(Role.CLOUD_ADMIN);
         Selenide.open("https://ift1-portal-front.apps.cloud.k8s.test.01.vmw.t1.loc/cloudcompute/networks?context=proj-y08lm6h7t9&type=project&org=ift");
         System.out.println(1);
         ((JavascriptExecutor) WebDriverRunner.getWebDriver()).executeScript("document.title = arguments[0]", UUID.randomUUID().toString());
@@ -49,8 +49,8 @@ public class UiTest extends Tests {
 
     @Test
     void nameT1() {
-        new CloudLoginPage()
-                .signIn(Role.CLOUD_ADMIN);
+//        new CloudLoginPage()
+//                .signIn(Role.CLOUD_ADMIN);
 //        Selenide.open("https://prod-portal-front.cloud.vtb.ru/vm/orders/761a5b34-ecfb-4033-ab66-a2a65cf205ec/main?context=proj-ln4zg69jek&type=project&org=vtb");
         Selenide.open("https://ift1-portal-front.apps.cloud.k8s.test.01.vmw.t1.loc/new-order/9695e599-5481-4d88-97e9-16cd4c56ff91/?isHideChip=true&context=proj-votmndlfyh&type=project&org=ift");
 //        Table.getTableByColumnName("Дата запуска");
