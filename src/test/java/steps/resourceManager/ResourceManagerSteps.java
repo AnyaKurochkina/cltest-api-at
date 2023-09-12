@@ -4,13 +4,13 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.restassured.path.json.JsonPath;
+import models.cloud.authorizer.Folder;
 import models.cloud.tagService.Context;
 import steps.Steps;
 
 import java.util.List;
 import java.util.Objects;
 
-import static api.routes.SecretServiceAdminAPI.getV1Secrets;
 import static core.helper.Configure.ResourceManagerURL;
 
 public class ResourceManagerSteps extends Steps {
@@ -37,6 +37,16 @@ public class ResourceManagerSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath()
                 .getString("data.path"));
+    }
+
+    public static Folder getFolderById(String id) {
+        return Objects.requireNonNull(new Http(ResourceManagerURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/v1/folders/{}", id)
+                .assertStatus(200)
+                        .jsonPath()
+                        .getObject("data", Folder.class)
+               );
     }
 
     public static List<String> getChildren(String id) {

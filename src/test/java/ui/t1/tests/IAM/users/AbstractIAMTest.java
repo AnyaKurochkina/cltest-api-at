@@ -2,8 +2,8 @@ package ui.t1.tests.IAM.users;
 
 import api.Tests;
 import core.enums.Role;
-import kotlin.collections.ArrayDeque;
 import lombok.extern.log4j.Log4j2;
+import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,13 +14,15 @@ import ui.extesions.ConfigExtension;
 import ui.models.IamUser;
 import ui.t1.pages.T1LoginPage;
 
-import java.util.Arrays;
+import java.util.Collections;
+
+import static steps.resourceManager.ResourceManagerSteps.getFolderById;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
 public abstract class AbstractIAMTest extends Tests {
     Project project;
-    String folderId;
+    Folder folder;
     Organization organization;
     IamUser user;
     IamUser user2;
@@ -29,10 +31,10 @@ public abstract class AbstractIAMTest extends Tests {
     public AbstractIAMTest() {
         organization = Organization.builder().type("default").build().createObject();
         project = Project.builder().isForOrders(true).build().createObject();
-        folderId = AuthorizerSteps.getParentProject(project.getId());;
-        user = new IamUser("airat.muzafarov@gmail.com", new ArrayDeque<>(Arrays.asList("Администратор")));
-        user2 = new IamUser("x64-bit@ya.ru", new ArrayDeque<>(Arrays.asList("Администратор")));
-        user3 = new IamUser("amuzafarov@t1.ru", new ArrayDeque<>(Arrays.asList("Администратор")));
+        folder = getFolderById(AuthorizerSteps.getParentProject(project.getId()));
+        user = new IamUser("airat.muzafarov@gmail.com", (Collections.singletonList("Администратор")));
+        user2 = new IamUser("x64-bit@ya.ru", (Collections.singletonList("Администратор")));
+        user3 = new IamUser("amuzafarov@t1.ru", (Collections.singletonList("Администратор")));
     }
 
     @BeforeEach
