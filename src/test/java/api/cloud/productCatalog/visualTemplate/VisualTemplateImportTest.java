@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductCatalogSteps.*;
 import static steps.productCatalog.TemplateSteps.deleteTemplateByName;
@@ -150,7 +151,9 @@ public class VisualTemplateImportTest extends Tests {
         DataFileHelper.write(filePath, updatedJsonForImport);
 
         importObjectWithTagList("item_visual_templates", filePath);
-        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getVisualTemplateByName(visualTemplateName).getTagList());
+        List<String> expectedTags = Arrays.asList("new_tag", "import_test", "test_import");
+        List<String> actualTags = getVisualTemplateByName(visualTemplateName).getTagList();
+        assertEqualsList(expectedTags, actualTags);
         deleteVisualTemplateByName(visualTemplateName);
     }
 }
