@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
-import static core.helper.StringUtils.format;
+import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.ProductCatalogSteps.*;
@@ -181,8 +181,7 @@ public class ProductImportTest extends Tests {
         importObjectWithTagList("products", filePath);
         List<String> expectedTags = Arrays.asList("new_tag", "import_test", "test_import");
         List<String> actualTags = getProductByName(productName).getTagList();
-        assertTrue(expectedTags.containsAll(actualTags) && actualTags.containsAll(expectedTags)
-                && expectedTags.size() == actualTags.size(), format("{} и {} не равны", expectedTags.toString(), actualTags.toString()));
+        assertEqualsList(expectedTags, actualTags);
         deleteProductByName(productName);
     }
 }

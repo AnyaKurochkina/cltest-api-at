@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.*;
@@ -159,7 +160,7 @@ public class GraphImportTest extends Tests {
         importObjectWithTagList("graphs", filePath);
         List<String> expectedTags = Arrays.asList("new_tag", "import_test", "test_import");
         List<String> actualTags = getGraphByName(graphName).getTagList();
-        assertTrue(expectedTags.containsAll(actualTags) && actualTags.containsAll(expectedTags)
-                && expectedTags.size() == actualTags.size());
+        assertEqualsList(expectedTags, actualTags);
+        deleteGraphByName(graphName);
     }
 }

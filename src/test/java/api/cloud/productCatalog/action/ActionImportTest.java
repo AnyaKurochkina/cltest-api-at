@@ -21,6 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
+import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -105,8 +106,7 @@ public class ActionImportTest extends Tests {
         importObjectWithTagList("actions", filePath);
         List<String> expectedTags = Arrays.asList("new_tag", "import_test", "test_import");
         List<String> actualTags = getActionByName(actionName).getTagList();
-        assertTrue(expectedTags.containsAll(actualTags) && actualTags.containsAll(expectedTags)
-                && expectedTags.size() == actualTags.size());
+        assertEqualsList(expectedTags, actualTags);
         deleteActionByName(actionName);
     }
 
