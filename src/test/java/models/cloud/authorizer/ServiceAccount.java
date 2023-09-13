@@ -5,10 +5,12 @@ import core.enums.Role;
 import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.StatusResponseException;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.Singular;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -27,16 +29,21 @@ import static core.utils.Waiting.sleep;
 public class ServiceAccount extends Entity implements KeyCloakClient {
     String projectId;
     String secret;
+    @Setter
     String id;
     String title;
     String jsonTemplate;
     Role role;
+    Boolean withApiKey;
 
     @Singular
     public List<String> roles;
 
     @Override
     public Entity init() {
+        if (withApiKey == null) {
+            withApiKey = true;
+        }
         jsonTemplate = "/authorizer/service_accounts.json";
         if (title == null)
             title = new Generex("[a-z]{5,18}").random();
@@ -132,7 +139,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         Assertions.assertEquals(title, jsonPath.get("data.title"));
         id = jsonPath.get("data.name");
 
-        if (!secret.equals("without")) {
+        if (withApiKey) {
             jsonPath = new Http(Configure.IamURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .body(toJson())
@@ -146,31 +153,33 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     @Override
     @Step("Удаление сервисного аккаунта")
     protected void delete() {
-        new Http(Configure.IamURL)
-                .setRole(Role.CLOUD_ADMIN)
-                .delete("/v1/projects/{}/service_accounts/{}/api_keys/{}", projectId, id, id)
-                .assertStatus(204);
-
-        int counter = 6;
-        JsonPath apiKeyResponse = null;
-        log.info("Проверка статуса статического ключа");
-        while (counter > 0) {
-            sleep(10000);
-            apiKeyResponse = new Http(Configure.IamURL)
+        try {
+            new Http(Configure.IamURL)
                     .setRole(Role.CLOUD_ADMIN)
-                    .get("/v1/projects/{}/service_accounts/{}", projectId, id)
-                    .assertStatus(200)
-                    .jsonPath();
+                    .delete("/v1/projects/{}/service_accounts/{}/api_keys/{}", projectId, id, id)
+                    .assertStatus(204);
+
+            int counter = 6;
+            JsonPath apiKeyResponse = null;
+            log.info("Проверка статуса статического ключа");
+            while (counter > 0) {
+                sleep(10000);
+                apiKeyResponse = new Http(Configure.IamURL)
+                        .setRole(Role.CLOUD_ADMIN)
+                        .get("/v1/projects/{}/service_accounts/{}", projectId, id)
+                        .assertStatus(200)
+                        .jsonPath();
 
 
-            if (apiKeyResponse.get("data.api_keys") == null) {
-                break;
+                if (apiKeyResponse.get("data.api_keys") == null) {
+                    break;
+                }
+                counter = counter - 1;
             }
-            counter = counter - 1;
+
+            Assertions.assertNull(apiKeyResponse.get("data.api_key"));
+        } catch (StatusResponseException ignore) {
         }
-
-        Assertions.assertNull(apiKeyResponse.get("data.api_key"));
-
         new Http(Configure.IamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/projects/{}/service_accounts/{}", projectId, id)

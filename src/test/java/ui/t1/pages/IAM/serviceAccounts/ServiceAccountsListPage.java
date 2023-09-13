@@ -2,8 +2,11 @@ package ui.t1.pages.IAM.serviceAccounts;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import io.qameta.allure.Step;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.ServiceAccount;
+import org.apache.commons.lang3.RandomStringUtils;
+import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.*;
 
 import java.util.Arrays;
@@ -24,6 +27,7 @@ public class ServiceAccountsListPage {
         $x("//div[text() = 'Сервисные аккаунты' and @type]").shouldBe(Condition.visible);
     }
 
+    @Step("Создание сервисного аккаунта")
     public ServiceAccountPage createServiceAccount(ServiceAccount account) {
         String accTitle = account.getTitle();
         createServiceAccountButton.click();
@@ -35,6 +39,7 @@ public class ServiceAccountsListPage {
         return new ServiceAccountPage(accTitle);
     }
 
+    @Step("Редактирование сервисного аккаунта")
     public ServiceAccountsListPage editServiceAccount(String title, ServiceAccount account) {
         Menu.byElement(serviceAccountsTable.getRowByColumnValue("Название", title)
                         .getElementLastColumn())
@@ -48,6 +53,28 @@ public class ServiceAccountsListPage {
         return this;
     }
 
+    @Step("Удаление сервисного аккаунта с апи токеном")
+    public ServiceAccountsListPage deleteServiceAccountWithApiToken(ServiceAccount account) {
+        Menu.byElement(serviceAccountsTable.getRowByColumnValue("Название", account.getTitle())
+                        .getElementLastColumn())
+                .select("Удалить");
+        DeleteDialog deleteDialog = new DeleteDialog("Удаление сервисного аккаунта");
+        deleteDialog.inputIdAndCheckNotDeletable("Для удаления сервисного аккаунта необходимо удалить привязанный API-ключ");
+        return this;
+    }
+
+    @Step("Удаление сервисного аккаунта")
+    public ServiceAccountsListPage deleteServiceAccount(ServiceAccount account) {
+        Menu.byElement(serviceAccountsTable.getRowByColumnValue("Название", account.getTitle())
+                        .getElementLastColumn())
+                .select("Удалить");
+        DeleteDialog deleteDialog = new DeleteDialog("Удаление сервисного аккаунта");
+        deleteDialog.inputInvalidId(RandomStringUtils.randomAlphabetic(6));
+        deleteDialog.inputValidIdAndDelete(format("Сервисный аккаунт {} успешно удален", account.getId()));
+        return this;
+    }
+
+    @Step("Проверка данных аккаунта")
     public ServiceAccountsListPage checkAccountData(ServiceAccount account) {
         GlobalUser user = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
         Table.Row row = serviceAccountsTable.getRowByColumnValue("Название", account.getTitle());
@@ -63,11 +90,13 @@ public class ServiceAccountsListPage {
         return this;
     }
 
+    @Step("Переход в сервисный аккаунт")
     public ServiceAccountPage goToServiceAccountPage(ServiceAccount account) {
         serviceAccountsTable.getRowByColumnValue("Название", account.getTitle()).get().click();
         return new ServiceAccountPage(account.getTitle());
     }
 
+    @Step("Проверка существования сервисного аккаунта {title}")
     public Boolean isServiceAccountExist(String title) {
         return new Table("Название").isColumnValueEquals("Название", title);
     }
