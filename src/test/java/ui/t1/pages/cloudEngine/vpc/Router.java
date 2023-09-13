@@ -26,7 +26,7 @@ public class Router extends IProductT1Page<Router> {
             super(Column.MAC);
         }
 
-        private SelenideElement getNetworkMenu(String network){
+        public SelenideElement getNetworkMenu(String network){
             return getRowByColumnValue(Column.NETWORK, network).get().$("button");
         }
     }

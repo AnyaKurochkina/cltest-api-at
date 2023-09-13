@@ -113,6 +113,5 @@ public class StateServiceTest extends Tests {
         createBulkAddAction(project.getId(), newAction);
         Item newItem = getItemsWithActionsByFilter("order_id", uuid).get(0);
         assertEquals(newFolder, newItem.getFolder());
-
     }
 }

@@ -1,0 +1,12 @@
+{
+  "importance": "LOW",
+  "channels": [
+    "ws", "email"
+  ],
+  "user_ids": [
+    "review@technoserv.cloud"
+  ],
+  "theme_id": 62,
+  "context_type": null,
+  "context": null
+}

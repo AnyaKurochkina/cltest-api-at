@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @Feature("Авторизация на портале")
 @Epic("Главная страница")
-@Tags({@Tag("regress"), @Tag("teamcity")})
+@Tags({@Tag("regress"), @Tag("teamcity"), @Tag("health_check")})
 public class KeyCloakTest extends Tests {
 
     @Test

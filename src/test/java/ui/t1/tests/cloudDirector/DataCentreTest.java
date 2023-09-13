@@ -143,7 +143,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
             Alert.red("Заказ защищен от удаления");
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
         } finally {
             Waiting.sleep(10000);
             dataCentrePage.switchProtectOrder(false);

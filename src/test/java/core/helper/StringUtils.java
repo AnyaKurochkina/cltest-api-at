@@ -104,6 +104,16 @@ public final class StringUtils {
         }
     }
 
+    public static String getContextType(String contextType) {
+        if (contextType.equals("folder")) {
+            return "Папка";
+        }
+        if (contextType.equals("project")) {
+            return "Проект";
+        }
+        return "Организация";
+    }
+
     public static boolean isNullOrEmpty(String value) {
         return value == null || value.length() == 0;
     }

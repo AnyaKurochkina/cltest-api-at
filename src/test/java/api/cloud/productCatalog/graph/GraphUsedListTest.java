@@ -1,22 +1,21 @@
 package api.cloud.productCatalog.graph;
 
+import api.Tests;
 import core.helper.http.Response;
-import httpModels.productCatalog.service.getService.response.GetServiceResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
-import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
+import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
-import api.Tests;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,6 +23,7 @@ import static steps.productCatalog.ActionSteps.getActionById;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductSteps.getProductById;
 import static steps.productCatalog.ProductSteps.partialUpdateProduct;
+import static steps.productCatalog.ServiceSteps.getServiceById;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -196,7 +196,7 @@ public class GraphUsedListTest extends Tests {
                 "/productCatalog/services/createServices.json");
         serviceSteps.partialUpdateObject(service.getId(), new JSONObject()
                 .put("service_info", "updated_service_for_last_version_used_graph_test_api"));
-        String serviceVersion = serviceSteps.getById(service.getId(), GetServiceResponse.class).getVersion();
+        String serviceVersion = getServiceById(service.getId()).getVersion();
 
         Action action = Action.builder()
                 .name("action_for_last_object_used_graph_test_api")

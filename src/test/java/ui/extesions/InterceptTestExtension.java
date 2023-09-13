@@ -28,8 +28,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+import static core.helper.AttachUtils.UImodifyThrowable;
 import static io.qameta.allure.Allure.getLifecycle;
-import static ui.extesions.ConfigExtension.attachFiles;
 
 @Log4j2
 public class InterceptTestExtension implements InvocationInterceptor, TestExecutionListener {
@@ -73,8 +73,8 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
                 } catch (Throwable e) {
                     invocation.skip();
                     if (Objects.nonNull(e.getCause()))
-                        throw attachFiles(e.getCause());
-                    throw attachFiles(e);
+                        throw UImodifyThrowable(e.getCause());
+                    throw UImodifyThrowable(e);
                 } finally {
                     runBeforeAll.add(extensionContext.getParent().orElseThrow(Exception::new).getUniqueId());
                 }
@@ -95,7 +95,7 @@ public class InterceptTestExtension implements InvocationInterceptor, TestExecut
                     && extensionContext.getRequiredTestMethod().getName().equals(before.getName())
                     && extensionContext.getRequiredTestClass().isAnnotationPresent(BlockTests.class))
                 failClass.put(extensionContext.getRequiredTestClass().getName(), e);
-            testThrow = attachFiles(e);
+            testThrow = UImodifyThrowable(e);
         }
 
         //если все тесты в классе были запущены

@@ -1,0 +1,4 @@
+Astra:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "vsphere", env: "DEV" }

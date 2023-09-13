@@ -37,6 +37,7 @@ public class FoldersTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(3)
     @TmsLink("377752")
     @DisplayName("Создание Папки")
@@ -56,6 +57,7 @@ public class FoldersTest extends Tests {
     }
 
     @Test
+    @Tag("health_check")
     @Order(5)
     @TmsLink("377753")
     @DisplayName("Удаление Папки")

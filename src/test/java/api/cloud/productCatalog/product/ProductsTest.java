@@ -20,7 +20,6 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -37,9 +36,6 @@ import static steps.references.ReferencesStep.*;
 @DisabledIfEnv("prod")
 public class ProductsTest extends Tests {
 
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/products/",
-            "productCatalog/products/createProduct.json");
-
     Map<String, String> info = new LinkedHashMap<String, String>() {{
         put("information", "testData");
     }};
@@ -47,7 +43,7 @@ public class ProductsTest extends Tests {
     @DisplayName("Создание продукта в продуктовом каталоге")
     @TmsLink("643375")
     @Test
-    public void createProduct() {
+    public void createProductTest() {
         Product product = Product.builder()
                 .name("create_product_test_api")
                 .title("AtTestApiProduct")
@@ -211,7 +207,7 @@ public class ProductsTest extends Tests {
         createProductWithPublicToken(createProduct).assertStatus(403);
         partialUpdateProductWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
                 .assertStatus(403);
-        putProductByIdWithPublicToken(productId, steps.createJsonObject("update_object_with_public_token_api"))
+        putProductByIdWithPublicToken(productId, createProduct("update_object_with_public_token_api").toJson())
                 .assertStatus(403);
         deleteProductWithPublicToken(productId).assertStatus(403);
     }
@@ -292,9 +288,9 @@ public class ProductsTest extends Tests {
                 .createObject();
         String cloneName = product.getName() + "-clone";
         copyProductById(product.getProductId());
-        assertTrue(steps.isExists(cloneName));
+        assertTrue(isProductExists(cloneName));
         deleteProductByName(cloneName);
-        assertFalse(steps.isExists(cloneName));
+        assertFalse(isProductExists(cloneName));
     }
 
     @DisplayName("Проверка tag_list при копировании продукта")
@@ -559,7 +555,7 @@ public class ProductsTest extends Tests {
                 .informationSystems(Collections.emptyList())
                 .build()
                 .createObject();
-        steps.getProductByContextProject(project.getId(), product.getProductId());
+        getProductByContextProject(project.getId(), product.getProductId());
     }
 
     @Test

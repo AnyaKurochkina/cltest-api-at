@@ -55,8 +55,6 @@ public class ScyllaDbCluster extends IProduct {
         if("LT".equalsIgnoreCase(getEnv()))
             productName = "ScyllaDB Cluster Astra LT";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (version == null)
@@ -75,6 +73,8 @@ public class ScyllaDbCluster extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

@@ -45,7 +45,7 @@ public class EngineTest extends AbstractComputeTest {
     public static void beforeAll() {}
 
     private void checkElementsEngine(Condition condition){
-        TypifiedElement.refresh();
+        TypifiedElement.refreshPage();
         IndexPage indexPage = new IndexPage();
         indexPage.goToCloudEngine();
         indexPage.getLinkDisks().getButton().shouldBe(condition);
@@ -72,7 +72,7 @@ public class EngineTest extends AbstractComputeTest {
     void disconnectEngine() {
         new IndexPage().disconnectCloudEngine();
         checkElementsEngine(Condition.not(Condition.visible));
-        TypifiedElement.refresh();
+        TypifiedElement.refreshPage();
         new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible, Duration.ofMinutes(2));
     }
 }

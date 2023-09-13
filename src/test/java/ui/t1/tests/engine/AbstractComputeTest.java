@@ -28,6 +28,7 @@ import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
+import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -89,7 +90,7 @@ public abstract class AbstractComputeTest extends Tests {
     public void beforeEach() {
         new T1LoginPage(getProjectId())
                 .signIn(Role.CLOUD_ADMIN);
-        Waiting.sleep(3000);
+        Tests.getPostLoadPage().run();
     }
 
     @BeforeAll
@@ -237,6 +238,23 @@ public abstract class AbstractComputeTest extends Tests {
                 .clickOrder();
         new VmList().selectCompute(v.getName())
                 .markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        return v;
+    });
+
+    protected final EntitySupplier<VmCreate> publicIpVm = lazy(() -> {
+        String ip = new IndexPage().goToPublicIps().addIp(region);
+        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity().setMode(AbstractEntity.Mode.AFTER_CLASS));
+        VmCreate v = new IndexPage().goToVirtualMachine().addVm()
+                .setAvailabilityZone(availabilityZone)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setPublicIp(ip)
+                .setSshKey(sshKey)
+                .clickOrder();
+        new VmList().selectCompute(v.getName())
+                .markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(false);
         return v;
     });
 }

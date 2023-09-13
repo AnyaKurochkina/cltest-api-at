@@ -45,8 +45,6 @@ public class ApacheAirflow extends IProduct {
         jsonTemplate = "/orders/apache_airflow.json";
         productName = "Apache Airflow Astra";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (airflowVersion == null)
@@ -59,6 +57,8 @@ public class ApacheAirflow extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

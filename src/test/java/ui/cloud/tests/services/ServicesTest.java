@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ServiceSteps.createService;
 import static steps.productCatalog.ServiceSteps.partialUpdateServiceByName;
-import static ui.elements.TypifiedElement.refresh;
+import static ui.elements.TypifiedElement.refreshPage;
 
 @ExtendWith(ConfigExtension.class)
 @Epic("Сервисы")
@@ -71,7 +71,7 @@ public class ServicesTest extends Tests {
         ServicesListPage page = new ServicesListPage();
         assertFalse(page.isProductDisplayed(service.getTitle()));
         partialUpdateServiceByName(name, new JSONObject().put("is_published", "true"));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(service.getTitle()));
         partialUpdateServiceByName(name, new JSONObject().put("is_published", "false"));
     }

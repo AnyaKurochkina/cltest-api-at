@@ -5,10 +5,6 @@ import ui.LoginPage;
 
 public class CloudLoginPage extends LoginPage {
 
-    public CloudLoginPage() {
-        super();
-    }
-
     public CloudLoginPage(String project) {
         super(project);
     }

@@ -26,6 +26,7 @@ import static steps.productCatalog.ActionSteps.*;
 public class ActionByNameTest extends Tests {
 
     @DisplayName("Получение действия по имени")
+    @Tag("health_check")
     @TmsLink("1358558")
     @Test
     public void getActionByNameTest() {

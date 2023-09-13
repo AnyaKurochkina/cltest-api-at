@@ -34,7 +34,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.portalBack.PortalBackSteps.getInformationSystemId;
 import static steps.productCatalog.ProductSteps.createProduct;
 import static steps.productCatalog.ProductSteps.partialUpdateProductByName;
-import static ui.elements.TypifiedElement.refresh;
+import static ui.elements.TypifiedElement.refreshPage;
 
 @Feature("Маркетплейс продуктов для заказа")
 @DisabledIfEnv("prod")
@@ -60,13 +60,13 @@ public class ProductsTest extends Tests {
         ProductsPage page = new IndexPage().clickOrderMore();
         assertFalse(page.isProductDisplayed(product.getTitle()));
         partialUpdateProductByName(name, new JSONObject().put("is_open", "true").put("in_general_list", "true"));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(product.getTitle()));
         partialUpdateProductByName(name, new JSONObject().put("is_open", "false"));
-        refresh();
+        refreshPage();
         assertFalse(page.isProductDisplayed(product.getTitle()));
         partialUpdateProductByName(name, new JSONObject().put("is_open", "true").put("in_general_list", "false"));
-        refresh();
+        refreshPage();
         assertFalse(page.isProductDisplayed(product.getTitle()));
     }
 
@@ -82,7 +82,7 @@ public class ProductsTest extends Tests {
         page.expandProductsList();
         int index1 = page.getProducts().indexOf(page.getProducts().find(Condition.exactText(name)));
         partialUpdateProductByName(name, new JSONObject().put("number", "100"));
-        refresh();
+        refreshPage();
         page.expandProductsList();
         int index2 = page.getProducts().indexOf(page.getProducts().find(Condition.exactText(name)));
         assertTrue(index1 < index2);
@@ -102,15 +102,15 @@ public class ProductsTest extends Tests {
         assertFalse(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("allowed_groups",
                 Arrays.asList(pcAdmin.getUsername(), orderServiceAdmin.getUsername())));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("allowed_groups", new JSONArray())
                 .put("restricted_groups", Collections.singletonList(pcAdmin.getUsername())));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("restricted_groups",
                 Arrays.asList(pcAdmin.getUsername(), orderServiceAdmin.getUsername())));
-        refresh();
+        refreshPage();
         assertFalse(page.isProductDisplayed(name));
     }
 
@@ -128,7 +128,7 @@ public class ProductsTest extends Tests {
         assertTrue(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject().put("allowed_groups", new JSONArray())
                 .put("restricted_groups", Collections.singletonList(keycloakRole)));
-        refresh();
+        refreshPage();
         assertFalse(page.isProductDisplayed(name));
     }
 
@@ -148,7 +148,7 @@ public class ProductsTest extends Tests {
         assertFalse(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject()
                 .put("context_restrictions", Arrays.asList(restriction1, restriction2)));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(name));
     }
 
@@ -178,7 +178,7 @@ public class ProductsTest extends Tests {
         partialUpdateProductByName(name, new JSONObject()
                 .put("context_restrictions",
                         Arrays.asList(restriction1, restriction2)));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(name));
     }
 
@@ -206,7 +206,7 @@ public class ProductsTest extends Tests {
         assertFalse(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject()
                 .put("context_restrictions", Arrays.asList(restriction1, restriction2)));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(name));
     }
 
@@ -234,7 +234,7 @@ public class ProductsTest extends Tests {
         assertFalse(page.isProductDisplayed(name));
         partialUpdateProductByName(name, new JSONObject()
                 .put("context_restrictions", Arrays.asList(restriction1, restriction2)));
-        refresh();
+        refreshPage();
         assertTrue(page.isProductDisplayed(name));
     }
 }

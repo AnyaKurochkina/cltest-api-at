@@ -16,6 +16,7 @@ import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.ActionSteps.partialUpdateAction;
 
 @Tag("product_catalog")
+@Tag("health_check")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")

@@ -70,7 +70,7 @@ public class DataTable extends Table {
     @SneakyThrows
     @Step("Поиск страницы с подходящим условием")
     public DataTable searchAllPages(Predicate<DataTable> condition) {
-        if(isPreviousPage())
+        if (isPreviousPage())
             selectPage(1);
         while (true) {
             if (condition.test(this))
