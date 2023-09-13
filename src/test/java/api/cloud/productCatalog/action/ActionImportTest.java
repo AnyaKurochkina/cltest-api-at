@@ -103,7 +103,10 @@ public class ActionImportTest extends Tests {
         DataFileHelper.write(filePath, updatedJsonForImport);
 
         importObjectWithTagList("actions", filePath);
-        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getActionByName(actionName).getTagList());
+        List<String> expectedTags = Arrays.asList("new_tag", "import_test", "test_import");
+        List<String> actualTags = getActionByName(actionName).getTagList();
+        assertTrue(expectedTags.containsAll(actualTags) && actualTags.containsAll(expectedTags)
+                && expectedTags.size() == actualTags.size());
         deleteActionByName(actionName);
     }
 

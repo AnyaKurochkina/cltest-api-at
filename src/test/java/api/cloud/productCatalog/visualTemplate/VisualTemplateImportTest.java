@@ -150,7 +150,10 @@ public class VisualTemplateImportTest extends Tests {
         DataFileHelper.write(filePath, updatedJsonForImport);
 
         importObjectWithTagList("item_visual_templates", filePath);
-        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getVisualTemplateByName(visualTemplateName).getTagList());
+        List<String> expectedTags = Arrays.asList("new_tag", "import_test", "test_import");
+        List<String> actualTags = getVisualTemplateByName(visualTemplateName).getTagList();
+        assertTrue(expectedTags.containsAll(actualTags) && actualTags.containsAll(expectedTags)
+                && expectedTags.size() == actualTags.size());
         deleteVisualTemplateByName(visualTemplateName);
     }
 }

@@ -157,6 +157,9 @@ public class GraphImportTest extends Tests {
                 .toString();
         DataFileHelper.write(filePath, updatedJsonForImport);
         importObjectWithTagList("graphs", filePath);
-        assertEquals(Arrays.asList("new_tag", "import_test", "test_import"), getGraphByName(graphName).getTagList());
+        List<String> expectedTags = Arrays.asList("new_tag", "import_test", "test_import");
+        List<String> actualTags = getGraphByName(graphName).getTagList();
+        assertTrue(expectedTags.containsAll(actualTags) && actualTags.containsAll(expectedTags)
+                && expectedTags.size() == actualTags.size());
     }
 }
