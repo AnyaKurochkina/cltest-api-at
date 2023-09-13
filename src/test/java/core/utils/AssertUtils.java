@@ -1,12 +1,16 @@
 package core.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import core.exception.NotFoundElementException;
+import lombok.SneakyThrows;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.Table;
 
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
 public class AssertUtils {
@@ -21,7 +25,7 @@ public class AssertUtils {
     }
 
     public static void assertHeaders(Table table, Collection<String> headers) {
-        Assertions.assertEquals(headers, table.getHeaders(), "Названия столбцов в таблице не совпадают");
+        assertEquals(headers, table.getHeaders(), "Названия столбцов в таблице не совпадают");
     }
 
     public static void assertEqualsList(List<String> l1, List<String> l2) {
@@ -30,6 +34,12 @@ public class AssertUtils {
         if (!differences.isEmpty()) {
             fail(String.format("Списки не совпадают:\n%s\n%s", Arrays.toString(l1.toArray()), Arrays.toString(l2.toArray())));
         }
+    }
+
+    @SneakyThrows
+    public static void assertEqualsJson(JSONObject j1, JSONObject j2) {
+        ObjectMapper mapper = new ObjectMapper();
+        assertEquals(mapper.readTree(j1.toString()), mapper.readTree(j2.toString()));
     }
 
     public static void assertContainsList(List<?> list, Object object) {

@@ -12,16 +12,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class DeleteDialog extends Dialog {
     private final SelenideElement deleteButton = $x("//button[@type ='submit']");
-    private final SelenideElement idNotValidMsg = $x("//p[text() = 'Идентификаторы не совпадают']");
-    private final SelenideElement id = $x("//form//p//b");
+    private final SelenideElement idNotValidMsg = $x("//*[text() = 'Идентификаторы не совпадают']");
+    private final SelenideElement id = $x("//*//p//b");
 
     public DeleteDialog() {
         super("Удаление");
     }
 
+    public DeleteDialog(String title) {
+        super(title);
+    }
+
     @Step("Вводим неверный id")
     public DeleteDialog inputInvalidId(String idValue) {
-        setInputValue("Идентификатор", idValue);
+        setInputByName("id", idValue);
         assertTrue(idNotValidMsg.isDisplayed());
         assertFalse(deleteButton.isEnabled());
         return this;
@@ -29,14 +33,14 @@ public class DeleteDialog extends Dialog {
 
     @Step("Вводим верный id")
     public void inputValidIdAndDelete() {
-        setInputValue("Идентификатор", id.getText());
+        setInputByName("id", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
         Alert.green("Удаление выполнено успешно");
     }
 
     @Step("Вводим верный id")
     public void inputValidIdAndDelete(String alertText) {
-        setInputValue("Идентификатор", id.getText());
+        setInputByName("id", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
         Alert.green(alertText);
     }
@@ -49,7 +53,7 @@ public class DeleteDialog extends Dialog {
 
     @Step("Проверка недоступности удаления и текста уведомления")
     public void inputIdAndCheckNotDeletable(String alertText) {
-        setInputValue("Идентификатор", id.getText());
+        setInputByName("id", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
         Alert.red(alertText);
     }

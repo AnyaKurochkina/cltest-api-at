@@ -1,4 +1,4 @@
-package ui.t1.tests.IAM.users;
+package ui.t1.pages.IAM;
 
 import core.helper.StringUtils;
 import core.utils.Waiting;
