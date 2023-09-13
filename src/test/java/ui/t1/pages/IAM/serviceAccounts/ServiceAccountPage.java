@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static core.helper.StringUtils.$x;
+import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -51,7 +52,7 @@ public class ServiceAccountPage {
         account.setId(id);
         assertTrue(id.startsWith("sa_proj-"));
         assertEquals(user.getEmail(), userName);
-        assertTrue(actualRoles.containsAll(expectedRoles) && expectedRoles.containsAll(actualRoles));
+        assertEqualsList(expectedRoles, actualRoles);
         return this;
     }
 

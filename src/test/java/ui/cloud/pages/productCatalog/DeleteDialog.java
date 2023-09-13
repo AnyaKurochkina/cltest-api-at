@@ -55,7 +55,7 @@ public class DeleteDialog extends Dialog {
     public void inputIdAndCheckNotDeletable(String alertText) {
         setInputByName("id", id.getText());
         deleteButton.shouldBe(Condition.enabled).click();
-        Alert.red(alertText).close();
+        Alert.red(alertText);
     }
 
     @Step("Подтверждение удаления объекта")

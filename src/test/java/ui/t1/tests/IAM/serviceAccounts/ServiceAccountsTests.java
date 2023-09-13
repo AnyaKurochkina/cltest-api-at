@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ExtendWith(ConfigExtension.class)
 public class ServiceAccountsTests extends Tests {
 
-    Project project = Project.builder().isForOrders(true).build().createObject();
+    Project project = Project.builder().isForOrders(true).build().onlyGetObject();
 
     @BeforeEach
     @Title("Авторизация на портале")

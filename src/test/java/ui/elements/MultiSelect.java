@@ -4,8 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
-import java.util.List;
-
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
@@ -53,21 +51,6 @@ public class MultiSelect extends Select {
 
     @Step("MultiSelect. Выбор элементов '{values}'")
     public String[] set(String... values) {
-        hover();
-        clear();
-        element.click();
-        for (String value : values) {
-            getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
-                    .click();
-        }
-        //TODO:
-        // Заменил hideOptions() -> hideOptionsByLastSvg(). Не аффектит ли что-либо
-        hideOptionsByLastSvg();
-        return values;
-    }
-
-    @Step("MultiSelect. Выбор элементов '{values}'")
-    public List<String> set(List<String> values) {
         hover();
         clear();
         element.click();

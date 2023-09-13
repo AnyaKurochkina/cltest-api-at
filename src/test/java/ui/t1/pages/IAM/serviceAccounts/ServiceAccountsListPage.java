@@ -14,6 +14,7 @@ import java.util.List;
 
 import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.format;
+import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,7 +34,7 @@ public class ServiceAccountsListPage {
         createServiceAccountButton.click();
         Dialog createDialog = Dialog.byTitle("Создать сервисный аккаунт");
         createDialog.setInputValueV2("Название", accTitle);
-        roles.set(account.getRoles());
+        roles.set(account.getRoles().toArray(new String[0]));
         createDialog.clickButton("Создать");
         Alert.green(format("Сервисный аккаунт {} успешно создан", accTitle));
         return new ServiceAccountPage(accTitle);
@@ -47,7 +48,7 @@ public class ServiceAccountsListPage {
         Dialog editDialog = Dialog.byTitle("Редактировать сервисный аккаунт");
         editDialog.setInputValueV2("Название", account.getTitle());
         roles.clear();
-        roles.set(account.getRoles());
+        roles.set(account.getRoles().toArray(new String[0]));
         editDialog.clickButton("Применить");
         Alert.green(format("Сервисный аккаунт {} успешно изменен", account.getTitle()));
         return this;
@@ -86,7 +87,7 @@ public class ServiceAccountsListPage {
         assertTrue(actualId.startsWith("sa_proj-"));
         assertEquals(user.getEmail(), actualUserName);
         assertEquals(account.getTitle(), actualTitle);
-        assertTrue(actualRoles.containsAll(expectedRoles) && expectedRoles.containsAll(actualRoles));
+        assertEqualsList(expectedRoles, actualRoles);;
         return this;
     }
 

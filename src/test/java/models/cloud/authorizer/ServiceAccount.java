@@ -3,9 +3,8 @@ package models.cloud.authorizer;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
-import core.helper.http.StatusResponseException;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.Builder;
@@ -153,7 +152,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     @Override
     @Step("Удаление сервисного аккаунта")
     protected void delete() {
-        try {
+        if (withApiKey) {
             new Http(Configure.IamURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .delete("/v1/projects/{}/service_accounts/{}/api_keys/{}", projectId, id, id)
@@ -178,8 +177,8 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
             }
 
             Assertions.assertNull(apiKeyResponse.get("data.api_key"));
-        } catch (StatusResponseException ignore) {
         }
+
         new Http(Configure.IamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/projects/{}/service_accounts/{}", projectId, id)
