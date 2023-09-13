@@ -1,0 +1,41 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "f81986f4-4cd1-490d-9764-2249a0a377cb",
+    "attrs": {
+      "auth": false,
+      "user": "airflow_admin",
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "layout": "c9488b63-131c-410a-a0f8-47a602566ee7",
+      "platform": "OpenStack",
+      "auth_user": "user",
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "1.7",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "redis_version": "6.2.6",
+      "user_password": "kin1yAtWBx5XyFl9vAMcXseXYBCkYJXq6whLvKRbPKa4rT4t6uRmGRsG31g0Z11d",
+      "ad_integration": true,
+      "add_parameters": false,
+      "geo_distribution": true,
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Redis Sentinel Astra (Redis с репликацией)"
+  }
+}
