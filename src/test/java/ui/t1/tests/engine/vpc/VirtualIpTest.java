@@ -6,30 +6,31 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.AbstractEntity;
-import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.elements.Table;
-import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.vpc.VirtualIp;
 import ui.t1.pages.cloudEngine.vpc.VirtualIpCreate;
 import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
 import ui.t1.tests.engine.AbstractComputeTest;
+import ui.t1.tests.engine.EntitySupplier;
 
 import java.util.Objects;
 
-@BlockTests
-@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Виртуальные IP")
 @Epic("Cloud Compute")
 public class VirtualIpTest extends AbstractComputeTest {
-    VirtualIpCreate ip;
+    private final EntitySupplier<VirtualIpCreate> randomVip = lazy(() -> {
+        VirtualIpCreate ip = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true).setName(getRandomName())
+                /* .setNetworkInterface("10.0.3.2")*/.setMode("active-active").clickOrder();
+        new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        return ip;
+    });
 
     @Test
     @Order(1)
@@ -37,10 +38,8 @@ public class VirtualIpTest extends AbstractComputeTest {
     @Tag("smoke")
     @DisplayName("Cloud VPC. Виртуальные IP-адреса. Создать IP-адрес")
     void addIp() {
-        ip = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true).setName(getRandomName())
-                /* .setNetworkInterface("10.0.3.2")*/.setMode("active-active").clickOrder();
-        VirtualIp ipPage = new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
-        String orderId = ipPage.getOrderId();
+        VirtualIpCreate ip = randomVip.get();
+        String orderId = new IndexPage().goToVirtualIps().selectIp(ip.getIp()).getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
                 .filter(i -> i.getFloatingIpAddress().equals(ip.getIp()))
@@ -52,6 +51,7 @@ public class VirtualIpTest extends AbstractComputeTest {
     @TmsLink("")
     @DisplayName("Cloud VPC. Виртуальные IP-адреса")
     void checkIp() {
+        VirtualIpCreate ip = randomVip.get();
         new IndexPage().goToVirtualIps();
         new TableChecker()
                 .add("", String::isEmpty)
@@ -71,6 +71,7 @@ public class VirtualIpTest extends AbstractComputeTest {
     @TmsLink("")
     @DisplayName("Cloud VPC. Виртуальные IP-адреса. Действия")
     void checkIpActions() {
+        VirtualIpCreate ip = randomVip.get();
         new IndexPage().goToVirtualIps().selectIp(ip.getIp());
         new TableChecker()
                 .add(Column.IP, e -> e.equals(ip.getIp()))
@@ -82,11 +83,28 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .check(() -> new Table(Column.IP).getRowByColumnValue(Column.IP, ip.getIp()));
     }
 
+//    @Test
+//    @Order(3)
+//    @TmsLink("")
+//    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Доступ в интернет. Подключить/отключить")
+//    void checkInternetAction() {
+//        VmCreate vm = randomVm.get();
+//        VirtualIpCreate vip = randomVip.get();
+//        String localIp = new VmList().selectCompute(vm.getName()).getLocalIp();
+//        VirtualIp virtualIp = new IndexPage().goToVirtualIps().selectIp(vip.getIp());
+//        virtualIp.getMenu().attachComputeIp(localIp);
+//        SshClient.SshClientBuilder ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER);
+//        String checkConnectCmd = ssh.privateKey(SshKeyList.PRIVATE_KEY).build()
+//                .execute("timeout 2 telnet {} 22", localIpVmTest);
+//        virtualIp.getMenu()
+//    }
+
     @Test
     @TmsLink("")
     @Order(100)
     @DisplayName("Cloud VPC. Виртуальные IP-адреса. Удалить")
     void deleteIp() {
+        VirtualIpCreate ip = randomVip.get();
         VirtualIp ipPage = new IndexPage().goToVirtualIps().selectIp(ip.getIp());
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip.getIp())));

@@ -31,8 +31,6 @@ public class GenericMonitoring extends IProduct {
         jsonTemplate = "/orders/astra_general_application.json";
         productName = "Generic Monitoring";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (segment == null)
@@ -43,6 +41,8 @@ public class GenericMonitoring extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

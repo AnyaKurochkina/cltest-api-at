@@ -141,14 +141,14 @@ public class VmCreate {
     }
 
     public VmCreate setSwitchPublicIp(boolean checked){
-        Switch.byText("Подключить публичный IP").setEnabled(checked);
+        Switch.byText("Подключить публичный IP адрес").setEnabled(checked);
         return this;
     }
 
     public VmCreate setPublicIp(String publicIp) {
         setSwitchPublicIp(true);
         Waiting.sleep(1000);
-        this.publicIp = Select.byLabel("Публичный IP").set(publicIp);
+        this.publicIp = Select.byLabel("Публичный IP адрес").set(publicIp);
         return this;
     }
 

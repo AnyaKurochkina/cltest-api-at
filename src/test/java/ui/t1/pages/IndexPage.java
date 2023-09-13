@@ -15,7 +15,9 @@ import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.*;
+import ui.t1.pages.supportCenter.MySubscriptionsPage;
 import ui.t1.pages.supportCenter.NotificationsPage;
+import ui.t1.pages.supportCenter.SubscribeUsersPage;
 
 import java.time.Duration;
 
@@ -30,6 +32,8 @@ public class IndexPage {
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
+    Button linkMySubscriptions = Button.byXpath("//a[.='Мои подписки']");
+    Button linkSubscriptionsByAdmin = Button.byXpath("//a[.='Подписки пользователей организации']");
     Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
@@ -51,6 +55,7 @@ public class IndexPage {
     Button linkServiceAccounts = Button.byXpath("//a[.='Сервисные аккаунты']");
     SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
     SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
+
 
     @Step("Переход на главную страницу")
     public static void go() {
@@ -194,13 +199,30 @@ public class IndexPage {
         btnAction.shouldNotBe(Condition.exist);
     }
 
-    @Step("Переход в Центр уведомлений")
+    @Step("Переход в Центр уведомлений на страницу Мои уведомления")
     public NotificationsPage goToNotificationCenter(){
         linkSupportCenter.click();
         linkNotifications.click();
         return new NotificationsPage();
     }
 
+    @Step("Переход в Центр уведомлений на страницу Мои подписки")
+    public MySubscriptionsPage goToMySubscriptions(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        linkMySubscriptions.click();
+
+        return new MySubscriptionsPage();
+    }
+
+    @Step("Переходим в Центр уведомлений на страницу Подписки пользователей организации")
+    public SubscribeUsersPage goToUsersSubscriptions(){
+        linkSupportCenter.click();
+        linkNotifications.click();
+        linkSubscriptionsByAdmin.click();
+
+        return new SubscribeUsersPage();
+    }
     @Step("Переход в модальное окно изменения контекста")
     public ContextDialog goToContextDialog(){
         changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();

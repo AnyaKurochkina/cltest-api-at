@@ -2,9 +2,6 @@ package api.cloud.productCatalog.template;
 
 import api.Tests;
 import core.helper.http.Response;
-import httpModels.productCatalog.ItemImpl;
-import httpModels.productCatalog.template.getListTemplate.response.GetTemplateListResponse;
-import httpModels.productCatalog.template.getTemplate.response.GetTemplateResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -20,14 +17,12 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import steps.productCatalog.ProductCatalogSteps;
 
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
-import static steps.productCatalog.TemplateSteps.getTemplateById;
-import static steps.productCatalog.TemplateSteps.partialUpdateTemplate;
+import static steps.productCatalog.TemplateSteps.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Шаблоны")
@@ -41,7 +36,7 @@ public class TemplatesTest extends Tests {
     @DisplayName("Создание шаблона в продуктовом каталоге")
     @TmsLink("643548")
     @Test
-    public void createTemplate() {
+    public void createTemplateTest() {
         String templateName = "create_template_test_api";
         Template template = Template.builder()
                 .name(templateName)
@@ -110,8 +105,8 @@ public class TemplatesTest extends Tests {
                 .name(templateName)
                 .build()
                 .createObject();
-        Assertions.assertTrue(steps.isExists(template.getName()));
-        Assertions.assertFalse(steps.isExists("no_exist_template"));
+        Assertions.assertTrue(isTemplateExists(template.getName()));
+        Assertions.assertFalse(isTemplateExists("no_exist_template"));
     }
 
     @DisplayName("Получение шаблона по Id")
@@ -129,17 +124,17 @@ public class TemplatesTest extends Tests {
     @DisplayName("Копирование шаблона по Id и удаление этого клона")
     @TmsLink("643557")
     @Test
-    public void copyTemplateById() {
+    public void copyTemplateByIdTest() {
         String templateName = "copy_by_id_template_test_api";
         Template template = Template.builder()
                 .name(templateName)
                 .build()
                 .createObject();
         String cloneName = template.getName() + "-clone";
-        steps.copyById(String.valueOf(template.getId()));
-        Assertions.assertTrue(steps.isExists(cloneName));
-        steps.deleteByName(template.getName() + "-clone", GetTemplateListResponse.class);
-        Assertions.assertFalse(steps.isExists(cloneName));
+        copyTemplateById(template.getId());
+        Assertions.assertTrue(isTemplateExists(cloneName));
+        deleteTemplateByName(cloneName);
+        Assertions.assertFalse(isTemplateExists(cloneName));
     }
 
     @DisplayName("Частичное обновление шаблона по Id")
@@ -186,29 +181,18 @@ public class TemplatesTest extends Tests {
     @TmsLink("742475")
     @Test
     public void orderingByCreateData() {
-        List<ItemImpl> list = steps
-                .orderingByCreateData(GetTemplateListResponse.class).getItemsList();
-        for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getCreateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getCreateData());
-            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
-                    "Даты должны быть отсортированы по возрастанию");
-        }
+        assertTrue(orderingTemplateByCreateData(), "Даты должны быть отсортированы по возрастанию");
     }
+
 
     @DisplayName("Проверка сортировки по дате обновления в шаблонах")
     @TmsLink("742477")
     @Test
     public void orderingByUpDateData() {
-        List<ItemImpl> list = steps
-                .orderingByUpDateData(GetTemplateListResponse.class).getItemsList();
-        for (int i = 0; i < list.size() - 1; i++) {
-            ZonedDateTime currentTime = ZonedDateTime.parse(list.get(i).getUpDateData());
-            ZonedDateTime nextTime = ZonedDateTime.parse(list.get(i + 1).getUpDateData());
-            assertTrue(currentTime.isBefore(nextTime) || currentTime.isEqual(nextTime),
-                    "Даты должны быть отсортированы по возрастанию");
-        }
+        assertTrue(orderingTemplateByUpdateData(),
+                "Даты должны быть отсортированы по возрастанию");
     }
+
 
     @DisplayName("Проверка доступа для методов с публичным ключом в шаблонах")
     @TmsLink("742478")
@@ -233,11 +217,12 @@ public class TemplatesTest extends Tests {
     @TmsLink("643616")
     @Test
     public void deleteTemplate() {
-        Template template = Template.builder()
-                .name("check_access_template_test_api")
+        JSONObject json = Template.builder()
+                .name("delete_template_test_api")
                 .build()
-                .createObject();
-        steps.deleteById(String.valueOf(template.getId()));
+                .toJson();
+        Template template = createTemplate(json).extractAs(Template.class);
+        deleteTemplateById(template.getId());
     }
 
     @Test
@@ -270,15 +255,15 @@ public class TemplatesTest extends Tests {
                 .version("1.0.0")
                 .build()
                 .init().toJson();
-        GetTemplateResponse template = steps.createProductObject(jsonObject).extractAs(GetTemplateResponse.class);
-        Response response = steps.dumpToBitbucket(template.getId());
+        Template template = createTemplate(jsonObject).assertStatus(201).extractAs(Template.class);
+        Response response = dumpTemplateToBitbucket(template.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        steps.deleteByName(templateName, GetTemplateListResponse.class);
+        deleteTemplateByName(templateName);
         String path = "template_" + templateName + "_" + template.getVersion();
-        steps.loadFromBitbucket(new JSONObject().put("path", path));
-        assertTrue(steps.isExists(templateName));
-        steps.deleteByName(templateName, GetTemplateListResponse.class);
-        assertFalse(steps.isExists(templateName));
+        loadTemplateFromBitbucket(new JSONObject().put("path", path));
+        assertTrue(isTemplateExists(templateName));
+        deleteTemplateByName(templateName);
+        assertFalse(isTemplateExists(templateName));
     }
 
     @DisplayName("Удаление шаблона используемого в узле графа")

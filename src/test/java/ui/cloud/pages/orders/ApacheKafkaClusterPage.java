@@ -427,7 +427,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
                 .clickOrderMore()
                 .selectProduct("Apache Kafka Cluster Astra");
         new ApacheKafkaClusterOrderPage().getNameCluster().setValue(nameCluster);
-        new Alert().check(Alert.Color.RED,"Значение поля не уникально");
+        Alert.red("Значение поля не уникально");
     }
 
 

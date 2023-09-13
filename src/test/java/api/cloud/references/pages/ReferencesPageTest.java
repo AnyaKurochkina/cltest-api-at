@@ -1,18 +1,21 @@
 package api.cloud.references.pages;
 
+import api.Tests;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
+import models.cloud.references.Directories;
 import models.cloud.references.Pages;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
+import ru.testit.annotations.Title;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -26,9 +29,30 @@ import static steps.references.ReferencesStep.*;
 @Epic("Справочники")
 @Feature("Pages")
 @DisabledIfEnv("prod")
-public class ReferencesPageTest extends ReferencesPageBaseTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+public class ReferencesPageTest extends Tests {
     private static final String PAGES_JSON_TEMPLATE = "references/createPages.json";
     private static final String PAGES_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_pages_api.json";
+
+    List<String> deleteList = new ArrayList<>();
+    Directories directories;
+
+    @Title("Создание тестовых данных")
+    @DisplayName("Создание тестовых данных")
+    @BeforeAll
+    public void createTestData() {
+        directories = createDirectory(createDirectoriesJsonObject("directories_for_page_test_api",
+                "test_api"));
+        deleteList.add(directories.getName());
+    }
+
+    @DisplayName("Удаление тестовых данных")
+    @AfterAll
+    public void deleteTestData() {
+        for (String name : deleteList) {
+            deletePrivateDirectoryByName(name);
+        }
+    }
 
     @DisplayName("Получение списка Pages по имени Directory для приватных ролей")
     @TmsLink("851370")

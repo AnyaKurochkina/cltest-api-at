@@ -51,7 +51,7 @@ public class UsersTest extends AbstractIAMTest {
     void addUserToFolderTest() {
         new IndexPage()
                 .goToUsers()
-                .changeContext("folder", folderId)
+                .changeContext("folder", folder.getName(), folder.getTitle())
                 .addUser(user)
                 .removeUser(user);
     }
@@ -77,7 +77,7 @@ public class UsersTest extends AbstractIAMTest {
     void changeContextTest() {
         Project project = Project.builder()
                 .projectName("test_api")
-                .folderName(folderId)
+                .folderName(folder.getName())
                 .build()
                 .createObject();
         new IndexPage()
@@ -102,7 +102,7 @@ public class UsersTest extends AbstractIAMTest {
     void userListByFolderContextTest() {
         new IndexPage()
                 .goToUsers()
-                .changeContext("folder", folderId)
+                .changeContext("folder", folder.getName(), folder.getTitle())
                 .showUsers("Текущего уровня и ниже")
                 .checkTableHeaders(Arrays.asList("Пользователь", "Роли", "Роли уровней ниже", "Статус"))
                 .showUsers("Текущего уровня и выше")

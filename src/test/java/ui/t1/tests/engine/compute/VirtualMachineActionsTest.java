@@ -78,7 +78,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                     .add("RAM", e -> StringUtils.isMatch("^\\d+ ГБ$", e))
                     .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
                     .add("Внутренний IP", e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
-                    .add("Внешние IP-адреса", e -> e.equals("—"))
                     .add(Column.CREATED_DATE, e -> e.length() > 5)
                     .add("", String::isEmpty)
                     .check(() -> new VmList.VmTable().getRowByColumnValue(Column.NAME, vm.getName()));
@@ -139,7 +138,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
             Alert.red("Заказ защищен от удаления");
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
         } finally {
             vmPage.switchProtectOrder(false);
         }

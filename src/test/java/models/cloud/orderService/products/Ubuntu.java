@@ -31,8 +31,6 @@ public class Ubuntu extends IProduct {
         jsonTemplate = "/orders/ubuntu_general_application.json";
         productName = "Ubuntu Linux";
         initProduct();
-        if(flavor == null)
-            flavor = getMinFlavor();
         if(osVersion == null)
             osVersion = getRandomOsVersion();
         if(segment == null)
@@ -43,6 +41,8 @@ public class Ubuntu extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if(flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

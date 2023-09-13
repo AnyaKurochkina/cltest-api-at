@@ -53,13 +53,13 @@ public class ProjectActionTest extends Tests {
     public void editProjectTest() {
         String name = "edit_project_ui_test";
         String updatedName = "updated_project_ui_test";
-            assertTrue(new IndexPage()
-                    .goToOrgStructure()
-                    .createProject(name)
-                    .changeNameProject(name, updatedName)
-                    .isProjectExist(updatedName));
-            new OrgStructurePage()
-                    .deleteProject(updatedName);
+        assertTrue(new IndexPage()
+                .goToOrgStructure()
+                .createProject(name)
+                .changeNameProject(name, updatedName)
+                .isProjectExist(updatedName));
+        new OrgStructurePage()
+                .deleteProject(updatedName);
     }
 
     @Test
@@ -67,15 +67,15 @@ public class ProjectActionTest extends Tests {
     public void createProjectInFolderTest() {
         String folderName = "org_structure_ui_test";
         Folder folder = Folder
-                .builder().
-                title(folderName)
-                .kind(Folder.DEFAULT)
+                .builder()
+                .title(folderName)
+                .kind(Folder.BUSINESS_BLOCK)
                 .build()
                 .createObject();
         String projectName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
         new IndexPage()
                 .goToOrgStructure()
-                .createProjectInFolder(folder.getName(), projectName)
+                .createProjectInFolder(folder.getTitle(), projectName)
                 .isProjectExist(projectName);
     }
 }
