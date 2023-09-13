@@ -172,7 +172,8 @@ public abstract class IProduct extends Entity {
     }
 
     private String replaceGraphParams(String str){
-        return str.replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
+        return Objects.requireNonNull(str)
+                .replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
                 .replace("${context::formData.platform}", getPlatform())
                 .replace("${context::projectInfo.organization}", ((Organization) Organization.builder().build().createObject()).getName())
                 .replace("${context::formData.default_nic.net_segment}", getSegment());
@@ -409,8 +410,8 @@ public abstract class IProduct extends Entity {
     public String getFilter() {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
-        return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
-                .getString("'ui:options'.filter").replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase());
+        return replaceGraphParams(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
+                .getString("'ui:options'.filter"));
     }
 
     @SneakyThrows

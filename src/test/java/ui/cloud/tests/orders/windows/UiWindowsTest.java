@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
@@ -125,7 +124,7 @@ public class UiWindowsTest extends UiProductTest {
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
             Alert.red("Заказ защищен от удаления");
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
         } finally {
             winPage.switchProtectOrder(false);
         }

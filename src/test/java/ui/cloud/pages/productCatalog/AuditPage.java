@@ -209,7 +209,7 @@ public class AuditPage extends EntityPage {
     private void checkAuditIsLoaded() {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
             if (Tab.byText("История изменений").getElement().exists()) new EntityPage().goToAuditTab();
         }
     }

@@ -45,7 +45,7 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     @Override
     public void checkLastAction(String action) {
         checkActionByIndex(0, action);
-        TypifiedElement.open(productLink);
+        TypifiedElement.openPage(productLink);
     }
 
     public void checkActionByIndex(int index, String action) {

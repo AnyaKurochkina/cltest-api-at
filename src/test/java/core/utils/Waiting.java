@@ -65,7 +65,7 @@ public class Waiting {
         Instant start = Instant.now();
         while (duration.compareTo(Duration.between(start, Instant.now())) > 0) {
             Waiting.sleep(500);
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
             if (b.get()) return;
         }
         throw new TimeoutException("Return false, duration: " + duration);

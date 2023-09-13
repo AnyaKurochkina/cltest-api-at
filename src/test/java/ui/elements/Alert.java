@@ -65,7 +65,7 @@ public class Alert implements TypifiedElement {
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
-    public Alert check(Color color, String text, Object... args) {
+    private Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
         element = getElement().shouldBe(Condition.visible);
         final String elementText = element.getText();
@@ -87,7 +87,7 @@ public class Alert implements TypifiedElement {
     @Step("Закрытие всех всплывающих уведомлений")
     public static void closeAll() {
         try {
-            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(15));
+            SelenideElement e = new Alert().getElement().shouldBe(Condition.visible, Duration.ofSeconds(5));
             while (e.exists() && e.isDisplayed()) {
                 new Alert(e).close();
             }

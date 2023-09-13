@@ -21,7 +21,7 @@ import steps.orderService.OrderServiceSteps;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class Redis extends IProduct {
+public class RedisSentinel extends IProduct {
     @ToString.Include
     String osVersion;
     String appUserPassword;
@@ -37,9 +37,9 @@ public class Redis extends IProduct {
 
     @Override
     public Entity init() {
-        jsonTemplate = "/orders/redis.json";
+        jsonTemplate = "/orders/redis_sentinel.json";
         if (productName == null)
-            productName = "Redis (Astra)";
+            productName = "Redis Sentinel Astra (Redis с репликацией)";
         if (appUser == null)
             appUser = "appuser";
         initProduct();
@@ -68,10 +68,6 @@ public class Redis extends IProduct {
         String accessGroup = accessGroup();
         JsonTemplate template = JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId);
-        if (envType().contains("prod")) {
-            template.put("$.order.attrs", "geo_distribution", true)
-                    .put("$.order.attrs", "layout", getIdGeoDistribution("2-single-node-servers", "redis"));
-        }
         return template.set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
@@ -85,6 +81,7 @@ public class Redis extends IProduct {
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.user_password", appUserPassword)
                 .set("$.order.attrs.user", appUser)
+                .set("$.order.attrs.layout", getIdGeoDistribution("master-1:replica-1:arbiter-1"))
                 .set("$.order.label", getLabel())
                 .build();
     }

@@ -60,7 +60,7 @@ public class Select implements TypifiedElement {
     public Select hover() {
         element.scrollIntoView(scrollCenter);
         element.shouldBe(activeCnd).hover().shouldBe(clickableCnd);
-        if (getValue().equals("")) {
+        if (getValue().isEmpty()) {
             Waiting.sleep(2000);
         }
         return this;
@@ -75,7 +75,7 @@ public class Select implements TypifiedElement {
     @Step("Select. Выбрать элемент с названием '{value}'")
     public String set(String value) {
         hover();
-        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
+        Waiting.sleep(() -> !getValue().isEmpty(), Duration.ofSeconds(1));
         String currentTitle = getValue();
         if (currentTitle.equals(value))
             return value;
@@ -87,10 +87,23 @@ public class Select implements TypifiedElement {
         return value;
     }
 
+    @Step("Select. Выбрать элемент с data-value '{dataValue}'")
+    public String setByDataValue(String dataValue) {
+        hover();
+        Waiting.sleep(() -> !getValue().isEmpty(), Duration.ofSeconds(1));
+        element.click();
+        if (dataValue.equals(RANDOM_VALUE))
+            setItem(getRandomIndex());
+        else
+            getOptions().filter(Condition.attribute("data-value", dataValue))
+                    .first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        return dataValue;
+    }
+
     @Step("Select. Выбрать элемент с названием содержащим '{value}'")
     public String setContains(String value) {
         hover();
-        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
+        Waiting.sleep(() -> !getValue().isEmpty(), Duration.ofSeconds(1));
         String currentTitle = getValue();
         if (currentTitle.contains(value))
             return value;
@@ -110,7 +123,7 @@ public class Select implements TypifiedElement {
     @Step("Select. Выбрать элемент с названием начинающимся с '{value}'")
     public String setStart(String value) {
         hover();
-        Waiting.sleep(() -> !getValue().equals(""), Duration.ofSeconds(1));
+        Waiting.sleep(() -> !getValue().isEmpty(), Duration.ofSeconds(1));
         String currentTitle = getValue();
         if (currentTitle.startsWith(value))
             return value;
