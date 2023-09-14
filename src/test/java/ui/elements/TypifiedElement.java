@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -110,7 +111,12 @@ public interface TypifiedElement {
     }
 
     static void openPage(String url) {
-        Selenide.open(url);
+        try {
+            Selenide.open(url);
+        } catch (WebDriverException e) {
+            if (WebDriverRunner.getWebDriver().getCurrentUrl().equals(url))
+                return;
+        }
         Tests.getPostLoadPage().run();
         checkProject();
     }
