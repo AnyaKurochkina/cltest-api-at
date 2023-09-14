@@ -1,0 +1,51 @@
+package api.cloud.orderService;
+
+import api.Tests;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
+import models.cloud.orderService.products.Astra;
+import models.cloud.orderService.products.OpenMessagingAstra;
+import org.junit.MarkDelete;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.params.ParameterizedTest;
+
+@Epic("Продукты")
+@Feature("OpenMessaging Astra")
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("open_messaging_astra"), @Tag("prod")})
+public class OpenMessagingAstraTest extends Tests {
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создать {0}")
+    void create(OpenMessagingAstra product) {
+        //noinspection EmptyTryBlock
+        try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {}
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновление установки {0}")
+    void expandMountPoint(OpenMessagingAstra product) {
+        try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            astra.upgradeSetup();
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Удалить {0}")
+    @MarkDelete
+    void delete(OpenMessagingAstra product) {
+        try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            astra.deleteObject();
+        }
+    }
+}

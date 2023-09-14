@@ -1,0 +1,41 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "501467a0-2bc6-47b4-8ada-ed47434dfefc",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m8",
+        "uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
+        "memory": 8
+      },
+      "platform": "OpenStack",
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "1.7",
+      "data_center": "5",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app",
+          "size": 30,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "ad_logon_grants": [
+        {
+          "role": "superuser",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "OpenMessaging Astra"
+  }
+}
