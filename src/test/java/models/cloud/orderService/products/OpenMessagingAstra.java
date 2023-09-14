@@ -23,14 +23,12 @@ import steps.orderService.OrderServiceSteps;
 @NoArgsConstructor
 @SuperBuilder
 public class OpenMessagingAstra extends IProduct {
-    public static String SNAPSHOT_PATH = "data.any{it.type=='snapshot' && it.state=='on'}";
-    @ToString.Include
     String osVersion;
     Flavor flavor;
 
     @Override
     public Entity init() {
-        jsonTemplate = "/orders/openmessaging_astra.json";
+        jsonTemplate = "/orders/open_messaging_astra.json";
         productName = "OpenMessaging Astra";
         initProduct();
         if (flavor == null)
@@ -74,47 +72,13 @@ public class OpenMessagingAstra extends IProduct {
                 .build();
     }
 
-    public void updateVmInfo() {
-        OrderServiceSteps.executeAction("update_vm_info", this, null, this.getProjectId());
-    }
-
-    public void stopHard() {
-        stopHard("stop_vm_hard");
-    }
-
-    public void stopSoft() {
-        stopSoft("stop_vm_soft");
-    }
-
-    public void start() {
-        start("start_vm");
-    }
-
-    public void restart() {
-        restart("reset_vm");
-    }
-
-    public void expandMountPoint() {
-        expandMountPoint("expand_mount_point_new", "/app", 10);
-    }
-
-    public void resize(Flavor flavor) {
-        resize("resize_vm", flavor);
-    }
-
     @Step("Удаление продукта")
     @Override
     protected void delete() {
-        delete("delete_vm");
+        delete("delete_two_layer");
     }
 
-    public void createSnapshot(int lifetime) {
-        OrderServiceSteps.executeAction("create_group_snapshot", this, new JSONObject().put("lifetime", lifetime), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот не найден");
-    }
-
-    public void deleteSnapshot() {
-        OrderServiceSteps.executeAction("delete_group_snapshot", this, null, this.getProjectId());
-        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот существует");
+    public void upgradeSetup() {
+        OrderServiceSteps.executeAction("open-messaging_upgrade_setup", this, null, this.getProjectId());
     }
 }
