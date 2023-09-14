@@ -9,7 +9,7 @@ import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
 import ui.elements.*;
 import ui.models.IamUser;
-import ui.t1.tests.IAM.users.AddUserDialog;
+import ui.t1.pages.IAM.AddUserDialog;
 
 import java.util.Arrays;
 import java.util.List;

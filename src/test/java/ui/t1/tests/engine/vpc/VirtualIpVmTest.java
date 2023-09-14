@@ -43,9 +43,9 @@ public class VirtualIpVmTest extends AbstractComputeTest {
         VmCreate vm = randomVm.get();
         VmCreate vm2 = randomVmSecond.get();
         VirtualIpCreate vip = randomVip.get();
-        new VirtualIpList().selectIp(vip.getIp())
+        new IndexPage().goToVirtualIps().selectIp(vip.getIp())
                 .markForDeletion(new VipEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(false);
-        String localIp = new VmList().selectCompute(vm.getName()).getLocalIp();
+        String localIp = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getLocalIp();
         new IndexPage().goToVirtualIps().selectIp(vip.getIp()).getMenu().attachComputeIp(localIp);
         new IndexPage().goToVirtualIps().selectIp(vip.getIp());
         Assertions.assertTrue(VirtualIp.InterfacesTable.isAttachIp(localIp), "В таблице 'Сетевые интерфейсы' не найден " + localIp);

@@ -339,7 +339,7 @@ public abstract class IProductPage {
             return;
         TypifiedElement.refreshPage();
 //        currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(10));
-        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(10),
+        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(5),
                 "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
         if (currentCost == prebillingCostValue && prebillingCostValue == 0)
             return;
@@ -368,7 +368,7 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getOrderCost() {
-        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(10)));
+        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(5)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }

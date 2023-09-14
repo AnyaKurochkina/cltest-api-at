@@ -133,7 +133,7 @@ public class TemplatesTest extends Tests {
         String cloneName = template.getName() + "-clone";
         copyTemplateById(template.getId());
         Assertions.assertTrue(isTemplateExists(cloneName));
-        deleteTemplateByName(template.getName());
+        deleteTemplateByName(cloneName);
         Assertions.assertFalse(isTemplateExists(cloneName));
     }
 

@@ -38,16 +38,16 @@ public class AttachUtils {
     }
 
     public static Throwable UImodifyThrowable(Throwable throwable) {
-        if (throwable.getMessage().contains("Screenshot:")) {
-            Allure.addAttachment("screenPage", "image/png",
-                    new ByteArrayInputStream(((TakesScreenshot) WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES)), ".png");
-            Allure.addAttachment("screenPage", "text/html", WebDriverRunner.getWebDriver().getPageSource(), ".html");
-            return throwable;
-        }
         try {
-            String videoUrl = getVideoUrl();
-            String videoRecordingTitle = "Video recording";
             attachRequests();
+            String videoUrl = getVideoUrl();
+            if (throwable.getMessage().contains("Screenshot:")) {
+                Allure.addAttachment("screenPage", "image/png",
+                        new ByteArrayInputStream(((TakesScreenshot) WebDriverRunner.getWebDriver()).getScreenshotAs(OutputType.BYTES)), ".png");
+                Allure.addAttachment("screenPage", "text/html", WebDriverRunner.getWebDriver().getPageSource(), ".html");
+                return throwable;
+            }
+            String videoRecordingTitle = "Video recording";
             StringBuilder newMessage = new StringBuilder();
             final String message = throwable.getMessage();
             String[] messageParts = splitMessage(message);

@@ -1,4 +1,4 @@
-package ui.t1.tests.IAM.users.orgStructure;
+package ui.t1.tests.IAM.orgStructure;
 
 import api.Tests;
 import core.enums.Role;

@@ -35,6 +35,14 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
+    public void setInputValueV2(String label, String value) {
+        Input.byLabelV2(label).setValue(value);
+    }
+
+    public void setInputByName(String name, String value) {
+        Input.byName(name).setValue(value);
+    }
+
     public String getInputValue(String label) {
         SelenideElement element = dialog.$x(String.format("descendant::div[label[starts-with(.,'%s')]]/div/input", label));
         return new Input(element).getValue();
@@ -56,14 +64,12 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public Dialog setTextareaAndPressEnter(TextArea textarea, String text) {
+    public void setTextareaAndPressEnter(TextArea textarea, String text) {
         textarea.setValueAndPressEnter(text);
-        return this;
     }
 
-    public Dialog setCheckBox(CheckBox checkBox, boolean checked) {
+    public void setCheckBox(CheckBox checkBox, boolean checked) {
         checkBox.setChecked(checked);
-        return this;
     }
 
     public void clickButton(String text) {
