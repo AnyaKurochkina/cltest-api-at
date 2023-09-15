@@ -7,6 +7,7 @@ import models.cloud.authorizer.GlobalUser;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.Configure.getAppProp;
+import static ui.elements.TypifiedElement.open;
 import static ui.elements.TypifiedElement.openPage;
 
 public class ControlPanelLoginPage {
@@ -15,7 +16,7 @@ public class ControlPanelLoginPage {
     SelenideElement passwordInput = $x("//input[@id='password']");
 
     public ControlPanelLoginPage() {
-        openPage(getAppProp("url.control-panel"));
+        open(getAppProp("url.control-panel"));
     }
 
     private void signIn(String user, String password) {
