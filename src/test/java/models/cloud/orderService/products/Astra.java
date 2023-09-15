@@ -117,4 +117,8 @@ public class Astra extends IProduct {
         OrderServiceSteps.executeAction("delete_group_snapshot", this, null, this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот существует");
     }
+
+    public void updateOsVm() {
+        OrderServiceSteps.executeAction("update_os_vm", this, null, this.getProjectId());
+    }
 }

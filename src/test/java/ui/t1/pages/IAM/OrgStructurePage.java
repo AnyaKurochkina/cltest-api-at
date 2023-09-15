@@ -80,10 +80,9 @@ public class OrgStructurePage {
     @Step("Открыть модальное окно у папки/проекта/организации")
     public ModalWindow openModalWindow(String name) {
         Waiting.sleep(2000);
-        String type = new OrgTable().getRowByColumnValue("Название", name).getValueByColumn("Тип");
-        new OrgTable().getRowByColumnValue("Название", name)
-                .get()
-                .click();
+        Table.Row row = new OrgTable().getRowByColumnValue("Название", name);
+        String type = row.getValueByColumn("Тип");
+        row.get().click();
         return new ModalWindow(String.format("%s  \"%s\"", type, name));
     }
 
@@ -164,14 +163,30 @@ public class OrgStructurePage {
         return this;
     }
 
+    @Step("Получение идентификатора у ресурса {name}")
+    public String getResourceId(String name) {
+        return new OrgTable().getRowByColumnValue("Название", name)
+                .getValueByColumn("Идентификатор");
+    }
+
     @Step("Получение заголовков таблицы")
     public List<String> getTableHeaders() {
         return new OrgTable().getNotEmptyHeaders();
     }
 
-    @Step("Проверка существования проекта с именем {name}")
+    @Step("Проверка существования проекта с именем {name} в папке {folder}")
     public boolean isProjectExist(String name) {
         return new OrgTable().isColumnValueEquals("Название", name);
+    }
+
+    @Step("Проверка существования проекта с именем {projectName} в папке {folder}")
+    public boolean isProjectExistInFolder(String projectName, String folder) {
+        OrgTable table = new OrgTable();
+        SelenideElement element = table.getRowByColumnValue("Название", folder).get().$x(".//button[@aria-label = 'expand row']");
+        if (element.getAttribute("aria-expanded") == null) {
+            element.click();
+        }
+        return table.isColumnValueEquals("Название", projectName);
     }
 
     @Step("Проверка существования папки с именем {name}")

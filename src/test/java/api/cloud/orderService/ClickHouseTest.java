@@ -9,10 +9,7 @@ import models.cloud.orderService.products.ClickHouse;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assumptions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import static core.utils.AssertUtils.assertContains;
@@ -28,6 +25,16 @@ public class ClickHouseTest extends Tests {
     void create(ClickHouse product) {
         //noinspection EmptyTryBlock
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {}
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void checkActions(ClickHouse product) {
+        try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            Assertions.assertTrue(clickHouse.isActionExist("update_os_standalone"));
+        }
     }
 
     @TmsLink("377793")

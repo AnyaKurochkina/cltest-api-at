@@ -26,8 +26,6 @@ import java.util.List;
 import static core.helper.StringUtils.format;
 import static models.cloud.authorizer.Folder.BUSINESS_BLOCK;
 import static org.junit.jupiter.api.Assertions.*;
-import static steps.authorizer.AuthorizerSteps.createFolder;
-import static steps.authorizer.AuthorizerSteps.deleteFolderByNameT1;
 
 @Epic("IAM и Управление")
 @Feature("Действия с пользователями")
@@ -50,8 +48,11 @@ public class UsersActionTest extends Tests {
     public void addUserTest() {
         IamUser user = new IamUser("airat.muzafarov@gmail.com", Collections.singletonList("Администратор"));
         String folderTitle = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-        String folderName = createFolder(folderTitle);
-        try {
+        Folder.builder()
+                .kind(BUSINESS_BLOCK)
+                .title(folderTitle)
+                .build()
+                .createObject();
             assertTrue(new IndexPage().goToOrgStructure()
                     .openModalWindow(folderTitle)
                     .setRole(user)
@@ -60,9 +61,6 @@ public class UsersActionTest extends Tests {
                     .openModalWindow(folderTitle)
                     .deleteUser(user);
             assertTrue(new ModalWindow().isUserTableEmpty());
-        } finally {
-            deleteFolderByNameT1(folderName);
-        }
     }
 
     @Test

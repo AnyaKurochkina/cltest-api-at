@@ -14,6 +14,8 @@ import ui.extesions.ConfigExtension;
 import ui.models.IamUser;
 import ui.t1.pages.T1LoginPage;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 import static steps.resourceManager.ResourceManagerSteps.getFolderById;
@@ -32,9 +34,9 @@ public abstract class AbstractIAMTest extends Tests {
         organization = Organization.builder().type("default").build().createObject();
         project = Project.builder().isForOrders(true).build().createObject();
         folder = getFolderById(AuthorizerSteps.getParentProject(project.getId()));
-        user = new IamUser("airat.muzafarov@gmail.com", (Collections.singletonList("Администратор")));
-        user2 = new IamUser("x64-bit@ya.ru", (Collections.singletonList("Администратор")));
-        user3 = new IamUser("amuzafarov@t1.ru", (Collections.singletonList("Администратор")));
+        user = new IamUser("airat.muzafarov@gmail.com", new ArrayList<>(Collections.singletonList("Администратор")));
+        user2 = new IamUser("x64-bit@ya.ru", new ArrayList<>(Arrays.asList("Администратор")));
+        user3 = new IamUser("amuzafarov@t1.ru", new ArrayList<>(Collections.singletonList("Администратор")));
     }
 
     @BeforeEach

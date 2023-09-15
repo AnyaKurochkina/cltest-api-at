@@ -6,10 +6,8 @@ import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.UserItem;
-import org.json.JSONObject;
 import steps.Steps;
 
 import java.util.List;
@@ -72,29 +70,12 @@ public class AuthorizerSteps extends Steps {
         return users;
     }
 
-    @Step("Удаление папки")
-    public static void deleteFolderByNameT1(String name) {
+    @Step("Удаление проекта")
+    public static void deleteFolder(String id) {
         new Http(Configure.ResourceManagerURL)
-                .setRole(Role.SUPERADMIN)
-                .delete("/v1/folders/" + name)
-                .assertStatus(204);
-    }
-
-    @Step("Создание папки")
-    public static String createFolder(String title) {
-        Organization org = Organization.builder().type("default").build().createObject();
-        JSONObject jsonObject = Folder.builder()
-                .title(title)
-                .build()
-                .toJson();
-        String url = String.format("/v1/organizations/%s/folders", org.getName());
-        return new Http(Configure.ResourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
-                .body(jsonObject)
-                .post(url)
-                .assertStatus(201)
-                .jsonPath()
-                .getString("data.name");
+                .delete("/v1/projects/" + id)
+                .assertStatus(204);
     }
 }
 

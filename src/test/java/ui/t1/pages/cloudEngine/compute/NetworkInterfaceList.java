@@ -39,7 +39,7 @@ public class NetworkInterfaceList extends IProductListT1Page {
     public void addInSecurityGroup(String group){
         final String action = "Добавить в группу безопасности";
         Button.byText(action).click();
-        Dialog.byTitle(action).setSelectValue("Название", group).clickButton("Добавить");
+        Dialog.byTitle("Добавить группу безопасности").setSelectValue("Название", group).clickButton("Добавить");
     }
 
     public class Menu {

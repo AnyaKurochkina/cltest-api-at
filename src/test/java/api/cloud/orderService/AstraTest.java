@@ -40,6 +40,16 @@ public class AstraTest extends Tests {
         }
     }
 
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void updateOsVm(Astra product) {
+        try (Astra astra = product.createObjectExclusiveAccess()) {
+            astra.updateOsVm();
+        }
+    }
+
     @Disabled
     @TmsLink("391699")
     @Tag("actions")

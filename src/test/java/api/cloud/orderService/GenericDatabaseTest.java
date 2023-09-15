@@ -8,6 +8,7 @@ import models.cloud.orderService.products.GenericDatabase;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,6 +25,16 @@ public class GenericDatabaseTest extends Tests {
     void create(GenericDatabase product) {
         //noinspection EmptyTryBlock
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void checkActions(GenericDatabase product) {
+        try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
+            Assertions.assertTrue(gb.isActionExist("update_os_vm"));
         }
     }
 

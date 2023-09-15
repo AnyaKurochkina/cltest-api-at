@@ -9,6 +9,7 @@ import models.cloud.orderService.products.Ubuntu;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -25,6 +26,16 @@ public class UbuntuTest extends Tests {
     void create(Ubuntu product) {
         //noinspection EmptyTryBlock
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void checkActions(Ubuntu product) {
+        try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
+            Assertions.assertTrue(ubuntu.isActionExist("update_os_vm"));
         }
     }
 
