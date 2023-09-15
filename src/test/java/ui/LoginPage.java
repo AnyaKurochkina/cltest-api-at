@@ -11,7 +11,7 @@ import ui.elements.TypifiedElement;
 import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.open;
+import static ui.elements.TypifiedElement.open;
 
 public abstract class LoginPage {
     protected SelenideElement usernameInput = $x("//input[@id='username']");
@@ -31,7 +31,7 @@ public abstract class LoginPage {
         TypifiedElement.checkProject();
         final String theme = "\"light\"";
         final String key = "themeType";
-        if (!Objects.equals(Selenide.sessionStorage().getItem(key), theme)) {
+        if(!Objects.equals(Selenide.sessionStorage().getItem(key), theme)) {
             Selenide.sessionStorage().setItem(key, theme);
             TypifiedElement.refreshPage();
         }
