@@ -18,6 +18,7 @@ import ui.t1.pages.T1LoginPage;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.authorizer.AuthorizerSteps.deleteFolder;
 
 @Epic("IAM и Управление")
 @Feature("Действия с проектом")
@@ -73,9 +74,11 @@ public class ProjectActionTest extends Tests {
                 .build()
                 .createObject();
         String projectName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-        new IndexPage()
+        assertTrue(new IndexPage()
                 .goToOrgStructure()
                 .createProjectInFolder(folder.getTitle(), projectName)
-                .isProjectExist(projectName);
+                .isProjectExistInFolder(projectName, folder.getTitle()));
+        String projectId = new OrgStructurePage().getResourceId(projectName);
+        deleteFolder(projectId);
     }
 }
