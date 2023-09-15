@@ -48,8 +48,8 @@ public abstract class AbstractComputeTest extends Tests {
     protected String availabilityZone = "ru-central1-a";
     protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
-    protected String hddTypeFirst = "HDD";
-    protected String hddTypeSecond = "HDD";
+    protected String hddTypeFirst = "500";
+    protected String hddTypeSecond = "500";
     protected String defaultNetwork = "default";
     protected String securityGroup = "default";
     protected String flavorName = "Intel";

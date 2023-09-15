@@ -12,15 +12,14 @@ import java.util.function.Supplier;
 
 
 /**
- * Класс ожиданий. Загрузка элементов, загрузка страницы, возмжность кликнуть и т.п.
+ * Класс ожиданий. Загрузка элементов, загрузка страницы, возможность кликнуть и т.п.
  *
  * @author kochetkovma
  */
 @Log4j2
 public class Waiting {
 
-    private Waiting() {
-    }
+    private Waiting() {}
 
     /**
      * Заснуть на таймаут
@@ -30,9 +29,7 @@ public class Waiting {
     public static void sleep(int millis) {
         try {
             Thread.sleep(millis);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        } catch (InterruptedException ignored) {}
     }
 
     public static boolean sleep(Supplier<Boolean> b, Duration duration) {

@@ -42,8 +42,7 @@ public class Tests {
                     TypifiedElement.checkProject();
                 }
             };
-        return () -> {
-        };
+        return () -> Waiting.sleep(() -> new IndexPage().getLinkProfile().isDisplayed(), Duration.ofSeconds(10));
     }
 
     @BeforeEach
