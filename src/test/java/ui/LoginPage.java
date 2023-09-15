@@ -11,8 +11,7 @@ import ui.elements.TypifiedElement;
 import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static com.codeborne.selenide.Selenide.open;
-import static ui.elements.TypifiedElement.openPage;
+import static ui.elements.TypifiedElement.open;
 
 public abstract class LoginPage {
     protected SelenideElement usernameInput = $x("//input[@id='username']");
@@ -21,7 +20,7 @@ public abstract class LoginPage {
 
     public LoginPage(String project) {
         Organization org = Organization.builder().type("default").build().createObject();
-        openPage(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
+        open(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
         submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
     }
 
