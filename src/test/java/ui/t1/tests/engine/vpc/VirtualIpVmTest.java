@@ -49,7 +49,7 @@ public class VirtualIpVmTest extends AbstractComputeTest {
         new IndexPage().goToVirtualIps().selectIp(vip.getIp()).getMenu().attachComputeIp(localIp);
         new IndexPage().goToVirtualIps().selectIp(vip.getIp());
         Assertions.assertTrue(VirtualIp.InterfacesTable.isAttachIp(localIp), "В таблице 'Сетевые интерфейсы' не найден " + localIp);
-        String localIp2 = new VmList().selectCompute(vm2.getName()).getLocalIp();
+        String localIp2 = new IndexPage().goToVirtualMachine().selectCompute(vm2.getName()).getLocalIp();
         new IndexPage().goToVirtualIps().getMenuVirtualIp(vip.getIp()).attachComputeIp(localIp2);
 
         new IndexPage().goToVirtualIps().getMenuVirtualIp(vip.getIp()).detachComputeIp(localIp2);

@@ -10,7 +10,10 @@ import models.cloud.subModels.Flavor;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
@@ -20,8 +23,8 @@ import java.util.List;
 
 @Epic("Продукты")
 @Feature("PostgreSQL Astra")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql_astra"), @Tag("prod")})
-public class PostgreSQLAstraTest extends Tests {
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("postgresql"), @Tag("prod")})
+public class PostgreSQLTest extends Tests {
     static final String dbName = "cached_bd";
 
     @TmsLink("1057046")
@@ -29,7 +32,16 @@ public class PostgreSQLAstraTest extends Tests {
     @ParameterizedTest(name = "Создать {0}")
     void create(PostgreSQL product) {
         //noinspection EmptyTryBlock
+        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {}
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void checkActions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            Assertions.assertTrue(postgreSQL.isActionExist("update_os_standalone"));
         }
     }
 

@@ -1,5 +1,6 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -8,16 +9,16 @@ import models.cloud.orderService.products.Redis;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
 
 @Epic("Продукты")
 @Feature("Redis (Astra)")
-@Tags({@Tag("regress"), @Tag("orders"), @Tag("redisAstra"), @Tag("prod")})
-public class RedisAstraTest extends Tests {
+@Tags({@Tag("regress"), @Tag("orders"), @Tag("redis"), @Tag("prod")})
+public class RedisTest extends Tests {
 
     @TmsLink("795817")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -34,6 +35,26 @@ public class RedisAstraTest extends Tests {
     void expandMountPoint(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.expandMountPoint();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void checkActions(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            Assertions.assertTrue(redis.isActionExist("update_os_standalone"));
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void updateOsStandalone(Redis product) {
+        try (Redis redis = product.createObjectExclusiveAccess()) {
+            redis.updateOsStandalone();
         }
     }
 

@@ -12,7 +12,6 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
-import static ui.elements.TypifiedElement.openPage;
 
 public abstract class LoginPage {
     protected SelenideElement usernameInput = $x("//input[@id='username']");
@@ -21,7 +20,7 @@ public abstract class LoginPage {
 
     public LoginPage(String project) {
         Organization org = Organization.builder().type("default").build().createObject();
-        openPage(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
+        open(String.format("/?context=%s&type=project&org=%s", project, org.getName()));
         submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
     }
 
@@ -32,7 +31,7 @@ public abstract class LoginPage {
         TypifiedElement.checkProject();
         final String theme = "\"light\"";
         final String key = "themeType";
-        if(!Objects.equals(Selenide.sessionStorage().getItem(key), theme)) {
+        if (!Objects.equals(Selenide.sessionStorage().getItem(key), theme)) {
             Selenide.sessionStorage().setItem(key, theme);
             TypifiedElement.refreshPage();
         }
