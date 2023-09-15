@@ -76,3 +76,7 @@ GitLab:
   - options:
 Podman:
   - options:
+RedisSentinel:
+  - options:
+OpenMessagingAstra:
+  - options:

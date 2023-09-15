@@ -7,6 +7,7 @@ import lombok.SneakyThrows;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -110,8 +111,17 @@ public interface TypifiedElement {
     }
 
     static void openPage(String url) {
-        Selenide.open(url);
+        open(url);
         Tests.getPostLoadPage().run();
         checkProject();
+    }
+
+    /**
+     * Открытие страницы и игнорирование WebDriverException (баг в ChromeDriver)
+     */
+    static void open(String url) {
+        try {
+            Selenide.open(url);
+        } catch (WebDriverException ignored) {}
     }
 }

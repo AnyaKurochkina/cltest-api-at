@@ -40,6 +40,7 @@ public class ForbiddenActionPage extends EntityPage {
     private final Button addButton = Button.byText("Добавить");
     private final Tab mainTab = Tab.byText("Основное");
     private final Tab paramsTab = Tab.byText("Параметры");
+    private final RadioGroup direction = RadioGroup.byFieldsetName("direction");
 
     public ForbiddenActionPage() {
         $x("//a[text()='Запрещенные действия']").shouldBe(Condition.visible);
@@ -124,6 +125,9 @@ public class ForbiddenActionPage extends EntityPage {
         actionSelect.setContains(action.getName());
         titleInput.setValue(forbiddenAction.getTitle());
         descriptionTextArea.setValue(forbiddenAction.getDescription());
+        direction.select(forbiddenAction.getDirection()
+                .replace("child_to_parent", "Запрет детей для родителя")
+                .replace("parent_to_child", "Запрет родителя для детей"));
         assertAll(() -> nameRequiredFieldHint.shouldNotBe(Condition.visible),
                 () -> titleRequiredFieldHint.shouldNotBe(Condition.visible),
                 () -> actionRequiredFieldHint.shouldNotBe(Condition.visible));
@@ -139,7 +143,7 @@ public class ForbiddenActionPage extends EntityPage {
     public ForbiddenActionPage checkAttributes(ForbiddenAction forbiddenAction) {
         mainTab.switchTo();
         Action action = getActionById(forbiddenAction.getActionId());
-        nameInput.getInput().shouldHave(Condition.exactValue(action.getName() + "__parent_to_child"));
+        nameInput.getInput().shouldHave(Condition.exactValue(action.getName() + "__" + forbiddenAction.getDirection()));
         titleInput.getInput().shouldHave(Condition.exactValue(forbiddenAction.getTitle()));
         assertTrue(actionSelect.getValue().contains(action.getName()));
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(forbiddenAction.getDescription()));

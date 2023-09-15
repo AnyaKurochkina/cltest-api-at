@@ -97,3 +97,18 @@ GitLab:
 TestProduct:
   - options:
       - { platform: "OpenStack", env: "DEV" }
+
+S3Ceph:
+  - options:
+KafkaService:
+  - options:
+Podman:
+  - options:
+RedisSentinel:
+  - options:
+OpenMessagingAstra:
+  - options:
+Windows:
+  - options:
+ApacheKafkaCluster:
+  - options:
