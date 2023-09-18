@@ -12,6 +12,7 @@ import core.helper.http.Path;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.AbstractEntity;
 import models.ObjectPoolService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -130,15 +131,16 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
-//        if (Configure.isIntegrationTestIt())
-//            RunningHandler.finishLaunch();
-//        ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
-//        new File(Configure.getAppProp("allure.results")).mkdir();
-//        FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);
-//        fooWriter.write("ENV=" + ENV);
-//        fooWriter.close();
-//        System.out.println("##teamcity[publishArtifacts 'logs => logs']");
-//        System.out.println("##teamcity[publishArtifacts 'target/swagger-coverage-output => swagger-coverage-output.zip']");
+        AbstractEntity.deleteTestRunEntities();
+        if (Configure.isIntegrationTestIt())
+            RunningHandler.finishLaunch();
+        ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
+        new File(Configure.getAppProp("allure.results")).mkdir();
+        FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);
+        fooWriter.write("ENV=" + ENV);
+        fooWriter.close();
+        System.out.println("##teamcity[publishArtifacts 'logs => logs']");
+        System.out.println("##teamcity[publishArtifacts 'target/swagger-coverage-output => swagger-coverage-output.zip']");
     }
 
     @SneakyThrows
