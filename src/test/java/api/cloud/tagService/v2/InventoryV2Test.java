@@ -40,7 +40,7 @@ public class InventoryV2Test extends AbstractTagServiceTest {
         InventoryV2Page inventoryList = TagServiceSteps.inventoriesListV2(context, new QueryBuilder().add("with_deleted", false));
         Assertions.assertEquals(0, inventoryList.stream()
                 .filter(e -> Objects.nonNull(e.getContextPath()))
-                .filter(e -> !e.getContextPath().equals(""))
+                .filter(e -> !e.getContextPath().isEmpty())
                 .count(), "Неверное кол-во inventories");
     }
 
