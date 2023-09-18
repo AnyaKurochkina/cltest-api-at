@@ -1,5 +1,11 @@
 package models;
 
+import core.helper.Configure;
+import ru.testit.junit5.RunningHandler;
+
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -8,6 +14,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static core.helper.Configure.ENV;
 import static models.AbstractEntity.Mode.AFTER_CLASS;
 import static models.AbstractEntity.Mode.AFTER_TEST;
 import static models.ObjectPoolService.awaitTerminationAfterShutdown;
@@ -35,6 +42,19 @@ public abstract class AbstractEntity {
                 ExecutorService threadPool = Executors.newFixedThreadPool(10);
                 threadPool.submit(() -> map.forEach((k, v) -> v.forEach(AbstractEntity::deleteEntity)));
                 awaitTerminationAfterShutdown(threadPool);
+            }
+            try {
+                if (Configure.isIntegrationTestIt())
+                    RunningHandler.finishLaunch();
+                ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");
+                new File(Configure.getAppProp("allure.results")).mkdir();
+                FileWriter fooWriter = new FileWriter(Configure.getAppProp("allure.results") + "environment.properties", false);
+                fooWriter.write("ENV=" + ENV);
+                fooWriter.close();
+                System.out.println("##teamcity[publishArtifacts 'logs => logs']");
+                System.out.println("##teamcity[publishArtifacts 'target/swagger-coverage-output => swagger-coverage-output.zip']");
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
         }));
     }
