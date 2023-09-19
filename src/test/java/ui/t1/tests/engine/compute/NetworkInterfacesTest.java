@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.AbstractEntity;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.compute.NetworkInterfaceList;
@@ -34,7 +35,7 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Сетевые интерфейсы. Изменить группы безопасности")
     void changeSecurityGroup() {
         VmCreate vm = randomVm.get();
-        new IndexPage().goToSecurityGroups().addGroup(vm.getName(), "desc").markForDeletion();
+        new IndexPage().goToSecurityGroups().addGroup(vm.getName(), "desc").markForDeletion(AbstractEntity.Mode.AFTER_TEST);
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSecurityGroups(vm.getName());
     }
