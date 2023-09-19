@@ -6,18 +6,13 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.AbstractEntity;
 import org.junit.jupiter.api.*;
-import steps.orderService.OrderServiceSteps;
-import steps.orderService.SecurityGroup;
-import steps.orderService.SecurityGroupResponse;
-import steps.orderService.VpcSteps;
+import steps.vpc.SecurityGroup;
+import steps.vpc.SecurityGroupResponse;
+import steps.vpc.VpcSteps;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.NetworkInterfaceList;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
-import ui.t1.pages.cloudEngine.vpc.Rule;
-import ui.t1.pages.cloudEngine.vpc.SecurityGroupList;
 import ui.t1.tests.engine.AbstractComputeTest;
-import ui.t1.tests.engine.EntitySupplier;
 
 import java.time.Duration;
 

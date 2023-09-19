@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
-import steps.orderService.SecurityGroupResponse;
+import steps.vpc.SecurityGroupResponse;
 import steps.resourceManager.ResourceManagerSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;

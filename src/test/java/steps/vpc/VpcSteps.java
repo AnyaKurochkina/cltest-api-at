@@ -1,11 +1,10 @@
-package steps.orderService;
+package steps.vpc;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import core.enums.Role;
 import core.exception.NotFoundElementException;
 import core.helper.http.Http;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 import static api.routes.VpcApi.*;
