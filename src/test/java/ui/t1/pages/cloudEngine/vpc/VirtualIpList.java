@@ -23,35 +23,13 @@ public class VirtualIpList extends IProductListT1Page {
         return new VirtualIp();
     }
 
-    public Menu getMenuVirtualIp(String ip) {
-        return new Menu(getMenuElement(new IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip).getIndex()));
-    }
-
-    public Menu getMenuVirtualIp(SelenideElement btn) {
-        return new Menu(btn);
-    }
-
-    public class Menu {
-        private final SelenideElement btn;
-
-        public Menu(SelenideElement btn) {
-            this.btn = btn;
-        }
-
-        @Step("Подключить к сетевому интерфейсу {ip}")
-        public void attachComputeIp(String ip) {
-            runActionWithParameters(btn, "Подключить к сетевому интерфейсу", "Подтвердить", () ->
-                    Dialog.byTitle("Подключить к сетевому интерфейсу")
-                            .setSelectValue("Сетевой интерфейс", ip));
-        }
-
-        @Step("Отключить от сетевого интерфейса {ip}")
-        public void detachComputeIp(String ip) {
-            runActionWithParameters(btn, "Отключить от сетевого интерфейса", "Подтвердить", () ->
-                    Dialog.byTitle("Отключить от сетевого интерфейса")
-                            .setSelectValue("Сетевой интерфейс", ip));
-        }
-    }
+//    public Menu getMenuVirtualIp(String ip) {
+//        return new Menu(getMenuElement(new IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip).getIndex()));
+//    }
+//
+//    public Menu getMenuVirtualIp(SelenideElement btn) {
+//        return new Menu(btn);
+//    }
 
     public List<String> getIpList() {
         return new IpTable().getColumnValuesList(Column.IP_ADDRESS);
