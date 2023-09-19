@@ -148,7 +148,10 @@ public abstract class IProductPage {
         if (Objects.nonNull(params.getNode())) {
             params.getNode().scrollIntoView(scrollCenter).click();
         }
-        Menu.byElement(button).select(action);
+        if (params.isSimpleAction())
+            Button.byElement(button).click();
+        else
+            Menu.byElement(button).select(action);
         Dialog dlgActions = Dialog.byTitle(action);
         if (params.isCheckPreBilling())
             prebillingCostValue = OrderUtils.getCostValue(prebillingCostElement);
@@ -173,7 +176,10 @@ public abstract class IProductPage {
             productNameText = productName.getText();
             params.getNode().scrollIntoView(scrollCenter).click();
         }
-        Menu.byElement(button).select(action);
+        if (params.isSimpleAction())
+            Button.byElement(button).click();
+        else
+            Menu.byElement(button).select(action);
         executable.execute();
         if (params.isCheckPreBilling())
             prebillingCostValue = OrderUtils.getCostValue(prebillingCostElement);
