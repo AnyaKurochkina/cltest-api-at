@@ -31,7 +31,7 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети. Добавление сети")
     void addNetwork() {
         new IndexPage().goToNetworks().addNetwork(name, "desc");
-        new NetworkList().selectNetwork(name).markForDeletion(new NetworkEntity().setMode(AbstractEntity.Mode.AFTER_CLASS));
+        new NetworkList().selectNetwork(name).markForDeletion(new NetworkEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS));
     }
 
     @Test

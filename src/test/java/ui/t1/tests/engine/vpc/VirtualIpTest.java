@@ -28,7 +28,7 @@ public class VirtualIpTest extends AbstractComputeTest {
     private final EntitySupplier<VirtualIpCreate> randomVip = lazy(() -> {
         VirtualIpCreate ip = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true).setName(getRandomName())
                 /* .setNetworkInterface("10.0.3.2")*/.setMode("active-active").clickOrder();
-        new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
         return ip;
     });
 

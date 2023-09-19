@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
+import steps.orderService.SecurityGroupResponse;
 import steps.resourceManager.ResourceManagerSteps;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
@@ -38,7 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import static api.routes.OrderServiceApi.deleteV1ProjectsProjectNameOrdersId;
 import static api.routes.OrderServiceApi.getV1ProjectsProjectNameOrdersId;
 import static api.routes.VpcApi.deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete;
-import static api.routes.VpcApi.deleteSecurityGroupApiV1ProjectsProjectNameSecurityGroupsSecurityGroupIdDelete;
 import static ui.t1.pages.cloudEngine.compute.SshKeyList.SSH_USER;
 
 @Log4j2
@@ -75,7 +75,7 @@ public abstract class AbstractComputeTest extends Tests {
 
     public static String getProjectId() {
         String id = project.get();
-        if(Objects.isNull(id)) {
+        if (Objects.isNull(id)) {
             synchronized (AbstractComputeTest.class) {
                 id = projectCountMap.entrySet().stream().min(Map.Entry.comparingByValue()).orElseThrow(NullPointerException::new).getKey();
                 projectCountMap.merge(id, 1, Integer::sum);
@@ -129,12 +129,13 @@ public abstract class AbstractComputeTest extends Tests {
         public InstanceEntity() {
             super(StringUtils.findByRegex("orders/([^/]*)/", WebDriverRunner.getWebDriver().getCurrentUrl()));
         }
+
         @Override
         public void delete() {
             String status = Http.builder().setRole(Role.CLOUD_ADMIN).api(getV1ProjectsProjectNameOrdersId, projectId, id).jsonPath().getString("status");
-            if(status.equals("changing") || status.equals("pending"))
+            if (status.equals("changing") || status.equals("pending"))
                 Waiting.sleep(20000);
-            if(status.equals("success")) {
+            if (status.equals("success")) {
                 OrderServiceSteps.switchProtect(id, projectId, false);
                 Http.builder().setRole(Role.CLOUD_ADMIN).api(deleteV1ProjectsProjectNameOrdersId, projectId, id);
                 Waiting.sleep(30000);
@@ -147,17 +148,20 @@ public abstract class AbstractComputeTest extends Tests {
         public VolumeEntity(String projectId, String id) {
             super(projectId, id);
         }
+
         @Override
         protected int getPriority() {
             return 2;
         }
     }
+
     @NoArgsConstructor
     public static class SnapshotEntity extends InstanceEntity {
         public SnapshotEntity(String projectId, String id) {
             super(projectId, id);
         }
     }
+
     @NoArgsConstructor
     public static class ImageEntity extends InstanceEntity {
         public ImageEntity(String projectId, String id) {
@@ -185,23 +189,14 @@ public abstract class AbstractComputeTest extends Tests {
         }
     }
 
-    public static class SecurityGroupEntity extends ComputeEntity {
+    public static class SecurityGroupEntity extends SecurityGroupResponse {
         public SecurityGroupEntity() {
-            super(StringUtils.findByRegex("security-groups/([^?]*)", WebDriverRunner.getWebDriver().getCurrentUrl()));
+            setId(StringUtils.findByRegex("security-groups/([^?]*)", WebDriverRunner.getWebDriver().getCurrentUrl()));
         }
 
         public SecurityGroupEntity(String projectId, String id) {
-            super(projectId, id);
-        }
-
-        @Override
-        protected int getPriority() {
-            return 2;
-        }
-
-        @Override
-        public void delete() {
-            Http.builder().setRole(Role.CLOUD_ADMIN).api(deleteSecurityGroupApiV1ProjectsProjectNameSecurityGroupsSecurityGroupIdDelete, projectId, id);
+            setId(id);
+            setProjectId(projectId);
         }
     }
 
@@ -210,6 +205,7 @@ public abstract class AbstractComputeTest extends Tests {
         public PublicIpEntity(String projectId, String id) {
             super(projectId, id);
         }
+
         @Override
         protected int getPriority() {
             return 3;
@@ -221,6 +217,7 @@ public abstract class AbstractComputeTest extends Tests {
         public VipEntity(String projectId, String id) {
             super(projectId, id);
         }
+
         @Override
         protected int getPriority() {
             return 0;
@@ -237,13 +234,13 @@ public abstract class AbstractComputeTest extends Tests {
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(v.getName())
-                .markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+                .markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
         return v;
     });
 
     protected final EntitySupplier<VmCreate> publicIpVm = lazy(() -> {
         String ip = new IndexPage().goToPublicIps().addIp(region);
-        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity().setMode(AbstractEntity.Mode.AFTER_CLASS));
+        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS));
         VmCreate v = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
@@ -254,7 +251,7 @@ public abstract class AbstractComputeTest extends Tests {
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(v.getName())
-                .markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(false);
+                .markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(false);
         return v;
     });
 }

@@ -1,15 +1,17 @@
 package core.helper.http;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import core.helper.Page;
 import io.restassured.path.json.JsonPath;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import core.helper.Page;
 import models.AbstractEntity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,20 +72,22 @@ public class Response {
     }
 
     @SneakyThrows
-    public <T> T extractAs(Class<T> clazz) {
-        return extractAs(clazz, false);
+    private <T> T extractValue(TypeReference<T> valueTypeRef) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.readValue(responseMessage, valueTypeRef);
     }
 
-    @SneakyThrows
-    public <T> T extractAs(Class<T> clazz, boolean deletable) {
-        JSONObject jsonObject = new JSONObject(responseMessage);
-        ObjectMapper objectMapper = new ObjectMapper();
-        T value = objectMapper.convertValue(jsonObject.toMap(), clazz);
-        if(deletable)
-            if(value instanceof AbstractEntity)
-                AbstractEntity.addEntity((AbstractEntity) value);
-            else throw new Exception("Параметр deletable = true может быть только для AbstractEntity");
-        return value;
+    public <T> T extractAs(TypeReference<T> valueTypeRef) {
+        return extractValue(valueTypeRef);
+    }
+
+    public <T> T extractAs(Class<T> clazz) {
+        return extractValue(new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return clazz;
+            }
+        });
     }
 
     @SneakyThrows
@@ -93,7 +97,7 @@ public class Response {
         T page = extractAs(clazz);
         List items = page.getList();
         int count = items.size();
-        if(Objects.nonNull(page.getMeta()))
+        if (Objects.nonNull(page.getMeta()))
             count = page.getMeta().getTotalCount();
         while (count > items.size()) {
             http.queryParams.put("page", "" + (++i));

@@ -17,8 +17,9 @@ public abstract class AbstractEntity {
     private Mode mode = AFTER_TEST;
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractEntity> T setMode(Mode mode) {
+    public <T extends AbstractEntity> T deleteMode(Mode mode) {
         this.mode = mode;
+        addEntity(this);
         return (T) this;
     }
 
@@ -77,7 +78,7 @@ public abstract class AbstractEntity {
         deleteCurrentThreadEntities(AFTER_RUN);
     }
 
-    public static void addEntity(AbstractEntity e) {
+    private static void addEntity(AbstractEntity e) {
         entities[e.getPriority()].computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(e);
     }
 
