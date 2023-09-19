@@ -71,7 +71,7 @@ public class OtherTest extends AbstractComputeTest {
                 }).collect(Collectors.toList());
 
         Assertions.assertEquals(1, list.size(), "Должен быть один item с новым orderId, size=3 и parent=null");
-        AbstractEntity.addEntity(new InstanceEntity(getProjectId(), list.get(0).getOrderId()));
+        new InstanceEntity(getProjectId(), list.get(0).getOrderId()).deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Test

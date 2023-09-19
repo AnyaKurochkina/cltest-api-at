@@ -65,7 +65,7 @@ public class DeleteAllOrders extends Tests {
     @Test
     @DisplayName("Удаление всех успешных заказов T1 Engine")
     void deleteOrdersCompute() {
-        Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> computeEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
+        Map<Path, Class<? extends AbstractEntity>> computeEntities = new HashMap<Path, Class<? extends AbstractEntity>>() {{
             put(getV1ProjectsProjectNameComputeInstances, AbstractComputeTest.InstanceEntity.class);
             put(getV1ProjectsProjectNameComputeVolumes, AbstractComputeTest.VolumeEntity.class);
             put(getV1ProjectsProjectNameComputeImages, AbstractComputeTest.ImageEntity.class);
@@ -74,17 +74,17 @@ public class DeleteAllOrders extends Tests {
             put(getV1ProjectsProjectNameComputeVips, AbstractComputeTest.VipEntity.class);
             put(getV1ProjectsProjectNameComputeSnats, AbstractComputeTest.InstanceEntity.class);
         }};
-        Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> vpcEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
+        Map<Path, Class<? extends AbstractEntity>> vpcEntities = new HashMap<Path, Class<? extends AbstractEntity>>() {{
             put(getNetworksApiV1ProjectsProjectNameNetworksGet, AbstractComputeTest.NetworkEntity.class);
             put(getSecurityGroupsApiV1ProjectsProjectNameSecurityGroupsGet, AbstractComputeTest.SecurityGroupEntity.class);
         }};
 
         Folder folderPollProject = Folder.builder().title("ProjectPool").build().onlyGetObject();
         for (String projectId : ResourceManagerSteps.getChildren(folderPollProject.getName())) {
-            for (Map.Entry<Path, Class<? extends AbstractComputeTest.ComputeEntity>> entry : computeEntities.entrySet()) {
+            for (Map.Entry<Path, Class<? extends AbstractEntity>> entry : computeEntities.entrySet()) {
                 addComputeEntitiesForRemove(entry.getKey(), projectId, entry.getValue());
             }
-            for (Map.Entry<Path, Class<? extends AbstractComputeTest.ComputeEntity>> entry : vpcEntities.entrySet()) {
+            for (Map.Entry<Path, Class<? extends AbstractEntity>> entry : vpcEntities.entrySet()) {
                 addVpcEntitiesForRemove(entry.getKey(), projectId, entry.getValue());
             }
         }
@@ -92,25 +92,27 @@ public class DeleteAllOrders extends Tests {
     }
 
     @SneakyThrows
-    private static void addComputeEntitiesForRemove(Path path, String projectId, Class<? extends AbstractComputeTest.ComputeEntity> computeEntity) {
+    private static void addComputeEntitiesForRemove(Path path, String projectId, Class<? extends AbstractEntity> computeEntity) {
         List<String> list = Http.builder()
                 .setRole(Role.CLOUD_ADMIN)
                 .api(path, projectId)
                 .jsonPath()
                 .getList("list.order_id");
         for (String id : list)
-            AbstractEntity.addEntity(computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id));
+            computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id)
+                    .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @SneakyThrows
-    private static void addVpcEntitiesForRemove(Path path, String projectId, Class<? extends AbstractComputeTest.ComputeEntity> computeEntity) {
+    private static void addVpcEntitiesForRemove(Path path, String projectId, Class<? extends AbstractEntity> computeEntity) {
         List<String> list = Http.builder()
                 .setRole(Role.CLOUD_ADMIN)
                 .api(path, projectId)
                 .jsonPath()
                 .getList("findAll{it.name != 'default'}.id");
         for (String id : list)
-            AbstractEntity.addEntity(computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id));
+            computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id)
+                    .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @AllArgsConstructor

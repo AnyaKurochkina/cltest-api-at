@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.rpcRouter.Exchange;
 import models.cloud.rpcRouter.ExchangeResponse;
@@ -40,7 +41,8 @@ public class ExchangeSteps extends Steps {
                 .body(exchange)
                 .post(exchangeV1)
                 .assertStatus(201)
-                .extractAs(ExchangeResponse.class, true);
+                .extractAs(ExchangeResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Создание Exchange")
@@ -149,7 +151,8 @@ public class ExchangeSteps extends Steps {
                 .withServiceToken()
                 .post(exchangeV1 + "{}/copy/", id)
                 .assertStatus(200)
-                .extractAs(ExchangeResponse.class, true);
+                .extractAs(ExchangeResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Экспорт Exchange")

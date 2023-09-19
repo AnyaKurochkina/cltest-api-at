@@ -29,7 +29,7 @@ public class Network {
     }
 
     public Network markForDeletion(AbstractComputeTest.NetworkEntity entity) {
-        AbstractEntity.addEntity(entity);
+        entity.deleteMode(AbstractEntity.Mode.AFTER_TEST);
         return this;
     }
 

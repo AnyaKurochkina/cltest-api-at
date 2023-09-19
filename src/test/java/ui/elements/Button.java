@@ -61,7 +61,7 @@ public class Button implements TypifiedElement {
     }
 
     public void click() {
-        button.hover().shouldBe(activeCnd).shouldBe(clickableCnd).click();
+        button.scrollIntoView(scrollCenter).shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Waiting.sleep(200);
     }
 }
