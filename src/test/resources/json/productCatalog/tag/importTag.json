@@ -1,0 +1,1 @@
+{"model_name": "Tag", "Tag": {"id": 451, "name": "import_tag_test_api"}, "rel_foreign_models": {}, "exported_objects": {"Tag": {"{\"name\": \"import_tag_test_api\"}": []}}, "dump_version": 5.0, "dump_date": "2023-09-11 13:32:05", "is_pinned_versions": false}
