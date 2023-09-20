@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.rpcRouter.*;
 import org.json.JSONObject;
@@ -60,7 +61,8 @@ public class InputQueueSteps extends Steps {
                 .body(queue)
                 .post(inputQueueV1)
                 .assertStatus(201)
-                .extractAs(InputQueueResponse.class, true);
+                .extractAs(InputQueueResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Экспорт InputQueue")
@@ -174,6 +176,7 @@ public class InputQueueSteps extends Steps {
                 .withServiceToken()
                 .post(inputQueueV1 + "{}/copy/", id)
                 .assertStatus(200)
-                .extractAs(InputQueueResponse.class, true);
+                .extractAs(InputQueueResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 }

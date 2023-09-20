@@ -1,4 +1,4 @@
-package ui.t1.tests.IAM.users.orgStructure;
+package ui.t1.tests.IAM.orgStructure;
 
 import api.Tests;
 import core.enums.Role;
@@ -10,7 +10,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.elements.Alert;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IAM.OrgStructurePage;
 import ui.t1.pages.IndexPage;
@@ -65,12 +64,12 @@ public class FolderActionTest extends Tests {
     @DisplayName("Удаление папки, находясь в ее контексте")
     public void deleteFolderInContextTest() {
         String folderName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-        new IndexPage()
+        IndexPage indexPage = new IndexPage();
+        indexPage
                 .goToOrgStructure()
                 .createFolder(folderName)
                 .selectContext(folderName)
                 .deleteFolder(folderName);
-        Alert.green("Выбран контекст:");
-
+        assertTrue(indexPage.isContextNameDisplayed("Выберите контекст (организацию, папку или проект)"));
     }
 }

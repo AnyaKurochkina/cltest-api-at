@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.rpcRouter.ExchangeResponse;
 import models.cloud.rpcRouter.GetOutPutQueueList;
@@ -82,7 +83,8 @@ public class OutputQueueSteps extends Steps {
                 .body(queue)
                 .post(outPutQueueV1)
                 .assertStatus(201)
-                .extractAs(OutputQueueResponse.class, true);
+                .extractAs(OutputQueueResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Получение списка OutPutQueue")
@@ -121,7 +123,8 @@ public class OutputQueueSteps extends Steps {
                 .withServiceToken()
                 .post(outPutQueueV1 + "{}/copy/", id)
                 .assertStatus(200)
-                .extractAs(OutputQueueResponse.class, true);
+                .extractAs(OutputQueueResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Получение OutPutQueue по id {id}")

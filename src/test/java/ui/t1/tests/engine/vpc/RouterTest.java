@@ -37,7 +37,7 @@ import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 public class RouterTest extends AbstractComputeTest {
     protected final EntitySupplier<RouterCreate> randomRouter = lazy(() -> {
         RouterCreate r = new IndexPage().goToRouters().addRouter().setName(getRandomName()).setRegion(region).setDesc("desc").addNetwork(defaultNetwork).clickOrder();
-        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
         return r;
     });
 
@@ -48,7 +48,7 @@ public class RouterTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Маршрутизаторы. Создать маршрутизатор")
     void addRouter() {
         RouterCreate router = randomRouter.get();
-        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
     }
 
     @Test

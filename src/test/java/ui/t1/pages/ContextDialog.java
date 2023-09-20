@@ -1,6 +1,7 @@
 package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import core.utils.Waiting;
@@ -11,6 +12,7 @@ import ui.t1.pages.IAM.OrgStructurePage;
 import java.util.Arrays;
 import java.util.List;
 
+import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -32,6 +34,7 @@ public class ContextDialog extends Dialog {
 
     @Step("Переход во вкладку \"Все\"")
     public ContextDialog goToAllTab() {
+        Waiting.sleep(2000);
         all.click();
         assertEquals("true", all.getButton().getAttribute("aria-selected"));
         checkHeaders(Arrays.asList("Название", "Тип", "Идентификатор"));
@@ -82,7 +85,12 @@ public class ContextDialog extends Dialog {
     @Step("Сменить контекст на {orgName}")
     public IndexPage changeOrganization(String orgName) {
         $x("//*[@id='selectValueWrapper']").click();
-        $x("//div[contains(text(), '{}')]", orgName).shouldBe(Condition.visible).click();
+        ElementsCollection containsNameOrgs = $$x("//div[contains(text(), '{}')]", orgName);
+        if (containsNameOrgs.size() == 1) {
+            containsNameOrgs.last().shouldBe(Condition.visible).click();
+        } else {
+            $x("//div[text()= '{}']", orgName).shouldBe(Condition.visible).click();
+        }
         all.click();
         organization.shouldBe(Condition.visible).click();
         assertTrue($x("//div[contains(text(), '{}')]", orgName).isDisplayed());

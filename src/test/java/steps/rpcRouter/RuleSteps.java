@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.rpcRouter.*;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -48,7 +49,8 @@ public class RuleSteps extends Steps {
                 .body(exchange)
                 .post(rulesV1)
                 .assertStatus(201)
-                .extractAs(RuleResponse.class, true);
+                .extractAs(RuleResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Создание Rule")
@@ -125,7 +127,8 @@ public class RuleSteps extends Steps {
                 .withServiceToken()
                 .post(rulesV1 + "{}/copy/", id)
                 .assertStatus(200)
-                .extractAs(RuleResponse.class, true);
+                .extractAs(RuleResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Экспорт Rule")

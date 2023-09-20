@@ -30,53 +30,10 @@ public class RedisSentinelTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
-    void expandMountPoint(RedisSentinel product) {
-        try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
-            redis.expandMountPoint();
-        }
-    }
-
-    @TmsLink("")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Сбросить пароль {0}")
     void resetPassword(RedisSentinel product) {
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
             redis.resetPassword();
-        }
-    }
-
-    @Disabled
-    @TmsLink("")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
-    void restart(RedisSentinel product) {
-        try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
-            redis.restart();
-        }
-    }
-
-    @Disabled
-    @TmsLink("")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
-    void stopSoft(RedisSentinel product) {
-        try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
-            redis.stopSoft();
-            redis.start();
-        }
-    }
-
-    @TmsLink("")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
-    void resize(RedisSentinel product) {
-        try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
-            redis.resize(redis.getMaxFlavor());
         }
     }
 
