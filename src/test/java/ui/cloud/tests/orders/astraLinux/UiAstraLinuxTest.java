@@ -51,6 +51,7 @@ public class UiAstraLinuxTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
+            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
@@ -131,7 +132,7 @@ public class UiAstraLinuxTest extends UiProductTest {
     @DisplayName("UI AstraLinux. Удалить и добавить группу доступа")
     void addGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
-        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.deleteGroup("superuser"));
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.deleteGroup("user"));
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, () -> astraLinuxPage.addGroup("user", Collections.singletonList(product.accessGroup())));
 
     }
