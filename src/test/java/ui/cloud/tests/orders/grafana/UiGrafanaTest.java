@@ -53,6 +53,7 @@ public class UiGrafanaTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             GrafanaOrderPage orderPage = new GrafanaOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getCreateUser().setValue("user");

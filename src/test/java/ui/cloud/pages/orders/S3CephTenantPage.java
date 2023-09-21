@@ -210,6 +210,16 @@ public class S3CephTenantPage extends IProductPage {
         btnAccessPolicy.click();
     }
 
+    public void deleteAccessPolicy() {
+        btnAccessPolicy.click();
+        runActionWithParameters(getActionsMenuButton("", 3), "Удалить политику", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Удалить политику");
+
+        });
+        btnAccessPolicy.click();
+    }
+
     public void deleteUser() {
         btnUsers.click();
         runActionWithoutParameters(getActionsMenuButton("", 3), "Удалить пользователя");

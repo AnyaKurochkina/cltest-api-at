@@ -56,7 +56,7 @@ public class AstraLinuxPage extends IProductPage {
 
     public void changeConfiguration() {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        Flavor maxFlavor = product.getMaxFlavor();
+        Flavor maxFlavor = product.getMaxFlavorLinuxVm();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
