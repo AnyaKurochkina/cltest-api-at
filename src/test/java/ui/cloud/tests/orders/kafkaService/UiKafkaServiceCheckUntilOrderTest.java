@@ -27,7 +27,7 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("ui_Kafka_service")})
 class UiKafkaServiceCheckUntilOrderTest extends Tests {
 
-    KafkaService product = KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/1e521f86-97f9-4bef-bea4-136aa41d5053/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    KafkaService product; // = KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/1e521f86-97f9-4bef-bea4-136aa41d5053/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
 
     @BeforeEach
@@ -50,7 +50,7 @@ class UiKafkaServiceCheckUntilOrderTest extends Tests {
         orderPage.checkOrderDisabled();
 
         //Проверка Детали заказа
-        
+
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getNameTopic().setValue("topic");
         orderPage.getDomain().set(product.getDomain());

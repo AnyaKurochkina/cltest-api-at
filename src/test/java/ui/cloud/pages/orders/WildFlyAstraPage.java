@@ -72,7 +72,7 @@ public class WildFlyAstraPage extends IProductPage {
     public void openAdminConsole() throws MalformedURLException, InterruptedException {
         String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url+"management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
-        TypifiedElement.open(url);
+        Selenide.open(url);
         $x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible);
     }
 
