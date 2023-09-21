@@ -3,6 +3,7 @@ package ui.elements;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Assertions;
 
 import static api.Tests.clickableCnd;
@@ -31,6 +32,9 @@ public class CheckBox implements TypifiedElement {
 
     public static CheckBox byId(String id) {
         return new CheckBox($x("//*[@id = '{}']", id));
+    }
+    public static CheckBox byXpath(@Language("XPath") String xPath) {
+        return new CheckBox($x(xPath));
     }
 
     @Step("CheckBox. Получение значения")

@@ -231,24 +231,24 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::synchronizeData);
     }
 
-
-
     @Test
     @Order(18)
-    @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Добавить роль на Web интерфейс")
-    void addRole() {
-        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addRole("manager",product.additionalAccessGroup()));
-    }
-    @Test
-    @Order(19)
     @TmsLink("")
     @DisplayName("UI RabbitMqClusterAstra. Удалить группу доступа на WEB интерфейс")
     void deleteGroup() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("manager"));
     }
+
+    @Test
+    @Order(19)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Добавить роль на Web интерфейс")
+    void addRole() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addRole("manager",product.additionalAccessGroup()));
+    }
+
     @Test
     @Order(20)
     @TmsLink("")
