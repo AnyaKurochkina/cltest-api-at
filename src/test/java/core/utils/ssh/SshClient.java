@@ -7,6 +7,7 @@ import core.utils.Waiting;
 import lombok.Builder;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 
 import java.io.*;
@@ -54,6 +55,14 @@ public class SshClient {
             log.debug("SSH connect error: {} {} {} {}", host, user, password, privateKey);
             throw e;
         }
+    }
+
+    public void writeTextFile(String path, String text){
+        Assertions.assertEquals("", execute("echo '{}' > {}", escapeShell(text), path));
+    }
+
+    private String escapeShell(String input) {
+        return input.replace("'", "'\\''");
     }
 
     private Channel initChannel(String commands, Session session) throws JSchException {
