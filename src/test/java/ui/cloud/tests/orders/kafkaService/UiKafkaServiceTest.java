@@ -53,7 +53,7 @@ public class UiKafkaServiceTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             KafkaServiceOrderPage orderPage = new KafkaServiceOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getNameTopic().setValue("topic");
+            orderPage.getNameTopic().setValue(name);
             orderPage.getDomain().set(product.getDomain());
             orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -125,8 +125,8 @@ public class UiKafkaServiceTest extends UiProductTest {
 
     @Test
     @Order(100)
-    @TmsLink("852007")
-    @DisplayName("UI ApacheKafkaCluster. Удаление продукта")
+    @TmsLink("")
+    @DisplayName("UI KafkaService. Удаление продукта")
     void delete() {
         KafkaServicePage servicePage = new KafkaServicePage(product);
         servicePage.runActionWithCheckCost(CompareType.ZERO, servicePage::delete);
