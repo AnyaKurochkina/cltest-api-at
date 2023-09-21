@@ -378,12 +378,6 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         Assertions.assertFalse(new Table("").isColumnValueContains("", nameGroup), "Ошибка удаления AD");
     }
 
-    public void openWebInterface() throws MalformedURLException, InterruptedException {
-        Selenide.open("https://dlzorg-wfc001lk.corp.dev.vtb:9993/management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
-        Selenide.open("https://dlzorg-wfc001lk.corp.dev.vtb:9993/");
-        assertContains("Deployments");
-    }
-
     public void deleteGroupAdmin(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(nameGroup, "Удалить админ группу");

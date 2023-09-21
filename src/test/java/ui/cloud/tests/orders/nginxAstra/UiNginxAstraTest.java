@@ -51,6 +51,7 @@ public class UiNginxAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             NginxAstraOrderPage orderPage = new NginxAstraOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
