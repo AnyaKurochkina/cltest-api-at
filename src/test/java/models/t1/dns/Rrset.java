@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.json.JSONObject;
 
-import java.util.List;
-
 @Builder
 @Data
 @AllArgsConstructor
@@ -17,7 +15,7 @@ import java.util.List;
 public class Rrset {
 
 	@JsonProperty("records")
-	private List<String> records;
+	private Object records;
 	@JsonProperty("record_ttl_seconds")
 	private Integer recordTtlSeconds;
 	@JsonProperty("record_name")
