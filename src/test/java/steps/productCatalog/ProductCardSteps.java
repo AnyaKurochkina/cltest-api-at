@@ -81,4 +81,12 @@ public class ProductCardSteps extends Steps {
                 .patch(cardUrl + id + "/");
     }
 
+    @Step("Проверка существования product cards по имени {name}")
+    public static boolean isProductCardExists(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(cardUrl + "exists/?name=" + name)
+                .assertStatus(200).jsonPath().get("exists");
+    }
+
 }

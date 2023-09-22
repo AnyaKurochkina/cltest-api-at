@@ -3,6 +3,7 @@ package models.cloud.productCatalog.productCard;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -12,12 +13,14 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
 public class CardItems {
     @JsonProperty("obj_type")
     private String objType;
+    @JsonProperty("obj_id")
     private String objId;
     @JsonProperty("obj_keys")
-    private Object objKeys;
+    private ObjectKeys objKeys;
     @JsonProperty("version_arr")
     private List<Integer> versionArr;
     @JsonProperty("dump")

@@ -5,6 +5,7 @@ import core.helper.JsonHelper;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.Date;
@@ -40,14 +41,19 @@ public class ProductCard extends Entity {
         return this;
     }
 
+    @SneakyThrows
     @Override
     public JSONObject toJson() {
+        JSONArray cards = null;
+        if (!cardItems.isEmpty()) {
+            cards = new JSONArray(JsonHelper.getCustomObjectMapper().writeValueAsString(cardItems));
+        }
         return JsonHelper.getJsonTemplate("productCatalog/productCard/createProductCard.json")
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.number", number)
                 .set("$.description", description)
-                .setIfNullRemove("$.cardItems", cardItems)
+                .setIfNullRemove("$.card_items", cards)
                 .setIfNullRemove("$.tag_list", tagList)
                 .build();
     }
