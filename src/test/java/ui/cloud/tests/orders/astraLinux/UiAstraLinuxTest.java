@@ -51,9 +51,9 @@ public class UiAstraLinuxTest extends UiProductTest {
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
             AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
+            orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);

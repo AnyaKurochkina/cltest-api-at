@@ -47,6 +47,7 @@ class UiNginxAstraCheckUntilOrderTest extends Tests {
 
         //Проверка Детали заказа
         orderPage.getSegmentSelect().set(product.getSegment());
+        orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
