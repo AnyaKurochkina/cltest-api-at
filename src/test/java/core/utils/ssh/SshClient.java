@@ -69,6 +69,7 @@ public class SshClient {
         Channel channel = session.openChannel("exec");
         ChannelExec channelExec = (ChannelExec) channel;
         channelExec.setCommand(commands);
+        out.reset();
         channelExec.setOutputStream(out);
         channelExec.setErrStream(out);
         return channel;

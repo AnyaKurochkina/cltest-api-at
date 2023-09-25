@@ -116,14 +116,14 @@ public class RedisSentinel extends IProduct {
 
     public void resetPassword() {
         String password = "UEijLKcQJN2pZ0Iqvxh1EXCuZ86pPGiEpdxwLRLWL4QnIOG2KPlGrw5jkLEScQZ9";
-        OrderServiceSteps.executeAction("reset_redis_user_password", this,
+        OrderServiceSteps.executeAction("reset_sentinel_redis_user_password", this,
                 new JSONObject().put("redis_password", password).put("user_name", appUser), this.getProjectId());
         appUserPassword = password;
         save();
     }
 
     public void changeNotifyKeyspaceEvents(String attr) {
-        OrderServiceSteps.executeAction("change_redis_param_notify", this,
+        OrderServiceSteps.executeAction("change_redis_sentinel_param_notify", this,
                 new JSONObject().put("notify_keyspace_events", attr), this.getProjectId());
     }
 

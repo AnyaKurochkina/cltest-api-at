@@ -114,7 +114,8 @@ public class RouterTest extends AbstractComputeTest {
                 .execute("timeout 2 telnet {} 22", localIpVmTest);
         AssertUtils.assertContains(checkConnectCmd, "OpenSSH");
         if (Configure.ENV.equalsIgnoreCase("t1prod"))
-            AssertUtils.assertContains(ssh.privateKey(SshKeyList.PRIVATE_KEY).build().execute("curl -Is http://yandex.ru"), "302 Moved temporarily");
+            AssertUtils.assertContains(ssh.privateKey(SshKeyList.PRIVATE_KEY).build().execute(CONNECT_INTERNET_COMMAND),
+                    CONNECT_INTERNET_COMMAND_RESPONSE);
     }
 
     @Test
@@ -125,7 +126,7 @@ public class RouterTest extends AbstractComputeTest {
         RouterCreate router = randomRouter.get();
         final String networkName = getRandomName();
         new IndexPage().goToNetworks().addNetwork(networkName, "desc");
-            new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity()).addSubnet()
+            new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity(), AbstractEntity.Mode.AFTER_TEST).addSubnet()
                     .setRegion(region)
                     .setCidr("10.1.0.0")
                     .setName(getRandomName())

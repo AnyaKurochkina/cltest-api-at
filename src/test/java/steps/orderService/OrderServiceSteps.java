@@ -323,8 +323,8 @@ public class OrderServiceSteps extends Steps {
         String actionStatus = "";
         int counter = 60;
         log.info("Проверка статуса выполнения действия");
-        while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
-            Waiting.sleep(20000);
+        while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.isEmpty()) && counter > 0) {
+            Waiting.sleep(25000);
             actionStatus = new Http(OrderServiceURL)
                     .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                     .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), action_id)

@@ -1,7 +1,7 @@
 {
   "order": {
-    "project_name": "proj-pkvckn08w9",
-    "product_id": "37c150ee-e822-4bf6-a25c-068601f9ddf1",
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "20456586-335f-468d-a944-16911a4e5424",
     "attrs": {
       "domain": "corp.dev.vtb",
       "flavor": {
@@ -10,15 +10,16 @@
         "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
         "memory": 4
       },
+      "layout": "34d5b69d-960b-41ad-84c1-32deac751072",
+      "dns_zone": "oslb-dev01.corp.dev.vtb",
+      "password": "BR7Z9oiI3E",
+      "platform": "OpenStack",
       "boot_disk": {
         "size": 30
       },
-      "password": "W1clvyliiSCyE0gs",
-      "platform": "vSphere",
       "on_support": true,
-      "os_version": "8.4",
+      "os_version": "1.7",
       "data_center": "5",
-      "dns_zone": "",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
@@ -31,12 +32,11 @@
       ],
       "ad_integration": true,
       "geo_distribution": true,
-      "layout": "",
       "ad_logon_grants": [
         {
           "role": "superuser",
           "groups": [
-            "cloud-plux-group-at"
+            "cloud-zorg-dev-group"
           ]
         }
       ]

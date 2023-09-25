@@ -57,6 +57,9 @@ public abstract class AbstractComputeTest extends Tests {
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
     protected static final String sshKey = "AT-default";
 
+    protected static final String CONNECT_INTERNET_COMMAND = "curl --connect-timeout 1 -Is http://yandex.ru";
+    protected static final String CONNECT_INTERNET_COMMAND_RESPONSE = "302 Moved temporarily";
+
     public AbstractComputeTest() {
         if (!Configure.ENV.equals("t1prod"))
             availabilityZone = "ru-central1-c";

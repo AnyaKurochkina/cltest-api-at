@@ -27,7 +27,7 @@ public class VirtualIpCreate {
     }
 
     public VirtualIpCreate setName(String name) {
-        Input.byLabel("Имя виртуального IP-адреса").setValue(name);
+        Input.byLabel("Имя виртуального IP адреса").setValue(name);
         this.name = name;
         return this;
     }
@@ -51,7 +51,7 @@ public class VirtualIpCreate {
     }
 
     public VirtualIpCreate setInternet(Boolean internet) {
-        Switch.byText("Разрешить доступ в Интернет").setEnabled(internet);
+        Switch.byText("Разрешить доступ в интернет").setEnabled(internet);
         this.internet = internet;
         return this;
     }

@@ -62,7 +62,7 @@ public class VirtualIpVmTest extends AbstractComputeTest {
     @Test
     @Order(89)
     @TmsLink("")
-    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Доступ в интернет. Подключить/отключить")
+    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Доступ в интернет. Подключить/отключить (Действие)")
     void checkInternetAction() {
         VmCreate vmProxy = randomVm.get();
         VmCreate vm = randomVmSecond.get();
@@ -80,13 +80,13 @@ public class VirtualIpVmTest extends AbstractComputeTest {
         addIpToInterface(publicIp, localIp, vip);
         new IndexPage().goToPublicIps().selectIp(publicIp).runActionWithCheckCost(CompareType.LESS, () -> new PublicIp().detachComputeIp());
         new IndexPage().goToPublicIps().selectIp(publicIp).runActionWithCheckCost(CompareType.LESS, () -> new PublicIp().attachComputeIp(vmProxy.getName()));
-//        checkConnectToVip(publicIp, vip);
+        checkConnectToVip(publicIp, vip, false);
 
         new IndexPage().goToVirtualIps().selectIp(vip.getIp()).runActionWithCheckCost(CompareType.EQUALS, () -> new VirtualIp().getMenu().enableInternet());
-        checkConnectToVip(publicIp, vip);
+        checkConnectToVip(publicIp, vip, true);
 
         new IndexPage().goToVirtualIps().selectIp(vip.getIp()).runActionWithCheckCost(CompareType.EQUALS, () -> new VirtualIp().getMenu().disableInternet());
-//        checkConnectToVip(publicIp, vip);
+        checkConnectToVip(publicIp, vip, false);
     }
 
     @Test
@@ -106,7 +106,7 @@ public class VirtualIpVmTest extends AbstractComputeTest {
         addIpToInterface(publicIp, localIp, vip);
         new IndexPage().goToPublicIps().selectIp(publicIp).detachComputeIp();
         new IndexPage().goToPublicIps().selectIp(publicIp).attachComputeIp(vmProxy.getName());
-        checkConnectToVip(publicIp, vip);
+        checkConnectToVip(publicIp, vip, true);
     }
 
     @Test
@@ -132,7 +132,7 @@ public class VirtualIpVmTest extends AbstractComputeTest {
         Assertions.assertTrue(addIpCmd.isEmpty() || addIpCmd.contains("File exists"), "Ошибка при добавлении IP адреса на интерфейс: " + addIpCmd);
     }
 
-    private void checkConnectToVip(String publicIp, VirtualIpCreate vip){
+    private void checkConnectToVip(String publicIp, VirtualIpCreate vip, boolean isInternet){
         SshClient ssh = SshClient.builder().host(publicIp).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
         final String privateKeyFile = "private_key";
         ssh.writeTextFile(privateKeyFile, DataFileHelper.read(SshKeyList.PRIVATE_KEY));
@@ -140,8 +140,11 @@ public class VirtualIpVmTest extends AbstractComputeTest {
         String res = ssh.execute("ssh -i {} {}@{} -o \"StrictHostKeyChecking no\" 'uname'", privateKeyFile, SshKeyList.SSH_USER, vip.getIp());
         AssertUtils.assertContains(res, "Linux");
         if(Configure.ENV.equalsIgnoreCase("t1prod")){
-            res = ssh.execute("ssh -i {} {}@{} -o \"StrictHostKeyChecking no\" 'curl -Is http://yandex.ru'", privateKeyFile, SshKeyList.SSH_USER, vip.getIp());
-            AssertUtils.assertContains(res, "302 Moved temporarily");
+            res = ssh.execute("ssh -i {} {}@{} -o \"StrictHostKeyChecking no\" '{}'", privateKeyFile, SshKeyList.SSH_USER, vip.getIp(), CONNECT_INTERNET_COMMAND);
+            if(isInternet)
+                AssertUtils.assertContains(res, CONNECT_INTERNET_COMMAND_RESPONSE);
+            else
+                AssertUtils.assertNotContains(res, CONNECT_INTERNET_COMMAND_RESPONSE);
         }
     }
 
