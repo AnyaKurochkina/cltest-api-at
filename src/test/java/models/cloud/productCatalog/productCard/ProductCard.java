@@ -8,6 +8,7 @@ import models.Entity;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,7 +24,8 @@ import static steps.productCatalog.ProductCardSteps.deleteProductCard;
 @Getter
 public class ProductCard extends Entity {
     @JsonProperty("card_items")
-    private List<CardItems> cardItems;
+    @Builder.Default
+    private List<CardItems> cardItems = new ArrayList<>();
     private String name;
     private String title;
     private String description;

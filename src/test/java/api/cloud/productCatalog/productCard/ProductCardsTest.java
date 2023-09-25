@@ -1,11 +1,19 @@
 package api.cloud.productCatalog.productCard;
 
+import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
+import lombok.SneakyThrows;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.productCard.CardItems;
 import models.cloud.productCatalog.productCard.ProductCard;
+import models.cloud.productCatalog.service.Service;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -18,9 +26,10 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.createAction;
-import static steps.productCatalog.ProductCardSteps.getProductCard;
-import static steps.productCatalog.ProductCardSteps.isProductCardExists;
+import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.ProductCardSteps.*;
 import static steps.productCatalog.ProductSteps.createProduct;
+import static steps.productCatalog.ServiceSteps.createService;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -30,6 +39,7 @@ public class ProductCardsTest {
 
     @Test
     @DisplayName("Создание продуктовой карты без card items")
+    @TmsLink("SOUL-7347")
     public void createProductCardWithOutCardItemsTest() {
         ProductCard productCard = ProductCard.builder()
                 .name("create_product_card_test_api")
@@ -45,6 +55,7 @@ public class ProductCardsTest {
 
     @Test
     @DisplayName("Создание продуктовой карты с card items")
+    @TmsLink("SOUL-7348")
     public void createProductCardWithCardItemsTest() {
         Action action = createAction();
         Product product = createProduct("product_for_card_items_test_api");
@@ -83,7 +94,8 @@ public class ProductCardsTest {
 
     @DisplayName("Проверка существования продуктовой карты по имени")
     @Test
-    public void checkProductExists() {
+    @TmsLink("SOUL-7349")
+    public void checkProductCardExistsTest() {
         String productName = "product_card_exist_test_api";
         ProductCard.builder()
                 .name(productName)
@@ -91,5 +103,61 @@ public class ProductCardsTest {
                 .createObject();
         assertTrue(isProductCardExists(productName));
         assertFalse(isProductCardExists("not_exists_name"));
+    }
+
+    @DisplayName("Обновление продуктовой карты")
+    @Test
+    @TmsLink("")
+    public void updateProductCardTest() {
+        String productName = "product_card_update_test_api";
+        ProductCard productCard = ProductCard.builder()
+                .name(productName)
+                .build()
+                .createObject();
+        Graph graph = createGraph();
+        CardItems productCardItem = CardItems.builder().objType("Graph")
+                .objId(graph.getGraphId())
+                .versionArr(Arrays.asList(1, 0, 0))
+                .build();
+        JSONObject json = ProductCard.builder()
+                .name(productName)
+                .cardItems(Collections.singletonList(productCardItem))
+                .build()
+                .toJson();
+        ProductCard updatedProductCard = updateProductCard(productCard.getId(), json).assertStatus(200).extractAs(ProductCard.class);
+        CardItems actualProductCardItem = updatedProductCard.getCardItems().get(0);
+        assertEquals("Graph", actualProductCardItem.getObjType());
+        assertEquals(graph.getName(), actualProductCardItem.getObjKeys().getName());
+        assertEquals(productCardItem.getVersionArr(), actualProductCardItem.getVersionArr());
+    }
+
+    @SneakyThrows
+    @DisplayName("Частичное обновление продуктовой карты")
+    @Test
+    @TmsLink("")
+    public void partialUpdateProductCardTest() {
+        Graph graph = createGraph();
+        CardItems productCardGraph = CardItems.builder().objType("Graph")
+                .objId(graph.getGraphId())
+                .versionArr(Arrays.asList(1, 0, 0))
+                .build();
+        String productName = "product_card_partial_update_test_api";
+        ProductCard productCard = ProductCard.builder()
+                .name(productName)
+                .cardItems(Collections.singletonList(productCardGraph))
+                .build()
+                .createObject();
+        Service service = createService(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
+        CardItems productCardService = CardItems.builder().objType("Service")
+                .objId(service.getId())
+                .versionArr(Arrays.asList(1, 0, 0))
+                .build();
+        ProductCard updatedProductCard = partialUpdateProductCard(productCard.getId(), new JSONObject()
+                .put("card_items", new JSONArray(JsonHelper.getCustomObjectMapper().writeValueAsString(Collections.singletonList(productCardService)))))
+                .assertStatus(200).extractAs(ProductCard.class);
+        CardItems actualProductCardItem = updatedProductCard.getCardItems().get(0);
+        assertEquals("Service", actualProductCardItem.getObjType());
+        assertEquals(service.getName(), actualProductCardItem.getObjKeys().getName());
+        assertEquals(productCardService.getVersionArr(), actualProductCardItem.getVersionArr());
     }
 }

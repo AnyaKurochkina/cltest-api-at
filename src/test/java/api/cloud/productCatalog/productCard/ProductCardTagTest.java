@@ -4,6 +4,7 @@ import api.Tests;
 import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.productCard.ProductCard;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -26,6 +27,7 @@ import static steps.productCatalog.ProductCardSteps.*;
 public class ProductCardTagTest extends Tests {
 
     @DisplayName("Добавление/Удаление списка Тегов в продуктовых картах")
+    @TmsLink("SOUL-7350")
     @Test
     public void addTagProductCardTest() {
         List<String> tagList = Arrays.asList("test_card_api", "test_card_api2");
@@ -40,6 +42,7 @@ public class ProductCardTagTest extends Tests {
     }
 
     @DisplayName("Проверка значения поля tag_list в продуктовых картах")
+    @TmsLink("SOUL-7351")
     @Test
     public void checkTagListValueTest() {
         List<String> tagList = Arrays.asList("product_card_tag_test_value", "product_card_tag_test_value2");
