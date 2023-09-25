@@ -96,7 +96,7 @@ public class ProductCatalogSteps {
     public static String getHealthStatusProductCatalog() {
         return new Http(ProductCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
-                .get("/api/healthcheck")
+                .get("/api/v1/health")
                 .assertStatus(200)
                 .jsonPath()
                 .getString("status");
