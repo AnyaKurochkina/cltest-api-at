@@ -52,8 +52,8 @@ public class UiGenericMonitoringTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             GenericMonitoringOrderPage orderPage = new GenericMonitoringOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
