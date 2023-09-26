@@ -8,8 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static models.AbstractEntity.Mode.AFTER_CLASS;
-import static models.AbstractEntity.Mode.AFTER_TEST;
+import static models.AbstractEntity.Mode.*;
 import static models.ObjectPoolService.awaitTerminationAfterShutdown;
 
 public abstract class AbstractEntity {
@@ -18,8 +17,9 @@ public abstract class AbstractEntity {
     private Mode mode = AFTER_TEST;
 
     @SuppressWarnings("unchecked")
-    public <T extends AbstractEntity> T setMode(Mode mode) {
+    public <T extends AbstractEntity> T deleteMode(Mode mode) {
         this.mode = mode;
+        addEntity(this);
         return (T) this;
     }
 
@@ -74,7 +74,11 @@ public abstract class AbstractEntity {
         deleteCurrentThreadEntities(AFTER_TEST);
     }
 
-    public static void addEntity(AbstractEntity e) {
+    public static void deleteTestRunEntities() {
+        deleteCurrentThreadEntities(AFTER_RUN);
+    }
+
+    private static void addEntity(AbstractEntity e) {
         entities[e.getPriority()].computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(e);
     }
 

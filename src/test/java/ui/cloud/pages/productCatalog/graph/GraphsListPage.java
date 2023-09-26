@@ -125,15 +125,19 @@ public class GraphsListPage extends EntityListPage {
             clearSearchButton.click();
         }
         searchInput.setValue(name);
-        TestUtils.wait(500);
-        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
-        TestUtils.wait(1000);
+        Waiting.sleep(500);
+        DataTable table = new DataTable(nameColumn);
+        new DataTable(nameColumn).searchAllPages(t -> table.isColumnValueContains(nameColumn, name))
+                .getRowByColumnValueContains(nameColumn, name).get().click();
+        Waiting.sleep(1000);
         return new GraphPage();
     }
 
     @Step("Открытие страницы графа '{name}'")
     public GraphPage openGraphPage(String name) {
-        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
+        DataTable table = new DataTable(nameColumn);
+        new DataTable(nameColumn).searchAllPages(t -> table.isColumnValueContains(nameColumn, name))
+                .getRowByColumnValueContains(nameColumn, name).get().click();
         return new GraphPage();
     }
 

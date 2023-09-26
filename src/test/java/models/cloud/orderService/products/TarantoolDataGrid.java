@@ -40,8 +40,6 @@ public class TarantoolDataGrid extends IProduct {
         if(Configure.ENV.equalsIgnoreCase("ift"))
             productName = "Tarantool Data Grid - Astra Linux";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (segment == null)
@@ -54,6 +52,8 @@ public class TarantoolDataGrid extends IProduct {
             setDomain(OrderServiceSteps.getDomain(this));
         if (tarantoolVersion == null)
             tarantoolVersion = getRandomProductVersionByPathEnum("tarantool_version.enum");
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 

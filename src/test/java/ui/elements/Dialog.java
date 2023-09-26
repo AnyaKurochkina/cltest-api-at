@@ -14,7 +14,7 @@ import static core.helper.StringUtils.$x;
 @NoArgsConstructor
 public class Dialog implements TypifiedElement {
     @Language("XPath")
-    protected final String xpath = "//h2[.='{}']/ancestor::div[@role='dialog']";
+    protected final String xpath = "//*[self::h2 or self::h5][.='{}']/ancestor::div[@role='dialog']";
     protected SelenideElement dialog;
 
     public Dialog(SelenideElement dialog) {
@@ -33,6 +33,14 @@ public class Dialog implements TypifiedElement {
     public Dialog setInputValue(String label, String value) {
         Input.byLabel(label).setValue(value);
         return this;
+    }
+
+    public void setInputValueV2(String label, String value) {
+        Input.byLabelV2(label).setValue(value);
+    }
+
+    public void setInputByName(String name, String value) {
+        Input.byName(name).setValue(value);
     }
 
     public String getInputValue(String label) {
@@ -56,14 +64,12 @@ public class Dialog implements TypifiedElement {
         return this;
     }
 
-    public Dialog setTextareaAndPressEnter(TextArea textarea, String text) {
+    public void setTextareaAndPressEnter(TextArea textarea, String text) {
         textarea.setValueAndPressEnter(text);
-        return this;
     }
 
-    public Dialog setCheckBox(CheckBox checkBox, boolean checked) {
+    public void setCheckBox(CheckBox checkBox, boolean checked) {
         checkBox.setChecked(checked);
-        return this;
     }
 
     public void clickButton(String text) {

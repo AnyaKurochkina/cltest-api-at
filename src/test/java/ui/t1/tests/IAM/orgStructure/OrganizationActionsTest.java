@@ -1,4 +1,4 @@
-package ui.t1.tests.IAM.users.orgStructure;
+package ui.t1.tests.IAM.orgStructure;
 
 import api.Tests;
 import core.enums.Role;
@@ -57,7 +57,7 @@ public class OrganizationActionsTest extends Tests {
                 .type("not_default")
                 .build()
                 .onlyGetObject();
-        String orgName = org.getName();
+        String orgName = org.getTitle();
         assertTrue(new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN)
                 .goToContextDialog()

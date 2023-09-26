@@ -14,6 +14,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.CompareType;
 import ui.elements.Menu;
+import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.Column;
@@ -36,7 +37,7 @@ import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 public class RouterTest extends AbstractComputeTest {
     protected final EntitySupplier<RouterCreate> randomRouter = lazy(() -> {
         RouterCreate r = new IndexPage().goToRouters().addRouter().setName(getRandomName()).setRegion(region).setDesc("desc").addNetwork(defaultNetwork).clickOrder();
-        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
         return r;
     });
 
@@ -47,7 +48,7 @@ public class RouterTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Маршрутизаторы. Создать маршрутизатор")
     void addRouter() {
         RouterCreate router = randomRouter.get();
-        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
     }
 
     @Test
@@ -91,8 +92,9 @@ public class RouterTest extends AbstractComputeTest {
                 .add("", String::isEmpty)
                 .add("", String::isEmpty)
                 .check(() -> new Router.NetworkInterfacesTable().getRow(0));
-        AssertUtils.assertEqualsList(Arrays.asList("Подключить сеть", "Скопировать ID", "Удалить"), new Menu(getActionsMenuButton(BLOCK_PARAMETERS)).getOptions());
-        AssertUtils.assertEqualsList(Arrays.asList("Удалить сетевой интерфейс", "Скопировать ID"), new Menu(getActionsMenuButton("Сетевые интерфейсы")).getOptions());
+        AssertUtils.assertEqualsList(Arrays.asList("Подключить сеть", "Скопировать ID", "Удалить"), new Menu(getActionsMenuButton(BLOCK_PARAMETERS)).click().getOptions());
+        TypifiedElement.refreshPage();
+        AssertUtils.assertEqualsList(Arrays.asList("Удалить сетевой интерфейс", "Скопировать ID"), new Menu(new Router.NetworkInterfacesTable().getNetworkMenu(router.getNetworks().get(0))).click().getOptions());
     }
 
     @Test
@@ -106,10 +108,8 @@ public class RouterTest extends AbstractComputeTest {
 
         VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
                 .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setPublicIp(ip).setSshKey(sshKey).clickOrder();
-        new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
+        new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity()).checkCreate(false);
 
-        new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
-                .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setPublicIp(ip).setSshKey(sshKey).clickOrder();
         String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).getLocalIp();
 
         SshClient.SshClientBuilder ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER);

@@ -8,6 +8,7 @@ import models.cloud.orderService.products.GenericMonitoring;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,6 +25,16 @@ public class GenericMonitoringTest extends Tests {
     void create(GenericMonitoring product) {
         //noinspection EmptyTryBlock
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Обновить ОС {0}")
+    void checkActions(GenericMonitoring product) {
+        try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
+            Assertions.assertTrue(gm.isActionExist("update_os_vm"));
         }
     }
 

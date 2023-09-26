@@ -172,7 +172,8 @@ public abstract class IProduct extends Entity {
     }
 
     private String replaceGraphParams(String str){
-        return str.replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
+        return Objects.requireNonNull(str)
+                .replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
                 .replace("${context::formData.platform}", getPlatform())
                 .replace("${context::projectInfo.organization}", ((Organization) Organization.builder().build().createObject()).getName())
                 .replace("${context::formData.default_nic.net_segment}", getSegment());
@@ -305,10 +306,13 @@ public abstract class IProduct extends Entity {
         }
     }
 
+    public boolean isActionExist(String action){
+        return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name == '%s'}", action));
+    }
 
     protected void checkConnectDb(String dbName, String user, String password, String url) throws ConnectException {
         String connectUrl = "jdbc:" + url + "/" + dbName;
-        Connection connection = null;
+        Connection connection;
         try {
             connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));
@@ -409,8 +413,8 @@ public abstract class IProduct extends Entity {
     public String getFilter() {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
-        return JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
-                .getString("'ui:options'.filter").replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase());
+        return replaceGraphParams(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("flavor")))
+                .getString("'ui:options'.filter"));
     }
 
     @SneakyThrows

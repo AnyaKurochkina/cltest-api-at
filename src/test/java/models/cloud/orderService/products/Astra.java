@@ -33,8 +33,6 @@ public class Astra extends IProduct {
         jsonTemplate = "/orders/astra_general_application.json";
         productName = "Astra Linux";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (segment == null)
@@ -45,6 +43,8 @@ public class Astra extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         return this;
     }
 
@@ -116,5 +116,9 @@ public class Astra extends IProduct {
     public void deleteSnapshot() {
         OrderServiceSteps.executeAction("delete_group_snapshot", this, null, this.getProjectId());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, SNAPSHOT_PATH), "Снапшот существует");
+    }
+
+    public void updateOsVm() {
+        OrderServiceSteps.executeAction("update_os_vm", this, null, this.getProjectId());
     }
 }

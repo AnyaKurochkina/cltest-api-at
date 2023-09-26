@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Windows;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
@@ -57,6 +56,7 @@ public class UiWindowsTest extends UiProductTest {
             WindowsOrderPage orderPage = new WindowsOrderPage();
             //orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getRoleServer().setContains("Autotests");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -125,7 +125,7 @@ public class UiWindowsTest extends UiProductTest {
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
             Alert.red("Заказ защищен от удаления");
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
         } finally {
             winPage.switchProtectOrder(false);
         }
@@ -273,5 +273,4 @@ public class UiWindowsTest extends UiProductTest {
         WindowsPage winPage = new WindowsPage(product);
         winPage.runActionWithCheckCost(CompareType.ZERO, winPage::delete);
     }
-
 }

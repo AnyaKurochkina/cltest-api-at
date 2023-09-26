@@ -24,10 +24,6 @@ public abstract class LoginPage {
         submitBtn.shouldBe(Condition.visible).shouldBe(Condition.enabled);
     }
 
-    public LoginPage() {
-        open("");
-    }
-
     private void signIn(String user, String password) {
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
@@ -37,7 +33,7 @@ public abstract class LoginPage {
         final String key = "themeType";
         if(!Objects.equals(Selenide.sessionStorage().getItem(key), theme)) {
             Selenide.sessionStorage().setItem(key, theme);
-            TypifiedElement.refresh();
+            TypifiedElement.refreshPage();
         }
     }
 

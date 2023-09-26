@@ -1,6 +1,7 @@
 package ui.cloud.tests.productCatalog.action;
 
 import core.enums.Role;
+import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
@@ -170,7 +171,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @ParameterizedTest(name = "Регистрация действия")
     @DisplayName("Регистрация действия")
-    //SOUL-6051
+    @TmsLink("SOUL-6051")
     public void registerActionTest(TestProduct p) {
         TestProduct product = p.createObject();
         String actionName = "at_ui_registered_action";

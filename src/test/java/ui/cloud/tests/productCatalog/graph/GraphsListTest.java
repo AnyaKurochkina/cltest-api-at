@@ -38,8 +38,6 @@ public class GraphsListTest extends GraphBaseTest {
     @DisplayName("Возврат в список со страницы графа")
     public void returnFromGraphPageTest() {
         new ControlPanelIndexPage().goToGraphsPage()
-                .sortByCreateDate()
-                .lastPage()
                 .openGraphPage(NAME)
                 .returnToGraphsList()
                 .checkGraphIsHighlighted(NAME);

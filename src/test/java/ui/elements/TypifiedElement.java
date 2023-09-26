@@ -1,11 +1,13 @@
 package ui.elements;
 
+import api.Tests;
 import com.codeborne.selenide.*;
 import core.utils.Waiting;
 import lombok.SneakyThrows;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -32,11 +34,6 @@ public interface TypifiedElement {
             Waiting.sleep(ms);
             return true;
         }
-    }
-
-    static void refresh() {
-        Selenide.refresh();
-        checkProject();
     }
 
     /**
@@ -107,8 +104,24 @@ public interface TypifiedElement {
         Alert.closeAll();
     }
 
-    static void open(String url) {
-        Selenide.open(url);
+    static void refreshPage() {
+        Selenide.refresh();
+        Tests.getPostLoadPage().run();
         checkProject();
+    }
+
+    static void openPage(String url) {
+        open(url);
+        Tests.getPostLoadPage().run();
+        checkProject();
+    }
+
+    /**
+     * Открытие страницы и игнорирование WebDriverException (баг в ChromeDriver)
+     */
+    static void open(String url) {
+        try {
+            Selenide.open(url);
+        } catch (WebDriverException ignored) {}
     }
 }

@@ -1,4 +1,4 @@
-package ui.t1.tests.IAM.users.orgStructure;
+package ui.t1.tests.IAM.orgStructure;
 
 import api.Tests;
 import core.enums.Role;
@@ -18,6 +18,7 @@ import ui.t1.pages.T1LoginPage;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.authorizer.AuthorizerSteps.deleteFolder;
 
 @Epic("IAM и Управление")
 @Feature("Действия с проектом")
@@ -53,13 +54,13 @@ public class ProjectActionTest extends Tests {
     public void editProjectTest() {
         String name = "edit_project_ui_test";
         String updatedName = "updated_project_ui_test";
-            assertTrue(new IndexPage()
-                    .goToOrgStructure()
-                    .createProject(name)
-                    .changeNameProject(name, updatedName)
-                    .isProjectExist(updatedName));
-            new OrgStructurePage()
-                    .deleteProject(updatedName);
+        assertTrue(new IndexPage()
+                .goToOrgStructure()
+                .createProject(name)
+                .changeNameProject(name, updatedName)
+                .isProjectExist(updatedName));
+        new OrgStructurePage()
+                .deleteProject(updatedName);
     }
 
     @Test
@@ -67,15 +68,17 @@ public class ProjectActionTest extends Tests {
     public void createProjectInFolderTest() {
         String folderName = "org_structure_ui_test";
         Folder folder = Folder
-                .builder().
-                title(folderName)
-                .kind(Folder.DEFAULT)
+                .builder()
+                .title(folderName)
+                .kind(Folder.BUSINESS_BLOCK)
                 .build()
                 .createObject();
         String projectName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-        new IndexPage()
+        assertTrue(new IndexPage()
                 .goToOrgStructure()
-                .createProjectInFolder(folder.getName(), projectName)
-                .isProjectExist(projectName);
+                .createProjectInFolder(folder.getTitle(), projectName)
+                .isProjectExistInFolder(projectName, folder.getTitle()));
+        String projectId = new OrgStructurePage().getResourceId(projectName);
+        deleteFolder(projectId);
     }
 }
