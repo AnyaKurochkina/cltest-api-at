@@ -40,6 +40,16 @@ public class VirtualIp extends IProductT1Page<VirtualIp> {
                     Dialog.byTitle("Отключить от сетевого интерфейса")
                             .setSelectValue("Сетевой интерфейс", ip));
         }
+
+        @Step("Отключить IP от интерфейса")
+        public void disableInternet() {
+            runActionWithoutParameters(BLOCK_PARAMETERS, "Отключить доступ в интернет");
+        }
+
+        @Step("Разрешить доступ в интернет")
+        public void enableInternet() {
+            runActionWithoutParameters(BLOCK_PARAMETERS, "Разрешить доступ в интернет");
+        }
     }
 
     public static class InterfacesTable extends Table {

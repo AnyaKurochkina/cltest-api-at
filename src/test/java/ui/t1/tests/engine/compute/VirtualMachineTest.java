@@ -6,6 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.AbstractEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -72,7 +73,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderId = vmPage.getOrderId();
 
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(getProjectId());
@@ -111,11 +112,11 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
 
         String ip = new IndexPage().goToPublicIps().addIp(region);
-        PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity()).checkCreate(true);
+        PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderIdIp = ipPage.getOrderId();
 
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.MORE, () -> vmPage.attachIp(ip));

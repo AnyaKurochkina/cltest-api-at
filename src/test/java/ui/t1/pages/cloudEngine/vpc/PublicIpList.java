@@ -33,7 +33,7 @@ public class PublicIpList {
     }
 
     public PublicIp selectIp(String name) {
-        new IpTable().getRowByColumnValue(Column.IP_ADDRESS, name).get().shouldBe(Condition.visible).click();
+        new IpTable().getRowByColumnValue(Column.IP_ADDRESS, name).getElementByColumn(Column.IP_ADDRESS).shouldBe(Condition.visible).click();
         return new PublicIp();
     }
 
