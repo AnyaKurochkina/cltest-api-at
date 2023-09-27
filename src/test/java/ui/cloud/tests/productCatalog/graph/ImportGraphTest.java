@@ -16,7 +16,7 @@ public class ImportGraphTest extends GraphBaseTest {
 
     @Test
     @DisplayName("Импорт графа до первого существующего объекта")
-    @TmsLink("636442")
+    @TmsLink("SOUL-817")
     public void importGraphTest() {
         String data = JsonHelper.getStringFromFile("/productCatalog/graphs/importGraph.json");
         JsonPath json = new JsonPath(data);
