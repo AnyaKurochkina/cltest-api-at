@@ -10,7 +10,6 @@ import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.VersionDiff;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
-import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -24,13 +23,15 @@ import static steps.productCatalog.ActionSteps.*;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = "active", callSuper = false)
+@EqualsAndHashCode(exclude = {"active", "actionId", "createDt", "updateDt", "versionCreateDt"}, callSuper = false)
+@ToString
 public class Action extends Entity {
 
     @JsonProperty("available_without_money")
     private Boolean availableWithoutMoney;
     @JsonProperty("version_list")
     private List<String> versionList;
+    @Setter
     @JsonProperty("current_version")
     private String currentVersion;
     private Integer priority;
@@ -69,6 +70,7 @@ public class Action extends Entity {
     private List<String> restrictedGroups;
     @JsonProperty("graph_id")
     private String graphId;
+    @JsonProperty("version")
     private String version;
     private String object_info;
     @JsonProperty("last_version")

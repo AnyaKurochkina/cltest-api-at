@@ -4,14 +4,19 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
+import models.cloud.productCatalog.productCard.CardItems;
 import models.cloud.productCatalog.productCard.ProductCard;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import steps.Steps;
 
+import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.StringUtils.convertStringVersionToIntArrayVersion;
 
 public class ProductCardSteps extends Steps {
 
@@ -41,6 +46,14 @@ public class ProductCardSteps extends Steps {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(cardUrl + id + "/")
+                .assertStatus(204);
+    }
+
+    @Step("Удаление productCard по имени {name}")
+    public static void deleteProductCardByName(String name) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .delete(cardhUrl2 + name + "/")
                 .assertStatus(204);
     }
 
@@ -90,6 +103,23 @@ public class ProductCardSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Применение product cards")
+    public static Response applyProductCard(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(cardUrl + id + "/apply/")
+                .assertStatus(200);
+    }
+
+    @Step("Копирование product cards")
+    public static ProductCard copyProductCard(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .post(cardUrl + id + "/copy/")
+                .assertStatus(200)
+                .extractAs(ProductCard.class);
+    }
+
     @Step("Проверка существования product cards по имени {name}")
     public static boolean isProductCardExists(String name) {
         return new Http(ProductCatalogURL)
@@ -98,4 +128,41 @@ public class ProductCardSteps extends Steps {
                 .assertStatus(200).jsonPath().get("exists");
     }
 
+    @Step("Экспорт product cards")
+    public static Response exportProductCard(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(cardUrl + id + "/obj_export/?as_file=true")
+                .assertStatus(200);
+    }
+
+    @Step("Импорт product cards")
+    public static ImportObject importProductCard(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(cardUrl + "obj_import/", "file", new File(pathName))
+                .assertStatus(200)
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
+    }
+
+    @Step("Создание product cards с CardItems")
+    public static ProductCard createProductCard(String name, CardItems... items) {
+        return ProductCard.builder()
+                .name(name)
+                .cardItems(Arrays.asList(items))
+                .build()
+                .createObject();
+    }
+
+    @Step("Создание CardItem c типом {objType}")
+    public static CardItems createCardItem(String objType, String objId, String version) {
+        return CardItems.builder()
+                .objType(objType)
+                .objId(objId)
+                .versionArr(convertStringVersionToIntArrayVersion(version))
+                .build();
+    }
 }
