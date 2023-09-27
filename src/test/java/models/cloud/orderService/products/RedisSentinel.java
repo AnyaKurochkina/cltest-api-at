@@ -22,6 +22,7 @@ import steps.orderService.OrderServiceSteps;
 @NoArgsConstructor
 @SuperBuilder
 public class RedisSentinel extends IProduct {
+    private final static String USERNAME_PATH = "data.find{it.type('app')}.data.config.users.any{it.user_name=='%s'}";
     @ToString.Include
     String osVersion;
     String appUserPassword;
@@ -150,4 +151,17 @@ public class RedisSentinel extends IProduct {
         delete("delete_two_layer");
     }
 
+    public void createUser(String user, String password) {
+        OrderServiceSteps.executeAction("redis_sentinel_create_user", this,
+                new JSONObject().put("redis_password", password).put("user_name", user), this.getProjectId());
+        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
+                        this, String.format(USERNAME_PATH, user)), String.format("Пользователь %s не найден", user));
+    }
+
+    public void deleteUser(String user) {
+        OrderServiceSteps.executeAction("redis_sentinel_delete_user", this,
+                new JSONObject().put("user_name", user), this.getProjectId());
+        Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
+                this, String.format(USERNAME_PATH, user)), String.format("Пользователь %s найден", user));
+    }
 }
