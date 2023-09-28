@@ -50,6 +50,9 @@ public class ProductCard extends Entity {
         if (!cardItems.isEmpty()) {
             cards = new JSONArray(JsonHelper.getCustomObjectMapper().writeValueAsString(cardItems));
         }
+        if (tagList == null) {
+            tagList = new ArrayList<>();
+        }
         return JsonHelper.getJsonTemplate("productCatalog/productCard/createProductCard.json")
                 .set("$.name", name)
                 .set("$.title", title)

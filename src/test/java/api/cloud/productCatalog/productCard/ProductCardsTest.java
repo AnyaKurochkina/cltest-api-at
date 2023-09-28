@@ -45,8 +45,8 @@ public class ProductCardsTest {
     @TmsLink("SOUL-7347")
     public void createProductCardWithOutCardItemsTest() {
         ProductCard productCard = ProductCard.builder()
-                .name("create_product_card_test_api")
-                .title("create_product_card_title_test_api")
+                .name("create_product_card_with_out_test_api")
+                .title("create_product_card_with_out_test_api")
                 .description("test_api")
                 .number(1)
                 .cardItems(Collections.emptyList())
@@ -76,8 +76,8 @@ public class ProductCardsTest {
         cardItemsList.add(productCardItem);
 
         ProductCard productCard = ProductCard.builder()
-                .name("create_product_card_test_api")
-                .title("create_product_card_title_test_api")
+                .name("create_product_card_with_card_items_test_api")
+                .title("create_product_card_with_card_items_title_test_api")
                 .description("test_api")
                 .number(1)
                 .cardItems(cardItemsList)
@@ -164,8 +164,8 @@ public class ProductCardsTest {
         cardItemsList.add(productCardItem);
 
         ProductCard productCard = ProductCard.builder()
-                .name("create_product_card_test_api")
-                .title("create_product_card_title_test_api")
+                .name("apply_product_card_test_api")
+                .title("apply_product_card_title_test_api")
                 .description("test_api")
                 .number(1)
                 .cardItems(cardItemsList)
@@ -240,10 +240,10 @@ public class ProductCardsTest {
         assertEquals(productCardService.getVersionArr(), actualProductCardItem.getVersionArr());
     }
 
-    @DisplayName("Проверка существования card items")
+    @DisplayName("Проверка существования card items = false")
     @Test
     @TmsLink("")
-    public void isCardItemExistTest() {
+    public void isCardItemExistFalseTest() {
         JSONObject json = Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
                 .build()
@@ -251,7 +251,7 @@ public class ProductCardsTest {
                 .toJson();
         Graph graph = createGraph(json).extractAs(Graph.class);
         CardItems cardItem = createCardItem("Graph", graph.getGraphId(), "1.0.0");
-        ProductCard productCard = createProductCard("is_object_exist_test_api", cardItem);
+        ProductCard productCard = createProductCard("is_object_exist_false_test_api", cardItem);
         deleteGraphById(graph.getGraphId());
         CardItems getCardItems = getProductCard(productCard.getId()).getCardItems().get(0);
         assertFalse(getCardItems.getIsObjExists(), "Поле is_obj_exists = true");
@@ -259,7 +259,26 @@ public class ProductCardsTest {
                 "Одно из полей is_obj_version_exists, is_obj_equal = true");
     }
 
-    @SneakyThrows
+    @DisplayName("Проверка существования card items = true")
+    @Test
+    @TmsLink("")
+    public void isCardItemExistTrueTest() {
+        JSONObject json = Graph.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
+                .build()
+                .init()
+                .toJson();
+        Graph graph = createGraph(json).extractAs(Graph.class);
+        CardItems cardItem = createCardItem("Graph", graph.getGraphId(), "1.0.0");
+        ProductCard productCard = createProductCard("is_object_exist_test_true_api", cardItem);
+        deleteGraphById(graph.getGraphId());
+        createGraph(json).extractAs(Graph.class);
+        CardItems getCardItems = getProductCard(productCard.getId()).getCardItems().get(0);
+        assertTrue(getCardItems.getIsObjExists(), "Поле is_obj_exists = false");
+        assertTrue(getCardItems.getIsObjVersionExists() && getCardItems.getIsObjEqual(),
+                "Одно из полей is_obj_version_exists, is_obj_equal = false");
+    }
+
     @DisplayName("Проверка существования version у card items")
     @Test
     @TmsLink("")
@@ -279,7 +298,6 @@ public class ProductCardsTest {
         assertFalse(getProductCard(productCard.getId()).getCardItems().get(0).getIsObjVersionExists(), "Поле is_obj_version_exists = true");
     }
 
-    @SneakyThrows
     @DisplayName("Проверка существования разницы card items")
     @Test
     @TmsLink("")
