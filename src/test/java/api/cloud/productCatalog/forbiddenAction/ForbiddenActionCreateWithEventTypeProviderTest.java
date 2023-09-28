@@ -55,7 +55,7 @@ public class ForbiddenActionCreateWithEventTypeProviderTest extends Tests {
                 .init()
                 .toJson();
         String message = createForbiddenAction(jsonObject).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Ошибка валидации (event_type_provider): String 1: Wrong value (%s) of event_type", eventTypeProvider.getEvent_type()),
+        assertEquals(String.format("Validation error (event_type_provider): String 1: Wrong value (%s) of event_type", eventTypeProvider.getEvent_type()),
                 message);
 
     }

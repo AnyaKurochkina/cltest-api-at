@@ -113,7 +113,7 @@ public class GraphNegativeTest extends Tests {
                 .init()
                 .toJson();
         String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0]");
-        assertEquals(String.format("{\"modifications\": [{\"err_message\": [\"Значения поля (envs) неуникальные: (%s)\"]," +
+        assertEquals(String.format("{\"modifications\": [{\"err_message\": [\"Field values (envs) non-unique: (%s)\"]," +
                 " \"err_details\": {\"fields\": [\"envs\"], \"objects\": [{\"name\": \"json_schema_dev_mod\", \"envs\":" +
                 " [\"dev\"]}], \"entity\": \"GraphModification\", \"error_code\": \"VALUES_OF_LIST_ARE_NOT_UNIQUE\"}}]}",
                 env.getValue()), error);
@@ -141,7 +141,7 @@ public class GraphNegativeTest extends Tests {
                 .init()
                 .toJson();
         String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0]");
-        assertEquals("{\"modifications\": [{\"err_message\": [\"Тип среды отсутствует в справочнике\"], \"err_details\":" +
+        assertEquals("{\"modifications\": [{\"err_message\": [\"Environment type is not in the directory\"], \"err_details\":" +
                 " {\"fields\": [\"envs\"], \"objects\": [{\"envs\": [\"dsfsdfsdf\"]}], \"entity\": \"GraphModification\"," +
                 " \"error_code\": \"ENV_DOES_NOT_EXISTS\"}}]}", error);
     }
