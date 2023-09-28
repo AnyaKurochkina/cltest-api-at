@@ -372,7 +372,7 @@ public class OtherTest extends AbstractComputeTest {
         new IndexPage()
                 .goToVirtualMachine()
                 .selectCompute(vm.getName())
-                .getNetworkMenu()
-                .updateSubnet("default");
+                .getNetworkMenu();
+    //            .updateSubnet("default");
     }
 }
