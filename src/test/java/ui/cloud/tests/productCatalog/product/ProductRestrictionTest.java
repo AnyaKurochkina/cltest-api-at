@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders;
+package ui.cloud.tests.productCatalog.product;
 
 import api.Tests;
 import com.codeborne.selenide.Condition;
@@ -39,7 +39,7 @@ import static ui.elements.TypifiedElement.refreshPage;
 @Feature("Маркетплейс продуктов для заказа")
 @DisabledIfEnv("prod")
 @ExtendWith(ConfigExtension.class)
-public class ProductsTest extends Tests {
+public class ProductRestrictionTest extends Tests {
 
     Project project = Project.builder().isForOrders(true).projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
             .build().createObject();

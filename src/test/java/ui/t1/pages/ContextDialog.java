@@ -85,11 +85,11 @@ public class ContextDialog extends Dialog {
     @Step("Сменить контекст на {orgName}")
     public IndexPage changeOrganization(String orgName) {
         $x("//*[@id='selectValueWrapper']").click();
-        ElementsCollection containsNameOrgs = $$x("//div[contains(text(), '{}')]", orgName);
+        ElementsCollection containsNameOrgs = $$x("//span[contains(text(), '{}')]", orgName);
         if (containsNameOrgs.size() == 1) {
             containsNameOrgs.last().shouldBe(Condition.visible).click();
         } else {
-            $x("//div[text()= '{}']", orgName).shouldBe(Condition.visible).click();
+            $x("//span[text()= '{}']", orgName).shouldBe(Condition.visible).click();
         }
         all.click();
         organization.shouldBe(Condition.visible).click();
@@ -100,7 +100,7 @@ public class ContextDialog extends Dialog {
     @Step("Выбрать огранизацию с именем {orgName}")
     public ContextDialog selectOrganization(String orgName) {
         $x("//*[@id='selectValueWrapper']").click();
-        $x("//div[contains(text(), '{}')]", orgName).shouldBe(Condition.visible).click();
+        $x("//span[contains(text(), '{}')]", orgName).shouldBe(Condition.visible).click();
         Waiting.sleep(1000);
         return this;
     }

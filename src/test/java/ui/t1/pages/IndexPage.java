@@ -6,6 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import ui.cloud.pages.productCatalog.AuditPage;
 import ui.elements.Button;
 import ui.elements.Menu;
 import ui.t1.pages.IAM.OrgStructurePage;
@@ -53,6 +54,7 @@ public class IndexPage {
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
     Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
     Button linkServiceAccounts = Button.byXpath("//a[.='Сервисные аккаунты']");
+    Button linkAudit = Button.byXpath("//a[.='Аудит']");
     SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
     SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
 
@@ -232,5 +234,13 @@ public class IndexPage {
     public boolean isContextNameDisplayed(String contextName){
         Selenide.refresh();
         return $x("//div[text() = '{}']", contextName).shouldBe(Condition.visible).isDisplayed();
+    }
+
+    @Step("Переход на страницу Инструменты.Аудит")
+    public AuditPage goToPortalAuditPage() {
+        linkTools.click();
+        Waiting.sleep(1000); //чтобы подгрузились последние изменения
+        linkAudit.click();
+        return new AuditPage();
     }
 }

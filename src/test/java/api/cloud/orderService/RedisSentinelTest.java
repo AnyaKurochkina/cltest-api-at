@@ -40,6 +40,17 @@ public class RedisSentinelTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создать/Удалить пользователя {0}")
+    void addUser(RedisSentinel product) {
+        try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
+            redis.createUser("user2", "mzVaohLVnTnH2XrEEa9iLEVHWbN2XP");
+            redis.deleteUser("user2");
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка создания {0}")
     void checkConnect(RedisSentinel product) {
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {

@@ -13,8 +13,8 @@
   },
   {
     "objectClassName": "models.cloud.authorizer.Project",
-    "id": "proj-h7jm0cj44h",
-    "projectName": "AT",
+    "id": "proj-ovgxwy023z",
+    "projectName": "Default project for AT",
     "isForOrders": true
   },
   {
