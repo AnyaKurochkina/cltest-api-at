@@ -26,8 +26,8 @@ import static steps.productCatalog.ForbiddenActionSteps.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"jsonTemplate", "productName"}, callSuper = false)
-@ToString(exclude = {"jsonTemplate", "productName"})
+@EqualsAndHashCode(exclude = {"updateDt"}, callSuper = false)
+@ToString
 public class ForbiddenAction extends Entity {
 
     @JsonProperty("event_type_provider")

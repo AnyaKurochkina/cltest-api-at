@@ -25,7 +25,8 @@ import static steps.productCatalog.AllowedActionSteps.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = {"updateDt"})
+@ToString
 public class AllowedAction extends Entity {
     private String description;
     @JsonProperty("item_restriction")
