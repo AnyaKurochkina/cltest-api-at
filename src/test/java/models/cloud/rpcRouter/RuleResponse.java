@@ -25,7 +25,7 @@ public class RuleResponse extends AbstractEntity {
 
     @Override
     protected int getPriority() {
-        return 0;
+        return 2;
     }
 
     @Override

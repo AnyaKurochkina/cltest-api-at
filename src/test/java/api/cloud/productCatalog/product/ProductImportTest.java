@@ -184,4 +184,20 @@ public class ProductImportTest extends Tests {
         assertEqualsList(expectedTags, actualTags);
         deleteProductByName(productName);
     }
+
+    @DisplayName("Проверка не обновления неверсионных полей при импорте уже существующего продукта")
+    @TmsLink("SOUL-7457")
+    @Test
+    public void checkNotVersionedFieldsWhenImportedExistProductTest() {
+        String description = "update description";
+        String productName = "check_not_versioned_fields__when_import_exist_product_test_api";
+        Product product = createProduct(productName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/products/checkNotVersionedFieldsExistProductImport.json";
+        DataFileHelper.write(filePath, exportProductById(product.getProductId()).toString());
+        partialUpdateProduct(product.getProductId(), new JSONObject().put("description", description));
+        importProduct(filePath);
+        DataFileHelper.delete(filePath);
+        Product productById = getProductById(product.getProductId());
+        assertEquals(description, productById.getDescription());
+    }
 }
