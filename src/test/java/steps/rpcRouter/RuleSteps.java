@@ -40,13 +40,13 @@ public class RuleSteps extends Steps {
 
     @Step("Создание Rule")
     public static RuleResponse createRule() {
-        JSONObject exchange = Rule.builder()
+        JSONObject json = Rule.builder()
                 .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_rule_api_test")
                 .build()
                 .toJson();
         return new Http(RpcRouter)
                 .withServiceToken()
-                .body(exchange)
+                .body(json)
                 .post(rulesV1)
                 .assertStatus(201)
                 .extractAs(RuleResponse.class)
@@ -55,13 +55,13 @@ public class RuleSteps extends Steps {
 
     @Step("Создание Rule")
     public static RuleResponse createRuleWithOutAutoDelete() {
-        JSONObject exchange = Rule.builder()
+        JSONObject json = Rule.builder()
                 .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_rule_api_test")
                 .build()
                 .toJson();
         return new Http(RpcRouter)
                 .withServiceToken()
-                .body(exchange)
+                .body(json)
                 .post(rulesV1)
                 .assertStatus(201)
                 .extractAs(RuleResponse.class);
@@ -135,7 +135,6 @@ public class RuleSteps extends Steps {
     public static Response exportRule(Integer id) {
         return new Http(RpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                //  .withServiceToken()
                 .get(rulesV1 + "{}/obj_export/?as_file=true", id)
                 .assertStatus(200);
     }

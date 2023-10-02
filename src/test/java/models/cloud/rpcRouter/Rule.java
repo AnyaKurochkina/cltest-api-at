@@ -17,6 +17,10 @@ public class Rule {
     private String title;
     private String description;
     private String code_expression;
+    private String code_expression_result;
+    private Object code_expression_errors;
+    private String test_queue_name;
+    private Object test_code_params;
 
 
     public JSONObject toJson() {
@@ -25,6 +29,10 @@ public class Rule {
                 .set("$.name", name)
                 .set("$.title", title)
                 .set("$.description", description)
+                .set("$.code_expression_result", code_expression_result)
+                .set("$.code_expression_errors", code_expression_errors)
+                .set("$.test_queue_name", test_queue_name)
+                .set("$.test_code_params", test_code_params)
                 .build();
     }
 }
