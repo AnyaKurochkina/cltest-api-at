@@ -31,12 +31,4 @@ public class KeyCloakTest extends Tests {
     void getTokenServiceAccount() {
         KeyCloakSteps.getServiceAccountToken(((Project)Project.builder().isForOrders(true).build().createObject()).getId(), Role.CLOUD_ADMIN);
     }
-
-    @Test
-    @TmsLink("")
-    @MarkDelete
-    @DisplayName("Получение токена SA")
-    void getTokenServiceAccount2() {
-
-    }
 }

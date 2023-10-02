@@ -11,6 +11,7 @@ import models.ObjectPoolService;
 import org.apiguardian.api.API;
 import org.apiguardian.api.API.Status;
 import org.junit.MarkDelete;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.engine.descriptor.JupiterTestDescriptor;
 import org.junit.jupiter.engine.descriptor.MethodBasedTestDescriptor;
 import org.junit.platform.commons.JUnitException;
@@ -107,6 +108,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             e.printStackTrace();
         }
         if (testDescriptor instanceof MethodBasedTestDescriptor) {
+            if(!((MethodBasedTestDescriptor) testDescriptor).getTestMethod().isAnnotationPresent(Disabled.class) &&
+                    !((MethodBasedTestDescriptor) testDescriptor).getTestClass().isAnnotationPresent(Disabled.class))
             mapTests.put(testDescriptor.getUniqueId().toString(), testDescriptor);
         }
     }
