@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
+import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import steps.keyCloak.KeyCloakSteps;
 import api.Tests;
@@ -29,5 +30,13 @@ public class KeyCloakTest extends Tests {
     @DisplayName("Получение токена SA")
     void getTokenServiceAccount() {
         KeyCloakSteps.getServiceAccountToken(((Project)Project.builder().isForOrders(true).build().createObject()).getId(), Role.CLOUD_ADMIN);
+    }
+
+    @Test
+    @TmsLink("")
+    @MarkDelete
+    @DisplayName("Получение токена SA")
+    void getTokenServiceAccount2() {
+
     }
 }
