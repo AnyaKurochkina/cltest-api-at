@@ -24,14 +24,14 @@ public class RuleSteps extends Steps {
     @Step("Удаление Rule по id {id}")
     public static Response deleteRuleById(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(rulesV1 + "{}/", id);
     }
 
-    @Step("Получение списка OutPutQueue отсортированного по {fieldName}")
+    @Step("Получение списка Rules отсортированного по {fieldName}")
     public static List<RuleResponse> getOrderingByFieldRulesList(String fieldName) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(rulesV1 + "?ordering={}", fieldName)
                 .assertStatus(200)
                 .extractAs(GetRulesList.class)
@@ -45,7 +45,7 @@ public class RuleSteps extends Steps {
                 .build()
                 .toJson();
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .post(rulesV1)
                 .assertStatus(201)
@@ -60,7 +60,7 @@ public class RuleSteps extends Steps {
                 .build()
                 .toJson();
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .post(rulesV1)
                 .assertStatus(201)
@@ -70,7 +70,7 @@ public class RuleSteps extends Steps {
     @Step("Получение объектов использующих Rule по id {id}")
     public static Response getObjectsUsedRule(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(rulesV1 + "{}/used/", id)
                 .assertStatus(200);
     }
@@ -78,7 +78,7 @@ public class RuleSteps extends Steps {
     @Step("Получение списка объектов используемых в c")
     public static Response getObjectsUsingRule(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(rulesV1 + "{}/using_objects/", id)
                 .assertStatus(200);
     }
@@ -86,7 +86,7 @@ public class RuleSteps extends Steps {
     @Step("Получение RuleResponse по id {id}")
     public static RuleResponse getRuleById(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(rulesV1 + "{}/", id)
                 .assertStatus(200)
                 .extractAs(RuleResponse.class);
@@ -95,7 +95,7 @@ public class RuleSteps extends Steps {
     @Step("Обновление Rule")
     public static RuleResponse updateRule(Integer id, JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .put(rulesV1 + "{}/", id)
                 .assertStatus(200)
@@ -105,7 +105,7 @@ public class RuleSteps extends Steps {
     @Step("Частичное обновление Rule")
     public static void partialUpdateRule(Integer id, JSONObject jsonObject) {
         new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .patch(rulesV1 + "{}/", id)
                 .assertStatus(200);
@@ -114,7 +114,7 @@ public class RuleSteps extends Steps {
     @Step("Получение списка Rule")
     public static List<RuleResponse> getRuleList() {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(rulesV1)
                 .assertStatus(200)
                 .extractAs(GetRulesList.class)
@@ -124,7 +124,7 @@ public class RuleSteps extends Steps {
     @Step("Копирование Rule")
     public static RuleResponse copyRule(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(rulesV1 + "{}/copy/", id)
                 .assertStatus(200)
                 .extractAs(RuleResponse.class)
@@ -151,7 +151,7 @@ public class RuleSteps extends Steps {
     @Step("Импорт Rule")
     public static ImportObject importRule(String pathName) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(rulesV1 + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
                 .jsonPath()
@@ -162,8 +162,8 @@ public class RuleSteps extends Steps {
     @Step("Проверка существования Rule по name {name}")
     public static boolean isRuleExist(String name) {
         List<RuleResponse> list = new Http(RpcRouter)
-                .withServiceToken()
-                .get(rulesV1 + "?name={}", name)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(rulesV1 + "?name__exact={}", name)
                 .assertStatus(200)
                 .extractAs(GetRulesList.class)
                 .getList();
@@ -173,8 +173,8 @@ public class RuleSteps extends Steps {
     @Step("Получение Rule по name {name}")
     public static RuleResponse getRuleByName(String name) {
         List<RuleResponse> list = new Http(RpcRouter)
-                .withServiceToken()
-                .get(rulesV1 + "?name={}", name)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(rulesV1 + "?name__exact={}", name)
                 .assertStatus(200)
                 .extractAs(GetRulesList.class)
                 .getList();
