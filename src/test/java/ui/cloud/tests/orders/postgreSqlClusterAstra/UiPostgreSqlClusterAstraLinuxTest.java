@@ -33,8 +33,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product;
-    //=PostgresSQLCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/477825e1-c2cf-4992-82e5-f5582b494882/main?context=proj-iv550odo9a&type=project&org=vtb");
+    PostgresSQLCluster product =PostgresSQLCluster.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/43a26f57-9e9a-464c-9701-bb5eebad89d7/main?context=proj-gxsz4e3shy&type=project&org=vtb");
     String nameDb = "at_db";
     String nameSlot = "at_slot";
     String limit = "20";
@@ -66,6 +65,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             if (product.isDev() || product.isTest() )

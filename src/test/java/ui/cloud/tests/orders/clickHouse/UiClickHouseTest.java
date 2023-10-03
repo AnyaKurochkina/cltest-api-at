@@ -67,6 +67,7 @@ public class UiClickHouseTest extends UiProductTest {
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
                 Alert.green("Значение скопировано");
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
             orderPage.getGroup().set(accessGroup);

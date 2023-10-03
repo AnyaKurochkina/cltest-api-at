@@ -30,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_tarantool_data_grid_astra")})
 public class UiTarantoolDataGridAstraTest extends UiProductTest {
 
-    TarantoolDataGrid product; // = TarantoolDataGrid.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/9424e5bc-d798-478e-8ab0-2770b68c60d3/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    TarantoolDataGrid product = TarantoolDataGrid.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/db/orders/6da3b2b7-d956-4f5c-83a3-11b7b2da9490/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -52,6 +52,7 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             //orderPage.getFlavorSelectCluster().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
