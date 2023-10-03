@@ -49,9 +49,10 @@ public abstract class AbstractComputeTest extends Tests {
     protected String availabilityZone = "ru-central1-a";
     protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
-    protected String hddTypeFirst = "500";
-    protected String hddTypeSecond = "500";
+    protected String hddTypeFirst = "Write: 3000";
+    protected String hddTypeSecond = "Read: 10000";
     protected String defaultNetwork = "default";
+    protected String defaultSubNetwork = "default";
     protected String securityGroup = "default";
     protected String flavorName = "Intel";
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
@@ -230,7 +231,10 @@ public abstract class AbstractComputeTest extends Tests {
 
     protected final EntitySupplier<VmCreate> randomVm = lazy(() -> {
         VmCreate v = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())

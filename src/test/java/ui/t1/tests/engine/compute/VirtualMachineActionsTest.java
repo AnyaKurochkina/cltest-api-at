@@ -57,10 +57,11 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .setBootSize(4)
                 .addSecurityGroups(securityGroup)
                 .setSubnet(defaultNetwork)
-                //.setNetworkInterface("10.0.3.2")
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        final String osVersion = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getOsElement().nextItem().getText();
+        Assertions.assertEquals("ubuntu_20_04", osVersion);
     }
 
     @Test
