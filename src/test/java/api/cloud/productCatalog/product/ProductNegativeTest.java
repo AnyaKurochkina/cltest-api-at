@@ -112,7 +112,7 @@ public class ProductNegativeTest extends Tests {
         Product product = ProductSteps.createProduct("get_invalid_value_category_v2_product_test_api");
         String error = partialUpdateProduct(product.getProductId(), new JSONObject().put("category_v2", "test"))
                 .extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Значения (test) нет среди допустимых вариантов в ProductCategoriesV2", error);
+        assertEquals("The value (test) is not among the valid options in ProductCategoriesV2", error);
     }
 
     @Test

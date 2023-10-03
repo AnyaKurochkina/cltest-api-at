@@ -35,7 +35,11 @@ public class NegativeDnsTest extends Tests {
     @AfterAll
     public static void clearTestData() {
         List<DnsZone> publicZoneList = getZoneList(projectId);
-        publicZoneList.forEach(x -> deleteZone(x.getId(), projectId));
+        publicZoneList.forEach(x -> {
+            if (x.getName().contains("test_api")) {
+                deleteZone(x.getId(), projectId);
+            }
+        });
     }
 
     @Test

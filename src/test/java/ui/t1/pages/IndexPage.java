@@ -29,7 +29,9 @@ import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
 @Getter
 public class IndexPage {
-    Button linkCloudStorageS3 = Button.byXpath("//a[.='Cloud Storage S3']");
+    Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектное хранилище S3']");
+    Button linkOldCloudStorageS3 = Button.byXpath("//a[@href='/buckets']");
+    Button linkNewCloudStorageS3 = Button.byXpath("//a[@href='/new-buckets']");
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
@@ -71,6 +73,14 @@ public class IndexPage {
     @Step("Переход на страницу S3 Cloud Storage")
     public CloudStorageS3 goToS3CloudStoragePage() {
         linkCloudStorageS3.click();
+        linkOldCloudStorageS3.click();
+        return new CloudStorageS3();
+    }
+
+    @Step("Переход на страницу Объектное хранилище S3")
+    public CloudStorageS3 goToNewS3CloudStoragePage() {
+        linkCloudStorageS3.click();
+        linkNewCloudStorageS3.click();
         return new CloudStorageS3();
     }
 
