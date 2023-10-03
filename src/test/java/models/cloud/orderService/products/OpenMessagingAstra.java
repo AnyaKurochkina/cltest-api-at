@@ -31,12 +31,12 @@ public class OpenMessagingAstra extends IProduct {
         jsonTemplate = "/orders/open_messaging_astra.json";
         productName = "OpenMessaging Astra";
         initProduct();
-        if (flavor == null)
-            flavor = getMinFlavor();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (flavor == null)
+            flavor = getMinFlavor();
         if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
         if (platform == null)

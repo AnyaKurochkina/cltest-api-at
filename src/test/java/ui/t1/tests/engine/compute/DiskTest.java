@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.AbstractEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -34,7 +35,7 @@ public class DiskTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Диски. Создание/Удаление")
     void createDisk() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).setSize(2L).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         String orderId = diskPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
@@ -50,7 +51,7 @@ public class DiskTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Диски. Защита от удаления")
     void protectDisk() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         diskPage.switchProtectOrder(true);
         try {
             diskPage.runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Удалить", () -> {
@@ -69,7 +70,7 @@ public class DiskTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Диски. Расширить диск")
     void expandDisk() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).setSize(2L).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.expandDisk(3));
     }
 
@@ -85,10 +86,10 @@ public class DiskTest extends AbstractComputeTest {
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate();
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         String orderIdVm = vmPage.getOrderId();
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).setSize(6L).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         String orderIdDisk = diskPage.getOrderId();
         diskPage.runActionWithCheckCost(CompareType.EQUALS, () -> diskPage.attachComputeVolume(vm.getName(), true));
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
@@ -114,9 +115,9 @@ public class DiskTest extends AbstractComputeTest {
                 .setName(getRandomName())
                 .setSize(2L)
                 .clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         diskPage.createImage(disk.getName());
-        Image imagePage = new IndexPage().goToImages().selectImage(disk.getName()).markForDeletion(new ImageEntity()).checkCreate();
+        Image imagePage = new IndexPage().goToImages().selectImage(disk.getName()).markForDeletion(new ImageEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         String orderIdImage = imagePage.getOrderId();
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
@@ -137,10 +138,10 @@ public class DiskTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Диски. Создать снимок")
     void createSnapshotFromDisk() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(getRandomName()).setSize(7L).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(disk.getName()));
         String orderIdDisk = diskPage.getOrderId();
-        new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).markForDeletion(new SnapshotEntity()).checkCreate();
+        new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).markForDeletion(new SnapshotEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
 
         String volumeId = StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderIdDisk))

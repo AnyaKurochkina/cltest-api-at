@@ -28,7 +28,6 @@ public class ApacheAirflowTest extends Tests {
         String pgAdminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         if("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
             abstractPostgreSQL = PostgresSQLCluster.builder().adminPassword(pgAdminPassword).env(product.getEnv()).build();
-        abstractPostgreSQL.setAdminPassword(pgAdminPassword);
         try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
             String dbName = "airflow";
             postgreSQL.createDb(dbName);

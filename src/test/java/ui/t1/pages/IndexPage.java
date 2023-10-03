@@ -6,6 +6,7 @@ import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
+import ui.cloud.pages.productCatalog.AuditPage;
 import ui.elements.Button;
 import ui.elements.Menu;
 import ui.t1.pages.IAM.OrgStructurePage;
@@ -28,7 +29,9 @@ import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
 @Getter
 public class IndexPage {
-    Button linkCloudStorageS3 = Button.byXpath("//a[.='Cloud Storage S3']");
+    Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектное хранилище S3']");
+    Button linkOldCloudStorageS3 = Button.byXpath("//a[@href='/buckets']");
+    Button linkNewCloudStorageS3 = Button.byXpath("//a[@href='/new-buckets']");
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
     Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
@@ -53,6 +56,7 @@ public class IndexPage {
     Button linkUsers = Button.byXpath("//a[.='Пользователи']");
     Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
     Button linkServiceAccounts = Button.byXpath("//a[.='Сервисные аккаунты']");
+    Button linkAudit = Button.byXpath("//a[.='Аудит']");
     SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
     SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
 
@@ -69,6 +73,14 @@ public class IndexPage {
     @Step("Переход на страницу S3 Cloud Storage")
     public CloudStorageS3 goToS3CloudStoragePage() {
         linkCloudStorageS3.click();
+        linkOldCloudStorageS3.click();
+        return new CloudStorageS3();
+    }
+
+    @Step("Переход на страницу Объектное хранилище S3")
+    public CloudStorageS3 goToNewS3CloudStoragePage() {
+        linkCloudStorageS3.click();
+        linkNewCloudStorageS3.click();
         return new CloudStorageS3();
     }
 
@@ -232,5 +244,13 @@ public class IndexPage {
     public boolean isContextNameDisplayed(String contextName){
         Selenide.refresh();
         return $x("//div[text() = '{}']", contextName).shouldBe(Condition.visible).isDisplayed();
+    }
+
+    @Step("Переход на страницу Инструменты.Аудит")
+    public AuditPage goToPortalAuditPage() {
+        linkTools.click();
+        Waiting.sleep(1000); //чтобы подгрузились последние изменения
+        linkAudit.click();
+        return new AuditPage();
     }
 }

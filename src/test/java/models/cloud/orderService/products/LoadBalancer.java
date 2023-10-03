@@ -64,7 +64,7 @@ public class LoadBalancer extends IProduct {
             setDomain(OrderServiceSteps.getDomain(this));
         if(zone == null)
             setZone(ReferencesStep.getJsonPathList(String
-                    .format("tags__contains=%s,%s,available&directory__name=gslb_servers", envType().toUpperCase(), segment))
+                    .format("tags__contains=%s,available&directory__name=gslb_servers", segment))
                     .getString("[0].data.name"));
         if (flavor == null)
             flavor = getMinFlavor();
@@ -96,7 +96,7 @@ public class LoadBalancer extends IProduct {
                 .set("$.order.attrs.ad_integration", true)
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
-                .set("$.order.attrs.layout", getIdGeoDistribution("balancer-2", envType().toUpperCase(), "balancer", org.getName()))
+                .set("$.order.attrs.layout", getIdGeoDistribution("balancer-2"))
                 .set("$.order.attrs.on_support", getSupport())
                 .build();
     }

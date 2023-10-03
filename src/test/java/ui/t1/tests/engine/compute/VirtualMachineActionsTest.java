@@ -60,7 +60,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 //.setNetworkInterface("10.0.3.2")
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
     }
 
     @Test

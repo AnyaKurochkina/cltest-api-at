@@ -89,6 +89,14 @@ public class GraphSteps extends Steps {
                 .patch(graphUrl + id + "/");
     }
 
+    @Step("Частичное обновление графа в контексте")
+    public static Response partialUpdateGraphInContext(String id, JSONObject object, String projectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .patch("/api/v1/projects/{}/graphs/{}/", projectId, id);
+    }
+
     @Step("Частичное обновление графа по имени {name}")
     public static void partialUpdateGraphByName(String name, JSONObject object) {
         new Http(ProductCatalogURL)

@@ -68,11 +68,22 @@ public class NetworkInterfaceList extends IProductListT1Page {
             });
         }
 
-        @Step("Изменить группы безопасности на {groups}")
-        public void updateSubnet(String subnet) {
+        @Step("Изменить группы безопасности на {network} {subnet}")
+        public void updateSubnet(String network, String subnet) {
             runActionWithParameters(btn, "Изменить подсеть", "Подтвердить", () -> {
                 Dialog.byTitle("Изменить подсеть");
                 Select.byLabel("Подсеть").setStart(subnet);
+            });
+        }
+
+        @Step("Изменить группы безопасности на {network} {subnet} c {ip}")
+        public void updateSubnet(String network, String subnet, String ip) {
+            runActionWithParameters(btn, "Изменить подсеть", "Подтвердить", () -> {
+                Dialog.byTitle("Изменить подсеть");
+                Select.byLabel("Сеть").setStart(network);
+                Select.byLabel("Подсеть").setStart(subnet);
+                Switch.byText("Задать IP адрес сетевого интерфейса").setEnabled(true);
+                Input.byPlaceholder("0.0.0.0").setValue(ip);
             });
         }
     }

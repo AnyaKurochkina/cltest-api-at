@@ -60,7 +60,7 @@ public class VisualTemplateNegativeTest extends Tests {
         String errorMessage = response.extractAs(ErrorMessage.class).getMessage();
         String itemName = response.jsonPath().getString("err_details.objects[0].name");
         String itemId = response.jsonPath().getString("err_details.objects[0].id");
-        String expectedMsg = "Объект не может быть создан так как event_type или event_provider имеют пересечение с другими объектами";
+        String expectedMsg = "The object cannot be created because the event_type or event_provider overlaps with other objects";
         partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject().put("is_active", false));
         assertEquals(expectedMsg, errorMessage);
         assertEquals(name, itemName);

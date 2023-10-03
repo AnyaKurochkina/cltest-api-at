@@ -12,6 +12,7 @@ import ui.cloud.pages.CompareType;
 import ui.elements.Table;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.Column;
+import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.vpc.VirtualIp;
 import ui.t1.pages.cloudEngine.vpc.VirtualIpCreate;
 import ui.t1.pages.cloudEngine.vpc.VirtualIpList;
@@ -28,7 +29,7 @@ public class VirtualIpTest extends AbstractComputeTest {
     private final EntitySupplier<VirtualIpCreate> randomVip = lazy(() -> {
         VirtualIpCreate ip = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true).setName(getRandomName())
                 /* .setNetworkInterface("10.0.3.2")*/.setMode("active-active").clickOrder();
-        new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new VirtualIpList().selectIp(ip.getIp()).markForDeletion(new VipEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return ip;
     });
 
@@ -82,22 +83,6 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("", String::isEmpty)
                 .check(() -> new Table(Column.IP).getRowByColumnValue(Column.IP, ip.getIp()));
     }
-
-//    @Test
-//    @Order(3)
-//    @TmsLink("")
-//    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Доступ в интернет. Подключить/отключить")
-//    void checkInternetAction() {
-//        VmCreate vm = randomVm.get();
-//        VirtualIpCreate vip = randomVip.get();
-//        String localIp = new VmList().selectCompute(vm.getName()).getLocalIp();
-//        VirtualIp virtualIp = new IndexPage().goToVirtualIps().selectIp(vip.getIp());
-//        virtualIp.getMenu().attachComputeIp(localIp);
-//        SshClient.SshClientBuilder ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER);
-//        String checkConnectCmd = ssh.privateKey(SshKeyList.PRIVATE_KEY).build()
-//                .execute("timeout 2 telnet {} 22", localIpVmTest);
-//        virtualIp.getMenu()
-//    }
 
     @Test
     @TmsLink("")
