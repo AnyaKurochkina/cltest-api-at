@@ -5,7 +5,10 @@ import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.tagService.*;
+import models.cloud.tagService.Filter;
+import models.cloud.tagService.Inventory;
+import models.cloud.tagService.Tag;
+import models.cloud.tagService.TagServiceSteps;
 import models.cloud.tagService.v2.FilterResultV2;
 import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.InventoryTagsV2;
@@ -17,7 +20,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static models.cloud.tagService.TagServiceSteps.inventoryFilterV2;
 import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 
 @Epic("Сервис тегов")
