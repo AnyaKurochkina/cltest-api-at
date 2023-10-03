@@ -86,7 +86,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
 
     public void restart() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_CLUSTER, "Перезагрузить кластер", ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build());
+        runActionWithoutParameters(BLOCK_CLUSTER, "Перезагрузить кластер", ActionParameters.builder().timeout(Duration.ofMinutes(20)).build());
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
@@ -138,7 +138,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
 
     public void updateOs() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_CLUSTER, "Обновить ОС на кластере Kafka", ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build());
+        runActionWithoutParameters(BLOCK_CLUSTER, "Обновить ОС на кластере Kafka", ActionParameters.builder().timeout(Duration.ofMinutes(20)).build());
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 

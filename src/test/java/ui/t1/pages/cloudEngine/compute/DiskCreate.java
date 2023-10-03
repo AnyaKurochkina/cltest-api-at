@@ -36,7 +36,7 @@ public class DiskCreate {
     }
 
     public DiskCreate setType(String type) {
-        Select.byLabel("Тип").set(type);
+        Select.byLabel("Тип").setContains(type);
         this.type = type;
         return this;
     }

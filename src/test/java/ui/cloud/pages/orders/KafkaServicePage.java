@@ -2,20 +2,12 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
-import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.orderService.products.KafkaService;
-import models.cloud.subModels.Flavor;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
@@ -70,7 +62,7 @@ public class KafkaServicePage extends IProductPage {
 
     public void restart() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_CLUSTER, "Перезагрузить кластер", ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build());
+        runActionWithoutParameters(BLOCK_CLUSTER, "Перезагрузить кластер", ActionParameters.builder().timeout(Duration.ofMinutes(20)).build());
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 

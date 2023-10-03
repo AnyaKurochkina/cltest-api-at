@@ -52,11 +52,11 @@ public class NetworkTest extends AbstractComputeTest {
     void addSubnet() {
         new IndexPage().goToNetworks().selectNetwork(name).addSubnet()
                 .setRegion(region)
-                .setCidr("10.0.0.0")
+                .setCidr("10.0.2.0")
                 .setName(getRandomName())
                 .setDesc("addSubnet")
                 .setDhcp(true)
-                .setPrefix(16)
+                .setPrefix(28)
                 .clickAdd();
     }
 
