@@ -15,7 +15,9 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -89,6 +91,13 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     }
 
     transient String leaderIp;
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public String pgcIp() {
+        return (String) OrderServiceSteps.getProductsField(this, "product_data.findAll{it.hostname.contains('-pgc')}.ip", List.class).stream()
+                .collect(Collectors.joining(","));
+    }
 
     @Override
     public void updateMaxConnections() {
