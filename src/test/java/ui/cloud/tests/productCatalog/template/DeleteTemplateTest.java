@@ -69,7 +69,8 @@ public class DeleteTemplateTest extends TemplateBaseTest {
         JSONObject graphItem = GraphItem.builder()
                 .name("1")
                 .description("1")
-                .templateId(template.getId())
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("subgraph")
                 .build()
                 .toJson();
         JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));
