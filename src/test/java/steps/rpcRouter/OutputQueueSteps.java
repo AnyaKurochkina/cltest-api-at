@@ -50,8 +50,8 @@ public class OutputQueueSteps extends Steps {
     }
 
     @Step("Импорт OutPutQueue")
-    public static ImportObject importOutPutQueue(String pathName) {
-        return new Http(RpcRouter)
+    public static void importOutPutQueue(String pathName) {
+        new Http(RpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(outPutQueueV1 + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
@@ -61,8 +61,8 @@ public class OutputQueueSteps extends Steps {
     }
 
     @Step("Экспорт нескольких OutPutQueue по Id")
-    public static Response exportOutPutQueuesById(JSONObject json) {
-        return new Http(RpcRouter)
+    public static void exportOutPutQueuesById(JSONObject json) {
+        new Http(RpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .post(outPutQueueV1 + "objects_export/")
