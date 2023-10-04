@@ -100,8 +100,12 @@ public class Graph extends Entity implements IProductCatalog {
     @SneakyThrows
     public JSONObject toJson() {
         JSONArray mod = null;
+        JSONArray nodes = null;
         if (modifications != null) {
             mod = new JSONArray(JsonHelper.getCustomObjectMapper().writeValueAsString(modifications));
+        }
+        if (graph != null) {
+            nodes = new JSONArray(JsonHelper.getCustomObjectMapper().writeValueAsString(graph));
         }
         return JsonHelper.getJsonTemplate("productCatalog/graphs/createGraph.json")
                 .set("$.name", name)
@@ -110,7 +114,7 @@ public class Graph extends Entity implements IProductCatalog {
                 .set("$.description", description)
                 .set("$.type", type)
                 .set("$.author", author)
-                .set("$.graph", graph)
+                .set("$.graph", nodes)
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)

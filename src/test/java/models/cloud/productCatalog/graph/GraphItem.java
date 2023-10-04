@@ -2,19 +2,20 @@ package models.cloud.productCatalog.graph;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.json.JSONObject;
 
 import java.util.List;
 import java.util.Map;
 
+import static core.helper.JsonHelper.getStringFromFile;
+
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
+@ToString
 public class GraphItem {
 
     @JsonProperty("is_sequential")
@@ -79,6 +80,10 @@ public class GraphItem {
     private Boolean lockOrderOnError;
     @JsonProperty("icon_store_id")
     private Object iconStoreId;
+
+    public static GraphItem getGraphItemFromJsonTemplate() {
+        return JsonHelper.deserialize(getStringFromFile("/productCatalog/graphs/GraphItem.json"), GraphItem.class);
+    }
 
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/graphs/GraphItem.json")
