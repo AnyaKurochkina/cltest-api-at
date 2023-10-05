@@ -11,15 +11,16 @@ import io.restassured.path.json.exception.JsonPathException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.stateService.*;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.json.JSONObject;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
 import steps.Steps;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.time.Duration;
+import java.time.ZonedDateTime;
+import java.util.*;
 
 import static core.helper.Configure.StateServiceURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -46,7 +47,7 @@ public class StateServiceSteps extends Steps {
     @Step("Создание Item")
     public static Item createItem(String projectId, JSONObject json) {
         return new Http(StateServiceURL)
-              //  .setRole(Role.CLOUD_ADMIN)
+                //  .setRole(Role.CLOUD_ADMIN)
                 .withServiceToken()
                 .body(json)
                 .post("/api/v1/projects/{}/items/", projectId)
@@ -308,7 +309,7 @@ public class StateServiceSteps extends Steps {
                 .getString("list[0].data.traceback");
     }
 
-    public static List<ShortItem> getItems(String id){
+    public static List<ShortItem> getItems(String id) {
         List<Item> list = new Http(StateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/?page=1&per_page=10000&data__state__in=off,on", id)
@@ -320,27 +321,23 @@ public class StateServiceSteps extends Steps {
         list.forEach(item -> {
             ShortItem itemData = new ShortItem();
 
-            if(item.getType().equals("public_ip"))
+            if (item.getType().equals("public_ip"))
                 itemData.floatingIpAddress = ((Map<String, String>) item.getData().get("config")).get("floating_ip_address");
-            else if(item.getType().equals("volume")){
+            else if (item.getType().equals("volume")) {
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
                 itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").longValue();
-            }
-            else if(item.getType().equals("snapshot")){
+            } else if (item.getType().equals("snapshot")) {
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
                 itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").longValue();
-            }
-            else if(item.getType().equals("image")){
+            } else if (item.getType().equals("image")) {
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
                 itemData.size = ((Map<String, Number>) item.getData().get("config")).get("size").longValue();
-            }
-            else if(item.getType().equals("instance"))
+            } else if (item.getType().equals("instance"))
                 itemData.name = ((Map<String, String>) item.getData().get("config")).get("name");
-            else if(item.getType().equals("nic")) {
+            else if (item.getType().equals("nic")) {
                 List<Object> ips = ((Map<String, List<Object>>) item.getData().get("config")).get("fixed_ips");
                 itemData.name = ((Map<String, String>) ips.get(0)).get("ip_address");
-            }
-            else if(item.getType().equals("vip")) {
+            } else if (item.getType().equals("vip")) {
                 List<Object> ips = ((Map<String, List<Object>>) item.getData().get("config")).get("fixed_ips");
                 itemData.floatingIpAddress = ((Map<String, String>) ips.get(0)).get("ip_address");
             }
@@ -364,7 +361,7 @@ public class StateServiceSteps extends Steps {
     public static List<ActionStateService> getActionListByFilter(String filter, String value) {
         return new Http(StateServiceURL)
                 .withServiceToken()
-                .get("/api/v1/actions/?{}={}", filter, value)
+                .get("/api/v1/actions/?{}={}&per_page=500", filter, value)
                 .assertStatus(200)
                 .extractAs(GetActionStateServiceList.class)
                 .getList();
@@ -377,6 +374,26 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetEventStateServiceList.class)
                 .getList();
+    }
+
+    @Step("Получение длительности узлов по actionId {actionId}")
+    public static void getNodesDuration(String actionId) {
+        List<ActionStateService> actionsList = getActionListByFilter("action_id", actionId);
+        System.out.println("action_id " + actionId);
+        HashMap<String, Long> durations = new HashMap<>();
+        for (ActionStateService action : actionsList) {
+            if (action.getStatus().contains("completed") && action.getSubtype().equals("run_node")) {
+                ActionStateService actionStarted = actionsList.stream()
+                        .filter(a -> a.getStatus().equals(action.getStatus().replace("completed", "started")))
+                        .findFirst().get();
+                long millis = Duration.
+                        between(ZonedDateTime.parse(actionStarted.getCreateDt()), ZonedDateTime.parse(action.getCreateDt())).toMillis();
+                durations.put(action.getStatus().split(":")[0], millis);
+            }
+        }
+        Comparator<Map.Entry<String, Long>> cmp = Map.Entry.comparingByValue();
+        durations.entrySet().stream().sorted(cmp.reversed()).forEach(e -> System.out.println(e.getKey() + " " +
+                DurationFormatUtils.formatDuration(e.getValue(), "HH:mm:ss.SSS")));
     }
 
     @Data

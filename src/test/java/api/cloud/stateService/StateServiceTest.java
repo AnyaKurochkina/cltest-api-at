@@ -12,6 +12,7 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,12 @@ import static steps.stateService.StateServiceSteps.*;
 @Feature("State Service api")
 @DisabledIfEnv("prod")
 public class StateServiceTest extends Tests {
+
+    @Test
+    @Disabled("Для вычисления длительности выполнения узлов при заказе/действии")
+    public void getStateServiceNodesDuration() {
+        getNodesDuration("27da3b68-51ae-4ae4-822f-61e6658950d4");
+    }
 
     @Test
     @DisplayName("Получение данных версии State Service")
