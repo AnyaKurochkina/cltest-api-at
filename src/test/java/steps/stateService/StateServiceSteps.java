@@ -377,10 +377,10 @@ public class StateServiceSteps extends Steps {
     }
 
     @Step("Получение длительности узлов по actionId {actionId}")
-    public static void getNodesDuration(String actionId) {
-        List<ActionStateService> actionsList = getActionListByFilter("action_id", actionId);
-        System.out.println("action_id " + actionId);
-        HashMap<String, Long> durations = new HashMap<>();
+    public static void getNodesDuration(String[] actionId) {
+        ArrayList<String> durations = new ArrayList<>();
+        for (String act: actionId) {
+        List<ActionStateService> actionsList = getActionListByFilter("action_id", act);
         for (ActionStateService action : actionsList) {
             if (action.getStatus().contains("completed") && action.getSubtype().equals("run_node")) {
                 ActionStateService actionStarted = actionsList.stream()
@@ -388,12 +388,11 @@ public class StateServiceSteps extends Steps {
                         .findFirst().get();
                 long millis = Duration.
                         between(ZonedDateTime.parse(actionStarted.getCreateDt()), ZonedDateTime.parse(action.getCreateDt())).toMillis();
-                durations.put(action.getStatus().split(":")[0], millis);
+                durations.add(action.getStatus().split(":")[0] + "," + millis);
             }
         }
-        Comparator<Map.Entry<String, Long>> cmp = Map.Entry.comparingByValue();
-        durations.entrySet().stream().sorted(cmp.reversed()).forEach(e -> System.out.println(e.getKey() + " " +
-                DurationFormatUtils.formatDuration(e.getValue(), "HH:mm:ss.SSS")));
+        }
+        durations.forEach(System.out::println);
     }
 
     @Data
