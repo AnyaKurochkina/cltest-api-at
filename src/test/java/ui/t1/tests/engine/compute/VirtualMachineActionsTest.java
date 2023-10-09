@@ -1,6 +1,7 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
+import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.TableChecker;
 import core.utils.Waiting;
@@ -9,6 +10,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.AbstractEntity;
+import org.json.JSONObject;
 import org.junit.BlockTests;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -56,12 +58,15 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .setName(getRandomName())
                 .setBootSize(4)
                 .addSecurityGroups(securityGroup)
-                .setSubnet(defaultNetwork)
-                .setSshKey(sshKey)
-                .clickOrder();
+                .setSubnet(defaultSubNetwork)
+                .setSshKey(sshKey);
+        Button.byText("Скопировать данные формы").click();
+        Alert.green("Данные успешно скопированы");
+        String imageName = new JSONObject(StringUtils.getClipBoardText()).getJSONObject("image").getString("name");
+        vm.clickOrder();
         new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         final String osVersion = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getOsElement().nextItem().getText();
-        Assertions.assertEquals("ubuntu_20_04", osVersion);
+        Assertions.assertEquals(imageName, osVersion);
     }
 
     @Test
