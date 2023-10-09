@@ -27,7 +27,7 @@ public class VirtualIpCreate {
     }
 
     public VirtualIpCreate setName(String name) {
-        Input.byLabel("Имя виртуального IP адреса").setValue(name);
+        Input.byLabel("Имя виртуального IP-адреса").setValue(name);
         this.name = name;
         return this;
     }
@@ -51,7 +51,7 @@ public class VirtualIpCreate {
     }
 
     public VirtualIpCreate setInternet(Boolean internet) {
-        Switch.byText("Разрешить доступ в интернет").setEnabled(internet);
+        Switch.byText("Разрешить доступ в Интернет").setEnabled(internet);
         this.internet = internet;
         return this;
     }
@@ -73,7 +73,7 @@ public class VirtualIpCreate {
                 Waiting.find(()-> !new VirtualIpList.IpTable().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofSeconds(80));
             }
             else
-                Waiting.find(()-> !new VirtualIpList.IpTable().isEmpty(), Duration.ofMinutes(1));
+                Waiting.find(()-> !new VirtualIpList.IpTable().isEmpty(), Duration.ofMinutes(2));
             Waiting.find(()-> !new VirtualIpList.IpTable().getFirstValueByColumn("Сеть").equals("—"), Duration.ofMinutes(1));
         });
         ip = new VirtualIpList.IpTable().getFirstValueByColumn(Column.IP_ADDRESS);

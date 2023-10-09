@@ -2,9 +2,9 @@ package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.elements.*;
-import ui.t1.pages.cloudEngine.Column;
 
 import java.util.Arrays;
 import java.util.List;
@@ -80,7 +80,9 @@ public class NetworkInterfaceList extends IProductListT1Page {
         public void updateSubnet(String network, String subnet, String ip) {
             runActionWithParameters(btn, "Изменить подсеть", "Подтвердить", () -> {
                 Dialog.byTitle("Изменить подсеть");
+                Waiting.sleep(2000);
                 Select.byLabel("Сеть").setStart(network);
+                Waiting.sleep(2000);
                 Select.byLabel("Подсеть").setStart(subnet);
                 Switch.byText("Задать IP адрес сетевого интерфейса").setEnabled(true);
                 Input.byPlaceholder("0.0.0.0").setValue(ip);

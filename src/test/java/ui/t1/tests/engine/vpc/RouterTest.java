@@ -128,11 +128,11 @@ public class RouterTest extends AbstractComputeTest {
         new IndexPage().goToNetworks().addNetwork(networkName, "desc");
             new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity(), AbstractEntity.Mode.AFTER_TEST).addSubnet()
                     .setRegion(region)
-                    .setCidr("10.1.0.0")
+                    .setCidr("10.1.1.0")
                     .setName(getRandomName())
                     .setDesc("forRouterTest")
                     .setDhcp(true)
-                    .setPrefix(24)
+                    .setPrefix(28)
                     .clickAdd();
 
             new IndexPage().goToRouters()

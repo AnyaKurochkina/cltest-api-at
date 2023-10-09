@@ -58,6 +58,7 @@ public class AttachUtils {
             if (!videoUrl.isEmpty()) {
                 newMessage.append("\n").append(videoRecordingTitle).append(": ").append(videoUrl);
             }
+            newMessage.append("\n").append("Link: ").append(WebDriverRunner.getWebDriver().getCurrentUrl());
             newMessage.append(messageParts[1]);
             setThrowableDetailMessage(throwable, newMessage.toString());
             return throwable;

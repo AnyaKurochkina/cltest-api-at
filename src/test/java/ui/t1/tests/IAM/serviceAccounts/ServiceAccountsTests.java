@@ -95,6 +95,8 @@ public class ServiceAccountsTests extends Tests {
                 .createApiKey(account.getTitle());
         String text = Selenide.clipboard().getText();
         assertEqualsJson(jsonObject, new JSONObject(text));
+        account.setWithApiKey(true);
+        account.save();
     }
 
     @Test
@@ -122,5 +124,7 @@ public class ServiceAccountsTests extends Tests {
                 .goToServiceAccountPage(account)
                 .deleteApiKey()
                 .isTableEmpty());
+        account.setWithApiKey(false);
+        account.save();
     }
 }

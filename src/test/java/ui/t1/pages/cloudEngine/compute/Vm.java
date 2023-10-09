@@ -2,13 +2,20 @@ package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
+import lombok.Getter;
+import ui.elements.MuiGridItem;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
 import ui.elements.Dialog;
 import ui.elements.Select;
 import ui.elements.Table;
 
+@Getter
 public class Vm extends IProductT1Page<Vm> {
+    private final MuiGridItem osElement = MuiGridItem.byText("Операционная система");
+    private final MuiGridItem descriptionElement = MuiGridItem.byText("Описание");
+    private final MuiGridItem availabilityZoneElement = MuiGridItem.byText("Зона доступности");
+    private final MuiGridItem nameElement = MuiGridItem.byText("Имя");
 
     public Disk selectDisk(String disk) {
         new Disk.DiskInfo().getRowByColumnValue(Column.NAME, disk).getElementByColumn(Column.NAME).shouldBe(Condition.visible).click();
