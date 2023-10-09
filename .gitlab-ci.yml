@@ -10,7 +10,7 @@ variables:
   ENV:
     value: ""
     description: "Выбрать стенд (t1ift)"
-  test:
+  TEST:
     value: ""
     description: "-Dtest= VirtualMachineTest#vmList"
   GROUPS:
@@ -22,7 +22,7 @@ variables:
   MAVEN_OPTS_1:
     value: ""
     description: "if you need to bring new libs off the web fill in ALL OF THIS -Drepository=https://repo1.maven.org/maven2/"
-  MAVEN_OPTS_2: "-Dtest=$test -Denv=$ENV $JAVA_PASS_TESTS -Dgroups=$GROUPS -Djunit.jupiter.execution.parallel.config.fixed.parallelism=$THREAD_COUNT"
+  MAVEN_OPTS_2: "-Dtest=$TEST -Denv=$ENV $JAVA_PASS_TESTS -Dgroups=$GROUPS -Djunit.jupiter.execution.parallel.config.fixed.parallelism=$THREAD_COUNT"
   MAVEN_OPTS_3: "-Dmaven.repo.local=.m2/repository"
   SSH_OPT: StrictHostKeyChecking=no
 
