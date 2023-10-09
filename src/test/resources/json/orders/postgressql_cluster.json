@@ -33,6 +33,7 @@
       "load_profile": "OLTP",
       "postgresql_version": "12",
       "replication": false,
+      "enable_ssl": false,
       "ad_logon_grants": [
         {
           "role": "superuser",
@@ -43,6 +44,7 @@
       ]
     },
     "count": 1,
+    "lifetime": null,
     "label": "PostgreSQL Cluster"
   }
 }
