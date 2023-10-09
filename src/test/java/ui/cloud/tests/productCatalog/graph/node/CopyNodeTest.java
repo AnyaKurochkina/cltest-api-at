@@ -50,7 +50,8 @@ public class CopyNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(name)
                 .description(nodeDescription)
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
                 }})
@@ -78,7 +79,8 @@ public class CopyNodeTest extends GraphBaseTest {
     public void copyTemplateNode() {
         String name = UUID.randomUUID().toString();
         GraphItem node = GraphItem.builder()
-                .templateId(template.getId())
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
                 .name(name)
                 .description(nodeDescription)
                 .input(new HashMap<String, String>() {{
@@ -108,7 +110,8 @@ public class CopyNodeTest extends GraphBaseTest {
         WebDriverRunner.getWebDriver().manage().window().maximize();
         String nodeName = UUID.randomUUID().toString();
         GraphItem node = GraphItem.builder()
-                .templateId(template.getId())
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
                 .name(nodeName)
                 .description(nodeDescription)
                 .input(new HashMap<String, String>() {{
