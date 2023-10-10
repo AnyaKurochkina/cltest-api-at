@@ -29,7 +29,6 @@ import static steps.stateService.StateServiceSteps.*;
 @Tag("state_service")
 @Epic("State Service")
 @Feature("State Service api")
-@DisabledIfEnv("prod")
 public class StateServiceTest extends Tests {
 
     @Test
