@@ -14,6 +14,9 @@ import ui.elements.Table;
 @Getter
 public class Vm extends IProductT1Page<Vm> {
     private final MuiGridItem osElement = MuiGridItem.byText("Операционная система");
+    private final MuiGridItem descriptionElement = MuiGridItem.byText("Описание");
+    private final MuiGridItem availabilityZoneElement = MuiGridItem.byText("Зона доступности");
+    private final MuiGridItem nameElement = MuiGridItem.byText("Имя");
 
     public Disk selectDisk(String disk) {
         new Disk.DiskInfo().getRowByColumnValue(Column.NAME, disk).getElementByColumn(Column.NAME).shouldBe(Condition.visible).click();
