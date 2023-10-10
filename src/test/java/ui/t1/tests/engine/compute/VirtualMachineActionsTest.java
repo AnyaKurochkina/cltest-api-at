@@ -1,7 +1,6 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
-import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.TableChecker;
 import core.utils.Waiting;
@@ -11,7 +10,6 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.AbstractEntity;
 import org.json.JSONObject;
-import org.junit.BlockTests;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -70,7 +68,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         Vm vmPage = new IndexPage().goToVirtualMachine().selectCompute(vm.getName());
         final String osVersion = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getOsElement().nextItem().getText();
         Assertions.assertAll(
-                () -> Assertions.assertEquals(imageName, osVersion)),
+                () -> Assertions.assertEquals(imageName, osVersion),
                 () -> Assertions.assertEquals(vm.getName(), vmPage.getNameElement().nextItem().getText()),
                 () -> Assertions.assertEquals(vm.getAvailabilityZone(), vmPage.getAvailabilityZoneElement().nextItem().getText()),
                 () -> Assertions.assertEquals(vm.getDescription(), vmPage.getDescriptionElement().nextItem().getText()));
