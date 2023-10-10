@@ -65,7 +65,7 @@ public class Alert implements TypifiedElement {
     }
 
     @Step("Проверка alert на цвет {color} и вхождение текста {text}")
-    private Alert check(Color color, String text, Object... args) {
+    public Alert check(Color color, String text, Object... args) {
         String message = StringUtils.format(text, args);
         element = getElement().shouldBe(Condition.visible);
         final String elementText = element.getText();
