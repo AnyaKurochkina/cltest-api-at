@@ -9,6 +9,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.AbstractEntity;
+import org.json.JSONObject;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
@@ -35,9 +36,11 @@ import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 @Feature("Виртуальные машины. Действия")
 @Epic("Cloud Compute")
 public class VirtualMachineActionsTest extends AbstractComputeTest {
+    String imageName;
     EntitySupplier<VmCreate> vmSup = lazy(() -> {
-        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
-                .setDescription("VirtualMachineActionsTest")
+        VmCreate vm = new IndexPage()
+                .goToVirtualMachine()
+                .addVm()
                 .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
@@ -45,9 +48,12 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .setName(getRandomName())
                 .setBootSize(4)
                 .addSecurityGroups(securityGroup)
-                .setSubnet(defaultNetwork)
-                .setSshKey(sshKey)
-                .clickOrder();
+                .setSubnet(defaultSubNetwork)
+                .setSshKey(sshKey);
+        Button.byText("Скопировать данные формы").click();
+        Alert.green("Данные успешно скопированы");
+        imageName = new JSONObject(StringUtils.getClipBoardText()).getJSONObject("image").getString("name");
+        vm.clickOrder();
         new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return vm;
     });
@@ -58,9 +64,11 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины. Создание Образ Ubuntu")
     void orderVm() {
         VmCreate vm = vmSup.get();
+        
         Vm vmPage = new IndexPage().goToVirtualMachine().selectCompute(vm.getName());
+        final String osVersion = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getOsElement().nextItem().getText();
         Assertions.assertAll(
-                () -> Assertions.assertEquals("ubuntu", vmPage.getOsElement().nextItem().getText()),
+                () -> Assertions.assertEquals(imageName, osVersion),
                 () -> Assertions.assertEquals(vm.getName(), vmPage.getNameElement().nextItem().getText()),
                 () -> Assertions.assertEquals(vm.getAvailabilityZone(), vmPage.getAvailabilityZoneElement().nextItem().getText()),
                 () -> Assertions.assertEquals(vm.getDescription(), vmPage.getDescriptionElement().nextItem().getText()));
