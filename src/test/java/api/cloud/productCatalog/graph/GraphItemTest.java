@@ -7,6 +7,7 @@ import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
+import models.cloud.productCatalog.pythonTemplate.PythonTemplate;
 import models.cloud.productCatalog.template.Template;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ import static models.cloud.productCatalog.graph.GraphItem.getGraphItemFromJsonTe
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.Jinja2Steps.createJinja;
+import static steps.productCatalog.PythonTemplateSteps.createPythonTemplateByName;
 import static steps.productCatalog.TemplateSteps.createTemplateByName;
 
 @Tag("product_catalog")
@@ -78,6 +80,22 @@ public class GraphItemTest extends Tests {
     }
 
     @Test
+    @DisplayName("Создание ноды графа типа python")
+    public void createGraphWithNodePythonSourceTypeTest() {
+        PythonTemplate pythonTemplate = createPythonTemplateByName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
+        GraphItem graphItem = getGraphItemFromJsonTemplate();
+        graphItem.setSourceType("python");
+        graphItem.setSourceId(pythonTemplate.getId());
+        graphItem.setName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api");
+        Graph graph = Graph.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
+                .graph(Collections.singletonList(graphItem))
+                .build()
+                .createObject();
+        assertEquals(graphItem, graph.getGraph().get(0));
+    }
+
+    @Test
     @DisplayName("Создание ноды графа не существующего типа")
     public void createGraphWithNotExistSourceTypeTest() {
         String sourceType = "not_exist";
@@ -113,5 +131,4 @@ public class GraphItemTest extends Tests {
         assertEquals(format("\"graph\": [ErrorDetail(string='\"non_field_errors\": Значение “{}” не является верным UUID-ом.', code='invalid')]", template.getId()),
                 message);
     }
-    //todo Сделать с python
 }

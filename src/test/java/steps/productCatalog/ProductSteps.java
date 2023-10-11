@@ -90,7 +90,7 @@ public class ProductSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
-                .post("/api/v1/products/")
+                .post(productUrl)
                 .assertStatus(201)
                 .extractAs(Product.class);
     }
