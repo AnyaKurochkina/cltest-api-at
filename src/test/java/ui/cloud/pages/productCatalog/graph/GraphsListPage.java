@@ -121,11 +121,7 @@ public class GraphsListPage extends EntityListPage {
 
     @Step("Поиск и открытие страницы графа '{name}'")
     public GraphPage findAndOpenGraphPage(String name) {
-        if (clearSearchButton.isDisplayed()) {
-            clearSearchButton.click();
-        }
-        searchInput.setValue(name);
-        Waiting.sleep(500);
+        search(name);
         DataTable table = new DataTable(nameColumn);
         new DataTable(nameColumn).searchAllPages(t -> table.isColumnValueContains(nameColumn, name))
                 .getRowByColumnValueContains(nameColumn, name).get().click();
