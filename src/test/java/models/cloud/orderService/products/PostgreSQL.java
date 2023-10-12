@@ -44,6 +44,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
         jsonTemplate = "/orders/postgresql.json";
         if (productName == null)
             productName = "PostgreSQL (Astra Linux)";
+        if (adminPassword == null)
+            adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
