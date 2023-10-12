@@ -2,6 +2,7 @@ package api.cloud.productCatalog.pythonTemplate;
 
 
 import api.Tests;
+import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -153,6 +154,9 @@ public class PythonTemplateTest extends Tests {
                 .graph(Collections.singletonList(graphItem))
                 .build()
                 .createObject();
-        getObjectListUsedPythonTemplate(pythonTemplate.getId());
+        Response response = getObjectListUsedPythonTemplate(pythonTemplate.getId());
+        assertEquals(1, response.jsonPath().getList("").size());
+        assertEquals(graph.getName(), response.jsonPath().getString("[0].name"));
+        assertEquals(graphItem.getName(), response.jsonPath().getString("[0].nodes[0].node_name"));
     }
 }
