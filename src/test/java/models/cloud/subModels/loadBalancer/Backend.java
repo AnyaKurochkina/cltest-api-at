@@ -16,28 +16,27 @@ public class Backend {
     String mode = "tcp";
     List<Server> servers;
     @Builder.Default
-    Boolean advancedCheck = true;
-    @Builder.Default
-    Integer checkPort = 80;
+    Boolean advancedCheck = false;
     @Builder.Default
     String balancingAlgorithm = "leastconn";
-    @Builder.Default
-    String advCheck = "httpchk";
-    @Builder.Default
-    Integer checkFall = 3;
-    @Builder.Default
-    String checkSsl = "disabled";
-    @Builder.Default
-    String match = "status";
-    @Builder.Default
-    Integer checkRise = 3;
-    @Builder.Default
-    Integer checkInterval = 5000;
-    @Builder.Default
-    String checkUri = "/";
-    @Builder.Default
-    String check_method = "GET";
-    @EqualsAndHashCode.Include
     String backendName;
+
+    /* tcp-check*/
+    Integer checkPort;
+    String advCheck;
+    Integer checkFall;
+    String checkSsl;
+    String match;
+    Integer checkRise;
+    Integer checkInterval;
+    String pattern;
+    String data;
+
+    /* httpchk GET*/
+    String checkMethod;
+    String checkUri;
     String versionAndHeaders;
+
+    /* httpchk PUT*/
+    String body;
 }
