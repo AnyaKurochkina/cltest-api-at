@@ -22,7 +22,7 @@ public class RedisTest extends Tests {
 
     @TmsLink("795817")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Redis product) {
         //noinspection EmptyTryBlock
         try (Redis redis = product.createObjectExclusiveAccess()) {}
@@ -31,7 +31,7 @@ public class RedisTest extends Tests {
     @TmsLink("795816")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.expandMountPoint();
@@ -41,7 +41,7 @@ public class RedisTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void checkActions(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             Assertions.assertTrue(redis.isActionExist("update_os_standalone"));
@@ -51,7 +51,7 @@ public class RedisTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void updateOsStandalone(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.updateOsStandalone();
@@ -61,7 +61,7 @@ public class RedisTest extends Tests {
     @TmsLink("795825")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
     void resetPassword(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.resetPassword();
@@ -72,7 +72,7 @@ public class RedisTest extends Tests {
     @TmsLink("795822")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.restart();
@@ -83,7 +83,7 @@ public class RedisTest extends Tests {
     @TmsLink("795823")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.stopSoft();
@@ -94,7 +94,7 @@ public class RedisTest extends Tests {
     @TmsLink("795820")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.resize(redis.getMaxFlavor());
@@ -105,7 +105,7 @@ public class RedisTest extends Tests {
     @TmsLinks({@TmsLink("795818"),@TmsLink("795821")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.stopHard();
@@ -116,7 +116,7 @@ public class RedisTest extends Tests {
     @TmsLink("795824")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] Проверка создания {0}")
     void checkConnect(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.checkConnect();
@@ -126,7 +126,7 @@ public class RedisTest extends Tests {
     @TmsLink("1654563")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить парметр notify-keyspace-events {0}")
+    @ParameterizedTest(name = "[{index}] Изменить парметр notify-keyspace-events {0}")
     void changeNotifyKeyspaceEvents(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
             redis.changeNotifyKeyspaceEvents("KEA");
@@ -135,7 +135,7 @@ public class RedisTest extends Tests {
 
     @TmsLink("795819")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Redis product) {
         try (Redis redis = product.createObjectExclusiveAccess()) {

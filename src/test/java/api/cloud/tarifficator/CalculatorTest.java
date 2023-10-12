@@ -35,7 +35,7 @@ public class CalculatorTest extends Tests {
     @TmsLink("456417")
     @SneakyThrows
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "Списание средств за продукт {0}")
+    @ParameterizedTest(name = "[{index}] Списание средств за продукт {0}")
     public void expenseAccount(Astra resource) {
         try (Astra product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
@@ -142,7 +142,7 @@ public class CalculatorTest extends Tests {
 
     @TmsLink("648902")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "Сравнение стоимости продукта в статусе ON с ценой предбиллинга")
+    @ParameterizedTest(name = "[{index}] Сравнение стоимости продукта в статусе ON с ценой предбиллинга")
     public void costProductStatusOn(Astra resource) {
         try (Astra product = resource.createObjectExclusiveAccess()) {
             Waiting.sleep(60000);
@@ -155,7 +155,7 @@ public class CalculatorTest extends Tests {
     @Disabled
     @TmsLink("649012")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "Сравнение стоимости продукта в статусе OFF с ценой предбиллинга")
+    @ParameterizedTest(name = "[{index}] Сравнение стоимости продукта в статусе OFF с ценой предбиллинга")
     public void costProductStatusOff(Astra resource) {
         try (Astra product = resource.createObjectExclusiveAccess()) {
             Waiting.sleep(60000);

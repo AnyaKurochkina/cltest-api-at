@@ -26,7 +26,7 @@ public class ScyllaDbClusterTest extends Tests {
 
     @TmsLink("1349516")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(ScyllaDbCluster product) {
         //noinspection EmptyTryBlock
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {}
@@ -35,7 +35,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @EnabledIfEnv({"prod", "blue"})
-    @ParameterizedTest(name = "Заказ на быстрых дисках {0}")
+    @ParameterizedTest(name = "[{index}] Заказ на быстрых дисках {0}")
     void checkDiskVm(ScyllaDbCluster product) {
         List<String> envs = Arrays.asList("LT", "PROD");
         Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
@@ -48,7 +48,7 @@ public class ScyllaDbClusterTest extends Tests {
 
     @TmsLink("1349521")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка подключения {0}")
+    @ParameterizedTest(name = "[{index}] Проверка подключения {0}")
     void checkConnect(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("cachedbd");
@@ -61,7 +61,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("1349517")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить БД {0}")
+    @ParameterizedTest(name = "[{index}] Добавить БД {0}")
     void createDb(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("cachedbd");
@@ -72,7 +72,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("1349515")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Присвоить права доступа пользователю {0}")
+    @ParameterizedTest(name = "[{index}] Присвоить права доступа пользователю {0}")
     void addPermissionsUser(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("cachedbd");
@@ -84,7 +84,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("1349514")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить права доступа пользователю {0}")
+    @ParameterizedTest(name = "[{index}] Удалить права доступа пользователю {0}")
     void removePermissionsUser(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("cachedbd");
@@ -97,7 +97,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("1349524")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Добавить пользователя {0}")
     void createDbmsUser(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("cachedbd");
@@ -108,7 +108,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("1349527")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
     void resetPassword(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("cachedbd");
@@ -121,7 +121,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("1349520")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Удалить пользователя {0}")
     void removeDbmsUser(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("cachedbd");
@@ -133,7 +133,7 @@ public class ScyllaDbClusterTest extends Tests {
     @TmsLink("1349518")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить БД {0}")
+    @ParameterizedTest(name = "[{index}] Удалить БД {0}")
     void removeDb(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
             scyllaDb.createDb("bdfordelete");
@@ -143,7 +143,7 @@ public class ScyllaDbClusterTest extends Tests {
 
     @TmsLink("1349523")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(ScyllaDbCluster product) {
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {

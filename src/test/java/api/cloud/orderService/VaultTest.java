@@ -23,7 +23,7 @@ public class VaultTest extends Tests {
     @TmsLink("1431949")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Vault product) {
         //noinspection EmptyTryBlock
         try (Vault vault = product.createObjectExclusiveAccess()) {
@@ -33,7 +33,7 @@ public class VaultTest extends Tests {
     @TmsLinks({@TmsLink("1431950"), @TmsLink("1431951")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить/Удалить право доступа {0}")
+    @ParameterizedTest(name = "[{index}] Добавить/Удалить право доступа {0}")
     void createRule(Vault product) {
         try (Vault vault = product.createObjectExclusiveAccess()) {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(vault.getProjectId(), "", "vlt");
@@ -45,7 +45,7 @@ public class VaultTest extends Tests {
     @TmsLink("1431952")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить право доступа {0}")
+    @ParameterizedTest(name = "[{index}] Изменить право доступа {0}")
     void editRule(Vault product) {
         try (Vault vault = product.createObjectExclusiveAccess()) {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(vault.getProjectId(),
@@ -57,7 +57,7 @@ public class VaultTest extends Tests {
 
     @TmsLink("1431953")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Vault product) {
         try (Vault vault = product.createObjectExclusiveAccess()) {

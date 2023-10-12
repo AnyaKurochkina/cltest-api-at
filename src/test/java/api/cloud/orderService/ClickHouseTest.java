@@ -21,7 +21,7 @@ public class ClickHouseTest extends Tests {
 
     @TmsLink("377799")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(ClickHouse product) {
         //noinspection EmptyTryBlock
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {}
@@ -30,7 +30,7 @@ public class ClickHouseTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void checkActions(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             Assertions.assertTrue(clickHouse.isActionExist("update_os_standalone"));
@@ -40,7 +40,7 @@ public class ClickHouseTest extends Tests {
     @TmsLink("377793")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.expandMountPoint();
@@ -50,7 +50,7 @@ public class ClickHouseTest extends Tests {
     @TmsLink("1427551")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль владельца {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль владельца {0}")
     void resetPasswordOwner(ClickHouse product) {
         Assumptions.assumeTrue("dev".equalsIgnoreCase(product.envType()), "Тест включен только для dev среды");
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
@@ -61,7 +61,7 @@ public class ClickHouseTest extends Tests {
     @TmsLink("391689")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль customer {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль customer {0}")
     void resetPasswordCustomer(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.resetPasswordCustomer();
@@ -72,7 +72,7 @@ public class ClickHouseTest extends Tests {
     @TmsLink("377795")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.restart();
@@ -82,7 +82,7 @@ public class ClickHouseTest extends Tests {
     @TmsLink("711827")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] Проверка создания {0}")
     void checkConnectDb(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.checkConnectDb();
@@ -93,7 +93,7 @@ public class ClickHouseTest extends Tests {
     @TmsLink("377798")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.stopSoft();
@@ -105,7 +105,7 @@ public class ClickHouseTest extends Tests {
     @TmsLinks({@TmsLink("377796"),@TmsLink("377797")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.stopHard();
@@ -116,7 +116,7 @@ public class ClickHouseTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("377800"),@TmsLink("1427552")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "ТУЗ локальные, создание/удаление локальной УЗ {0}")
+    @ParameterizedTest(name = "[{index}] ТУЗ локальные, создание/удаление локальной УЗ {0}")
     void createUserAccount(ClickHouse product) {
         try (ClickHouse cluster = product.createObjectExclusiveAccess()) {
             cluster.createUserAccount("test", "helv1gONd1kINnQe7XsAzqiPPtyq50E0LAA2NX");
@@ -127,7 +127,7 @@ public class ClickHouseTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("377802"),@TmsLink("1427553")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "ТУЗ AD, добавление/удаление {0}")
+    @ParameterizedTest(name = "[{index}] ТУЗ AD, добавление/удаление {0}")
     void addUserAd(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.addUserAd("user1");
@@ -138,7 +138,7 @@ public class ClickHouseTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("391688"),@TmsLink("1427554")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Группы пользователей AD, добавление/удаление {0}")
+    @ParameterizedTest(name = "[{index}] Группы пользователей AD, добавление/удаление {0}")
     void addGroupAd(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.deleteGroupAd(clickHouse.accessGroup());
@@ -149,7 +149,7 @@ public class ClickHouseTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("1427555"),@TmsLink("1427556")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Группы прикладных администраторов AD, добавление/удаление {0}")
+    @ParameterizedTest(name = "[{index}] Группы прикладных администраторов AD, добавление/удаление {0}")
     void addGroupAdmin(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.deleteGroupAdmin(clickHouse.accessGroup());
@@ -159,7 +159,7 @@ public class ClickHouseTest extends Tests {
 
     @TmsLink("330446")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "AD Проверка создания ВМ {0}")
+    @ParameterizedTest(name = "[{index}] AD Проверка создания ВМ {0}")
     void checkCreate(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             assertContains(clickHouse.executeSsh("sudo id"), "root");
@@ -168,7 +168,7 @@ public class ClickHouseTest extends Tests {
 
     @TmsLink("1653898")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить информацию о сертификатах {0}")
+    @ParameterizedTest(name = "[{index}] Обновить информацию о сертификатах {0}")
     void updateCertsInfo(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.certsInfo();
@@ -178,7 +178,7 @@ public class ClickHouseTest extends Tests {
     @Disabled
     @TmsLink("1653899")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    @ParameterizedTest(name = "[{index}] Обновить сертификаты {0}")
     void updateCerts(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
             clickHouse.certsInfo();
@@ -187,7 +187,7 @@ public class ClickHouseTest extends Tests {
 
     @TmsLink("377794")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(ClickHouse product) {
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {

@@ -40,7 +40,7 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("1421430")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(ApacheAirflow product, PostgreSQL ignore) {
         createPostgres(product);
         //noinspection EmptyTryBlock
@@ -51,7 +51,7 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("1421459")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expand(ApacheAirflow product, PostgreSQL ignore) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
@@ -63,7 +63,7 @@ public class ApacheAirflowTest extends Tests {
     @MarkDelete
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     void delete(ApacheAirflow product, PostgreSQL ignore) {
         createPostgres(product);
         try (ApacheAirflow airflow = product.createObjectExclusiveAccess()) {

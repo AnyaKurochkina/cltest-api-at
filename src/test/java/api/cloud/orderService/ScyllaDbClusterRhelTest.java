@@ -24,7 +24,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
 
     @TmsLink("1349497")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(ScyllaDbCluster product) {
         product.setProductName(productName);
         //noinspection EmptyTryBlock
@@ -33,7 +33,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
 
     @TmsLink("1349503")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка подключения {0}")
+    @ParameterizedTest(name = "[{index}] Проверка подключения {0}")
     void checkConnect(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -47,7 +47,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
     @TmsLink("1349510")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить БД {0}")
+    @ParameterizedTest(name = "[{index}] Добавить БД {0}")
     void createDb(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -59,7 +59,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
     @TmsLink("1349509")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Присвоить права доступа пользователю {0}")
+    @ParameterizedTest(name = "[{index}] Присвоить права доступа пользователю {0}")
     void addPermissionsUser(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -72,7 +72,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
     @TmsLink("1349511")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить права доступа пользователю {0}")
+    @ParameterizedTest(name = "[{index}] Удалить права доступа пользователю {0}")
     void removePermissionsUser(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -86,7 +86,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
     @TmsLink("1349501")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Добавить пользователя {0}")
     void createDbmsUser(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -98,7 +98,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
     @TmsLink("1349506")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
     void resetPassword(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -112,7 +112,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
     @TmsLink("1349499")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Удалить пользователя {0}")
     void removeDbmsUser(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -125,7 +125,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
     @TmsLink("1349504")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить БД {0}")
+    @ParameterizedTest(name = "[{index}] Удалить БД {0}")
     void removeDb(ScyllaDbCluster product) {
         product.setProductName(productName);
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
@@ -136,7 +136,7 @@ public class ScyllaDbClusterRhelTest extends Tests {
 
     @TmsLink("1349505")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(ScyllaDbCluster product) {
         product.setProductName(productName);
