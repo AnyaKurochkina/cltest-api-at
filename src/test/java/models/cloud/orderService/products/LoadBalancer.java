@@ -16,6 +16,7 @@ import models.cloud.subModels.Flavor;
 import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Gslb;
+import models.cloud.subModels.loadBalancer.Server;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -170,16 +171,15 @@ public class LoadBalancer extends IProduct {
             Assertions.assertFalse(isStateContains(backend.getBackendName()));
     }
 
-    public void editBackend(String backendName, String action, List<String> serversName) {
-        JSONArray servers = new JSONArray();
-        serversName.forEach(e -> {
-            JSONObject obj = new JSONObject();
-            obj.put("name", e);
-            servers.put(obj);
-        });
-
+    public void editBackend(String backendName, String action, List<Server> servers) {
         OrderServiceSteps.executeAction("balancer_release_edit_backend", this,
                 new JSONObject().put("backend_name", backendName).put("action", action).put("servers", servers), this.getProjectId());
+    }
+
+    public void editFrontEnd(Frontend frontend, boolean isTcpBackend, String backendName, Integer port) {
+        String backendFiled = isTcpBackend ? "default_backend_name_tcp" : "default_backend_name_http";
+        JSONObject data = new JSONObject().put(backendFiled, backendName).put("frontend", serialize(frontend)).put("frontend_port", port);
+        OrderServiceSteps.executeAction("balancer_release_edit_frontend", this, data, this.getProjectId());
     }
 
     public void deleteFrontend(Frontend frontend) {
