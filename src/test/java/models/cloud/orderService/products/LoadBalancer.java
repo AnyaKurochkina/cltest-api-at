@@ -16,6 +16,7 @@ import models.cloud.subModels.Flavor;
 import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Gslb;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
@@ -167,6 +168,18 @@ public class LoadBalancer extends IProduct {
         save();
         if (isDev())
             Assertions.assertFalse(isStateContains(backend.getBackendName()));
+    }
+
+    public void editBackend(String backendName, String action, List<String> serversName) {
+        JSONArray servers = new JSONArray();
+        serversName.forEach(e -> {
+            JSONObject obj = new JSONObject();
+            obj.put("name", e);
+            servers.put(obj);
+        });
+
+        OrderServiceSteps.executeAction("balancer_release_edit_backend", this,
+                new JSONObject().put("backend_name", backendName).put("action", action).put("servers", servers), this.getProjectId());
     }
 
     public void deleteFrontend(Frontend frontend) {

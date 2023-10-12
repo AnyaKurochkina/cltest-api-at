@@ -1,4 +1,4 @@
-package api.cloud.orderService;
+package api.cloud.orderService.loadBalancer;
 
 import api.Tests;
 import com.mifmif.common.regex.Generex;

@@ -44,7 +44,7 @@ public class OrderServiceSteps extends Steps {
         int counter = 90;
 
         log.info("Проверка статуса заказа");
-        while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
+        while ((orderStatus.equals("pending") || orderStatus.isEmpty() || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(20000);
             Response res = new Http(OrderServiceURL)
                     .disableAttachmentLog()
@@ -61,7 +61,6 @@ public class OrderServiceSteps extends Steps {
             try {
                 error = StateServiceSteps.getErrorFromStateService(product.getOrderId());
             } catch (Throwable e) {
-                e.printStackTrace();
                 log.error("Ошибка в GetErrorFromStateService " + e);
             }
             if (Objects.isNull(error))
@@ -120,7 +119,7 @@ public class OrderServiceSteps extends Steps {
                     .jsonPath()
                     .getList("list.id");
             idOfAllSuccessProducts.addAll(idOfAllSuccessProductsOnOnePage);
-        } while (idOfAllSuccessProductsOnOnePage.size() != 0);
+        } while (!idOfAllSuccessProductsOnOnePage.isEmpty());
         log.info("Список ID проектов со статусом success " + idOfAllSuccessProducts);
         log.info("Кол-во продуктов " + idOfAllSuccessProducts.size());
         return idOfAllSuccessProducts;
@@ -251,7 +250,7 @@ public class OrderServiceSteps extends Steps {
                             .jsonPath()
                             .get("action_id"));
 
-                    checkActionStatusMethod("success", product, actionId.get());
+                    checkActionStatusMethod(product, actionId.get());
                     if (Objects.nonNull(status))
                         product.setStatus(status);
                 });
@@ -301,7 +300,7 @@ public class OrderServiceSteps extends Steps {
                             .assertStatus(200)
                             .jsonPath()
                             .get("action_id"));
-                    checkActionStatusMethod("success", product, actionId.get());
+                    checkActionStatusMethod(product, actionId.get());
                     if (costPreBilling.get() != null) {
                         Float cost = null;
                         for (int i = 0; i < 20; i++) {
@@ -321,7 +320,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Ожидание успешного выполнения action")
-    public static void checkActionStatusMethod(String exp_status, IProduct product, String action_id) {
+    public static void checkActionStatusMethod(IProduct product, String actionId) {
         String actionStatus = "";
         int counter = 60;
         log.info("Проверка статуса выполнения действия");
@@ -330,13 +329,17 @@ public class OrderServiceSteps extends Steps {
             actionStatus = new Http(OrderServiceURL)
                     .disableAttachmentLog()
                     .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
-                    .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), action_id)
+                    .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), actionId)
                     .assertStatus(200)
                     .jsonPath()
                     .get("status");
             counter = counter - 1;
         }
-        if (!actionStatus.equals(exp_status.toLowerCase())) {
+        if(actionStatus.equalsIgnoreCase("warning")){
+            String messages = getActionHistoryOutput(product.getOrderId(), product.getProjectId(), actionId);
+            Assertions.fail(String.format("Результат выполнения action продукта: warning. \nИтоговый статус: %s . \nОшибка: %s", actionStatus, messages));
+        }
+        else if (!actionStatus.equalsIgnoreCase("success")) {
             String error = null;
             try {
                 error = StateServiceSteps.getErrorFromStateService(product.getOrderId());
@@ -357,6 +360,19 @@ public class OrderServiceSteps extends Steps {
             status = getStatus(product);
         } while (status.equals("pending") || status.equals("changing")
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+    }
+
+    @Step("Получение warning ")
+    public static String getActionHistoryOutput(String orderId, String projectId, String actionId) {
+        return new Http(OrderServiceURL)
+                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}/actions/history/{}/output",
+                        projectId,
+                        orderId,
+                        actionId)
+                .assertStatus(200)
+                .jsonPath()
+                .getString("list.collect{e -> e}.data");
     }
 
     @Step("Получение домена для сегмента сети")
@@ -453,7 +469,7 @@ public class OrderServiceSteps extends Steps {
                 .assertStatus(200)
                 .jsonPath();
 
-        if (!filter.equals(""))
+        if (!filter.isEmpty())
             filter = "it.data.config." + filter + " && ";
         res.itemId = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
 
