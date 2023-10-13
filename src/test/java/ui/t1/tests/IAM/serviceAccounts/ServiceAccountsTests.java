@@ -100,6 +100,25 @@ public class ServiceAccountsTests extends Tests {
     }
 
     @Test
+    @DisplayName("Создание статического ключа")
+    public void createStaticKey() {
+        ServiceAccount account = ServiceAccount.builder()
+                .title("create_static_key_ui_test")
+                .withApiKey(false)
+                .roles(Collections.singletonList("Администратор хранилища"))
+                .build()
+                .createObject();
+        JSONObject jsonObject = new IndexPage()
+                .goToServiceAccounts()
+                .goToServiceAccountPage(account)
+                .createStaticKey(account.getTitle());
+        String text = Selenide.clipboard().getText();
+        assertEqualsJson(jsonObject, new JSONObject(text));
+        account.setWithApiKey(true);
+        account.save();
+    }
+
+    @Test
     @DisplayName("Удаление сервисного аккаунта с API-ключом")
     public void deleteServiceAccountWithApiKey() {
         ServiceAccount account = ServiceAccount.builder()
