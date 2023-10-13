@@ -7,10 +7,7 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.ServiceAccount;
 import org.json.JSONObject;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.elements.Alert;
-import ui.elements.Breadcrumb;
-import ui.elements.Button;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +21,7 @@ public class ServiceAccountPage {
 
     List<String> headers = Arrays.asList("Роли", "Дата создания", "Создатель", "Идентификатор");
     Button apiKeysTab = Button.byId("api_keys");
-    Button s3KeysTab = Button.byId("ceph_public_keys");
+    Tab staticKeys = Tab.byText("Статические ключи Объектного хранилища S3");
     Button create = Button.byText("Создать");
     Button delete = Button.byXpath("//span[text() = 'API-ключ']/following::button[@label = 'Удалить']");
 
@@ -37,7 +34,7 @@ public class ServiceAccountPage {
         List<String> roles = new Table("Роли").getNotEmptyHeaders();
         assertEquals(headers, roles);
         assertTrue(apiKeysTab.isVisible());
-        assertTrue(s3KeysTab.isVisible());
+        assertTrue(staticKeys.getElement().isDisplayed());
         return this;
     }
 
@@ -64,6 +61,24 @@ public class ServiceAccountPage {
 
     @Step("Создание Апи ключа")
     public JSONObject createApiKey(String title) {
+        create.click();
+        Alert.green("API ключ успешно создан");
+        Button.byText("Скопировать данные формы").click();
+        Alert.green("Данные успешно скопированы");
+        String url = $x("//*[text() = 'Адрес сервиса авторизации:']/following-sibling::div").getText();
+        String id = $x("//*[text() = 'Идентификатор:']/following-sibling::div").getText();
+        String clientId = $x("//*[text() = 'Ключ:']/following-sibling::div").getText();
+        JSONObject jsonObject = new JSONObject()
+                .put("url", url)
+                .put("name", id)
+                .put("title", title)
+                .put("secretKey", clientId);
+        Button.byText("Подтверждаю, что данные мной сохранены").click();
+        return jsonObject;
+    }
+
+    @Step("Создание статического ключа")
+    public JSONObject createStaticKey(String title) {
         create.click();
         Alert.green("API ключ успешно создан");
         Button.byText("Скопировать данные формы").click();
