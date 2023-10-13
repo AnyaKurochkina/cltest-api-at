@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.etcd;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -64,7 +65,8 @@ public class UiEtcdTest extends UiProductTest {
             Alert.green("Значение скопировано");
             orderPage.getNumberNodes().set("3");
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
+            if(Configure.ENV.equals("ift"))
+                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());

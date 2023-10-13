@@ -3,6 +3,7 @@ package ui.cloud.tests.orders.clickHouse;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -67,7 +68,8 @@ public class UiClickHouseTest extends UiProductTest {
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
                 Alert.green("Значение скопировано");
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
+            if(Configure.ENV.equals("ift"))
+                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
             orderPage.getGroup().set(accessGroup);

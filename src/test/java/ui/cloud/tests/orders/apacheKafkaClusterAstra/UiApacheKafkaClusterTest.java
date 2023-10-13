@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.apacheKafkaClusterAstra;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -55,8 +56,10 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
+            if(Configure.ENV.equals("ift"))
+                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getConfigCluster().set("kafka-4:zookeeper-3");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());

@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.kafkaService;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -55,7 +56,8 @@ public class UiKafkaServiceTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getNameTopic().setValue(name);
             orderPage.getDomain().set(product.getDomain());
-            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
+            if(Configure.ENV.equals("ift"))
+                orderPage.getDataCentreSelect().set(product.getDataCentre());
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

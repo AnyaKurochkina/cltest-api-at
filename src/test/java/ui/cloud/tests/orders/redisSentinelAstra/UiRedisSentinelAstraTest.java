@@ -3,6 +3,7 @@ package ui.cloud.tests.orders.redisSentinelAstra;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -29,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 import static ui.cloud.pages.orders.RedisAstraOrderPage.userNameRedisSentinel;
 
 @Epic("UI Продукты")
-@Feature("Redis (Astra)")
+@Feature("Redis Sentinel Astra")
 @Tags({@Tag("ui"), @Tag("ui_redis_sentinel_astra")})
 public class UiRedisSentinelAstraTest extends UiProductTest {
 
@@ -57,6 +58,8 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
+            if(Configure.ENV.equals("ift"))
+                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getUserInput().setValue(userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();

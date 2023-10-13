@@ -3,6 +3,7 @@ package ui.cloud.tests.orders.postgreSqlClusterAstra;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -65,7 +66,8 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
+            if(Configure.ENV.equals("ift"))
+                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             if (product.isDev() || product.isTest() )
@@ -117,7 +119,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Получить актуальную конфигурацию")
     void getActualConfiguration() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::getActualConfiguration);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::getActualConfiguration);
     }
 
     @Test
@@ -126,7 +128,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Изменить default_transaction_isolation на REPEATABLE READ")
     void changeTransactionIsolation() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.changeTransactionIsolation("REPEATABLE READ"));
     }
 
     @Test

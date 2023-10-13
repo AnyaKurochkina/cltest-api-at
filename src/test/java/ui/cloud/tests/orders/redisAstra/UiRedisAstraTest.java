@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.redisAstra;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -55,7 +56,8 @@ public class UiRedisAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
+            if(Configure.ENV.equals("ift"))
+                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getUserInput().setValue(RedisAstraOrderPage.userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();
