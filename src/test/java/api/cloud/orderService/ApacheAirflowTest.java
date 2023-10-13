@@ -23,18 +23,21 @@ import steps.orderService.OrderServiceSteps;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("airflow"), @Tag("prod")})
 public class ApacheAirflowTest extends Tests {
 
-    private static void createPostgres(ApacheAirflow product) {
+    private static AbstractPostgreSQL createPostgres(ApacheAirflow product) {
+        AbstractPostgreSQL postgreSQL;
+
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
-        String pgAdminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
-        if("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
-            abstractPostgreSQL = PostgresSQLCluster.builder().adminPassword(pgAdminPassword).env(product.getEnv()).build();
-        try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
-            String dbName = "airflow";
-            postgreSQL.createDb(dbName);
-            product.setPgAdminPassword(pgAdminPassword);
-            product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
-            product.setDbUser(new DbUser(dbName, dbName + "_admin"));
-        }
+        if ("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
+            abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
+
+        postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess();
+        String dbName = "airflow";
+        postgreSQL.createDb(dbName);
+        product.setPgAdminPassword(postgreSQL.getAdminPassword());
+        product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
+        product.setDbUser(new DbUser(dbName, dbName + "_admin"));
+        postgreSQL.close();
+        return postgreSQL;
     }
 
     @TmsLink("1421430")
