@@ -49,6 +49,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .setBootSize(4)
                 .addSecurityGroups(securityGroup)
                 .setSubnet(defaultSubNetwork)
+                .setDescription("Описание")
                 .setSshKey(sshKey);
         Button.byText("Скопировать данные формы").click();
         Alert.green("Данные успешно скопированы");
