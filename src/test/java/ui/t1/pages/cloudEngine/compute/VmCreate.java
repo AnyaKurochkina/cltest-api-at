@@ -164,12 +164,6 @@ public class VmCreate {
     }
 
     public VmCreate clickOrder() {
-        /* Временный костыль для prod */
-
-        Select.byLabel("Серия").setContains("Intel Cascade Lake 3.0 GHz");
-        Waiting.sleep(3000);
-
-        /* */
         OrderUtils.clickOrder();
         OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
