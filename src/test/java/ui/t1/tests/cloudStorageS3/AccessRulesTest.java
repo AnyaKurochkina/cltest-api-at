@@ -25,10 +25,10 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoAccessRulesLayer()
                 .addAccessRule()
-                .setUser("ilkaboomboom@rambler.ru")
+                .setUser("nkparinov@t1-integration.ru")
                 .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
                 .createAccessRule()
-                .checkRule("Илья Федосов", true);
+                .checkRule("Никита Паринов", true);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
@@ -46,15 +46,15 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoAccessRulesLayer()
                 .addAccessRule()
-                .setUser("ilkaboomboom@rambler.ru")
+                .setUser("nkparinov@t1-integration.ru")
                 .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .createAccessRule()
-                .checkRule("Илья Федосов", true)
-                .editAccessRule("Илья Федосов")
+                .checkRule("Никита Паринов", true)
+                .editAccessRule("Никита Паринов")
                 .setRules(false, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .setRules(true, AccessRulesTypes.READ, AccessRulesTypes.WRITEACL)
                 .saveAccessRule()
-                .editAccessRule("Илья Федосов")
+                .editAccessRule("Никита Паринов")
                 .checkRule(false, AccessRulesTypes.WRITE)
                 .checkRule(false, AccessRulesTypes.READACL)
                 .checkRule(true, AccessRulesTypes.READ)
@@ -77,11 +77,11 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoAccessRulesLayer()
                 .addAccessRule()
-                .setUser("ilkaboomboom@rambler.ru")
+                .setUser("nkparinov@t1-integration.ru")
                 .setRules(true, AccessRulesTypes.WRITE, AccessRulesTypes.READACL)
                 .createAccessRule()
-                .deleteAccessRule("Илья Федосов")
-                .checkRule("Илья Федосов", false);
+                .deleteAccessRule("Никита Паринов")
+                .checkRule("Никита Паринов", false);
 
         new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);

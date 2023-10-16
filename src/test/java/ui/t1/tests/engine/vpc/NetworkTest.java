@@ -31,7 +31,7 @@ public class NetworkTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Сети. Добавление сети")
     void addNetwork() {
         new IndexPage().goToNetworks().addNetwork(name, "desc");
-        new NetworkList().selectNetwork(name).markForDeletion(new NetworkEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS));
+        new NetworkList().selectNetwork(name).markForDeletion(new NetworkEntity(), AbstractEntity.Mode.AFTER_CLASS);
     }
 
     @Test
@@ -52,11 +52,11 @@ public class NetworkTest extends AbstractComputeTest {
     void addSubnet() {
         new IndexPage().goToNetworks().selectNetwork(name).addSubnet()
                 .setRegion(region)
-                .setCidr("10.0.0.0")
+                .setCidr("10.0.2.0")
                 .setName(getRandomName())
                 .setDesc("addSubnet")
                 .setDhcp(true)
-                .setPrefix(16)
+                .setPrefix(28)
                 .clickAdd();
     }
 

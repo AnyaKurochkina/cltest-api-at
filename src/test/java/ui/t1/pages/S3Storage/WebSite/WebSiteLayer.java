@@ -1,5 +1,6 @@
 package ui.t1.pages.S3Storage.WebSite;
 
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.elements.Alert;
 import ui.elements.Button;
@@ -24,6 +25,7 @@ public class WebSiteLayer extends AbstractLayerS3<WebSiteLayer> {
     @Step("Включение режима веб-сайта '{mode}'")
     public WebSiteLayer setWebSiteMode(Boolean mode)
     {
+        Waiting.sleep(3000);
         Switch.byText("Режим веб-сайта").setEnabled(mode);
         Alert.green("Режим веб-сайта успешно изменен");
         return this;

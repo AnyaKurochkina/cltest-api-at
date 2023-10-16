@@ -28,7 +28,6 @@ public class VirtualIp extends IProductT1Page<VirtualIp> {
 
         @Step("Подключить к сетевому интерфейсу {ip}")
         public void attachComputeIp(String ip) {
-            if (!InterfacesTable.isAttachIp(ip))
                 runActionWithParameters(btn, "Подключить к сетевому интерфейсу", "Подтвердить", () ->
                         Dialog.byTitle("Подключить к сетевому интерфейсу")
                                 .setSelectValue("Сетевой интерфейс", ip));
@@ -39,6 +38,16 @@ public class VirtualIp extends IProductT1Page<VirtualIp> {
             runActionWithParameters(btn, "Отключить от сетевого интерфейса", "Подтвердить", () ->
                     Dialog.byTitle("Отключить от сетевого интерфейса")
                             .setSelectValue("Сетевой интерфейс", ip));
+        }
+
+        @Step("Отключить IP от интерфейса")
+        public void disableInternet() {
+            runActionWithoutParameters(BLOCK_PARAMETERS, "Отключить доступ в интернет");
+        }
+
+        @Step("Разрешить доступ в интернет")
+        public void enableInternet() {
+            runActionWithoutParameters(BLOCK_PARAMETERS, "Разрешить доступ в интернет");
         }
     }
 

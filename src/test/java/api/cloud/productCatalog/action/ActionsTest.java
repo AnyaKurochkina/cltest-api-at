@@ -581,7 +581,8 @@ public class ActionsTest extends Tests {
                 .skipItemChange(true)
                 .build()
                 .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation)",
+        assertEquals("If the value of the field (skip_on_prebilling) is True," +
+                        " the values of the following fields must be True: (available_without_money, skip_reservation)",
                 errMessage);
 
         String errMessage2 = createAction(Action.builder()
@@ -593,7 +594,7 @@ public class ActionsTest extends Tests {
                 .skipItemChange(true)
                 .build()
                 .toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Если значение поля (skip_on_prebilling) True, значения следующий полей должны быть True: (available_without_money, skip_reservation)",
+        assertEquals("If the value of the field (skip_on_prebilling) is True, the values of the following fields must be True: (available_without_money, skip_reservation)",
                 errMessage2);
     }
 

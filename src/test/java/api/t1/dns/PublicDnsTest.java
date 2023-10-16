@@ -37,7 +37,7 @@ public class PublicDnsTest extends Tests {
     public static void clearTestData() {
         List<DnsZone> publicZoneList = getZoneList(projectId);
         publicZoneList.forEach(x -> {
-            if (x.getType().equals("public")) {
+            if (x.getName().contains("test_api")) {
                 deleteZone(x.getId(), projectId);
             }
         });
@@ -59,6 +59,22 @@ public class PublicDnsTest extends Tests {
         deleteZone(dnsZone.getId(), projectId);
         assertFalse(isZoneExist(dnsZone.getId(), projectId), String.format("Зона с именем %s не удалена", zone.getName()));
         assertFalse(isZoneExistInPowerDns(zone.getDomainName()), String.format("Зона с именем %s не удалена в PowerDns", zone.getName()));
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Проверка что при создании публичной зоны, отображаются обязательные ресурсные записи")
+    public void checkRrsetExistsWhenPublicZoneCreatedTest() {
+        String domainName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + ".ru";
+        DnsZone zone = DnsZone.builder()
+                .name("check_rrset_exists_when_public_zone_created_test_api")
+                .domainName(domainName)
+                .type("public")
+                .build();
+        DnsZone dnsZone = createZone(zone.toJson(), projectId);
+        List<Rrset> rrsets = dnsZone.getRrsets();
+        assertTrue(rrsets.stream().anyMatch(x -> x.getRecordType().equals("NS")), "Ресурсная запись с типом NS отсутствует");
+        assertTrue(rrsets.stream().anyMatch(x -> x.getRecordType().equals("SOA")), "Ресурсная запись с типом SOA отсутствует");
     }
 
     @Test
@@ -211,8 +227,8 @@ public class PublicDnsTest extends Tests {
                 .type("public")
                 .build();
         DnsZone dnsZone = createZone(zone.toJson(), projectId);
-        DateValidator validator = new DateValidator(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'"));
-        assertTrue(validator.isValid(dnsZone.getCreated_at()), "Формат даты не соответствует yyyy-MM-dd'T'HH:mm:ss'Z'");
-        assertTrue(validator.isValid(dnsZone.getUpdated_at()), "Формат даты не соответствует yyyy-MM-dd'T'HH:mm:ss'Z'");
+        DateValidator validator = new DateValidator(DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'"));
+        assertTrue(validator.isValid(dnsZone.getCreated_at()), "Формат даты не соответствует yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
+        assertTrue(validator.isValid(dnsZone.getUpdated_at()), "Формат даты не соответствует yyyy-MM-dd'T'HH:mm:ss.SSSSSS'Z'");
     }
 }

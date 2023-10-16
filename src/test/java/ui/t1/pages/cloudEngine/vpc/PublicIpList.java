@@ -23,17 +23,17 @@ public class PublicIpList {
         OrderUtils.waitCreate(() -> {
             if (!isEmpty) {
                 String oldIp = ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
-                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofMinutes(1));
+                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofMinutes(2));
             } else {
-                Waiting.find(() -> !ipTable.update().isEmpty(), Duration.ofMinutes(1));
-                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).equals("—"), Duration.ofMinutes(1));
+                Waiting.find(() -> !ipTable.update().isEmpty(), Duration.ofMinutes(2));
+                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).equals("—"), Duration.ofMinutes(2));
             }
         });
         return ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
     }
 
     public PublicIp selectIp(String name) {
-        new IpTable().getRowByColumnValue(Column.IP_ADDRESS, name).get().shouldBe(Condition.visible).click();
+        new IpTable().getRowByColumnValue(Column.IP_ADDRESS, name).getElementByColumn(Column.IP_ADDRESS).shouldBe(Condition.visible).click();
         return new PublicIp();
     }
 

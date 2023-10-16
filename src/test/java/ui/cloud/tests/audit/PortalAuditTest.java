@@ -5,6 +5,8 @@ import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.restassured.path.json.JsonPath;
+import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
@@ -26,6 +28,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import static steps.productCatalog.GraphSteps.*;
+import static steps.resourceManager.ResourceManagerSteps.getFolderById;
+import static steps.resourceManager.ResourceManagerSteps.getProjectJsonPath;
 
 @Feature("Просмотр аудита на портале")
 @ExtendWith(ConfigExtension.class)
@@ -132,16 +136,17 @@ public class PortalAuditTest extends Tests {
     @TmsLink("1458196")
     @DisplayName("Просмотр записи аудита в родительском контексте")
     public void checkAuditInParentContext() {
-        new IndexPage().goToPortalAuditPage()
+        new IndexPage().goToPortalAuditPage();
+        JsonPath projectJson = getProjectJsonPath(project.getId());
+        String folderId = projectJson.getString("data.folder");
+        Folder folder = getFolderById(folderId);
+        new ContextPage().openUserContext().setContext(folder.getTitle());
+        new AuditPage()
                 .setOperationTypeFilterAndApply(copyType)
                 .setUserFilter(pcAdmin.getEmail())
                 .setStatusCodeFilter(okCode)
                 .applyAdditionalFilters()
-                .checkRecordDetailsByContextId(project.getId(), projectsObject, noValue, noValue);
-        new ContextPage().openUserContext().setContext("VTB-VTB.Cloud-QA-AT-DEV");
-        new AuditPage()
-                .setUserFilter(pcAdmin.getEmail())
-                .applyAdditionalFilters()
-                .checkRecordDetailsByContextId(project.getId(), projectsObject, noValue, noValue);
+                .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), copyType,
+                        projectsObject, okCode, okStatus);
     }
 }

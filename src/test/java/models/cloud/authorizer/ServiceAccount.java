@@ -33,6 +33,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     String title;
     String jsonTemplate;
     Role role;
+    @Setter
     Boolean withApiKey;
 
     @Singular

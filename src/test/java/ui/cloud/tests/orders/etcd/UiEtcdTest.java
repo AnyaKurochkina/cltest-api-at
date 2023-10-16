@@ -64,6 +64,7 @@ public class UiEtcdTest extends UiProductTest {
             Alert.green("Значение скопировано");
             orderPage.getNumberNodes().set("3");
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());

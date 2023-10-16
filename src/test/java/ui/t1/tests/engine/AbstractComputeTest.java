@@ -21,8 +21,8 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
-import steps.vpc.SecurityGroupResponse;
 import steps.resourceManager.ResourceManagerSteps;
+import steps.vpc.SecurityGroupResponse;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
@@ -48,13 +48,17 @@ public abstract class AbstractComputeTest extends Tests {
     protected String availabilityZone = "ru-central1-a";
     protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
-    protected String hddTypeFirst = "500";
-    protected String hddTypeSecond = "500";
+    protected String hddTypeFirst = "Write: 3000";
+    protected String hddTypeSecond = "Read: 10000";
     protected String defaultNetwork = "default";
+    protected String defaultSubNetwork = "default";
     protected String securityGroup = "default";
     protected String flavorName = "Intel";
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
     protected static final String sshKey = "AT-default";
+
+    protected static final String CONNECT_INTERNET_COMMAND = "curl --connect-timeout 1 -Is http://yandex.ru";
+    protected static final String CONNECT_INTERNET_COMMAND_RESPONSE = "302 Moved temporarily";
 
     public AbstractComputeTest() {
         if (!Configure.ENV.equals("t1prod"))
@@ -226,7 +230,10 @@ public abstract class AbstractComputeTest extends Tests {
 
     protected final EntitySupplier<VmCreate> randomVm = lazy(() -> {
         VmCreate v = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())
@@ -234,24 +241,13 @@ public abstract class AbstractComputeTest extends Tests {
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(v.getName())
-                .markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return v;
     });
 
-    protected final EntitySupplier<VmCreate> publicIpVm = lazy(() -> {
+    protected final EntitySupplier<String> randomPublicIp = lazy(() -> {
         String ip = new IndexPage().goToPublicIps().addIp(region);
-        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS));
-        VmCreate v = new IndexPage().goToVirtualMachine().addVm()
-                .setAvailabilityZone(availabilityZone)
-                .setImage(image)
-                .setDeleteOnTermination(true)
-                .setName(getRandomName())
-                .addSecurityGroups(securityGroup)
-                .setPublicIp(ip)
-                .setSshKey(sshKey)
-                .clickOrder();
-        new VmList().selectCompute(v.getName())
-                .markForDeletion(new InstanceEntity().deleteMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(false);
-        return v;
+        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_CLASS);
+        return ip;
     });
 }

@@ -61,6 +61,9 @@ test:
     - sshpass -e scp -r -o $SSH_OPT target/site/allure-maven-plugin/ qa-admin@10.13.20.10:~/reports/logs/$CURR_DATE
     - sshpass -e ssh -o $SSH_OPT qa-admin@10.13.20.10 "/home/qa-admin/json_parser.py reports/allure-maven-plugin/data/suites.json > ~/output.txt"
     - sshpass -e scp -o $SSH_OPT qa-admin@10.13.20.10:~/output.txt output.txt
+    - echo -n "http://10.13.20.10/~qa-admin/logs/"
+    - echo -n $CURR_DATE
+    - echo "/allure-maven-plugin/"
     - curl -X POST -H 'Content-Type:application/json' -d @output.txt https://api.telegram.org/bot$TELE_TOKEN/sendMessage || exit 0 # || EXIT_CODE=$?
     #- export EXIT_CODE=0
   rules:

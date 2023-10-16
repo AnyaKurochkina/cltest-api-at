@@ -54,8 +54,9 @@ public class UiPodmanTest extends UiProductTest {
                     .expandProductsList()
                     .selectProduct(product.getProductName());
             PodmanOrderPage orderPage = new PodmanOrderPage();
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().set(product.getDataCentre());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
