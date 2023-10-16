@@ -6,6 +6,7 @@ import ui.elements.Dialog;
 import ui.elements.SearchSelect;
 import ui.models.IamUser;
 
+import java.util.List;
 import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
@@ -15,6 +16,7 @@ import static steps.authorizer.AuthorizerSteps.getContextName;
 public class AddUserDialog extends Dialog {
 
     private final Button confirmAddUserBtn = Button.byText("Добавить");
+    private final Button applyBtn = Button.byText("Применить", 2);
     private final SearchSelect selectUser = SearchSelect.byLabel("Пользователь");
     private final SearchSelect selectRole = SearchSelect.byLabel("Роли", 2);
 
@@ -43,6 +45,23 @@ public class AddUserDialog extends Dialog {
         }
         selectRole.close();
         confirmAddUserBtn.click();
+        Waiting.sleep(1000);
+    }
+
+    public void addRole(List<String> roles) {
+        for (String role : roles) {
+            selectRole.add(role);
+        }
+        selectRole.close();
+        applyBtn.click();
+        Waiting.sleep(1000);
+    }
+
+    public void removeRole(List<String> roles) {
+        for (String role : roles) {
+            $x("//div[text() = '{}']/parent::div/button", role).click();
+        }
+        applyBtn.click();
         Waiting.sleep(1000);
     }
 }

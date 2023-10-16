@@ -71,6 +71,19 @@ public class SearchSelect extends Select {
         return value;
     }
 
+    @Step("SearchSelect. Добавить элемент с текстом '{value}'")
+    public String add(String value) {
+        hover();
+        String currentTitle = getValue();
+        if (currentTitle.equals(value))
+            return value;
+        element.click();
+        element.$x(".//input").setValue(value);
+        getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
+                .click();
+        return value;
+    }
+
     @Step("SearchSelect. Выбрать элемент с текстом содержащим '{value}'")
     public String setContains(String value) {
         hover();
