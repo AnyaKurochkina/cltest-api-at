@@ -2,6 +2,7 @@ package ui.t1.pages.IAM.serviceAccounts;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.ServiceAccount;
@@ -79,6 +80,7 @@ public class ServiceAccountPage {
 
     @Step("Создание статического ключа")
     public JSONObject createStaticKey(String description) {
+        staticKeysTab.switchTo();
         create.click();
         Dialog.byTitle("Создать статический ключ")
                 .setTextarea(TextArea.byName("description"), description)
@@ -101,11 +103,23 @@ public class ServiceAccountPage {
         return this;
     }
 
+    @Step("Удаление статического ключа")
+    public ServiceAccountPage deleteStaticKey(ServiceAccount account) {
+        staticKeysTab.switchTo();
+        Waiting.sleep(6000);
+        Menu.byElement(new Table("Access key").getRowByColumnValue("Название", account.getAccessId())
+                        .get().$x(".//button"))
+                .select("Удалить");
+        Dialog.byTitle("Подтверждение удаления ключа").clickButton("Да");
+        return this;
+    }
+
     public boolean isTableEmpty() {
+        Waiting.sleep(3000);
         return new Table("Дата добавления").isEmpty();
     }
 
-    public boolean isStaticKeyExist(String description) {
-        return new Table("Access key").isColumnValueEquals("Описание", description);
+    public boolean isStaticKeyExist(String id) {
+        return new Table("Access key").isColumnValueEquals("Название", id);
     }
 }

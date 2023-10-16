@@ -116,8 +116,27 @@ public class ServiceAccountsTests extends Tests {
                 .createStaticKey(description);
         String text = Selenide.clipboard().getText();
         assertEqualsJson(jsonObject, new JSONObject(text));
-        new ServiceAccountPage(account.getTitle()).isStaticKeyExist(description);
-        account.deleteStaticKey();
+        String id = jsonObject.getString("access_id");
+        assertTrue(new ServiceAccountPage(account.getTitle())
+                .isStaticKeyExist(id));
+        account.deleteStaticKeyNewStorage(id);
+    }
+
+    @Test
+    @DisplayName("Удаление статического ключа")
+    public void deleteStaticKey() {
+        ServiceAccount account = ServiceAccount.builder()
+                .title("create_static_key_ui_test")
+                .withApiKey(false)
+                .roles(Collections.singletonList("Администратор хранилища"))
+                .build()
+                .createObject();
+        account.createStaticKeyNewStorage();
+        assertTrue(new IndexPage()
+                .goToServiceAccounts()
+                .goToServiceAccountPage(account)
+                .deleteStaticKey(account)
+                .isTableEmpty());
     }
 
     @Test
