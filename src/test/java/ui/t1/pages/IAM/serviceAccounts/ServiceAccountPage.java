@@ -78,8 +78,19 @@ public class ServiceAccountPage {
     }
 
     @Step("Создание статического ключа")
-    public JSONObject createStaticKey(String title) {
-        return null;
+    public JSONObject createStaticKey(String description) {
+        create.click();
+        Dialog.byTitle("Создать статический ключ")
+                .setTextarea(TextArea.byName("description"), description)
+                .clickButton("Создать");
+        String id = $x("//*[text() = 'Access key:']/following-sibling::div").getText();
+        String secret = $x("//*[text() = 'Secret key:']/following-sibling::div").getText();
+        JSONObject jsonObject = new JSONObject()
+                .put("access_id", id)
+                .put("secret_key", secret);
+        Button.byText("Скопировать данные формы").click();
+        Button.byText("Закрыть");
+        return jsonObject;
     }
 
     @Step("Удаление апи ключа")
@@ -92,5 +103,9 @@ public class ServiceAccountPage {
 
     public boolean isTableEmpty() {
         return new Table("Дата добавления").isEmpty();
+    }
+
+    public boolean isStaticKeyExist(String description) {
+        return new Table("Access key").isColumnValueEquals("Описание", description);
     }
 }
