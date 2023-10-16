@@ -23,7 +23,7 @@ import steps.orderService.OrderServiceSteps;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("airflow"), @Tag("prod")})
 public class ApacheAirflowTest extends Tests {
 
-    private static AbstractPostgreSQL createPostgres(ApacheAirflow product) {
+    private static void createPostgres(ApacheAirflow product) {
         AbstractPostgreSQL postgreSQL;
 
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
@@ -37,7 +37,6 @@ public class ApacheAirflowTest extends Tests {
         product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
         product.setDbUser(new DbUser(dbName, dbName + "_admin"));
         postgreSQL.close();
-        return postgreSQL;
     }
 
     @TmsLink("1421430")
