@@ -63,7 +63,10 @@ test:
     - sshpass -e ssh -o $SSH_OPT qa-admin@10.13.20.10 "echo http://10.13.20.10/~qa-admin/logs/$CURR_DATE/allure-maven-plugin/ >> ~/output.txt"
     - sshpass -e scp -o $SSH_OPT qa-admin@10.13.20.10:~/output.txt output.txt
     - echo -n "\nhttp://10.13.20.10/~qa-admin/logs/$CURR_DATE/allure-maven-plugin/"
-    - curl -X POST -H 'Content-Type:application/json' -d @output.txt https://api.telegram.org/bot$TELE_TOKEN/sendMessage || exit 0 # || EXIT_CODE=$?
+    - awk -v size=4095 -v ORS= '1; length >= size { print "\n" }' output.txt | awk -v size=4095 -v ORS= '{print > "output_part" NR}' RS='\n'
+    - for part in output_part*; do
+        curl -X POST -H 'Content-Type:application/json' -d "@$part" https://api.telegram.org/bot$TELE_TOKEN/sendMessage || exit 0
+      done
     #- export EXIT_CODE=0
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
