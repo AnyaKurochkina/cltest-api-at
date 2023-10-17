@@ -23,7 +23,7 @@ public class S3CephTest extends Tests {
 
     @TmsLink("974377")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Заказ {0}")
+    @ParameterizedTest(name = "[{index}] Заказ {0}")
     void create(S3Ceph product) {
 //        noinspection EmptyTryBlock
         try (S3Ceph ignored = product.createObjectExclusiveAccess()) {}
@@ -32,7 +32,7 @@ public class S3CephTest extends Tests {
     @TmsLinks({@TmsLink("974378"), @TmsLink("974384")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить/Удалить бакет {0}")
+    @ParameterizedTest(name = "[{index}] Добавить/Удалить бакет {0}")
     void addBucket(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs attrs = S3Ceph.BucketAttrs.builder()
@@ -48,7 +48,7 @@ public class S3CephTest extends Tests {
     @TmsLink("974462")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить бакет {0}")
+    @ParameterizedTest(name = "[{index}] Изменить бакет {0}")
     void updateBucket(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs attrs = S3Ceph.BucketAttrs.builder()
@@ -70,7 +70,7 @@ public class S3CephTest extends Tests {
     @TmsLinks({@TmsLink("974387"), @TmsLink("974386")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить/Удалить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Добавить/Удалить пользователя {0}")
     void addUser(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             String userName = new Generex("[a-z]{1}[a-z0-9-]{1,18}[a-z]{1}").random();
@@ -84,7 +84,7 @@ public class S3CephTest extends Tests {
     @TmsLinks({@TmsLink("974389"), @TmsLink("974390")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить/Удалить политику {0}")
+    @ParameterizedTest(name = "[{index}] Добавить/Удалить политику {0}")
     void addPolicy(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
@@ -120,7 +120,7 @@ public class S3CephTest extends Tests {
     @TmsLinks({@TmsLink("1248910"), @TmsLink("1248914"), @TmsLink("1248915")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить/Изменить/Удалить правило жизненного цикла {0}")
+    @ParameterizedTest(name = "[{index}] Добавить/Изменить/Удалить правило жизненного цикла {0}")
     void addRule(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
@@ -151,7 +151,7 @@ public class S3CephTest extends Tests {
     @TmsLink("974392")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить политику {0}")
+    @ParameterizedTest(name = "[{index}] Изменить политику {0}")
     void updatePolicy(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {
             S3Ceph.BucketAttrs bucketAttrs = S3Ceph.BucketAttrs.builder()
@@ -190,7 +190,7 @@ public class S3CephTest extends Tests {
 
     @TmsLink("974393")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(S3Ceph product) {
         try (S3Ceph s3Ceph = product.createObjectExclusiveAccess()) {

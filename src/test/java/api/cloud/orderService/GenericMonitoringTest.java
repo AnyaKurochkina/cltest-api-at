@@ -21,7 +21,7 @@ public class GenericMonitoringTest extends Tests {
     @TmsLink("1731017")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(GenericMonitoring product) {
         //noinspection EmptyTryBlock
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
@@ -31,7 +31,7 @@ public class GenericMonitoringTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void checkActions(GenericMonitoring product) {
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
             Assertions.assertTrue(gm.isActionExist("update_os_vm"));
@@ -41,7 +41,7 @@ public class GenericMonitoringTest extends Tests {
     @TmsLink("1731018")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(GenericMonitoring product) {
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
             gm.expandMountPoint();
@@ -51,7 +51,7 @@ public class GenericMonitoringTest extends Tests {
     @TmsLink("1731020")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(GenericMonitoring product) {
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
             gm.resize(gm.getMaxFlavorLinuxVm());
@@ -60,7 +60,7 @@ public class GenericMonitoringTest extends Tests {
 
     @TmsLink("1731021")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "AD Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
     void checkCreate(GenericMonitoring product) {
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {
             gm.checkCertsBySsh();
@@ -69,7 +69,7 @@ public class GenericMonitoringTest extends Tests {
 
     @TmsLink("1731022")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(GenericMonitoring product) {
         try (GenericMonitoring gm = product.createObjectExclusiveAccess()) {

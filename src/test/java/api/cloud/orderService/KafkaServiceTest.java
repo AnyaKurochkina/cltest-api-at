@@ -24,7 +24,7 @@ public class KafkaServiceTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1232494")
-    @ParameterizedTest(name = "Создание {0}")
+    @ParameterizedTest(name = "[{index}] Создание {0}")
     void create(KafkaService product) {
         //noinspection EmptyTryBlock
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {}
@@ -32,7 +32,7 @@ public class KafkaServiceTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLinks({@TmsLink("1232495"), @TmsLink("1232497")})
-    @ParameterizedTest(name = "Создание/удаление acl {0}")
+    @ParameterizedTest(name = "[{index}] Создание/удаление acl {0}")
     void createAcl(KafkaService product) {
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {
             kafkaService.createAclRole("cert1", KafkaRoles.CONSUMER);
@@ -42,7 +42,7 @@ public class KafkaServiceTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLinks({@TmsLink("1232500"), @TmsLink("1232501")})
-    @ParameterizedTest(name = "Создание/удаление acl группы {0}")
+    @ParameterizedTest(name = "[{index}] Создание/удаление acl группы {0}")
     void createAclGroup(KafkaService product) {
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {
             kafkaService.createAclGroup("1418_topic_name_consumergroup_group");
@@ -52,7 +52,7 @@ public class KafkaServiceTest extends Tests {
 
     @TmsLink("1232502")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удаление {0}")
+    @ParameterizedTest(name = "[{index}] Удаление {0}")
     @MarkDelete
     void delete(KafkaService product) {
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {

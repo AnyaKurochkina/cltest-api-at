@@ -144,7 +144,7 @@ public class OrganizationTariffPlanTest extends Tests {
 
     @Order(6)
     @TmsLink("531467")
-    @ParameterizedTest(name = "Активация и Архивация (без update_orders)")
+    @ParameterizedTest(name = "[{index}] Активация и Архивация (без update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     void activateTariffPlanWithoutUpdateOrders(Astra product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";
@@ -176,7 +176,7 @@ public class OrganizationTariffPlanTest extends Tests {
 
     @Order(7)
     @TmsLink("531468")
-    @ParameterizedTest(name = "Активация и Архивация (с update_orders)")
+    @ParameterizedTest(name = "[{index}] Активация и Архивация (с update_orders)")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     void activateTariffPlanWithUpdateOrders(Astra product) {
         String tariffPlanIdPath = "attrs.tariff_plan_id";

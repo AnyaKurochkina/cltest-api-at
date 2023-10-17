@@ -25,7 +25,7 @@ public class NginxAstraTest extends Tests {
 
     @TmsLink("846594")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Nginx product) {
         //noinspection EmptyTryBlock
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
@@ -35,7 +35,7 @@ public class NginxAstraTest extends Tests {
     @TmsLink("846597")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.expandMountPoint();
@@ -46,7 +46,7 @@ public class NginxAstraTest extends Tests {
     @TmsLink("846600")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.restart();
@@ -57,7 +57,7 @@ public class NginxAstraTest extends Tests {
     @TmsLink("846599")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.stopSoft();
@@ -68,7 +68,7 @@ public class NginxAstraTest extends Tests {
     @TmsLink("846596")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
 //            nginx.stopHard();
@@ -84,7 +84,7 @@ public class NginxAstraTest extends Tests {
     @TmsLinks({@TmsLink("846595"), @TmsLink("846598")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.stopHard();
@@ -94,7 +94,7 @@ public class NginxAstraTest extends Tests {
 
     @TmsLink("1127039")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    @ParameterizedTest(name = "[{index}] Обновить сертификаты {0}")
     void updateCerts(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             nginx.updateCerts();
@@ -103,7 +103,7 @@ public class NginxAstraTest extends Tests {
 
     @TmsLink("847277")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "AD Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
     void checkCreate(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {
             assertContains(nginx.executeSsh("sudo systemctl status nginx | grep active"), "Active: active (running)");
@@ -112,7 +112,7 @@ public class NginxAstraTest extends Tests {
 
     @TmsLink("846593")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Nginx product) {
         try (Nginx nginx = product.createObjectExclusiveAccess()) {

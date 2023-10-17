@@ -1,43 +1,48 @@
 {
 	"order": {
-		"project_name": "proj-aydi9thv3w",
-		"product_id": "28bed880-2714-4317-a967-d000d492bd9d",
 		"attrs": {
-			"domain": "corp.dev.vtb",
-			"flavor": {
-				"cpus": 2,
-				"name": "c2m4",
-				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-				"memory": 4
-			},
-			"features": [],
-			"pagefile": "Automatically manage paging file size for all drives",
-			"platform": "vSphere",
-			"boot_disk": {
-				"path": "C",
-				"size": 80,
-				"file_system": "ntfs"
-			},
-			"extra_nics": [],
-			"on_support": false,
-			"os_version": "2016",
-			"role": "rep_point",
-			"data_center": "5",
-			"default_nic": {
-				"net_segment": "dev-srv-app"
-			},
-			"extra_disks": [],
 			"ad_integration": true,
 			"ad_logon_grants": [
 				{
-					"role": "Administrators",
 					"groups": [
-						"cloud-dmcrux-testgroup100"
-					]
+						"cloud-zorg-frsxg"
+					],
+					"role": "Administrators"
 				}
-			]
+			],
+			"boot_disk": {
+				"file_system": "ntfs",
+				"path": "C",
+				"size": 80
+			},
+			"data_center": "50",
+			"default_nic": {
+				"net_segment": "test-srv-perf"
+			},
+			"domain": "test.vtb.ru",
+			"extra_disks": [
+			],
+			"extra_nics": [
+			],
+			"features": [
+				"TelnetClient"
+			],
+			"flavor": {
+				"cpus": 2,
+				"memory": 4,
+				"name": "c2m4",
+				"uuid": "3dfab004-286c-4f39-9932-baf865756a23"
+			},
+			"on_support": true,
+			"os_version": "2016",
+			"pagefile": "Automatically manage paging file size for all drives",
+			"platform": "OpenStack",
+			"role": "generic_application"
 		},
 		"count": 1,
-		"label": "Windows server_0001"
+		"label": "Windows server",
+		"lifetime": null,
+		"product_id": "9b54fdfc-6a57-4bae-9a9a-c6eebb42e4dc",
+		"project_name": ""
 	}
 }

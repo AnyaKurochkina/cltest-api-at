@@ -22,7 +22,7 @@ public class UbuntuTest extends Tests {
 
     @TmsLink("391696")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Ubuntu product) {
         //noinspection EmptyTryBlock
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
@@ -32,7 +32,7 @@ public class UbuntuTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void checkActions(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             Assertions.assertTrue(ubuntu.isActionExist("update_os_vm"));
@@ -42,7 +42,7 @@ public class UbuntuTest extends Tests {
     @TmsLink("391706")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.expandMountPoint();
@@ -53,7 +53,7 @@ public class UbuntuTest extends Tests {
     @TmsLink("391692")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.restart();
@@ -64,7 +64,7 @@ public class UbuntuTest extends Tests {
     @TmsLink("391695")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.stopSoft();
@@ -75,7 +75,7 @@ public class UbuntuTest extends Tests {
     @TmsLink("391697")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.resize(ubuntu.getMaxFlavorLinuxVm());
@@ -85,7 +85,7 @@ public class UbuntuTest extends Tests {
     @TmsLink("654208")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Проверить конфигурацию {0}")
     void refreshVmConfig(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.refreshVmConfig();
@@ -96,7 +96,7 @@ public class UbuntuTest extends Tests {
     @TmsLinks({@TmsLink("391693"), @TmsLink("391694")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.stopHard();
@@ -106,7 +106,7 @@ public class UbuntuTest extends Tests {
 
     @TmsLink("1090961")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Проверка прав у ролей пользователя {0}")
     void checkCreate(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.checkUserGroupBySsh();
@@ -116,7 +116,7 @@ public class UbuntuTest extends Tests {
     @TmsLink("391691")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Ubuntu product) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
