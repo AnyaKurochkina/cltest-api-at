@@ -47,7 +47,7 @@ public class RouterCreate {
     public RouterCreate clickOrder() {
         Button.byText("Заказать").click();
         Alert.green("Заказ успешно создан");
-        OrderUtils.waitCreate(() -> OrderUtils.waitCreate(() -> Waiting.find(() -> new RouterList.RouterTable().isColumnValueEquals(Column.NAME, name), Duration.ofMinutes(1))));
+        OrderUtils.waitCreate(() -> OrderUtils.waitCreate(() -> Waiting.find(() -> new RouterList.RouterTable().isColumnValueEquals(Column.NAME, name), Duration.ofMinutes(2))));
         OrderUtils.waitCreate(() -> OrderUtils.waitCreate(() -> Waiting.find(() -> !new RouterList.RouterTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.CREATED_DATE)

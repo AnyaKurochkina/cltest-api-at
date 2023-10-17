@@ -12,6 +12,7 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -28,8 +29,19 @@ import static steps.stateService.StateServiceSteps.*;
 @Tag("state_service")
 @Epic("State Service")
 @Feature("State Service api")
-@DisabledIfEnv("prod")
 public class StateServiceTest extends Tests {
+
+    @Test
+    @Disabled("Для вычисления длительности выполнения узлов при заказе/действии")
+    public void getStateServiceNodesDuration() {
+        String[] actions = new String[] {"de2fb5b7-9211-43ca-afac-8c2166dee386", "5ee959c1-253d-4669-94a6-5de3fedceeab", "d0c6ef6b-5965-4f79-a9c0-f71f2f8a64f4",
+                "b742cda5-48ec-4b41-ba4e-7d118df134e6", "a5cb7230-d5ad-4203-8ef3-37fdea373b97", "b6a72062-07e5-48f9-9bb6-77a29ae1ed34", "02216196-46c5-42a4-a2f0-e694425e90b9",
+                "f0d577a6-e663-4a68-8edc-28da87b29ec9", "6b71cf6f-5599-43ef-b85c-d28c4f8fdddf", "1facc47d-79b2-4b55-9b8e-e1736358354f", "5cd1539b-6a02-4959-b9a8-c22e38303fb2",
+                "30b82f8d-0e9f-4b3f-8994-13a101025d57", "7ec1ffba-1307-496a-bf59-d0aa3d5d8962", "e715f1fb-51e7-43ee-8280-acffdf013c90", "aab6cfb3-17b8-4785-8d68-9aed2fff7bd3",
+                "3519e4e3-4692-4b1e-9795-6699630dd28d", "521e508e-5100-4276-b9f2-4fd00f12befe", "a8e40fda-619b-47ff-b555-2bcf0a0cef8d", "cbfb8672-fd37-4d0b-88ac-d7b87f9b5b7f",
+                "e481d162-1303-44ef-bc72-fe84500e41c0"};
+        getNodesDuration(actions);
+    }
 
     @Test
     @DisplayName("Получение данных версии State Service")

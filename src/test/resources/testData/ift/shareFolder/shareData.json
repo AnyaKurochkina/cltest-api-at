@@ -35,31 +35,22 @@
     "objectClassName": "models.cloud.authorizer.Project",
     "informationSystem": "9cef3ede-fd3f-407f-bbed-9767e700036e",
     "objectUid": "65084264-7c43-4c69-9b30-8933b66ba4d2",
-    "id": "proj-pkvckn08w9",
+    "id": "proj-gxsz4e3shy",
     "projectName": "DEV",
     "projectEnvironmentPrefix": {
       "env": "DEV",
-      "id": "ccdf17a9-b2a6-4d23-9f7b-af5cc4575839",
+      "id": "6c830df1-37b7-45b3-9b90-ccac3967663f",
       "envType": "DEV",
       "projectEnvironmentId": "447044a8-00ae-486e-8e59-6136353ca4ce"
     },
     "isForOrders": true
   },
   {
-    "objectClassName": "models.cloud.portalBack.AccessGroup",
-    "prefixName": "cloud-plux-group-at",
-    "user": "",
-    "isDeleted": false,
-    "projectName": "proj-pkvckn08w9",
-    "objectUid": "f3df42af-9cb6-42c7-b409-3c05b173f575",
-    "isForOrders": true
-  },
-  {
     "objectClassName": "models.cloud.authorizer.ServiceAccount",
-    "id": "sa_proj-pkvckn08w9-1u",
-    "secret": "264e60c838ca8a02f5fa6be835b01a32",
+    "id": "sa_proj-gxsz4e3shy-ey",
+    "secret": "50664a1dd61942b7c909c2bb0cd8ba7c",
     "isDeleted": false,
-    "projectId": "proj-pkvckn08w9",
+    "projectId": "proj-gxsz4e3shy",
     "role": "roles/order-service.admin",
     "isForOrders": true
   },

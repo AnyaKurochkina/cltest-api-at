@@ -32,12 +32,8 @@ public class SecurityGroupList {
         return this;
     }
 
-    public void markForDeletion(){
-        AbstractEntity.addEntity(new AbstractComputeTest.SecurityGroupEntity());
-    }
-
     public void markForDeletion(AbstractEntity.Mode mode){
-        AbstractEntity.addEntity(new AbstractComputeTest.SecurityGroupEntity().setMode(mode));
+        new AbstractComputeTest.SecurityGroupEntity().deleteMode(mode);
     }
 
     public void deleteGroup(String name) {

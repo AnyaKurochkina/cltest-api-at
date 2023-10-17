@@ -48,7 +48,7 @@ public class DeleteDialog extends Dialog {
     @Step("Проверка недоступности удаления и текста уведомления")
     public void submitAndCheckNotDeletable(String alertText) {
         deleteButton.shouldBe(Condition.enabled).click();
-        Alert.red(alertText);
+        new Alert().check(Alert.Color.RED, alertText);
     }
 
     @Step("Проверка недоступности удаления и текста уведомления")

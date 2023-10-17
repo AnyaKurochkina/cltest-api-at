@@ -58,4 +58,10 @@ public class AssertUtils {
                 fail(String.format("Текст '%s' не найден в '%s'", str, text));
             }
     }
+    public static void assertNotContains(String text, String... strings) {
+        for (String str : strings)
+            if (text.contains(str)) {
+                fail(String.format("Текст '%s' найден в '%s'", str, text));
+            }
+    }
 }

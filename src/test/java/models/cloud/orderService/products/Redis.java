@@ -153,4 +153,7 @@ public class Redis extends IProduct {
         delete("delete_two_layer");
     }
 
+    public void updateOsStandalone() {
+        OrderServiceSteps.executeAction("update_os_standalone", this, null, this.getProjectId());
+    }
 }

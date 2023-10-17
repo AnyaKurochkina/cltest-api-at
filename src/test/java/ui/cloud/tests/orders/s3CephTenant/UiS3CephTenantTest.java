@@ -46,6 +46,7 @@ public class UiS3CephTenantTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             S3CephTenantOrderPage orderPage = new S3CephTenantOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())
@@ -175,6 +176,15 @@ public class UiS3CephTenantTest extends UiProductTest {
 
     @Test
     @Order(14)
+    @TmsLink("891777")
+    @DisplayName("UI S3CephTenant. Удалить политику")
+    void deleteAccessPolicy() {
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage(product);
+        s3CepthPages.runActionWithCheckCost(CompareType.EQUALS, () -> s3CepthPages.deleteAccessPolicy());
+    }
+
+    @Test
+    @Order(15)
     @TmsLink("891770")
     @DisplayName("UI S3CephTenant. Удалить бакет")
     void deleteBucket() {
@@ -183,7 +193,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     }
 
     @Test
-    @Order(15)
+    @Order(16)
     @TmsLink("891774")
     @DisplayName("UI S3CephTenant. Удалить пользователя")
     void deleteUser() {

@@ -111,13 +111,17 @@ public interface TypifiedElement {
     }
 
     static void openPage(String url) {
-        try {
-            Selenide.open(url);
-        } catch (WebDriverException e) {
-            if (WebDriverRunner.getWebDriver().getCurrentUrl().equals(url))
-                return;
-        }
+        open(url);
         Tests.getPostLoadPage().run();
         checkProject();
+    }
+
+    /**
+     * Открытие страницы и игнорирование WebDriverException (баг в ChromeDriver)
+     */
+    static void open(String url) {
+        try {
+            Selenide.open(url);
+        } catch (WebDriverException ignored) {}
     }
 }

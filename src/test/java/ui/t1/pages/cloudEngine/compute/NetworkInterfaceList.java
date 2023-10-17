@@ -2,9 +2,9 @@ package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.elements.*;
-import ui.t1.pages.cloudEngine.Column;
 
 import java.util.Arrays;
 import java.util.List;
@@ -37,9 +37,13 @@ public class NetworkInterfaceList extends IProductListT1Page {
     }
 
     public void addInSecurityGroup(String group){
-        final String action = "Добавить в группу безопасности";
-        Button.byText(action).click();
-        Dialog.byTitle(action).setSelectValue("Название", group).clickButton("Добавить");
+        Button.byText("Добавить в группу безопасности").click();
+        Dialog.byTitle("Добавить группу безопасности").setSelectValue("Название", group).clickButton("Добавить");
+    }
+
+    public void deleteFromSecurityGroup(String group){
+        Button.byText("Исключить из группы безопасности").click();
+        Dialog.byTitle("Удалить группу безопасности").setSelectValue("Название", group).clickButton("Удалить");
     }
 
     public class Menu {
@@ -64,11 +68,24 @@ public class NetworkInterfaceList extends IProductListT1Page {
             });
         }
 
-        @Step("Изменить группы безопасности на {groups}")
-        public void updateSubnet(String subnet) {
+        @Step("Изменить группы безопасности на {network} {subnet}")
+        public void updateSubnet(String network, String subnet) {
             runActionWithParameters(btn, "Изменить подсеть", "Подтвердить", () -> {
                 Dialog.byTitle("Изменить подсеть");
                 Select.byLabel("Подсеть").setStart(subnet);
+            });
+        }
+
+        @Step("Изменить группы безопасности на {network} {subnet} c {ip}")
+        public void updateSubnet(String network, String subnet, String ip) {
+            runActionWithParameters(btn, "Изменить подсеть", "Подтвердить", () -> {
+                Dialog.byTitle("Изменить подсеть");
+                Waiting.sleep(2000);
+                Select.byLabel("Сеть").setStart(network);
+                Waiting.sleep(2000);
+                Select.byLabel("Подсеть").setStart(subnet);
+                Switch.byText("Задать IP адрес сетевого интерфейса").setEnabled(true);
+                Input.byPlaceholder("0.0.0.0").setValue(ip);
             });
         }
     }

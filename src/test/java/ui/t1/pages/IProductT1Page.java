@@ -62,8 +62,8 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     }
 
     @SuppressWarnings("unchecked")
-    public C markForDeletion(AbstractEntity entity) {
-        AbstractEntity.addEntity(entity);
+    public C markForDeletion(AbstractEntity entity, AbstractEntity.Mode mode) {
+        entity.deleteMode(mode);
         return (C) this;
     }
 

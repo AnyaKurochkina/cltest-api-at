@@ -7,6 +7,7 @@ import core.utils.Waiting;
 import lombok.Builder;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 
 import java.io.*;
@@ -47,8 +48,8 @@ public class SshClient {
             channel.connect();
             if (!Waiting.sleep(channel::isClosed, Duration.ofMinutes(1)))
                 log.debug("SSH Соединение будет закрыто принудительно");
-            String res = out.toString();
-            log.debug("SSH response: {}", res);
+            String res = out.toString().replaceAll("[ \t\r\n]+$", "");
+            log.debug("SSH response: '{}'", res);
             return res;
         } catch (JSchException e){
             log.debug("SSH connect error: {} {} {} {}", host, user, password, privateKey);
@@ -56,10 +57,19 @@ public class SshClient {
         }
     }
 
+    public void writeTextFile(String path, String text){
+        Assertions.assertEquals("", execute("echo '{}' > {}", escapeShell(text), path));
+    }
+
+    private String escapeShell(String input) {
+        return input.replace("'", "'\\''");
+    }
+
     private Channel initChannel(String commands, Session session) throws JSchException {
         Channel channel = session.openChannel("exec");
         ChannelExec channelExec = (ChannelExec) channel;
         channelExec.setCommand(commands);
+        out.reset();
         channelExec.setOutputStream(out);
         channelExec.setErrStream(out);
         return channel;

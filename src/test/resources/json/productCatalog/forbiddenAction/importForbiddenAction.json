@@ -1,1 +1,150 @@
-{"model_name": "ForbiddenAction", "ForbiddenAction": {"id": 909, "context_restrictions": [], "event_type_provider": [{"event_type": "bm", "event_provider": "s3"}], "name": "qwztfr__parent_to_child", "title": "import_forbidden_action_test_api", "description": "Description", "item_restriction": "string", "object_info": "", "direction": "parent_to_child", "action_id": "bed68596-acd6-4da3-87d5-6981dd5348fc", "action": "bed68596-acd6-4da3-87d5-6981dd5348fc"}, "rel_foreign_models": {"action": {"model_name": "Action", "Action": {"graph_id": "7410f7c1-cde9-4031-8627-5a6b614c9a0e", "multiple": false, "priority": 0, "extra_data": {}, "object_info": "", "graph_version": "", "data_config_key": null, "data_config_path": null, "item_restriction": null, "skip_item_change": false, "skip_reservation": false, "data_config_fields": [], "skip_on_prebilling": false, "location_restriction": "", "graph_version_pattern": "", "skip_validate_checker": false, "auto_removing_if_failed": false, "available_without_money": false, "skip_restriction_service": false, "ignore_restriction_service": false, "skip_request_resource_pools": false, "available_with_cost_reduction": false, "current_version": "", "context_restrictions": [], "event_type_provider": [{"event_type": "bm", "event_provider": "s3"}], "name": "qwztfr", "title": "AT API Action", "description": "desc", "number": 50, "is_safe": false, "is_delayable": false, "skip_item_with_secondary_rel": false, "type": "", "allowed_groups": [], "restricted_groups": [], "required_order_statuses": [], "required_item_statuses": [], "allowed_developers": [], "restricted_developers": [], "version_arr": [1, 0, 0], "last_version_str": "1.0.0", "icon_store_id": null, "icon_store": null}, "rel_foreign_models": {"graph": {"model_name": "Graph", "Graph": {"author": "AT API", "output": {}, "ui_schema": {}, "json_schema": {}, "object_info": "", "static_data": {}, "modifications": [], "printed_output": {}, "lock_order_on_error": false, "damage_order_on_error": false, "current_version": "", "name": "graph_for_action_api_test", "title": "AT API Graph", "description": "for at tests", "type": "action", "allowed_developers": [], "restricted_developers": [], "default_item": {}, "version_arr": [1, 0, 0], "last_version_str": "1.0.0"}, "rel_foreign_models": {}, "rel_revers_models": {"nodes": []}}}}}, "exported_objects": {"Graph": {"{\"last_version_str\": \"1.0.0\", \"name\": \"graph_for_action_api_test\", \"version\": \"1.0.0\"}": [{"graph_version": "LAST", "last_version_str": "1.0.0", "model_name": "Action", "name": "qwztfr", "version": "1.0.0"}]}, "Action": {"{\"last_version_str\": \"1.0.0\", \"name\": \"qwztfr\", \"version\": \"1.0.0\"}": [{"action_version": "LAST", "direction": "parent_to_child", "event_type_provider": [{"event_type": "bm", "event_provider": "s3"}], "model_name": "ForbiddenAction", "name": "qwztfr__parent_to_child"}]}, "ForbiddenAction": {"{\"direction\": \"parent_to_child\", \"event_type_provider\": [{\"event_type\": \"bm\", \"event_provider\": \"s3\"}], \"name\": \"qwztfr__parent_to_child\"}": []}}, "dump_version": 5.0, "dump_date": "2023-09-11 13:32:05", "is_pinned_versions": false}
+{
+  "model_name": "ForbiddenAction",
+  "ForbiddenAction": {
+    "id": 944,
+    "context_restrictions": [],
+    "event_type_provider": [
+      {
+        "event_type": "bm",
+        "event_provider": "s3"
+      }
+    ],
+    "name": "gvqqxp__parent_to_child",
+    "title": "import_forbidden_action_test_api",
+    "description": "Description",
+    "item_restriction": "string",
+    "object_info": "",
+    "direction": "parent_to_child",
+    "action_id": "3c9d95b8-9b3a-4154-bdb4-c15c8686dc96",
+    "action": "3c9d95b8-9b3a-4154-bdb4-c15c8686dc96"
+  },
+  "rel_foreign_models": {
+    "action": {
+      "model_name": "Action",
+      "Action": {
+        "graph_id": "e1104bfb-b960-4a2c-bf07-3755086f4da2",
+        "multiple": false,
+        "priority": 0,
+        "extra_data": {},
+        "object_info": "",
+        "graph_version": "",
+        "data_config_key": null,
+        "data_config_path": null,
+        "item_restriction": null,
+        "skip_item_change": false,
+        "skip_reservation": false,
+        "data_config_fields": [],
+        "skip_on_prebilling": false,
+        "location_restriction": "",
+        "graph_version_pattern": "",
+        "skip_validate_checker": false,
+        "auto_removing_if_failed": false,
+        "available_without_money": false,
+        "skip_restriction_service": false,
+        "ignore_restriction_service": false,
+        "skip_request_resource_pools": false,
+        "available_with_cost_reduction": false,
+        "current_version": "",
+        "context_restrictions": [],
+        "event_type_provider": [
+          {
+            "event_type": "bm",
+            "event_provider": "s3"
+          }
+        ],
+        "name": "gvqqxp",
+        "title": "AT API Action",
+        "description": "desc",
+        "number": 50,
+        "is_safe": false,
+        "is_delayable": false,
+        "skip_item_with_secondary_rel": false,
+        "type": "",
+        "allowed_groups": [],
+        "restricted_groups": [],
+        "required_order_statuses": [],
+        "required_item_statuses": [],
+        "allowed_developers": [],
+        "restricted_developers": [],
+        "version_arr": [
+          1,
+          0,
+          0
+        ],
+        "last_version_str": "1.0.0",
+        "icon_store_id": null,
+        "icon_store": null
+      },
+      "rel_foreign_models": {
+        "graph": {
+          "model_name": "Graph",
+          "Graph": {
+            "author": "AT API",
+            "output": {},
+            "ui_schema": {},
+            "json_schema": {},
+            "object_info": "",
+            "static_data": {},
+            "modifications": [],
+            "printed_output": {},
+            "lock_order_on_error": false,
+            "damage_order_on_error": false,
+            "current_version": "",
+            "name": "import_forbidden_action_test",
+            "title": "AT API Graph",
+            "description": "for at tests",
+            "type": "action",
+            "allowed_developers": [],
+            "restricted_developers": [],
+            "default_item": {},
+            "version_arr": [
+              1,
+              0,
+              0
+            ],
+            "last_version_str": "1.0.0"
+          },
+          "rel_foreign_models": {},
+          "rel_revers_models": {
+            "nodes": []
+          }
+        }
+      }
+    }
+  },
+  "exported_objects": {
+    "Graph": {
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"graph_for_action_api_test\", \"version\": \"1.0.0\"}": [
+        {
+          "graph_version": "LAST",
+          "last_version_str": "1.0.0",
+          "model_name": "Action",
+          "name": "gvqqxp",
+          "version": "1.0.0"
+        }
+      ]
+    },
+    "Action": {
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"gvqqxp\", \"version\": \"1.0.0\"}": [
+        {
+          "action_version": "LAST",
+          "direction": "parent_to_child",
+          "event_type_provider": [
+            {
+              "event_type": "bm",
+              "event_provider": "s3"
+            }
+          ],
+          "model_name": "ForbiddenAction",
+          "name": "gvqqxp__parent_to_child"
+        }
+      ]
+    },
+    "ForbiddenAction": {
+      "{\"direction\": \"parent_to_child\", \"event_type_provider\": [{\"event_type\": \"bm\", \"event_provider\": \"s3\"}], \"name\": \"gvqqxp__parent_to_child\"}": []
+    }
+  },
+  "dump_version": 5.0,
+  "dump_date": "2023-09-27 10:39:53",
+  "is_pinned_versions": false
+}

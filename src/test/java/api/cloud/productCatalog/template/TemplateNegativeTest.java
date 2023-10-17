@@ -62,7 +62,7 @@ public class TemplateNegativeTest extends Tests {
                 .build()
                 .toJson();
         String errorMessage = createTemplate(template).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Template не может быть создан с таким type", errorMessage);
+        assertEquals("Template cannot be created with this type", errorMessage);
     }
 
     @DisplayName("Негативный тест на частичное обновление шаблона по Id без токена")

@@ -12,6 +12,7 @@ import core.helper.http.Path;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.AbstractEntity;
 import models.ObjectPoolService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.platform.launcher.TestExecutionListener;
@@ -130,6 +131,7 @@ public class TestsExecutionListener implements TestExecutionListener {
 
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
+        AbstractEntity.deleteTestRunEntities();
         if (Configure.isIntegrationTestIt())
             RunningHandler.finishLaunch();
         ObjectPoolService.saveEntities(Configure.getAppProp("data.folder") + "/shareFolder/logData.json");

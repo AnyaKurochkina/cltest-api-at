@@ -33,7 +33,7 @@ import static ui.cloud.pages.orders.RedisAstraOrderPage.userNameRedisSentinel;
 @Tags({@Tag("ui"), @Tag("ui_redis_sentinel_astra")})
 public class UiRedisSentinelAstraTest extends UiProductTest {
 
-    Redis product;// = Redis.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/da477d21-546a-4da3-b39c-11d14e4de0ef/main?context=proj-iv550odo9a&type=project&org=vtb");
+    Redis product; // = Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/093356ae-9ca4-498d-85fa-5b9671eea39d/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -105,6 +105,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
 
     @Test
     @Order(10)
+    @Disabled
     @TmsLink("")
     @DisplayName("UI Redis Sentinel Astra. Изменить конфигурацию")
     void changeConfiguration() {

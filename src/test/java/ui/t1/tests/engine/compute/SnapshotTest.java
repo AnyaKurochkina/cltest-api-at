@@ -4,6 +4,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.AbstractEntity;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -37,12 +38,12 @@ public class SnapshotTest extends AbstractComputeTest {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
                 .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setSshKey(sshKey).clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity()).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
-        Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity()).checkCreate(true);
+        Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         snapshot.createDisk(vm.getName());
-        Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
+        Disk createdDisk = new IndexPage().goToDisks().selectDisk(vm.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderIdDisk = createdDisk.getOrderId();
 
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
@@ -59,9 +60,9 @@ public class SnapshotTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Снимки. Удалить")
     void deleteSnapshot() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setSize(11L).setAvailabilityZone(availabilityZone).setName(getRandomName()).clickOrder();
-        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity()).checkCreate(true);
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(disk.getName()));
-        Snapshot snapshotPage = new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).markForDeletion(new SnapshotEntity()).checkCreate(true);
+        Snapshot snapshotPage = new IndexPage().goToSnapshots().selectSnapshot(disk.getName()).markForDeletion(new SnapshotEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         snapshotPage.switchProtectOrder(true);
         snapshotPage.delete();
 

@@ -306,10 +306,13 @@ public abstract class IProduct extends Entity {
         }
     }
 
+    public boolean isActionExist(String action){
+        return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name == '%s'}", action));
+    }
 
     protected void checkConnectDb(String dbName, String user, String password, String url) throws ConnectException {
         String connectUrl = "jdbc:" + url + "/" + dbName;
-        Connection connection = null;
+        Connection connection;
         try {
             connection = DriverManager.getConnection(connectUrl, user, password);
             Assertions.assertTrue(Objects.requireNonNull(connection, "Подключение не создалось по url: " + connectUrl).isValid(1));

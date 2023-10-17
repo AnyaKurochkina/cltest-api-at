@@ -5,6 +5,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.QueryBuilder;
 import io.qameta.allure.Step;
+import models.AbstractEntity;
 import org.json.JSONObject;
 
 import static api.routes.SecretServiceAdminAPI.*;
@@ -14,7 +15,8 @@ public class SecretServiceAdminSteps {
 
     @Step("Создание секрета")
     public static SecretResponse postV1Secrets(Secret secret) {
-        return Http.builder().setRole(Role.SUPERADMIN).body(serialize(secret)).api(postV1Secrets).extractAs(SecretResponse.class, true);
+        return Http.builder().setRole(Role.SUPERADMIN).body(serialize(secret)).api(postV1Secrets).extractAs(SecretResponse.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Удаление секрета {secretId}")

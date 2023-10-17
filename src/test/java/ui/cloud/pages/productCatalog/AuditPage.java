@@ -16,6 +16,7 @@ import ui.elements.*;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static core.helper.StringUtils.getClipBoardText;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
@@ -158,13 +159,6 @@ public class AuditPage extends EntityPage {
     }
 
     @Step("Проверка отсутствия записей в аудите")
-    public AuditPage checkRecordsNotFound() {
-        Waiting.sleep(1000);
-        Assertions.assertTrue(new Table("Учетная запись").isEmpty());
-        return this;
-    }
-
-    @Step("Проверка отсутствия записей в аудите")
     public AuditPage checkRecordsNotFoundV2() {
         $x("//td[text()='Нет данных для отображения']").shouldBe(Condition.visible);
         return this;
@@ -182,15 +176,15 @@ public class AuditPage extends EntityPage {
     public AuditPage checkCopyToClipboard(String value, String contextId) {
         openRecordByContextId(contextId);
         copyDataButton.getButton().scrollIntoView(scrollCenter).click();
-        Assertions.assertTrue(StringUtils.getClipBoardText().contains(this.contextId.getText()));
+        Assertions.assertTrue(getClipBoardText().contains(this.contextId.getText()));
         copyAddressButton.click();
-        Assertions.assertEquals(StringUtils.getClipBoardText(), address.getText());
+        Assertions.assertEquals(getClipBoardText(), address.getText());
         if (!request.$x(".//i").exists()) {
             copyRequestButton.click();
-            Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
+            Assertions.assertTrue(getClipBoardText().contains(value));
         }
         copyResponseButton.click();
-        Assertions.assertTrue(StringUtils.getClipBoardText().contains(value));
+        Assertions.assertTrue(getClipBoardText().contains(value));
         return this;
     }
 
@@ -329,8 +323,8 @@ public class AuditPage extends EntityPage {
     private void openRecordByResponse(String value) {
         Table table = new Table("Учетная запись");
         for (SelenideElement row : table.getRows()) {
-            if (this.response.exists() && this.response.getText().contains(value)) break;
             row.scrollIntoView(scrollCenter).click();
+            if (this.response.exists() && this.response.getText().contains(value)) break;
         }
     }
 }

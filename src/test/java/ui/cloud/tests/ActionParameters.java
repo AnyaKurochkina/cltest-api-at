@@ -10,6 +10,8 @@ import java.time.Duration;
 @Data
 public class ActionParameters {
     @Builder.Default
+    boolean isSimpleAction = false;
+    @Builder.Default
     boolean clickCancel = false;
     @Builder.Default
     boolean checkPreBilling = true;
@@ -19,6 +21,6 @@ public class ActionParameters {
     boolean checkAlert = true;
     @Builder.Default
     boolean waitChangeStatus = true;
-    Duration timeOut;
+    Duration timeout;
     SelenideElement node;
 }

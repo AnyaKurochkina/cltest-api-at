@@ -47,6 +47,7 @@ public class OrderServiceSteps extends Steps {
         while ((orderStatus.equals("pending") || orderStatus.equals("") || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(20000);
             Response res = new Http(OrderServiceURL)
+                    .disableAttachmentLog()
                     .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                     .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                     .assertStatus(200);
@@ -73,6 +74,7 @@ public class OrderServiceSteps extends Steps {
 
     public static String getStatus(IProduct product) {
         return new Http(OrderServiceURL)
+                .disableAttachmentLog()
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
                 .assertStatus(200)
@@ -206,7 +208,7 @@ public class OrderServiceSteps extends Steps {
 
     public static void switchProtect(String orderId, String projectId, boolean value) {
         Assertions.assertEquals(!value, new Http(OrderServiceURL)
-//                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                .disableAttachmentLog()
                 .setRole(CLOUD_ADMIN)
                 .body(new JSONObject().put("order", new JSONObject().put("deletable", !value)))
                 .patch("/v1/projects/{}/orders/{}", projectId, orderId)
@@ -323,9 +325,10 @@ public class OrderServiceSteps extends Steps {
         String actionStatus = "";
         int counter = 60;
         log.info("Проверка статуса выполнения действия");
-        while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.equals("")) && counter > 0) {
-            Waiting.sleep(20000);
+        while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.isEmpty()) && counter > 0) {
+            Waiting.sleep(25000);
             actionStatus = new Http(OrderServiceURL)
+                    .disableAttachmentLog()
                     .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                     .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), action_id)
                     .assertStatus(200)
@@ -474,6 +477,7 @@ public class OrderServiceSteps extends Steps {
         log.info("Получение статуса для для продукта " + Objects.requireNonNull(product));
         //Отправка запроса на получение айтема
         JsonPath jsonPath = new Http(OrderServiceURL)
+                .disableAttachmentLog()
                 .setProjectId(Objects.requireNonNull(product).getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
                 .assertStatus(200)
@@ -538,13 +542,18 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение сетевого сегмента для продукта {product}")
     public static String getNetSegment(IProduct product) {
-        return Objects.requireNonNull(new Http(OrderServiceURL)
+        String segment = "dev-srv-app";
+        List<String> list =  new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/net_segments?project_name={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         Objects.requireNonNull(product).getProjectId(), product.getProductCatalogName())
                 .assertStatus(200)
                 .jsonPath()
-                .getString("list[0].code"), "Список сетевых сегментов пуст");
+                .getList("list.findAll{it.status == 'available'}.code");
+        if (list.contains(segment))
+            return segment;
+        Assertions.assertFalse(list.isEmpty(), "Список available Segment пуст");
+        return list.get(0);
     }
 
     @Step("Удаление всех заказов")

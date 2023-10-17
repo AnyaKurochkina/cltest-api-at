@@ -84,23 +84,22 @@ public class ContextDialog extends Dialog {
 
     @Step("Сменить контекст на {orgName}")
     public IndexPage changeOrganization(String orgName) {
-        $x("//*[@id='selectValueWrapper']").click();
-        ElementsCollection containsNameOrgs = $$x("//div[contains(text(), '{}')]", orgName);
-        if (containsNameOrgs.size() == 1) {
-            containsNameOrgs.last().shouldBe(Condition.visible).click();
-        } else {
-            $x("//div[text()= '{}']", orgName).shouldBe(Condition.visible).click();
-        }
+        selectOrganization(orgName);
         all.click();
         organization.shouldBe(Condition.visible).click();
-        assertTrue($x("//div[contains(text(), '{}')]", orgName).isDisplayed());
+        assertTrue($x("//*[contains(text(), '{}')]", orgName).isDisplayed());
         return new IndexPage();
     }
 
     @Step("Выбрать огранизацию с именем {orgName}")
     public ContextDialog selectOrganization(String orgName) {
         $x("//*[@id='selectValueWrapper']").click();
-        $x("//div[contains(text(), '{}')]", orgName).shouldBe(Condition.visible).click();
+        ElementsCollection containsNameOrgs = $$x("//*[contains(text(), '{}')]", orgName);
+        if (containsNameOrgs.size() == 1) {
+            containsNameOrgs.last().shouldBe(Condition.visible).click();
+        } else {
+            $x("//*[text()= '{}']", orgName).shouldBe(Condition.visible).click();
+        }
         Waiting.sleep(1000);
         return this;
     }

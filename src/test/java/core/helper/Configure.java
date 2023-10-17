@@ -41,6 +41,9 @@ public class Configure {
     public static String DNSService;
     public static String PowerDns;
     public static String RpcRouter;
+    public static String RestrictionServiceUrl;
+    public static String Budget;
+    public static String SyncService;
 
     static {
         try {
@@ -86,6 +89,9 @@ public class Configure {
             ImageService = KONG_URL + "cloud-images";
             DNSService = KONG_URL + "cloud-dns";
             RpcRouter = KONG_URL + "rpc-django-router";
+            RestrictionServiceUrl = KONG_URL + "restriction-service";
+            Budget = KONG_URL + "budget";
+            SyncService = KONG_URL + "sync-service";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();

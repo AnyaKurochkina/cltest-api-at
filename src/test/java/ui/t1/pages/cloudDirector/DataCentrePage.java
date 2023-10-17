@@ -52,7 +52,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
             CheckBox.byId("root_high_available").setChecked(true);
         }, ActionParameters.builder()
                 .waitChangeStatus(true)
-                .timeOut(Duration.ofMinutes(3))
+                .timeout(Duration.ofMinutes(3))
                 .build());
         Waiting.sleep(5000);
         generalInformation.click();

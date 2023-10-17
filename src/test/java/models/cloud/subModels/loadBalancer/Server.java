@@ -19,4 +19,6 @@ public class Server {
     Integer fall;
     Integer rise;
     Integer inter;
+    String ssl;
+    Integer slowStart;
 }

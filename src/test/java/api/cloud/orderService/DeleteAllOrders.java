@@ -46,7 +46,7 @@ public class DeleteAllOrders extends Tests {
         List<Order> orders = new ArrayList<>();
         List<String> projects = Arrays.asList("proj-ln4zg69jek", "proj-rddf0uwi0q", "proj-ahjjqmlgnm",
                 "proj-bhbyhmik3a", "proj-zoz17np8rb", "proj-114wetem0c", "proj-1oob0zjo5h", "proj-6wpfrbes0g", "proj-aei4kz2yu4",
-                "proj-lcwn3pwg7z", "proj-50duh5yxy6", "proj-xryy5l8ei5", "proj-yhi3rxo07h");
+                "proj-lcwn3pwg7z", "proj-50duh5yxy6", "proj-xryy5l8ei5", "proj-yhi3rxo07h", "proj-5ejgs0vfzf", "proj-nedsjpgpjk");
         if (Configure.ENV.equals("blue")) {
             projects = Arrays.asList("proj-iv550odo9a", "proj-3wgrmny2yu", "proj-td00y68hfk",
                     "proj-anw4ujlh5u", "proj-bw5aabeuw1", "proj-2xdbtyzqs3", "proj-lww1vo6okh", "proj-7w4eov3old", "proj-99p4fdfs5c",
@@ -65,7 +65,7 @@ public class DeleteAllOrders extends Tests {
     @Test
     @DisplayName("Удаление всех успешных заказов T1 Engine")
     void deleteOrdersCompute() {
-        Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> computeEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
+        Map<Path, Class<? extends AbstractEntity>> computeEntities = new HashMap<Path, Class<? extends AbstractEntity>>() {{
             put(getV1ProjectsProjectNameComputeInstances, AbstractComputeTest.InstanceEntity.class);
             put(getV1ProjectsProjectNameComputeVolumes, AbstractComputeTest.VolumeEntity.class);
             put(getV1ProjectsProjectNameComputeImages, AbstractComputeTest.ImageEntity.class);
@@ -74,17 +74,17 @@ public class DeleteAllOrders extends Tests {
             put(getV1ProjectsProjectNameComputeVips, AbstractComputeTest.VipEntity.class);
             put(getV1ProjectsProjectNameComputeSnats, AbstractComputeTest.InstanceEntity.class);
         }};
-        Map<Path, Class<? extends AbstractComputeTest.ComputeEntity>> vpcEntities = new HashMap<Path, Class<? extends AbstractComputeTest.ComputeEntity>>() {{
+        Map<Path, Class<? extends AbstractEntity>> vpcEntities = new HashMap<Path, Class<? extends AbstractEntity>>() {{
             put(getNetworksApiV1ProjectsProjectNameNetworksGet, AbstractComputeTest.NetworkEntity.class);
             put(getSecurityGroupsApiV1ProjectsProjectNameSecurityGroupsGet, AbstractComputeTest.SecurityGroupEntity.class);
         }};
 
         Folder folderPollProject = Folder.builder().title("ProjectPool").build().onlyGetObject();
         for (String projectId : ResourceManagerSteps.getChildren(folderPollProject.getName())) {
-            for (Map.Entry<Path, Class<? extends AbstractComputeTest.ComputeEntity>> entry : computeEntities.entrySet()) {
+            for (Map.Entry<Path, Class<? extends AbstractEntity>> entry : computeEntities.entrySet()) {
                 addComputeEntitiesForRemove(entry.getKey(), projectId, entry.getValue());
             }
-            for (Map.Entry<Path, Class<? extends AbstractComputeTest.ComputeEntity>> entry : vpcEntities.entrySet()) {
+            for (Map.Entry<Path, Class<? extends AbstractEntity>> entry : vpcEntities.entrySet()) {
                 addVpcEntitiesForRemove(entry.getKey(), projectId, entry.getValue());
             }
         }
@@ -92,25 +92,27 @@ public class DeleteAllOrders extends Tests {
     }
 
     @SneakyThrows
-    private static void addComputeEntitiesForRemove(Path path, String projectId, Class<? extends AbstractComputeTest.ComputeEntity> computeEntity) {
+    private static void addComputeEntitiesForRemove(Path path, String projectId, Class<? extends AbstractEntity> computeEntity) {
         List<String> list = Http.builder()
                 .setRole(Role.CLOUD_ADMIN)
                 .api(path, projectId)
                 .jsonPath()
                 .getList("list.order_id");
         for (String id : list)
-            AbstractEntity.addEntity(computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id));
+            computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id)
+                    .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @SneakyThrows
-    private static void addVpcEntitiesForRemove(Path path, String projectId, Class<? extends AbstractComputeTest.ComputeEntity> computeEntity) {
+    private static void addVpcEntitiesForRemove(Path path, String projectId, Class<? extends AbstractEntity> computeEntity) {
         List<String> list = Http.builder()
                 .setRole(Role.CLOUD_ADMIN)
                 .api(path, projectId)
                 .jsonPath()
                 .getList("findAll{it.name != 'default'}.id");
         for (String id : list)
-            AbstractEntity.addEntity(computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id));
+            computeEntity.getDeclaredConstructor(String.class, String.class).newInstance(projectId, id)
+                    .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @AllArgsConstructor

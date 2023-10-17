@@ -37,7 +37,6 @@ public class ActionPage extends EntityPage {
     private final SelenideElement locationInOrderTab = $x("//*[text()= 'Расположение в заказе']");
     private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
     private final SelenideElement paramsTab = $x("//button[span[text()='Параметры']]");
-    private final SelenideElement graphInputField = $x("//*[@id = 'selectValueWrapper']/input");
     private final Select graphVersionDropDown = Select.byLabel("Значение");
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
@@ -198,10 +197,10 @@ public class ActionPage extends EntityPage {
         //TODO DropDown не сразу раскрывается
         for (int i = 0; i < 10; i++) {
             eventTypeDropDown.getElement().$x(".//*[name()='svg']").click();
-            TestUtils.wait(1500);
-            if ($x("//div[text() = '" + eventType.getValue() + "']").isDisplayed()) break;
+            Waiting.sleep(1500);
+            if ($x("//div[. = '" + eventType.getValue() + "']").isDisplayed()) break;
         }
-        $x("//div[text() = '" + eventType.getValue() + "']").click();
+        $x("//div[. = '" + eventType.getValue() + "']").click();
         eventProviderDropDown.set(eventProvider.getValue());
         table.getRow(0).get().$x(".//button[.='Сохранить']").click();
         locationInOrderTab.click();
@@ -210,9 +209,7 @@ public class ActionPage extends EntityPage {
         data.setValue(valueOfData);
         graphTab.click();
         graphInput.click();
-        graphInputField.setValue(graphTitle);
-        TestUtils.wait(1000);
-        $x("//div[contains(text(), '" + graphTitle + "')]").click();
+        graphSelect.setContains(graphTitle);
         TestUtils.scrollToTheBottom();
         saveButton.click();
         backButton.click();

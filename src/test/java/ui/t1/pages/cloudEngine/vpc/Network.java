@@ -28,8 +28,8 @@ public class Network {
         Waiting.findWithRefresh(() -> !new SubnetListInfo().isColumnValueEquals(Column.NOMINATION, subnet), Duration.ofMinutes(1));
     }
 
-    public Network markForDeletion(AbstractComputeTest.NetworkEntity entity) {
-        AbstractEntity.addEntity(entity);
+    public Network markForDeletion(AbstractComputeTest.NetworkEntity entity, AbstractEntity.Mode mode) {
+        entity.deleteMode(mode);
         return this;
     }
 

@@ -9,13 +9,10 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.AbstractEntity;
-import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.CompareType;
 import ui.elements.Menu;
 import ui.elements.TypifiedElement;
-import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.SshKeyList;
@@ -37,7 +34,7 @@ import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 public class RouterTest extends AbstractComputeTest {
     protected final EntitySupplier<RouterCreate> randomRouter = lazy(() -> {
         RouterCreate r = new IndexPage().goToRouters().addRouter().setName(getRandomName()).setRegion(region).setDesc("desc").addNetwork(defaultNetwork).clickOrder();
-        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return r;
     });
 
@@ -48,7 +45,7 @@ public class RouterTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Маршрутизаторы. Создать маршрутизатор")
     void addRouter() {
         RouterCreate router = randomRouter.get();
-        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity().setMode(AbstractEntity.Mode.AFTER_CLASS)).checkCreate(true);
+        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
     }
 
     @Test
@@ -104,20 +101,31 @@ public class RouterTest extends AbstractComputeTest {
     void connectNetwork() {
         randomRouter.get();
         String ip = new IndexPage().goToPublicIps().addIp(region);
-        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity()).checkCreate(true);
+        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
 
-        VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
-                .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setPublicIp(ip).setSshKey(sshKey).clickOrder();
-        new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity()).checkCreate(false);
+        VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
+                .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setPublicIp(ip)
+                .setSshKey(sshKey)
+                .clickOrder();
+        new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
 
-        String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity()).checkCreate(true).getLocalIp();
+        String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).getLocalIp();
 
         SshClient.SshClientBuilder ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER);
         String checkConnectCmd = ssh.privateKey(SshKeyList.PRIVATE_KEY).build()
                 .execute("timeout 2 telnet {} 22", localIpVmTest);
         AssertUtils.assertContains(checkConnectCmd, "OpenSSH");
         if (Configure.ENV.equalsIgnoreCase("t1prod"))
-            AssertUtils.assertContains(ssh.privateKey(SshKeyList.PRIVATE_KEY).build().execute("curl -Is http://yandex.ru"), "302 Moved temporarily");
+            AssertUtils.assertContains(ssh.privateKey(SshKeyList.PRIVATE_KEY).build().execute(CONNECT_INTERNET_COMMAND),
+                    CONNECT_INTERNET_COMMAND_RESPONSE);
     }
 
     @Test
@@ -128,13 +136,13 @@ public class RouterTest extends AbstractComputeTest {
         RouterCreate router = randomRouter.get();
         final String networkName = getRandomName();
         new IndexPage().goToNetworks().addNetwork(networkName, "desc");
-            new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity()).addSubnet()
+            new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity(), AbstractEntity.Mode.AFTER_TEST).addSubnet()
                     .setRegion(region)
-                    .setCidr("10.1.0.0")
+                    .setCidr("10.1.1.0")
                     .setName(getRandomName())
                     .setDesc("forRouterTest")
                     .setDhcp(true)
-                    .setPrefix(24)
+                    .setPrefix(28)
                     .clickAdd();
 
             new IndexPage().goToRouters()
