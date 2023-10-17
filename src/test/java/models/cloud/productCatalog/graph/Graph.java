@@ -167,7 +167,7 @@ public class Graph extends Entity implements IProductCatalog {
                         }
                         break;
                     case ("Service"):
-                                                if (isServiceExists(resp.getName())) {
+                        if (isServiceExists(resp.getName())) {
                             Service getService = getServiceById(resp.getId());
                             if (getService.getIsPublished()) {
                                 partialUpdateServiceById(getService.getId(), new JSONObject().put("is_published", false));
