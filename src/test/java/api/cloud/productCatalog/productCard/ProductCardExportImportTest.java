@@ -5,6 +5,7 @@ import core.helper.DataFileHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
@@ -34,7 +35,7 @@ public class ProductCardExportImportTest {
 
     @Test
     @DisplayName("Экспорт/Импорт продуктовой карты card items")
-    @TmsLink("SOUL-")
+    @TmsLinks({@TmsLink("SOUL-7690"), @TmsLink("SOUL-7691")})
     public void exportImportProductCardTest() {
         String fileName = Configure.RESOURCE_PATH + "/json/productCatalog/productCard/importProductCard.json";
         Graph graph = createGraph();

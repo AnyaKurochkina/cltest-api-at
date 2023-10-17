@@ -110,7 +110,7 @@ public class ProductCardsTest {
 
     @DisplayName("Копирование продуктовой карты")
     @Test
-    @TmsLink("SOUL-")
+    @TmsLink("SOUL-7692")
     public void copyProductCardTest() {
         String productName = "copy_product_card_test_api";
         Template template = createTemplateByName("template_for_copy_product_card_test_api");
@@ -130,7 +130,7 @@ public class ProductCardsTest {
 
     @DisplayName("Применение продуктовой карты")
     @Test
-    @TmsLink("")
+    @TmsLink("SOUL-7693")
     public void applyProductCardTest() {
         Graph graphForAction = createGraph();
         Graph graphForProduct = createGraph();
@@ -186,7 +186,7 @@ public class ProductCardsTest {
 
     @DisplayName("Обновление продуктовой карты")
     @Test
-    @TmsLink("")
+    @TmsLink("SOUL-7694")
     public void updateProductCardTest() {
         String productName = "product_card_update_test_api";
         ProductCard productCard = ProductCard.builder()
@@ -213,7 +213,7 @@ public class ProductCardsTest {
     @SneakyThrows
     @DisplayName("Частичное обновление продуктовой карты")
     @Test
-    @TmsLink("")
+    @TmsLink("SOUL-7695")
     public void partialUpdateProductCardTest() {
         Graph graph = createGraph();
         CardItems productCardGraph = CardItems.builder().objType("Graph")
@@ -242,7 +242,7 @@ public class ProductCardsTest {
 
     @DisplayName("Проверка существования card items = false")
     @Test
-    @TmsLink("")
+    @TmsLink("SOUL-7696")
     public void isCardItemExistFalseTest() {
         JSONObject json = Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
@@ -261,7 +261,7 @@ public class ProductCardsTest {
 
     @DisplayName("Проверка существования card items = true")
     @Test
-    @TmsLink("")
+    @TmsLink("SOUL-7697")
     public void isCardItemExistTrueTest() {
         JSONObject json = Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
@@ -281,7 +281,7 @@ public class ProductCardsTest {
 
     @DisplayName("Проверка существования version у card items")
     @Test
-    @TmsLink("")
+    @TmsLink("SOUL-7698")
     public void isCardItemVersionExistTest() {
         String graphName = RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api";
         JSONObject json = Graph.builder()
@@ -300,7 +300,7 @@ public class ProductCardsTest {
 
     @DisplayName("Проверка существования разницы card items")
     @Test
-    @TmsLink("")
+    @TmsLink("SOUL-7699")
     public void isCardItemEqualsTest() {
         String graphName = RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api";
         Graph graph = createGraph(graphName);
