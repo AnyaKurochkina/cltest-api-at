@@ -53,7 +53,8 @@ public class EditNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description("Тестовый узел")
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
                 }})
@@ -78,7 +79,8 @@ public class EditNodeTest extends GraphBaseTest {
     public void editTemplateNodeTest() {
         GraphItem node = GraphItem.builder()
                 .name(TEMPLATE_NAME)
-                .templateId(template.getId())
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
                 .description("Тестовый узел")
                 .timeout(100)
                 .number(1)
@@ -107,8 +109,9 @@ public class EditNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name("1")
                 .description("1")
-                .templateId(template.getId())
-                .templateVersion("")
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
+                .sourceVersion("")
                 .printedOutput(Collections.singletonList(new HashMap<String, String>() {{
                     put("type", "text");
                 }}))
@@ -144,8 +147,9 @@ public class EditNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name("1")
                 .description("1")
-                .templateId(template.getId())
-                .templateVersion("")
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
+                .sourceVersion("")
                 .number(1)
                 .input(new HashMap<String, String>() {{
                     put("override_param_1", "1");
@@ -189,8 +193,9 @@ public class EditNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name("1")
                 .description("1")
-                .templateId(template.getId())
-                .templateVersion("")
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
+                .sourceVersion("")
                 .number(1)
                 .output(new HashMap<String, Object>() {{
                     put("override_param_1", "1");

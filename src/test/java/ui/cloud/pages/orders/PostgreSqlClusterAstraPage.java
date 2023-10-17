@@ -194,6 +194,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         node2.scrollIntoView(scrollCenter).click();
         if (!Selenide.$x("//div[text()='Публикации']").exists()) {
+            btnGeneralInfo.click();
             runActionWithoutParameters(getHeaderBlock(namePost), "Создать публикацию");
             btnGeneralInfo.click();
             node2.scrollIntoView(scrollCenter).click();
@@ -205,7 +206,8 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     public void createLogicSlot(String nameDb, String nameSlot, SelenideElement node2) {
         new PostgreSqlClusterAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         node2.scrollIntoView(scrollCenter).click();
-        if (!Selenide.$x("//div[text()='Слоты']").exists()) {
+        if (!Selenide.$x("//td[text()='at_slot']").exists()) {
+            btnGeneralInfo.click();
             runActionWithParameters(nameDb, "Создать логический слот", "Подтвердить", () -> Input.byLabel("Имя логического слота").setValue(nameSlot));
             btnGeneralInfo.click();
             node2.scrollIntoView(scrollCenter).click();

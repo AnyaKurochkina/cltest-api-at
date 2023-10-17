@@ -50,6 +50,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
             RabbitMqClusterAstraOrderPage orderPage = new RabbitMqClusterAstraOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
+            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);

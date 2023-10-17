@@ -28,7 +28,6 @@ public class VirtualIp extends IProductT1Page<VirtualIp> {
 
         @Step("Подключить к сетевому интерфейсу {ip}")
         public void attachComputeIp(String ip) {
-            if (!InterfacesTable.isAttachIp(ip))
                 runActionWithParameters(btn, "Подключить к сетевому интерфейсу", "Подтвердить", () ->
                         Dialog.byTitle("Подключить к сетевому интерфейсу")
                                 .setSelectValue("Сетевой интерфейс", ip));

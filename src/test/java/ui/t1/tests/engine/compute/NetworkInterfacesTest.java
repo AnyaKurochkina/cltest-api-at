@@ -53,16 +53,16 @@ public class NetworkInterfacesTest extends AbstractComputeTest {
     void changeSubnet() {
         VmCreate vm = randomVm.get();
         String networkName = getRandomName();
-        String ip = "10.0.3.3";
+        String ip = "10.0.3.6";
         new IndexPage().goToNetworks().addNetwork(networkName, "desc");
         new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity(), AbstractEntity.Mode.AFTER_TEST);
         new IndexPage().goToNetworks().selectNetwork(networkName).addSubnet()
                 .setRegion(region)
-                .setCidr("10.0.0.0")
+                .setCidr("10.0.3.0")
                 .setName(networkName)
                 .setDesc(networkName)
                 .setDhcp(true)
-                .setPrefix(16)
+                .setPrefix(28)
                 .clickAdd();
         NetworkInterfaceList networkInterfaceList = new IndexPage().goToNetworkInterfaces();
         networkInterfaceList.getMenuNetworkInterface(vm.getName()).updateSubnet(networkName, networkName, ip);

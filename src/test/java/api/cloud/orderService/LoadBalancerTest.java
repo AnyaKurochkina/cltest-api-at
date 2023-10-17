@@ -199,7 +199,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("g-tcp-public-" + balancer.getEnv().toLowerCase())
+                    .globalname("glb-tcp-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend)
                     .build());
         }
@@ -213,7 +213,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             balancer.addGslb(Gslb.builder()
-                    .globalname("g-http-public-" + balancer.getEnv().toLowerCase())
+                    .globalname("glb-http-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend)
                     .healthCheckParams(Gslb.HealthCheckParams.builder()
                             .urlPath("/")
@@ -258,7 +258,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
-                    .globalname("tcp-public" + balancer.getEnv().toLowerCase())
+                    .globalname("glb-tcp-public" + balancer.getEnv().toLowerCase())
                     .frontend(frontend)
                     .build();
             balancer.addGslb(gslb);
@@ -282,6 +282,12 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "Удаление всех GSLB публикаций в заказе {0}")
     void deleteAllGslb(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Frontend frontend = addTcpSimple(balancer);
+            Gslb gslb = Gslb.builder()
+                    .globalname("glb-tcp-public-delete-all" + balancer.getEnv().toLowerCase())
+                    .frontend(frontend)
+                    .build();
+            balancer.addGslb(gslb);
             balancer.deleteAllGslb();
         }
     }

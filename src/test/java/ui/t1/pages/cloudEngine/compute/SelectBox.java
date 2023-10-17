@@ -2,9 +2,10 @@ package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.ex.ElementNotFound;
+import core.exception.NotFoundElementException;
 import lombok.AllArgsConstructor;
 import ui.elements.Button;
-import ui.elements.Menu;
 import ui.elements.Select;
 import ui.elements.TypifiedElement;
 
@@ -20,14 +21,17 @@ public class SelectBox implements TypifiedElement {
 
     public static void setOsImage(Image image) {
         Button.byText("Операционные системы").click();
-        SelectBox selectBox = new SelectBox($x("//*[.='{}']/parent::*//*[name()='svg']", image.os));
-        selectBox.select(image.version);
+        findImage(() -> {
+            SelectBox selectBox = new SelectBox($x("//*[.='{}']/parent::*//*[name()='svg']", image.os));
+            selectBox.select(image.version);
+        }, image.os);
     }
 
-    public static void setMarketplaceImage(Image image) {
+    public static void setMarketplaceImage(String image) {
         Button.byText("Cloud Marketplace").click();
-        SelectBox selectBox = new SelectBox($x("//*[.='{}']/parent::*//*[name()='svg']", image.os));
-        selectBox.select(image.version);
+        Button.byText("Показать еще").click();
+        findImage(() -> $x("//span[starts-with(text(),'{}')]", image).click(), image);
+        Button.byText("Использовать").click();
     }
 
     public static void setUserImage(String image) {
@@ -48,5 +52,15 @@ public class SelectBox implements TypifiedElement {
     public static class Image {
         String os;
         String version;
+    }
+
+    private static void findImage(Runnable runnable, String image) {
+        try {
+            runnable.run();
+        } catch (ElementNotFound e) {
+            NotFoundElementException exception = new NotFoundElementException("Не найден образ {}", image);
+            exception.addSuppressed(e);
+            throw exception;
+        }
     }
 }

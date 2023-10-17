@@ -103,8 +103,18 @@ public class RouterTest extends AbstractComputeTest {
         String ip = new IndexPage().goToPublicIps().addIp(region);
         new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
 
-        VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
-                .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setPublicIp(ip).setSshKey(sshKey).clickOrder();
+        VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
+                .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setPublicIp(ip)
+                .setSshKey(sshKey)
+                .clickOrder();
         new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
 
         String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).getLocalIp();
@@ -128,11 +138,11 @@ public class RouterTest extends AbstractComputeTest {
         new IndexPage().goToNetworks().addNetwork(networkName, "desc");
             new NetworkList().selectNetwork(networkName).markForDeletion(new NetworkEntity(), AbstractEntity.Mode.AFTER_TEST).addSubnet()
                     .setRegion(region)
-                    .setCidr("10.1.0.0")
+                    .setCidr("10.1.1.0")
                     .setName(getRandomName())
                     .setDesc("forRouterTest")
                     .setDhcp(true)
-                    .setPrefix(24)
+                    .setPrefix(28)
                     .clickAdd();
 
             new IndexPage().goToRouters()

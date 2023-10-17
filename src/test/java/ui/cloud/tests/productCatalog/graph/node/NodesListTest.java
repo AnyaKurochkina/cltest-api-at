@@ -40,7 +40,7 @@ public class NodesListTest extends GraphBaseTest {
     public void addNodeByTemplateTest() {
         GraphItem node = GraphItem.builder()
                 .name(TEMPLATE_NAME)
-                .templateId(template.getId())
+                .sourceId(String.valueOf(template.getId()))
                 .description("Тестовый узел")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "{}");
@@ -64,7 +64,8 @@ public class NodesListTest extends GraphBaseTest {
     public void findNodesTest() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .description(nodeDescription)
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");

@@ -48,8 +48,8 @@ public class SshClient {
             channel.connect();
             if (!Waiting.sleep(channel::isClosed, Duration.ofMinutes(1)))
                 log.debug("SSH Соединение будет закрыто принудительно");
-            String res = out.toString();
-            log.debug("SSH response: {}", res);
+            String res = out.toString().replaceAll("[ \t\r\n]+$", "");
+            log.debug("SSH response: '{}'", res);
             return res;
         } catch (JSchException e){
             log.debug("SSH connect error: {} {} {} {}", host, user, password, privateKey);

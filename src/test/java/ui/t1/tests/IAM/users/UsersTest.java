@@ -14,6 +14,7 @@ import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.IndexPage;
 
 import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.IAM.users.UsersPage.isUserAdded;
@@ -60,14 +61,16 @@ public class UsersTest extends AbstractIAMTest {
     @TmsLink("134903")
     @DisplayName("Пользователи. Редактирование ролей пользователя.")
     void editUserTest() {
+        List<String> addedRoles = Arrays.asList("Редактор", "Администратор хранилища");
         new IndexPage()
                 .goToUsers()
                 .addUser(user2)
-                .addRole(user2, "Редактор");
+                .addRole(user2, addedRoles);
         user2.addRole("Редактор");
+        user2.addRole("Администратор хранилища");
         assertTrue(isUserAdded(user2));
         new UsersPage()
-                .removeRoles(user2, user2.getRole())
+                .removeRoles(user2, addedRoles)
                 .removeUser(user2);
     }
 

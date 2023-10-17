@@ -25,7 +25,7 @@ public class RuleImportTest extends Tests {
     @TmsLink("")
     @Test
     public void importRuleTest() {
-        RuleResponse rule = createRule();
+        RuleResponse rule = createRuleWithOutAutoDelete();
         String filePath = Configure.RESOURCE_PATH + "/json/rpcDjangoRouter/importRule.json";
         DataFileHelper.write(filePath, exportRule(rule.getId()).toString());
         deleteRuleById(rule.getId());

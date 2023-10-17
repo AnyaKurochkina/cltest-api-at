@@ -62,6 +62,6 @@ public class ActionsListTest extends ActionBaseTest {
         assertTrue(page.isActionDisplayed(action.getName()));
         page.getProviderSelect().set(EventProvider.OPENSTACK.getValue());
         page.getApplyFiltersButton().click();
-        assertFalse(page.isActionDisplayed(action.getName()));
+        page.checkActionNotFound(action.getName());
     }
 }

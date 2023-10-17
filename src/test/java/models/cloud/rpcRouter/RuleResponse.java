@@ -19,6 +19,10 @@ public class RuleResponse extends AbstractEntity {
     private String title;
     private String description;
     private String code_expression;
+    private String code_expression_result;
+    private Object code_expression_errors;
+    private String test_queue_name;
+    private Object test_code_params;
     private Integer id;
     private Date create_dt;
     private Date update_dt;

@@ -1,5 +1,6 @@
 package models.cloud.tarifficator;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
@@ -40,6 +41,11 @@ public class TariffPlan extends Entity {
     Boolean updateOrders;
     Date updatedAt;
     Boolean activationErrorsCount;
+
+    @JsonProperty("default")
+    Boolean defaultField;
+    List<String> organizationNames;
+
 
     @SneakyThrows
     public JSONObject toJson() {

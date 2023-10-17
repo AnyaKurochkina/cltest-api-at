@@ -11,6 +11,7 @@ import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
 public class SearchSelect extends Select {
+    String closeXpath = ".//*[@d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 0 1 .92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 0 1-.17-.44Z']/parent::*/parent::*";
 
     public SearchSelect(SelenideElement element) {
         super(element);
@@ -49,7 +50,14 @@ public class SearchSelect extends Select {
         return this;
     }
 
+    @Step("SearchSelect. Закрыть")
+    public SearchSelect close() {
+        element.$x(closeXpath).click();
+        return this;
+    }
+
     @Step("SearchSelect. Выбрать элемент с текстом '{value}'")
+    @Override
     public String set(String value) {
         hover();
         String currentTitle = getValue();
@@ -57,6 +65,19 @@ public class SearchSelect extends Select {
             return value;
         element.click();
         clear();
+        element.$x(".//input").setValue(value);
+        getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
+                .click();
+        return value;
+    }
+
+    @Step("SearchSelect. Добавить элемент с текстом '{value}'")
+    public String add(String value) {
+        hover();
+        String currentTitle = getValue();
+        if (currentTitle.equals(value))
+            return value;
+        element.click();
         element.$x(".//input").setValue(value);
         getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd)
                 .click();

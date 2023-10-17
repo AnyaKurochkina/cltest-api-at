@@ -5,6 +5,8 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 
+import java.util.List;
+
 import static core.helper.StringUtils.$$x;
 
 /**
@@ -21,6 +23,10 @@ public class Breadcrumb implements TypifiedElement {
 
     public static void click(String label) {
         Button.byElement(new Breadcrumb().getItem(label)).click();
+    }
+
+    public static List<String> getItemsText(){
+        return new Breadcrumb().breadcrumbItems.texts();
     }
 
     public static void getItem(int index) {
