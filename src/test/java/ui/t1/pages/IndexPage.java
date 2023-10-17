@@ -1,7 +1,6 @@
 package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -242,8 +241,7 @@ public class IndexPage {
 
     @Step("Проверка отображения имени {contextName} контекста")
     public boolean isContextNameDisplayed(String contextName){
-        Selenide.refresh();
-        return $x("//div[text() = '{}']", contextName).shouldBe(Condition.visible).isDisplayed();
+        return $x("//div[text() = '{}']", contextName).isDisplayed();
     }
 
     @Step("Переход на страницу Инструменты.Аудит")

@@ -1,6 +1,7 @@
 package ui.t1.pages.IAM;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import core.utils.Waiting;
@@ -105,6 +106,8 @@ public class OrgStructurePage {
         deleteAction.shouldBe(Condition.visible).click();
         new DeleteDialog()
                 .inputValidIdAndDelete(String.format("Папка \"%s\" удалена", name));
+        Selenide.refresh();
+        Alert.green("Выбран контекст:");
         return this;
     }
 
