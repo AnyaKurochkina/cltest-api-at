@@ -22,6 +22,10 @@ public class AbstractTagServiceTest extends Tests {
         return new Generex("AT-" + prefix + "-[a-z]{6}").random();
     }
 
+    protected String randomName() {
+        return new Generex("AT-[a-z]{6}").random();
+    }
+
     protected List<Tag> generateTags(int count) {
         List<Tag> tags = new ArrayList<>();
         for (int i = 0; i < count; i++)

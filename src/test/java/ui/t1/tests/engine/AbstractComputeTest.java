@@ -21,15 +21,14 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
-import steps.vpc.SecurityGroupResponse;
 import steps.resourceManager.ResourceManagerSteps;
+import steps.vpc.SecurityGroupResponse;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
-import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 
 import java.util.HashMap;

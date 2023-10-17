@@ -26,14 +26,14 @@ public class InputQueueSteps extends Steps {
     @Step("Удаление InputQueue по id {id}")
     public static Response deleteInputQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(inputQueueV1 + "{}/", id);
     }
 
     @Step("Получение списка InputQueue отсортированного по {fieldName}")
     public static List<InputQueueResponse> getOrderingByFieldInputQueueList(String fieldName) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(inputQueueV1 + "?ordering={}", fieldName)
                 .assertStatus(200)
                 .extractAs(GetInputQueueList.class)
@@ -43,7 +43,7 @@ public class InputQueueSteps extends Steps {
     @Step("Создание OutPutQueue")
     public static Response createInputQueue(JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post(inputQueueV1);
     }
@@ -57,7 +57,7 @@ public class InputQueueSteps extends Steps {
                 .build()
                 .toJson();
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(queue)
                 .post(inputQueueV1)
                 .assertStatus(201)
@@ -69,7 +69,6 @@ public class InputQueueSteps extends Steps {
     public static Response exportInputQueue(Integer id) {
         return new Http(RpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                //  .withServiceToken()
                 .get(inputQueueV1 + "{}/obj_export/?as_file=true", id)
                 .assertStatus(200);
     }
@@ -86,7 +85,7 @@ public class InputQueueSteps extends Steps {
     @Step("Импорт InputQueue")
     public static ImportObject importInputQueue(String pathName) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(inputQueueV1 + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
                 .jsonPath()
@@ -97,7 +96,7 @@ public class InputQueueSteps extends Steps {
     @Step("Получение списка объектов использующих InputQueue")
     public static Response getObjectsUsedInputQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(inputQueueV1 + "{}/used/", id)
                 .assertStatus(200);
     }
@@ -105,7 +104,7 @@ public class InputQueueSteps extends Steps {
     @Step("Получение списка объектов используемых в InputQueue")
     public static Response getObjectsUsingInputQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(inputQueueV1 + "{}/using_objects/", id)
                 .assertStatus(200);
     }
@@ -113,7 +112,7 @@ public class InputQueueSteps extends Steps {
     @Step("Получение InputQueue по id {id}")
     public static InputQueueResponse getInputQueueById(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(inputQueueV1 + "{}/", id)
                 .assertStatus(200)
                 .extractAs(InputQueueResponse.class);
@@ -122,8 +121,8 @@ public class InputQueueSteps extends Steps {
     @Step("Получение InputQueue по name {name}")
     public static InputQueueResponse getInputQueueByName(String name) {
         List<InputQueueResponse> list = new Http(RpcRouter)
-                .withServiceToken()
-                .get(inputQueueV1 + "?name={}", name)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(inputQueueV1 + "?name__exact={}", name)
                 .assertStatus(200)
                 .extractAs(GetInputQueueList.class)
                 .getList();
@@ -133,8 +132,8 @@ public class InputQueueSteps extends Steps {
     @Step("Проверка существования InputQueue по name {name}")
     public static boolean isInputQueueExist(String name) {
         List<InputQueueResponse> list = new Http(RpcRouter)
-                .withServiceToken()
-                .get(inputQueueV1 + "?name={}", name)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(inputQueueV1 + "?name__exact={}", name)
                 .assertStatus(200)
                 .extractAs(GetInputQueueList.class)
                 .getList();
@@ -144,7 +143,7 @@ public class InputQueueSteps extends Steps {
     @Step("Обновление InputQueue")
     public static InputQueueResponse updateInputQueue(Integer id, JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .put(inputQueueV1 + "{}/", id)
                 .assertStatus(200)
@@ -154,7 +153,7 @@ public class InputQueueSteps extends Steps {
     @Step("Частичное обновление InputQueue")
     public static void partialUpdateInputQueue(Integer id, JSONObject jsonObject) {
         new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .patch(inputQueueV1 + "{}/", id)
                 .assertStatus(200);
@@ -163,7 +162,7 @@ public class InputQueueSteps extends Steps {
     @Step("Получение списка InputQueue")
     public static List<InputQueueResponse> getInputQueueList() {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(inputQueueV1)
                 .assertStatus(200)
                 .extractAs(GetInputQueueList.class)
@@ -173,7 +172,7 @@ public class InputQueueSteps extends Steps {
     @Step("Копирование OutPutQueue")
     public static InputQueueResponse copyInputQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(inputQueueV1 + "{}/copy/", id)
                 .assertStatus(200)
                 .extractAs(InputQueueResponse.class)

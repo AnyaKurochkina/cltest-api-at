@@ -3,6 +3,7 @@
 		"project_name": "proj-aydi9thv3w",
 		"product_id": "ff48b6ff-700a-42f3-8a55-deee61e2d5a7",
 		"attrs": {
+			"enable_ssl": false,
 			"domain": "corp.dev.vtb",
 			"flavor": {
 				"cpus": 2,
@@ -27,8 +28,7 @@
 			],
 			"ad_integration": true,
 			"postgresql_config": {
-				"default_transaction_isolation": "READ COMMITTED",
-				"max_connections": 100
+				"default_transaction_isolation": "READ COMMITTED"
 			},
 			"load_profile": "OLTP",
 			"postgresql_version": "12",
@@ -42,6 +42,7 @@
 			]
 		},
 		"count": 1,
+		"lifetime": null,
 		"label": "PostgreSQL"
 	}
 }
