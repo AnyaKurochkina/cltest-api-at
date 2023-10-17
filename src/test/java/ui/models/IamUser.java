@@ -14,4 +14,10 @@ public class IamUser {
     public void addRole(String role) {
         this.role.add(role);
     }
+
+    public void removeRole(List<String> roles) {
+        for (String role : roles) {
+            this.role.remove(role);
+        }
+    }
 }

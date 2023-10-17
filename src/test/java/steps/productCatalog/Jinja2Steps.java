@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.jinja2.GetJinja2List;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
@@ -11,6 +12,7 @@ import models.cloud.productCatalog.jinja2.UsedJinja2ObjectList;
 import org.json.JSONObject;
 import steps.Steps;
 
+import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.ProductCatalogURL;
@@ -255,5 +257,16 @@ public class Jinja2Steps extends Steps {
                 .body(body)
                 .post(jinjaUrl + "load_from_bitbucket/")
                 .assertStatus(200);
+    }
+
+    @Step("Импорт jinja2")
+    public static ImportObject importJinja2(String pathName) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .multiPart(jinjaUrl + "obj_import/", "file", new File(pathName))
+                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
+                .jsonPath()
+                .getList("imported_objects", ImportObject.class)
+                .get(0);
     }
 }

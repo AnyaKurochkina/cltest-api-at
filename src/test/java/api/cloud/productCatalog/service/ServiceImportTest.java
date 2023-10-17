@@ -11,13 +11,13 @@ import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.service.Service;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.OrgDirectionSteps.createOrgDirectionByName;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
 import static steps.productCatalog.ServiceSteps.*;
@@ -103,5 +103,21 @@ public class ServiceImportTest extends Tests {
         assertTrue(isServiceExists(name), "Сервис не существует");
         deleteServiceByName(name);
         assertFalse(isServiceExists(name), "Сервис существует");
+    }
+
+    @DisplayName("Проверка не обновления неверсионных полей при импорте уже существующего сервиса")
+    @TmsLink("SOUL-7459")
+    @Test
+    public void checkNotVersionedFieldsWhenImportedExistServiceTest() {
+        String description = "update description";
+        String serviceName = "check_not_versioned_fields__when_import_exist_service_test_api";
+        Service service = createService(serviceName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/services/checkNotVersionedFieldsExistServiceImport.json";
+        DataFileHelper.write(filePath, exportServiceById(service.getId()).toString());
+        partialUpdateServiceById(service.getId(), new JSONObject().put("description", description));
+        importService(filePath);
+        DataFileHelper.delete(filePath);
+        Service serviceById = getServiceById(service.getId());
+        assertEquals(description, serviceById.getDescription());
     }
 }

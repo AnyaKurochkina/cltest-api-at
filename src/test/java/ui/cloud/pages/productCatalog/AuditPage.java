@@ -32,7 +32,7 @@ public class AuditPage extends EntityPage {
     private final Button copyDataButton = Button.byXpath("//span[text()='Адрес']/preceding::button[1]");
     private final Button showFullView = Button.byXpath("//span[text()='Ответ']//following::button[1]");
     private final Button copyAddressButton = Button.byXpath("//span[text()='Адрес']/following::button[1]");
-    private final Button copyRequestButton = Button.byXpath("//span[text()='Запрос']/following::button[1]");
+    private final Button copyRequestButton = Button.byXpath("//span[text()='Запрос']/following::button[2]");
     private final Button copyResponseButton = Button.byXpath("//span[text()='Ответ']/following::button[2]");
     private final SelenideElement additionalFilters = $x("//div[text()='Дополнительные фильтры']");
     private final SelenideElement clearOperationTypeFilter = $x("//*[@id='searchSelectClearIcon']");

@@ -130,8 +130,7 @@ public class ActionsListPage extends EntityListPage {
 
     @Step("Проверка, что действия не найдены при поиске по '{value}'")
     public ActionsListPage checkActionNotFound(String value) {
-        searchInput.setValue(value);
-        Waiting.sleep(1000);
+        search(value);
         assertTrue(new Table(NAME_COLUMN).isEmpty());
         return this;
     }

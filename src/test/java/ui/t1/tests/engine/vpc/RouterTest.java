@@ -103,8 +103,18 @@ public class RouterTest extends AbstractComputeTest {
         String ip = new IndexPage().goToPublicIps().addIp(region);
         new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
 
-        VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
-                .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setPublicIp(ip).setSshKey(sshKey).clickOrder();
+        VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
+                .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
+                .setImage(image)
+                .setDeleteOnTermination(true)
+                .setName(getRandomName())
+                .addSecurityGroups(securityGroup)
+                .setPublicIp(ip)
+                .setSshKey(sshKey)
+                .clickOrder();
         new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
 
         String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).getLocalIp();
