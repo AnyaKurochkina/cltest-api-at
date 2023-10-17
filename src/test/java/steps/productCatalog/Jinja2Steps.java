@@ -8,6 +8,7 @@ import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.jinja2.GetJinja2List;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
+import models.cloud.productCatalog.jinja2.UsedJinja2ObjectList;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -22,13 +23,31 @@ public class Jinja2Steps extends Steps {
 
     @Step("Получение списка jinja2")
     public static List<Jinja2Template> getJinja2List() {
-        //Todo сравнение с jsonshema
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(jinjaUrl)
-                // .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetJinja2List.class).getList();
+    }
+
+    @Step("Получение списка объектов использующих Jinja2_template по id - {id}")
+    public static List<UsedJinja2ObjectList> getObjectListUsedJinja2Template(String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(jinjaUrl + id + "/used/")
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", UsedJinja2ObjectList.class);
+    }
+
+    @Step("Получение списка объектов использующих Jinja2_template по имени {name}")
+    public static List<UsedJinja2ObjectList> getObjectListUsedJinja2TemplateByName(String name) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(jinjaUrl2 + name + "/used/")
+                .assertStatus(200)
+                .jsonPath()
+                .getList("", UsedJinja2ObjectList.class);
     }
 
     @Step("Получение jinja2 по Id")
@@ -232,8 +251,8 @@ public class Jinja2Steps extends Steps {
     }
 
     @Step("Выгрузка jinja2 из Gitlab")
-    public static Response loadJinja2FromBitbucket(JSONObject body) {
-        return new Http(ProductCatalogURL)
+    public static void loadJinja2FromBitbucket(JSONObject body) {
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(jinjaUrl + "load_from_bitbucket/")
