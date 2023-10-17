@@ -31,7 +31,7 @@ import static steps.productCatalog.PythonTemplateSteps.*;
 public class PythonTemplateTest extends Tests {
 
     @DisplayName("Создание python_template в продуктовом каталоге")
-    @TmsLink("")
+    @TmsLink("SOUL-7705")
     @Test
     public void createPythonTemplateTest() {
         PythonTemplate expectedPythonTemplate = createPythonTemplateByName("create_python_template_api_test");
@@ -40,7 +40,7 @@ public class PythonTemplateTest extends Tests {
     }
 
     @DisplayName("Проверка существования python_template по имени")
-    @TmsLink("")
+    @TmsLink("SOUL-7706")
     @Test
     public void checkPythonTemplateExists() {
         String name = "create_python_template_api_test";
@@ -51,7 +51,7 @@ public class PythonTemplateTest extends Tests {
     }
 
     @DisplayName("Получение списка python_template")
-    @TmsLink("")
+    @TmsLink("SOUL-7707")
     @Test
     public void getPythonTemplateListTest() {
         String name = "get_python_template_list_api_test";
@@ -61,7 +61,7 @@ public class PythonTemplateTest extends Tests {
     }
 
     @DisplayName("Частичное обновление python_template без указания версии, версия должна инкрементироваться")
-    @TmsLink("")
+    @TmsLink("SOUL-7708")
     @Test
     public void patchPythonTemplateTest() {
         String name = "python_template_patch_test_api";
@@ -74,7 +74,7 @@ public class PythonTemplateTest extends Tests {
     }
 
     @DisplayName("Обновление python_template")
-    @TmsLink("")
+    @TmsLink("SOUL-7709")
     @Test
     public void putPythonTemplateTest() {
         String name = "python_template_put_test_api";
@@ -87,7 +87,7 @@ public class PythonTemplateTest extends Tests {
     }
 
     @DisplayName("Копирование python_template по Id")
-    @TmsLink("")
+    @TmsLink("SOUL-7710")
     @Test
     public void copyPythonTemplateByIdTest() {
         String name = "clone_python_template_test_api";
@@ -102,7 +102,7 @@ public class PythonTemplateTest extends Tests {
 
     @Test
     @DisplayName("Удаление python_template")
-    @TmsLink("")
+    @TmsLink("SOUL-7711")
     public void deletePythonTemplateTest() {
         String name = "delete_python_template_test_api";
         if (isPythonTemplateExists(name)) {
@@ -119,7 +119,7 @@ public class PythonTemplateTest extends Tests {
 
     @Test
     @DisplayName("Удаление python_template используемого в ноде графа")
-    @TmsLink("")
+    @TmsLink("SOUL-7712")
     public void deletePythonTemplateUsedInGraphNodeTest() {
         String name = "delete_python_template_used_in_graph_node_test_api";
         PythonTemplate pythonTemplate = createPythonTemplateByName(name);
@@ -140,7 +140,7 @@ public class PythonTemplateTest extends Tests {
 
     @Test
     @DisplayName("Получение списка объектов использующих python_template")
-    @TmsLink("")
+    @TmsLink("SOUL-7713")
     public void getUsedPythonTemplateObjectListTest() {
         String name = "get_object_list_used_python_template_test_api";
         PythonTemplate pythonTemplate = createPythonTemplateByName(name);
