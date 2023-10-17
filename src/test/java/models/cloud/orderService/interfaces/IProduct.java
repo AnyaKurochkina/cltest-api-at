@@ -530,12 +530,24 @@ public abstract class IProduct extends Entity {
     }
 
     public boolean isDev() {
+        if (projectId == null) {
+            Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
+            setProjectId(project.getId());
+        }
         return envType().equalsIgnoreCase("dev");
     }
     public boolean isTest() {
+        if (projectId == null) {
+            Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
+            setProjectId(project.getId());
+        }
         return envType().equalsIgnoreCase("test");
     }
     public boolean isProd() {
+        if (projectId == null) {
+            Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
+            setProjectId(project.getId());
+        }
         return envType().equalsIgnoreCase("prod");
     }
 
