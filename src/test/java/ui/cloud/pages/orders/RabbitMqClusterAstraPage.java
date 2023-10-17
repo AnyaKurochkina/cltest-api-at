@@ -148,12 +148,15 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    public void addUser(String nameUser) {
+    public void addUser(String nameUser,String numberApd,String numberRis) {
         new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser))) {
             runActionWithParameters(BLOCK_USERS, "Создать пользователя", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Создать пользователя");
-                dlg.setInputValue("Введите имя пользователя", nameUser);
+
+                dlg.setInputValue("Введите номер системы APD", numberApd);
+                dlg.setInputValue("Введите номер системы в RIS", numberRis);
+                dlg.setInputValue("Уникальное имя клиента", nameUser);
             });
             btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser), "Пользователь не существует");

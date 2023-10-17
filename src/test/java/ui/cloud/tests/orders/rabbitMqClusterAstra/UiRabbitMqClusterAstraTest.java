@@ -115,7 +115,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @DisplayName("UI RabbitMqClusterAstraPage. Создать пользователя RabbitMQ")
     void addUser() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addUser(nameUser));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addUser(nameUser,"14888", "104878"));
     }
     @Test
     @Order(6)
