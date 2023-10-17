@@ -276,7 +276,8 @@ public class TemplatesTest extends Tests {
                 .createObject();
         JSONObject graphItem = GraphItem.builder()
                 .name("graph_node_test_api")
-                .templateId(template.getId())
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
                 .build()
                 .toJson();
         Graph graph = Graph.builder()
@@ -290,7 +291,7 @@ public class TemplatesTest extends Tests {
         partialUpdateGraph(graph.getGraphId(), obj);
         String errMsg = steps.getDeleteObjectResponse(Integer.toString(template.getId())).assertStatus(400)
                 .extractAs(ErrorMessage.class).getMessage();
-        String expectedErrorMessage = String.format("Нельзя удалить шаблон: %s. Он используется:\nGraph: (name: %s, version: %s)"
+        String expectedErrorMessage = String.format("Нельзя удалить Template: %s. Он используется:\nGraph: (name: %s, version: %s)"
                 , template.getName(), graph.getName(), "1.0.1");
         assertEquals(expectedErrorMessage, errMsg);
     }

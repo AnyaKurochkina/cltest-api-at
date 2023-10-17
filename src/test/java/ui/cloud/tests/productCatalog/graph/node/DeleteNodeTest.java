@@ -37,7 +37,8 @@ public class DeleteNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .number(1)
                 .build();
         patchGraphWithGraphItem(graph, node);
@@ -55,7 +56,8 @@ public class DeleteNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .number(1)
                 .build();
         patchGraphWithGraphItem(graph, node);
