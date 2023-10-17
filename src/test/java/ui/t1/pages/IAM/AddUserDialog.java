@@ -18,7 +18,7 @@ public class AddUserDialog extends Dialog {
     private final Button confirmAddUserBtn = Button.byText("Добавить");
     private final Button applyBtn = Button.byText("Применить", 2);
     private final SearchSelect selectUser = SearchSelect.byLabel("Пользователь");
-    private final SearchSelect selectRole = SearchSelect.byLabel("Роли", 2);
+    private final SearchSelect selectRole = SearchSelect.byName("roleList");
 
     public AddUserDialog(String url) {
         StringBuilder title = new StringBuilder();

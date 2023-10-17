@@ -70,6 +70,6 @@ public class FolderActionTest extends Tests {
                 .createFolder(folderName)
                 .selectContext(folderName)
                 .deleteFolder(folderName);
-        assertTrue(indexPage.isContextNameDisplayed("Выберите контекст (организацию, папку или проект)"));
+        assertFalse(indexPage.isContextNameDisplayed("Выберите контекст (организацию, папку или проект)"));
     }
 }

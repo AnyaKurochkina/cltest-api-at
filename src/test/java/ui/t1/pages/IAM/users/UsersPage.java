@@ -87,7 +87,7 @@ public class UsersPage {
     @Step("Показать пользователей")
     public UsersPage showUsers(String text) {
         StringUtils.$x("//*[@id='selectValueWrapper']").click();
-        StringUtils.$x("//div[text() = '{}']", text).shouldBe(Condition.visible).click();
+        StringUtils.$x("//span[text() = '{}']", text).parent().shouldBe(Condition.visible).click();
         return this;
     }
 
