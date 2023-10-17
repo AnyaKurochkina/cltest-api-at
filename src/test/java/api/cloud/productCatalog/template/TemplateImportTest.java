@@ -10,6 +10,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.template.Template;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -99,5 +100,21 @@ public class TemplateImportTest extends Tests {
         assertTrue(isTemplateExists(name), "Шаблон не существует");
         deleteTemplateByName(name);
         assertFalse(isTemplateExists(name), "Шаблон существует");
+    }
+
+    @DisplayName("Проверка не обновления неверсионных полей при импорте уже существующего шаблона")
+    @TmsLink("SOUL-7458")
+    @Test
+    public void checkNotVersionedFieldsWhenImportedExistTemplateTest() {
+        String description = "update description";
+        String templateName = "check_not_versioned_fields__when_import_exist_template_test_api";
+        Template template = createTemplateByName(templateName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/templates/checkNotVersionedFieldsExistTemplateImport.json";
+        DataFileHelper.write(filePath, exportTemplateById(template.getId()).toString());
+        partialUpdateTemplate(template.getId(), new JSONObject().put("description", description));
+        importTemplate(filePath);
+        DataFileHelper.delete(filePath);
+        Template templateById = getTemplateById(template.getId());
+        assertEquals(description, templateById.getDescription());
     }
 }
