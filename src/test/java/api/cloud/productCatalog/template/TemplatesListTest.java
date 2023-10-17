@@ -12,7 +12,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,8 +29,6 @@ import static steps.productCatalog.TemplateSteps.*;
 @Tag("product_catalog")
 @DisabledIfEnv("prod")
 public class TemplatesListTest extends Tests {
-    ProductCatalogSteps steps = new ProductCatalogSteps("/api/v1/templates/",
-            "productCatalog/templates/createTemplate.json");
 
     @DisplayName("Получение списка шаблонов")
     @TmsLink("643551")
@@ -64,7 +61,7 @@ public class TemplatesListTest extends Tests {
         String expectedNodeName = "graph_item_test_api";
         JSONObject graphItem = GraphItem.builder()
                 .name(expectedNodeName)
-                .templateId(template.getId())
+                .sourceId(String.valueOf(template.getId()))
                 .build()
                 .toJson();
         Graph graph = Graph.builder()

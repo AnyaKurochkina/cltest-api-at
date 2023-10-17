@@ -2,15 +2,13 @@ package ui.t1.pages.IAM.serviceAccounts;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.ServiceAccount;
 import org.json.JSONObject;
 import ui.cloud.pages.productCatalog.DeleteDialog;
-import ui.elements.Alert;
-import ui.elements.Breadcrumb;
-import ui.elements.Button;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,8 +21,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ServiceAccountPage {
 
     List<String> headers = Arrays.asList("Роли", "Дата создания", "Создатель", "Идентификатор");
-    Button apiKeysTab = Button.byId("api_keys");
-    Button s3KeysTab = Button.byId("ceph_public_keys");
+    Tab staticKeysTab = Tab.byText("Статические ключи Объектного хранилища S3");
+    Tab apiKeysTab = Tab.byText("API-ключ");
     Button create = Button.byText("Создать");
     Button delete = Button.byXpath("//span[text() = 'API-ключ']/following::button[@label = 'Удалить']");
 
@@ -36,8 +34,8 @@ public class ServiceAccountPage {
     public ServiceAccountPage checkHeadersAndTabs() {
         List<String> roles = new Table("Роли").getNotEmptyHeaders();
         assertEquals(headers, roles);
-        assertTrue(apiKeysTab.isVisible());
-        assertTrue(s3KeysTab.isVisible());
+        assertTrue(apiKeysTab.getElement().isDisplayed());
+        assertTrue(staticKeysTab.getElement().isDisplayed());
         return this;
     }
 
@@ -80,6 +78,23 @@ public class ServiceAccountPage {
         return jsonObject;
     }
 
+    @Step("Создание статического ключа")
+    public JSONObject createStaticKey(String description) {
+        staticKeysTab.switchTo();
+        create.click();
+        Dialog.byTitle("Создать статический ключ")
+                .setTextarea(TextArea.byName("description"), description)
+                .clickButton("Создать");
+        String id = $x("//*[text() = 'Access key:']/following-sibling::div").getText();
+        String secret = $x("//*[text() = 'Secret key:']/following-sibling::div").getText();
+        JSONObject jsonObject = new JSONObject()
+                .put("access_id", id)
+                .put("secret_key", secret);
+        Button.byText("Скопировать данные формы").click();
+        Button.byText("Закрыть");
+        return jsonObject;
+    }
+
     @Step("Удаление апи ключа")
     public ServiceAccountPage deleteApiKey() {
         delete.click();
@@ -88,7 +103,23 @@ public class ServiceAccountPage {
         return this;
     }
 
+    @Step("Удаление статического ключа")
+    public ServiceAccountPage deleteStaticKey(ServiceAccount account) {
+        staticKeysTab.switchTo();
+        Waiting.sleep(6000);
+        Menu.byElement(new Table("Access key").getRowByColumnValue("Название", account.getAccessId())
+                        .get().$x(".//button"))
+                .select("Удалить");
+        Dialog.byTitle("Подтверждение удаления ключа").clickButton("Да");
+        return this;
+    }
+
     public boolean isTableEmpty() {
+        Waiting.sleep(3000);
         return new Table("Дата добавления").isEmpty();
+    }
+
+    public boolean isStaticKeyExist(String id) {
+        return new Table("Access key").isColumnValueEquals("Название", id);
     }
 }

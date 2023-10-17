@@ -32,7 +32,9 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     String id;
     String title;
     String jsonTemplate;
+    String accessId;
     Role role;
+    @Setter
     Boolean withApiKey;
 
     @Singular
@@ -62,12 +64,13 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
     @Step("Создание статического ключа досутпа hcp bucket")
     public void createStaticKey() {
-        new Http(Configure.IamURL)
+        accessId = new Http(Configure.IamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(new JSONObject("{\"access_key\":{\"description\":\"Ключ\",\"password\":\"JP1mD3rlh67Hek@zb%ClSCFUxvUj4q6Z0ZfjfnK3VQhXt5xMLplE$B7237FPHu\"}}"))
                 .post("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                 .assertStatus(201)
-                .jsonPath();
+                .jsonPath()
+                .getString("data.access_id");
 
         sleep(10000);
         JsonPath jsonPathStatus = new Http(Configure.IamURL)
@@ -108,6 +111,25 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         Assertions.assertTrue(jsonPath.getList("data").isEmpty(),
                 "При удалении статического ключа ожидается в ответе пустой блок data, но data:\n" + jsonPath.getList("data").toString());
         save();
+    }
+
+    @Step("Создание статического ключа")
+    public void createStaticKeyNewStorage() {
+        accessId = new Http(Configure.IamURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .body(new JSONObject("{\"access_key\":{\"description\":\"Ключ\",\"product_name\":\"storage-new\"}}"))
+                .post("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
+                .assertStatus(201)
+                .jsonPath()
+                .getString("data.access_id");
+    }
+
+    @Step("Удаление статического ключа")
+    public void deleteStaticKeyNewStorage(String keyId) {
+        new Http(Configure.IamURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .delete("/v1/projects/{}/service_accounts/{}/access_keys/{}?product_name=storage-new", projectId, id, keyId)
+                .assertStatus(204);
     }
 
     @Step("Изменение сервисного аккаунта")

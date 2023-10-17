@@ -22,7 +22,7 @@ import steps.orderService.OrderServiceSteps;
 @NoArgsConstructor
 @SuperBuilder
 public class RedisSentinel extends IProduct {
-    private final static String USERNAME_PATH = "data.find{it.type('app')}.data.config.users.any{it.user_name=='%s'}";
+    private final static String USERNAME_PATH = "data.find{it.type=='app'}.data.config.users.any{it.user_name=='%s'}";
     @ToString.Include
     String osVersion;
     String appUserPassword;
