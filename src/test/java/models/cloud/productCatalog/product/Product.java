@@ -23,7 +23,8 @@ import static steps.productCatalog.ProductSteps.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = false, exclude = {"productId", "createDt", "updateDt", "versionCreateDt"})
+@ToString
 public class Product extends Entity {
 
     @JsonProperty("is_open")
@@ -52,6 +53,7 @@ public class Product extends Entity {
     private String title;
     @JsonProperty("graph_id")
     private String graphId;
+    @JsonProperty("version")
     private String version;
     @JsonProperty("max_count")
     @Builder.Default
