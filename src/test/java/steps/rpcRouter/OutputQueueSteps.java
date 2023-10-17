@@ -28,7 +28,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Удаление OutPutQueue")
     public static Response deleteOutPutQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(outPutQueueV1 + "{}/", id)
                 .assertStatus(204);
     }
@@ -36,7 +36,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Создание OutPutQueue")
     public static Response createOutPutQueue(JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post(outPutQueueV1);
     }
@@ -45,15 +45,14 @@ public class OutputQueueSteps extends Steps {
     public static Response exportOutPutQueue(Integer id) {
         return new Http(RpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                //  .withServiceToken()
                 .get(outPutQueueV1 + "{}/obj_export/?as_file=true", id)
                 .assertStatus(200);
     }
 
     @Step("Импорт OutPutQueue")
-    public static ImportObject importOutPutQueue(String pathName) {
-        return new Http(RpcRouter)
-                .withServiceToken()
+    public static void importOutPutQueue(String pathName) {
+        new Http(RpcRouter)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(outPutQueueV1 + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
                 .jsonPath()
@@ -62,8 +61,8 @@ public class OutputQueueSteps extends Steps {
     }
 
     @Step("Экспорт нескольких OutPutQueue по Id")
-    public static Response exportOutPutQueuesById(JSONObject json) {
-        return new Http(RpcRouter)
+    public static void exportOutPutQueuesById(JSONObject json) {
+        new Http(RpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .post(outPutQueueV1 + "objects_export/")
@@ -79,7 +78,7 @@ public class OutputQueueSteps extends Steps {
                 .build()
                 .toJson();
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(queue)
                 .post(outPutQueueV1)
                 .assertStatus(201)
@@ -90,7 +89,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение списка OutPutQueue")
     public static List<OutputQueueResponse> getOutPutQueueList() {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(outPutQueueV1)
                 .assertStatus(200)
                 .extractAs(GetOutPutQueueList.class)
@@ -100,7 +99,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Обновление OutPutQueue")
     public static OutputQueueResponse updateOutPutQueue(Integer id, JSONObject jsonObject) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .put(outPutQueueV1 + "{}/", id)
                 .assertStatus(200)
@@ -111,7 +110,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Частичное обновление OutPutQueue")
     public static void partialUpdateOutPutQueue(Integer id, JSONObject jsonObject) {
         new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .patch(outPutQueueV1 + "{}/", id)
                 .assertStatus(200);
@@ -120,7 +119,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Копирование OutPutQueue")
     public static OutputQueueResponse copyOutPutQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(outPutQueueV1 + "{}/copy/", id)
                 .assertStatus(200)
                 .extractAs(OutputQueueResponse.class)
@@ -130,7 +129,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение OutPutQueue по id {id}")
     public static OutputQueueResponse getOutPutQueueById(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(outPutQueueV1 + "{}/", id)
                 .assertStatus(200)
                 .extractAs(OutputQueueResponse.class);
@@ -139,8 +138,8 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение OutPutQueue по name {name}")
     public static OutputQueueResponse getOutPutQueueByName(String name) {
         List<OutputQueueResponse> list = new Http(RpcRouter)
-                .withServiceToken()
-                .get(outPutQueueV1 + "?name={}", name)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(outPutQueueV1 + "?name__exact={}", name)
                 .assertStatus(200)
                 .extractAs(GetOutPutQueueList.class)
                 .getList();
@@ -150,8 +149,8 @@ public class OutputQueueSteps extends Steps {
     @Step("Проверка существования OutPutQueue по name {name}")
     public static boolean isOutPutQueueExist(String name) {
         List<OutputQueueResponse> list = new Http(RpcRouter)
-                .withServiceToken()
-                .get(outPutQueueV1 + "?name={}", name)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(outPutQueueV1 + "?name__exact={}", name)
                 .assertStatus(200)
                 .extractAs(GetOutPutQueueList.class)
                 .getList();
@@ -161,7 +160,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение списка OutPutQueue отсортированного по {fieldName}")
     public static List<OutputQueueResponse> getOrderingByFieldOutPutQueueList(String fieldName) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(outPutQueueV1 + "?ordering={}", fieldName)
                 .assertStatus(200)
                 .extractAs(GetOutPutQueueList.class)
@@ -171,7 +170,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение списка объектов использующих OutputQueue")
     public static Response getObjectsUsedOutputQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(outPutQueueV1 + "{}/used/", id)
                 .assertStatus(200);
     }
@@ -179,7 +178,7 @@ public class OutputQueueSteps extends Steps {
     @Step("Получение списка объектов используемых в OutputQueue")
     public static Response getObjectsUsingOutputQueue(Integer id) {
         return new Http(RpcRouter)
-                .withServiceToken()
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(outPutQueueV1 + "{}/using_objects/", id)
                 .assertStatus(200);
     }

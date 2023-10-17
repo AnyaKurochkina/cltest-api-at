@@ -65,7 +65,7 @@ public class RuleTest extends Tests {
     @TmsLink("")
     @Test
     public void deleteRuleTest() {
-        RuleResponse ruleResponse = createRule();
+        RuleResponse ruleResponse = createRuleWithOutAutoDelete();
         deleteRuleById(ruleResponse.getId());
         assertFalse(isRuleExist(ruleResponse.getName()));
     }
