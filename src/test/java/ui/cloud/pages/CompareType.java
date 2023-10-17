@@ -4,5 +4,6 @@ public enum CompareType {
     MORE,
     LESS,
     EQUALS,
-    ZERO
+    ZERO,
+    NOT_CHECK
 }

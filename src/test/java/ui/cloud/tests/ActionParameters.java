@@ -21,6 +21,6 @@ public class ActionParameters {
     boolean checkAlert = true;
     @Builder.Default
     boolean waitChangeStatus = true;
-    Duration timeOut;
+    Duration timeout;
     SelenideElement node;
 }

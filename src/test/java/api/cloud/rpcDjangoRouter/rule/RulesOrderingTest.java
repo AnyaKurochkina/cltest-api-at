@@ -35,7 +35,7 @@ public class RulesOrderingTest extends Tests {
         for (int i = 0; i < exchangeList.size() - 1; i++) {
             RuleResponse currentQueue = exchangeList.get(i);
             RuleResponse nextQueue = exchangeList.get(i + 1);
-            assertTrue(delNoDigOrLet(currentQueue.getTitle()).compareTo(delNoDigOrLet(nextQueue.getTitle())) <= 0
+            assertTrue(currentQueue.getTitle().compareToIgnoreCase(nextQueue.getTitle()) <= 0
                     ,String.format("%s стоит выше чем %s", currentQueue.getTitle(), nextQueue.getTitle()));
         }
     }

@@ -60,8 +60,8 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
-                .subgraphId(subgraph.getGraphId())
-                .subgraphVersion("Последняя")
+                .sourceId(subgraph.getGraphId())
+              //  .subgraphVersion("Последняя")
                 .number(1)
                 .build();
         new ControlPanelIndexPage().goToGraphsPage()
@@ -77,8 +77,8 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
-                .subgraphId(subgraph.getGraphId())
-                .subgraphVersion("Последняя")
+                .sourceId(subgraph.getGraphId())
+                //.subgraphVersion("Последняя")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
                 }})
@@ -108,7 +108,8 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name("")
                 .description("test")
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .number(1)
                 .timeout(1)
                 .build();
@@ -119,7 +120,8 @@ public class AddNodeTest extends GraphBaseTest {
         node = GraphItem.builder()
                 .name("test")
                 .description("")
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .number(1)
                 .timeout(1)
                 .build();
@@ -134,8 +136,8 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
-                .subgraphId(subgraph.getGraphId())
-                .subgraphVersion("Последняя")
+                .sourceType(subgraph.getGraphId())
+                .sourceVersion("Последняя")
                 .number(0)
                 .timeout(0)
                 .build();
@@ -150,8 +152,9 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
-                .subgraphId(subgraph.getGraphId())
-                .subgraphVersion("Последняя")
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
+                .sourceVersion("Последняя")
                 .build();
         new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
@@ -167,8 +170,9 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(TEMPLATE_NAME)
                 .description(nodeDescription)
-                .templateId(template.getId())
-                .templateVersion("Последняя")
+                .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
+                .sourceVersion("Последняя")
                 .timeout(100)
                 .number(1)
                 .build();
@@ -281,7 +285,7 @@ public class AddNodeTest extends GraphBaseTest {
         page.getOutputTextArea().setValue("{\"override_param_2\":\"1\"}");
         assertEquals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)",
                 page.getOutputHint().getText());
-        $x("//label[text()='Printed output (Переопределение Printed output запрещено в шаблоне)']")
+        $x("//*[text()='Printed output (Переопределение Printed output запрещено в шаблоне)']")
                 .shouldBe(Condition.visible);
         assertEquals("{}", page.getPrintedOutputTextArea().getWhitespacesRemovedValue());
     }

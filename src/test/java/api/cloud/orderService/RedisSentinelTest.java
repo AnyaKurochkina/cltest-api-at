@@ -21,7 +21,7 @@ public class RedisSentinelTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(RedisSentinel product) {
         //noinspection EmptyTryBlock
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {}
@@ -30,7 +30,7 @@ public class RedisSentinelTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
     void resetPassword(RedisSentinel product) {
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
             redis.resetPassword();
@@ -40,7 +40,7 @@ public class RedisSentinelTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать/Удалить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Создать/Удалить пользователя {0}")
     void addUser(RedisSentinel product) {
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
             redis.createUser("user2", "mzVaohLVnTnH2XrEEa9iLEVHWbN2XP");
@@ -51,7 +51,7 @@ public class RedisSentinelTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] Проверка создания {0}")
     void checkConnect(RedisSentinel product) {
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
             redis.checkConnect();
@@ -61,7 +61,7 @@ public class RedisSentinelTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить параметр notify-keyspace-events {0}")
+    @ParameterizedTest(name = "[{index}] Изменить параметр notify-keyspace-events {0}")
     void changeNotifyKeyspaceEvents(RedisSentinel product) {
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {
             redis.changeNotifyKeyspaceEvents("KEA");
@@ -70,7 +70,7 @@ public class RedisSentinelTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(RedisSentinel product) {
         try (RedisSentinel redis = product.createObjectExclusiveAccess()) {

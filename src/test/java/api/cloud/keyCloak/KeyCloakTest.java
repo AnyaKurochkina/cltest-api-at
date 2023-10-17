@@ -1,15 +1,16 @@
 package api.cloud.keyCloak;
 
+import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import steps.keyCloak.KeyCloakSteps;
-import api.Tests;
-
-import static org.junit.jupiter.api.Assertions.fail;
 
 
 @Feature("Авторизация на портале")

@@ -1,13 +1,15 @@
 {
   "order": {
-    "project_name": "proj-frybyv41jh",
-    "product_id": "73fa9b8a-86bc-435a-89d2-00a875469136",
+    "project_name": "proj-ahjjqmlgnm",
+    "product_id": "dd04d23b-44c9-4c4a-81bc-55302f39a655",
     "attrs": {
       "platform": "ceph",
       "data_center": "5",
-      "net_segment": "dev-srv-app"
+      "net_segment": "prod-srv-app",
+      "storage_type": "nvme"
     },
     "count": 1,
-    "label": "S3 CEPH Tenant"
+    "label": "S3 CEPH Tenant",
+    "lifetime": null
   }
 }

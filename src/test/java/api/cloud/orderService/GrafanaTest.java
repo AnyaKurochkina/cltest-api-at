@@ -20,7 +20,7 @@ public class GrafanaTest extends Tests {
     @TmsLink("1731001")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Grafana product) {
         //noinspection EmptyTryBlock
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
@@ -30,7 +30,7 @@ public class GrafanaTest extends Tests {
     @TmsLink("1731002")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(Grafana product) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
             grafana.expandMountPoint();
@@ -40,7 +40,7 @@ public class GrafanaTest extends Tests {
     @TmsLink("1731003")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
     void resetPassword(Grafana product) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
             grafana.resetPassword("Ha81GpR75Dhet6yY0t4DBBNjJ6imn");
@@ -49,7 +49,7 @@ public class GrafanaTest extends Tests {
 
     @TmsLink("1731006")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "AD Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
     void checkCreate(Grafana product) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
             grafana.checkCertsBySsh();
@@ -58,7 +58,7 @@ public class GrafanaTest extends Tests {
 
     @TmsLink("1731008")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Grafana product) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {

@@ -272,7 +272,7 @@ public class OtherTest extends AbstractComputeTest {
     @Test
     @TmsLink("1398404")
     @DisplayName("Cloud Compute. Создание диска из образа MarketPlace")
-    void creatDiskFromImage() {
+    void createDiskFromImage() {
         DiskCreate disk = new IndexPage().goToDisks().addDisk()
                 .setAvailabilityZone(availabilityZone)
                 .setName(getRandomName())
@@ -373,6 +373,6 @@ public class OtherTest extends AbstractComputeTest {
                 .goToVirtualMachine()
                 .selectCompute(vm.getName())
                 .getNetworkMenu()
-                .updateSubnet(defaultNetwork, "default");
+                .updateSubnet(defaultNetwork, defaultSubNetwork);
     }
 }

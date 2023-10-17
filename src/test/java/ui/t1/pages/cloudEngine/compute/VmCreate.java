@@ -28,6 +28,7 @@ public class VmCreate {
     private Boolean deleteOnTermination;
     private String flavorName;
     private String flavor;
+    private String network;
     private String subnet;
     private String networkInterface;
     private String publicIp;
@@ -84,6 +85,11 @@ public class VmCreate {
         return this;
     }
 
+    public VmCreate seNetwork(String network) {
+        this.network = Select.byLabel("Сеть").setContains(network);
+        return this;
+    }
+
     public VmCreate setSubnet(String subnet) {
         this.subnet = Select.byLabel("Подсеть", 1).setContains(subnet);
         return this;
@@ -116,7 +122,6 @@ public class VmCreate {
         Select select = Select.byLabel("Группы безопасности сетевого интерфейса");
         if (Objects.isNull(this.securityGroups)) {
             this.securityGroups = new ArrayList<>();
-//            select.clear();
         }
         this.securityGroups.add(securityGroups);
         select.set(securityGroups);
@@ -132,6 +137,12 @@ public class VmCreate {
     public VmCreate setUserImage(String image) {
         this.userImage = image;
         SelectBox.setUserImage(image);
+        return this;
+    }
+
+    public VmCreate setMarketplaceImage(String image) {
+        this.userImage = image;
+        SelectBox.setMarketplaceImage(image);
         return this;
     }
 

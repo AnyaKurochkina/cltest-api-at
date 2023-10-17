@@ -18,6 +18,7 @@ import static api.Tests.activeCnd;
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.open;
 import static core.helper.StringUtils.getContextType;
+import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static ui.cloud.pages.productCatalog.EntityListPage.openActionMenu;
 
@@ -25,12 +26,7 @@ import static ui.cloud.pages.productCatalog.EntityListPage.openActionMenu;
 public class UsersPage {
 
     private final Button addUserBtn = Button.byElement($x("//*[@data-testid='user-management-add-button']//button"));
-    private final Button closeDialog = Button.byText("Закрыть");
-    private final Button cancelDialog = Button.byText("Отмена");
-    private final Button confirmChangesBtn = Button.byText("Применить", 2);
     private static final Button confirmSearchBtn = Button.byText("Применить");
-    private final Button openRolesListBtn = Button.byXpath("//button[@title = 'Open']");
-    private final Button closeRolesListBtn = Button.byXpath("//button[@title = 'Close']");
     private static final Input searchUser = Input.byPlaceholder("Введите данные пользователя");
     private static final Button clearFilters = Button.byText("Сбросить фильтры");
 
@@ -70,37 +66,28 @@ public class UsersPage {
     }
 
     @Step("Добавить роли")
-    public UsersPage addRole(IamUser user, String roleName) {
-        openActionMenu("Пользователь", user.getEmail());
-        $x("//*[text()= 'Редактировать']").click();
-        openRolesListBtn.click();
-        StringUtils.$x("//li[@role = 'menuitem' and text() = 'Базовые']").click();
-        StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", roleName).click();
-        Waiting.sleep(1000);
-        assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", roleName).isDisplayed());
-        closeRolesListBtn.click();
-        confirmChangesBtn.click();
+    public UsersPage addRole(IamUser user, List<String> roles) {
+        editUserAction(user.getEmail());
+        new AddUserDialog(WebDriverRunner.currentFrameUrl()).addRole(roles);
         Alert.green("Изменен пользователь {}", user.getEmail());
         return this;
     }
 
     @Step("Удалить роли")
     public UsersPage removeRoles(IamUser user, List<String> roleNames) {
-        openActionMenu("Пользователь", user.getEmail());
-        $x("//*[text()= 'Редактировать']").click();
-        for (String role : roleNames) {
-            StringUtils.$x("//*[@role = 'button']//*[text() = '{}']//parent::div/*[local-name() = 'svg']", role).click();
-        }
-        $x("//*[text() = 'Поле обязательно для заполнения']").shouldBe(Condition.visible);
-        confirmChangesBtn.getButton().shouldBe(Condition.disabled);
-        closeDialog.click();
+        editUserAction(user.getEmail());
+        new AddUserDialog(WebDriverRunner.currentFrameUrl()).removeRole(roleNames);
+        Alert.green("Изменен пользователь {}", user.getEmail());
+        user.removeRole(roleNames);
+        List<String> rolesValue = getCurrentRoles(user.getEmail());
+        assertEqualsList(user.getRole(), rolesValue);
         return this;
     }
 
     @Step("Показать пользователей")
     public UsersPage showUsers(String text) {
         StringUtils.$x("//*[@id='selectValueWrapper']").click();
-        StringUtils.$x("//div[text() = '{}']", text).shouldBe(Condition.visible).click();
+        StringUtils.$x("//span[text() = '{}']", text).parent().shouldBe(Condition.visible).click();
         return this;
     }
 
@@ -121,8 +108,7 @@ public class UsersPage {
         confirmSearchBtn.click();
         UsersListTable table = new UsersListTable();
         if (table.isColumnValueEquals("Пользователь", user.getEmail())) {
-            List<String> rolesValue = Arrays.asList(table.getRowByColumnValue("Пользователь", user.getEmail())
-                    .getValueByColumn("Роли").split("\n"));
+            List<String> rolesValue = getCurrentRoles(user.getEmail());
             log.info(rolesValue);
             return isRolesEquals(rolesValue, user.getRole());
         }
@@ -139,6 +125,17 @@ public class UsersPage {
         confirmSearchBtn.click();
         UsersListTable table = new UsersListTable();
         return table.isColumnValueEquals("Пользователь", email);
+    }
+
+    private static List<String> getCurrentRoles(String email) {
+        UsersListTable table = new UsersListTable();
+        return Arrays.asList(table.getRowByColumnValue("Пользователь", email)
+                .getValueByColumn("Роли").split("\n"));
+    }
+
+    private void editUserAction(String email) {
+        openActionMenu("Пользователь", email);
+        $x("//*[text()= 'Редактировать']").click();
     }
 
     private static boolean isRolesEquals(List<String> roles, List<String> userRoles) {

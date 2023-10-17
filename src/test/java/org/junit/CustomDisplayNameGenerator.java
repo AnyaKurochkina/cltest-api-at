@@ -14,11 +14,7 @@ public class CustomDisplayNameGenerator extends DisplayNameGenerator.Standard {
             name = testMethod.getAnnotation(Story.class).value();
         else if (testMethod.isAnnotationPresent(ParameterizedTest.class)) {
             String nameParametrized = testMethod.getAnnotation(ParameterizedTest.class).name();
-            int index = nameParametrized.indexOf('{');
-            if(index > 0) {
-                nameParametrized = nameParametrized.substring(0, index);
-                name = nameParametrized;
-            }
+            return nameParametrized.replaceAll("\\[[^\\[\\]]*]|\\{[^{}]*}", "");
         }
         return name;
     }

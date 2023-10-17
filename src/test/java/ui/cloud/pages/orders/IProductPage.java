@@ -29,7 +29,6 @@ import static api.Tests.clickableCnd;
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
-import static core.helper.StringUtils.doubleToString;
 import static ui.elements.Alert.checkNoRedAlerts;
 import static ui.elements.TypifiedElement.postfix;
 import static ui.elements.TypifiedElement.scrollCenter;
@@ -164,8 +163,10 @@ public abstract class IProductPage {
             goToCluster();
         if (params.isWaitChangeStatus())
             waitChangeStatus();
-        if (params.isCheckLastAction())
+        if (params.isCheckLastAction()) {
+            Waiting.sleep(1000);
             checkLastAction(action);
+        }
     }
 
     @SneakyThrows
@@ -196,14 +197,16 @@ public abstract class IProductPage {
             $x("//a[.='{}']", productNameText).scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         }
         if (params.isWaitChangeStatus()) {
-            if (params.getTimeOut() == null) {
+            if (params.getTimeout() == null) {
                 waitChangeStatus();
             } else {
-                waitChangeStatus(params.getTimeOut());
+                waitChangeStatus(params.getTimeout());
             }
         }
-        if (params.isCheckLastAction())
+        if (params.isCheckLastAction()) {
+            Waiting.sleep(1000);
             checkLastAction(action);
+        }
     }
 
     public void goToCluster() {

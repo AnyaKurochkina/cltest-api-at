@@ -75,11 +75,24 @@ public class DiskTest extends AbstractComputeTest {
     }
 
     @Test
+    @TmsLink("")
+    @DisplayName("Cloud Compute. Диски. Изменить тип диска")
+    void changeTypeDisk() {
+        DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone)
+                .setType(hddTypeFirst).setName(getRandomName()).setSize(1L).clickOrder();
+        Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate();
+        diskPage.runActionWithCheckCost(CompareType.NOT_CHECK, () -> diskPage.changeTypeDisk(hddTypeSecond));
+    }
+
+    @Test
     @TmsLink("1249422")
     @DisplayName("Cloud Compute. Диски. Подключить/Отключить диск")
     void attachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())

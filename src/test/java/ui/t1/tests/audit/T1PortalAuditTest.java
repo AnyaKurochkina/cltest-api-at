@@ -60,7 +60,8 @@ public class T1PortalAuditTest extends Tests {
                 .createObject();
 
         partialUpdateGraphInContext(graph.getGraphId(),
-                new JSONObject().put("id", graph.getGraphId()).put("description", "audit test"),
+                new JSONObject().put("id", graph.getGraphId()).put("name", graph.getName()).put("description", "audit test")
+                        .put("version_changed_by_user", "f57125a4-27a8-4aea-87e1-591ed8af3795"),
                 project.getId());
         deleteGraphByIdInContext(graph.getGraphId(), project.getId());
 

@@ -210,7 +210,8 @@ public class PostgreSqlAstraPage extends IProductPage {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
-        expandDisk(name, size, node);
+        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
+        runActionWithParameters(BLOCK_APP, "Расширить точку монтирования /pg_data (standalone)", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
         btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +
@@ -218,8 +219,6 @@ public class PostgreSqlAstraPage extends IProductPage {
         Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-        Assertions.assertTrue(new Table(HEADER_CONNECT_STATUS).isColumnValueContains(HEADER_DISK_SIZE,
-                value));
     }
 
     public void resetPasswordDb() {

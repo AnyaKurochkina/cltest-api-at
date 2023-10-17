@@ -25,7 +25,7 @@ public class ArtemisAstraTest extends Tests {
 
     @TmsLink("982658")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Artemis product) {
         //noinspection EmptyTryBlock
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
@@ -35,7 +35,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLinks({@TmsLink("982647"),@TmsLink("982652")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать/удалить сервис {0}")
+    @ParameterizedTest(name = "[{index}] Создать/удалить сервис {0}")
     void createService(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.createService("randomserv2", "randomcert2");
@@ -46,7 +46,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982661")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать клиента Own без сервиса {0}")
+    @ParameterizedTest(name = "[{index}] Создать клиента Own без сервиса {0}")
     void createClientOwn(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             Artemis.Client client = new Artemis.Client();
@@ -60,7 +60,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982653")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать клиента temporary {0}")
+    @ParameterizedTest(name = "[{index}] Создать клиента temporary {0}")
     void createClientTemporary(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.createService("someserv2", "somecertif");
@@ -76,7 +76,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982655")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить клиента {0}")
+    @ParameterizedTest(name = "[{index}] Удалить клиента {0}")
     void deleteClient(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             Artemis.Client client = new Artemis.Client();
@@ -91,7 +91,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982651")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать клиента Own с сервисом {0}")
+    @ParameterizedTest(name = "[{index}] Создать клиента Own с сервисом {0}")
     void createClientOwnWithService(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.createService("someserv", "somecertif");
@@ -107,7 +107,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982662")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.restart();
@@ -118,7 +118,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982648")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.stopSoft();
@@ -130,7 +130,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982649")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
 //            artemis.stopHard();
@@ -146,7 +146,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLinks({@TmsLink("982654"),@TmsLink("982656")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить/Выключить принудительно {0}")
+    @ParameterizedTest(name = "[{index}] Включить/Выключить принудительно {0}")
     void stopHard(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.stopHard();
@@ -157,7 +157,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982650")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Проверить конфигурацию {0}")
     void refreshVmConfig(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.refreshVmConfig();
@@ -167,7 +167,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("1092312")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Отправить конфигурацию кластера на email {0}")
+    @ParameterizedTest(name = "[{index}] Отправить конфигурацию кластера на email {0}")
     void exportConf(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.exportConf();
@@ -177,7 +177,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("1093969")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновление сертификатов Artemis {0}")
+    @ParameterizedTest(name = "[{index}] Обновление сертификатов Artemis {0}")
     void updateCerts(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.updateCerts();
@@ -187,7 +187,7 @@ public class ArtemisAstraTest extends Tests {
     @TmsLink("982660")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Artemis product) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {

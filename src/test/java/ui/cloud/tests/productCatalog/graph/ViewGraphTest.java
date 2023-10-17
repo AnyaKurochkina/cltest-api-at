@@ -134,7 +134,8 @@ public class ViewGraphTest extends GraphBaseTest {
         JSONObject graphItem = GraphItem.builder()
                 .name("1")
                 .description("1")
-                .subgraphId(graph.getGraphId())
+                .sourceId(graph.getGraphId())
+                .sourceType("subgraph")
                 .build()
                 .toJson();
         JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));
@@ -157,7 +158,8 @@ public class ViewGraphTest extends GraphBaseTest {
         JSONObject graphItem = GraphItem.builder()
                 .name("1")
                 .description("1")
-                .subgraphId(graph.getGraphId())
+                .sourceId(graph.getGraphId())
+                .sourceType("subgraph")
                 .build()
                 .toJson();
         JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));

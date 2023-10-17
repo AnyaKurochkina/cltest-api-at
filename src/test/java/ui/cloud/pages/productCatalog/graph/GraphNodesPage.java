@@ -102,8 +102,8 @@ public class GraphNodesPage extends GraphPage {
         Waiting.sleep(1000);
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
-        if (!StringUtils.isNullOrEmpty(node.getSubgraphId())) {
-            Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
+        if (!StringUtils.isNullOrEmpty(node.getSourceId())) {
+            Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
             subgraphSelect.setContains(subgraph.getName());
             paramsTab.click();
             Waiting.sleep(1500);
@@ -114,8 +114,8 @@ public class GraphNodesPage extends GraphPage {
             timeoutInput.setValue(String.valueOf(node.getTimeout()));
             logLevelSelect.getElement().$x(".//select").shouldBe(Condition.disabled);
         }
-        if (!Objects.isNull(node.getTemplateId())) {
-            Template template = TemplateSteps.getTemplateById(node.getTemplateId());
+        if (!Objects.isNull(node.getSourceId())) {
+            Template template = TemplateSteps.getTemplateById(Integer.parseInt(node.getSourceId()));
             templateSelect.setContains(template.getName());
             Waiting.sleep(2000);
         }
@@ -143,7 +143,7 @@ public class GraphNodesPage extends GraphPage {
         subgraphVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
-        node.setSubgraphVersion(version);
+        node.setSourceVersion(version);
         node.setDescription(description);
         Waiting.sleep(1000);
         return this;
@@ -159,7 +159,7 @@ public class GraphNodesPage extends GraphPage {
         templateVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
-        node.setTemplateVersion(version);
+        node.setSourceVersion(version);
         node.setDescription(description);
         Waiting.sleep(1000);
         return this;
@@ -199,7 +199,7 @@ public class GraphNodesPage extends GraphPage {
         addNodeButton.click();
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
-        Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
+        Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
         subgraphSelect.setContains(subgraph.getName());
         if (node.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
@@ -238,22 +238,21 @@ public class GraphNodesPage extends GraphPage {
         //Сериализация, чтобы подтянулись значения из JSON шаблона
         node = JsonHelper.deserialize(node.toJson().toString(), GraphItem.class);
         if (Objects.isNull(node.getNumber())) node.setNumber(1);
-        if (StringUtils.isNullOrEmpty(node.getSubgraphVersion())) node.setSubgraphVersion("Последняя");
-        if (StringUtils.isNullOrEmpty(node.getTemplateVersion())) node.setTemplateVersion("Последняя");
+        if (StringUtils.isNullOrEmpty(node.getSourceId())) node.setSourceVersion("Последняя");
         selectNodeInGraph(node);
         editNodeButton.click();
         Waiting.sleep(1000);
         nodeName.getInput().shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.getInput().shouldHave(Condition.exactValue(node.getDescription()));
-        if (!StringUtils.isNullOrEmpty(node.getSubgraphId())) {
-            Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
+        if (!StringUtils.isNullOrEmpty(node.getSourceId())) {
+            Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
             assertTrue(subgraphSelect.getValue().contains(subgraph.getName()));
-            assertEquals(node.getSubgraphVersion(), subgraphVersionSelect.getValue());
+            assertEquals(node.getSourceId(), subgraphVersionSelect.getValue());
         }
-        if (!Objects.isNull(node.getTemplateId())) {
-            Template template = TemplateSteps.getTemplateById(node.getTemplateId());
+        if (!Objects.isNull(node.getSourceId())) {
+            Template template = TemplateSteps.getTemplateById(Integer.parseInt(node.getSourceId()));
             assertTrue(templateSelect.getValue().contains(template.getName()));
-            assertEquals(node.getTemplateVersion(), templateVersionSelect.getValue());
+            assertEquals(node.getSourceId(), templateVersionSelect.getValue());
         }
         paramsTab.click();
         Waiting.sleep(1500);
