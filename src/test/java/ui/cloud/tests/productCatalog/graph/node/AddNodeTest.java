@@ -285,7 +285,7 @@ public class AddNodeTest extends GraphBaseTest {
         page.getOutputTextArea().setValue("{\"override_param_2\":\"1\"}");
         assertEquals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)",
                 page.getOutputHint().getText());
-        $x("//label[text()='Printed output (Переопределение Printed output запрещено в шаблоне)']")
+        $x("//*[text()='Printed output (Переопределение Printed output запрещено в шаблоне)']")
                 .shouldBe(Condition.visible);
         assertEquals("{}", page.getPrintedOutputTextArea().getWhitespacesRemovedValue());
     }

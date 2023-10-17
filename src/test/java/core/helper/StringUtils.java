@@ -15,6 +15,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Log4j2
 public final class StringUtils {
@@ -112,6 +113,12 @@ public final class StringUtils {
             return "Проект";
         }
         return "Организация";
+    }
+
+    public static List<Integer> convertStringVersionToIntArrayVersion(String version) {
+        return Arrays.stream(version.split("\\."))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
     }
 
     public static boolean isNullOrEmpty(String value) {

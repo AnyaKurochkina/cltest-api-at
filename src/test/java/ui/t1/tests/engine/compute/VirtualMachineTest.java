@@ -39,7 +39,10 @@ public class VirtualMachineTest extends AbstractComputeTest {
     void vmCreatePage() {
         VmCreate vmPage = new IndexPage().goToVirtualMachine().addVm();
         vmPage.setName(new Generex("[a-zA-Z0-9]{5,10}").random())
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setBootSize(2)
                 .setRegion(region)
@@ -63,7 +66,10 @@ public class VirtualMachineTest extends AbstractComputeTest {
     void createVmWithoutBootDiskAutoDelete() {
         String name = getRandomName();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(false)
                 .setBootSize(6)
@@ -105,7 +111,10 @@ public class VirtualMachineTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины. Подключить IP")
     void attachAndDetachIp() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())
