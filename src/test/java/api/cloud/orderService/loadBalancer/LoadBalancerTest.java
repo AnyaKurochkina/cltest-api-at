@@ -13,6 +13,7 @@ import models.cloud.subModels.loadBalancer.Server;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -132,6 +133,8 @@ public class LoadBalancerTest extends Tests {
                     .checkUri("/status")
                     .build();
             balancer.addBackend(backend);
+            if (balancer.isDev())
+                Assertions.assertTrue(balancer.isStateContains(backend.getBackendName()));
             balancer.addFrontend(Frontend.builder()
                     .frontendName("frontend_tcp_width_check")
                     .defaultBackendNameTcp(backend.getBackendName())

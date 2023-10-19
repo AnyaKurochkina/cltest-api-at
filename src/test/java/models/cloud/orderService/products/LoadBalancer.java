@@ -13,10 +13,7 @@ import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
-import models.cloud.subModels.loadBalancer.Backend;
-import models.cloud.subModels.loadBalancer.Frontend;
-import models.cloud.subModels.loadBalancer.Gslb;
-import models.cloud.subModels.loadBalancer.Server;
+import models.cloud.subModels.loadBalancer.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -47,6 +44,7 @@ public class LoadBalancer extends IProduct {
     private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
     private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
     private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}.last()";
+
     @Override
     public Entity init() {
         jsonTemplate = "/orders/load_balancer.json";
@@ -56,17 +54,17 @@ public class LoadBalancer extends IProduct {
             osVersion = getRandomOsVersion();
         if (password == null)
             password = "AuxDG%Yg%wtfCqL3!kopIPvX%ud1HY@J";
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
-        if(zone == null)
+        if (zone == null)
             setZone(ReferencesStep.getJsonPathList(String
-                    .format("tags__contains=%s,available&directory__name=gslb_servers", segment))
+                            .format("tags__contains=%s,available&directory__name=gslb_servers", segment))
                     .getString("[0].data.name"));
         if (flavor == null)
             flavor = getMinFlavor();
@@ -134,8 +132,6 @@ public class LoadBalancer extends IProduct {
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
         backends.add(backend);
         save();
-        if (isDev())
-            Assertions.assertTrue(isStateContains(backend.getBackendName()));
     }
 
     public void addFrontend(Frontend frontend) {
@@ -176,6 +172,11 @@ public class LoadBalancer extends IProduct {
                 new JSONObject().put("backend_name", backendName).put("action", action).put("servers", servers), this.getProjectId());
     }
 
+    public void createHealthCheck(HealthCheck healthCheck) {
+        OrderServiceSteps.executeAction("balancer_release_create_health_check", this,
+                serialize(healthCheck), this.getProjectId());
+    }
+
     public void editFrontEnd(Frontend frontend, boolean isTcpBackend, String backendName, Integer port) {
         String backendFiled = isTcpBackend ? "default_backend_name_tcp" : "default_backend_name_http";
         JSONObject data = new JSONObject().put(backendFiled, backendName).put("frontend", serialize(frontend)).put("frontend_port", port);
@@ -191,6 +192,17 @@ public class LoadBalancer extends IProduct {
         save();
         if (isDev())
             Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
+    }
+
+    public void deleteFrontends(List<Frontend> frontends) {
+        OrderServiceSteps.executeAction("balancer_release_delete_frontends", this,
+                new JSONObject().put("frontends", serializeList(frontends)), this.getProjectId());
+        frontends.forEach(e -> {
+            Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
+                    String.format(FRONTEND_PATH, e.getFrontendName()), Frontend.class), "Frontend не удален");
+            frontends.remove(e);
+        });
+        save();
     }
 
     public void deleteGslb(Gslb gslb) {

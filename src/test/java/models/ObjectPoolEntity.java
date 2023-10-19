@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import models.cloud.orderService.interfaces.IProduct;
 import org.junit.jupiter.api.parallel.ResourceLock;
 
 import java.lang.management.ManagementFactory;
@@ -153,15 +154,20 @@ public class ObjectPoolEntity {
     public void lock() {
         if(isDeadLock(Thread.currentThread().getName(), lock.getOwnerThreadName()))
             throw new CreateEntityException("Тестовое исключение. Надо перезапустить тест :(");
-        writeLog("lock() " + status + " " + entity);
+        if(IProduct.class.isAssignableFrom(clazz))
+            writeLog("lock() " + status + " " + entity);
         lock.tryLock(2, TimeUnit.HOURS);
-        writeLog("lockPost() " + status + " " + entity);
+        if(IProduct.class.isAssignableFrom(clazz))
+            writeLog("lock()2 " + status + " " + entity);
     }
 
     public void release() {
         try {
-            writeLog("unlock() " + status + " " + entity);
+            if(IProduct.class.isAssignableFrom(clazz))
+                writeLog("unlock() " + status + " " + entity);
             lock.unlock();
+            if(IProduct.class.isAssignableFrom(clazz))
+                writeLog("unlock()2 " + status + " " + entity);
         } catch (IllegalMonitorStateException e) {
             writeLog("error" + e);
             e.printStackTrace();
@@ -174,7 +180,7 @@ public class ObjectPoolEntity {
     }
 
     private static void writeLog(String text) {
-//        log.info("RESOURCE_LOG {} {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
+        log.info("2RESOURCE_LOG {} {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
     }
 
     private static class CustomReentrantLock extends ReentrantLock {
