@@ -16,7 +16,6 @@ import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.createAction;
@@ -56,38 +55,9 @@ public class ExtRelationTest extends Tests {
     @TmsLink("1600594")
     @Test
     public void createExtRelationWithExclusiveFalseTest() {
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject json2 = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
-        Item primaryItem2 = createItem(project.getId(), json2);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
+        Item primaryItem2 = createItem(project);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         relationsIdsForDelete.add(extRelation.getId());
@@ -106,38 +76,9 @@ public class ExtRelationTest extends Tests {
     @TmsLink("1600596")
     @Test
     public void createExtRelationWithExclusiveTrueTest() {
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject json2 = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
-        Item primaryItem2 = createItem(project.getId(), json2);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
+        Item primaryItem2 = createItem(project);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 true);
         relationsIdsForDelete.add(extRelation.getId());
@@ -155,28 +96,8 @@ public class ExtRelationTest extends Tests {
     @TmsLink("1600598")
     @Test
     public void deleteExtRelationWhenItemStateChangedTest() {
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         assertTrue(isRelationExistById(projects, project.getId(), extRelation.getId()), String.format("Relation c id - %d не существует", extRelation.getId()));

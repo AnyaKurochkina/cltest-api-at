@@ -6,6 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.productCatalog.Env;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.Modification;
@@ -33,7 +34,7 @@ public class GraphContextTest extends Tests {
 
     public GraphContextTest() {
         project = Project.builder()
-               // .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
+                .projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
                 .isForOrders(true)
                 .build()
                 .createObject();

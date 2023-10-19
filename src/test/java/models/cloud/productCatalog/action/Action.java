@@ -79,6 +79,8 @@ public class Action extends Entity {
     private String dataConfigKey;
     @JsonProperty("name")
     private String name;
+    @JsonProperty("inactive_reason")
+    private String inactiveReason;
     private Integer number;
     @JsonProperty("allowed_groups")
     private List<Object> allowedGroups;

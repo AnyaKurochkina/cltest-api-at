@@ -9,13 +9,11 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import models.cloud.stateService.extRelations.ExtRelation;
-import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.createAction;
@@ -55,38 +53,9 @@ public class ItemTest extends Tests {
     @TmsLink("1744953")
     @Test
     public void getPrimaryItemsListBySecondaryItemIdTest() {
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        JSONObject json2 = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
-        Item primaryItem2 = createItem(project.getId(), json2);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
+        Item primaryItem2 = createItem(project);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         relationsIdsForDelete.add(extRelation.getId());
@@ -102,38 +71,9 @@ public class ItemTest extends Tests {
     @TmsLink("1745012")
     @Test
     public void getSecondaryItemsListByPrimaryItemIdTest() {
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        JSONObject secondaryJson2 = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
-        Item secondaryItem2 = createItem(project.getId(), secondaryJson2);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
+        Item secondaryItem2 = createItem(project);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         relationsIdsForDelete.add(extRelation.getId());
@@ -149,28 +89,8 @@ public class ItemTest extends Tests {
     @TmsLink("1745012")
     @Test
     public void getItemsListWithOutPrimaryRelationTest() {
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("app")
-                .subtype("acls")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         relationsIdsForDelete.add(extRelation.getId());
@@ -181,28 +101,8 @@ public class ItemTest extends Tests {
     @TmsLink("1745012")
     @Test
     public void getItemsListWithOutSecondaryRelationTest() {
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("bm")
-                .subtype("acls")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("app")
-                .subtype("acls")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
         ExtRelation extRelation = createExtRelation(projects, project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         relationsIdsForDelete.add(extRelation.getId());

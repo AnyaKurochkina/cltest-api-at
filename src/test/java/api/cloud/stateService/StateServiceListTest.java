@@ -181,7 +181,7 @@ public class StateServiceListTest extends Tests {
         ZonedDateTime endDt = ZonedDateTime.parse("2022-11-23T12:42:00.000000Z");
         List<Item> list = getItemsListByFilter(String.format("created_row_dt__gte=%s&created_row_dt__lt=%s", startDt, endDt));
         for (Item item : list) {
-            ZonedDateTime createdRowDt = ZonedDateTime.parse(item.getCreatedRowDt());
+            ZonedDateTime createdRowDt = ZonedDateTime.parse(item.getCreatedRowDt() + "Z");
             assertTrue((createdRowDt.isAfter(startDt) || createdRowDt.isEqual(startDt)) && createdRowDt.isBefore(endDt),
                     String.format("Дата %s itema не входит в заданный промежуток.", createdRowDt));
         }
@@ -239,55 +239,24 @@ public class StateServiceListTest extends Tests {
     @DisplayName("Получение списка Items с параметром with_ext_relation=true")
     @TmsLink("1600823")
     public void getItemsListWithExtRelationTrueTest() {
-        Action action = createAction();
-        Graph graph = createGraph();
         Project project = Project.builder().isForOrders(true).build().createObject();
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject json2 = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
-        Item primaryItem2 = createItem(project.getId(), json2);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
+        Item primaryItem2 = createItem(project);
         ExtRelation extRelation = createExtRelation("projects", project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         ExtRelation extRelation2 = createExtRelation("projects", project.getId(), primaryItem2.getItemId(), primaryItem.getItemId(),
                 false);
         String newFolder = String.format("/organization/vtb/folder/folder/fold-test/project/%s/", project.getId());
         JSONObject newAction = JsonHelper.getJsonTemplate("stateService/createAction.json")
-                .set("$.order_ids", Collections.singletonList(orderId))
-                .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.order_ids", Collections.singletonList(primaryItem.getOrderId()))
+                .set("$.graph_id", primaryItem.getGraphId())
+                .set("$.action_id", primaryItem.getActions())
                 .set("$.data.folder", newFolder)
                 .set("$.create_dt", currentTimeInFormat())
                 .build();
         createBulkAddAction(project.getId(), newAction);
-        Response response = getItemsListByFilter(project.getId(), String.format("order_id=%s&with_ext_relations=true", orderId));
+        Response response = getItemsListByFilter(project.getId(), String.format("order_id=%s&with_ext_relations=true", primaryItem.getOrderId()));
         assertEquals(secondaryItem.getItemId(), response.jsonPath().getString("list[0].data.ext_relations.secondary[0]"));
         assertEquals(primaryItem2.getItemId(), response.jsonPath().getString("list[0].data.ext_relations.primary[0]"));
         deleteExtRelation("projects", project.getId(), extRelation.getId());

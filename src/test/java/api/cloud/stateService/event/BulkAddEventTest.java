@@ -43,12 +43,20 @@ public class BulkAddEventTest extends Tests {
                 .set("$.graph_id", graph.getGraphId())
                 .set("$.action_id", action.getActionId())
                 .set("$.events[0].item_id", uuid)
+                .set("$.events[0].graph_id", uuid)
+                .set("$.events[0].action_id", uuid)
+                .set("$.events[1].item_id", uuid)
+                .set("$.events[1].graph_id", uuid)
+                .set("$.events[1].action_id", uuid)
+                .set("$.events[2].item_id", uuid)
+                .set("$.events[2].graph_id", uuid)
+                .set("$.events[2].action_id", uuid)
                 .build();
         EventStateService expectedEvent = createBulkAddEvent(project.getId(), json2)
                 .assertStatus(201)
                 .jsonPath()
                 .getObject("[0]", EventStateService.class);
-        EventStateService actualEvent = getEventListByFilter("action_id", action.getActionId()).get(0);
+        EventStateService actualEvent = getEventListByFilter("action_id", action.getActionId()).get(2);
         assertEquals(expectedEvent, actualEvent);
     }
 
@@ -67,13 +75,19 @@ public class BulkAddEventTest extends Tests {
                 .set("$.action_id", action.getActionId())
                 .set("$.events[0].item_id", uuid)
                 .set("$.events[0].subtype", subtype)
+                .set("$.events[1].item_id", uuid)
+                .set("$.events[1].graph_id", graph.getGraphId())
+                .set("$.events[1].action_id", action.getActionId())
+                .set("$.events[2].item_id", uuid)
+                .set("$.events[2].graph_id", graph.getGraphId())
+                .set("$.events[2].action_id", action.getActionId())
                 .build();
         String error = createBulkAddEvent(project.getId(), json2)
                 .assertStatus(400)
                 .jsonPath()
                 .getList("", String.class)
                 .get(0);
-        String expectedErrorMsg = String.format("'%s' is not one of ['acls', 'build', 'state', 'config', 'parent', 'env_type', 'provider', 'warnings', 'inventory', 'host_groups', 'config_audit', 'src_order_id']\n" +
+        String expectedErrorMsg = String.format("'%s' is not one of ['acls', 'build', 'state', 'config', 'parent', 'env_type', 'provider', 'warnings', 'inventory', 'host_groups', 'config_audit', 'src_order_id', 'inventory_status']\n" +
                         "\n" +
                         "Failed validating 'enum' in schema['properties']['subtype']:\n" +
                         "    {'enum': ['acls',\n" +
@@ -87,7 +101,8 @@ public class BulkAddEventTest extends Tests {
                         "              'inventory',\n" +
                         "              'host_groups',\n" +
                         "              'config_audit',\n" +
-                        "              'src_order_id'],\n" +
+                        "              'src_order_id',\n" +
+                        "              'inventory_status'],\n" +
                         "     'type': 'string'}\n" +
                         "\n" +
                         "On instance['subtype']:\n" +
