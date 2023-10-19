@@ -37,6 +37,10 @@ public class GraphPage extends EntityPage {
     private final Button usageButton = Button.byText("Перейти в использование");
     private final String nameColumn = "Имя";
     private final RadioGroup typeRadioGroup = RadioGroup.byFieldsetLabel("Тип");
+    private final Button orderFormTab = Button.byText("Форма заказа");
+    private final Button plannerTab = Button.byText("Планировщик");
+    private final Button addOptionButton = Button.byText("Добавить конфигурацию");
+    private final Button saveOptionButton = Button.byXpath("//div[@role='dialog']//button[.='Сохранить']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
