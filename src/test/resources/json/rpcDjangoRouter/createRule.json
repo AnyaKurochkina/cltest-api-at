@@ -2,5 +2,9 @@
   "name": "string",
   "title": "api_test",
   "description": "string",
-  "code_expression": "return"
+  "code_expression": "return",
+  "test_queue_name":"",
+  "test_code_params": {},
+  "code_expression_result": "",
+  "code_expression_errors": {}
 }

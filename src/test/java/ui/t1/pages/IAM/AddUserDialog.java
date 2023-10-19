@@ -1,24 +1,24 @@
 package ui.t1.pages.IAM;
 
-import core.helper.StringUtils;
 import core.utils.Waiting;
 import ui.elements.Button;
 import ui.elements.Dialog;
-import ui.elements.TextArea;
+import ui.elements.SearchSelect;
 import ui.models.IamUser;
 
+import java.util.List;
 import java.util.Objects;
 
 import static core.helper.StringUtils.$x;
 import static core.helper.StringUtils.findByRegex;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.authorizer.AuthorizerSteps.getContextName;
 
 public class AddUserDialog extends Dialog {
 
-    private final Button openRolesListBtn = Button.byXpath("//button[@title = 'Open']");
-    private final Button closeRolesListBtn = Button.byXpath("//button[@title = 'Close']");
     private final Button confirmAddUserBtn = Button.byText("Добавить");
+    private final Button applyBtn = Button.byText("Применить", 2);
+    private final SearchSelect selectUser = SearchSelect.byLabel("Пользователь");
+    private final SearchSelect selectRole = SearchSelect.byName("roleList");
 
     public AddUserDialog(String url) {
         StringBuilder title = new StringBuilder();
@@ -38,13 +38,30 @@ public class AddUserDialog extends Dialog {
     }
 
     public void addUser(IamUser user) {
-        setTextareaAndPressEnter(TextArea.byName("userList"), user.getEmail());
-        openRolesListBtn.click();
-        StringUtils.$x("//li[@role = 'menuitem' and text() = 'Базовые']").click();
-        StringUtils.$x("//li[@role = 'option']//div[text() = '{}']", user.getRole().get(0)).click();
-        assertTrue(StringUtils.$x("//*[@role = 'button']//*[text() = '{}']", user.getRole().get(0)).isDisplayed());
-        closeRolesListBtn.click();
+        selectUser.set(user.getEmail());
+        selectUser.close();
+        for (String role : user.getRole()) {
+            selectRole.set(role);
+        }
+        selectRole.close();
         confirmAddUserBtn.click();
+        Waiting.sleep(1000);
+    }
+
+    public void addRole(List<String> roles) {
+        for (String role : roles) {
+            selectRole.add(role);
+        }
+        selectRole.close();
+        applyBtn.click();
+        Waiting.sleep(1000);
+    }
+
+    public void removeRole(List<String> roles) {
+        for (String role : roles) {
+            $x("//div[text() = '{}']/parent::div/button", role).click();
+        }
+        applyBtn.click();
         Waiting.sleep(1000);
     }
 }

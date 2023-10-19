@@ -25,7 +25,7 @@ public class WildFlyAstraTest extends Tests {
 
     @TmsLink("833650")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(WildFly product) {
         //noinspection EmptyTryBlock
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {}
@@ -34,7 +34,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("833652")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.expandMountPoint();
@@ -45,7 +45,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("833651")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.restart();
@@ -56,7 +56,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("833645")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopSoft();
@@ -68,7 +68,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("833648")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
 //            wildFly.stopHard();
@@ -83,7 +83,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("833647")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Проверить конфигурацию {0}")
     void refreshVmConfig(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.refreshVmConfig();
@@ -94,7 +94,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLinks({@TmsLink("833646"),@TmsLink("833653")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopHard();
@@ -105,7 +105,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("833644")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить сертификаты {0}")
+    @ParameterizedTest(name = "[{index}] Обновить сертификаты {0}")
     void updateCerts(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             JSONObject data = new JSONObject().put("accept_cert_updating", true).put("is_balancer", false).put("is_balancer", "default");
@@ -116,7 +116,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("1095072")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Синхронизировать конфигурацию сервера {0}")
+    @ParameterizedTest(name = "[{index}] Синхронизировать конфигурацию сервера {0}")
     void syncDev(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.syncDev();
@@ -126,7 +126,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("1356699")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС сервера {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС сервера {0}")
     void updateOs(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.updateOs();
@@ -136,7 +136,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLinks({@TmsLink("1356700"),@TmsLink("1356702")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Запустить сервис {0}")
+    @ParameterizedTest(name = "[{index}] Запустить сервис {0}")
     void startService(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.stopService();
@@ -147,7 +147,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("1356703")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезапустить сервис {0}")
+    @ParameterizedTest(name = "[{index}] Перезапустить сервис {0}")
     void restartService(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.restartService();
@@ -157,7 +157,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Заменить Java Wildfly {0}")
+    @ParameterizedTest(name = "[{index}] Заменить Java Wildfly {0}")
     void wildflyChangeJava(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.wildflyChangeJava();
@@ -168,7 +168,7 @@ public class WildFlyAstraTest extends Tests {
     @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавление/Удаление пользователя WildFly {0}")
+    @ParameterizedTest(name = "[{index}] Добавление/Удаление пользователя WildFly {0}")
     void user(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.addUser("user1", "Deployer");
@@ -179,7 +179,7 @@ public class WildFlyAstraTest extends Tests {
     @TmsLinks({@TmsLink("989487"),@TmsLink("989491")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавление/Удаление группы WildFly {0}")
+    @ParameterizedTest(name = "[{index}] Добавление/Удаление группы WildFly {0}")
     void group(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             String group = PortalBackSteps.getRandomAccessGroup(wildFly.getProjectId(), wildFly.getDomain(), "compute");
@@ -190,7 +190,7 @@ public class WildFlyAstraTest extends Tests {
 
     @TmsLink("908268")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "AD Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
     void checkCreate(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             assertContains(wildFly.executeSsh("sudo systemctl status wildfly | grep active"), "Active: active (exited)");
@@ -199,7 +199,7 @@ public class WildFlyAstraTest extends Tests {
 
     @TmsLink("833649")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(WildFly product) {
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {

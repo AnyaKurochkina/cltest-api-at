@@ -46,12 +46,25 @@ public class Filter {
             return this;
         }
 
+        public Tag addInnerFilter(String tagOperator, List<TagFilter> innerFilters){
+            if(Objects.isNull(filters))
+                filters = new ArrayList<>();
+            filters.add(new TagFilter("inner_filter", tagOperator, innerFilters));
+            return this;
+        }
+
+        public Tag setTagOperator(String tagOperator) {
+            this.tagOperator = tagOperator;
+            return this;
+        }
+
         @Data
         @JsonInclude(JsonInclude.Include.NON_NULL)
         public static class TagFilter {
             String lookup;
             String key;
             Object value;
+            String tagOperator;
 
             public TagFilter(String key, List<String> value) {
                 this.key = key;
@@ -67,6 +80,12 @@ public class Filter {
                 this.lookup = lookup;
                 this.key = key;
                 this.value = value;
+            }
+
+            public TagFilter(String lookup, String tagOperator, List<TagFilter> filters) {
+                this.lookup = lookup;
+                this.tagOperator = tagOperator;
+                this.value = filters;
             }
         }
     }

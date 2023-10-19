@@ -24,23 +24,25 @@ import steps.orderService.OrderServiceSteps;
 public class ApacheAirflowTest extends Tests {
 
     private static void createPostgres(ApacheAirflow product) {
+        AbstractPostgreSQL postgreSQL;
+
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
-        String pgAdminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
-        if("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
-            abstractPostgreSQL = PostgresSQLCluster.builder().adminPassword(pgAdminPassword).env(product.getEnv()).build();
-        try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
-            String dbName = "airflow";
-            postgreSQL.createDb(dbName);
-            product.setPgAdminPassword(pgAdminPassword);
-            product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
-            product.setDbUser(new DbUser(dbName, dbName + "_admin"));
-        }
+        if ("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
+            abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
+
+        postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess();
+        String dbName = "airflow";
+        postgreSQL.createDb(dbName);
+        product.setPgAdminPassword(postgreSQL.getAdminPassword());
+        product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
+        product.setDbUser(new DbUser(dbName, dbName + "_admin"));
+        postgreSQL.close();
     }
 
     @TmsLink("1421430")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(ApacheAirflow product, PostgreSQL ignore) {
         createPostgres(product);
         //noinspection EmptyTryBlock
@@ -51,7 +53,7 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("1421459")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expand(ApacheAirflow product, PostgreSQL ignore) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
@@ -63,7 +65,7 @@ public class ApacheAirflowTest extends Tests {
     @MarkDelete
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     void delete(ApacheAirflow product, PostgreSQL ignore) {
         createPostgres(product);
         try (ApacheAirflow airflow = product.createObjectExclusiveAccess()) {

@@ -33,7 +33,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099086")
-    @ParameterizedTest(name = "Создание {0}")
+    @ParameterizedTest(name = "[{index}] Создание {0}")
     void create(GitLab product) {
         //noinspection EmptyTryBlock
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {}
@@ -41,7 +41,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099087")
-    @ParameterizedTest(name = "Создать CI/CD переменную для GitLab группы {0}")
+    @ParameterizedTest(name = "[{index}] Создать CI/CD переменную для GitLab группы {0}")
     void createVariable(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createVariable(GitLab.Variable.builder().key("key001").value("value001").build());
@@ -50,7 +50,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099294")
-    @ParameterizedTest(name = "Обновить переменную для GitLab группы {0}")
+    @ParameterizedTest(name = "[{index}] Обновить переменную для GitLab группы {0}")
     void updateVariable(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createVariable(GitLab.Variable.builder().key("key002").value("value001").build());
@@ -60,7 +60,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099295")
-    @ParameterizedTest(name = "Удалить переменную для GitLab группы {0}")
+    @ParameterizedTest(name = "[{index}] Удалить переменную для GitLab группы {0}")
     void deleteVariable(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createVariable(GitLab.Variable.builder().key("key003").value("value001").build());
@@ -70,7 +70,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099296")
-    @ParameterizedTest(name = "Добавить участника к группе GitLab {0}")
+    @ParameterizedTest(name = "[{index}] Добавить участника к группе GitLab {0}")
     void addUser(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.addUser("vtb4043675", "developer");
@@ -79,7 +79,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099297")
-    @ParameterizedTest(name = "Изменить пользователя в группе GitLab {0}")
+    @ParameterizedTest(name = "[{index}] Изменить пользователя в группе GitLab {0}")
     void updateUser(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             String userName = "vtb4050570";
@@ -92,7 +92,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099298")
-    @ParameterizedTest(name = "Удалить пользователя из группы GitLab {0}")
+    @ParameterizedTest(name = "[{index}] Удалить пользователя из группы GitLab {0}")
     void deleteUser(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             String userName = "vtb4057583";
@@ -105,7 +105,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099299")
-    @ParameterizedTest(name = "Создать проект GitLab {0}")
+    @ParameterizedTest(name = "[{index}] Создать проект GitLab {0}")
     void createProject(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createProject(project);
@@ -114,7 +114,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099300")
-    @ParameterizedTest(name = "Создать CI/CD переменную для GitLab проекта {0}")
+    @ParameterizedTest(name = "[{index}] Создать CI/CD переменную для GitLab проекта {0}")
     void createProjectVariable(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createProject(project);
@@ -124,7 +124,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099301")
-    @ParameterizedTest(name = "Обновить переменную для GitLab проекта {0}")
+    @ParameterizedTest(name = "[{index}] Обновить переменную для GitLab проекта {0}")
     void updateProjectVariable(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createProject(project);
@@ -135,7 +135,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099302")
-    @ParameterizedTest(name = "Удалить переменную для GitLab проекта {0}")
+    @ParameterizedTest(name = "[{index}] Удалить переменную для GitLab проекта {0}")
     void deleteProjectVariable(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createProject(project);
@@ -146,7 +146,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099303")
-    @ParameterizedTest(name = "Создать токен для GitLab проекта {0}")
+    @ParameterizedTest(name = "[{index}] Создать токен для GitLab проекта {0}")
     void createProjectToken(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createProject(project);
@@ -156,7 +156,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099304")
-    @ParameterizedTest(name = "Отозвать токен для GitLab проекта {0}")
+    @ParameterizedTest(name = "[{index}] Отозвать токен для GitLab проекта {0}")
     void deleteProjectToken(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             String tokenName = "token2";
@@ -170,7 +170,7 @@ public class GitlabTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1099305")
-    @ParameterizedTest(name = "Удалить проект GitLab {0}")
+    @ParameterizedTest(name = "[{index}] Удалить проект GitLab {0}")
     void deleteProject(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {
             gitLab.createProject(project);
@@ -180,7 +180,7 @@ public class GitlabTest extends Tests {
 
     @TmsLink("1099306")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удаление {0}")
+    @ParameterizedTest(name = "[{index}] Удаление {0}")
     @MarkDelete
     void delete(GitLab product) {
         try (GitLab gitLab = product.createObjectExclusiveAccess()) {

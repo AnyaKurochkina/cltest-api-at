@@ -30,7 +30,7 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
     @Tag("actions")
     @TmsLink("719578")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "Негативные тесты создания топика {0}")
+    @ParameterizedTest(name = "[{index}] Негативные тесты создания топика {0}")
     public void negativeCreateKafkaTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             assertAll("Проверка ошибки при передачи неверных параметров топика",
@@ -48,7 +48,7 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
     @Tag("actions")
     @TmsLink("725948")
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "Создание Topic Kafka(топик существует) {0}")
+    @ParameterizedTest(name = "[{index}] Создание Topic Kafka(топик существует) {0}")
     public void CreateKafkaTopicIfExist(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             String topicName = "CreateKafkaTopicIfExist";

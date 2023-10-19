@@ -22,6 +22,8 @@ import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$x;
+import static models.cloud.productCatalog.graph.SourceType.SUBGRAPH;
+import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.elements.TypifiedElement.scrollCenter;
@@ -67,8 +69,6 @@ public class GraphNodesPage extends GraphPage {
     private final SelenideElement incorrectTimeoutHint =
             $x("//label[text()='Время ожидания, сек']/ancestor::div[2]//div[text()='Введите корректное значение']");
     private final SelenideElement nameNonUniqueHint = $x("//div[text()='Узел с данным названием уже существует']");
-    private final Select templateVersionSelect = Select.byXpath("(//label[text()='Версия'])[1]/following::div[select]");
-    private final Select subgraphVersionSelect = Select.byXpath("(//label[text()='Версия'])[2]/following::div[select]");
     private final Select nodeSelect = Select.byLabel("Узел");
     private final Select graphVersionSelectV2 = Select.byLabel("Версия");
     private final SelenideElement mainTab = $x("//button[text()='Основное']");
@@ -77,8 +77,6 @@ public class GraphNodesPage extends GraphPage {
     private final TextArea staticDataTextArea = TextArea.byLabel("Static data");
     private final Input searchNodesInput = Input.byPlaceholder("Поиск...");
     private final Button fitViewButton = Button.byAriaLabel("fit view");
-    private final SearchSelect subgraphSelect = SearchSelect.byLabel("Подграф");
-    private final SearchSelect templateSelect = SearchSelect.byLabel("Шаблон");
     private final Button fullScreenButton = Button.byAriaLabel("fullscreen");
     private final Button addButton = Button.byText("Добавить");
     private final Select logLevelSelect = Select.byXpath("//label[.='Уровень логирования']/following::div[1]");
@@ -89,6 +87,9 @@ public class GraphNodesPage extends GraphPage {
             $x("//*[text()='Output']/following::div[contains(@class,'ErrorTextStyled')][1]");
     private final SelenideElement printedOutputHint =
             $x("//*[text()='Printed output ']/following::div[contains(@class,'ErrorTextStyled')][1]");
+    private final Select sourceTypeSelect = Select.byLabel("Тип объекта");
+    private final SearchSelect sourceSelect = SearchSelect.byLabel("Объект");
+    private final Select sourceVersionSelect = Select.byLabel("Версия");
 
     public GraphNodesPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();
@@ -102,9 +103,10 @@ public class GraphNodesPage extends GraphPage {
         Waiting.sleep(1000);
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
-        if (!StringUtils.isNullOrEmpty(node.getSubgraphId())) {
-            Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
-            subgraphSelect.setContains(subgraph.getName());
+        if (node.getSourceType().equals(SUBGRAPH.getValue())) {
+            Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
+            sourceTypeSelect.set(SUBGRAPH.getDisplayName());
+            sourceSelect.setContains(subgraph.getName());
             paramsTab.click();
             Waiting.sleep(1500);
             inputTextArea.setValue(new JSONObject(node.getInput()).toString());
@@ -114,9 +116,10 @@ public class GraphNodesPage extends GraphPage {
             timeoutInput.setValue(String.valueOf(node.getTimeout()));
             logLevelSelect.getElement().$x(".//select").shouldBe(Condition.disabled);
         }
-        if (!Objects.isNull(node.getTemplateId())) {
-            Template template = TemplateSteps.getTemplateById(node.getTemplateId());
-            templateSelect.setContains(template.getName());
+        if (node.getSourceType().equals(TEMPLATE.getValue())) {
+            Template template = TemplateSteps.getTemplateById(Integer.parseInt(node.getSourceId()));
+            sourceTypeSelect.set(TEMPLATE.getDisplayName());
+            sourceSelect.setContains(template.getName());
             Waiting.sleep(2000);
         }
         additionalTab.click();
@@ -140,10 +143,10 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         editNodeButton.click();
         nodeDescription.setValue(description);
-        subgraphVersionSelect.set(version);
+        sourceVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
-        node.setSubgraphVersion(version);
+        node.setSourceVersion(version);
         node.setDescription(description);
         Waiting.sleep(1000);
         return this;
@@ -156,10 +159,10 @@ public class GraphNodesPage extends GraphPage {
         selectNodeInGraph(node);
         editNodeButton.click();
         nodeDescription.setValue(description);
-        templateVersionSelect.set(version);
+        sourceVersionSelect.set(version);
         formSaveNodeButton.click();
         saveGraphWithPatchVersion();
-        node.setTemplateVersion(version);
+        node.setSourceVersion(version);
         node.setDescription(description);
         Waiting.sleep(1000);
         return this;
@@ -199,8 +202,8 @@ public class GraphNodesPage extends GraphPage {
         addNodeButton.click();
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
-        Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
-        subgraphSelect.setContains(subgraph.getName());
+        Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
+        sourceSelect.setContains(subgraph.getName());
         if (node.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
         }
@@ -238,22 +241,23 @@ public class GraphNodesPage extends GraphPage {
         //Сериализация, чтобы подтянулись значения из JSON шаблона
         node = JsonHelper.deserialize(node.toJson().toString(), GraphItem.class);
         if (Objects.isNull(node.getNumber())) node.setNumber(1);
-        if (StringUtils.isNullOrEmpty(node.getSubgraphVersion())) node.setSubgraphVersion("Последняя");
-        if (StringUtils.isNullOrEmpty(node.getTemplateVersion())) node.setTemplateVersion("Последняя");
+        if (StringUtils.isNullOrEmpty(node.getSourceVersion())) node.setSourceVersion("Последняя");
         selectNodeInGraph(node);
         editNodeButton.click();
         Waiting.sleep(1000);
         nodeName.getInput().shouldHave(Condition.exactValue(node.getName()));
         nodeDescription.getInput().shouldHave(Condition.exactValue(node.getDescription()));
-        if (!StringUtils.isNullOrEmpty(node.getSubgraphId())) {
-            Graph subgraph = GraphSteps.getGraphById(node.getSubgraphId());
-            assertTrue(subgraphSelect.getValue().contains(subgraph.getName()));
-            assertEquals(node.getSubgraphVersion(), subgraphVersionSelect.getValue());
+        if (node.getSourceType().equals(SUBGRAPH.getValue())) {
+            Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
+            assertEquals(SUBGRAPH.getDisplayName(), sourceTypeSelect.getValue());
+            assertTrue(sourceSelect.getValue().contains(subgraph.getName()));
+            assertEquals(node.getSourceVersion(), sourceVersionSelect.getValue());
         }
-        if (!Objects.isNull(node.getTemplateId())) {
-            Template template = TemplateSteps.getTemplateById(node.getTemplateId());
-            assertTrue(templateSelect.getValue().contains(template.getName()));
-            assertEquals(node.getTemplateVersion(), templateVersionSelect.getValue());
+        if (node.getSourceType().equals(TEMPLATE.getValue())) {
+            Template template = TemplateSteps.getTemplateById(Integer.parseInt(node.getSourceId()));
+            assertEquals(TEMPLATE.getDisplayName(), sourceTypeSelect.getValue());
+            assertTrue(sourceSelect.getValue().contains(template.getName()));
+            assertEquals(node.getSourceVersion(), sourceVersionSelect.getValue());
         }
         paramsTab.click();
         Waiting.sleep(1500);

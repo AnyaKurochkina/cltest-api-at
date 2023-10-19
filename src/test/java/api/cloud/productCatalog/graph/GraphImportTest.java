@@ -163,4 +163,20 @@ public class GraphImportTest extends Tests {
         assertEqualsList(expectedTags, actualTags);
         deleteGraphByName(graphName);
     }
+
+    @DisplayName("Проверка не обновления неверсионных полей при импорте уже существующего графа")
+    @TmsLink("SOUL-7455")
+    @Test
+    public void checkNotVersionedFieldsWhenImportedExistGraphTest() {
+        String description = "update description";
+        String graphName = "check_not_versioned_fields__when_import_exist_graph_test_api";
+        Graph graph = createGraph(graphName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/checkNotVersionedFieldsExistGraphImport.json";
+        DataFileHelper.write(filePath, exportGraphById(graph.getGraphId()).toString());
+        partialUpdateGraph(graph.getGraphId(), new JSONObject().put("description", description));
+        importGraph(filePath);
+        DataFileHelper.delete(filePath);
+        Graph graphById = getGraphById(graph.getGraphId());
+        assertEquals(description, graphById.getDescription());
+    }
 }

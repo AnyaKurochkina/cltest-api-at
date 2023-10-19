@@ -114,7 +114,7 @@ public class GraphSteps extends Steps {
                 .post(graphUrl);
     }
 
-    @Step("Создание графа")
+    @Step("Создание графа c именем {name}")
     public static Graph createGraph(String name) {
         return Graph.builder()
                 .name(name)
@@ -134,7 +134,7 @@ public class GraphSteps extends Steps {
     @Step("Создание графа")
     public static Graph createGraph() {
         return Graph.builder()
-                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
                 .build()
                 .createObject();
     }

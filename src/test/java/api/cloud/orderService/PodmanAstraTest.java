@@ -25,7 +25,7 @@ public class PodmanAstraTest extends Tests {
 
     @TmsLink("820506")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Podman product) {
         //noinspection EmptyTryBlock
         try (Podman podman = product.createObjectExclusiveAccess()) {
@@ -35,7 +35,7 @@ public class PodmanAstraTest extends Tests {
     @TmsLink("820507")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.expandMountPoint();
@@ -46,7 +46,7 @@ public class PodmanAstraTest extends Tests {
     @TmsLink("820504")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.restart();
@@ -57,7 +57,7 @@ public class PodmanAstraTest extends Tests {
     @TmsLink("820501")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.stopSoft();
@@ -66,7 +66,7 @@ public class PodmanAstraTest extends Tests {
     }
 
 //    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+//    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
 //    void resize(Podman product) {
 //        try (Podman podman = product.createObjectExclusiveAccess()) {
 //            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
@@ -83,7 +83,7 @@ public class PodmanAstraTest extends Tests {
     @TmsLinks({@TmsLink("820505"), @TmsLink("820503")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.stopHard();
@@ -93,7 +93,7 @@ public class PodmanAstraTest extends Tests {
 
     @TmsLink("851394")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "AD Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
     void checkCreate(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.checkCertsBySsh();
@@ -104,7 +104,7 @@ public class PodmanAstraTest extends Tests {
 
     @TmsLink("1091842")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Проверка прав у ролей пользователя {0}")
     void checkUserGroup(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {
             podman.checkUserGroupBySsh();
@@ -113,7 +113,7 @@ public class PodmanAstraTest extends Tests {
 
     @TmsLink("820502")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Podman product) {
         try (Podman podman = product.createObjectExclusiveAccess()) {

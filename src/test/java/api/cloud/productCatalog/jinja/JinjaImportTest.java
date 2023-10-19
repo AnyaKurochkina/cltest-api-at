@@ -7,11 +7,13 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.Jinja2Steps.*;
 import static steps.productCatalog.ProductCatalogSteps.importObjects;
@@ -50,5 +52,21 @@ public class JinjaImportTest extends Tests {
         assertTrue(isJinja2Exists(jinjaName2), "Jinja2 не существует");
         deleteJinjaByName(jinjaName);
         deleteJinjaByName(jinjaName2);
+    }
+
+    @DisplayName("Проверка не обновления неверсионных полей при импорте уже существующего jinja2")
+    @TmsLink("SOUL-7456")
+    @Test
+    public void checkNotVersionedFieldsWhenImportedExistJinjaTest() {
+        String description = "update description";
+        String jinjaName = "check_not_versioned_fields__when_import_exist_jinja2_test_api";
+        Jinja2Template jinja = createJinja(jinjaName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/checkNotVersionedFieldsExistJinja2Import.json";
+        DataFileHelper.write(filePath, exportJinjaById(jinja.getId()).toString());
+        partialUpdateJinja2(jinja.getId(), new JSONObject().put("description", description));
+        importJinja2(filePath);
+        DataFileHelper.delete(filePath);
+        Jinja2Template jinja2ById = getJinja2ById(jinja.getId());
+        assertEquals(description, jinja2ById.getDescription());
     }
 }

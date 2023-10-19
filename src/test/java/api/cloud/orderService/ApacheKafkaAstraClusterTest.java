@@ -40,7 +40,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @TmsLink("847102")
     @Order(1)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(ApacheKafkaCluster product) {
         //noinspection EmptyTryBlock
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {}
@@ -50,7 +50,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(2)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать ACL на топик Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Создать ACL на топик Kafka {0}")
     void createAcl(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Collections.singletonList("PacketTopicNameForAcl"));
@@ -62,7 +62,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(3)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание ACL на транзакцию Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Создание ACL на транзакцию Kafka {0}")
     void createAclTransaction(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createAclTransaction("*");
@@ -73,7 +73,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(4)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка создания ВМ и брокера Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Проверка создания ВМ и брокера Kafka {0}")
     void checkConnection(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             String topicName = "PacketTopicNameForAcl5";
@@ -95,7 +95,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(5)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Идемпотентные ACL. Создание/удаление {0}")
+    @ParameterizedTest(name = "[{index}] Идемпотентные ACL. Создание/удаление {0}")
     void createIdempotentAcl(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createIdempotentAcl("cn001");
@@ -107,7 +107,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(6)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить параметр топиков Kafka Cluster {0}")
+    @ParameterizedTest(name = "[{index}] Изменить параметр топиков Kafka Cluster {0}")
     void editTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.createTopics(Collections.singletonList("PacketTopicNameForEdit"));
@@ -120,7 +120,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Order(7)
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить кластерный сертификат {0}")
+    @ParameterizedTest(name = "[{index}] Обновить кластерный сертификат {0}")
     void updateCerts(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.updateCerts();
@@ -131,7 +131,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(8)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Пакетное создание/удаление Topic-ов Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Пакетное создание/удаление Topic-ов Kafka {0}")
     void createTopic(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             List<String> topics = Stream.generate(new Generex("[a-zA-Z0-9][a-zA-Z0-9.\\-_]*")::random)
@@ -146,7 +146,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(9)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить кластер Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить кластер Kafka {0}")
     void restart(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.restart();
@@ -157,7 +157,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(10)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновление дистрибутива ВТБ-Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Обновление дистрибутива ВТБ-Kafka {0}")
     void update(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.upgradeVersion();
@@ -168,7 +168,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(11)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновление ядра Kafka до версии 2.8.1 {0}")
+    @ParameterizedTest(name = "[{index}] Обновление ядра Kafka до версии 2.8.1 {0}")
     void upgrade281(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.upgrade281();
@@ -179,7 +179,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(12)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Пакетное создание/удаление квот Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Пакетное создание/удаление квот Kafka {0}")
     void addAndRemoveQuota(ApacheKafkaCluster product) {
         int quota = 131072;
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
@@ -192,7 +192,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Order(13)
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить кластерный сертификат (аварийно) {0}")
+    @ParameterizedTest(name = "[{index}] Обновить кластерный сертификат (аварийно) {0}")
     void updateCertsInterrupting(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.updateCertsInterrupting();
@@ -203,7 +203,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Order(14)
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Вертикальное масштабирование {0}")
+    @ParameterizedTest(name = "[{index}] Вертикальное масштабирование {0}")
     void resize(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.resize();
@@ -214,7 +214,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(15)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Синхронизировать конфигурацию кластера Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Синхронизировать конфигурацию кластера Kafka {0}")
     void syncInfo(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.syncInfo();
@@ -226,7 +226,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(16)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Прислать конфигурацию кластера Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Прислать конфигурацию кластера Kafka {0}")
     void sendConfig(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.sendConfig();
@@ -238,7 +238,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(14)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Включить/выключить кластер Kafka {0}")
+    @ParameterizedTest(name = "[{index}] Включить/выключить кластер Kafka {0}")
     void start(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.stopSoft();
@@ -251,7 +251,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(18)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.expandMountPoint();
@@ -262,7 +262,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(19)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Увеличить дисковое пространство {0}")
+    @ParameterizedTest(name = "[{index}] Увеличить дисковое пространство {0}")
     void kafkaExpandMountPoint(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.kafkaExpandMountPoint();
@@ -273,7 +273,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @Tag("actions")
     @Order(20)
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить имя кластера {0}")
+    @ParameterizedTest(name = "[{index}] Изменить имя кластера {0}")
     void changeName(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.changeName("new-name");
@@ -283,7 +283,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @TmsLink("847096")
     @MarkDelete
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     void delete(ApacheKafkaCluster product) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
             kafka.deleteObject();

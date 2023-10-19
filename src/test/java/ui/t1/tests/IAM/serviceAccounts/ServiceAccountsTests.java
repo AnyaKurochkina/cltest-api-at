@@ -13,6 +13,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.extesions.ConfigExtension;
+import ui.t1.pages.IAM.serviceAccounts.ServiceAccountPage;
 import ui.t1.pages.IAM.serviceAccounts.ServiceAccountsListPage;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
@@ -97,6 +98,45 @@ public class ServiceAccountsTests extends Tests {
         assertEqualsJson(jsonObject, new JSONObject(text));
         account.setWithApiKey(true);
         account.save();
+    }
+
+    @Test
+    @DisplayName("Создание статического ключа")
+    public void createStaticKey() {
+        String description = "Статический ключ для тестов ui";
+        ServiceAccount account = ServiceAccount.builder()
+                .title("create_static_key_ui_test")
+                .withApiKey(false)
+                .roles(Collections.singletonList("Администратор хранилища"))
+                .build()
+                .createObject();
+        JSONObject jsonObject = new IndexPage()
+                .goToServiceAccounts()
+                .goToServiceAccountPage(account)
+                .createStaticKey(description);
+        String text = Selenide.clipboard().getText();
+        assertEqualsJson(jsonObject, new JSONObject(text));
+        String id = jsonObject.getString("access_id");
+        assertTrue(new ServiceAccountPage(account.getTitle())
+                .isStaticKeyExist(id));
+        account.deleteStaticKeyNewStorage(id);
+    }
+
+    @Test
+    @DisplayName("Удаление статического ключа")
+    public void deleteStaticKey() {
+        ServiceAccount account = ServiceAccount.builder()
+                .title("create_static_key_ui_test")
+                .withApiKey(false)
+                .roles(Collections.singletonList("Администратор хранилища"))
+                .build()
+                .createObject();
+        account.createStaticKeyNewStorage();
+        assertTrue(new IndexPage()
+                .goToServiceAccounts()
+                .goToServiceAccountPage(account)
+                .deleteStaticKey(account)
+                .isTableEmpty());
     }
 
     @Test

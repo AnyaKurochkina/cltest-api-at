@@ -49,13 +49,13 @@ public class ApacheAirflow extends IProduct {
             osVersion = getRandomOsVersion();
         if (airflowVersion == null)
             airflowVersion = getRandomProductVersionByPathEnum("airflow_version.enum");
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         if (flavor == null)
             flavor = getMinFlavor();
@@ -84,6 +84,7 @@ public class ApacheAirflow extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
+                .set("$.order.attrs.web_console_grants[0].role", isDev() ? "admin" : "Operator")
                 .set("$.order.attrs.deploy_grants[0].groups[0]", accessGroupTech)
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", getSupport())

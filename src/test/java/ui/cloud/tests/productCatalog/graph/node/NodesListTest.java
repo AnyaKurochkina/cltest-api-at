@@ -13,6 +13,8 @@ import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
 import java.util.HashMap;
 
+import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
+
 @Feature("Добавление узла графа")
 public class NodesListTest extends GraphBaseTest {
     private Graph graph;
@@ -37,10 +39,11 @@ public class NodesListTest extends GraphBaseTest {
     @Test
     @TmsLink("802404")
     @DisplayName("Просмотр входных и выходных параметров узлов")
-    public void addNodeByTemplateTest() {
+    public void viewNodeParamsTest() {
         GraphItem node = GraphItem.builder()
                 .name(TEMPLATE_NAME)
-                .templateId(template.getId())
+                .sourceType(TEMPLATE.getValue())
+                .sourceId(String.valueOf(template.getId()))
                 .description("Тестовый узел")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "{}");
@@ -64,7 +67,8 @@ public class NodesListTest extends GraphBaseTest {
     public void findNodesTest() {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
-                .subgraphId(subgraph.getGraphId())
+                .sourceId(subgraph.getGraphId())
+                .sourceType("subgraph")
                 .description(nodeDescription)
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");

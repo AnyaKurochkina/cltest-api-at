@@ -75,15 +75,25 @@ public class AllowedActionImportTest extends Tests {
     @TmsLink("1320574")
     @Test
     public void importExistAllowedActionTest() {
-        AllowedAction allowedAction = createAllowedAction("import_exist_allowed_action_test_api");
+        String allowedActionName = "import_exist_allowed_action_test_api";
+        AllowedAction allowedAction = createAllowedAction(allowedActionName);
         Action action = getActionById(allowedAction.getActionId());
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/allowedAction/existAllowedActionImport.json";
         DataFileHelper.write(filePath, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
+        JSONObject json = AllowedAction.builder()
+                .name(allowedActionName)
+                .actionId(action.getActionId())
+                .build()
+                .init()
+                .toJson();
+        updateAllowedAction(allowedAction.getId(), json);
         ImportObject importObject = importAllowedAction(filePath);
+        AllowedAction actual = getAllowedActionById(allowedAction.getId());
         DataFileHelper.delete(filePath);
         assertEquals("success", importObject.getStatus());
         assertEquals(String.format("Обновлен объект %s %s:%d", importObject.getModelName(), action.getName(), allowedAction.getId()),
                 importObject.getMessages().get(0));
+        assertEquals(allowedAction, actual);
     }
 
     @Test

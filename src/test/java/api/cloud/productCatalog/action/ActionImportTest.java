@@ -201,5 +201,21 @@ public class ActionImportTest extends Tests {
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName), "Действие существует");
     }
+
+    @DisplayName("Проверка не обновления неверсионных полей при импорте уже существующего действия")
+    @TmsLink("SOUL-7454")
+    @Test
+    public void checkNotVersionedFieldsWhenImportedExistActionTest() {
+        String description = "update description";
+        String actionName = "check_not_versioned_fields__when_import_exist_action_test_api";
+        Action action = createAction(actionName);
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/checkNotVersionedFieldsExistActionImport.json";
+        DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
+        partialUpdateAction(action.getActionId(), new JSONObject().put("description", description));
+        importAction(filePath);
+        DataFileHelper.delete(filePath);
+        Action actionById = getActionById(action.getActionId());
+        assertEquals(description, actionById.getDescription());
+    }
 }
 

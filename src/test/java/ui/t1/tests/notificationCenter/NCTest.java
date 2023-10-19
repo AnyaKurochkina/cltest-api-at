@@ -139,7 +139,7 @@ public class NCTest {
         }
 
         @Test
-        @Title("Создаем подписку для другого пользователя на Группу тем ")
+        @Title("Создаем подписку для другого пользователя на Группу тем")
         void subscribeOtherTest() {
             SubscribeUsersPage subscribeUsersPage = new IndexPage().goToUsersSubscriptions();
             subscribeUsersPage.clickCreateSubscription()

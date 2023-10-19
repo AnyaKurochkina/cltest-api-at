@@ -54,14 +54,24 @@ public class ForbiddenActionImportTest extends Tests {
     @TmsLink("1320761")
     @Test
     public void importExistForbiddenActionTest() {
-        ForbiddenAction forbiddenAction = createForbiddenAction("already_exist_import_forbidden_action_test_api");
+        String forbiddenActionName = "already_exist_import_forbidden_action_test_api";
+        ForbiddenAction forbiddenAction = createForbiddenAction(forbiddenActionName);
         Action action = getActionById(forbiddenAction.getActionId());
         DataFileHelper.write(PATHNAME2, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
+        JSONObject json = ForbiddenAction.builder()
+                .name(forbiddenActionName)
+                .actionId(action.getActionId())
+                .build()
+                .init()
+                .toJson();
+        updateForbiddenAction(forbiddenAction.getId(), json);
         ImportObject importObject = importForbiddenAction(PATHNAME2);
+        ForbiddenAction getForbiddenAction = getForbiddenActionById(forbiddenAction.getId());
         DataFileHelper.delete(PATHNAME2);
         assertEquals("success", importObject.getStatus());
         assertEquals(String.format("Обновлен объект %s %s:%d,%s", importObject.getModelName(), action.getName(), forbiddenAction.getId(), forbiddenAction.getDirection()),
                 importObject.getMessages().get(0));
+        assertEquals(forbiddenAction,getForbiddenAction);
     }
 
     @Test

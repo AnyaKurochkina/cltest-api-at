@@ -29,7 +29,7 @@ public class PostgreSQLTest extends Tests {
 
     @TmsLink("1057046")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(PostgreSQL product) {
         //noinspection EmptyTryBlock
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {}
@@ -38,7 +38,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void checkActions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             Assertions.assertTrue(postgreSQL.isActionExist("update_os_standalone"));
@@ -49,7 +49,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057048")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.expandMountPoint();
@@ -59,7 +59,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057043")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить БД {0}")
+    @ParameterizedTest(name = "[{index}] Добавить БД {0}")
     void createDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -69,7 +69,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057047")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка подключения к БД {0}")
+    @ParameterizedTest(name = "[{index}] Проверка подключения к БД {0}")
     void checkDbConnection(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             String db = "bd_for_check_connection";
@@ -82,7 +82,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057037")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Добавить пользователя {0}")
     void createDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -93,7 +93,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057042")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
     void resetPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -105,7 +105,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057039")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Сбросить пароль владельца {0}")
+    @ParameterizedTest(name = "[{index}] Сбросить пароль владельца {0}")
     void resetDbOwnerPassword(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -116,7 +116,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057044")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Удалить пользователя {0}")
     void removeDbmsUser(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -128,7 +128,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1701481")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить extensions {0}")
+    @ParameterizedTest(name = "[{index}] Изменить extensions {0}")
     void updateExtensions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -139,7 +139,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1701482")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Актуализировать extensions {0}")
+    @ParameterizedTest(name = "[{index}] Актуализировать extensions {0}")
     void getExtensions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -150,7 +150,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить точку монтирования /pg_audit {0}")
+    @ParameterizedTest(name = "[{index}] Добавить точку монтирования /pg_audit {0}")
     void addMountPointPgAudit(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.addMountPointPgAudit();
@@ -160,7 +160,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить точку монтирования /pg_backup {0}")
+    @ParameterizedTest(name = "[{index}] Добавить точку монтирования /pg_backup {0}")
     void addMountPointPgBackup(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.addMountPointPgBackup();
@@ -170,7 +170,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Добавить точку монтирования /pg_walarchive {0}")
+    @ParameterizedTest(name = "[{index}] Добавить точку монтирования /pg_walarchive {0}")
     void addMountPointPgWalarchive(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.addMountPointPgWalarchive();
@@ -180,7 +180,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057040")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Максимизировать max_connections {0}")
+    @ParameterizedTest(name = "[{index}] Максимизировать max_connections {0}")
     void updateMaxConnections(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             if(postgreSQL.isDev()) {
@@ -200,7 +200,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1701483")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить минорную версию СУБД {0}")
+    @ParameterizedTest(name = "[{index}] Обновить минорную версию СУБД {0}")
     void updatePostgresql(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.updatePostgresql();
@@ -210,7 +210,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void updateOs(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.updateOs();
@@ -220,7 +220,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1701485")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Получить актуальную конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Получить актуальную конфигурацию {0}")
     void getConfiguration(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.getConfiguration();
@@ -231,7 +231,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057050")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.restart();
@@ -241,7 +241,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057052")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить БД {0}")
+    @ParameterizedTest(name = "[{index}] Удалить БД {0}")
     void removeDb(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -253,7 +253,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057038")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.stopSoft();
@@ -264,7 +264,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057041")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(postgreSQL);
@@ -277,7 +277,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLinks({@TmsLink("1057045"), @TmsLink("1057053")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.stopHard();
@@ -288,7 +288,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLink("1057049")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить default_transaction_isolation {0}")
+    @ParameterizedTest(name = "[{index}] Изменить default_transaction_isolation {0}")
     void updateDti(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.updateDti("REPEATABLE READ");
@@ -298,7 +298,7 @@ public class PostgreSQLTest extends Tests {
     @TmsLinks({@TmsLink("1116377"), @TmsLink("1116378"), @TmsLink("1104181")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Назначить/Убрать предел подключений {0}")
+    @ParameterizedTest(name = "[{index}] Назначить/Убрать предел подключений {0}")
     void setConnLimit(PostgreSQL product) {
 //        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
@@ -310,7 +310,7 @@ public class PostgreSQLTest extends Tests {
 
     @TmsLink("994970")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Проверка прав у ролей пользователя {0}")
     void checkUserPermissions(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
@@ -321,7 +321,7 @@ public class PostgreSQLTest extends Tests {
 
     @TmsLink("1057051")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {

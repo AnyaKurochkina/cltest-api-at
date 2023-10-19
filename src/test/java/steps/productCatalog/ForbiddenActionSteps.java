@@ -78,7 +78,7 @@ public class ForbiddenActionSteps extends Steps {
     @Step("Получение запрещенного действия по Id")
     public static ForbiddenAction getForbiddenActionById(Integer objectId) {
         return new Http(ProductCatalogURL)
-                .setRole(Role.ORDER_SERVICE_ADMIN)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + objectId + "/")
                 .extractAs(ForbiddenAction.class);
     }
@@ -100,6 +100,15 @@ public class ForbiddenActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(endPoint + id + "/");
+    }
+
+    @Step("Обновление запрещенного действия")
+    public static Response updateForbiddenAction(Integer id, JSONObject object) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(object)
+                .put(endPoint + id + "/")
+                .assertStatus(200);
     }
 
     @Step("Экспорт запрещенного действия по Id")

@@ -89,7 +89,10 @@ public class DiskTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Диски. Подключить/Отключить диск")
     void attachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())

@@ -23,7 +23,7 @@ public class AstraTest extends Tests {
     @Tag("actions")
     @Tag("health_check")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать {0}")
+    @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(Astra product) {
         //noinspection EmptyTryBlock
         try (Astra astra = product.createObjectExclusiveAccess()) {
@@ -33,7 +33,7 @@ public class AstraTest extends Tests {
     @TmsLink("391705")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Расширить {0}")
+    @ParameterizedTest(name = "[{index}] Расширить {0}")
     void expandMountPoint(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.expandMountPoint();
@@ -43,7 +43,7 @@ public class AstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Обновить ОС {0}")
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void updateOsVm(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.updateOsVm();
@@ -54,7 +54,7 @@ public class AstraTest extends Tests {
     @TmsLink("391699")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Перезагрузить {0}")
+    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
     void restart(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.restart();
@@ -64,7 +64,7 @@ public class AstraTest extends Tests {
     @TmsLink("1685463")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Реинвентаризация ВМ (Linux) {0}")
+    @ParameterizedTest(name = "[{index}] Реинвентаризация ВМ (Linux) {0}")
     void updateVmInfo(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.updateVmInfo();
@@ -75,7 +75,7 @@ public class AstraTest extends Tests {
     @TmsLink("391702")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить {0}")
     void stopSoft(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.stopSoft();
@@ -86,7 +86,7 @@ public class AstraTest extends Tests {
     @TmsLink("391704")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменить конфигурацию {0}")
+    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
     void resize(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.resize(astra.getMaxFlavorLinuxVm());
@@ -97,7 +97,7 @@ public class AstraTest extends Tests {
     @TmsLinks({@TmsLink("391700"), @TmsLink("391701")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Выключить принудительно/Включить {0}")
+    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
     void stopHard(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.stopHard();
@@ -107,7 +107,7 @@ public class AstraTest extends Tests {
 
     @TmsLink("1090927")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка прав у ролей пользователя {0}")
+    @ParameterizedTest(name = "[{index}] Проверка прав у ролей пользователя {0}")
     void checkCreate(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.checkUserGroupBySsh();
@@ -116,7 +116,7 @@ public class AstraTest extends Tests {
 
     @TmsLink("382910")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "AD Проверка создания {0}")
+    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
     void checkCreateAd(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.checkCertsBySsh();
@@ -125,7 +125,7 @@ public class AstraTest extends Tests {
 
     @TmsLinks({@TmsLink("1733768"), @TmsLink("1733769")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создать/удалить снапшот {0}")
+    @ParameterizedTest(name = "[{index}] Создать/удалить снапшот {0}")
     void createSnapshot(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.createSnapshot(1);
@@ -136,7 +136,7 @@ public class AstraTest extends Tests {
     @TmsLink("391698")
     @Tag("health_check")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить {0}")
+    @ParameterizedTest(name = "[{index}] Удалить {0}")
     @MarkDelete
     void delete(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {

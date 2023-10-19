@@ -61,7 +61,26 @@ test:
     - sshpass -e scp -r -o $SSH_OPT target/site/allure-maven-plugin/ qa-admin@10.13.20.10:~/reports/logs/$CURR_DATE
     - sshpass -e ssh -o $SSH_OPT qa-admin@10.13.20.10 "/home/qa-admin/json_parser.py reports/allure-maven-plugin/data/suites.json > ~/output.txt"
     - sshpass -e scp -o $SSH_OPT qa-admin@10.13.20.10:~/output.txt output.txt
-    - curl -X POST -H 'Content-Type:application/json' -d @output.txt https://api.telegram.org/bot$TELE_TOKEN/sendMessage || exit 0 # || EXIT_CODE=$?
+    - FILE_CONTENT=$(grep -zoP '"text":\s"\K[^"]*' output.txt)
+    - FILE_CONTENT="${FILE_CONTENT//Доброе утро, мои хорошие!/}"
+    - FILE_CONTENT="${FILE_CONTENT//passed/✅}"
+    - FILE_CONTENT="${FILE_CONTENT//broken/🆘}"
+    - FILE_CONTENT="${FILE_CONTENT//failed/🆘}"
+    - FILE_CONTENT="${FILE_CONTENT}\nhttp://10.13.20.10/~qa-admin/logs/$CURR_DATE/allure-maven-plugin/"
+    - BLOCK_SIZE=4000
+    - MESSAGE=""
+    - LENGTH=${#FILE_CONTENT}
+    - START=0
+    - END=$BLOCK_SIZE
+    - >
+      while [ $START -lt $LENGTH ]; do
+        BLOCK="${FILE_CONTENT:START:END-START}"
+        MESSAGE='{"chat_id": "-986372754","text": "'"$BLOCK"'","disable_notification": true}'
+        curl -X POST -H 'Content-Type: application/json' -d "$MESSAGE" "https://api.telegram.org/bot$TELE_TOKEN/sendMessage" || exit 0
+        START=$((END))
+        END=$((START+BLOCK_SIZE))
+      done
+    - echo -n -e "\nhttp://10.13.20.10/~qa-admin/logs/$CURR_DATE/allure-maven-plugin/\n"
     #- export EXIT_CODE=0
   rules:
     - if: $CI_PIPELINE_SOURCE == "push"
