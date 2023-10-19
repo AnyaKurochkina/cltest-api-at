@@ -22,6 +22,8 @@ import java.time.Duration;
 import java.util.HashMap;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static models.cloud.productCatalog.graph.SourceType.SUBGRAPH;
+import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Feature("Добавление узла графа")
@@ -60,8 +62,9 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
+                .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-              //  .subgraphVersion("Последняя")
+                .sourceVersion("Последняя")
                 .number(1)
                 .build();
         new ControlPanelIndexPage().goToGraphsPage()
@@ -77,8 +80,9 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
+                .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-                //.subgraphVersion("Последняя")
+                .sourceVersion("Последняя")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
                 }})
@@ -108,8 +112,8 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name("")
                 .description("test")
+                .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-                .sourceType("subgraph")
                 .number(1)
                 .timeout(1)
                 .build();
@@ -136,7 +140,8 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
-                .sourceType(subgraph.getGraphId())
+                .sourceType(SUBGRAPH.getValue())
+                .sourceId(subgraph.getGraphId())
                 .sourceVersion("Последняя")
                 .number(0)
                 .timeout(0)
@@ -152,8 +157,8 @@ public class AddNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(SUBGRAPH_NAME)
                 .description(nodeDescription)
+                .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-                .sourceType("subgraph")
                 .sourceVersion("Последняя")
                 .build();
         new ControlPanelIndexPage().goToGraphsPage()
@@ -171,7 +176,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .name(TEMPLATE_NAME)
                 .description(nodeDescription)
                 .sourceId(String.valueOf(template.getId()))
-                .sourceType("template")
+                .sourceType(TEMPLATE.getValue())
                 .sourceVersion("Последняя")
                 .timeout(100)
                 .number(1)
@@ -211,7 +216,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
-        page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        page.getSourceSelect().setContains(TEMPLATE_NAME);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.enabled);
         assertEquals(LogLevel.SHORT.getDisplayName(), page.getLogLevelSelect().getValue());
@@ -241,7 +246,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
-        page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        page.getSourceSelect().setContains(TEMPLATE_NAME);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         page.getLogLevelTooltipIcon().hover();
@@ -276,7 +281,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
-        page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        page.getSourceSelect().setContains(TEMPLATE_NAME);
         Waiting.sleep(2000);
         page.getParamsTab().click();
         page.getInputTextArea().setValue("{\"override_param_1\":\"1\"}");
@@ -312,7 +317,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
-        page.getTemplateSelect().setContains(TEMPLATE_NAME);
+        page.getSourceSelect().setContains(TEMPLATE_NAME);
         Waiting.sleep(2000);
         page.getParamsTab().click();
         page.getInputTextArea().setValue(inputValue);
