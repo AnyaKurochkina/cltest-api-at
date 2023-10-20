@@ -135,10 +135,13 @@ public class LoadBalancerTest extends Tests {
             balancer.addBackend(backend);
             if (balancer.isDev())
                 Assertions.assertTrue(balancer.isStateContains(backend.getBackendName()));
-            balancer.addFrontend(Frontend.builder()
+            final Frontend frontendTcpWidthCheck = Frontend.builder()
                     .frontendName("frontend_tcp_width_check")
                     .defaultBackendNameTcp(backend.getBackendName())
-                    .build());
+                    .build();
+            balancer.addFrontend(frontendTcpWidthCheck);
+            if (balancer.isDev())
+                Assertions.assertTrue(balancer.isStateContains(frontendTcpWidthCheck.getFrontendName()));
         }
     }
 
@@ -218,10 +221,6 @@ public class LoadBalancerTest extends Tests {
             balancer.addGslb(Gslb.builder()
                     .globalname("glb-http-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend)
-                    .healthCheckParams(Gslb.HealthCheckParams.builder()
-                            .urlPath("/")
-                            .useSsl(false)
-                            .build())
                     .build());
         }
     }

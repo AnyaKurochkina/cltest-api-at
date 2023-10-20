@@ -134,6 +134,10 @@ public class LoadBalancer extends IProduct {
         save();
     }
 
+    public void changeActiveStandbyMode(StandbyMode standbyMode) {
+        OrderServiceSteps.executeAction("balancer_release_change_active_standby_mode", this, serialize(standbyMode), this.getProjectId());
+    }
+
     public void addFrontend(Frontend frontend) {
         if (frontends.contains(frontend))
             return;
@@ -142,8 +146,6 @@ public class LoadBalancer extends IProduct {
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не создался");
         frontends.add(frontend);
         save();
-        if (isDev())
-            Assertions.assertTrue(isStateContains(frontend.getFrontendName()));
     }
 
     public void addGslb(Gslb gslb) {

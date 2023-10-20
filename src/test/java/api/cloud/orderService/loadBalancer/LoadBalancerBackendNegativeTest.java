@@ -7,8 +7,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
-import models.cloud.subModels.loadBalancer.Backend;
-import models.cloud.subModels.loadBalancer.Server;
+import models.cloud.subModels.loadBalancer.*;
 import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -258,6 +257,41 @@ public class LoadBalancerBackendNegativeTest extends Tests {
                     .checkInterval(5000)
                     .build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422);
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Перевести сервера бэкенда в Active/StandBy режим. Пустой backend_name {0}")
+    void changeActiveStandbyModeNotValidBackendName(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+//            StandbyMode standbyMode = StandbyMode.builder().backendName(LoadBalancerBackendChangeNegativeTest.backend.getBackendName()).build();
+            StandbyMode standbyMode = StandbyMode.builder().serverNames(Collections.singletonList("10.0.0.9")).build();
+            AssertResponse.run(() -> balancer.changeActiveStandbyMode(standbyMode)).status(422).responseContains("backend_name");
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Перевести сервера бэкенда в Active/StandBy режим. Невалидный state {0}")
+    void changeActiveStandbyModeNotValidState(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
+            StandbyMode standbyMode = StandbyMode.builder().backendName(LoadBalancerBackendChangeNegativeTest.backend.getBackendName()).
+                    serverNames(Collections.singletonList("10.0.0.9")).state("not_valid").build();
+            AssertResponse.run(() -> balancer.changeActiveStandbyMode(standbyMode)).status(422).responseContains("state");
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создать GSLB. Невалидный globalname {0}")
+    void changeActiveStandbyModeNotValidGlobalname(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
+            balancer.addFrontend(LoadBalancerBackendChangeNegativeTest.frontend);
+            Gslb gslb = Gslb.builder().frontend(LoadBalancerBackendChangeNegativeTest.frontend).globalname(new Generex("[a-z]{65}").random()).build();
+            AssertResponse.run(() -> balancer.addGslb(gslb)).status(422).responseContains("globalname");
         }
     }
 }
