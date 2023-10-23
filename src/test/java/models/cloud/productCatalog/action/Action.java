@@ -138,6 +138,8 @@ public class Action extends Entity {
     private Boolean skipItemChange;
     @JsonProperty("skip_item_with_secondary_rel")
     private Boolean skipItemWithSecondaryRel;
+    @JsonProperty("is_for_items")
+    private Boolean isForItems;
 
     @Override
     public Entity init() {
@@ -188,6 +190,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_item_change", skipItemChange)
                 .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
                 .setIfNullRemove("$.skip_item_with_secondary_rel", skipItemWithSecondaryRel)
+                .setIfNullRemove("$.is_for_items", isForItems)
                 .build();
     }
 
