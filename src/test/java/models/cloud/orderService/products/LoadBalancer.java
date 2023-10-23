@@ -40,9 +40,12 @@ public class LoadBalancer extends IProduct {
     List<Frontend> frontends = new ArrayList<>();
     @Builder.Default
     List<Gslb> gslbs = new ArrayList<>();
+    @Builder.Default
+    List<RouteSni> routes = new ArrayList<>();
     private final String FRONTEND_PATH = "data.find{it.type=='cluster'}.data.config.frontends.find{it.frontend_name == '%s'}";
     private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
     private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
+    private final String ROUTE_PATH = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s')}";
     private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}.last()";
 
     @Override
@@ -155,6 +158,16 @@ public class LoadBalancer extends IProduct {
         Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не создался");
         gslbs.add(gslb);
+        save();
+    }
+
+    public void addRouteSni(RouteSni route) {
+        if (routes.contains(route))
+            return;
+        OrderServiceSteps.executeAction("balancer_release_create_route_sni", this, new JSONObject(JsonHelper.toJson(route)), this.getProjectId());
+        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
+                String.format(ROUTE_PATH, route.getRoutes().get(0).getName()), RouteSni.RouteCheck.class), "route не создался");
+        routes.add(route);
         save();
     }
 

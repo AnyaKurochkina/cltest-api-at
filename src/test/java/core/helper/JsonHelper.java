@@ -1,6 +1,7 @@
 package core.helper;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -73,6 +74,11 @@ public class JsonHelper {
     @SneakyThrows
     public static <T> T deserialize(String object, Class<?> clazz) {
         return (T) getCustomObjectMapper().readValue(object, clazz);
+    }
+
+    @SneakyThrows
+    public static <T> T deserialize(String object) {
+        return (T) getCustomObjectMapper().readValue(object, new TypeReference<T>(){});
     }
 
     @SneakyThrows

@@ -22,13 +22,20 @@ public class Backend {
     String backendName;
 
     /* tcp-check*/
-    Integer checkPort;
-    String advCheck;
-    Integer checkFall;
-    String checkSsl;
-    String match;
-    Integer checkRise;
-    Integer checkInterval;
+    @Builder.Default
+    Integer checkPort = 32344;
+    @Builder.Default
+    String advCheck = "tcp-check";//"tcp-check";
+    @Builder.Default
+    Integer checkFall = 3;
+    @Builder.Default
+    String checkSsl = "disabled";
+    @Builder.Default
+    String match = "string";
+    @Builder.Default
+    Integer checkRise = 3;
+    @Builder.Default
+    Integer checkInterval = 5000;
     String pattern;
     String data;
 
