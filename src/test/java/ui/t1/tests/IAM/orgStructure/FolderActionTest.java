@@ -17,6 +17,7 @@ import ui.t1.pages.T1LoginPage;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static ui.elements.TypifiedElement.refreshPage;
 
 @Epic("IAM и Управление")
 @Feature("Действия с проектом")
@@ -71,5 +72,6 @@ public class FolderActionTest extends Tests {
                 .selectContext(folderName)
                 .deleteFolder(folderName);
         assertFalse(indexPage.isContextNameDisplayed("Выберите контекст (организацию, папку или проект)"));
+        refreshPage();
     }
 }
