@@ -53,7 +53,7 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание http Frontend c tcp Backend {0}")
+    @ParameterizedTest(name = "Создание Frontend. Невалидный backend_name {0}")
     void notValidFrontendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Frontend frontend = Frontend.builder()
@@ -84,7 +84,7 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить Frontend. несуществующий name {0}")
+    @ParameterizedTest(name = "Удалить Frontend. Несуществующий name {0}")
     void deleteFrontendNotValidFrontendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = Frontend.builder()
@@ -96,7 +96,7 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Массовое Удаление. несуществующий name {0}")
+    @ParameterizedTest(name = "Массовое Удаление. Несуществующий name {0}")
     void deleteFrontendsNotValidFrontendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = Frontend.builder()

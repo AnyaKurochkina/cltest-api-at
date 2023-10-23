@@ -46,7 +46,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой balancingAlgorithm {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой balancing_algorithm {0}")
     void backendEmptyBalancingAlgorithm(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().servers(serversHttp).backendName("backend_empty_balancing_algorithm").balancingAlgorithm(null).build();
@@ -77,7 +77,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой checkFall {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой check_fall {0}")
     void backendEmptyModeCheckFall(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_fall").servers(serversTcp)
@@ -93,7 +93,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой checkRise {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой check_rise {0}")
     void backendEmptyModeCheckRise(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_rise").servers(serversTcp)
@@ -109,7 +109,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой checkInterval {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой check_interval {0}")
     void backendEmptyModeCheckInterval(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_interval").servers(serversTcp)
@@ -125,7 +125,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой advCheck {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой adv_check {0}")
     void backendEmptyAdvCheck(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_adv_check").servers(serversTcp)
@@ -141,7 +141,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой checkMethod {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой check_method {0}")
     void backendEmptyCheckMethod(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_method").servers(serversTcp)
@@ -158,7 +158,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой checkUri {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой check_uri {0}")
     void backendEmptyCheckUri(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_uri").servers(serversTcp)
@@ -197,7 +197,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Пустой servers.address {0}")
+    @ParameterizedTest(name = "Создание Backend. Пустой server.name {0}")
     void backendEmptyServersName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         List<Server> servers = Collections.singletonList(Server.builder().address("10.226.48.194").port(80).build());

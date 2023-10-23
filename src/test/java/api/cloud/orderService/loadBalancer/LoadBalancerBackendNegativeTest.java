@@ -52,7 +52,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный checkUri {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный check_uri {0}")
     void notValidBackendCheckUri(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_httpchk_check_uri")
@@ -66,7 +66,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный balancingAlgorithm {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный balancing_algorithm {0}")
     void notValidBackendBalancingAlgorithm(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_balancing_algorithm")
@@ -77,7 +77,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный checkPort {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный check_port {0}")
     void notValidBackendCheckPort(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_port")
@@ -96,7 +96,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный advCheck {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный adv_check {0}")
     void notValidBackendAdvCheck(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_adv_check")
@@ -115,7 +115,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный checkFall {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный check_fall {0}")
     void notValidBackendCheckFall(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_fall")
@@ -134,7 +134,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный checkSsl {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный check_ssl {0}")
     void notValidBackendCheckSsl(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_ssl")
@@ -172,7 +172,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный checkMethod {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный check_method {0}")
     void notValidBackendCheckMethod(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_method")
@@ -188,7 +188,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный VersionAndHeaders {0}")
+    @ParameterizedTest(name = "Создание Backend. Невалидный version_and_headers {0}")
     void notValidBackendVersionAndHeaders(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_version_and_headers")

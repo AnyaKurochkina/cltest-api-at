@@ -6,11 +6,9 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
-import models.cloud.subModels.loadBalancer.Backend;
-import models.cloud.subModels.loadBalancer.Frontend;
-import models.cloud.subModels.loadBalancer.Gslb;
-import models.cloud.subModels.loadBalancer.Server;
+import models.cloud.subModels.loadBalancer.*;
 import org.junit.MarkDelete;
+import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -20,6 +18,7 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Epic("Продукты")
@@ -28,9 +27,12 @@ import java.util.List;
 public class LoadBalancerTest extends Tests {
 
     List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").build(),
-            Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
+            Server.builder().address("10.226.99.133").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
     List<Server> serversHttp = Arrays.asList(Server.builder().address("10.226.48.194").port(80).name("d5soul-ngc004lk.corp.dev.vtb").build(),
-            Server.builder().address("10.226.99.132").port(80).name("d5soul-ngc005lk.corp.dev.vtb").build());
+            Server.builder().address("10.226.99.133").port(80).name("d5soul-ngc005lk.corp.dev.vtb").build());
+    @Mock
+    static LoadBalancer balancer = LoadBalancer.builder().build()
+            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/37c93f8e-c2ee-40cb-a5d2-008524676f3f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @TmsLink("1286242")
     @Tag("actions")
@@ -158,14 +160,14 @@ public class LoadBalancerTest extends Tests {
     Frontend addHttpSimple(LoadBalancer balancer) {
         Backend backend = Backend.builder()
                 .servers(serversHttp)
-                .backendName("backend_http_simple")
+                .backendName("backend_http_simple_4")
                 .mode("http")
                 .balancingAlgorithm("roundrobin")
                 .advancedCheck(false)
                 .build();
         balancer.addBackend(backend);
         Frontend frontend = Frontend.builder()
-                .frontendName("frontend_http_simple")
+                .frontendName("frontend_http_simple_4")
                 .mode("http")
                 .frontendPort(80)
                 .defaultBackendNameHttp(backend.getBackendName())
@@ -308,6 +310,62 @@ public class LoadBalancerTest extends Tests {
                     .build();
             balancer.revertConfig(backend);
 
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменение фронтенда {0}")
+    void editFrontend(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Frontend frontend = addHttpSimple(balancer);
+            frontend.setDefaultBackendName(frontend.getDefaultBackendNameHttp());
+            frontend.setDefaultBackendNameHttp(null);
+            balancer.editFrontEnd(frontend, false, frontend.getDefaultBackendNameHttp(), 999);
+        }
+    }
+
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Изменение бэкенда {0}")
+    void editBackend(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Backend backend = Backend.builder()
+                    .servers(serversTcp)
+                    .backendName("backend_for_edit")
+                    .advancedCheck(false)
+                    .build();
+            balancer.addBackend(backend);
+            balancer.editBackend(backend.getBackendName(), "delete", serversTcp);
+        }
+    }
+
+    @TmsLink("")
+    @Disabled
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "Создание проверки доступности. httpchk {0}")
+    void createHeathCheck(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Backend backend = Backend.builder()
+                    .servers(serversTcp)
+                    .backendName("backend_for_heath2")
+                    .advancedCheck(false)
+                    .build();
+            balancer.addBackend(backend);
+            HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
+                    .protocol("httpchk")
+                    .checkStrings(Collections.singletonList(CheckString.builder()
+                            .stringType("connect")
+                            .stringAddress("10.0.0.1")
+                            .stringPort(10)
+                            .stringUseSsl("disabled")
+                            .stringSendProxy("disabled")
+                            .build()))
+                    .checkMethod("GET")
+                    .checkUri("/")
+                    .build();
+            balancer.createHealthCheck(healthCheck);
         }
     }
 

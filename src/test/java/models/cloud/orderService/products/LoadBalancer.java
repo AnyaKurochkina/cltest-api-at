@@ -122,6 +122,7 @@ public class LoadBalancer extends IProduct {
 
     public void deleteAllGslb() {
         OrderServiceSteps.executeAction("balancer_gslb_release_delete_publications_by_orderid", this, null, this.getProjectId());
+        gslbs.clear();
     }
 
     public void addBackend(Backend backend) {
@@ -210,12 +211,15 @@ public class LoadBalancer extends IProduct {
     public void deleteGslb(Gslb gslb) {
         gslbs.remove(gslb);
         gslb = (Gslb) OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class);
-        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
-                new JSONObject().put("globalname", gslb.getGlobalname()), this.getProjectId());
+        deleteGslbSource(gslb.getGlobalname());
         Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не удален");
         save();
     }
 
+    public void deleteGslbSource(String globalName) {
+        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
+                new JSONObject().put("globalname", globalName), this.getProjectId());
+    }
 
     public Boolean isStateContains(String name) {
         String url = (String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('console_urls')}.data.config.console_urls[0]");
