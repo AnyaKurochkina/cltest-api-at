@@ -158,7 +158,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items with folder и по фильтру {filter}")
     public static List<Item> getItemsWithActionsByFilter(String filter, String value) {
         return new Http(StateServiceURL)
-                .setRole(Role.SUPERADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/?{}={}&with_folder=true", filter, value)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -304,7 +304,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение item по id={id} и фильтру {filter}")
     public static Item getItemByIdAndFilter(String id, String filter) {
         return new Http(StateServiceURL)
-                .setRole(Role.SUPERADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/{}/?{}", id, filter)
                 .assertStatus(200)
                 .extractAs(Item.class);
@@ -313,7 +313,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение item по id={id}")
     public static Item getItemById(String id) {
         return new Http(StateServiceURL)
-                .setRole(Role.SUPERADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/{}/", id)
                 .assertStatus(200)
                 .extractAs(Item.class);

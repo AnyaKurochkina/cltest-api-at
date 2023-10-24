@@ -11,7 +11,6 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -109,6 +108,14 @@ public class StateServiceTest extends Tests {
                 .set("$.graph_id", graph.getGraphId())
                 .set("$.action_id", action.getActionId())
                 .set("$.events[0].item_id", uuid)
+                .set("$.events[0].graph_id", graph.getGraphId())
+                .set("$.events[0].action_id", action.getActionId())
+                .set("$.events[1].item_id", uuid)
+                .set("$.events[1].graph_id", graph.getGraphId())
+                .set("$.events[1].action_id", action.getActionId())
+                .set("$.events[2].item_id", uuid)
+                .set("$.events[2].graph_id", graph.getGraphId())
+                .set("$.events[2].action_id", action.getActionId())
                 .build();
         createBulkAddAction(project.getId(), json);
         createBulkAddEvent(project.getId(), json2);
