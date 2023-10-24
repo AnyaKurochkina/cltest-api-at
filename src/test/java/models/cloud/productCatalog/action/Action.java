@@ -138,6 +138,8 @@ public class Action extends Entity {
     private Boolean skipItemChange;
     @JsonProperty("skip_item_with_secondary_rel")
     private Boolean skipItemWithSecondaryRel;
+    @JsonProperty("is_for_items")
+    private Boolean isForItems;
 
     @Override
     public Entity init() {

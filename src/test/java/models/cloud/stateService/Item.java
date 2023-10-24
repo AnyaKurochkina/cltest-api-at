@@ -15,7 +15,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"id", "createdRowDt", "updateDt"})
+@ToString
 public class Item {
     private String id;
     private LinkedHashMap<String, Object> data;
