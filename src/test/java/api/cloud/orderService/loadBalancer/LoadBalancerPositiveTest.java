@@ -27,10 +27,8 @@ public class LoadBalancerPositiveTest extends Tests {
 
     List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").build(),
             Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
-    List<Server> serversHttp = Arrays.asList(Server.builder().address("10.226.48.194").port(80).name("d5soul-ngc004lk.corp.dev.vtb").build(),
-            Server.builder().address("10.226.99.132").port(80).name("d5soul-ngc005lk.corp.dev.vtb").build());
 
-    LoadBalancer balancer = LoadBalancer.builder().build()
+    static LoadBalancer balancer = LoadBalancer.builder().build()
             .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/a75efab9-0452-4609-a110-0812cce44d8c/main?context=proj-ln4zg69jek&type=project&org=vtb");
     private static final int MAX_FIELD_SIZE = 255;
     private static final int MAX_FIELD_SIZE_GSLB = 64;
@@ -43,126 +41,92 @@ public class LoadBalancerPositiveTest extends Tests {
 
     @TmsLink("")
     @Order(1)
-    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка максимальной длины наименований полей у заказов {0}")
     void validFieldMaxName(LoadBalancer product) {
-        Backend backend = createBackendTcpMaxName();
-        Frontend frontend = createFrontendTcpMaxName(backend.getBackendName());
-        Gslb gslb = createGslbMaxName(frontend);
-        createRouteMaxName(backend, gslb.getGlobalname());
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Backend backend = createBackendTcp(MASK + new Generex(String.format("[a-zA-Z0-9]{%s}", MAX_FIELD_SIZE - MASK.length())).random(), true);
+            balancer.addBackend(backend);
+            Frontend frontend = createFrontendTcp(backend.getBackendName(), MASK + new Generex(String.format("[a-zA-Z0-9]{%s}", MAX_FIELD_SIZE - MASK.length())).random());
+            balancer.addFrontend(frontend);
+            Gslb gslb = createGslb(frontend, MASK_GSLB + new Generex(String.format("[a-z0-9]{%s}", MAX_FIELD_SIZE_GSLB - MASK_GSLB.length())).random());
+            balancer.addGslb(gslb);
+            RouteSni route = createRoute(balancer, backend, gslb.getGlobalname(), MASK_ROUTE + new Generex(String.format("[a-z0-9]{%s}", MAX_FIELD_SIZE - MASK_ROUTE.length())).random());
+            balancer.addRouteSni(route);
+        }
     }
 
     @TmsLink("")
     @Order(2)
-    @Source(ProductArgumentsProvider.ONE_PRODUCT)
+    @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка минимальной длины наименований полей у заказов {0}")
     void validFieldMinName(LoadBalancer product) {
-        Backend backend = createBackendTcpMinName();
-        Frontend frontend = createFrontendTcpMinName(backend.getBackendName());
-        Gslb gslb = createGslbMinName(frontend);
-        createRouteMinName(backend, gslb.getGlobalname());
-    }
-
-
-
-    @Step("Создание tcp Backend с максимальным значением длины наименования")
-    private Backend createBackendTcpMaxName() {
-        Backend backend = Backend.builder()
-                .servers(serversTcp)
-                .backendName(MASK + new Generex(String.format("[a-zA-Z0-9]{%s}", MAX_FIELD_SIZE - MASK.length())).random())
-                .advancedCheck(true)
-                .pattern(new Generex(String.format("[a-zA-Z0-9]{%s}", MAX_FIELD_SIZE)).random())
-                .data(new Generex(String.format("[a-zA-Z0-9]{%s}", MAX_FIELD_SIZE)).random())
-                .build();
-        balancer.addBackend(backend);
-        return backend;
-    }
-    @Step("Создание tcp Backend с минимальным значением длины наименования")
-    private Backend createBackendTcpMinName() {
-        Backend backend = Backend.builder()
-                .servers(serversTcp)
-                .backendName(new Generex(String.format("[a-zA-Z]{%s}", MIN_FIELD_SIZE)).random())
-                .advancedCheck(true)
-                .data("a")
-                .pattern("b")
-                .build();
-        balancer.addBackend(backend);
-        return backend;
-    }
-
-    @Step("Создание tcp Frontend c tcp Backend с максимальными значениями длин наименований")
-    private Frontend createFrontendTcpMaxName(String backendName) {
-        Frontend frontend = Frontend.builder()
-                .frontendName(MASK + new Generex(String.format("[a-zA-Z0-9]{%s}", MAX_FIELD_SIZE - MASK.length())).random())
-                .defaultBackendNameTcp(backendName)
-                .mode("tcp")
-                .build();
-        balancer.addFrontend(frontend);
-        return frontend;
-    }
-
-    @Step("Создание tcp Frontend c tcp Backend с минимальными значениями длин наименований")
-    private Frontend createFrontendTcpMinName(String backendName) {
-        Frontend frontend = Frontend.builder()
-                .frontendName(new Generex(String.format("[a-zA-Z]{%s}", MIN_FIELD_SIZE)).random())
-                .defaultBackendNameTcp(backendName)
-                .mode("tcp")
-                .build();
-        balancer.addFrontend(frontend);
-        return frontend;
-    }
-
-    @Step("Создание Gslb c Backend с максимальными значениями длин наименования")
-    Gslb createGslbMaxName(Frontend frontend) {
-        Gslb gslb = Gslb.builder()
-                .globalname(MASK_GSLB + new Generex(String.format("[a-z0-9]{%s}", MAX_FIELD_SIZE_GSLB - MASK_GSLB.length())).random())
-                .frontend(frontend)
-                .build();
-        balancer.addGslb(gslb);
-        return gslb;
-    }
-
-    @Step("Создание Gslb c Backend с минимальными значениями длин наименования")
-    Gslb createGslbMinName(Frontend frontend) {
-        Gslb gslb = Gslb.builder()
-                .globalname(new Generex(String.format("[a-z0-9]{%s}", MIN_FIELD_SIZE_GSLB)).random())
-                .frontend(frontend)
-                .build();
-        balancer.addGslb(gslb);
-        return gslb;
-    }
-
-    @Step("Создание Route c Gslb и Backend с максимальными значениями длин наименования")
-    void createRouteMaxName(Backend backend, String globalName) {
-        List<RouteSni.DnsPrefix> dnsPrefixes = (List<RouteSni.DnsPrefix>)OrderServiceSteps.getListObjectClass(balancer, "data.find{it.type=='cluster'}.data.config.polaris_config");
-        List<RouteSni.Route> routes = Arrays.asList(new RouteSni.Route(backend.getBackendName(),MASK_ROUTE + new Generex(String.format("[a-z0-9]{%s}", MAX_FIELD_SIZE - MASK_ROUTE.length())).random()));//
-
-        for(int i = 0; i < dnsPrefixes.size(); i++) {
-            if(((Map)dnsPrefixes.get(i)).get("globalname").toString().contains(globalName)) {
-                RouteSni route = RouteSni.builder()
-                        .dnsPrefix(new RouteSni.DnsPrefix((Map)dnsPrefixes.get(i)))
-                        .routes(routes)
-                        .build();
-                balancer.addRouteSni(route);
-                break;
-            }
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Backend backend = createBackendTcp(new Generex(String.format("[a-zA-Z]{%s}", MIN_FIELD_SIZE)).random(), false);
+            balancer.addBackend(backend);
+            Frontend frontend = createFrontendTcp(backend.getBackendName(), new Generex(String.format("[a-zA-Z]{%s}", MIN_FIELD_SIZE)).random());
+            Gslb gslb = createGslb(frontend, new Generex(String.format("[a-z0-9]{%s}", MIN_FIELD_SIZE_GSLB)).random());
+            balancer.addGslb(gslb);
+            RouteSni route = createRoute(balancer, backend, gslb.getGlobalname(), new Generex(String.format("[a-z0-9]{%s}", MIN_FIELD_SIZE)).random());
+            balancer.addRouteSni(route);
         }
     }
 
-    @Step("Создание Route c Gslb и Backend с минимальными значениями длин наименования")
-    void createRouteMinName(Backend backend, String globalName) {
-        List<RouteSni.DnsPrefix> dnsPrefixes = (List<RouteSni.DnsPrefix>)OrderServiceSteps.getListObjectClass(balancer, "data.find{it.type=='cluster'}.data.config.polaris_config");
-        List<RouteSni.Route> routes = Arrays.asList(new RouteSni.Route(backend.getBackendName(),new Generex(String.format("[a-z0-9]{%s}", MIN_FIELD_SIZE)).random()));
+    @Step("Создание tcp Backend")
+    private Backend createBackendTcp(String backendName, boolean max) {
+        Backend backend = Backend.builder()
+                .servers(serversTcp)
+                .backendName(backendName)
+                .advancedCheck(true)
+                .checkPort(32344)
+                .advCheck("tcp-check")
+                .checkFall(3)
+                .checkSsl("disabled")
+                .match("string")
+                .checkRise(3)
+                .checkInterval(5000)
+                .pattern(new Generex(String.format("[a-zA-Z0-9]{%s}", max ? MAX_FIELD_SIZE : MIN_FIELD_SIZE)).random())
+                .data(new Generex(String.format("[a-zA-Z0-9]{%s}", max ? MAX_FIELD_SIZE : MIN_FIELD_SIZE)).random())
+                .build();
+        return backend;
+    }
 
+    @Step("Создание tcp Frontend c tcp Backend")
+    private Frontend createFrontendTcp(String backendName, String frontendName) {
+        Frontend frontend = Frontend.builder()
+                .frontendName(frontendName)
+                .defaultBackendNameTcp(backendName)
+                .mode("tcp")
+                .build();
+        return frontend;
+    }
+
+    @Step("Создание Gslb c Frontend")
+    private Gslb createGslb(Frontend frontend, String globalName) {
+        Gslb gslb = Gslb.builder()
+                .globalname(globalName)
+                .frontend(frontend)
+                .build();
+        return gslb;
+    }
+
+
+    @Step("Создание Route c Gslb и Backend")
+    private RouteSni createRoute(LoadBalancer balancer, Backend backend, String globalName, String name) {
+        List<RouteSni.DnsPrefix> dnsPrefixes = OrderServiceSteps.getProductsField(balancer, "data.find{it.type=='cluster'}.data.config.polaris_config", List.class);
+        List<RouteSni.Route> routes = Arrays.asList(new RouteSni.Route(backend.getBackendName(), name));
+        RouteSni route = null;
         for(int i = 0; i < dnsPrefixes.size(); i++) {
             if(((Map)dnsPrefixes.get(i)).get("globalname").toString().contains(globalName)) {
-                RouteSni route = RouteSni.builder()
+                route = RouteSni.builder()
                         .dnsPrefix(new RouteSni.DnsPrefix((Map)dnsPrefixes.get(i)))
                         .routes(routes)
                         .build();
-                balancer.addRouteSni(route);
                 break;
             }
         }
+        return route;
     }
+
+
 }
