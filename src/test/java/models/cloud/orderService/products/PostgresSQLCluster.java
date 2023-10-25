@@ -67,15 +67,19 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Override
     public void createDb(String dbName) {
-        if (database.contains(new Db(dbName)))
+        if(getEnv().equalsIgnoreCase("LT")) {
+            if (database.contains(new Db(dbName)))
+                return;
+            OrderServiceSteps.executeAction("postgresql_create_db_lt_prod", this,
+                    new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, adminPassword)), this.getProjectId());
+            Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
+                    "База данных не создалась c именем " + dbName);
+            database.add(new Db(dbName));
+            log.info("database = " + database);
+            save();
             return;
-        OrderServiceSteps.executeAction("postgresql_create_db_lt_prod", this,
-                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, adminPassword)), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
-                "База данных не создалась c именем " + dbName);
-        database.add(new Db(dbName));
-        log.info("database = " + database);
-        save();
+        }
+        super.createDb(dbName);
     }
 
     @Override
