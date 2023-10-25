@@ -229,7 +229,7 @@ public abstract class IProduct extends Entity {
     }
 
     public String executeSsh(SshClient client, String cmd) {
-        Assumptions.assumeTrue("dev".equalsIgnoreCase(envType()), "Тест включен только для dev среды");
+        Assumptions.assumeTrue(isDev(), "Тест включен только для dev среды");
         return client.execute(cmd);
     }
 
@@ -307,6 +307,7 @@ public abstract class IProduct extends Entity {
     }
 
     public boolean isActionExist(String action){
+        Assumptions.assumeTrue(isDev(), "Тест включен только для dev среды");
         return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name == '%s'}", action));
     }
 
