@@ -556,12 +556,6 @@ public class OrderServiceSteps extends Steps {
         return JsonHelper.deserialize(object, clazz);
     }
 
-    @Step("Получение списка объектов класса по пути {path}")
-    public static Object getListObjectClass(IProduct product, String path) {
-        String object = new Gson().toJson(getProductsField(product, path, List.class, false));
-        return JsonHelper.deserialize(object);
-    }
-
     @Step("Получение сетевого сегмента для продукта {product}")
     public static String getNetSegment(IProduct product) {
         String segment = "dev-srv-app";

@@ -77,11 +77,6 @@ public class JsonHelper {
     }
 
     @SneakyThrows
-    public static <T> T deserialize(String object) {
-        return (T) getCustomObjectMapper().readValue(object, new TypeReference<T>(){});
-    }
-
-    @SneakyThrows
     public static <T> T convertResponseOnClass(String rawJson, Class<T> clazz){
         JSONObject jsonObject = new JSONObject(rawJson);
         ObjectMapper objectMapper = new ObjectMapper();
