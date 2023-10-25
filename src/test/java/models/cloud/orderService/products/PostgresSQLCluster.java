@@ -235,6 +235,10 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         OrderServiceSteps.executeAction("postgresql_cluster_get_configuration", this, null, this.getProjectId());
     }
 
+    public void updateVersionDb() {
+        OrderServiceSteps.executeAction("postgresql_get_version", this, null, this.getProjectId());
+    }
+
     @Override
     public void updatePostgresql() {
         OrderServiceSteps.executeAction("postgresql_cluster_update_postgresql", this, new JSONObject().put("check_agree", true), this.getProjectId());
