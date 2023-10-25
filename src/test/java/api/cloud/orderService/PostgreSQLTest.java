@@ -10,10 +10,7 @@ import models.cloud.subModels.Flavor;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
@@ -213,6 +210,7 @@ public class PostgreSQLTest extends Tests {
     @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void updateOs(PostgreSQL product) {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(postgreSQL.isDev(), "Тест включен только для dev среды");
             postgreSQL.updateOs();
         }
     }

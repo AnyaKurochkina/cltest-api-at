@@ -15,7 +15,8 @@ import java.util.List;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"id", "createdRowDt", "updateDt"})
+@ToString
 public class Item {
     private String id;
     private LinkedHashMap<String, Object> data;
@@ -39,6 +40,8 @@ public class Item {
     private String graphId;
     @JsonProperty("provider")
     private String provider;
+    @JsonProperty("parent")
+    private String parent;
     private String type;
     @JsonProperty("order_id")
     private String orderId;

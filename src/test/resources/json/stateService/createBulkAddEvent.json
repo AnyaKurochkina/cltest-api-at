@@ -1,15 +1,130 @@
 {
-  "order_id": "00000001-0001-0001-0001-000000000002",
-  "action_id": "000843ca-0e7a-44de-9b40-6fbad2057b39",
-  "graph_id": "b9027824-0b66-40bb-8d42-7a4ad981c343",
+  "order_id": "c002ecbb-f485-462f-b181-c0b3e441ad19",
+  "action_id": "${action_id}",
+  "graph_id": "8975c85e-3f90-482f-a765-86a06013aa27",
   "events": [
     {
-      "type": "app",
-      "subtype": "state",
-      "status": "change_order",
+      "create_dt": "2023-09-29T13:13:12.530751+03:00",
+      "order_id": "c002ecbb-f485-462f-b181-c0b3e441ad19",
+      "action_id": "${action_id}",
+      "graph_id": "8975c85e-3f90-482f-a765-86a06013aa27",
+      "item_id": "${Псевдо случайынй uuid}",
+      "type": "vm",
+      "subtype": "config",
+      "status": "",
       "data": {
-      },
-      "item_id": "00000001-0001-0001-0001-000000000002"
+        "image": {
+          "os": {
+            "type": "linux",
+            "vendor": "rusbitech",
+            "version": "1.7",
+            "architecture": "x86_64",
+            "distribution": "astra",
+            "localization": "en"
+          },
+          "name": "tpl_linux_astra_1.7_x86_64_en",
+          "size": 30,
+          "uuid": "015769bc-8cad-4a82-9b29-57d246213c1b"
+        },
+        "domain": "corp.dev.vtb",
+        "flavor": {
+          "cpus": 2,
+          "name": "c2m4",
+          "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+          "memory": 4
+        },
+        "tenant": {
+          "name": "Cloud-d6plux",
+          "uuid": "group-v22233"
+        },
+        "hostname": "d6plux-apc001lv",
+        "boot_disk": {
+          "path": "/dev/sda",
+          "size": 50,
+          "uuid": "6000C294-0ee7-2f38-77a7-ce8525fe0a70",
+          "purpose": "boot"
+        },
+        "swap_size": 3,
+        "extra_nics": [],
+        "on_support": false,
+        "os_version": "1.7_x86-64",
+        "default_nic": {
+          "mtu": 1500,
+          "name": "eth0",
+          "uuid": "4000",
+          "subnet": {
+            "name": "dvpg_K37-5-SOUL_1356",
+            "uuid": "dvportgroup-1065"
+          },
+          "addresses": [
+            {
+              "type": "ipv4",
+              "address": "10.226.3.44"
+            },
+            {
+              "type": "ipv6",
+              "address": "fe80::250:56ff:fead:5017"
+            }
+          ],
+          "mac_address": "00:50:56:ad:50:17",
+          "net_segment": "dev-srv-app",
+          "address_assignment": "STATIC"
+        },
+        "environment": "DEV",
+        "extra_disks": [
+          {
+            "path": "/dev/sdb",
+            "size": 10,
+            "uuid": "6000C293-86df-c050-61a0-9ce4631631ee",
+            "purpose": "general"
+          }
+        ],
+        "extra_mounts": [
+          {
+            "size": 10,
+            "mount": "/app",
+            "device": "/dev/mapper/vg_02-lv_app",
+            "fstype": "xfs",
+            "options": "rw,relatime,attr2,inode64,logbufs=8,logbsize=32k,noquota"
+          }
+        ],
+        "resource_pool": {
+          "name": "K37-5-SOUL",
+          "uuid": "domain-c23",
+          "ui_link": "https://d5soul-vc5001xv.region.vtb.ru",
+          "endpoint": "https://d5soul-vc5001xv.region.vtb.ru",
+          "platform": "vsphere",
+          "tenant_prefix": "Cloud"
+        },
+        "ad_integration": true,
+        "storage_profile": "HDD",
+        "environment_type": "DEV",
+        "default_v4_address": "10.226.3.44",
+        "default_v6_address": "None"
+      }
+    },
+    {
+      "create_dt": "2023-09-29T13:13:12.530751+03:00",
+      "order_id": "7d28361a-9fdd-4c28-a135-f5b07cf7513e",
+      "action_id": "${action_id}",
+      "graph_id": "8975c85e-3f90-482f-a765-86a06013aa27",
+      "item_id": "${Псевдо случайынй uuid}",
+      "type": "vm",
+      "subtype": "provider",
+      "status": "vsphere",
+      "data": {},
+      "update_data": null
+    },
+    {
+      "create_dt": "2023-09-29T13:13:12.530751+03:00",
+      "order_id": "7d28361a-9fdd-4c28-a135-f5b07cf7513e",
+      "action_id": "${action_id}",
+      "graph_id": "8975c85e-3f90-482f-a765-86a06013aa27",
+      "item_id": "${Псевдо случайынй uuid}",
+      "type": "vm",
+      "subtype": "state",
+      "status": "on",
+      "data": {}
     }
   ]
 }

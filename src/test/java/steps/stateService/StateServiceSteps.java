@@ -10,8 +10,10 @@ import io.qameta.allure.Step;
 import io.restassured.path.json.exception.JsonPathException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
+import models.cloud.authorizer.Project;
+import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.*;
-import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.json.JSONObject;
 import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
@@ -20,10 +22,15 @@ import steps.Steps;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 import static core.helper.Configure.StateServiceURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static steps.productCatalog.ActionSteps.createAction;
+import static steps.productCatalog.GraphSteps.createGraph;
 
 @Log4j2
 public class StateServiceSteps extends Steps {
@@ -45,14 +52,26 @@ public class StateServiceSteps extends Steps {
     }
 
     @Step("Создание Item")
-    public static Item createItem(String projectId, JSONObject json) {
-        return new Http(StateServiceURL)
-                //  .setRole(Role.CLOUD_ADMIN)
-                .withServiceToken()
-                .body(json)
-                .post("/api/v1/projects/{}/items/", projectId)
-                .assertStatus(201)
-                .extractAs(Item.class);
+    public static Item createItem(Project project) {
+        String uuid = UUID.randomUUID().toString();
+        Action action = createAction();
+        Graph graph = createGraph();
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
+                .set("$.order_id", uuid)
+                .set("$.graph_id", graph.getGraphId())
+                .set("$.action_id", action.getActionId())
+                .set("$.events[0].item_id", uuid)
+                .set("$.events[0].graph_id", graph.getGraphId())
+                .set("$.events[0].action_id", action.getActionId())
+                .set("$.events[1].item_id", uuid)
+                .set("$.events[1].graph_id", graph.getGraphId())
+                .set("$.events[1].action_id", action.getActionId())
+                .set("$.events[2].item_id", uuid)
+                .set("$.events[2].graph_id", graph.getGraphId())
+                .set("$.events[2].action_id", action.getActionId())
+                .build();
+        createBulkAddEvent(project.getId(), json2);
+        return getItemById(uuid);
     }
 
     public static String getErrorFromStateService(String orderId) {
@@ -139,7 +158,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка items with folder и по фильтру {filter}")
     public static List<Item> getItemsWithActionsByFilter(String filter, String value) {
         return new Http(StateServiceURL)
-                .setRole(Role.SUPERADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/?{}={}&with_folder=true", filter, value)
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
@@ -285,8 +304,17 @@ public class StateServiceSteps extends Steps {
     @Step("Получение item по id={id} и фильтру {filter}")
     public static Item getItemByIdAndFilter(String id, String filter) {
         return new Http(StateServiceURL)
-                .setRole(Role.SUPERADMIN)
+                .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/{}/?{}", id, filter)
+                .assertStatus(200)
+                .extractAs(Item.class);
+    }
+
+    @Step("Получение item по id={id}")
+    public static Item getItemById(String id) {
+        return new Http(StateServiceURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/items/{}/", id)
                 .assertStatus(200)
                 .extractAs(Item.class);
     }

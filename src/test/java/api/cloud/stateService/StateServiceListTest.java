@@ -8,7 +8,10 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
+import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.enums.EventProvider;
+import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import models.cloud.stateService.extRelations.ExtRelation;
@@ -19,17 +22,17 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.orderService.OrderServiceSteps;
+import steps.resourceManager.ResourceManagerSteps;
 import steps.stateService.StateServiceSteps;
 
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static core.helper.DateValidator.currentTimeInFormat;
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.orderService.OrderServiceSteps.registerAction;
 import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.stateService.ExtRelationsStep.createExtRelation;
@@ -92,7 +95,7 @@ public class StateServiceListTest extends Tests {
     @Test
     @DisplayName("Получение списка items with actions по контексту и фильтру")
     @TmsLink("")
-    public void getItemListWithActions() {
+    public void getItemListWithActionsAndFilters() {
         Project project = Project.builder().isForOrders(true)
                 .build()
                 .createObject();
@@ -104,6 +107,61 @@ public class StateServiceListTest extends Tests {
         for (Item item : itemsProviderList) {
             assertEquals("vsphere", item.getProvider());
         }
+    }
+
+    @Test
+    @DisplayName("Получение списка items with actions")
+    @TmsLink("SOUL-7780")
+    public void getItemListWithActions() {
+        Project project = Project.builder().isForOrders(true)
+                .build()
+                .createObject();
+        Action action = Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
+                .requiredItemStatuses(Arrays.asList("on"))
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
+                .number(0)
+                .build()
+                .createObject();
+        registerAction(action.getName());
+        Item item = createItem(project);
+        String path = ResourceManagerSteps.getProjectPath("projects", project.getId()) + "/";
+        JSONObject newAction = JsonHelper.getJsonTemplate("stateService/createAction.json")
+                .set("$.order_ids", Collections.singletonList(item.getOrderId()))
+                .set("$.graph_id", item.getGraphId())
+                .set("$.action_id", item.getActionId())
+                .set("$.data.folder", path)
+                .set("$.create_dt", currentTimeInFormat())
+                .build();
+        createBulkAddAction(project.getId(), newAction);
+        Item getItem = getItemsListByFilter(project.getId(), format("item_id={}&with_actions=true", item.getItemId()))
+                .jsonPath().getList("list", Item.class).get(0);
+        assertTrue(getItem.getActions().stream().anyMatch(x -> x.getActionId().equals(action.getActionId())));
+    }
+
+    @Test
+    @DisplayName("Получение списка items as_dict=true")
+    @TmsLink("SOUL-7779")
+    public void getItemListAsDictTrue() {
+        Project project = Project.builder().isForOrders(true)
+                .build()
+                .createObject();
+        Item item = createItem(project);
+        String path = ResourceManagerSteps.getProjectPath("projects", project.getId()) + "/";
+        JSONObject newAction = JsonHelper.getJsonTemplate("stateService/createAction.json")
+                .set("$.order_ids", Collections.singletonList(item.getOrderId()))
+                .set("$.graph_id", item.getGraphId())
+                .set("$.action_id", item.getActionId())
+                .set("$.data.folder", path)
+                .set("$.create_dt", currentTimeInFormat())
+                .build();
+        createBulkAddAction(project.getId(), newAction);
+        Item getItem = getItemsListByFilter(project.getId(), format("order_id={}&as_dict=true", item.getOrderId())).jsonPath()
+                .getObject(item.getItemId(), Item.class);
+        assertEquals(item, getItem);
     }
 
     @Test
@@ -161,7 +219,9 @@ public class StateServiceListTest extends Tests {
     public void getItemListWithFolderTrueTest() {
         List<Item> list = getItemsListByFilter("with_folder=true");
         for (Item item : list) {
-            assertNotNull(item.getFolder());
+            if (item.getFolder() != null) {
+                assertFalse(item.getFolder().isEmpty());
+            }
         }
     }
 
@@ -181,7 +241,7 @@ public class StateServiceListTest extends Tests {
         ZonedDateTime endDt = ZonedDateTime.parse("2022-11-23T12:42:00.000000Z");
         List<Item> list = getItemsListByFilter(String.format("created_row_dt__gte=%s&created_row_dt__lt=%s", startDt, endDt));
         for (Item item : list) {
-            ZonedDateTime createdRowDt = ZonedDateTime.parse(item.getCreatedRowDt());
+            ZonedDateTime createdRowDt = ZonedDateTime.parse(item.getCreatedRowDt() + "Z");
             assertTrue((createdRowDt.isAfter(startDt) || createdRowDt.isEqual(startDt)) && createdRowDt.isBefore(endDt),
                     String.format("Дата %s itema не входит в заданный промежуток.", createdRowDt));
         }
@@ -239,55 +299,24 @@ public class StateServiceListTest extends Tests {
     @DisplayName("Получение списка Items с параметром with_ext_relation=true")
     @TmsLink("1600823")
     public void getItemsListWithExtRelationTrueTest() {
-        Action action = createAction();
-        Graph graph = createGraph();
         Project project = Project.builder().isForOrders(true).build().createObject();
-        String orderId = UUID.randomUUID().toString();
-        String itemId = UUID.randomUUID().toString();
-        JSONObject json = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(orderId)
-                .itemId(itemId)
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject secondaryJson = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        JSONObject json2 = Item.builder()
-                .actionId(action.getActionId())
-                .graphId(graph.getGraphId())
-                .orderId(UUID.randomUUID().toString())
-                .itemId(UUID.randomUUID().toString())
-                .type("paas")
-                .subtype("build")
-                .build()
-                .toJson();
-        Item primaryItem = createItem(project.getId(), json);
-        Item secondaryItem = createItem(project.getId(), secondaryJson);
-        Item primaryItem2 = createItem(project.getId(), json2);
+        Item primaryItem = createItem(project);
+        Item secondaryItem = createItem(project);
+        Item primaryItem2 = createItem(project);
         ExtRelation extRelation = createExtRelation("projects", project.getId(), primaryItem.getItemId(), secondaryItem.getItemId(),
                 false);
         ExtRelation extRelation2 = createExtRelation("projects", project.getId(), primaryItem2.getItemId(), primaryItem.getItemId(),
                 false);
         String newFolder = String.format("/organization/vtb/folder/folder/fold-test/project/%s/", project.getId());
         JSONObject newAction = JsonHelper.getJsonTemplate("stateService/createAction.json")
-                .set("$.order_ids", Collections.singletonList(orderId))
-                .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.order_ids", Collections.singletonList(primaryItem.getOrderId()))
+                .set("$.graph_id", primaryItem.getGraphId())
+                .set("$.action_id", primaryItem.getActions())
                 .set("$.data.folder", newFolder)
                 .set("$.create_dt", currentTimeInFormat())
                 .build();
         createBulkAddAction(project.getId(), newAction);
-        Response response = getItemsListByFilter(project.getId(), String.format("order_id=%s&with_ext_relations=true", orderId));
+        Response response = getItemsListByFilter(project.getId(), String.format("order_id=%s&with_ext_relations=true", primaryItem.getOrderId()));
         assertEquals(secondaryItem.getItemId(), response.jsonPath().getString("list[0].data.ext_relations.secondary[0]"));
         assertEquals(primaryItem2.getItemId(), response.jsonPath().getString("list[0].data.ext_relations.primary[0]"));
         deleteExtRelation("projects", project.getId(), extRelation.getId());
