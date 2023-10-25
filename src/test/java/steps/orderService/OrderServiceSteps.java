@@ -394,7 +394,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static String getDataCentre(IProduct product) {
-        String dc = "50";
+        String dc = "5";
         log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
         Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
