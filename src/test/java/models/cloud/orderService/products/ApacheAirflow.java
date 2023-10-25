@@ -88,7 +88,7 @@ public class ApacheAirflow extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
-                .set("$.order.attrs.web_console_grants[0].role", isDev() ? "admin" : "Operator")
+                .set("$.order.attrs.web_console_grants[0].role", "Operator")
                 .set("$.order.attrs.deploy_grants[0].groups[0]", accessGroupTech)
                 .set("$.order.attrs.deploy_grants[0].role", deployRoleGroup)
                 .set("$.order.project_name", project.id)
@@ -151,7 +151,7 @@ public class ApacheAirflow extends IProduct {
     }
 
     public void airflowChangeWebAccess(List<String> accessGroups) {
-        JSONObject data = new JSONObject().append("groups", accessGroups);
+        JSONObject data = new JSONObject().put("groups", accessGroups);
         OrderServiceSteps.executeAction("airflow_change_web_access", this, data, this.getProjectId());
     }
 

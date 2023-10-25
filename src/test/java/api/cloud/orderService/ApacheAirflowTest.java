@@ -36,12 +36,15 @@ public class ApacheAirflowTest extends Tests {
             abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
 
         postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess();
-        String dbName = "airflow";
-        postgreSQL.createDb(dbName);
-        product.setPgAdminPassword(postgreSQL.getAdminPassword());
-        product.setDbServer(postgreSQL.pgcIp());
-        product.setDbUser(new DbUser(dbName, dbName + "_admin"));
-        postgreSQL.close();
+        try {
+            String dbName = "airflow";
+            postgreSQL.createDb(dbName);
+            product.setPgAdminPassword(postgreSQL.getAdminPassword());
+            product.setDbServer(postgreSQL.pgcIp());
+            product.setDbUser(new DbUser(dbName, dbName + "_admin"));
+        } finally {
+            postgreSQL.close();
+        }
     }
 
     @TmsLink("1421430")
