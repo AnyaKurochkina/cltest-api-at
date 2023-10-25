@@ -10,7 +10,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
-import models.cloud.subModels.Db;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -61,19 +60,6 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         if (flavor == null)
             flavor = getMinFlavor();
         return this;
-    }
-
-    @Override
-    public void createDb(String dbName) {
-        if (database.contains(new Db(dbName)))
-            return;
-        OrderServiceSteps.executeAction("postgresql_create_db_lt_prod", this,
-                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, adminPassword)), this.getProjectId());
-        Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
-                "База данных не создалась c именем " + dbName);
-        database.add(new Db(dbName));
-        log.info("database = " + database);
-        save();
     }
 
     @Override
