@@ -259,6 +259,7 @@ public class EditNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
+        page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
         page.getSourceVersionSelect().set("1.0.1");
         Waiting.sleep(2000);

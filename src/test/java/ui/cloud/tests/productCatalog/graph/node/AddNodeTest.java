@@ -216,6 +216,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
+        page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.enabled);
@@ -246,6 +247,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
+        page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
@@ -281,6 +283,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
+        page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
         Waiting.sleep(2000);
         page.getParamsTab().click();
@@ -317,6 +320,7 @@ public class AddNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
+        page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
         Waiting.sleep(2000);
         page.getParamsTab().click();

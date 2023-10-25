@@ -18,6 +18,7 @@ import steps.productCatalog.TemplateSteps;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
+import java.time.Duration;
 import java.util.Objects;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -203,6 +204,7 @@ public class GraphNodesPage extends GraphPage {
         nodeName.setValue(node.getName());
         nodeDescription.setValue(node.getDescription());
         Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
+        sourceTypeSelect.setContains(SUBGRAPH.getDisplayName());
         sourceSelect.setContains(subgraph.getName());
         if (node.getName().isEmpty()) {
             nameRequiredFieldHint.shouldBe(Condition.visible);
@@ -250,13 +252,13 @@ public class GraphNodesPage extends GraphPage {
         if (node.getSourceType().equals(SUBGRAPH.getValue())) {
             Graph subgraph = GraphSteps.getGraphById(node.getSourceId());
             assertEquals(SUBGRAPH.getDisplayName(), sourceTypeSelect.getValue());
-            assertTrue(sourceSelect.getValue().contains(subgraph.getName()));
+            Waiting.find(() -> sourceSelect.getValue().contains(subgraph.getName()), Duration.ofSeconds(3));
             assertEquals(node.getSourceVersion(), sourceVersionSelect.getValue());
         }
         if (node.getSourceType().equals(TEMPLATE.getValue())) {
             Template template = TemplateSteps.getTemplateById(Integer.parseInt(node.getSourceId()));
             assertEquals(TEMPLATE.getDisplayName(), sourceTypeSelect.getValue());
-            assertTrue(sourceSelect.getValue().contains(template.getName()));
+            Waiting.find(() -> sourceSelect.getValue().contains(template.getName()), Duration.ofSeconds(3));
             assertEquals(node.getSourceVersion(), sourceVersionSelect.getValue());
         }
         paramsTab.click();
