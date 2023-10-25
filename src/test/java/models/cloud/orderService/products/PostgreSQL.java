@@ -12,6 +12,9 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import static core.utils.AssertUtils.assertContains;
 
 
@@ -82,6 +85,11 @@ public class PostgreSQL extends AbstractPostgreSQL {
                 .set("$.order.attrs.on_support", !isDev())
                 .set("$.order.label", getLabel())
                 .build();
+    }
+
+    @Override
+    public String pgcIp() {
+        return (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.hostname.contains('-pgc')}.ip");
     }
 
     @Step("Удаление продукта")
