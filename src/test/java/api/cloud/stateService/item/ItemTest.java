@@ -1,6 +1,7 @@
 package api.cloud.stateService.item;
 
 import api.Tests;
+import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -9,6 +10,7 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import models.cloud.stateService.extRelations.ExtRelation;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
@@ -115,5 +117,24 @@ public class ItemTest extends Tests {
     public void getItemListWithStateNotEqualsDeleted() {
         List<Item> itemList = getItemsListByFilter("include_deleted=true");
         assertTrue(itemList.stream().anyMatch(x -> x.getData().get("state").equals("deleted")), "Item со state = deleted не найден");
+    }
+
+    @DisplayName("Перевод item в state = problem")
+    @TmsLink("")
+    @Test
+    public void changeItemStateToProblem() {
+        Item item = createItem(project);
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEventWithOneEvent.json")
+                .set("$.order_id", item.getOrderId())
+                .set("$.graph_id", item.getGraphId())
+                .set("$.action_id", item.getActionId())
+                .set("$.events[0].item_id", item.getItemId())
+                .set("$.events[0].graph_id",  item.getGraphId())
+                .set("$.events[0].action_id", item.getActionId())
+                .set("$.events[0].order_id", item.getOrderId())
+                .set("$.events[0].status", "problem")
+                .build();
+        createBulkAddEvent(project.getId(), json2);
+        getItemById(item.getItemId());
     }
 }
