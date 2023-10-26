@@ -19,8 +19,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static models.cloud.tagService.TagServiceSteps.inventoryFilterV2;
-import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
+import static models.cloud.tagService.TagServiceSteps.*;
 
 @Epic("Сервис тегов")
 @Feature("Проверка Inventory V2")
@@ -63,6 +62,7 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
         Waiting.sleep(1000);
         inventoryTagsV2(context, inventory.getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), randomName())));
         Date updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+//        Date updatedAtAfterUpdate = inventoryTagListV2(context, inventory.getId()).getList().get(0).getUpdatedAt();
         Assertions.assertTrue(updatedAt.before(updatedAtAfterUpdate));
     }
 
