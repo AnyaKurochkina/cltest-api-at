@@ -108,4 +108,12 @@ public class ItemTest extends Tests {
         relationsIdsForDelete.add(extRelation.getId());
         List<Item> secondaryItemsList = getItemsListWithOutSecondaryRelation(primaryItem.getItemId());
     }
+
+    @DisplayName("Получение списка items по фильтру include_deleted=true")
+    @TmsLink("")
+    @Test
+    public void getItemListWithStateNotEqualsDeleted() {
+        List<Item> itemList = getItemsListByFilter("include_deleted=true");
+        assertTrue(itemList.stream().anyMatch(x -> x.getData().get("state").equals("deleted")), "Item со state = deleted не найден");
+    }
 }
