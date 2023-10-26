@@ -52,14 +52,6 @@ public class ObjectPoolService {
 
     @SneakyThrows
     public static <T extends Entity> T create(Entity e, boolean exclusiveAccess, boolean isPublic) {
-//        if(e.isMock()) {
-//            synchronized (Mock.class) {
-//                if(Objects.isNull(e.getMockReentrantLock()))
-//                     e.setMockReentrantLock(new ReentrantLock());
-//            }
-//            e.getMockReentrantLock().lock();
-//            return (T) e;
-//        }
         if (e.isSkip())
             throw new TestAbortedException("Нет конфигураций для объекта " + e.getClass().getSimpleName());
         ObjectPoolEntity objectPoolEntity;

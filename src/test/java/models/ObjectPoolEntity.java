@@ -129,7 +129,7 @@ public class ObjectPoolEntity {
         this.entity = ObjectPoolService.toJson(entity);
     }
 
-//если другой какой либо поток заблочил этот ресурс и он заблокирован моим
+//если другой какой-либо поток заблочил этот ресурс и он заблокирован моим
     private List<String> getLockedThreads(String rootThread) {
         ThreadInfo[] infos = ManagementFactory.getThreadMXBean().dumpAllThreads(true, true);
         List<String> threads = new ArrayList<>();
@@ -154,22 +154,13 @@ public class ObjectPoolEntity {
     public void lock() {
         if(isDeadLock(Thread.currentThread().getName(), lock.getOwnerThreadName()))
             throw new CreateEntityException("Тестовое исключение. Надо перезапустить тест :(");
-        if(IProduct.class.isAssignableFrom(clazz))
-            writeLog("lock() " + status + " " + entity);
         lock.tryLock(2, TimeUnit.HOURS);
-        if(IProduct.class.isAssignableFrom(clazz))
-            writeLog("lock()2 " + status + " " + entity);
     }
 
     public void release() {
         try {
-            if(IProduct.class.isAssignableFrom(clazz))
-                writeLog("unlock() " + status + " " + entity);
             lock.unlock();
-            if(IProduct.class.isAssignableFrom(clazz))
-                writeLog("unlock()2 " + status + " " + entity);
         } catch (IllegalMonitorStateException e) {
-            writeLog("error" + e);
             e.printStackTrace();
         }
     }
@@ -180,7 +171,7 @@ public class ObjectPoolEntity {
     }
 
     private static void writeLog(String text) {
-        log.info("2RESOURCE_LOG {} {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
+        log.info("RESOURCE_LOG {} {} \n {}\n", Thread.currentThread().getName(), text, getStackTrace(Thread.currentThread().getStackTrace()));
     }
 
     private static class CustomReentrantLock extends ReentrantLock {

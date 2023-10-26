@@ -17,8 +17,6 @@ import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.opentest4j.MultipleFailuresError;
 
@@ -30,10 +28,14 @@ import java.util.List;
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerBackendChangeNegativeTest extends Tests {
+
+    static List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").build(),
+            Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
     static List<Server> serversHttp = Arrays.asList(Server.builder().address("10.226.48.194").port(80).name("d5soul-ngc004lk.corp.dev.vtb").build(),
             Server.builder().address("10.226.99.132").port(80).name("d5soul-ngc005lk.corp.dev.vtb").build());
-    public static Backend backend = Backend.builder().servers(serversHttp).backendName(new Generex("load_balancer_negative_test-[0-9]{4}").random()).build();
-    public static Frontend frontend = Frontend.builder().frontendName(new Generex("load_balancer_negative_test-[0-9]{4}")
+
+    static Backend backend = Backend.builder().servers(serversHttp).backendName(new Generex("load_balancer_negative_test-[0-9]{4}").random()).build();
+    static Frontend frontend = Frontend.builder().frontendName(new Generex("load_balancer_negative_test-[0-9]{4}")
             .random()).mode("tcp").defaultBackendNameTcp(backend.getBackendName()).build();
 
     @Mock

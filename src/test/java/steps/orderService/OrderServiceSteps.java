@@ -362,7 +362,7 @@ public class OrderServiceSteps extends Steps {
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
     }
 
-    @Step("Получение warning ")
+    @Step("Получение warning по orderId = {orderId}")
     public static String getActionHistoryOutput(String orderId, String projectId, String actionId) {
         return new Http(OrderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)

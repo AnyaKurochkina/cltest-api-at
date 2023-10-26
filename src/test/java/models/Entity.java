@@ -72,10 +72,6 @@ public abstract class Entity implements AutoCloseable {
 
     @Override
     public void close() {
-//        if(isMock) {
-//            getMockReentrantLock().unlock();
-//            return;
-//        }
         ObjectPoolEntity objectPoolEntity = ObjectPoolService.getObjectPoolEntity(this);
         if (objectPoolEntity.getStatus() == ObjectStatus.FAILED)
             return;

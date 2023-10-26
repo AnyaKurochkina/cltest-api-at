@@ -7,16 +7,21 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
-import models.cloud.subModels.loadBalancer.*;
+import models.cloud.subModels.loadBalancer.Backend;
+import models.cloud.subModels.loadBalancer.Frontend;
+import models.cloud.subModels.loadBalancer.Gslb;
+import models.cloud.subModels.loadBalancer.RouteSni;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
 
 
 @Epic("Продукты")
@@ -24,12 +29,6 @@ import java.util.Map;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class LoadBalancerPositiveTest extends Tests {
-
-    List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").build(),
-            Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
-
-    static LoadBalancer balancer = LoadBalancer.builder().build()
-            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/a75efab9-0452-4609-a110-0812cce44d8c/main?context=proj-ln4zg69jek&type=project&org=vtb");
     private static final int MAX_FIELD_SIZE = 255;
     private static final int MAX_FIELD_SIZE_GSLB = 64;
     private static final int MIN_FIELD_SIZE = 1;
@@ -74,7 +73,7 @@ public class LoadBalancerPositiveTest extends Tests {
 
     @Step("Создание tcp Backend")
     private Backend createBackendTcp(String backendName, boolean max) {
-        Backend backend = Backend.builder()
+        return Backend.builder()
                 .servers(serversTcp)
                 .backendName(backendName)
                 .advancedCheck(true)
@@ -88,38 +87,35 @@ public class LoadBalancerPositiveTest extends Tests {
                 .pattern(new Generex(String.format("[a-zA-Z0-9]{%s}", max ? MAX_FIELD_SIZE : MIN_FIELD_SIZE)).random())
                 .data(new Generex(String.format("[a-zA-Z0-9]{%s}", max ? MAX_FIELD_SIZE : MIN_FIELD_SIZE)).random())
                 .build();
-        return backend;
     }
 
     @Step("Создание tcp Frontend c tcp Backend")
     private Frontend createFrontendTcp(String backendName, String frontendName) {
-        Frontend frontend = Frontend.builder()
+        return Frontend.builder()
                 .frontendName(frontendName)
                 .defaultBackendNameTcp(backendName)
                 .mode("tcp")
                 .build();
-        return frontend;
     }
 
     @Step("Создание Gslb c Frontend")
     private Gslb createGslb(Frontend frontend, String globalName) {
-        Gslb gslb = Gslb.builder()
+        return Gslb.builder()
                 .globalname(globalName)
                 .frontend(frontend)
                 .build();
-        return gslb;
     }
 
 
     @Step("Создание Route c Gslb и Backend")
     private RouteSni createRoute(LoadBalancer balancer, Backend backend, String globalName, String name) {
         List<RouteSni.DnsPrefix> dnsPrefixes = OrderServiceSteps.getProductsField(balancer, "data.find{it.type=='cluster'}.data.config.polaris_config", List.class);
-        List<RouteSni.Route> routes = Arrays.asList(new RouteSni.Route(backend.getBackendName(), name));
+        List<RouteSni.Route> routes = Collections.singletonList(new RouteSni.Route(backend.getBackendName(), name));
         RouteSni route = null;
-        for(int i = 0; i < dnsPrefixes.size(); i++) {
-            if(((Map)dnsPrefixes.get(i)).get("globalname").toString().contains(globalName)) {
+        for (RouteSni.DnsPrefix dnsPrefix : dnsPrefixes) {
+            if (((Map<?, ?>) dnsPrefix).get("globalname").toString().contains(globalName)) {
                 route = RouteSni.builder()
-                        .dnsPrefix(new RouteSni.DnsPrefix((Map)dnsPrefixes.get(i)))
+                        .dnsPrefix(new RouteSni.DnsPrefix((Map<?, ?>) dnsPrefix))
                         .routes(routes)
                         .build();
                 break;
