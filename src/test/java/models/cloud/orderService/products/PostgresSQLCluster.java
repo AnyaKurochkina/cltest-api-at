@@ -71,7 +71,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
             if (database.contains(new Db(dbName)))
                 return;
             OrderServiceSteps.executeAction("postgresql_create_db_lt_prod", this,
-                    new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, adminPassword)), this.getProjectId());
+                    new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: 11}", dbName, adminPassword)), this.getProjectId());
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                     "База данных не создалась c именем " + dbName);
             database.add(new Db(dbName));
