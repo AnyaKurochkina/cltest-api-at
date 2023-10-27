@@ -58,8 +58,6 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            if(Configure.ENV.equals("ift"))
-                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getUserInput().setValue(userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();

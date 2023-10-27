@@ -57,8 +57,6 @@ public class UiWindowsTest extends UiProductTest {
             WindowsOrderPage orderPage = new WindowsOrderPage();
             //orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            if(Configure.ENV.equals("ift"))
-                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getRoleServer().setContains("Autotests");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));

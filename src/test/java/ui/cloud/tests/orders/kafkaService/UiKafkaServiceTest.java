@@ -56,8 +56,6 @@ public class UiKafkaServiceTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getNameTopic().setValue(name);
             orderPage.getDomain().set(product.getDomain());
-            if(Configure.ENV.equals("ift"))
-                orderPage.getDataCentreSelect().set(product.getDataCentre());
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

@@ -114,12 +114,10 @@ public class ApacheKafkaClusterPage extends IProductPage {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_CLUSTER, "Горизонтальное масштабирование", "Подтвердить", () -> {
-//            Dialog dlg = Dialog.byTitle("Горизонтальное масштабирование");
-//            dlg.setInputValue("Количество", "4");
             CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю, что понимаю что делаю").setChecked(true);
             Selenide.$x("//span[text()='Увеличение количества брокеров в составе кластера и перевыпуск кластерного сертификата.']").shouldBe(Condition.visible);
             Selenide.$x("//span[text()='Операция выполняется без недоступности сервиса, если текущее состояние кластера и параметры топиков позволяют обеспечить отказоустойчивость.']").shouldBe(Condition.visible);
-            Select.byLabel("Количество").set("4"); //,ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build()
+            Select.byLabel("Количество").set("4");
         });
 
     }
