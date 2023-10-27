@@ -39,6 +39,8 @@ public class Item {
     private String graphId;
     @JsonProperty("provider")
     private String provider;
+    @JsonProperty("parent")
+    private String parent;
     private String type;
     @JsonProperty("order_id")
     private String orderId;

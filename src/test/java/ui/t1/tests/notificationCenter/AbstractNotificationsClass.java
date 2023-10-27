@@ -24,12 +24,11 @@ import static core.helper.Configure.getAppProp;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AbstractNotificationsClass extends Tests {
 
-     Project project;
+    Project project;
     GlobalUser user = GlobalUser.builder().role(Role.NOTIFICATIONS_ADMIN).build().createObject();
 
     SubscriptionsSteps subscriptionSteps = new SubscriptionsSteps();
     NotificationsPage notificationsPage = new NotificationsPage();
-
 
 
     static String groupIDOne, groupIDTwo, groupIDThree, groupIDFour, uiGroupID;
@@ -55,7 +54,7 @@ public class AbstractNotificationsClass extends Tests {
     String messageURL = getAppProp("base.url") + "/t1-disk";
 
 
-    public AbstractNotificationsClass(){
+    public AbstractNotificationsClass() {
         project = Project.builder().isForOrders(true).build().createObject();
     }
 
@@ -67,11 +66,9 @@ public class AbstractNotificationsClass extends Tests {
     }
 
 
-
-
     @Title("Создаем темы и группы тем для тестов")
     @BeforeAll
-    public void beforeAll(){
+    public void beforeAll() {
         groupIDOne = subscriptionSteps.createThemeGroup(themeGroupNameOne);
         groupIDTwo = subscriptionSteps.createThemeGroup(themeGroupNameTwo);
         groupIDThree = subscriptionSteps.createThemeGroup(themeGroupNameThree);
@@ -138,19 +135,15 @@ public class AbstractNotificationsClass extends Tests {
         subscriptionIDThree = subscriptionSteps.createSubscription(LOW.getBackName(), themeIDThree, WS.getBackName());
         subscriptionIDFour = subscriptionSteps.createSubscription(HIGH.getBackName(), themeIDFour, WS.getBackName());
         subscriptionIDFive = subscriptionSteps.createSubscription(COMMON.getBackName(), themeIDFive, WS.getBackName());
-        emailSubOne = subscriptionSteps.createSubscription(HIGH.getBackName(), emailThemeID, EMAIL.getBackName() );
+        emailSubOne = subscriptionSteps.createSubscription(HIGH.getBackName(), emailThemeID, EMAIL.getBackName());
         emailSubTwo = subscriptionSteps.createSubscription(COMMON.getBackName(), emailThemeIDTwo, EMAIL.getBackName());
         subscriptionSteps.markAllRead();
     }
 
 
-
-
-
-
     @AfterAll
     @Title("Удаляем темы и группы тем, созданные для тестов")
-    void afterAll(){
+    void afterAll() {
         subscriptionSteps.deleteSubscriptions(
                 subscriptionIDOne,
                 subscriptionIDTwo,
@@ -158,7 +151,7 @@ public class AbstractNotificationsClass extends Tests {
                 subscriptionIDFour,
                 subscriptionIDFive,
                 emailSubOne,
-                emailSubTwo );
+                emailSubTwo);
         subscriptionSteps.deleteThemes(
                 themeIDOne,
                 themeIDTwo,
@@ -168,7 +161,7 @@ public class AbstractNotificationsClass extends Tests {
                 emailThemeID,
                 emailThemeIDTwo,
                 uiTestThemeOne,
-                uiTestThemeTwo );
+                uiTestThemeTwo);
         subscriptionSteps.deleteThemeGroups(
                 groupIDOne,
                 groupIDTwo,

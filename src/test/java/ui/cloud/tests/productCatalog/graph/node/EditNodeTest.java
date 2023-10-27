@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.UUID;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static models.cloud.productCatalog.graph.SourceType.SUBGRAPH;
+import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Feature("Редактирование узла графа")
@@ -54,7 +56,7 @@ public class EditNodeTest extends GraphBaseTest {
                 .name(SUBGRAPH_NAME)
                 .description("Тестовый узел")
                 .sourceId(subgraph.getGraphId())
-                .sourceType("subgraph")
+                .sourceType(SUBGRAPH.getValue())
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
                 }})
@@ -80,7 +82,7 @@ public class EditNodeTest extends GraphBaseTest {
         GraphItem node = GraphItem.builder()
                 .name(TEMPLATE_NAME)
                 .sourceId(String.valueOf(template.getId()))
-                .sourceType("template")
+                .sourceType(TEMPLATE.getValue())
                 .description("Тестовый узел")
                 .timeout(100)
                 .number(1)
@@ -257,8 +259,8 @@ public class EditNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
-        page.getTemplateSelect().setContains(TEMPLATE_NAME);
-        page.getTemplateVersionSelect().set("1.0.1");
+        page.getSourceSelect().setContains(TEMPLATE_NAME);
+        page.getSourceVersionSelect().set("1.0.1");
         Waiting.sleep(2000);
         page.getParamsTab().click();
         page.getInputTextArea().setValue(inputValue);
@@ -266,7 +268,7 @@ public class EditNodeTest extends GraphBaseTest {
         page.getFormAddNodeButton().click();
         page.saveGraphWithPatchVersion();
         page.openEditDialog(node);
-        page.getTemplateVersionSelect().set("1.0.2");
+        page.getSourceVersionSelect().set("1.0.2");
         page.getParamsTab().click();
         Waiting.findWithAction(() -> page.getInputHint().exists(),
                 () -> {
@@ -277,7 +279,7 @@ public class EditNodeTest extends GraphBaseTest {
         assertEquals("Свойство \"override_param_2\" отсутствует в шаблоне (переопределение запрещено)", page.getOutputHint().getText());
         assertEquals("Переопределение запрещено в шаблоне. Очистите поле или включите переопределение Printed output в шаблоне узлов", page.getPrintedOutputHint().getText());
         page.getMainTab().click();
-        page.getTemplateSelect().setContains(template2.getName());
+        page.getSourceSelect().setContains(template2.getName());
         Waiting.sleep(2000);
         page.getParamsTab().click();
         assertEquals("{\"input_param\":\"\"}",

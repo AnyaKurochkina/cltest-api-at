@@ -62,6 +62,7 @@ public class TemplatesListTest extends Tests {
         JSONObject graphItem = GraphItem.builder()
                 .name(expectedNodeName)
                 .sourceId(String.valueOf(template.getId()))
+                .sourceType("template")
                 .build()
                 .toJson();
         Graph graph = Graph.builder()
