@@ -5,22 +5,20 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public class Frontend {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class StandbyMode {
     @Builder.Default
-    String mode = "tcp";
+    Boolean accept = true;
+    String backendName;
+    List<String> serverNames;
     @Builder.Default
-    Integer frontendPort = 443;
-    @EqualsAndHashCode.Include
-    String frontendName;
-    String defaultBackendNameTcp;
-    String defaultBackendNameHttp;
-
-    String defaultBackendName;
+    String state = "stand_by";
 }
