@@ -114,12 +114,7 @@ public interface TypifiedElement {
         checkProject();
     }
 
-    /**
-     * Открытие страницы и игнорирование WebDriverException (баг в ChromeDriver)
-     */
     static void open(String url) {
-        try {
             Selenide.open(url);
-        } catch (WebDriverException ignored) {}
     }
 }
