@@ -137,7 +137,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Расширить точку монтирования")
     void expandDisk() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", $x("(//td[.='postgresql'])[1]")));
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", $x("(//td[.='—'])[1]")));
     }
 
     @Test

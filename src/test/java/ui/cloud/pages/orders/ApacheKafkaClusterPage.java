@@ -1,6 +1,7 @@
 package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.subModels.Flavor;
@@ -109,7 +110,19 @@ public class ApacheKafkaClusterPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+    public void horizontalScaling() {
+        new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        Flavor maxFlavor = product.getMaxFlavor();
+        runActionWithParameters(BLOCK_CLUSTER, "Горизонтальное масштабирование", "Подтвердить", () -> {
+//            Dialog dlg = Dialog.byTitle("Горизонтальное масштабирование");
+//            dlg.setInputValue("Количество", "4");
+            CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю, что понимаю что делаю").setChecked(true);
+            Selenide.$x("//span[text()='Увеличение количества брокеров в составе кластера и перевыпуск кластерного сертификата.']").shouldBe(Condition.visible);
+            Selenide.$x("//span[text()='Операция выполняется без недоступности сервиса, если текущее состояние кластера и параметры топиков позволяют обеспечить отказоустойчивость.']").shouldBe(Condition.visible);
+            Select.byLabel("Количество").set("4"); //,ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build()
+        });
 
+    }
     public void changeNameCluster(String name) {
         runActionWithParameters(BLOCK_CLUSTER, "Изменить имя кластера", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Изменить имя кластера");

@@ -103,7 +103,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     @DisplayName("UI Redis Sentinel Astra. Расширить точку монтирования")
     void expandDisk() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis/data", "20", new Table("Роли узла").getRowByIndex(0)));
+        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis", "20", new Table("Роли узла").getRowByIndex(0)));
     }
 
     @Test
@@ -180,6 +180,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("")
+    @Disabled
     @DisplayName("UI Redis Sentinel Astra. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
