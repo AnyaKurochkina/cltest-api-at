@@ -55,8 +55,6 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            if(Configure.ENV.equals("ift"))
-                orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getConfigCluster().set("kafka-4:zookeeper-3");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
