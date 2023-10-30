@@ -17,6 +17,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -135,6 +136,7 @@ public class ItemTest extends Tests {
                 .set("$.events[0].status", "problem")
                 .build();
         createBulkAddEvent(project.getId(), json2);
-        getItemById(item.getItemId());
+        Item itemById = getItemById(item.getItemId());
+        assertEquals("problem", itemById.getData().get("state"));
     }
 }
