@@ -24,6 +24,7 @@ import models.cloud.keyCloak.UserToken;
 import models.cloud.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.junit.Mock;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.opentest4j.TestAbortedException;
 import ru.testit.junit5.StepsAspects;
@@ -35,6 +36,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static io.qameta.allure.Allure.getLifecycle;
 
@@ -66,7 +68,7 @@ public class ObjectPoolService {
         if (Configure.isTestItCreateAutotest && e instanceof IProduct) {
             if (isNeedLock(objectPoolEntity, exclusiveAccess))
                 objectPoolEntity.release();
-            throw new CreateEntityException("Создание объекта пропущенно (isTestItCreateAutotest = true)");
+            throw new CreateEntityException("Создание объекта пропущено (isTestItCreateAutotest = true)");
         }
 
         if (objectPoolEntity.getStatus().equals(ObjectStatus.FAILED)) {
@@ -287,15 +289,15 @@ public class ObjectPoolService {
         try {
             List<LinkedHashMap<String, Object>> listEntities = new ObjectMapper().readValue(content, new TypeReference<List<LinkedHashMap<String, Object>>>() {
             });
-            listEntities.forEach(v -> {
-                        ObjectPoolEntity objectPoolEntity = writeEntityToMap(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString())));
-                        objectPoolEntity.setStatus(ObjectStatus.CREATED);
-//                            objectPoolEntity.setMock(true);
-                    }
-            );
+            listEntities.forEach(v -> addEntity(fromJson(new JSONObject(v).toString(), getClassByName(v.get("objectClassName").toString()))));
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void addEntity(Entity entity){
+        ObjectPoolEntity objectPoolEntity = writeEntityToMap(entity);
+        objectPoolEntity.setStatus(ObjectStatus.CREATED);
     }
 
     public static Class<?> getClassByName(String name) {

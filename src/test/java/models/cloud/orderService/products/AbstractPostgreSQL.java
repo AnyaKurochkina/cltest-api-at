@@ -38,6 +38,8 @@ public abstract class AbstractPostgreSQL extends IProduct {
     protected Flavor flavor;
     protected String adminPassword;
 
+    public abstract String pgcIp();
+
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
@@ -158,10 +160,6 @@ public abstract class AbstractPostgreSQL extends IProduct {
         users.add(new DbUser(dbName, username));
         log.info("users = " + users);
         save();
-    }
-
-    public String getIp() {
-        return ((String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='vm'}.data.config.default_v4_address"));
     }
 
     //Сбросить пароль пользователя

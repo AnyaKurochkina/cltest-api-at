@@ -193,4 +193,14 @@ public class RabbitMQClusterAstra extends IProduct {
     public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app", 10);
     }
+
+    public void updateOs() {
+        OrderServiceSteps.executeAction("rabbitmq_update_os_cluster_release", this, new JSONObject().put("check_agree", true), projectId);
+    }
+
+    public void verticalScaling() {
+        JSONObject data = JsonHelper.getJsonTemplate("/orders/rabbitmq_vertical_scaling.json")
+                .set("$.flavor", new JSONObject(getMaxFlavor().toString())).build();
+        OrderServiceSteps.executeAction("rabbitmq_vertical_scaling_release", this, data, projectId);
+    }
 }

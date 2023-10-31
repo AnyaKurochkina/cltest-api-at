@@ -292,6 +292,16 @@ public class PostgresSQLClusterAstraTest extends Tests {
         }
     }
 
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Актуализировать версию СУБД {0}")
+    void updateVersionDb(PostgresSQLCluster product) {
+        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            postgreSQL.updateVersionDb();
+        }
+    }
+
     @TmsLink("1701480")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

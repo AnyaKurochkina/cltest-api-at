@@ -10,12 +10,15 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
+import models.cloud.subModels.Db;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -63,6 +66,23 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     }
 
     @Override
+    public void createDb(String dbName) {
+        if(getEnv().equalsIgnoreCase("LT")) {
+            if (database.contains(new Db(dbName)))
+                return;
+            OrderServiceSteps.executeAction("postgresql_create_db_lt_prod", this,
+                    new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: 11}", dbName, adminPassword)), this.getProjectId());
+            Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
+                    "База данных не создалась c именем " + dbName);
+            database.add(new Db(dbName));
+            log.info("database = " + database);
+            save();
+            return;
+        }
+        super.createDb(dbName);
+    }
+
+    @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
         JsonTemplate template = JsonHelper.getJsonTemplate(jsonTemplate)
@@ -89,6 +109,13 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     }
 
     transient String leaderIp;
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public String pgcIp() {
+        return (String) OrderServiceSteps.getProductsField(this, "product_data.findAll{it.hostname.contains('-pgc')}.ip", List.class).stream()
+                .collect(Collectors.joining(","));
+    }
 
     @Override
     public void updateMaxConnections() {
@@ -206,6 +233,10 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     @Override
     public void getConfiguration() {
         OrderServiceSteps.executeAction("postgresql_cluster_get_configuration", this, null, this.getProjectId());
+    }
+
+    public void updateVersionDb() {
+        OrderServiceSteps.executeAction("postgresql_get_version", this, null, this.getProjectId());
     }
 
     @Override
