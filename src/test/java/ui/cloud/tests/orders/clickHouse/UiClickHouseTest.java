@@ -3,7 +3,6 @@ package ui.cloud.tests.orders.clickHouse;
 import com.codeborne.selenide.Condition;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;

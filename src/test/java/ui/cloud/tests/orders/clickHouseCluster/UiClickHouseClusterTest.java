@@ -3,7 +3,6 @@ package ui.cloud.tests.orders.clickHouseCluster;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
