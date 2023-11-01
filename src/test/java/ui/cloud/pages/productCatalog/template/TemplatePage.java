@@ -89,8 +89,7 @@ public class TemplatePage extends EntityPage {
         checkTemplateVersion(template.getVersion());
         goToParamsTab();
         String printedOutputJSON = new JSONArray((ArrayList) template.getPrintedOutput()).toString();
-        Assertions.assertEquals(printedOutputJSON, printedOutput.getElement().getValue()
-                .replaceAll("\\s", ""));
+        Assertions.assertEquals(printedOutputJSON, printedOutput.getWhitespacesRemovedValue());
         return this;
     }
 
