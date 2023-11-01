@@ -129,8 +129,8 @@ public class LoadBalancer extends IProduct {
     }
 
     public void addBackend(Backend backend) {
-        if (backends.contains(backend))
-            return;
+//        if (backends.contains(backend))
+//            return;
         OrderServiceSteps.executeAction("balancer_release_create_backend", this, new JSONObject(JsonHelper.toJson(backend)), this.getProjectId());
         Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
@@ -232,6 +232,20 @@ public class LoadBalancer extends IProduct {
     public void deleteGslbSource(String globalName) {
         OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
                 new JSONObject().put("globalname", globalName), this.getProjectId());
+    }
+
+    public void deleteRouteSni(RouteSni routeSni, RouteSni.RouteCheck route) {
+        routes.remove(routeSni);
+        OrderServiceSteps.executeAction("balancer_release_delete_sni_route", this,
+                new JSONObject().put("sni_route", new JSONObject().put("index", route.getIndex()).put("route_name", route.getRouteName()).put("backend_name", route.getBackendName()).put("frontend_name", route.getFrontendName())), this.getProjectId());
+        Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, route.getRouteName()), RouteSni.RouteCheck.class), "route не удален");
+        save();
+    }
+
+    public void editRouteSni(RouteSni routeSni, String backendName) {
+        RouteSni.RouteCheck route = (RouteSni.RouteCheck) OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, routeSni.getRoutes().get(0).getName()), RouteSni.RouteCheck.class);
+        JSONObject data = new JSONObject().put("backend_name", backendName).put("sni_route", new JSONObject().put("index", route.getIndex()).put("route_name", route.getRouteName()).put("backend_name", route.getBackendName()).put("frontend_name", route.getFrontendName()));
+        OrderServiceSteps.executeAction("balancer_release_edit_sni_route", this, data, this.getProjectId());
     }
 
     public Boolean isStateContains(String name) {
