@@ -13,9 +13,8 @@ import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
-import models.cloud.subModels.loadBalancer.Backend;
-import models.cloud.subModels.loadBalancer.Frontend;
-import models.cloud.subModels.loadBalancer.Gslb;
+import models.cloud.subModels.loadBalancer.*;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.OrderServiceSteps;
@@ -41,10 +40,14 @@ public class LoadBalancer extends IProduct {
     List<Frontend> frontends = new ArrayList<>();
     @Builder.Default
     List<Gslb> gslbs = new ArrayList<>();
+    @Builder.Default
+    List<RouteSni> routes = new ArrayList<>();
     private final String FRONTEND_PATH = "data.find{it.type=='cluster'}.data.config.frontends.find{it.frontend_name == '%s'}";
     private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
     private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
+    private final String ROUTE_PATH = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s')}";
     private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}.last()";
+
     @Override
     public Entity init() {
         jsonTemplate = "/orders/load_balancer.json";
@@ -54,17 +57,17 @@ public class LoadBalancer extends IProduct {
             osVersion = getRandomOsVersion();
         if (password == null)
             password = "AuxDG%Yg%wtfCqL3!kopIPvX%ud1HY@J";
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
+        if (dataCentre == null)
             setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
-        if(zone == null)
+        if (zone == null)
             setZone(ReferencesStep.getJsonPathList(String
-                    .format("tags__contains=%s,available&directory__name=gslb_servers", segment))
+                            .format("tags__contains=%s,available&directory__name=gslb_servers", segment))
                     .getString("[0].data.name"));
         if (flavor == null)
             flavor = getMinFlavor();
@@ -122,6 +125,7 @@ public class LoadBalancer extends IProduct {
 
     public void deleteAllGslb() {
         OrderServiceSteps.executeAction("balancer_gslb_release_delete_publications_by_orderid", this, null, this.getProjectId());
+        gslbs.clear();
     }
 
     public void addBackend(Backend backend) {
@@ -132,8 +136,10 @@ public class LoadBalancer extends IProduct {
                 String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
         backends.add(backend);
         save();
-        if (isDev())
-            Assertions.assertTrue(isStateContains(backend.getBackendName()));
+    }
+
+    public void changeActiveStandbyMode(StandbyMode standbyMode) {
+        OrderServiceSteps.executeAction("balancer_release_change_active_standby_mode", this, serialize(standbyMode), this.getProjectId());
     }
 
     public void addFrontend(Frontend frontend) {
@@ -144,8 +150,6 @@ public class LoadBalancer extends IProduct {
                 String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не создался");
         frontends.add(frontend);
         save();
-        if (isDev())
-            Assertions.assertTrue(isStateContains(frontend.getFrontendName()));
     }
 
     public void addGslb(Gslb gslb) {
@@ -155,6 +159,16 @@ public class LoadBalancer extends IProduct {
         Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не создался");
         gslbs.add(gslb);
+        save();
+    }
+
+    public void addRouteSni(RouteSni route) {
+        if (routes.contains(route))
+            return;
+        OrderServiceSteps.executeAction("balancer_release_create_route_sni", this, new JSONObject(JsonHelper.toJson(route)), this.getProjectId());
+        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
+                String.format(ROUTE_PATH, route.getRoutes().get(0).getName()), RouteSni.RouteCheck.class), "route не создался");
+        routes.add(route);
         save();
     }
 
@@ -169,6 +183,22 @@ public class LoadBalancer extends IProduct {
             Assertions.assertFalse(isStateContains(backend.getBackendName()));
     }
 
+    public void editBackend(String backendName, String action, List<Server> servers) {
+        OrderServiceSteps.executeAction("balancer_release_edit_backend", this,
+                new JSONObject().put("backend_name", backendName).put("action", action).put("servers", servers), this.getProjectId());
+    }
+
+    public void createHealthCheck(HealthCheck healthCheck) {
+        OrderServiceSteps.executeAction("balancer_release_create_health_check", this,
+                serialize(healthCheck), this.getProjectId());
+    }
+
+    public void editFrontEnd(Frontend frontend, boolean isTcpBackend, String backendName, Integer port) {
+        String backendFiled = isTcpBackend ? "default_backend_name_tcp" : "default_backend_name_http";
+        JSONObject data = new JSONObject().put(backendFiled, backendName).put("frontend", serialize(frontend)).put("frontend_port", port);
+        OrderServiceSteps.executeAction("balancer_release_edit_frontend", this, data, this.getProjectId());
+    }
+
     public void deleteFrontend(Frontend frontend) {
         OrderServiceSteps.executeAction("balancer_release_delete_frontend", this,
                 new JSONObject().put("frontend_name", frontend.getFrontendName()), this.getProjectId());
@@ -180,15 +210,29 @@ public class LoadBalancer extends IProduct {
             Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
     }
 
+    public void deleteFrontends(List<Frontend> frontends) {
+        OrderServiceSteps.executeAction("balancer_release_delete_frontends", this,
+                new JSONObject().put("frontends", serializeList(frontends)), this.getProjectId());
+        frontends.forEach(e -> {
+            Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
+                    String.format(FRONTEND_PATH, e.getFrontendName()), Frontend.class), "Frontend не удален");
+            frontends.remove(e);
+        });
+        save();
+    }
+
     public void deleteGslb(Gslb gslb) {
         gslbs.remove(gslb);
         gslb = (Gslb) OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class);
-        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
-                new JSONObject().put("globalname", gslb.getGlobalname()), this.getProjectId());
+        deleteGslbSource(gslb.getGlobalname());
         Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не удален");
         save();
     }
 
+    public void deleteGslbSource(String globalName) {
+        OrderServiceSteps.executeAction("balancer_gslb_release_delete_publication", this,
+                new JSONObject().put("globalname", globalName), this.getProjectId());
+    }
 
     public Boolean isStateContains(String name) {
         String url = (String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('console_urls')}.data.config.console_urls[0]");

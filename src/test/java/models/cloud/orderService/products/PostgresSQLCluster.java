@@ -71,7 +71,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
             if (database.contains(new Db(dbName)))
                 return;
             OrderServiceSteps.executeAction("postgresql_create_db_lt_prod", this,
-                    new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, adminPassword)), this.getProjectId());
+                    new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: 11}", dbName, adminPassword)), this.getProjectId());
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                     "База данных не создалась c именем " + dbName);
             database.add(new Db(dbName));
@@ -233,6 +233,10 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     @Override
     public void getConfiguration() {
         OrderServiceSteps.executeAction("postgresql_cluster_get_configuration", this, null, this.getProjectId());
+    }
+
+    public void updateVersionDb() {
+        OrderServiceSteps.executeAction("postgresql_get_version", this, null, this.getProjectId());
     }
 
     @Override
