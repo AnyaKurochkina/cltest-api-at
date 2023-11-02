@@ -200,4 +200,32 @@ public class ProductImportTest extends Tests {
         Product productById = getProductById(product.getProductId());
         assertEquals(description, productById.getDescription());
     }
+
+    @DisplayName("Проверка current_version при импорте уже существующего продукта")
+    @TmsLink("SOUL-7771")
+    @Test
+    public void checkCurrentVersionWhenAlreadyExistProductImportTest() {
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/products/checkCurrentVersion.json";
+        Product product = Product.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
+                .version("1.0.1")
+                .build()
+                .createObject();
+        DataFileHelper.write(filePath, exportProductById(product.getProductId()).toString());
+        product.deleteObject();
+        Product createdProduct = Product.builder()
+                .name(product.getName())
+                .version("1.0.0")
+                .build()
+                .createObject();
+        partialUpdateProduct(createdProduct.getProductId(), new JSONObject()
+                .put("max_count", 6)
+                .put("version", "1.1.1"));
+        partialUpdateProduct(createdProduct.getProductId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        importProduct(filePath);
+        DataFileHelper.delete(filePath);
+        Product productById = getProductById(createdProduct.getProductId());
+        assertEquals("1.1.1", productById.getCurrentVersion());
+    }
 }

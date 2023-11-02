@@ -7,6 +7,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -68,5 +69,33 @@ public class JinjaImportTest extends Tests {
         DataFileHelper.delete(filePath);
         Jinja2Template jinja2ById = getJinja2ById(jinja.getId());
         assertEquals(description, jinja2ById.getDescription());
+    }
+
+    @DisplayName("Проверка current_version при импорте уже существующего jinja2")
+    @TmsLink("SOUL-7770")
+    @Test
+    public void checkCurrentVersionWhenAlreadyExistJinjaImportTest() {
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/checkCurrentVersion.json";
+        Jinja2Template jinja2Template = Jinja2Template.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
+                .version("1.0.1")
+                .build()
+                .createObject();
+        DataFileHelper.write(filePath, exportJinjaById(jinja2Template.getId()).toString());
+        jinja2Template.deleteObject();
+        Jinja2Template createdJinja = Jinja2Template.builder()
+                .name(jinja2Template.getName())
+                .version("1.0.0")
+                .build()
+                .createObject();
+        partialUpdateJinja2(createdJinja.getId(), new JSONObject()
+                .put("jinja2_template", "test_api")
+                .put("version", "1.1.1"));
+        partialUpdateJinja2(createdJinja.getId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        importJinja2(filePath);
+        DataFileHelper.delete(filePath);
+        Jinja2Template jinja2ById = getJinja2ById(createdJinja.getId());
+        assertEquals("1.1.1", jinja2ById.getCurrentVersion());
     }
 }
