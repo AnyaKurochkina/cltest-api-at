@@ -54,7 +54,6 @@ public class UiGrafanaTest extends UiProductTest {
             GrafanaOrderPage orderPage = new GrafanaOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getCreateUser().setValue("user");
             orderPage.getGeneratePassButton().click();
