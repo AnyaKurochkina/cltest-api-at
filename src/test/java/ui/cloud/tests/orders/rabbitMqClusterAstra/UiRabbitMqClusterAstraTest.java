@@ -25,7 +25,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("RabbitMQClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_rabbit_mq_cluster_astra")})
 public class UiRabbitMqClusterAstraTest extends UiProductTest {
-    RabbitMQClusterAstra product = RabbitMQClusterAstra.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/1cd0d80b-ed4d-4967-8ff3-6e29ef894941/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    RabbitMQClusterAstra product;// = RabbitMQClusterAstra.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/1cd0d80b-ed4d-4967-8ff3-6e29ef894941/main?context=proj-ln4zg69jek&type=project&org=vtb");
     String nameUser = "atUser";
     String nameHost = "atHostName";
 
