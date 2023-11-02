@@ -5,6 +5,7 @@ import core.enums.Role;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.Configure;
+import core.helper.JsonTemplate;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
@@ -87,7 +88,7 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String segment;
     @Setter
-    protected String dataCentre, domain;
+    protected String availabilityZone, domain;
 
     protected String jsonTemplate;
 
@@ -123,8 +124,8 @@ public abstract class IProduct extends Entity {
         return link;
     }
 
-    public String getDataCentre() {
-        return Objects.requireNonNull(dataCentre, "Поле dataCentre пустое");
+    public String getAvailabilityZone() {
+        return Objects.requireNonNull(availabilityZone, "Поле availabilityZone пустое");
     }
 
     public String getDomain() {
@@ -497,12 +498,12 @@ public abstract class IProduct extends Entity {
     }
 
     protected void createProduct() {
-//        Waiting.sleep((int) ((Math.random() * 20000) + 10000));
         log.info("Отправка запроса на создание заказа " + productName);
+        JSONObject data = deleteObjectIfNotFoundInUiSchema(toJson(), getProductId());
+        data = new JsonTemplate(data).set("$.order.lifetime", "172800").build();
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
-//                .setRole(Role.ORDER_SERVICE_ADMIN)
-                .body(deleteObjectIfNotFoundInUiSchema(toJson(), getProductId()))
+                .body(data)
                 .post("/v1/projects/" + projectId + "/orders")
                 .assertStatus(201)
                 .jsonPath();

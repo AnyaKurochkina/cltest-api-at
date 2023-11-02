@@ -53,8 +53,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -72,7 +72,7 @@ public class PostgreSQL extends AbstractPostgreSQL {
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)

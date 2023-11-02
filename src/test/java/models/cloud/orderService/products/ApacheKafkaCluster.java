@@ -63,8 +63,8 @@ public class ApacheKafkaCluster extends IProduct {
             kafkaVersion = "2.13-2.4.1";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -82,7 +82,7 @@ public class ApacheKafkaCluster extends IProduct {
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.kafka_version", kafkaVersion)

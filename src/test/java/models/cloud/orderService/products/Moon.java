@@ -31,8 +31,8 @@ public class Moon extends IProduct {
         initProduct();
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         return this;
     }
 
@@ -55,7 +55,7 @@ public class Moon extends IProduct {
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.product_id", productId)
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.attrs.user_mark", "moon" + new Random().nextInt())
                 .set("$.order.label", getLabel())
