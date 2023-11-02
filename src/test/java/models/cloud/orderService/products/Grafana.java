@@ -13,6 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -92,7 +93,7 @@ public class Grafana extends IProduct {
     @Step("Сбросить пароль")
     public void resetPassword(String password) {
         JSONObject jsonData = new JSONObject().put("user_name", getUsers()).put("users_password", password);
-        OrderServiceSteps.executeAction("reset_grafana_user_password", this, jsonData, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("reset_grafana_user_password").product(this).data(jsonData).build());
         usersPassword = password;
         save();
     }

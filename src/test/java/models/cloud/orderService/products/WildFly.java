@@ -10,6 +10,7 @@ import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
@@ -50,13 +51,13 @@ public class WildFly extends IProduct {
             wildFlyVersion = "23.0.2.Final";
         if (javaVersion == null)
             javaVersion = "1.8.0";
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         if (flavor == null)
             flavor = getMinFlavor();
@@ -93,7 +94,7 @@ public class WildFly extends IProduct {
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
-        OrderServiceSteps.executeAction("wildfly_release_update_certs", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_update_certs").product(this).data(data).build());
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "data.find{it.data.config.containsKey('certificate')}.data.config.certificate.end_date"));
         Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
 
@@ -101,57 +102,56 @@ public class WildFly extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     public void syncDev() {
-        OrderServiceSteps.executeAction("wildfly_release_sync", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_sync").product(this).build());
     }
 
     public void updateOs() {
-        OrderServiceSteps.executeAction("wildfly_release_update_os", this, new JSONObject().put("accept", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_update_os").product(this).data(new JSONObject().put("accept", true)).build());
     }
 
     public void stopService() {
-        OrderServiceSteps.executeAction("wildfly_release_stop_wf", this, new JSONObject().put("accept", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_stop_wf").product(this).data(new JSONObject().put("accept", true)).build());
     }
 
     public void startService() {
-        OrderServiceSteps.executeAction("wildfly_release_start_wf", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_start_wf").product(this).data(new JSONObject().put("accept", true)).build());
     }
 
     public void restartService() {
-        OrderServiceSteps.executeAction("wildfly_release_restart_wf", this, new JSONObject().put("accept", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_restart_wf").product(this).data(new JSONObject().put("accept", true)).build());
     }
 
     public void wildflyChangeJava() {
         JSONObject data = new JSONObject().put("accept", true).put("java_version", otherJavaVersion).put("wildfly_version", wildFlyVersion);
-        OrderServiceSteps.executeAction("wildfly_release_change_java", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_change_java").product(this).data(data).build());
     }
 
     //Добавление пользователя WildFly
     public void addUser(String username, String role) {
-        OrderServiceSteps.executeAction("wildfly_add_user", this,
-                new JSONObject().put("new_wildfly_user", new JSONObject().put("user_name", username).put("user_role", role))
-                , this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_add_user").product(this)
+                .data(new JSONObject().put("new_wildfly_user", new JSONObject().put("user_name", username).put("user_role", role))).build());
     }
 
     //Удаление пользователя WildFly
     public void deleteUser(String username, String role) {
-        OrderServiceSteps.executeAction("wildfly_del_user", this,
-                new JSONObject().put("wildfly_deployer", username).put("user_role", role), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_del_user").product(this)
+                .data(new JSONObject().put("wildfly_deployer", username).put("user_role", role)).build());
     }
 
     //Добавление группы WildFly
     public void addGroup(String name, String role) {
-        OrderServiceSteps.executeAction("wildfly_release_add_group", this,
-                new JSONObject().put("new_wildfly_user", new JSONObject().append("group_name", name).put("user_role", role)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_add_group").product(this)
+                .data(new JSONObject().put("new_wildfly_user", new JSONObject().append("group_name", name).put("user_role", role))).build());
     }
 
     //Удаление группы WildFly
     public void deleteGroup(String name, String role) {
-        OrderServiceSteps.executeAction("wildfly_release_del_group", this,
-                new JSONObject().put("wildfly_deployer", name).put("user_role", role), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("wildfly_release_del_group").product(this)
+                .data(new JSONObject().put("wildfly_deployer", name).put("user_role", role)).build());
     }
 
     public void expandMountPoint() {

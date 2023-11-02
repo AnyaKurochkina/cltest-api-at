@@ -13,6 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
@@ -103,12 +104,12 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .remove("$.ad_logon_grants", !isDev())
                 .set("$.on_support", getSupport())
                 .build();
-        OrderServiceSteps.executeAction("add_dedicated_kibana_node", this, object, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("add_dedicated_kibana_node").product(this).data(object).build());
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     //Перезагрузить по питанию

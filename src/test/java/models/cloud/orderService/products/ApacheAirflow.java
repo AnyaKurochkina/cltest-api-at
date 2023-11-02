@@ -13,6 +13,7 @@ import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
@@ -106,7 +107,7 @@ public class ApacheAirflow extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     public void resize() {
@@ -134,6 +135,7 @@ public class ApacheAirflow extends IProduct {
     }
 
     public static String CERT_END_DATE = "data.find{it.data.config.containsKey('certificate_expiration')}.data.config.certificate_expiration";
+
     @SneakyThrows
     public void updateCerts() {
         Date dateBeforeUpdate;
@@ -147,19 +149,19 @@ public class ApacheAirflow extends IProduct {
 
     public void updateGroupAddDagFiles(String accessGroupTechNew) {
         JSONObject data = new JSONObject().put("role", deployRoleGroup).append("groups", accessGroupTechNew);
-        OrderServiceSteps.executeAction("airflow_change_deploy_group", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("airflow_change_deploy_group").product(this).data(data).build());
     }
 
     public void airflowChangeWebAccess(List<String> accessGroups) {
         JSONObject data = new JSONObject().put("groups", accessGroups);
-        OrderServiceSteps.executeAction("airflow_change_web_access", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("airflow_change_web_access").product(this).data(data).build());
     }
 
     public void airflowInstallExtras() {
-        OrderServiceSteps.executeAction("airflow_install_extras", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("airflow_install_extras").product(this).build());
     }
 
     public void updateOs() {
-        OrderServiceSteps.executeAction("airflow_update_os", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("airflow_update_os").product(this).build());
     }
 }
