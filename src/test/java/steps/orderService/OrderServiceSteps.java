@@ -238,7 +238,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    if(act.skipOnPrebilling)
+                    if (act.skipOnPrebilling)
                         costPreBilling.set(CalcCostSteps.getCostByUid(product));
                     else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
 
@@ -290,7 +290,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    if(act.skipOnPrebilling)
+                    if (act.skipOnPrebilling)
                         costPreBilling.set(CalcCostSteps.getCostByUid(product));
                     else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
@@ -409,35 +409,32 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public static String getDataCentre(IProduct product) {
-        String dc = "50";
-        log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
+    @Step("Получение зоны доступности для сегмента сети {product.segment}")
+    public static String getAvailabilityZone(IProduct product) {
         Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
+                .get("/v1/availability_zones?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
                         product.getSegment(),
                         org.getName(),
                         product.getProductCatalogName(),
                         product.getProjectId())
                 .assertStatus(200)
                 .jsonPath()
-                .getList("list.findAll{it.status == 'available'}.code");
-        if (list.contains(dc))
-            return dc;
-        Assertions.assertFalse(list.isEmpty(), "Список available ДЦ пуст");
+                .getList("list.code");
+        Assertions.assertFalse(list.isEmpty(), "Список зон доступности пуст");
         return list.get(new Random().nextInt(list.size()));
     }
 
+    @Step("Получение платформы для зоны доступности {product.availabilityZone} и сегмента {product.segment}")
     public static String getPlatform(IProduct product) {
         String platform = "OpenStack";
-        log.info("Получение Платформы для ДЦ {} и сегмента {}", product.getDataCentre(), product.getSegment());
         Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/platforms?net_segment_code={}&data_center_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                .get("/v1/platforms?net_segment_code={}&availability_zone_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
-                        product.getDataCentre(),
+                        product.getAvailabilityZone(),
                         org.getName(),
                         product.getProductCatalogName())
                 .assertStatus(200)
@@ -475,8 +472,8 @@ public class OrderServiceSteps extends Steps {
 
         StringJoiner actions = new StringJoiner("\n", "\n", "");
         List<Map<String, Object>> mapList = jsonPath.getList("data.actions.flatten()");
-        for(Map<String, Object> e :  mapList)
-            if(Objects.nonNull(e))
+        for (Map<String, Object> e : mapList)
+            if (Objects.nonNull(e))
                 actions.add(String.format("['%s' : '%s']", e.get("title"), e.get("name")));
         Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
         res.skipOnPrebilling = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.skip_on_prebilling", filter, action, action));
@@ -559,7 +556,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение сетевого сегмента для продукта {product}")
     public static String getNetSegment(IProduct product) {
         String segment = "dev-srv-app";
-        List<String> list =  new Http(OrderServiceURL)
+        List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/net_segments?project_name={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         Objects.requireNonNull(product).getProjectId(), product.getProductCatalogName())
@@ -589,14 +586,14 @@ public class OrderServiceSteps extends Steps {
                         .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
-                if(!label.test(jsonPath.getString("label")))
+                if (!label.test(jsonPath.getString("label")))
                     continue;
                 String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
                 String action = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.actions.find{it.type == 'delete'}.name");
                 log.trace("item_id = " + itemId);
                 log.trace("action = " + action);
 
-                if(project.getProjectEnvironmentPrefix().getEnvType().equalsIgnoreCase("prod")){
+                if (project.getProjectEnvironmentPrefix().getEnvType().equalsIgnoreCase("prod")) {
                     OrderServiceSteps.switchProtect(order, project.id, false);
                 }
 
