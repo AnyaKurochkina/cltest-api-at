@@ -1,5 +1,6 @@
 package steps.orderService;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import core.enums.Role;
@@ -11,6 +12,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
@@ -238,7 +240,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    if(act.skipOnPrebilling)
+                    if (act.skipOnPrebilling)
                         costPreBilling.set(CalcCostSteps.getCostByUid(product));
                     else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
 
@@ -290,7 +292,7 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
                 () -> {
-                    if(act.skipOnPrebilling)
+                    if (act.skipOnPrebilling)
                         costPreBilling.set(CalcCostSteps.getCostByUid(product));
                     else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
@@ -335,11 +337,10 @@ public class OrderServiceSteps extends Steps {
                     .get("status");
             counter = counter - 1;
         }
-        if(actionStatus.equalsIgnoreCase("warning")){
+        if (actionStatus.equalsIgnoreCase("warning")) {
             String messages = getActionHistoryOutput(product.getOrderId(), product.getProjectId(), actionId);
             Assertions.fail(String.format("Результат выполнения action продукта: warning. \nИтоговый статус: %s . \nОшибка: %s", actionStatus, messages));
-        }
-        else if (!actionStatus.equalsIgnoreCase("success")) {
+        } else if (!actionStatus.equalsIgnoreCase("success")) {
             String error = null;
             try {
                 error = StateServiceSteps.getErrorFromStateService(product.getOrderId());
@@ -475,8 +476,8 @@ public class OrderServiceSteps extends Steps {
 
         StringJoiner actions = new StringJoiner("\n", "\n", "");
         List<Map<String, Object>> mapList = jsonPath.getList("data.actions.flatten()");
-        for(Map<String, Object> e :  mapList)
-            if(Objects.nonNull(e))
+        for (Map<String, Object> e : mapList)
+            if (Objects.nonNull(e))
                 actions.add(String.format("['%s' : '%s']", e.get("title"), e.get("name")));
         Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
         res.skipOnPrebilling = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.skip_on_prebilling", filter, action, action));
@@ -551,15 +552,29 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Получение объекта класса по пути {path}")
-    public static Object getObjectClass(IProduct product, String path, Class<?> clazz) {
-        String object = new Gson().toJson(getProductsField(product, path, Map.class, false));
-        return JsonHelper.deserialize(object, clazz);
+    public static <T> T getObjectClass(IProduct product, String path, TypeReference<T> valueTypeRef) {
+        Object object = getProductsField(product, path, Object.class, false);
+        String json;
+        if(object instanceof List)
+            json = Entity.serializeList(object).toString();
+        else
+            json = Entity.serialize(object).toString();
+        return JsonHelper.deserialize(json, valueTypeRef);
+    }
+
+    public static <T> T getObjectClass(IProduct product, String path, Class<T> clazz) {
+        return getObjectClass(product, path, new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return clazz;
+            }
+        });
     }
 
     @Step("Получение сетевого сегмента для продукта {product}")
     public static String getNetSegment(IProduct product) {
         String segment = "dev-srv-app";
-        List<String> list =  new Http(OrderServiceURL)
+        List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/net_segments?project_name={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         Objects.requireNonNull(product).getProjectId(), product.getProductCatalogName())
@@ -589,14 +604,14 @@ public class OrderServiceSteps extends Steps {
                         .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
-                if(!label.test(jsonPath.getString("label")))
+                if (!label.test(jsonPath.getString("label")))
                     continue;
                 String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
                 String action = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.actions.find{it.type == 'delete'}.name");
                 log.trace("item_id = " + itemId);
                 log.trace("action = " + action);
 
-                if(project.getProjectEnvironmentPrefix().getEnvType().equalsIgnoreCase("prod")){
+                if (project.getProjectEnvironmentPrefix().getEnvType().equalsIgnoreCase("prod")) {
                     OrderServiceSteps.switchProtect(order, project.id, false);
                 }
 
