@@ -1,7 +1,7 @@
 {
   "order": {
     "attrs": {
-      "data_center": "5",
+      "availability_zone": "5",
       "net_segment": "dev-srv-app",
       "quota": {
         "cpu": 1.0,
@@ -27,6 +27,7 @@
     "count": 1.0,
     "label": "OpenShift project",
     "product_id": "10000003-1111-2222-b9dc-4a9e5dafd44e",
-    "project_name": "proj-xazpppulba"
+    "project_name": "proj-xazpppulba",
+    "lifetime": null
   }
 }

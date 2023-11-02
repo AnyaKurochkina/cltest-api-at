@@ -17,7 +17,7 @@
       "extra_nics": [],
       "on_support": true,
       "os_version": "1.7",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
@@ -54,6 +54,7 @@
       "java_version": "11.0.12"
     },
     "count": 1,
-    "label": "WildFly Astra"
+    "label": "WildFly Astra",
+    "lifetime": null
   }
 }
