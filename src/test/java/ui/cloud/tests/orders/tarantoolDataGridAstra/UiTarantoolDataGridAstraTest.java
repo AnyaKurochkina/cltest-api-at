@@ -52,7 +52,6 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             //orderPage.getFlavorSelectCluster().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
