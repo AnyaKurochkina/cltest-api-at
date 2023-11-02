@@ -319,7 +319,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
-                    .backendName("backend_for_edit9")
+                    .backendName("backend_for_edit")
                     .advancedCheck(false)
                     .build();
             balancer.addBackend(backend);

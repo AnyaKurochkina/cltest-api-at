@@ -1,6 +1,5 @@
 package models.cloud.orderService.products;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.Data;
@@ -12,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.ActionParameters;
