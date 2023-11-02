@@ -84,6 +84,14 @@ public class ProductCatalogSteps {
                 .get(0);
     }
 
+    @Step("Проверка item restrictions")
+    public static Response checkItemRestrictions(JSONObject jsonObject) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(jsonObject)
+                .post("/api/v1/check_item_restrictions/");
+    }
+
     @Step("Получение версии продуктового каталога")
     public static Response getProductCatalogVersion() {
         return new Http(ProductCatalogURL)

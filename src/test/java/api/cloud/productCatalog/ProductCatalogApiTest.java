@@ -1,18 +1,21 @@
 package api.cloud.productCatalog;
 
+import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.authorizer.Project;
+import models.cloud.stateService.Item;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import api.Tests;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductCatalogSteps.*;
+import static steps.stateService.StateServiceSteps.createItem;
 
 @Epic("Product Catalog")
 @Feature("Product Catalog API")
@@ -36,5 +39,19 @@ public class ProductCatalogApiTest extends Tests {
     @Test
     public void healthTest() {
         assertEquals("ok", getHealthStatusProductCatalog());
+    }
+
+    @DisplayName("Проверка item restriction")
+    @TmsLink("")
+    @Test
+    public void checkItemRestriction() {
+        Project project = Project.builder().build().onlyGetObject();
+        Item item = createItem(project);
+        JSONObject json = new JSONObject().put("data_item", item.getData()).put("item_restriction", "state == 'on'");
+        Response response = checkItemRestrictions(json).assertStatus(200);
+        assertTrue(response.extractAs(Boolean.class));
+        JSONObject json2 = new JSONObject().put("data_item", item.getData()).put("item_restriction", "state == 'off'");
+        Response response2 = checkItemRestrictions(json2).assertStatus(200);
+        assertFalse(response2.extractAs(Boolean.class));
     }
 }
