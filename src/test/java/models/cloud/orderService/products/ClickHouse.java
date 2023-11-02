@@ -82,8 +82,8 @@ public class ClickHouse extends IProduct {
             chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
@@ -266,7 +266,7 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.ch_customer_password", chCustomerPassword)
                 .set("$.order.attrs.ch_version", chVersion)
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)

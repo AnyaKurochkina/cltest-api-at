@@ -28,8 +28,8 @@ public class S3Ceph extends IProduct {
         initProduct();
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         return this;
     }
 
@@ -38,7 +38,7 @@ public class S3Ceph extends IProduct {
         Project project = Project.builder().id(projectId).build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.project_name", project.id)
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.product_id", productId)
 //                .set("$.order.attrs.platform", platform)

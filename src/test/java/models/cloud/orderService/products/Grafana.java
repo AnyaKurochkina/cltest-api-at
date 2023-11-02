@@ -38,8 +38,8 @@ public class Grafana extends IProduct {
             osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -69,7 +69,7 @@ public class Grafana extends IProduct {
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())

@@ -55,8 +55,8 @@ public class ApacheAirflow extends IProduct {
             airflowVersion = getRandomProductVersionByPathEnum("airflow_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -77,7 +77,7 @@ public class ApacheAirflow extends IProduct {
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.cluster_name", new Generex("at-[a-z]{6}").random())
                 .set("$.order.attrs.airflow_version", airflowVersion)

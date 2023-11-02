@@ -37,8 +37,8 @@ public class KafkaService extends IProduct {
         initProduct();
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
@@ -60,7 +60,7 @@ public class KafkaService extends IProduct {
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.topic_name", "1418_" + new Random().nextInt())
                 .set("$.order.attrs.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .build();
