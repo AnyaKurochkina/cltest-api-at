@@ -14,6 +14,7 @@ import models.cloud.subModels.Db;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
@@ -67,11 +68,11 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Override
     public void createDb(String dbName) {
-        if(getEnv().equalsIgnoreCase("LT")) {
+        if (getEnv().equalsIgnoreCase("LT")) {
             if (database.contains(new Db(dbName)))
                 return;
-            OrderServiceSteps.executeAction("postgresql_create_db_lt_prod", this,
-                    new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: 11}", dbName, adminPassword)), this.getProjectId());
+            JSONObject data = new JSONObject().put("db_name", dbName).put("db_admin_pass", adminPassword).put("conn_limit", 11);
+            OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_create_db_lt_prod").product(this).data(data).build());
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                     "База данных не создалась c именем " + dbName);
             database.add(new Db(dbName));
@@ -120,7 +121,8 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     @Override
     public void updateMaxConnections() {
         String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='cluster'}.data.config.load_profile");
-        OrderServiceSteps.executeAction("postgresql_cluster_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_cluster_update_max_connections").product(this)
+                .data(new JSONObject().put("load_profile", loadProfile)).build());
     }
 
     @Override
@@ -164,7 +166,8 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         int size = 11;
         String mount = "/pg_data";
         Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
-        OrderServiceSteps.executeAction("expand_mount_point_postgresql_pgdata", this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("expand_mount_point_postgresql_pgdata").product(this)
+                .data(new JSONObject().put("size", size).put("mount", mount)).build());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
@@ -187,7 +190,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     public void configureDebezium() {
         if (isNotDebezium("cluster")) {
             JSONObject data = new JSONObject().put("check_agree", true).put("user_password", "hcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXz");
-            OrderServiceSteps.executeAction("postgresql_cluster_configure_debezium", this, data, this.getProjectId());
+            OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_cluster_configure_debezium").product(this).data(data).build());
         }
     }
 
@@ -196,7 +199,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         configureDebezium();
         if (isNotDebezium("db")) {
             JSONObject data = new JSONObject().put("check_agree", true);
-            OrderServiceSteps.executeAction("postgresql_db_configure_for_debezium", this, data, this.getProjectId());
+            OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_db_configure_for_debezium").product(this).data(data).build());
         }
     }
 
@@ -204,14 +207,14 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     public void createLogicalSlot(String slotName) {
         configureDebeziumDb();
         JSONObject data = new JSONObject().put("slot_name", slotName);
-        OrderServiceSteps.executeAction("postgresql_db_create_logical_slot", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_db_create_logical_slot").product(this).data(data).build());
         Assertions.assertEquals(state(slotName), "on");
     }
 
     @Step("Удалить логический слот")
     public void removeLogicalSlot(String slotName) {
         JSONObject data = new JSONObject().put("name", slotName);
-        OrderServiceSteps.executeAction("postgresql_remove_logical_slot", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_remove_logical_slot").product(this).data(data).build());
         Assertions.assertEquals(state(slotName), "deleted");
     }
 
@@ -219,35 +222,36 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     public void createPublication(String publication) {
         configureDebeziumDb();
         JSONObject data = new JSONObject().put("publication_name", publication);
-        OrderServiceSteps.executeAction("postgresql_db_create_publication", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_db_create_publication").product(this).data(data).build());
         Assertions.assertEquals(state(publication), "on");
     }
 
     @Step("Удалить публикацию")
     public void removePublication(String publication) {
         JSONObject data = new JSONObject().put("name", publication);
-        OrderServiceSteps.executeAction("postgresql_remove_publication", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_remove_publication").product(this).data(data).build());
         Assertions.assertEquals(state(publication), "deleted");
     }
 
     @Override
     public void getConfiguration() {
-        OrderServiceSteps.executeAction("postgresql_cluster_get_configuration", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_cluster_get_configuration").product(this).build());
     }
 
     public void updateVersionDb() {
-        OrderServiceSteps.executeAction("postgresql_get_version", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_get_version").product(this).build());
     }
 
     @Override
     public void updatePostgresql() {
-        OrderServiceSteps.executeAction("postgresql_cluster_update_postgresql", this, new JSONObject().put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_cluster_update_postgresql").product(this)
+                .data(new JSONObject().put("check_agree", true)).build());
     }
 
     @Override
     public void updateDti(String defaultTransactionIsolation) {
-        OrderServiceSteps.executeAction("postgresql_cluster_update_dti", this,
-                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_cluster_update_dti").product(this)
+                .data(new JSONObject().put("default_transaction_isolation", defaultTransactionIsolation)).build());
     }
 
     public void resetDbOwnerPassword(String username) {
@@ -264,22 +268,6 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     public void resize(Flavor flavor) {
         resize("resize_postgresql_cluster", flavor);
-    }
-
-    public void restart() {
-        restart("reset_two_layer");
-    }
-
-    public void stopSoft() {
-        stopSoft("stop_two_layer");
-    }
-
-    public void start() {
-        start("start_two_layer");
-    }
-
-    public void stopHard() {
-        stopHard("stop_hard_two_layer");
     }
 
     @Step("Удаление продукта")

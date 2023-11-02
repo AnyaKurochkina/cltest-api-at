@@ -20,6 +20,7 @@ public class RouteSni {
     public List<Route> routes;
 
     @Data
+    @NoArgsConstructor
     public static class DnsPrefix {
         int ttl;
         List<Member> members;
@@ -48,6 +49,7 @@ public class RouteSni {
         }
 
         @Data
+        @NoArgsConstructor
         public static class MonitorParams {
             int port;
             int retries;

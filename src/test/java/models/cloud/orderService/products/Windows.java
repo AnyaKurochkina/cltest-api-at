@@ -2,7 +2,10 @@ package models.cloud.orderService.products;
 
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
@@ -11,6 +14,7 @@ import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Map;
@@ -34,16 +38,16 @@ public class Windows extends IProduct {
     private static String DISK_IS_CONNECTED = "data.find{it.type=='vm'}.data.config.extra_disks.find{it.path=='%s'}.is_connected";
     public static String ADD_DISK = "Добавить диск";
 
-    private final static Map<String, String> roles = Stream.of(new String[][] {
-            { "generic_application", "ap" },
-            { "microsoft_sql_server", "sq" },
-            { "frontend_web_service", "we" },
-            { "mock_server", "mk" },
-            { "reporting_point", "rp" },
-            { "security_tools", "se" },
-            { "autotest_scripts", "as" },
-            { "proxy_server", "px" },
-            { "generic_gateway", "gw" },
+    private final static Map<String, String> roles = Stream.of(new String[][]{
+            {"generic_application", "ap"},
+            {"microsoft_sql_server", "sq"},
+            {"frontend_web_service", "we"},
+            {"mock_server", "mk"},
+            {"reporting_point", "rp"},
+            {"security_tools", "se"},
+            {"autotest_scripts", "as"},
+            {"proxy_server", "px"},
+            {"generic_gateway", "gw"},
     }).collect(Collectors.toMap(data -> data[0], data -> data[1]));
 
     @Override
@@ -59,20 +63,20 @@ public class Windows extends IProduct {
         jsonTemplate = "/orders/windows_server.json";
         productName = "Windows server";
         initProduct();
-        if(role == null){
+        if (role == null) {
             role = (String) roles.keySet().toArray()[(int) (Math.random() * roles.size())];
         }
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
         return this;
     }
@@ -98,56 +102,58 @@ public class Windows extends IProduct {
     }
 
     public void astromAdd() {
-        OrderServiceSteps.executeAction("windows_astrom_add", this, new JSONObject().put("check_agree", true));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("windows_astrom_add").product(this)
+                .data(new JSONObject().put("check_agree", true)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "X")));
     }
 
     public void astromDelete() {
-        OrderServiceSteps.executeAction("windows_astrom_delete", this, null);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("windows_astrom_delete").product(this).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, "X")));
     }
 
     //Добавить диск
     public void addDisk(String disk) {
-        OrderServiceSteps.executeAction("windows_add_disk", this, new JSONObject("{path: \"" + disk + "\", size: 10, file_system: \"ntfs\"}"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("windows_add_disk").product(this)
+                .data(new JSONObject().put("path", disk).put("size", 10).put("file_system", "ntfs")).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk)));
     }
 
     //Расширить диск
     public void expandMountPoint(String disk) {
-//        int sizeBefore = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
-        OrderServiceSteps.executeAction("windows_expand_disk", this, new JSONObject("{path: \"" + disk + "\", size: 12}"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("windows_expand_disk").product(this)
+                .data(new JSONObject().put("path", disk).put("size", 12)).build());
         int sizeAfter = (Integer) OrderServiceSteps.getProductsField(this, String.format(DISK_SIZE, disk));
         Assertions.assertEquals(sizeAfter, 12);
     }
 
     public void unmountDisk(String disk) {
         String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
-        OrderServiceSteps.executeAction("windows_unmount_disk", this,
-                new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: true}"), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("windows_unmount_disk").product(this)
+                .data(new JSONObject().put("path", disk).put("serial", serial).put("is_connected", true)).build());
         boolean isConnected = (Boolean) OrderServiceSteps.getProductsField(this, String.format(DISK_IS_CONNECTED, disk));
         Assertions.assertFalse(isConnected, "Диск не отключен");
     }
 
     public void mountDisk(String disk) {
         String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
-        OrderServiceSteps.executeAction("windows_mount_disk", this,
-                new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: false}"), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("windows_mount_disk").product(this)
+                .data(new JSONObject().put("path", disk).put("serial", serial).put("is_connected", false)).build());
         boolean isConnected = (Boolean) OrderServiceSteps.getProductsField(this, String.format(DISK_IS_CONNECTED, disk));
         Assertions.assertTrue(isConnected, "Диск не подключен");
     }
 
     public void deleteDisk(String disk) {
         String serial = (String) OrderServiceSteps.getProductsField(this, String.format(DISK_SERIAL, disk));
-        OrderServiceSteps.executeAction("windows_delete_disk", this,
-                new JSONObject("{path: \"" + disk + "\", serial: \"" + serial + "\", is_connected: false}"), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("windows_delete_disk").product(this)
+                .data(new JSONObject().put("path", disk).put("serial", serial).put("is_connected", false)).build());
         boolean isCreatedDisk = (Boolean) OrderServiceSteps.getProductsField(this, String.format(ADD_DISK_PATH, disk));
         Assertions.assertFalse(isCreatedDisk, "Диск не удален");
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
 

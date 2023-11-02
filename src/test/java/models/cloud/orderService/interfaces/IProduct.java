@@ -38,6 +38,7 @@ import ru.testit.annotations.LinkType;
 import ru.testit.junit5.StepsAspects;
 import ru.testit.services.LinkItem;
 import steps.calculator.CalcCostSteps;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
 import steps.productCatalog.ProductCatalogSteps;
@@ -94,7 +95,8 @@ public abstract class IProduct extends Entity {
 
     @Setter
     transient String link;
-    @Setter @Getter
+    @Setter
+    @Getter
     transient String error;
 
     @Getter
@@ -160,7 +162,7 @@ public abstract class IProduct extends Entity {
         return accessGroup("personal", "AT-ORDER-2");
     }
 
-    protected String state(String name){
+    protected String state(String name) {
         return (String) OrderServiceSteps.getProductsField(this, String.format(STATE_PATH, name));
     }
 
@@ -172,7 +174,7 @@ public abstract class IProduct extends Entity {
                 .getString(String.format("find{it.name.contains('%s')}.id", name)), "Id geo_distribution not found " + name);
     }
 
-    private String replaceGraphParams(String str){
+    private String replaceGraphParams(String str) {
         return Objects.requireNonNull(str)
                 .replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
                 .replace("${context::formData.platform}", getPlatform())
@@ -195,7 +197,7 @@ public abstract class IProduct extends Entity {
     public void checkVmDisk(Map<String, String> rules) {
         List<Map<String, String>> vmList = OrderServiceSteps.getProductsField(this,
                 "data.findAll{it.type=='vm'}.data.config.collect{[(it.node_roles==null?'*':it.node_roles[0]):it.storage_profile]}", List.class);
-        for(Map.Entry<String, String> rule : rules.entrySet())
+        for (Map.Entry<String, String> rule : rules.entrySet())
             Assertions.assertTrue(vmList.stream().filter(e -> e.containsKey(rule.getKey())).allMatch(e -> e.get(rule.getKey()).equalsIgnoreCase(rule.getValue())),
                     "Диски не соответствуют правилу: " + rule.getKey() + ":" + rule.getValue());
     }
@@ -271,27 +273,27 @@ public abstract class IProduct extends Entity {
 
     //Обновить сертификаты
     protected void updateCerts(String action) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject().put("dumb", "empty").put("accept", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(new JSONObject().put("dumb", "empty")).build());
     }
 
     //Перезагрузить
     protected void restart(String action) {
-        OrderServiceSteps.executeAction(action, this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).build());
     }
 
     //Выключить принудительно
     protected void stopHard(String action) {
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).status(ProductStatus.STOPPED).build());
     }
 
     //Выключить
     protected void stopSoft(String action) {
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.STOPPED, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).status(ProductStatus.STOPPED).build());
     }
 
     //Включить
     protected void start(String action) {
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.CREATED, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).status(ProductStatus.CREATED).build());
     }
 
     private void checkPreconditionStatusProduct() {
@@ -300,14 +302,14 @@ public abstract class IProduct extends Entity {
             close();
             throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
         }
-        String status = OrderServiceSteps.getStatus(this);
+        String status = OrderServiceSteps.getStatus(getOrderId(), getProjectId());
         if (status.equals("changing") || status.equals("pending")) {
             close();
             throw new CreateEntityException(String.format("Статус продукта %s не соответствует исходному", status));
         }
     }
 
-    public boolean isActionExist(String action){
+    public boolean isActionExist(String action) {
         Assumptions.assumeTrue(isDev(), "Тест включен только для dev среды");
         return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name == '%s'}", action));
     }
@@ -331,8 +333,8 @@ public abstract class IProduct extends Entity {
         if (envType().contains("prod")) {
             OrderServiceSteps.switchProtect(getOrderId(), getProjectId(), false);
         }
-        OrderServiceSteps.executeAction(action, this, null, ProductStatus.DELETED, this.getProjectId());
-        Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(this), 0.0F, "Стоимость после удаления заказа больше 0.0");
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).status(ProductStatus.DELETED).build());
+        Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(getOrderId(), getProjectId()), 0.0F, "Стоимость после удаления заказа больше 0.0");
         if (Objects.isNull(platform))
             return;
         if (platform.equalsIgnoreCase("vSphere") && Configure.ENV.equalsIgnoreCase("IFT")) {
@@ -367,7 +369,8 @@ public abstract class IProduct extends Entity {
 
     //Изменить конфигурацию
     protected void resize(String action, Flavor flavor) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
+                .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -394,7 +397,8 @@ public abstract class IProduct extends Entity {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
-        OrderServiceSteps.executeAction(action, this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("accept", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
+                .data(new JSONObject().put("flavor", flavor.toString()).put("warning", new Object()).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -474,8 +478,7 @@ public abstract class IProduct extends Entity {
     //Расширить
     protected void expandMountPoint(String action, String mount, int size) {
         Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
-        OrderServiceSteps.executeActionWidthFilter(action, this, new JSONObject("{\"size\": " + size + ", \"mount\": \"" + mount + "\"}"), this.getProjectId(),
-                String.format("extra_mounts.find{it.mount == '%s'}", mount));
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(new JSONObject().put("size", size).put("mount", mount)).build());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
@@ -538,6 +541,7 @@ public abstract class IProduct extends Entity {
         }
         return envType().equalsIgnoreCase("dev");
     }
+
     public boolean isTest() {
         if (projectId == null) {
             Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();
@@ -545,6 +549,7 @@ public abstract class IProduct extends Entity {
         }
         return envType().equalsIgnoreCase("test");
     }
+
     public boolean isProd() {
         if (projectId == null) {
             Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(env)).isForOrders(true).build().createObject();

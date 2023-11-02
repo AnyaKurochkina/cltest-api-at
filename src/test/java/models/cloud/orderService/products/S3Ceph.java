@@ -10,6 +10,7 @@ import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import org.json.JSONObject;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.resourceManager.ResourceManagerSteps;
 
@@ -59,58 +60,58 @@ public class S3Ceph extends IProduct {
 
     @Step("Удалить бакет")
     public void deleteBucket(String name) {
-        OrderServiceSteps.executeAction("s3_ceph_bucket_delete", this, new JSONObject(String.format("{name: \"%s\"}", name)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_bucket_delete").product(this).data(new JSONObject().put("name", name)).build());
     }
 
     @Step("Добавить бакет")
     public void addBucket(BucketAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_bucket_add", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_bucket_add").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("Изменить бакет")
     public void updateBucket(BucketAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_bucket_update", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_bucket_update").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("Добавить пользователя")
     public void addUser(String userName, String accessKey, String secretKey) {
-        OrderServiceSteps.executeAction("s3_ceph_user_add", this,
-                new JSONObject().put("user_name", userName).put("access_key", accessKey).put("secret_key", secretKey), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_user_add").product(this)
+                .data(new JSONObject().put("user_name", userName).put("access_key", accessKey).put("secret_key", secretKey)).build());
     }
 
     @Step("Удалить пользователя")
     public void deleteUser(String userName) {
-        OrderServiceSteps.executeAction("s3_ceph_user_delete", this, new JSONObject().put("user_name", userName), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_user_delete").product(this).data(new JSONObject().put("user_name", userName)).build());
     }
 
     @Step("Добавить политику")
     public void addPolicy(PolicyAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_policy_add", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_policy_add").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("Изменить политику")
     public void updatePolicy(PolicyAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_policy_update", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_policy_update").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("Удалить политику")
     public void deletePolicy(PolicyAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_policy_delete", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_policy_delete").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("Изменить правило жизненного цикла")
     public void updateRule(RoleAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_update", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_bucket_lr_update").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("Добавить правило жизненного цикла")
     public void addRule(RoleAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_create", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_bucket_lr_create").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("далить правило жизненного цикла")
     public void deleteRule(RoleAttrs attrs) {
-        OrderServiceSteps.executeAction("s3_ceph_bucket_lr_delete", this, new JSONObject().put("name", attrs.getName()), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("s3_ceph_bucket_lr_delete").product(this).data(new JSONObject().put("name", attrs.getName())).build());
     }
 
     @Step("Удалить тенант")

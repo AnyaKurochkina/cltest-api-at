@@ -12,6 +12,7 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import redis.clients.jedis.Jedis;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 
@@ -91,7 +92,8 @@ public class Redis extends IProduct {
 
     //Изменить конфигурацию
     public void resize(Flavor flavor) {
-        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
+                .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true).put("warning", new Object())).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -119,15 +121,15 @@ public class Redis extends IProduct {
 
     public void resetPassword() {
         String password = "UEijLKcQJN2pZ0Iqvxh1EXCuZ86pPGiEpdxwLRLWL4QnIOG2KPlGrw5jkLEScQZ9";
-        OrderServiceSteps.executeAction("reset_redis_user_password", this,
-                new JSONObject().put("redis_password", password).put("user_name", appUser), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("reset_redis_user_password").product(this)
+                .data(new JSONObject().put("redis_password", password).put("user_name", appUser)).build());
         appUserPassword = password;
         save();
     }
 
     public void changeNotifyKeyspaceEvents(String attr) {
-        OrderServiceSteps.executeAction("change_redis_param_notify", this,
-                new JSONObject().put("notify_keyspace_events", attr), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("change_redis_param_notify").product(this)
+                .data(new JSONObject().put("notify_keyspace_events", attr)).build());
     }
 
 
@@ -154,6 +156,6 @@ public class Redis extends IProduct {
     }
 
     public void updateOsStandalone() {
-        OrderServiceSteps.executeAction("update_os_standalone", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("update_os_standalone").product(this).build());
     }
 }
