@@ -426,7 +426,7 @@ public class OrderServiceSteps extends Steps {
         return list.get(new Random().nextInt(list.size()));
     }
 
-    @Step("Получение зоны доступности для зоны доступности {product.availabilityZone} и сегмента {product.segment}")
+    @Step("Получение платформы для зоны доступности {product.availabilityZone} и сегмента {product.segment}")
     public static String getPlatform(IProduct product) {
         String platform = "OpenStack";
         Organization org = Organization.builder().type("default").build().createObject();
