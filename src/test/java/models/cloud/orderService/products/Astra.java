@@ -23,7 +23,7 @@ import steps.orderService.OrderServiceSteps;
 @NoArgsConstructor
 @SuperBuilder
 public class Astra extends IProduct {
-    public static String SNAPSHOT_PATH = "data.any{it.type=='snapshot' && it.state=='on'}";
+    public static String SNAPSHOT_PATH = "data.any{it.type=='snapshot' && it.data.state=='on'}";
     @ToString.Include
     String osVersion;
     Flavor flavor;

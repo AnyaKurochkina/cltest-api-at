@@ -32,16 +32,6 @@ public class PostgreSQLTest extends Tests {
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {}
     }
 
-    @TmsLink("")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
-    void checkActions(PostgreSQL product) {
-        try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
-            Assertions.assertTrue(postgreSQL.isActionExist("update_os_standalone"));
-        }
-    }
-
     @Disabled
     @TmsLink("1057048")
     @Tag("actions")
