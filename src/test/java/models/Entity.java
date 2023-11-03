@@ -17,11 +17,10 @@ import org.json.JSONObject;
 
 import java.lang.annotation.*;
 import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 @NoArgsConstructor
 @SuperBuilder
-@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId", "skip", "isMock"})
+@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId", "skip", "mock"})
 public abstract class Entity implements AutoCloseable {
     public String objectClassName;
     public String uuid;
@@ -30,7 +29,7 @@ public abstract class Entity implements AutoCloseable {
     @Getter @Setter
     boolean skip;
     @Getter @Setter
-    private boolean isMock;
+    private boolean mock;
     @Getter @Setter
     private Lock mockReentrantLock;
 
