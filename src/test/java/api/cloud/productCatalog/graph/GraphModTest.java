@@ -239,6 +239,6 @@ public class GraphModTest extends Tests {
                 .build()
                 .createObject();
         String errorMsg = getResponseGraphByIdContext(project.getId(), graph.getGraphId()).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(format("Нет ключа {} в словаре {}", key), errorMsg);
+        assertEquals(format("No {} key in {} dictionary for schema (json_schema)", key), errorMsg);
     }
 }
