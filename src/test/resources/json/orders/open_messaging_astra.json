@@ -14,7 +14,7 @@
       "extra_nics": [],
       "on_support": false,
       "os_version": "1.7",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
@@ -36,6 +36,7 @@
       ]
     },
     "count": 1,
-    "label": "OpenMessaging Astra"
+    "label": "OpenMessaging Astra",
+    "lifetime": null
   }
 }

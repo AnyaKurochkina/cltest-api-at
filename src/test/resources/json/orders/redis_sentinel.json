@@ -36,6 +36,7 @@
       ]
     },
     "count": 1,
-    "label": "Redis Sentinel Astra (Redis с репликацией)"
+    "label": "Redis Sentinel Astra (Redis с репликацией)",
+    "lifetime": null
   }
 }

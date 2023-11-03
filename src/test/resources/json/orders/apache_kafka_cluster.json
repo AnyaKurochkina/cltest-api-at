@@ -13,7 +13,7 @@
       "platform": "vsphere",
       "on_support": true,
       "os_version": "7.9",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "test-srv-synt"
       },
@@ -40,6 +40,7 @@
       "kafka_log_retention_minutes": 30
     },
     "count": 1,
-    "label": "Apache Kafka Cluster"
+    "label": "Apache Kafka Cluster",
+    "lifetime": null
   }
 }
