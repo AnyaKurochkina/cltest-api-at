@@ -27,7 +27,6 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegat
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerTest extends Tests {
 
-//    @Mock
     static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
             .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
 
@@ -328,8 +327,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
-    @Disabled
+    @TmsLink("SOUL-8013")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание проверки доступности. httpchk {0}")
     void createHeathCheck(LoadBalancer product) {
@@ -356,7 +354,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8012")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Синхронизация конфигурации {0}")
@@ -366,13 +364,13 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8011")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Включить/Выключить maintenance {0}")
     void changePublicationsMaintenanceMode(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            String hostname = OrderServiceSteps.getProductsField(balancer, "data.find{it.type=='cluster'}.data.config.cluster_nodes[0].name").toString();
+            String hostname = OrderServiceSteps.getObjectClass(balancer,"data.find{it.type=='cluster'}.data.config.cluster_nodes[0].name", String.class);
             ChangePublicationsMaintenanceMode modeOff = ChangePublicationsMaintenanceMode.builder().state("inactive")
                     .hostnameOn(Collections.singletonList(hostname)).build();
             balancer.changePublicationsMaintenanceMode(modeOff);
@@ -382,7 +380,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8010")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Изменение таймаутов {0}")
@@ -392,7 +390,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8009")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Обновление ОС {0}")
@@ -402,7 +400,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8008")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Обновление сертификатов {0}")
@@ -412,7 +410,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8007")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Вертикальное масштабирование {0}")
@@ -422,7 +420,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8006")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Горизонтальное масштабирование {0}")
@@ -433,7 +431,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8005")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Увеличить дисковое пространство {0}")
@@ -443,7 +441,8 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
+    @TmsLink("SOUL-8004")
+    @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Комплексное создание {0}")
