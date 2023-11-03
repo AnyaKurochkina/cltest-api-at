@@ -21,7 +21,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 @NoArgsConstructor
 @SuperBuilder
-@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId", "skip"})
+@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId", "skip", "isMock"})
 public abstract class Entity implements AutoCloseable {
     public String objectClassName;
     public String uuid;
