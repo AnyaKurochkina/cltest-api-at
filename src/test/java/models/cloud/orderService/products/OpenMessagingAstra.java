@@ -13,7 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -79,6 +79,6 @@ public class OpenMessagingAstra extends IProduct {
     }
 
     public void upgradeSetup() {
-        OrderServiceSteps.executeAction("open-messaging_upgrade_setup", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("open-messaging_upgrade_setup").product(this).build());
     }
 }
