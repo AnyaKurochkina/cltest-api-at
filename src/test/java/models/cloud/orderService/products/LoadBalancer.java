@@ -223,10 +223,14 @@ public class LoadBalancer extends IProduct {
 
     public void deleteGslb(Gslb gslb) {
         gslbs.remove(gslb);
-        gslb = (Gslb) OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class);
+        gslb = OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class);
         deleteGslbSource(gslb.getGlobalname());
         Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не удален");
         save();
+    }
+
+    public void deleteGslbs() {
+
     }
 
     public void deleteGslbSource(String globalName) {
@@ -238,14 +242,15 @@ public class LoadBalancer extends IProduct {
         routes.remove(routeSni);
         OrderServiceSteps.executeAction("balancer_release_delete_sni_route", this,
                 new JSONObject().put("sni_route", new JSONObject().put("index", route.getIndex()).put("route_name", route.getRouteName()).put("backend_name", route.getBackendName()).put("frontend_name", route.getFrontendName())), this.getProjectId());
-        Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, route.getRouteName()), RouteSni.RouteCheck.class), "route не удален");
+        Assertions.assertNull(OrderServiceSteps.getProductsField(this, String.format(ROUTE_PATH, route.getRouteName()), RouteSni.RouteCheck.class), "route не удален");
         save();
     }
 
     public void editRouteSni(RouteSni routeSni, String backendName) {
-        RouteSni.RouteCheck route = (RouteSni.RouteCheck) OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, routeSni.getRoutes().get(0).getName()), RouteSni.RouteCheck.class);
+        RouteSni.RouteCheck route = OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, routeSni.getRoutes().get(0).getName()), RouteSni.RouteCheck.class);
         JSONObject data = new JSONObject().put("backend_name", backendName).put("sni_route", new JSONObject().put("index", route.getIndex()).put("route_name", route.getRouteName()).put("backend_name", route.getBackendName()).put("frontend_name", route.getFrontendName()));
         OrderServiceSteps.executeAction("balancer_release_edit_sni_route", this, data, this.getProjectId());
+        Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, backendName), RouteSni.RouteCheck.class), "route не удален");
     }
 
     public Boolean isStateContains(String name) {
