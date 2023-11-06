@@ -30,17 +30,8 @@ public class RouteSni {
         String globalname;
         MonitorParams monitorParams;
 
-        public DnsPrefix(Map dns) {
-            this.ttl = (int)dns.get("ttl");
-            this.members = (List)dns.get("members");
-            this.monitor = (String)dns.get("monitor");
-            this.fallback = (String)dns.get("fallback");
-            this.lbMethod = (String)dns.get("lb_method");
-            this.globalname = (String)dns.get("globalname");
-            this.monitorParams = new MonitorParams((Map)dns.get("monitor_params"));
-        }
-
         @Data
+        @NoArgsConstructor
         public static class Member {
             String ip;
             String name;
@@ -57,15 +48,6 @@ public class RouteSni {
             boolean useSsl;
             int interval;
             String backendName;
-
-            public MonitorParams(Map params) {
-                this.port = (int)params.get("port");
-                this.retries = (int)params.get("retries");
-                this.timeout = (int)params.get("timeout");
-                this.interval = (int)params.get("interval");
-                this.useSsl = (boolean) params.get("use_ssl");
-                this.backendName = (String) params.get("backend_name");
-            }
         }
     }
 

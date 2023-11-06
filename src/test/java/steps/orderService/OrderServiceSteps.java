@@ -446,6 +446,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение объекта класса по пути {path}")
     public static <T> T getObjectClass(IProduct product, String path, TypeReference<T> valueTypeRef) {
         Object object = getProductsField(product, path, Object.class, false);
+        if(object == null) return null;
         String json;
         if(object instanceof List)
             json = Entity.serializeList(object).toString();
