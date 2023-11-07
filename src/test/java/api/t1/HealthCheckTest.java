@@ -31,7 +31,8 @@ public class HealthCheckTest extends Tests {
                     .getString("status");
             assertEquals("ok", status);
         }
-        List<String> urls2 = Arrays.asList(ProductCatalogURL, CalculatorURL, RestrictionServiceUrl, SyncService, Budget, Day2ServiceURL);
+        List<String> urls2 = Arrays.asList(ProductCatalogURL, CalculatorURL, RestrictionServiceUrl, SyncService, Budget, Day2ServiceURL,
+                AccountManagerURL, FeedServiceURL, SelectorCp, Auditor);
         for (String url : urls2) {
             new Http(url)
                     .setRole(Role.CLOUD_ADMIN)
