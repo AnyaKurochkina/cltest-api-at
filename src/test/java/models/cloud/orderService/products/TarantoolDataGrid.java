@@ -31,7 +31,6 @@ public class TarantoolDataGrid extends IProduct {
     public static final String SERVICE_PATH = "data.find{it.type=='cluster'}.data.config.cluster.find{it.instance=='%s'}.state";
     @ToString.Include
     String osVersion;
-    Flavor flavor;
     String tarantoolVersion;
 
     @Override
@@ -51,8 +50,6 @@ public class TarantoolDataGrid extends IProduct {
             setDomain(OrderServiceSteps.getDomain(this));
         if (tarantoolVersion == null)
             tarantoolVersion = getRandomProductVersionByPathEnum("tarantool_version.enum");
-        if (flavor == null)
-            flavor = getMinFlavor();
         return this;
     }
 
@@ -68,7 +65,6 @@ public class TarantoolDataGrid extends IProduct {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
-                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
