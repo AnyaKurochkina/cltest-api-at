@@ -1,5 +1,6 @@
 package steps.orderService;
 
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import core.enums.Role;
@@ -11,6 +12,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
+import models.Entity;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
@@ -71,11 +73,11 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public static String getStatus(IProduct product) {
+    public static String getStatus(String orderId, String projectId) {
         return new Http(OrderServiceURL)
                 .disableAttachmentLog()
-                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
-                .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("status");
@@ -142,33 +144,23 @@ public class OrderServiceSteps extends Steps {
                     .jsonPath()
                     .getList("list.id");
             idOfAllSuccessProducts.addAll(idOfAllSuccessProductsOnOnePage);
-        } while (idOfAllSuccessProductsOnOnePage.size() != 0);
+        } while (!idOfAllSuccessProductsOnOnePage.isEmpty());
         log.info("Список ID проектов со статусом success " + idOfAllSuccessProducts);
         log.info("Кол-во продуктов " + idOfAllSuccessProducts.size());
         return idOfAllSuccessProducts;
     }
 
-    @Step("Отправка action {action}")
-    public static Response sendAction(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
-        Action act = getItemIdByOrderIdAndActionTitle(action, product, filter);
-        return JsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", act.itemId)
-                .set("$.order.attrs", jsonData)
-                .send(OrderServiceURL)
-                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
-                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), action);
-    }
-
-    //{"order":{"attrs":{"client_types":"own","name":"dfghjkl","owner_cert":"dfghjkl"},"graph_version":"1.0.7"},"item_id":"ad08595a-c325-5434-9e5b-3d8b1bda7306"}
-    @Step("Отправка action {action}")
-    public static Response sendAction(String action, IProduct product, JSONObject jsonData, String filter) {
-        Action act = getItemIdByOrderIdAndActionTitle(action, product, filter);
-        return JsonHelper.getJsonTemplate("/actions/template.json")
-                .set("$.item_id", act.itemId)
-                .set("$.order.attrs", jsonData)
-                .send(OrderServiceURL)
-                .setRole(ORDER_SERVICE_ADMIN)
-                .patch("/v1/projects/{}/orders/{}/actions/{}", product.getProjectId(), product.getOrderId(), action);
+    @Step("Отправка action {action.name}")
+    public static Response sendAction(ActionParameters action) {
+            final Http request = JsonHelper.getJsonTemplate("/actions/template.json")
+                    .set("$.item_id", action.getItemId())
+                    .set("$.order.attrs", action.getData())
+                    .send(OrderServiceURL);
+        if(Objects.isNull(action.getRole()))
+            return request.setProjectId(action.getProjectId(), ORDER_SERVICE_ADMIN)
+                    .patch("/v1/projects/{}/orders/{}/actions/{}", action.getProjectId(), action.getOrderId(), action.getName());
+        return request.setRole(action.getRole())
+                .patch("/v1/projects/{}/orders/{}/actions/{}", action.getProjectId(), action.getOrderId(), action.getName());
     }
 
     @Step("Добавление действия {actionName} заказа и регистрация его в авторайзере")
@@ -193,18 +185,6 @@ public class OrderServiceSteps extends Steps {
         product.setProjectId(target.getId());
     }
 
-    public static void executeAction(String action, IProduct product, JSONObject jsonData, String projectId) {
-        executeAction(action, product, jsonData, null, projectId, "");
-    }
-
-    public static void executeActionWidthFilter(String action, IProduct product, JSONObject jsonData, String projectId, String filter) {
-        executeAction(action, product, jsonData, null, projectId, filter);
-    }
-
-    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId) {
-        executeAction(action, product, jsonData, status, projectId, "");
-    }
-
     public static void switchProtect(String orderId, String projectId, boolean value) {
         Assertions.assertEquals(!value, new Http(OrderServiceURL)
                 .disableAttachmentLog()
@@ -216,50 +196,33 @@ public class OrderServiceSteps extends Steps {
                 .getBoolean("deletable"));
     }
 
-
-    /**
-     * Метод выполняет экшен по его имени
-     *
-     * @param projectId id проекта
-     * @param action    имя экшена
-     * @param product   объект продукта
-     * @param jsonData  параметр дата в запросе, к примеру: "order":{"data":{}}}
-     */
-    @Step("Выполнение action \"{action}\"")
-    public static void executeAction(String action, IProduct product, JSONObject jsonData, ProductStatus status, String projectId, String filter) {
-        //Получение item'ов для экшена
-        waitStatus(Duration.ofMinutes(10), product);
-        Action act = getItemIdByOrderIdAndActionTitle(action, product, filter);
-        log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
-        //TODO: Возможно стоит сделать более детальную проверку на значение
-
+    @Step("Выполнение action {action.name} у заказа {action.orderId}")
+    public static void runAction(ActionParameters action) {
+        waitStatus(Duration.ofMinutes(10), action.getOrderId(), action.getProjectId());
+        updateItemIdByOrderIdAndActionTitle(action);
         AtomicReference<Float> costPreBilling = new AtomicReference<>();
         AtomicReference<String> actionId = new AtomicReference<>();
 
-        Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
+        Assertions.assertAll("Проверка выполнения action - " + action.getName() + " у продукта " + action.getOrderId(),
                 () -> {
-                    if(act.skipOnPrebilling)
-                        costPreBilling.set(CalcCostSteps.getCostByUid(product));
-                    else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
-
+                    if (action.getSkipOnPrebilling())
+                        costPreBilling.set(CalcCostSteps.getCostByUid(action.getOrderId(), action.getProjectId()));
+                    else costPreBilling.set(CostSteps.getCostAction(action));
                     Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
                 },
                 () -> {
-                    actionId.set(sendAction(action, product, jsonData, projectId, filter)
-                            .assertStatus(200)
-                            .jsonPath()
-                            .get("action_id"));
-
-                    checkActionStatusMethod(product, actionId.get());
-                    if (Objects.nonNull(status))
-                        product.setStatus(status);
+                    actionId.set(sendAction(action).assertStatus(200).jsonPath().get("action_id"));
+                    waitStatus(action.getTimeout(), action.getOrderId(), action.getProjectId());
+                    checkActionStatusMethod(action.getOrderId(), action.getProjectId(), actionId.get());
+                    if (Objects.nonNull(action.getStatus()))
+                        action.getProduct().setStatus(action.getStatus());
                 });
 
         if (costPreBilling.get() != null) {
             Float cost = null;
             for (int i = 0; i < 20; i++) {
                 Waiting.sleep(20000);
-                cost = CalcCostSteps.getCostByUid(product);
+                cost = CalcCostSteps.getCostByUid(action.getOrderId(), action.getProjectId());
                 if (cost == null)
                     continue;
                 if (Math.abs(cost - costPreBilling.get()) > 0.00001)
@@ -267,97 +230,39 @@ public class OrderServiceSteps extends Steps {
                 break;
             }
             Assertions.assertNotNull(cost, "Стоимость списания равна null");
-            Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
+            Assertions.assertEquals(costPreBilling.get(), cost, 0.00001,
+                    "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action.getName());
         }
-    }
-
-    /**
-     * Метод выполняет экшен по его имени
-     *
-     * @param action   имя экшена
-     * @param product  объект продукта
-     * @param jsonData параметр дата в запросе, к примеру: "order":{"data":{}}}
-     */
-    @Step("Выполнение action \"{action}\"")
-    public static void executeAction(String action, IProduct product, JSONObject jsonData) {
-        //Получение item'ов для экшена
-        Action act = getItemIdByOrderIdAndActionTitle(action, product, "");
-        log.info("Отправка запроса на выполнение действия '{}' продукта {}", action, product);
-        //TODO: Возможно стоит сделать более детальную проверку на значение
-
-        AtomicReference<Float> costPreBilling = new AtomicReference<>();
-        AtomicReference<String> actionId = new AtomicReference<>();
-
-        Assertions.assertAll("Проверка выполнения action - " + action + " у продукта " + product.getOrderId(),
-                () -> {
-                    if(act.skipOnPrebilling)
-                        costPreBilling.set(CalcCostSteps.getCostByUid(product));
-                    else costPreBilling.set(CostSteps.getCostAction(action, act.itemId, product, jsonData));
-                    Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
-                },
-                () -> {
-                    actionId.set(sendAction(action, product, jsonData, "")
-                            .assertStatus(200)
-                            .jsonPath()
-                            .get("action_id"));
-                    checkActionStatusMethod(product, actionId.get());
-                    if (costPreBilling.get() != null) {
-                        Float cost = null;
-                        for (int i = 0; i < 20; i++) {
-                            Waiting.sleep(20000);
-                            cost = CalcCostSteps.getCostByUid(product);
-                            if (cost == null)
-                                continue;
-                            if (Math.abs(cost - costPreBilling.get()) > 0.00001)
-                                continue;
-                            break;
-                        }
-                        Assertions.assertNotNull(cost, "Стоимость списания равна null");
-                        Assertions.assertEquals(costPreBilling.get(), cost, 0.00001, "Стоимость предбиллинга экшена отличается от стоимости списаний после action - " + action);
-                    }
-                });
-
     }
 
     @Step("Ожидание успешного выполнения action")
-    public static void checkActionStatusMethod(IProduct product, String actionId) {
-        String actionStatus = "";
-        int counter = 60;
-        log.info("Проверка статуса выполнения действия");
-        while ((actionStatus.equals("pending") || actionStatus.equals("changing") || actionStatus.isEmpty()) && counter > 0) {
-            Waiting.sleep(25000);
-            actionStatus = new Http(OrderServiceURL)
-                    .disableAttachmentLog()
-                    .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
-                    .get("/v1/projects/{}/orders/{}/actions/history/{}", product.getProjectId(), product.getOrderId(), actionId)
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get("status");
-            counter = counter - 1;
-        }
-        if(actionStatus.equalsIgnoreCase("warning")){
-            String messages = getActionHistoryOutput(product.getOrderId(), product.getProjectId(), actionId);
+    private static void checkActionStatusMethod(String orderId, String projectId, String actionId) {
+        String actionStatus = new Http(OrderServiceURL)
+                .disableAttachmentLog()
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}/actions/history/{}", projectId, orderId, actionId)
+                .assertStatus(200)
+                .jsonPath()
+                .get("status");
+
+        if (actionStatus.equalsIgnoreCase("warning")) {
+            String messages = getActionHistoryOutput(orderId, projectId, actionId);
             Assertions.fail(String.format("Результат выполнения action продукта: warning. \nИтоговый статус: %s . \nОшибка: %s", actionStatus, messages));
         }
-        else if (!actionStatus.equalsIgnoreCase("success")) {
-            String error = null;
-            try {
-                error = StateServiceSteps.getErrorFromStateService(product.getOrderId());
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
+        if (!actionStatus.equalsIgnoreCase("success")) {
+            String error = StateServiceSteps.getErrorFromStateService(orderId);
             if (Objects.isNull(error))
                 error = "Действие не выполнено по таймауту";
-            Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", product, actionStatus, error));
+            Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", orderId, actionStatus, error));
         }
     }
 
-    private static void waitStatus(Duration timeout, IProduct product) {
+    private static void waitStatus(Duration timeout, String orderId, String projectId) {
         Instant startTime = Instant.now();
         String status;
         do {
             Waiting.sleep(20000);
-            status = getStatus(product);
+            status = getStatus(orderId, projectId);
         } while (status.equals("pending") || status.equals("changing")
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
     }
@@ -409,35 +314,32 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public static String getDataCentre(IProduct product) {
-        String dc = "50";
-        log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
+    @Step("Получение зоны доступности для сегмента сети {product.segment}")
+    public static String getAvailabilityZone(IProduct product) {
         Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
+                .get("/v1/availability_zones?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
                         product.getSegment(),
                         org.getName(),
                         product.getProductCatalogName(),
                         product.getProjectId())
                 .assertStatus(200)
                 .jsonPath()
-                .getList("list.findAll{it.status == 'available'}.code");
-        if (list.contains(dc))
-            return dc;
-        Assertions.assertFalse(list.isEmpty(), "Список available ДЦ пуст");
+                .getList("list.code");
+        Assertions.assertFalse(list.isEmpty(), "Список зон доступности пуст");
         return list.get(new Random().nextInt(list.size()));
     }
 
+    @Step("Получение платформы для зоны доступности {product.availabilityZone} и сегмента {product.segment}")
     public static String getPlatform(IProduct product) {
         String platform = "OpenStack";
-        log.info("Получение Платформы для ДЦ {} и сегмента {}", product.getDataCentre(), product.getSegment());
         Organization org = Organization.builder().type("default").build().createObject();
         List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                .get("/v1/platforms?net_segment_code={}&data_center_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
+                .get("/v1/platforms?net_segment_code={}&availability_zone_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
-                        product.getDataCentre(),
+                        product.getAvailabilityZone(),
                         org.getName(),
                         product.getProductCatalogName())
                 .assertStatus(200)
@@ -448,39 +350,27 @@ public class OrderServiceSteps extends Steps {
         return list.get(new Random().nextInt(list.size()));
     }
 
-    private static class Action {
-        public String itemId;
-        public Boolean skipOnPrebilling;
-    }
 
-
-    /**
-     * @param action  экшен
-     * @param product продукт
-     * @return - возвращаем ID айтема
-     */
-    public static Action getItemIdByOrderIdAndActionTitle(String action, IProduct product, String filter) {
-        Action res = new Action();
-        log.info("Получение item_id для " + Objects.requireNonNull(action));
-        //Отправка запроса на получение айтема
+    private static void updateItemIdByOrderIdAndActionTitle(ActionParameters action) {
+        log.info("Получение item_id для " + Objects.requireNonNull(action.getName()));
         JsonPath jsonPath = new Http(OrderServiceURL)
-                .setProjectId(Objects.requireNonNull(product).getProjectId(), ORDER_SERVICE_ADMIN)
-                .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
+                .setProjectId(action.getProjectId(), ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/" + action.getProjectId() + "/orders/" + action.getOrderId())
                 .assertStatus(200)
                 .jsonPath();
 
-        if (!filter.isEmpty())
-            filter = "it.data.config." + filter + " && ";
-        res.itemId = jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", filter, action));
+        if (!action.getFilter().isEmpty())
+            action.setFilter("it.data.config." + action.getFilter() + " && ");
+        action.setItemId(jsonPath.getString(String.format("data.find{%sit.actions.find{it.name=='%s'}}.item_id", action.getFilter(), action.getName())));
 
         StringJoiner actions = new StringJoiner("\n", "\n", "");
         List<Map<String, Object>> mapList = jsonPath.getList("data.actions.flatten()");
-        for(Map<String, Object> e :  mapList)
-            if(Objects.nonNull(e))
+        for (Map<String, Object> e : mapList)
+            if (Objects.nonNull(e))
                 actions.add(String.format("['%s' : '%s']", e.get("title"), e.get("name")));
-        Assertions.assertNotNull(res.itemId, "Action '" + action + "' не найден у продукта " + product.getProductName() + "\n Найденные экшены: " + actions);
-        res.skipOnPrebilling = jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.skip_on_prebilling", filter, action, action));
-        return res;
+        Assertions.assertNotNull(action.getItemId(), "Action '" + action.getName() + "' не найден\n Найденные экшены: " + actions);
+        action.setSkipOnPrebilling(jsonPath.getBoolean(String.format("data.find{%sit.actions.find{it.name=='%s'}}.actions.find{it.name=='%s'}.skip_on_prebilling",
+                action.getFilter(), action.getName(), action.getName())));
     }
 
     /**
@@ -522,14 +412,17 @@ public class OrderServiceSteps extends Steps {
         return new Gson().fromJson(jsonArray, type);
     }
 
+    @Deprecated
     public static <T extends Comparable<T>> Comparable<T> getProductsField(IProduct product, String path) {
         return getProductsField(product, path, null);
     }
 
+    @Deprecated
     public static <T> T getProductsField(IProduct product, String path, Class<T> clazz) {
         return getProductsField(product, path, clazz, true);
     }
 
+    @Deprecated
     @Step("Получение значения по пути {path}")
     public static <T> T getProductsField(IProduct product, String path, Class<T> clazz, boolean assertion) {
         Object s;
@@ -551,15 +444,29 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Получение объекта класса по пути {path}")
-    public static Object getObjectClass(IProduct product, String path, Class<?> clazz) {
-        String object = new Gson().toJson(getProductsField(product, path, Map.class, false));
-        return JsonHelper.deserialize(object, clazz);
+    public static <T> T getObjectClass(IProduct product, String path, TypeReference<T> valueTypeRef) {
+        Object object = getProductsField(product, path, Object.class, false);
+        String json;
+        if(object instanceof List)
+            json = Entity.serializeList(object).toString();
+        else
+            json = Entity.serialize(object).toString();
+        return JsonHelper.deserialize(json, valueTypeRef);
+    }
+
+    public static <T> T getObjectClass(IProduct product, String path, Class<T> clazz) {
+        return getObjectClass(product, path, new TypeReference<T>() {
+            @Override
+            public Type getType() {
+                return clazz;
+            }
+        });
     }
 
     @Step("Получение сетевого сегмента для продукта {product}")
     public static String getNetSegment(IProduct product) {
         String segment = "dev-srv-app";
-        List<String> list =  new Http(OrderServiceURL)
+        List<String> list = new Http(OrderServiceURL)
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/net_segments?project_name={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         Objects.requireNonNull(product).getProjectId(), product.getProductCatalogName())
@@ -589,14 +496,14 @@ public class OrderServiceSteps extends Steps {
                         .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
-                if(!label.test(jsonPath.getString("label")))
+                if (!label.test(jsonPath.getString("label")))
                     continue;
                 String itemId = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.item_id");
                 String action = jsonPath.get("data.find{it.actions.find{it.type == 'delete'}}.actions.find{it.type == 'delete'}.name");
                 log.trace("item_id = " + itemId);
                 log.trace("action = " + action);
 
-                if(project.getProjectEnvironmentPrefix().getEnvType().equalsIgnoreCase("prod")){
+                if (project.getProjectEnvironmentPrefix().getEnvType().equalsIgnoreCase("prod")) {
                     OrderServiceSteps.switchProtect(order, project.id, false);
                 }
 

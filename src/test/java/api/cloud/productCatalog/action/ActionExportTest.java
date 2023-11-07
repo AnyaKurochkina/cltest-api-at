@@ -22,6 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
@@ -95,5 +96,20 @@ public class ActionExportTest extends Tests {
         List<String> actualTagList = exportObjectByIdWithTags("actions", action.getActionId()).jsonPath().getList("Action.tag_name_list");
         assertEquals(actualTagList, expectedTagList);
         deleteActionById(action.getActionId());
+    }
+
+    @DisplayName("Проверка current_version при экспорте действия")
+    @TmsLink("SOUL-7757")
+    @Test
+    public void checkCurrentVersionActionExportTest() {
+        String actionName = "check_current_version_action_export_test_api";
+        Action action = createAction(actionName);
+        partialUpdateAction(action.getActionId(), new JSONObject()
+                .put("priority", 4)
+                .put("version", "1.1.1"));
+        partialUpdateAction(action.getActionId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        String currentVersion = exportActionById(action.getActionId()).jsonPath().getString("Action.current_version");
+        assertNull(currentVersion);
     }
 }

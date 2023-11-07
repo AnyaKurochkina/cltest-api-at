@@ -14,11 +14,11 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.productCatalog.ProductCatalogSteps;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -171,19 +171,16 @@ public class CostSteps extends Steps {
     }
 
     @Step("Получение предварительной стоимости action {action} продукта {product}")
-    public static Float getCostAction(String action, String itemId, IProduct product, JSONObject data) {
-//        Project project = Project.builder().projectEnvironment(new ProjectEnvironment(product.getEnv()))
-//                .isForOrders(true).build().createObject();
-//        Project project = Project.builder().id(product.getProjectId()).build().createObject();
-        log.info("Отправка запроса на получение стоимости экшена: " + action + ", у продукта " + product.getProductName());
+    public static Float getCostAction(ActionParameters action) {
+        log.info("Отправка запроса на получение стоимости экшена: " + action.getName() + ", у продукта " + action.getOrderId());
         return JsonHelper.getJsonTemplate("/tarifficator/costAction.json")
-                .set("$.project_name", product.getProjectId())
-                .set("$.item_id", itemId)
-                .set("$.action_name", action)
-                .set("$.id", product.getOrderId())
-                .set("$.order.attrs", data)
+                .set("$.project_name", action.getProjectId())
+                .set("$.item_id", action.getItemId())
+                .set("$.action_name", action.getName())
+                .set("$.id", action.getOrderId())
+                .set("$.order.attrs", action.getData())
                 .send(TarifficatorURL)
-                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .setProjectId(action.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .post("/v1/cost")
                 .assertStatus(200)
                 .jsonPath()

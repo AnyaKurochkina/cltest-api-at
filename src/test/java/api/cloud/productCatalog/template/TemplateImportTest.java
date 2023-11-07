@@ -10,6 +10,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.template.Template;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -116,5 +117,33 @@ public class TemplateImportTest extends Tests {
         DataFileHelper.delete(filePath);
         Template templateById = getTemplateById(template.getId());
         assertEquals(description, templateById.getDescription());
+    }
+
+    @DisplayName("Проверка current_version при импорте уже существующего шаблона")
+    @TmsLink("SOUL-7774")
+    @Test
+    public void checkCurrentVersionWhenAlreadyExistTemplateImportTest() {
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/templates/checkCurrentVersion.json";
+        Template template = Template.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
+                .version("1.0.1")
+                .build()
+                .createObject();
+        DataFileHelper.write(filePath, exportTemplateById(template.getId()).toString());
+        template.deleteObject();
+        Template createdTemplate = Template.builder()
+                .name(template.getName())
+                .version("1.0.0")
+                .build()
+                .createObject();
+        partialUpdateTemplate(createdTemplate.getId(), new JSONObject()
+                .put("priority", 6)
+                .put("version", "1.1.1"));
+        partialUpdateTemplate(createdTemplate.getId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        importTemplate(filePath);
+        DataFileHelper.delete(filePath);
+        Template templateById = getTemplateById(createdTemplate.getId());
+        assertEquals("1.1.1", templateById.getCurrentVersion());
     }
 }

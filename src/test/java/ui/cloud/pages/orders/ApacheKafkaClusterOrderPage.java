@@ -5,12 +5,14 @@ import com.codeborne.selenide.SelenideElement;
 import core.helper.StringUtils;
 import lombok.Getter;
 import ui.elements.Input;
+import ui.elements.Select;
 
 @Getter
 public class ApacheKafkaClusterOrderPage extends NewOrderPage {
 
     Input nameCluster = Input.byLabel("Имя кластера *");
     SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
+    protected Select configCluster = Select.byLabel("Конфигурация кластера");
 
     public ApacheKafkaClusterOrderPage() {
         labelInput.setValue(labelValue);

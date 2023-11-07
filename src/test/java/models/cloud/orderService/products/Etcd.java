@@ -13,6 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
@@ -40,8 +41,8 @@ public class Etcd extends IProduct {
             osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -71,7 +72,7 @@ public class Etcd extends IProduct {
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
@@ -91,18 +92,18 @@ public class Etcd extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     @Step("Обновить сертификаты")
     public void updateCerts() {
-        OrderServiceSteps.executeAction("tdg_update_certs", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("tdg_update_certs").product(this).build());
     }
 
     @Step("Перезапустить сервисы")
     public void restartInstances(List<String> services) {
         JSONObject data = new JSONObject().put("type", "Instance").put("instances", services);
-        OrderServiceSteps.executeAction("tdg_restart_instances", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("tdg_restart_instances").product(this).data(data).build());
     }
 
     @Step("Удалить")
@@ -113,13 +114,13 @@ public class Etcd extends IProduct {
 
     public void resetPassword(String etcdPassword) {
         JSONObject data = new JSONObject().put("etcd_user", etcdUser).put("etcd_password", etcdPassword);
-        OrderServiceSteps.executeAction("etcd_reset_user_pass", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("etcd_reset_user_pass").product(this).data(data).build());
         this.etcdPassword = etcdPassword;
         save();
     }
 
     public void createCerts() {
         JSONObject data = new JSONObject().put("etcd_user", etcdUser);
-        OrderServiceSteps.executeAction("etcd_create_certs", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("etcd_create_certs").product(this).data(data).build());
     }
 }

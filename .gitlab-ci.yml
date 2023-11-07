@@ -15,7 +15,7 @@ variables:
     description: "-Dtest= VirtualMachineTest#vmList"
   GROUPS:
     value: ""
-    description: "-Dgroups="
+    description: "-Dgroups=t1_ui_cloud_compute&smoke"
   THREAD_COUNT:
     value: "4"
     description: "-Djunit.jupiter.execution.parallel.config.fixed.parallelism=$THREAD_COUNT"

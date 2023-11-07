@@ -29,7 +29,6 @@ public class NewOrderPage {
     protected Input countInput = Input.byLabel("Количество");
     protected Input labelInput = Input.byLabel("Метка");
     protected Select segmentSelect = Select.byLabel("Сетевой сегмент");
-    protected Select dataCentreSelect = Select.byLabel("Дата-центр");
     protected Select platformSelect = Select.byLabel("Платформа");
     protected Select osVersionSelect = Select.byLabel("Версия ОС");
     protected Select versionWildfly = Select.byLabel("Версия Wildfly");

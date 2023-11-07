@@ -46,7 +46,6 @@ public class UiS3CephTenantTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             S3CephTenantOrderPage orderPage = new S3CephTenantOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             OrderUtils.clickOrder();
             new OrdersPage()
                     .getRowByColumnValue("Продукт", orderPage.getLabelValue())

@@ -26,12 +26,12 @@ public class ProductInjector implements TestInstancePostProcessor {
                     product.setEnv("DEV");
                     product.setSegment("dev-srv-app");
                     product.setPlatform("OpenStack");
-                } else if (Configure.ENV.equals("blue")) {
-                    product.setPlatform("OpenStack");
-                } else {
-                    product.setPlatform("OpenStack");
-                    product.setDataCentre("5");
                 }
+                else if(Configure.ENV.equals("blue")){
+                    product.setPlatform("OpenStack");
+                }
+                else
+                    product.setPlatform("OpenStack");
                 product.init();
                 field.set(testInstance, product);
             }

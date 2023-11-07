@@ -15,6 +15,7 @@ import models.cloud.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Random;
@@ -35,13 +36,13 @@ public class KafkaService extends IProduct {
         jsonTemplate = "/orders/kafka_service.json";
         productName = "Kafka Topic как услуга";
         initProduct();
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         return this;
     }
@@ -60,31 +61,35 @@ public class KafkaService extends IProduct {
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.topic_name", "1418_" + new Random().nextInt())
                 .set("$.order.attrs.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .build();
     }
 
     public void createAclRole(String cert, KafkaRoles role) {
-        OrderServiceSteps.executeAction("taas_create_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"" + cert + "\",\"client_role\":\"" + role.getRole() + "\"}]}"), this.projectId);
+        JSONObject data = new JSONObject("{\"acls\":[{\"client_cn\":\"" + cert + "\",\"client_role\":\"" + role.getRole() + "\"}]}");
+        OrderServiceSteps.runAction(ActionParameters.builder().name("taas_create_acls").product(this).data(data).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_ROLE, cert, role.getRole())), "ACL не создался");
     }
 
     public void deleteAclRole(String cert, KafkaRoles role) {
         JSONObject object = new JSONObject().put("client_cn", cert).put("client_role", role.getRole());
-        OrderServiceSteps.executeAction("taas_delete_acls", this, new JSONObject().put("selected", new JSONArray().put(object.put("rawData", new JSONObject(object.toMap())))), this.projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("taas_delete_aclstaas_delete_acls").product(this)
+                .data(new JSONObject().put("selected", new JSONArray().put(object.put("rawData", new JSONObject(object.toMap()))))).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_ROLE, cert, role.getRole())), "ACL не создался");
     }
 
     public void createAclGroup(String group) {
-        OrderServiceSteps.executeAction("taas_create_group_acls", this, new JSONObject("{\"acls\":[{\"client_cn\":\"*\",\"group_name\":\"" + group + "\"}]}"), this.projectId);
+        JSONObject data = new JSONObject("{\"acls\":[{\"client_cn\":\"*\",\"group_name\":\"" + group + "\"}]}");
+        OrderServiceSteps.runAction(ActionParameters.builder().name("taas_create_group_acls").product(this).data(data).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_GROUP, group)), "ACL не создался");
     }
 
     public void deleteAclGroup(String group) {
         JSONObject object = new JSONObject().put("client_cn", "*").put("group_name", group);
-        OrderServiceSteps.executeAction("taas_delete_group_acls", this, new JSONObject().put("selected", new JSONArray().put(object.put("rawData", new JSONObject(object.toMap())))), this.projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("taas_delete_group_acls").product(this)
+                .data(new JSONObject().put("selected", new JSONArray().put(object.put("rawData", new JSONObject(object.toMap()))))).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_GROUP, group)), "ACL не создался");
     }
 

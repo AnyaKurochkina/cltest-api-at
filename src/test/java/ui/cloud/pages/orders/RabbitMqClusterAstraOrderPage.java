@@ -22,7 +22,8 @@ public class RabbitMqClusterAstraOrderPage extends NewOrderPage {
     Select group4 = Select.byXpath("(//div[label[text()='Группы']]/div)[4]");
     SelenideElement generatePassButton1 = $x("//button[@aria-label='generate']");
     SelenideElement generatePassButton2 = $x("(//button[@aria-label='generate'])[2]");
-
+    protected Select groupSelectManager = Select.byLabel("Manager");
+    protected Select groupSelectAdministrator = Select.byLabel("Administrator");
     public RabbitMqClusterAstraOrderPage() {
         labelInput.setValue(labelValue);
         platformSelect.getElement().shouldBe(Condition.enabled);

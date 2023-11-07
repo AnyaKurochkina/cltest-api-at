@@ -16,7 +16,7 @@
       "memtx_core": 256,
       "on_support": true,
       "os_version": "1.7",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
@@ -65,6 +65,7 @@
       ]
     },
     "count": 1,
-    "label": "Tarantool Data Grid Astra"
+    "label": "Tarantool Data Grid Astra",
+    "lifetime": null
   }
 }

@@ -13,6 +13,7 @@ import models.cloud.subModels.Flavor;
 import models.cloud.subModels.Vhost;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
@@ -50,13 +51,13 @@ public class RabbitMQClusterAstra extends IProduct {
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         if (flavor == null)
             flavor = getMinFlavor();
@@ -73,7 +74,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
@@ -90,12 +91,13 @@ public class RabbitMQClusterAstra extends IProduct {
 
     //Создать пользователя RabbitMQ
     public void rabbitmqCreateUser(String user) {
-        OrderServiceSteps.executeAction("rabbitmq_create_user_release", this, new JSONObject(String.format("{rabbitmq_users: [{name: \"%s\"}]}", user)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_create_user_release").product(this)
+                .data(new JSONObject(String.format("{rabbitmq_users: [{name: \"%s\"}]}", user))).build());
         Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь " + user);
     }
 
     public void rabbitmqDeleteUser(String user) {
-        OrderServiceSteps.executeAction("rabbitmq_delete_users_release", this, new JSONObject().put("name", user), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_users_release").product(this).data(new JSONObject().put("name", user)).build());
         Assertions.assertFalse(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта присутствует пользователь " + user);
     }
 
@@ -122,52 +124,57 @@ public class RabbitMQClusterAstra extends IProduct {
         List<Vhost> vhosts = new ArrayList<>();
         for (String name : collect)
             vhosts.add(new Vhost(name));
-        OrderServiceSteps.executeAction("rabbitmq_create_vhosts_release", this, new JSONObject("{\"rabbitmq_vhosts\": " + JsonHelper.toJson(vhosts) + "}"), projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_create_vhosts_release").product(this)
+                .data(new JSONObject().put("rabbitmq_vhosts", serializeList(vhosts))).build());
         for (String name : collect)
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
                     String.format(RABBIT_CLUSTER_VHOST, name)), "Отсутствует vhost " + name);
     }
 
     public void deleteVhost(List<String> collect) {
-        OrderServiceSteps.executeAction("rabbitmq_delete_vhosts_release", this, new JSONObject("{\"rabbitmq_vhosts_to_delete\": " + JsonHelper.toJson(collect) + "}"), projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_vhosts_release").product(this)
+                .data(new JSONObject().put("rabbitmq_vhosts_to_delete", serializeList(collect))).build());
         for (String name : collect)
             Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
                     String.format(RABBIT_CLUSTER_VHOST, name)), "Присутствует vhost " + name);
     }
 
     public void editVhostAccess(String user, List<String> permissions, String vhost) {
-        OrderServiceSteps.executeAction("rabbitmq_edit_vhost_access_release", this,
-                new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_permissions\": [{\"permissions\": " + JsonHelper.toJson(permissions) + ", \"vhost_name\": \"" + vhost + "\"}]}"), projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_edit_vhost_access_release").product(this)
+                .data(new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_permissions\": [{\"permissions\": " + JsonHelper.toJson(permissions) + ", \"vhost_name\": \"" + vhost + "\"}]}")).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
                 String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Отсутствует vhost access " + vhost);
     }
 
     public void deleteVhostAccess(String user, String vhost) {
-        OrderServiceSteps.executeAction("rabbitmq_delete_vhost_access_release", this,
-                new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_name\": \"" + vhost + "\"}"), projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_vhost_access_release").product(this)
+                .data(new JSONObject().put("user_name", user).put("vhost_name", vhost)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
                 String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Присутствует vhost access " + vhost);
     }
 
     @Step("Произвести ре-балансировку очередей")
     public void queueRebalancing() {
-        OrderServiceSteps.executeAction("rabbitmq_queue_rebalancing_release", this, new JSONObject().put("accept", true), projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_queue_rebalancing_release").product(this)
+                .data(new JSONObject().put("accept", true)).build());
     }
 
     @Step("Синхронизировать данные кластера")
     public void dataSynchronization() {
-        OrderServiceSteps.executeAction("rabbitmq_data_synchronization_release", this, new JSONObject().put("accept", true), projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_data_synchronization_release").product(this)
+                .data(new JSONObject().put("accept", true)).build());
     }
 
     @Step("Редактировать группу доступа")
     public void editAccessGroupsOnTheWeb(String group, String role) {
         JSONObject data = new JSONObject().put("accept", true).append("members", group).put("role", role);
-        OrderServiceSteps.executeAction("rabbitmq_edit_access_groups_on_the_web_release", this, data, projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_edit_access_groups_on_the_web_release")
+                .product(this).data(data).build());
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     public void resize() {
@@ -195,12 +202,13 @@ public class RabbitMQClusterAstra extends IProduct {
     }
 
     public void updateOs() {
-        OrderServiceSteps.executeAction("rabbitmq_update_os_cluster_release", this, new JSONObject().put("check_agree", true), projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_update_os_cluster_release").product(this)
+                .data(new JSONObject().put("check_agree", true)).build());
     }
 
     public void verticalScaling() {
         JSONObject data = JsonHelper.getJsonTemplate("/orders/rabbitmq_vertical_scaling.json")
                 .set("$.flavor", new JSONObject(getMaxFlavor().toString())).build();
-        OrderServiceSteps.executeAction("rabbitmq_vertical_scaling_release", this, data, projectId);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_vertical_scaling_release").product(this).data(data).build());
     }
 }

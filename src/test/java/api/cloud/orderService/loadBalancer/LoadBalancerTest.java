@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.*;
 import org.junit.MarkDelete;
+import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.orderService.OrderServiceSteps;
 
 import java.util.Collections;
 
@@ -25,23 +27,16 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegat
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerTest extends Tests {
 
+    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
+            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
+
     @TmsLink("1286242")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{index}] Создать {0}")
     void create(LoadBalancer product) {
         //noinspection EmptyTryBlock
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-        }
-    }
-
-    @TmsLink("1286246")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(LoadBalancer product) {
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.expandMountPoint();
+        try (LoadBalancer ignored = product.createObjectExclusiveAccess()) {
         }
     }
 
@@ -151,14 +146,14 @@ public class LoadBalancerTest extends Tests {
     Frontend addHttpSimple(LoadBalancer balancer) {
         Backend backend = Backend.builder()
                 .servers(serversHttp)
-                .backendName("backend_http_simple_4")
+                .backendName("backend_http_simple")
                 .mode("http")
                 .balancingAlgorithm("roundrobin")
                 .advancedCheck(false)
                 .build();
         balancer.addBackend(backend);
         Frontend frontend = Frontend.builder()
-                .frontendName("frontend_http_simple_4")
+                .frontendName("frontend_http_simple")
                 .mode("http")
                 .frontendPort(80)
                 .defaultBackendNameHttp(backend.getBackendName())
@@ -324,7 +319,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
-                    .backendName("backend_for_edit")
+                    .backendName("backend_for_edit9")
                     .advancedCheck(false)
                     .build();
             balancer.addBackend(backend);
@@ -332,15 +327,14 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    @TmsLink("")
-    @Disabled
+    @TmsLink("SOUL-8013")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание проверки доступности. httpchk {0}")
     void createHeathCheck(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
-                    .backendName("backend_for_heath2")
+                    .backendName("backend_for_heath")
                     .advancedCheck(false)
                     .build();
             balancer.addBackend(backend);
@@ -357,6 +351,116 @@ public class LoadBalancerTest extends Tests {
                     .checkUri("/")
                     .build();
             balancer.createHealthCheck(healthCheck);
+        }
+    }
+
+    @TmsLink("SOUL-8012")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Синхронизация конфигурации {0}")
+    void fullSync(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.fullSync();
+        }
+    }
+
+    @TmsLink("SOUL-8011")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Включить/Выключить maintenance {0}")
+    void changePublicationsMaintenanceMode(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            String hostname = OrderServiceSteps.getObjectClass(balancer,"data.find{it.type=='cluster'}.data.config.cluster_nodes[0].name", String.class);
+            ChangePublicationsMaintenanceMode modeOff = ChangePublicationsMaintenanceMode.builder().state("inactive")
+                    .hostnameOn(Collections.singletonList(hostname)).build();
+            balancer.changePublicationsMaintenanceMode(modeOff);
+            ChangePublicationsMaintenanceMode modeOn = ChangePublicationsMaintenanceMode.builder().state("active")
+                    .hostnameOff(Collections.singletonList(hostname)).build();
+            balancer.changePublicationsMaintenanceMode(modeOn);
+        }
+    }
+
+    @TmsLink("SOUL-8010")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Изменение таймаутов {0}")
+    void editTimeouts(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.editTimeouts(300000, 300000, 300000);
+        }
+    }
+
+    @TmsLink("SOUL-8009")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Обновление ОС {0}")
+    void updateOs(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.updateOs();
+        }
+    }
+
+    @TmsLink("SOUL-8008")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Обновление сертификатов {0}")
+    void updateCertificates(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.updateCertificates("all");
+        }
+    }
+
+    @TmsLink("SOUL-8007")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Вертикальное масштабирование {0}")
+    void resizeClusterVms(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.resizeClusterVms(balancer.getMaxFlavor());
+        }
+    }
+
+    @TmsLink("SOUL-8006")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Горизонтальное масштабирование {0}")
+    void addHaproxy(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.addHaproxy(6);
+            balancer.addHaproxy(4);
+        }
+    }
+
+    @TmsLink("SOUL-8005")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Увеличить дисковое пространство {0}")
+    void expandMountPoint(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.expandMountPoint();
+        }
+    }
+
+    @TmsLink("SOUL-8004")
+    @Disabled
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Комплексное создание {0}")
+    void complexCreate(LoadBalancer product) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Backend backend = Backend.builder().servers(serversTcp).backendName("complex_backend3").advancedCheck(false).build();
+            Frontend frontend = Frontend.builder().frontendName("complex_frontend3").frontendPort(80)
+                    .defaultBackendNameTcp(backend.getBackendName()).build();
+            HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
+                    .checkStrings(Collections.singletonList(CheckString.builder()
+                            .stringType("connect").stringAddress("10.0.0.1").stringPort(10).stringUseSsl("disabled")
+                            .stringSendProxy("disabled").build())).build();
+            RouteSni routeSni = RouteSni.builder()
+                    .routes(Collections.singletonList(new RouteSni.Route(backend.getBackendName(), "complex_sni"))).build();
+
+            ComplexCreate complex = ComplexCreate.builder()/*.healthCheck(healthCheck).sniRoute(routeSni)*/
+                    .backend(backend)/*.frontend(frontend)*/.build();
+            balancer.complexCreate(complex);
         }
     }
 

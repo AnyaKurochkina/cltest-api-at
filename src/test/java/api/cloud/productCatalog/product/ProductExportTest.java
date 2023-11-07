@@ -19,10 +19,11 @@ import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductSteps;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
@@ -103,5 +104,20 @@ public class ProductExportTest extends Tests {
         List<String> actualTagList = exportObjectByIdWithTags("products", product.getProductId()).jsonPath().getList("Product.tag_name_list");
         assertEquals(actualTagList, expectedTagList);
         deleteProductById(product.getProductId());
+    }
+
+    @DisplayName("Проверка current_version при экспорте продукта")
+    @TmsLink("SOUL-7772")
+    @Test
+    public void checkCurrentVersionProductExportTest() {
+        String productName = "check_current_version_product_export_test_api";
+        Product product = createProduct(productName);
+        partialUpdateProduct(product.getProductId(), new JSONObject()
+                .put("max_count", 5)
+                .put("version", "1.1.1"));
+        partialUpdateProduct(product.getProductId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        String currentVersion = exportProductById(product.getProductId()).jsonPath().getString("Product.current_version");
+        assertNull(currentVersion);
     }
 }

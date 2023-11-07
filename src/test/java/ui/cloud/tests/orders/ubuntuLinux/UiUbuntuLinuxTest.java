@@ -54,7 +54,6 @@ public class UiUbuntuLinuxTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             UbuntuLinuxOrderPage orderPage = new UbuntuLinuxOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));

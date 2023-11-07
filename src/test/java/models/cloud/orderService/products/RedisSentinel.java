@@ -12,6 +12,7 @@ import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import redis.clients.jedis.Jedis;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 
@@ -54,8 +55,8 @@ public class RedisSentinel extends IProduct {
             redisVersion = getRandomProductVersionByPathEnum("redis_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -72,7 +73,7 @@ public class RedisSentinel extends IProduct {
         return template.set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.redis_version", redisVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
@@ -89,7 +90,8 @@ public class RedisSentinel extends IProduct {
 
     //Изменить конфигурацию
     public void resize(Flavor flavor) {
-        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
+                .data(new JSONObject().put("flavor", flavor.toString()).put("warning", new Object()).put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -117,15 +119,15 @@ public class RedisSentinel extends IProduct {
 
     public void resetPassword() {
         String password = "UEijLKcQJN2pZ0Iqvxh1EXCuZ86pPGiEpdxwLRLWL4QnIOG2KPlGrw5jkLEScQZ9";
-        OrderServiceSteps.executeAction("reset_sentinel_redis_user_password", this,
-                new JSONObject().put("redis_password", password).put("user_name", appUser), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_revert_config").product(this)
+                .data(new JSONObject().put("redis_password", password).put("user_name", appUser)).build());
         appUserPassword = password;
         save();
     }
 
     public void changeNotifyKeyspaceEvents(String attr) {
-        OrderServiceSteps.executeAction("change_redis_sentinel_param_notify", this,
-                new JSONObject().put("notify_keyspace_events", attr), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("change_redis_sentinel_param_notify").product(this)
+                .data(new JSONObject().put("notify_keyspace_events", attr)).build());
     }
 
 
@@ -152,15 +154,15 @@ public class RedisSentinel extends IProduct {
     }
 
     public void createUser(String user, String password) {
-        OrderServiceSteps.executeAction("redis_sentinel_create_user", this,
-                new JSONObject().put("redis_password", password).put("user_name", user), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("redis_sentinel_create_user").product(this)
+                .data(new JSONObject().put("redis_password", password).put("user_name", user)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
-                        this, String.format(USERNAME_PATH, user)), String.format("Пользователь %s не найден", user));
+                this, String.format(USERNAME_PATH, user)), String.format("Пользователь %s не найден", user));
     }
 
     public void deleteUser(String user) {
-        OrderServiceSteps.executeAction("redis_sentinel_delete_user", this,
-                new JSONObject().put("user_name", user), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("redis_sentinel_delete_user").product(this)
+                .data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                 this, String.format(USERNAME_PATH, user)), String.format("Пользователь %s найден", user));
     }

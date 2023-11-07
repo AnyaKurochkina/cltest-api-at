@@ -42,5 +42,6 @@
   "skip_validate_checker": false,
   "skip_item_change": false,
   "ignore_restriction_service": false,
+  "is_for_items": true,
   "tag_list": []
 }

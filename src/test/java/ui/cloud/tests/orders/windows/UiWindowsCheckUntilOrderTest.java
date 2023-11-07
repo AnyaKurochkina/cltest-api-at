@@ -57,7 +57,6 @@ class UiWindowsCheckUntilOrderTest extends Tests {
         //Проверка Детали заказа
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getSegmentSelect().set(product.getSegment());
-        orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getRoleServer().setContains("Autotests");
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
