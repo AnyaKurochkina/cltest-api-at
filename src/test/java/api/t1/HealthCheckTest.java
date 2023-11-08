@@ -46,5 +46,13 @@ public class HealthCheckTest extends Tests {
                     .get("/v1/health")
                     .assertStatus(200);
         }
+
+        List<String> urls4 = Arrays.asList(VictoriaProxy);
+        for (String url : urls4) {
+            new Http(url)
+                    .setRole(Role.CLOUD_ADMIN)
+                    .get("/api/v1/health/")
+                    .assertStatus(200);
+        }
     }
 }

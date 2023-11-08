@@ -47,6 +47,7 @@ public class Configure {
     public static String LucrumService;
     public static String SelectorCp;
     public static String Auditor;
+    public static String VictoriaProxy;
 
     static {
         try {
@@ -98,6 +99,7 @@ public class Configure {
             LucrumService = KONG_URL + "lucrum-service";
             SelectorCp = KONG_URL + "selector-cp";
             Auditor = KONG_URL + "auditor";
+            VictoriaProxy = KONG_URL + "sccm-manager";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();
