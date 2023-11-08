@@ -163,8 +163,8 @@ public class LoadBalancer extends IProduct {
     }
 
     public void addRouteSni(RouteSni route) {
-        if (routes.contains(route))
-            return;
+//        if (routes.contains(route))
+//            return;
         OrderServiceSteps.executeAction("balancer_release_create_route_sni", this, new JSONObject(JsonHelper.toJson(route)), this.getProjectId());
         Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
                 String.format(ROUTE_PATH, route.getRoutes().get(0).getName()), RouteSni.RouteCheck.class), "route не создался");
