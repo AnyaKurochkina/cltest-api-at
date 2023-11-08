@@ -66,6 +66,8 @@ public class PublicIpTest extends AbstractComputeTest {
     void attachIp() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())
