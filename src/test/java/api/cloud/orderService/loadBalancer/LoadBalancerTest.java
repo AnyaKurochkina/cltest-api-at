@@ -94,7 +94,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    Frontend addTcpSimple(LoadBalancer balancer) {
+    static Frontend addTcpSimple(LoadBalancer balancer) {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName("backend_tcp_simple")
