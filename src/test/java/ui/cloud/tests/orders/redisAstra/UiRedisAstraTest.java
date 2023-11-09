@@ -31,8 +31,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_redis_astra")})
 public class UiRedisAstraTest extends UiProductTest {
 
-    Redis product;
-    //= Redis.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/37be3184-396f-4d3d-94aa-534cea51a43d/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    Redis product;// = Redis.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/9121cf13-4723-4bd7-9ea7-77319da23191/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -124,10 +123,18 @@ public class UiRedisAstraTest extends UiProductTest {
     @Test
     @Order(19)
     @TmsLink("796997")
-    @DisplayName("UI RedisAstra. Сбросить пароль")
-    void resetPassword() {
+    @DisplayName("UI RedisAstra. Сбросить пароль (удалить)")
+    void resetPasswordSentinel() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPasswordSentinel(RedisAstraOrderPage.userNameRedisSentinel));
+    }
+    @Test
+    @Order(20)
+    @TmsLink("")
+    @DisplayName("UI RedisAstra. Сбросить пароль пользователя")
+    void resetPassword() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::resetPassword);
     }
 
     @Test
