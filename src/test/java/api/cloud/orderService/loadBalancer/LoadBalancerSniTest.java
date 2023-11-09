@@ -32,7 +32,8 @@ public class LoadBalancerSniTest extends Tests {
     static final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
     @Mock
     static LoadBalancer balancer = LoadBalancer.builder().build()
-            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/8e61b88a-1411-4df7-862e-a4e6d4baf05a/main?context=proj-114wetem0c&type=project&org=vtb");
+            //.buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/8e61b88a-1411-4df7-862e-a4e6d4baf05a/main?context=proj-114wetem0c&type=project&org=vtb");
+              .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/76e2f498-36f5-43c9-88f2-a664fec0a7f0/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @TmsLink("")
     @Tag("actions")

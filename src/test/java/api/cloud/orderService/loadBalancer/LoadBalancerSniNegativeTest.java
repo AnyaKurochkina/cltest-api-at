@@ -26,9 +26,10 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerSniTest.*;
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerSniNegativeTest extends Tests {
-    @Mock
-    static LoadBalancer balancer = LoadBalancer.builder().build()
-            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/8e61b88a-1411-4df7-862e-a4e6d4baf05a/main?context=proj-114wetem0c&type=project&org=vtb");
+//    @Mock
+//    static LoadBalancer balancer = LoadBalancer.builder().build()
+//           // .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/8e61b88a-1411-4df7-862e-a4e6d4baf05a/main?context=proj-114wetem0c&type=project&org=vtb");
+//           // .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/76e2f498-36f5-43c9-88f2-a664fec0a7f0/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
