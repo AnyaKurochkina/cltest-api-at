@@ -26,4 +26,6 @@ public class Server {
     Integer inter;
     String useSsl;
     Integer slowStart;
+
+    String ssl;
 }
