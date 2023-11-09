@@ -287,7 +287,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
             balancer.addFrontend(LoadBalancerBackendChangeNegativeTest.frontend);
-            Gslb gslb = Gslb.builder().frontend(LoadBalancerBackendChangeNegativeTest.frontend).globalname(new Generex("[a-z]{65}").random()).build();
+            Gslb gslb = Gslb.builder().frontend(LoadBalancerBackendChangeNegativeTest.frontend.getFrontendName()).globalname(new Generex("[a-z]{65}").random()).build();
             AssertResponse.run(() -> balancer.addGslb(gslb)).status(422).responseContains("globalname");
         }
     }

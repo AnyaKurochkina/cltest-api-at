@@ -504,7 +504,7 @@ public abstract class IProduct extends Entity {
     protected void createProduct() {
         log.info("Отправка запроса на создание заказа " + productName);
         JSONObject data = deleteObjectIfNotFoundInUiSchema(toJson(), getProductId());
-        data = new JsonTemplate(data).set("$.order.lifetime", "172800").build();
+        data = new JsonTemplate(data).set("$.order.lifetime", null).build();
         JsonPath jsonPath = new Http(OrderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                 .body(data)
