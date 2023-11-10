@@ -46,8 +46,10 @@ public class Configure {
     public static String SyncService;
     public static String LucrumService;
     public static String SelectorCp;
+    public static String SelectorInventory;
+    public static String ServiceManagerProxy;
     public static String Auditor;
-    public static String VictoriaProxy;
+    public static String SccmManager;
 
     static {
         try {
@@ -98,8 +100,10 @@ public class Configure {
             SyncService = KONG_URL + "sync-service";
             LucrumService = KONG_URL + "lucrum-service";
             SelectorCp = KONG_URL + "selector-cp";
+            SelectorInventory = KONG_URL + "selector-inventory";
             Auditor = KONG_URL + "auditor";
-            VictoriaProxy = KONG_URL + "sccm-manager";
+            SccmManager = KONG_URL + "sccm-manager";
+            ServiceManagerProxy = KONG_URL + "service-manager-proxy";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();
