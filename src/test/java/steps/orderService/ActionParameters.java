@@ -23,6 +23,8 @@ public class ActionParameters {
     @Builder.Default
     private Duration timeout = Duration.ofMinutes(25);
     private Role role;
+    @Builder.Default
+    private Boolean checkPrebilling = true;
 
     private ProductStatus status;
     private IProduct product;

@@ -316,7 +316,7 @@ public class LoadBalancer extends IProduct {
     }
 
     public void addHaproxy(int haproxyCount) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_add_haproxy").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_add_haproxy").checkPrebilling(false).product(this)
                 .data(new JSONObject().put("new_haproxy_count", haproxyCount).put("check_agree", true)).timeout(Duration.ofMinutes(40)).build());
     }
 
