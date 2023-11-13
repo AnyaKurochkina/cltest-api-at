@@ -15,6 +15,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.resourceManager.ResourceManagerSteps;
 import ui.t1.tests.engine.AbstractComputeTest;
@@ -43,6 +44,7 @@ public class DeleteAllOrders extends Tests {
     @Test
     @DisplayName("Вывод всех ошибочных заказов")
     void printAllErrorOrders() {
+        Http.setFixedRole(Role.CLOUD_ADMIN);
         List<Order> orders = new ArrayList<>();
         List<String> projects = Arrays.asList("proj-ln4zg69jek", "proj-rddf0uwi0q", "proj-ahjjqmlgnm",
                 "proj-bhbyhmik3a", "proj-zoz17np8rb", "proj-114wetem0c", "proj-1oob0zjo5h", "proj-6wpfrbes0g", "proj-aei4kz2yu4",
@@ -54,11 +56,19 @@ public class DeleteAllOrders extends Tests {
         }
         for (String projectId : projects) {
             OrderServiceSteps.getProductsWithStatus(projectId, "changing", "damaged", "failure", "pending", "locked", "deprovisioned_error")
-                    .forEach(e -> orders.add(new Order(e, projectId)));
+                    .forEach(e -> orders.add(new Order(e, projectId, CalcCostSteps.getCostByUid(e, projectId))));
         }
+        System.out.println("Битые заказы:");
         for (Order order : orders) {
-            System.out.printf("%s/all/orders/%s/main?context=%s&type=project&org=vtb%n",
+            if(order.cost == null || order.cost == 0.0f)
+                System.out.printf("%s/all/orders/%s/main?context=%s&type=project&org=vtb%n",
                     Configure.getAppProp("base.url"), order.id, order.projectId);
+        }
+        System.out.println("Битые заказы со списаниями:");
+        for (Order order : orders) {
+            if(order.cost != null && order.cost != 0.0f)
+                System.out.printf("%s/all/orders/%s/main?context=%s&type=project&org=vtb %.02f₽/сут.%n",
+                        Configure.getAppProp("base.url"), order.id, order.projectId, order.cost * 60 * 24);
         }
     }
 
@@ -119,5 +129,6 @@ public class DeleteAllOrders extends Tests {
     private static class Order {
         String id;
         String projectId;
+        Float cost;
     }
 }
