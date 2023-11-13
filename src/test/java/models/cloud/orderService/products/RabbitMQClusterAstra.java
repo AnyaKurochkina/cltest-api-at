@@ -55,7 +55,7 @@ public class RabbitMQClusterAstra extends IProduct {
             setSegment(OrderServiceSteps.getNetSegment(this));
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
-        if(platform == null)
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
@@ -75,7 +75,7 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.availability_zone", getAvailabilityZone())
-                .set("$.order.attrs.platform",  getPlatform())
+                .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
@@ -90,15 +90,17 @@ public class RabbitMQClusterAstra extends IProduct {
     }
 
     //Создать пользователя RabbitMQ
-    public void rabbitmqCreateUser(String user) {
+    public void rabbitmqCreateUser(String apd, String risCode, String userName) {
+        JSONObject jsonObject = new JSONObject().append("rabbitmq_users", new JSONObject().put("apd", apd).put("ris_code", risCode).put("name", userName))
+                .put("env_prefix", getEnv().toLowerCase());
         OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_create_user_release").product(this)
-                .data(new JSONObject(String.format("{rabbitmq_users: [{name: \"%s\"}]}", user))).build());
-        Assertions.assertTrue(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта отсутствует пользователь " + user);
+                .data(jsonObject).build());
+        Assertions.assertTrue((OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, userName), Boolean.class)), "У продукта отсутствует пользователь " + userName);
     }
 
     public void rabbitmqDeleteUser(String user) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_users_release").product(this).data(new JSONObject().put("name", user)).build());
-        Assertions.assertFalse(((Boolean) OrderServiceSteps.getProductsField(this, String.format(RABBITMQ_USER, user))), "У продукта присутствует пользователь " + user);
+        Assertions.assertFalse((OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), Boolean.class)), "У продукта присутствует пользователь " + user);
     }
 
     @Step("Удаление продукта")

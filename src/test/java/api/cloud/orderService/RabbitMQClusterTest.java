@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.RabbitMQClusterAstra;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -31,6 +32,8 @@ import static core.utils.AssertUtils.assertContains;
 @DisabledIfEnv("ift")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rabbitmqcluster"), @Tag("prod")})
 public class RabbitMQClusterTest extends Tests {
+    private final static String ADP = RandomStringUtils.randomAlphabetic(5).toLowerCase();
+    private final static String RIS_CODE = RandomStringUtils.randomAlphabetic(5).toLowerCase();
 
     @TmsLink("377645")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -91,7 +94,7 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "[{index}] Создать/Удалить пользователя RabbitMQ {0}")
     void createUser(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.rabbitmqCreateUser("testapiuser");
+            rabbit.rabbitmqCreateUser(ADP,RIS_CODE, "testapiuser");
             rabbit.rabbitmqDeleteUser("testapiuser");
         }
     }
@@ -127,7 +130,7 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "[{index}] Редактирование/Удаление прав на vhost {0}")
     void addVhostAccess(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.rabbitmqCreateUser("vhostUser");
+            rabbit.rabbitmqCreateUser(ADP,RIS_CODE,"vhostUser");
             rabbit.addVhost(Collections.singletonList("vhostAccess"));
             rabbit.editVhostAccess("vhostUser", Arrays.asList("READ", "WRITE", "CONFIGURE"), "vhostAccess");
             rabbit.deleteVhostAccess("vhostUser", "vhostAccess");
@@ -151,7 +154,7 @@ public class RabbitMQClusterTest extends Tests {
     @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
     void checkCreate(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
-            rabbit.rabbitmqCreateUser("sshUser");
+            rabbit.rabbitmqCreateUser(ADP, RIS_CODE, "sshUser");
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_users"), "sshUser");
             rabbit.addVhost(Collections.singletonList("sshVhostAccess"));
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_vhosts"), "sshVhostAccess");

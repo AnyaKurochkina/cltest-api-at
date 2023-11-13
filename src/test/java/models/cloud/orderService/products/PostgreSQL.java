@@ -106,7 +106,7 @@ public class PostgreSQL extends AbstractPostgreSQL {
 
     public void resize(Flavor newFlavor) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
-                .data(new JSONObject().put("flavor", newFlavor.toString()).put("warning", new Object()).put("check_agree", true)).build());
+                .data(new JSONObject().put("flavor", serialize(newFlavor)).put("warning", new JSONObject()).put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(newFlavor.data.cpus, cpusAfter);

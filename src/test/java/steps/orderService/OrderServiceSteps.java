@@ -252,7 +252,7 @@ public class OrderServiceSteps extends Steps {
         }
         if (!actionStatus.equalsIgnoreCase(expectedStatus)) {
             String error = StateServiceSteps.getErrorFromStateService(orderId);
-            if (Objects.isNull(error))
+            if (Objects.isNull(error) || error.equals("[]"))
                 error = "Действие не выполнено по таймауту";
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", orderId, actionStatus, error));
         }

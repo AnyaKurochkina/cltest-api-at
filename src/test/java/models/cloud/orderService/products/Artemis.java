@@ -138,7 +138,7 @@ public class Artemis extends IProduct {
                 .set("$.name", name)
                 .set("$.owner_cert", ownerCert)
                 .build();
-        OrderServiceSteps.runAction(ActionParameters.builder().name("artemis_create_service").product(this).data(obj).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_create_service").product(this).data(obj).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
