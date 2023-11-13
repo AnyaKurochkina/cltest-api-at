@@ -152,11 +152,11 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Отправка action {action.name}")
     public static Response sendAction(ActionParameters action) {
-            final Http request = JsonHelper.getJsonTemplate("/actions/template.json")
-                    .set("$.item_id", action.getItemId())
-                    .set("$.order.attrs", action.getData())
-                    .send(OrderServiceURL);
-        if(Objects.isNull(action.getRole()))
+        final Http request = JsonHelper.getJsonTemplate("/actions/template.json")
+                .set("$.item_id", action.getItemId())
+                .set("$.order.attrs", action.getData())
+                .send(OrderServiceURL);
+        if (Objects.isNull(action.getRole()))
             return request.setProjectId(action.getProjectId(), ORDER_SERVICE_ADMIN)
                     .patch("/v1/projects/{}/orders/{}/actions/{}", action.getProjectId(), action.getOrderId(), action.getName());
         return request.setRole(action.getRole())
@@ -205,10 +205,12 @@ public class OrderServiceSteps extends Steps {
 
         Assertions.assertAll("Проверка выполнения action - " + action.getName() + " у продукта " + action.getOrderId(),
                 () -> {
-                    if (action.getSkipOnPrebilling())
-                        costPreBilling.set(CalcCostSteps.getCostByUid(action.getOrderId(), action.getProjectId()));
-                    else costPreBilling.set(CostSteps.getCostAction(action));
-                    Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
+                    if (action.getCheckPrebilling()) {
+                        if (action.getSkipOnPrebilling())
+                            costPreBilling.set(CalcCostSteps.getCostByUid(action.getOrderId(), action.getProjectId()));
+                        else costPreBilling.set(CostSteps.getCostAction(action));
+                        Assertions.assertTrue(costPreBilling.get() >= 0, "Стоимость после action отрицательная");
+                    }
                 },
                 () -> {
                     actionId.set(sendAction(action).assertStatus(200).jsonPath().get("action_id"));
@@ -445,10 +447,9 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение объекта класса по пути {path}")
     public static <T> T getObjectClass(IProduct product, String path, TypeReference<T> valueTypeRef) {
-        Object object = getProductsField(product, path, Object.class, false);
-        if(object == null) return null;
+        Object object = getProductsField(product, path, null, false);
         String json;
-        if(object instanceof List)
+        if (object instanceof List)
             json = Entity.serializeList(object).toString();
         else
             json = Entity.serialize(object).toString();
