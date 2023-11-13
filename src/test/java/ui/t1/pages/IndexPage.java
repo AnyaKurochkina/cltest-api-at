@@ -12,6 +12,7 @@ import ui.t1.pages.IAM.OrgStructurePage;
 import ui.t1.pages.IAM.serviceAccounts.ServiceAccountsListPage;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
+import ui.t1.pages.cdn.CdnPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.*;
@@ -56,6 +57,7 @@ public class IndexPage {
     Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
     Button linkServiceAccounts = Button.byXpath("//a[.='Сервисные аккаунты']");
     Button linkAudit = Button.byXpath("//a[.='Аудит']");
+    Button linkCdn = Button.byXpath("//a[.='Cloud CDN']");
     SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
     SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
 
@@ -198,6 +200,12 @@ public class IndexPage {
         linkCloudEngine.click();
         linkRouters.click();
         return new RouterList();
+    }
+
+    @Step("Переход на страницу Cloud CDN")
+    public CdnPage goToCdn() {
+        linkCdn.click();
+        return new CdnPage();
     }
 
     @Step("Отключить Cloud Engine")
