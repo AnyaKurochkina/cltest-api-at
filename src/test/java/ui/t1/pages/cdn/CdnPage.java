@@ -4,9 +4,7 @@ import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.t1.cdn.Resource;
-import ui.elements.Button;
-import ui.elements.DataTable;
-import ui.elements.Dialog;
+import ui.elements.*;
 
 import java.time.Duration;
 
@@ -15,7 +13,9 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CdnPage {
 
-    Button addResources = Button.byText("Добавить");
+    private final Button addButton = Button.byText("Добавить");
+    private final Tab sourceGroupsTab = Tab.byText("Группы источников");
+    private final Tab resourcesTab = Tab.byText("Ресурсы");
 
     public CdnPage() {
         $x("//div[text() = 'CDN']").shouldBe(Condition.visible);
@@ -23,7 +23,7 @@ public class CdnPage {
 
     @Step("Создание ресурса CDN")
     public CdnPage createResource(Resource resource) {
-        addResources.click();
+        addButton.click();
         Dialog addResourceDialog = Dialog.byTitle("Добавить ресурс");
         addResourceDialog.setInputByName("domainName", resource.getDomainName());
         addResourceDialog.setInputByName("hostnames-0", resource.getHostName());
@@ -37,9 +37,49 @@ public class CdnPage {
         return this;
     }
 
+    @Step("Удаление ресурса CDN")
+    public boolean deleteResource(String resourceName) {
+        resourcesTab.switchTo();
+        deleteEntity(resourceName);
+        Dialog.byTitle("Удаление ресурса CDN").clickButton("Удалить");
+        return isEntityExist(resourceName);
+    }
+
+    @Step("Создание группы источника CDN")
+    public CdnPage createSourceGroup(String name, String sourceDomainName) {
+        sourceGroupsTab.switchTo();
+        addButton.click();
+        Dialog addSourceGroupDialog = Dialog.byTitle("Добавить группу источников");
+        addSourceGroupDialog.setInputByName("name", name);
+        addSourceGroupDialog.setInputValueV2("Доменное имя источника", sourceDomainName);
+        addSourceGroupDialog.clickButtonByType("submit");
+        Alert.green("Группа источников успешно добавлена");
+        return this;
+    }
+
+    @Step("Удаление группы источника")
+    public boolean deleteSourceGroup(String name) {
+        sourceGroupsTab.switchTo();
+        deleteEntity(name);
+        Dialog.byTitle("Удаление группы источников").clickButton("Удалить");
+        Alert.green("Группа источников успешно удалена");
+        Waiting.sleep(1000);
+        return new ResourcesTable().isColumnValueContains("Название", name);
+    }
+
     @Step("Проверка существования ресурса")
-    public boolean isResourceExist(String name) {
+    public boolean isEntityExist(String name) {
+        Waiting.sleep(2000);
         return new ResourcesTable().isColumnValueEquals("Название", name);
+    }
+
+    private void deleteEntity(String name) {
+        ResourcesTable table = new ResourcesTable();
+        Menu.byElement(table.searchAllPages(t -> table.isColumnValueContains("Название", name))
+                        .getRowByColumnValueContains("Название", name)
+                        .get()
+                        .$x(".//button[@id = 'actions-menu-button']"))
+                .select("Удалить");
     }
 
     public static class ResourcesTable extends DataTable {

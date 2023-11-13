@@ -44,6 +44,7 @@ public class Configure {
     public static String RestrictionServiceUrl;
     public static String Budget;
     public static String SyncService;
+    public static String CdnProxy;
 
     static {
         try {
@@ -92,6 +93,7 @@ public class Configure {
             RestrictionServiceUrl = KONG_URL + "restriction-service";
             Budget = KONG_URL + "budget";
             SyncService = KONG_URL + "sync-service";
+            CdnProxy = KONG_URL + "cdn-proxy";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();

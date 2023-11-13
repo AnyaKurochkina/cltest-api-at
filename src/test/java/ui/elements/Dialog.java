@@ -76,4 +76,9 @@ public class Dialog implements TypifiedElement {
         dialog.$x("descendant::button[.='" + text + "']").shouldBe(Condition.enabled).click();
         Waiting.sleep(200);
     }
+
+    public void clickButtonByType(String type) {
+        dialog.$x("descendant::button[@type='" + type + "']").shouldBe(Condition.enabled).click();
+        Waiting.sleep(200);
+    }
 }
