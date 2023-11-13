@@ -32,11 +32,6 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerPositiveNameTest.b
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerSniTest extends Tests {
-    @Mock
-    static LoadBalancer balancer = LoadBalancer.builder().build()
-            //.buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
-            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/b58c9ed7-7f49-4e7b-a910-956cc697ae52/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
-
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -53,8 +48,7 @@ public class LoadBalancerSniTest extends Tests {
     @ParameterizedTest(name = "Удаление маршрута sni {0}")
     void deleteRouteSni(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            RouteSni route = getExistRouteSni(balancer,"snitcp7634746393.gslb-tcp-4083145101.oslb-synt01.test.vtb.ru");
-            //RouteSni route = addTcpRoute(balancer);
+            RouteSni route = addTcpRoute(balancer);
             balancer.deleteRouteSni(route);
         }
     }
@@ -81,19 +75,18 @@ public class LoadBalancerSniTest extends Tests {
         }
     }
 
-    @TmsLink("")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Проверка sni маршрута {0}")
-    void check(LoadBalancer product) {
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            RouteSni route = addTcpRoute(balancer);
-            //RouteSni route = getExistRouteSni(balancer,"123123.gslb-tcp-3602955324.oslb-synt01.test.vtb.ru");
-            addAliases(balancer, route);
-            balancer.editRouteSni(route, addTcpGslb(balancer));
-            balancer.deleteRouteSni(route);
-        }
-    }
+//    @TmsLink("")
+//    @Tag("actions")
+//    @Source(ProductArgumentsProvider.PRODUCTS)
+//    @ParameterizedTest(name = "Проверка sni маршрута {0}")
+//    void check(LoadBalancer product) {
+//        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+//            RouteSni route = addTcpRoute(balancer);
+//            addAliases(balancer, route);
+//            balancer.editRouteSni(route, addTcpGslb(balancer));
+//            balancer.deleteRouteSni(route);
+//        }
+//    }
 
     private void addAliases(LoadBalancer balancer, RouteSni route) {
         balancer.addAliases(route, Arrays.asList(RouteSni.Alias.builder().name(new Generex("aliassnitcp[0-9]{10}").random()).build(), RouteSni.Alias.builder().name(new Generex("aliassnitcp[0-9]{10}").random()).build()));

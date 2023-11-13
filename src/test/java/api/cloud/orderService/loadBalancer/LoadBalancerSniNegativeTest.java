@@ -24,11 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerSniNegativeTest extends Tests {
-    @Mock
-    static LoadBalancer balancer = LoadBalancer.builder().build()
-            //.buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
-            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/b58c9ed7-7f49-4e7b-a910-956cc697ae52/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
-
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание маршрута sni с невалидными названием {0}")
