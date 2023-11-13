@@ -48,7 +48,7 @@ public class LoadBalancer extends IProduct {
     private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
     private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
     private final String ROUTE_PATH = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s')}";
-    private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}.last()";
+    private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}[-2]";
 
     @Override
     public Entity init() {
@@ -316,7 +316,7 @@ public class LoadBalancer extends IProduct {
     }
 
     public void addHaproxy(int haproxyCount) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_add_haproxy").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_add_haproxy").checkPrebilling(false).product(this)
                 .data(new JSONObject().put("new_haproxy_count", haproxyCount).put("check_agree", true)).timeout(Duration.ofMinutes(40)).build());
     }
 

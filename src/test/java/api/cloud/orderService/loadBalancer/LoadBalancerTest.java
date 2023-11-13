@@ -1,13 +1,13 @@
 package api.cloud.orderService.loadBalancer;
 
 import api.Tests;
+import com.fasterxml.jackson.core.type.TypeReference;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.*;
 import org.junit.MarkDelete;
-import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -18,6 +18,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Collections;
+import java.util.List;
 
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversHttp;
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
@@ -27,8 +28,8 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegat
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerTest extends Tests {
 
-    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
-            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
+//    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
+//            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
 
     @TmsLink("1286242")
     @Tag("actions")
@@ -194,7 +195,7 @@ public class LoadBalancerTest extends Tests {
             Frontend frontend = addTcpSimple(balancer);
             balancer.addGslb(Gslb.builder()
                     .globalname("glb-tcp-public-" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend)
+                    .frontend(frontend.getFrontendName())
                     .build());
         }
     }
@@ -208,7 +209,7 @@ public class LoadBalancerTest extends Tests {
             Frontend frontend = addHttpSimple(balancer);
             balancer.addGslb(Gslb.builder()
                     .globalname("glb-http-public-" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend)
+                    .frontend(frontend.getFrontendName())
                     .build());
         }
     }
@@ -249,7 +250,7 @@ public class LoadBalancerTest extends Tests {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
                     .globalname("glb-tcp-public" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend)
+                    .frontend(frontend.getFrontendName())
                     .build();
             balancer.addGslb(gslb);
             balancer.deleteGslb(gslb);
@@ -275,7 +276,7 @@ public class LoadBalancerTest extends Tests {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
                     .globalname("glb-tcp-public-delete-all" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend)
+                    .frontend(frontend.getFrontendName())
                     .build();
             balancer.addGslb(gslb);
             balancer.deleteAllGslb();
@@ -427,8 +428,17 @@ public class LoadBalancerTest extends Tests {
     void addHaproxy(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.addHaproxy(6);
+            startAllHosts(balancer);
             balancer.addHaproxy(4);
+            startAllHosts(balancer);
         }
+    }
+
+    private void startAllHosts(LoadBalancer balancer) {
+        List<String> hostnames = OrderServiceSteps.getObjectClass(balancer,
+                "data.find{it.type=='cluster'}.data.config.cluster_nodes.findAll{it.main_status=='off'}.name", new TypeReference<List<String>>() {});
+        ChangePublicationsMaintenanceMode modeOn = ChangePublicationsMaintenanceMode.builder().state("active").hostnameOff(hostnames).build();
+        balancer.changePublicationsMaintenanceMode(modeOn);
     }
 
     @TmsLink("SOUL-8005")

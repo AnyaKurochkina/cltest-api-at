@@ -1,6 +1,5 @@
 package models.cloud.orderService.products;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.Data;
@@ -12,7 +11,6 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.orderService.ActionParameters;
@@ -31,15 +29,12 @@ public class TarantoolDataGrid extends IProduct {
     public static final String SERVICE_PATH = "data.find{it.type=='cluster'}.data.config.cluster.find{it.instance=='%s'}.state";
     @ToString.Include
     String osVersion;
-    Flavor flavor;
     String tarantoolVersion;
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/tarantool.json";
         productName = "Tarantool Data Grid Astra";
-        if (Configure.ENV.equalsIgnoreCase("ift"))
-            productName = "Tarantool Data Grid - Astra Linux";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
@@ -53,8 +48,6 @@ public class TarantoolDataGrid extends IProduct {
             setDomain(OrderServiceSteps.getDomain(this));
         if (tarantoolVersion == null)
             tarantoolVersion = getRandomProductVersionByPathEnum("tarantool_version.enum");
-        if (flavor == null)
-            flavor = getMinFlavor();
         return this;
     }
 
@@ -70,7 +63,6 @@ public class TarantoolDataGrid extends IProduct {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
-                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
                 .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())

@@ -102,7 +102,7 @@ public class LoadBalancerPositiveTest extends Tests {
     private Gslb createGslb(Frontend frontend, String globalName) {
         return Gslb.builder()
                 .globalname(globalName)
-                .frontend(frontend)
+                .frontend(frontend.getFrontendName())
                 .build();
     }
 
