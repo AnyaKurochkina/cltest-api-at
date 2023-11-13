@@ -10,6 +10,7 @@ import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Gslb;
 import models.cloud.subModels.loadBalancer.RouteSni;
+import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
@@ -23,6 +24,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerSniNegativeTest extends Tests {
+    @Mock
+    static LoadBalancer balancer = LoadBalancer.builder().build()
+            //.buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
+            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/b58c9ed7-7f49-4e7b-a910-956cc697ae52/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -53,11 +58,19 @@ public class LoadBalancerSniNegativeTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание маршрута sni с ранее используемым бекэндом в другом маршруте {0}")
     void editRouteUsedBackend(LoadBalancer product) {
+        String backendName = "";
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            RouteSni route = addTcpRoute(balancer);
-            Frontend frontend = addTcpFrontend(balancer);
-            Gslb gslb = addTcpGslb(balancer, frontend);
-            AssertResponse.run(() -> balancer.addRouteSni(addRoute(route.getRoutes().get(0).getBackendName(), gslb.getGlobalname(), true)));
+            try {
+                RouteSni routeSni = addTcpRoute(balancer);
+                Frontend frontend = addTcpFrontend(balancer);
+                Gslb gslb = addTcpGslb(balancer, frontend);
+                for(RouteSni.Route route: routeSni.getRoutes()) {
+                    backendName = route.getBackendName();
+                    balancer.addRouteSni(addRoute(backendName, gslb.getGlobalname(),true));
+                }
+            } catch (Throwable e) {
+                assertTrue(e.getMessage().contains("Backend `" + backendName + "` already using in sni route!"));
+            }
         }
     }
 

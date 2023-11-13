@@ -14,6 +14,7 @@ import models.cloud.subModels.loadBalancer.RouteSni;
 import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -26,10 +27,15 @@ import java.util.List;
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
 import static api.cloud.orderService.loadBalancer.LoadBalancerPositiveNameTest.balancer;
 
+
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerSniTest extends Tests {
+    @Mock
+    static LoadBalancer balancer = LoadBalancer.builder().build()
+            //.buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
+            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/b58c9ed7-7f49-4e7b-a910-956cc697ae52/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @TmsLink("")
     @Tag("actions")
@@ -47,7 +53,8 @@ public class LoadBalancerSniTest extends Tests {
     @ParameterizedTest(name = "Удаление маршрута sni {0}")
     void deleteRouteSni(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            RouteSni route = addTcpRoute(balancer);
+            RouteSni route = getExistRouteSni(balancer,"snitcp7634746393.gslb-tcp-4083145101.oslb-synt01.test.vtb.ru");
+            //RouteSni route = addTcpRoute(balancer);
             balancer.deleteRouteSni(route);
         }
     }
@@ -80,12 +87,10 @@ public class LoadBalancerSniTest extends Tests {
     @ParameterizedTest(name = "Проверка sni маршрута {0}")
     void check(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-           // RouteSni route = getExistRouteSni(balancer,"snitcp0307054963.gslb-tcp-2483251909.oslb-synt01.test.vtb.ru");
-            //balancer.deleteRouteSni(route);
             RouteSni route = addTcpRoute(balancer);
+            //RouteSni route = getExistRouteSni(balancer,"123123.gslb-tcp-3602955324.oslb-synt01.test.vtb.ru");
             addAliases(balancer, route);
-            String backendName = addTcpGslb(balancer);
-            balancer.editRouteSni(route, backendName);
+            balancer.editRouteSni(route, addTcpGslb(balancer));
             balancer.deleteRouteSni(route);
         }
     }
