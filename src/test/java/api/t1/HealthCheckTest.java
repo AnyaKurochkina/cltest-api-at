@@ -21,7 +21,8 @@ public class HealthCheckTest extends Tests {
 
     @Test
     public void healthCheckTest() {
-        List<String> urls = Arrays.asList(StateServiceURL, ReferencesURL, SccmManager);
+        List<String> urls = Arrays.asList(StateServiceURL, ReferencesURL, SccmManager, IssueCollectorService, TagsService
+        , SelectorAllocator);
         for (String url : urls) {
             String status = new Http(url)
                     .setRole(Role.CLOUD_ADMIN)
@@ -32,7 +33,7 @@ public class HealthCheckTest extends Tests {
             assertEquals("ok", status);
         }
         List<String> urls2 = Arrays.asList(ProductCatalogURL, CalculatorURL, RestrictionServiceUrl, SyncService, Budget, Day2ServiceURL,
-                AccountManagerURL, FeedServiceURL, SelectorCp, Auditor);
+                AccountManagerURL, FeedServiceURL, SelectorCp, Auditor, ServiceManagerProxy, WaitingService, SecretService);
         for (String url : urls2) {
             new Http(url)
                     .setRole(Role.CLOUD_ADMIN)
@@ -47,11 +48,9 @@ public class HealthCheckTest extends Tests {
                     .assertStatus(200);
         }
 
-        List<String> urls4 = Arrays.asList(ServiceManagerProxy);
+        List<String> urls4 = Arrays.asList(SelectorAllocator);
         for (String url : urls4) {
             new Http(url)
-                    .withServiceToken()
-                    //.setWithoutToken()
                     .setRole(Role.CLOUD_ADMIN)
                     .get("/api/v1/health/")
                     .assertStatus(200);
