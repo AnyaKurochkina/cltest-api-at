@@ -69,6 +69,7 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "[{index}] Реинвентаризация ВМ (Linux) {0}")
     void updateVmInfo(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
             astra.updateVmInfo();
         }
     }
@@ -130,6 +131,7 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "[{index}] Создать/удалить снапшот {0}")
     void createSnapshot(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
             astra.createSnapshot(1);
             astra.deleteSnapshot();
         }

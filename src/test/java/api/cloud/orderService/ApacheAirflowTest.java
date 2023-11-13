@@ -34,7 +34,7 @@ public class ApacheAirflowTest extends Tests {
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
         if ("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
             abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
-
+        abstractPostgreSQL.setSkip(product.isSkip());
         postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess();
         try {
             String dbName = "airflow";
@@ -100,7 +100,7 @@ public class ApacheAirflowTest extends Tests {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.airflowInstallExtras();
-            if (apacheAirflow.isDev()){
+            if (apacheAirflow.isDev()) {
                 String ip = (String) OrderServiceSteps.getProductsField(apacheAirflow, "product_data[0].ip");
                 assertContains(apacheAirflow.executeSsh(SshClient.builder().host(ip).env(apacheAirflow.envType()).build(),
                         "ls /app"), "  cloudera  ", "  extras  ");
