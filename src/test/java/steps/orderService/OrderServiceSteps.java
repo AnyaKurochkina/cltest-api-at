@@ -1,6 +1,5 @@
 package steps.orderService;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import core.enums.Role;
@@ -10,9 +9,9 @@ import core.helper.http.Http;
 import core.helper.http.Response;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.path.json.JsonPath;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
 import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
@@ -445,24 +444,22 @@ public class OrderServiceSteps extends Steps {
         return (T) s;
     }
 
-    @Step("Получение объекта класса по пути {path}")
-    public static <T> T getObjectClass(IProduct product, String path, TypeReference<T> valueTypeRef) {
-        Object object = getProductsField(product, path, null, false);
-        String json;
-        if (object instanceof List)
-            json = Entity.serializeList(object).toString();
-        else
-            json = Entity.serialize(object).toString();
-        return JsonHelper.deserialize(json, valueTypeRef);
+    private static JsonPath getObjectClass(IProduct product){
+        return new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
+                .assertStatus(200)
+                .jsonPath();
     }
 
+    @Step("Получение объекта класса по пути {path}")
+    public static <T> T getObjectClass(IProduct product, String path, TypeRef<T> valueTypeRef) {
+        return getObjectClass(product).getObject(path, valueTypeRef);
+    }
+
+    @Step("Получение поля по пути {path}")
     public static <T> T getObjectClass(IProduct product, String path, Class<T> clazz) {
-        return getObjectClass(product, path, new TypeReference<T>() {
-            @Override
-            public Type getType() {
-                return clazz;
-            }
-        });
+        return getObjectClass(product).getObject(path, clazz);
     }
 
     @Step("Получение сетевого сегмента для продукта {product}")
