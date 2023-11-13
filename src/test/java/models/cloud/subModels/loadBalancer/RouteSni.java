@@ -16,57 +16,28 @@ import java.util.Map;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class RouteSni {
-    public DnsPrefix dnsPrefix;
-    public List<Route> routes;
+    private String globalname;
+    private List<Route> routes;
 
     @Data
-    @NoArgsConstructor
-    public static class DnsPrefix {
-        int ttl;
-        List<Member> members;
-        String monitor;
-        String fallback;
-        String lbMethod;
-        String globalname;
-        MonitorParams monitorParams;
-
-        @Data
-        @NoArgsConstructor
-        public static class Member {
-            String ip;
-            String name;
-            int weight;
-            boolean maintenanceMode;
-        }
-
-        @Data
-        @NoArgsConstructor
-        public static class MonitorParams {
-            int port;
-            int retries;
-            int timeout;
-            boolean useSsl;
-            int interval;
-            String backendName;
-        }
-    }
-
-    @Data
+    @AllArgsConstructor
     public static class Route {
         String backendName;
         String name;
-
-        public Route(String backendName, String name) {
-            this.backendName = backendName;
-            this.name = name;
-        }
     }
 
     @Data
     public static class RouteCheck {
         int index;
+        List<String> aliases;
         String routeName;
         String backendName;
         String frontendName;
+    }
+
+    @Data
+    @Builder
+    public static class Alias {
+        String name;
     }
 }

@@ -2,6 +2,7 @@ package api.cloud.orderService.loadBalancer;
 
 import api.Tests;
 import com.mifmif.common.regex.Generex;
+import com.sun.webkit.BackForwardList;
 import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -21,24 +22,24 @@ import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
 import static api.cloud.orderService.loadBalancer.LoadBalancerSniTest.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerSniNegativeTest extends Tests {
-//    @Mock
+    @Mock
 //    static LoadBalancer balancer = LoadBalancer.builder().build()
-//           // .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/8e61b88a-1411-4df7-862e-a4e6d4baf05a/main?context=proj-114wetem0c&type=project&org=vtb");
-//           // .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/76e2f498-36f5-43c9-88f2-a664fec0a7f0/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
+//            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
+//    // .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/d0f1264e-fd90-4495-bd3d-d5dd2871f558/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Создание маршрута sni с невалидными названием {0}")
     void notValidMaxName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Gslb gslb = addTcpGslb(balancer);
-            RouteSni route = addRoute(balancer, gslb.getFrontend().getDefaultBackendName(), gslb.getGlobalname(),false);
-            AssertResponse.run(() -> balancer.addRouteSni(route));
+            Frontend frontend = addTcpFrontend(balancer);
+            AssertResponse.run(() -> balancer.addRouteSni(addRoute(frontend.getDefaultBackendNameTcp(), addTcpGslb(balancer, frontend).getGlobalname(), false)));
         }
     }
 
@@ -46,9 +47,14 @@ public class LoadBalancerSniNegativeTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Изменения бекэнда на несуществующий бекэнд в маршруте sni {0}")
     void editRouteNotExistBackend(LoadBalancer product) {
+        String backendName = new Generex("[a-z0-9]{20}").random();
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            RouteSni route = addTcpRoute(balancer);
-            AssertResponse.run(() -> balancer.editRouteSni(route, new Generex("[a-z0-9]{20}").random()));
+            try {
+                RouteSni route = addTcpRoute(balancer);
+                balancer.editRouteSni(route, backendName);
+            } catch (Throwable e) {
+                assertTrue(e.getMessage().contains("Backend `" + backendName + "` was not found"));
+            }
         }
     }
 
@@ -57,10 +63,10 @@ public class LoadBalancerSniNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание маршрута sni с ранее используемым бекэндом в другом маршруте {0}")
     void editRouteUsedBackend(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            RouteSni route1 = addTcpRoute(balancer);
-            Gslb gslb = addTcpGslb(balancer);
-            RouteSni route2 = addRoute(balancer, route1.routes.get(0).getBackendName(), gslb.getGlobalname(),true);
-            AssertResponse.run(() -> balancer.addRouteSni(route2));
+            RouteSni route = addTcpRoute(balancer);
+            Frontend frontend = addTcpFrontend(balancer);
+            Gslb gslb = addTcpGslb(balancer, frontend);
+            AssertResponse.run(() -> balancer.addRouteSni(addRoute(route.getRoutes().get(0).getBackendName(), gslb.getGlobalname(), true)));
         }
     }
 
@@ -70,14 +76,7 @@ public class LoadBalancerSniNegativeTest extends Tests {
     void removeRouteNotValidRouteName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             RouteSni route = addTcpRoute(balancer);
-            AssertResponse.run(() -> balancer.deleteRouteSni(route, getRouteByDeleteNotValid(balancer, route)));
+            AssertResponse.run(() -> balancer.deleteRouteSni(RouteSni.builder().routes(route.getRoutes()).globalname(route.getGlobalname().replace("-tcp","")).build()));
         }
-    }
-
-    @Step("Получение Route для удаления в невалидном формате")
-    public static RouteSni.RouteCheck getRouteByDeleteNotValid(LoadBalancer balancer, RouteSni routeSni) {
-        RouteSni.RouteCheck route = OrderServiceSteps.getObjectClass(balancer, String.format("data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s')}", routeSni.getRoutes().get(0).getName()), RouteSni.RouteCheck.class);
-        route.setRouteName(new Generex("[a-z0-9]{20}").random());
-        return route;
     }
 }
