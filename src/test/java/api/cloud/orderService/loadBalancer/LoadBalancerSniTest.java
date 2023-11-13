@@ -32,8 +32,8 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerPositiveNameTest.b
 public class LoadBalancerSniTest extends Tests {
 //    @Mock
 //    static LoadBalancer balancer = LoadBalancer.builder().build()
-//            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
-//             // .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/d0f1264e-fd90-4495-bd3d-d5dd2871f558/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
+//            //.buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
+//              .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/d0f1264e-fd90-4495-bd3d-d5dd2871f558/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
 
     @TmsLink("")
     @Tag("actions")
@@ -74,9 +74,6 @@ public class LoadBalancerSniTest extends Tests {
     @ParameterizedTest(name = "Добавить псевдоним маршрута sni {0}")
     void createAliasesSni(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-//            RouteSni route = getExistRouteSni(balancer,"snitcp3470502953.gslb-tcp-2257439140.oslb-synt01.test.vtb.ru");
-//            addAliases(balancer, route);
-//            OrderServiceSteps.getObjectClass(balancer, String.format("data.find{it.type=='cluster'}.data.config.sni_routes.find{it.aliases.contains('%s')}", "aliassnitcp1008398558"), RouteSni.RouteCheck.class);
             addAliases(balancer, addTcpRoute(balancer));
         }
     }
@@ -87,7 +84,7 @@ public class LoadBalancerSniTest extends Tests {
 //    @ParameterizedTest(name = "Проверка sni маршрута {0}")
 //    void check(LoadBalancer product) {
 //        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-//            //RouteSni route = getExistRouteSni(balancer,"snitcp0307054963.gslb-tcp-2483251909.oslb-synt01.test.vtb.ru");
+//            RouteSni route = getExistRouteSni(balancer,"snitcp0307054963.gslb-tcp-2483251909.oslb-synt01.test.vtb.ru");
 //            //balancer.deleteRouteSni(route);
 //        }
 //    }
@@ -97,7 +94,7 @@ public class LoadBalancerSniTest extends Tests {
     }
 
     static RouteSni addRoute(String backendName, String globalName, boolean valid) {
-        String globalNameFull = OrderServiceSteps.getProductsField(balancer, String.format("data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}.globalname", "gslb-tcp-2020322555"), String.class);
+        String globalNameFull = OrderServiceSteps.getProductsField(balancer, String.format("data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}.globalname", globalName), String.class);
         List<RouteSni.Route> routes = Collections.singletonList(new RouteSni.Route(backendName, new Generex(valid ? "snitcp[0-9]{10}" : "[a-z0-9]{256}").random()));
         return RouteSni.builder().routes(routes).globalname(globalNameFull).build();
     }

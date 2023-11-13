@@ -28,7 +28,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerSniNegativeTest extends Tests {
-    @Mock
+//    @Mock
 //    static LoadBalancer balancer = LoadBalancer.builder().build()
 //            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/df4bcb7c-6139-45dd-b6de-81c5633bfa95/main?context=proj-2xdbtyzqs3&type=project&org=vtb");
 //    // .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/d0f1264e-fd90-4495-bd3d-d5dd2871f558/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
