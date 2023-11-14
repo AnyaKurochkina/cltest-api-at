@@ -25,8 +25,14 @@ public class Select implements TypifiedElement {
     protected final ElementsCollection options = $$x("((/html/body/div)[last()])//*[text()!='']");
     @Getter
     protected SelenideElement element;
-    private final Button btnOpen = Button.byElement(element.$x(".//button[@aria-label='Open']"));
-    private final Button btnClose = Button.byElement(element.$x(".//button[@aria-label='Close']"));
+
+    public Button getBtnOpen() {
+        return Button.byElement(element.$x(".//button[@aria-label='Open']"));
+    }
+
+    public Button getBtnClose() {
+        return Button.byElement(element.$x(".//button[@aria-label='Close']"));
+    }
 
     public Select(SelenideElement element) {
         this.element = element;
@@ -81,7 +87,7 @@ public class Select implements TypifiedElement {
         String currentTitle = getValue();
         if (currentTitle.equals(value))
             return value;
-        btnOpen.click();
+        getBtnOpen().click();
         if (value.equals(RANDOM_VALUE))
             setItem(getRandomIndex());
         else
@@ -93,7 +99,7 @@ public class Select implements TypifiedElement {
     public String setByDataValue(String dataValue) {
         hover();
         Waiting.sleep(() -> !getValue().isEmpty(), Duration.ofSeconds(1));
-        btnOpen.click();
+        getBtnOpen().click();
         if (dataValue.equals(RANDOM_VALUE))
             setItem(getRandomIndex());
         else
@@ -109,7 +115,7 @@ public class Select implements TypifiedElement {
         String currentTitle = getValue();
         if (currentTitle.contains(value))
             return value;
-        btnOpen.click();
+        getBtnOpen().click();
         if (value.equals(RANDOM_VALUE)) {
             setItem(getRandomIndex());
         } else
@@ -129,7 +135,7 @@ public class Select implements TypifiedElement {
         String currentTitle = getValue();
         if (currentTitle.startsWith(value))
             return value;
-        btnOpen.click();
+        getBtnOpen().click();
         if (value.equals(RANDOM_VALUE))
             setItem(getRandomIndex());
         else
