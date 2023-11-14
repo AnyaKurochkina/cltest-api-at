@@ -37,7 +37,7 @@ public class VirtualIpTest extends AbstractComputeTest {
         return v;
     });
 
-    private  final EntitySupplier<Void> prepareVmWidthVip = lazy(() -> {
+    private final EntitySupplier<Void> prepareVmWidthVip = lazy(() -> {
         VirtualIpCreate vip = vipSup.get();
         VmCreate vm = randomVm.get();
         String publicIp = randomPublicIp.get();

@@ -13,6 +13,7 @@ import ui.t1.pages.IAM.serviceAccounts.ServiceAccountsListPage;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
+import ui.t1.pages.cloudEngine.backup.BackupsList;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.*;
 import ui.t1.pages.supportCenter.MySubscriptionsPage;
@@ -48,6 +49,8 @@ public class IndexPage {
     Button linkRouters = Button.byXpath("//a[.='Маршрутизаторы']");
     Button linkImages = Button.byXpath("//a[.='Образы']");
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
+    Button linkBackups = Button.byXpath("//a[.='Резервные копии']");
+
     Button linkHistory = Button.byXpath("//a[.='История действий']");
     Button linkNetworks = Button.byXpath("//a[.='Сети']");
     Button linkTools = Button.byXpath("//a[.='Инструменты']");
@@ -156,6 +159,13 @@ public class IndexPage {
         linkCloudEngine.click();
         linkNetworks.click();
         return new NetworkList();
+    }
+
+    @Step("Переход на страницу Сетевые интерфейсы")
+    public BackupsList goToBackups() {
+        linkCloudEngine.click();
+        linkBackups.click();
+        return new BackupsList();
     }
 
     @Step("Переход на страницу Сетевые интерфейсы")

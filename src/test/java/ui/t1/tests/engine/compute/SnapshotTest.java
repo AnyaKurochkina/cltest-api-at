@@ -28,7 +28,7 @@ public class SnapshotTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Снимки")
     void snapshotList() {
         new IndexPage().goToSnapshots();
-        assertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", "Зона доступности", "Источник", "Размер, ГБ", "Дата создания", "");
+        assertHeaders(new SnapshotList.SnapshotsTable(),"", "Имя", "Описание", Column.AVAILABILITY_ZONE, "Источник", "Размер, ГБ", "Дата создания", "");
     }
 
     @Test
