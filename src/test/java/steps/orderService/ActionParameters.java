@@ -25,6 +25,8 @@ public class ActionParameters {
     private Role role;
     @Builder.Default
     private Boolean checkPrebilling = true;
+    @Builder.Default
+    private String expectedStatus = "success";
 
     private ProductStatus status;
     private IProduct product;
