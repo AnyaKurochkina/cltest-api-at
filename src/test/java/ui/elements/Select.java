@@ -27,11 +27,7 @@ public class Select implements TypifiedElement {
     protected SelenideElement element;
 
     public Button getBtnOpen() {
-        return Button.byElement(element.$x(".//button[@aria-label='Open']"));
-    }
-
-    public Button getBtnClose() {
-        return Button.byElement(element.$x(".//button[@aria-label='Close']"));
+        return Button.byElement(element.$x(".//*[name()='path' and starts-with(@d,'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74')]"));
     }
 
     public Select(SelenideElement element) {
