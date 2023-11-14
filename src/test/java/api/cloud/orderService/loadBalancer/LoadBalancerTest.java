@@ -1,10 +1,10 @@
 package api.cloud.orderService.loadBalancer;
 
 import api.Tests;
-import com.fasterxml.jackson.core.type.TypeReference;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.restassured.common.mapper.TypeRef;
 import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.*;
 import org.junit.MarkDelete;
@@ -27,6 +27,10 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegat
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerTest extends Tests {
+
+//    @Mock
+//    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
+//            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
 
     @TmsLink("1286242")
     @Tag("actions")
@@ -91,7 +95,7 @@ public class LoadBalancerTest extends Tests {
         }
     }
 
-    static Frontend addTcpSimple(LoadBalancer balancer) {
+    Frontend addTcpSimple(LoadBalancer balancer) {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName("backend_tcp_simple")
@@ -433,7 +437,7 @@ public class LoadBalancerTest extends Tests {
 
     private void startAllHosts(LoadBalancer balancer) {
         List<String> hostnames = OrderServiceSteps.getObjectClass(balancer,
-                "data.find{it.type=='cluster'}.data.config.cluster_nodes.findAll{it.main_status=='off'}.name", new TypeReference<List<String>>() {});
+                "data.find{it.type=='cluster'}.data.config.cluster_nodes.findAll{it.main_status=='off'}.name", new TypeRef<List<String>>() {});
         ChangePublicationsMaintenanceMode modeOn = ChangePublicationsMaintenanceMode.builder().state("active").hostnameOff(hostnames).build();
         balancer.changePublicationsMaintenanceMode(modeOn);
     }
