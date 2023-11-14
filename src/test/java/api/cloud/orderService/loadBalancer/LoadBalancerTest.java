@@ -28,9 +28,6 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegat
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerTest extends Tests {
 
-//    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
-//            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
-
     @TmsLink("1286242")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

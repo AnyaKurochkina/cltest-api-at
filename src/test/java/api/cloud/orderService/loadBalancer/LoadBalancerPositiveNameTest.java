@@ -29,10 +29,6 @@ public class LoadBalancerPositiveNameTest extends Tests {
     private static final String MASK_ROUTE = "abcdefghijklmnopqrastuvwxyz.1234567890.";
     private static final String MASK_ADVANCED = "abcdefghijklmnopqrastuvwxyz.ABCDEFGHIJKLMNOPQRSTUVWXYZ-1234567890_";
 
-    @Mock
-    static LoadBalancer balancer = LoadBalancer.builder().build()
-            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/d0f1264e-fd90-4495-bd3d-d5dd2871f558/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
-
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Проверка максимальной длины наименований полей у заказов {0}")

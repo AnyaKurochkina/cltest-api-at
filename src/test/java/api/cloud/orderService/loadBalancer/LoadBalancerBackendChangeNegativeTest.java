@@ -38,11 +38,6 @@ public class LoadBalancerBackendChangeNegativeTest extends Tests {
     static Frontend frontend = Frontend.builder().frontendName(new Generex("load_balancer_negative_test-[0-9]{4}")
             .random()).mode("tcp").defaultBackendNameTcp(backend.getBackendName()).build();
 
-    @Mock
-    static LoadBalancer balancer = LoadBalancer.builder().build()
-              //.buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/37c93f8e-c2ee-40cb-a5d2-008524676f3f/main?context=proj-ln4zg69jek&type=project&org=vtb");
-              .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/76e2f498-36f5-43c9-88f2-a664fec0a7f0/frontends?context=proj-2xdbtyzqs3&type=project&org=vtb");
-
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Редактирование Backend. delete. Несуществующий server.name {0}")
