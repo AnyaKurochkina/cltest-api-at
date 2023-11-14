@@ -214,7 +214,7 @@ public class OrderServiceSteps extends Steps {
                 () -> {
                     actionId.set(sendAction(action).assertStatus(200).jsonPath().get("action_id"));
                     waitStatus(action.getTimeout(), action.getOrderId(), action.getProjectId());
-                    checkActionStatusMethod(action.getOrderId(), action.getProjectId(), actionId.get());
+                    checkActionStatusMethod(action.getOrderId(), action.getProjectId(), actionId.get(), action.getExpectedStatus());
                     if (Objects.nonNull(action.getStatus()))
                         action.getProduct().setStatus(action.getStatus());
                 });
@@ -237,7 +237,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     @Step("Ожидание успешного выполнения action")
-    private static void checkActionStatusMethod(String orderId, String projectId, String actionId) {
+    private static void checkActionStatusMethod(String orderId, String projectId, String actionId, String expectedStatus) {
         String actionStatus = new Http(OrderServiceURL)
                 .disableAttachmentLog()
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
@@ -250,7 +250,7 @@ public class OrderServiceSteps extends Steps {
             String messages = getActionHistoryOutput(orderId, projectId, actionId);
             Assertions.fail(String.format("Результат выполнения action продукта: warning. \nИтоговый статус: %s . \nОшибка: %s", actionStatus, messages));
         }
-        if (!actionStatus.equalsIgnoreCase("success")) {
+        if (!actionStatus.equalsIgnoreCase(expectedStatus)) {
             String error = StateServiceSteps.getErrorFromStateService(orderId);
             if (Objects.isNull(error))
                 error = "Действие не выполнено по таймауту";

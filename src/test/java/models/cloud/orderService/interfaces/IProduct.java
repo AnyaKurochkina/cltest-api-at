@@ -333,7 +333,7 @@ public abstract class IProduct extends Entity {
         if (envType().contains("prod")) {
             OrderServiceSteps.switchProtect(getOrderId(), getProjectId(), false);
         }
-        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).status(ProductStatus.DELETED).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).expectedStatus("deprovisioned").status(ProductStatus.DELETED).build());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(getOrderId(), getProjectId()), 0.0F, "Стоимость после удаления заказа больше 0.0");
         if (Objects.isNull(platform))
             return;
