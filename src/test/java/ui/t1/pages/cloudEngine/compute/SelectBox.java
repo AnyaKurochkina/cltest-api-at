@@ -9,6 +9,7 @@ import ui.elements.Button;
 import ui.elements.Select;
 import ui.elements.TypifiedElement;
 
+import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 
 public class SelectBox implements TypifiedElement {
@@ -30,7 +31,7 @@ public class SelectBox implements TypifiedElement {
     public static void setMarketplaceImage(String image) {
         Button.byText("Cloud Marketplace").click();
         Button.byText("Показать еще").click();
-        findImage(() -> $x("//span[starts-with(text(),'{}')]", image).click(), image);
+        findImage(() -> $$x("//span[starts-with(text(),'{}')]", image).filter(Condition.visible).get(0).click(), image);
         Button.byText("Использовать").click();
     }
 
