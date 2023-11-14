@@ -31,7 +31,7 @@ public class SelectBox implements TypifiedElement {
     public static void setMarketplaceImage(String image) {
         Button.byText("Cloud Marketplace").click();
         Button.byText("Показать еще").click();
-        findImage(() -> $$x("//span[starts-with(text(),'{}')]", image).filter(Condition.visible).get(0).click(), image);
+        findImage(() -> Button.byElement($x("(//span[starts-with(text(),'{}')])[last()]", image)).click(), image);
         Button.byText("Использовать").click();
     }
 
