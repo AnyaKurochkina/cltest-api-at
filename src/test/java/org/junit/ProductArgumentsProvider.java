@@ -53,7 +53,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                     .filter(p -> Objects.nonNull(p.getEnv()))
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
-                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv())));
+                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv(), 1)));
             return list.stream();
         }
     }
