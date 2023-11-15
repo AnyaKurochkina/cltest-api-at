@@ -229,6 +229,16 @@ public class ClickHousePage extends IProductPage {
         });
     }
 
+    public void updateInformationCert() {
+        new ClickHousePage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Обновить информацию о сертификатах Clickhouse");
+    }
+
+    public void updateCertificate() {
+        new ClickHousePage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты Clickhouse");
+    }
+
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable(String columnName) {
             super(columnName);
