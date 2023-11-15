@@ -33,29 +33,29 @@ public class DefectologMMTest extends AbstractTagServiceTest {
     void notExistsAttrs() {
         Inventory inventory = generateInventories(1).get(0);
         Date dateFrom = Date.from(Instant.ofEpochMilli(inventoryTagListV2(context, inventory.getId()).getList().get(0)
-                .getUpdatedAt().getTime()).plusSeconds(1));
+                .getUpdatedAt().getTime()).minusSeconds(1));
 
         StartTask task = StartTask.builder().kwargsParam(StartTask.KwargsParam.builder()
                 .taskValidators(Collections.singletonList("INV-MM-ATTRS")).build()).build();
         Assertions.assertTrue(DefectologSteps.tasksCreate(task));
 
-        int defectId = findDefectIdByInternalName("INV-MM-ATTRS");
+        int defectId = findDefectIdByInternalName("INV-MM-ATTRS", dateFrom);
         DefectPage defectPage = readDefectPage(defectId);
 
     }
 
 
-    private void assertDefectPageContainsInventories(String internalName, List<Inventory> inventories) {
-        int defectId = findDefectIdByInternalName(internalName);
-        DefectPage defectPage = readDefectPage(defectId);
-        inventories.forEach(inventory ->
-                Assertions.assertTrue(defectPage.getPatients().contains(inventory.getId()),
-                        String.format("Inventory %s not found in defectPage %d ", inventory.getId(), defectPage.getId())));
-    }
+//    private void assertDefectPageContainsInventories(String internalName, List<Inventory> inventories) {
+//        int defectId = findDefectIdByInternalName(internalName);
+//        DefectPage defectPage = readDefectPage(defectId);
+//        inventories.forEach(inventory ->
+//                Assertions.assertTrue(defectPage.getPatients().contains(inventory.getId()),
+//                        String.format("Inventory %s not found in defectPage %d ", inventory.getId(), defectPage.getId())));
+//    }
 
-    private int findDefectIdByInternalName(String internalName) {
+    private int findDefectIdByInternalName(String internalName, Date dateFrom) {
         return DefectologSteps.defectsList().stream()
-                .filter(e -> Duration.between(e.getCreatedAt().toInstant(), new Date().toInstant()).getSeconds() < 10)
+                .filter(e -> e.getCreatedAt().after(dateFrom))
                 .filter(e -> e.getGroup().getInternalName().equals(internalName))
                 .findFirst()
                 .orElseThrow(NotFoundElementException::new).getId();
