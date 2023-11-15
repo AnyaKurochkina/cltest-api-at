@@ -168,7 +168,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void resize() {
-        resize("kafka_resize_cluster_vms");
+        resize("resize_kafka_cluster_vms");
     }
 
     @Override

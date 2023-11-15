@@ -27,8 +27,8 @@ public class ClickHouseClusterTest extends Tests {
 
     @TmsLink("1161960")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(ClickHouseCluster product, Integer num) {
         //noinspection EmptyTryBlock
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
         }
@@ -37,8 +37,8 @@ public class ClickHouseClusterTest extends Tests {
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @EnabledIfEnv({"prod", "blue"})
-    @ParameterizedTest(name = "[{index}] Заказ на быстрых дисках {0}")
-    void checkDiskVm(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Заказ на быстрых дисках {0}")
+    void checkDiskVm(ClickHouseCluster product, Integer num) {
         Assumptions.assumeTrue("LT".contains(product.getEnv()), "Тест только для среды LT");
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.checkVmDisk(new HashMap<String, String>() {{
@@ -51,8 +51,8 @@ public class ClickHouseClusterTest extends Tests {
     @TmsLink("1161955")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.expandMountPoint();
         }
@@ -61,8 +61,8 @@ public class ClickHouseClusterTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("1161958"), @TmsLink("1161966")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] ТУЗ локальные, создание/удаление локальной УЗ {0}")
-    void createUserAccount(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] ТУЗ локальные, создание/удаление локальной УЗ {0}")
+    void createUserAccount(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.createUserAccount("test", "qBZ7hUOija_gSSyOEt7rA-.nk-x.R4UzdJvrv8y1JJk.lpp");
             cluster.deleteUserAccount("test");
@@ -72,8 +72,8 @@ public class ClickHouseClusterTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("1161962"), @TmsLink("1161959")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] ТУЗ AD, добавление/удаление {0}")
-    void addUserAd(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] ТУЗ AD, добавление/удаление {0}")
+    void addUserAd(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.addUserAd("user1");
             cluster.deleteUserAd("user1");
@@ -83,8 +83,8 @@ public class ClickHouseClusterTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("1161961"), @TmsLink("1161963")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Группы пользователей AD, добавление/удаление {0}")
-    void addGroupAd(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Группы пользователей AD, добавление/удаление {0}")
+    void addGroupAd(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.deleteGroupAd(cluster.accessGroup());
             cluster.addGroupAd(cluster.accessGroup());
@@ -94,8 +94,8 @@ public class ClickHouseClusterTest extends Tests {
     @Tag("actions")
     @TmsLinks({@TmsLink("1161967"), @TmsLink("1161957")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Группы прикладных администраторов AD, добавление/удаление {0}")
-    void addGroupAdmin(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Группы прикладных администраторов AD, добавление/удаление {0}")
+    void addGroupAdmin(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.deleteGroupAdmin(cluster.accessGroup());
             cluster.addGroupAdmin(cluster.accessGroup());
@@ -105,8 +105,8 @@ public class ClickHouseClusterTest extends Tests {
     @TmsLink("1161956")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Сбросить пароль пользователя {0}")
-    void resetPasswordCustomer(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Сбросить пароль пользователя {0}")
+    void resetPasswordCustomer(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.resetPasswordCustomer();
         }
@@ -116,8 +116,8 @@ public class ClickHouseClusterTest extends Tests {
     @TmsLink("1161968")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.restart();
         }
@@ -126,8 +126,8 @@ public class ClickHouseClusterTest extends Tests {
     @TmsLink("1161965")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверка создания {0}")
-    void checkConnectDb(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Проверка создания {0}")
+    void checkConnectDb(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.checkConnectDb(0);
             cluster.checkConnectDb(1);
@@ -138,8 +138,8 @@ public class ClickHouseClusterTest extends Tests {
     @TmsLink("1161954")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.stopSoft();
             cluster.start();
@@ -150,8 +150,8 @@ public class ClickHouseClusterTest extends Tests {
     @TmsLinks({@TmsLink("1161964"), @TmsLink("1161952")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.stopHard();
             cluster.start();
@@ -160,8 +160,8 @@ public class ClickHouseClusterTest extends Tests {
 
     @TmsLink("1212279")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] AD Проверка создания ВМ {0}")
-    void checkCreate(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] AD Проверка создания ВМ {0}")
+    void checkCreate(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             assertContains(cluster.executeSsh("sudo id"), "root");
         }
@@ -169,8 +169,8 @@ public class ClickHouseClusterTest extends Tests {
 
     @TmsLink("1654650")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить информацию о сертификатах {0}")
-    void updateCertsInfo(ClickHouseCluster product) {
+    @ParameterizedTest(name = "[{1}] Обновить информацию о сертификатах {0}")
+    void updateCertsInfo(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.certsInfo();
         }
@@ -178,9 +178,9 @@ public class ClickHouseClusterTest extends Tests {
 
     @TmsLink("1161953")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(ClickHouseCluster product) {
+    void delete(ClickHouseCluster product, Integer num) {
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
             cluster.deleteObject();
         }

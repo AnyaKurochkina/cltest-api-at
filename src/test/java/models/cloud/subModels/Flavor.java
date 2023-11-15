@@ -8,7 +8,7 @@ public class Flavor {
     @EqualsAndHashCode.Include
     @Getter
     public String name;
-    public String id;
+    public String uid;
     public Data data;
 
     public int getMemory(){
@@ -26,6 +26,6 @@ public class Flavor {
 
     @Override
     public String toString() {
-        return String.format("{\"cpus\": %d, \"memory\": %d, \"name\":\"%s\", \"uuid\":\"%s\"}", data.cpus, data.memory, name, id);
+        return String.format("{\"cpus\": %d, \"memory\": %d, \"name\":\"%s\", \"uuid\":\"%s\"}", data.cpus, data.memory, name, uid);
     }
 }

@@ -37,8 +37,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("377645")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(RabbitMQClusterAstra product, Integer num) {
         //noinspection EmptyTryBlock
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
         }
@@ -48,8 +48,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLink("377638")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.expandMountPoint();
         }
@@ -58,8 +58,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLink("653492")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверить конфигурацию {0}")
-    void refreshVmConfig(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Проверить конфигурацию {0}")
+    void refreshVmConfig(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.refreshVmConfig();
         }
@@ -69,8 +69,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLink("377641")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.restart();
         }
@@ -80,8 +80,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLink("377644")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.stopSoft();
             rabbit.start();
@@ -91,8 +91,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLink("377656")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать/Удалить пользователя RabbitMQ {0}")
-    void createUser(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Создать/Удалить пользователя RabbitMQ {0}")
+    void createUser(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser(ADP,RIS_CODE, "testapiuser");
             rabbit.rabbitmqDeleteUser("testapiuser");
@@ -102,8 +102,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLinks({@TmsLink("377646"), @TmsLink("SOUL-6730")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить сертификаты. Проверка создание бэкапа сертификатов {0}")
-    void updateCerts(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Обновить сертификаты. Проверка создание бэкапа сертификатов {0}")
+    void updateCerts(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbitMQCluster = product.createObjectExclusiveAccess()) {
             Assertions.assertEquals("", rabbitMQCluster.executeSsh("ls /app/tls/backup/"));
             rabbitMQCluster.updateCerts();
@@ -114,8 +114,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLinks({@TmsLink("707975"), @TmsLink("707972")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создание/Удаление vhosts {0}")
-    void deleteVhostAccessVhost(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Создание/Удаление vhosts {0}")
+    void deleteVhostAccessVhost(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             List<String> vhosts = Stream.generate(new Generex("[a-zA-Z0-9]{2,16}")::random)
                     .limit(new Random().nextInt(14) + 1).distinct().collect(Collectors.toList());
@@ -127,8 +127,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLinks({@TmsLink("707976"), @TmsLink("707978")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Редактирование/Удаление прав на vhost {0}")
-    void addVhostAccess(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Редактирование/Удаление прав на vhost {0}")
+    void addVhostAccess(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser(ADP,RIS_CODE,"vhostUser");
             rabbit.addVhost(Collections.singletonList("vhostAccess"));
@@ -141,8 +141,8 @@ public class RabbitMQClusterTest extends Tests {
     @TmsLinks({@TmsLink("377642"), @TmsLink("377643")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.stopHard();
             rabbit.start();
@@ -151,8 +151,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("1060328")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
-    void checkCreate(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] AD Проверка создания {0}")
+    void checkCreate(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser(ADP, RIS_CODE, "sshUser");
             assertContains(rabbit.executeSsh("sudo rabbitmqctl list_users"), "sshUser");
@@ -165,8 +165,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("SOUL-6729")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверка дублирования промежуточных сертификатов RabbitMQ {0}")
-    void checkDuplicateCerts(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Проверка дублирования промежуточных сертификатов RabbitMQ {0}")
+    void checkDuplicateCerts(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             String[] certs = rabbit.executeSsh("cat /app/tls/certs/root.pem").split("-----END CERTIFICATE-----\n");
             Assertions.assertEquals(certs.length, Arrays.stream(certs).distinct().count());
@@ -175,8 +175,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Произвести балансировку очередей {0}")
-    void queueRebalancing(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Произвести балансировку очередей {0}")
+    void queueRebalancing(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.queueRebalancing();
         }
@@ -184,8 +184,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Синхронизировать данные кластера {0}")
-    void dataSynchronization(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Синхронизировать данные кластера {0}")
+    void dataSynchronization(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.dataSynchronization();
         }
@@ -193,8 +193,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить операционную систему {0}")
-    void updateOs(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Обновить операционную систему {0}")
+    void updateOs(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.updateOs();
         }
@@ -202,8 +202,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Вертикальное масштабирование {0}")
-    void verticalScaling(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Вертикальное масштабирование {0}")
+    void verticalScaling(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.verticalScaling();
         }
@@ -211,8 +211,8 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Редактировать группу доступа {0}")
-    void accessGroupsOnTheWeb(RabbitMQClusterAstra product) {
+    @ParameterizedTest(name = "[{1}] Редактировать группу доступа {0}")
+    void accessGroupsOnTheWeb(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             String group = rabbit.accessGroup();
             rabbit.editAccessGroupsOnTheWeb(group, rabbit.getRole());
@@ -221,9 +221,9 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(RabbitMQClusterAstra product) {
+    void delete(RabbitMQClusterAstra product, Integer num) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.deleteObject();
         }

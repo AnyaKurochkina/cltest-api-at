@@ -21,8 +21,8 @@ public class GenericDatabaseTest extends Tests {
     @TmsLink("1731025")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(GenericDatabase product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(GenericDatabase product, Integer num) {
         //noinspection EmptyTryBlock
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
         }
@@ -31,8 +31,8 @@ public class GenericDatabaseTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
-    void checkActions(GenericDatabase product) {
+    @ParameterizedTest(name = "[{1}] Обновить ОС {0}")
+    void checkActions(GenericDatabase product, Integer num) {
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
             Assertions.assertTrue(gb.isActionExist("update_os_vm"));
         }
@@ -41,8 +41,8 @@ public class GenericDatabaseTest extends Tests {
     @TmsLink("1731024")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(GenericDatabase product) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(GenericDatabase product, Integer num) {
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
             gb.expandMountPoint();
         }
@@ -51,8 +51,8 @@ public class GenericDatabaseTest extends Tests {
     @TmsLink("1731026")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
-    void resize(GenericDatabase product) {
+    @ParameterizedTest(name = "[{1}] Изменить конфигурацию {0}")
+    void resize(GenericDatabase product, Integer num) {
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
             gb.resize(gb.getMaxFlavorLinuxVm());
         }
@@ -60,8 +60,8 @@ public class GenericDatabaseTest extends Tests {
 
     @TmsLink("1731023")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
-    void checkCreate(GenericDatabase product) {
+    @ParameterizedTest(name = "[{1}] AD Проверка создания {0}")
+    void checkCreate(GenericDatabase product, Integer num) {
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
             gb.checkCertsBySsh();
         }
@@ -69,9 +69,9 @@ public class GenericDatabaseTest extends Tests {
 
     @TmsLink("1731027")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(GenericDatabase product) {
+    void delete(GenericDatabase product, Integer num) {
         try (GenericDatabase gb = product.createObjectExclusiveAccess()) {
             gb.deleteObject();
         }
