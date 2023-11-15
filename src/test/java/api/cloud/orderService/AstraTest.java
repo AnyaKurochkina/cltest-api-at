@@ -1,6 +1,8 @@
 package api.cloud.orderService;
 
 import api.Tests;
+import core.enums.Role;
+import core.helper.http.Http;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -70,7 +72,12 @@ public class AstraTest extends Tests {
     void updateVmInfo(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
-            astra.updateVmInfo();
+            Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
+            try {
+                astra.updateVmInfo();
+            } finally {
+                Http.removeFixedRole();
+            }
         }
     }
 
@@ -132,8 +139,13 @@ public class AstraTest extends Tests {
     void createSnapshot(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
-            astra.createSnapshot(1);
-            astra.deleteSnapshot();
+            Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
+            try {
+                astra.createSnapshot(1);
+                astra.deleteSnapshot();
+            } finally {
+                Http.removeFixedRole();
+            }
         }
     }
 
