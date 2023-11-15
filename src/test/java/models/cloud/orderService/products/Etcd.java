@@ -114,7 +114,7 @@ public class Etcd extends IProduct {
 
     public void resetPassword(String etcdPassword) {
         JSONObject data = new JSONObject().put("etcd_user", etcdUser).put("etcd_password", etcdPassword);
-        OrderServiceSteps.runAction(ActionParameters.builder().name("etcd_reset_user_pass").product(this).data(data).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("etcd_reset_user_pass_without_ssl").product(this).data(data).build());
         this.etcdPassword = etcdPassword;
         save();
     }
