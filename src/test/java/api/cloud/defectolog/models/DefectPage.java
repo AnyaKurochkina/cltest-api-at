@@ -1,14 +1,15 @@
 package api.cloud.defectolog.models;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import core.helper.Json;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import models.cloud.tagService.Inventory;
+import org.json.JSONObject;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Builder
@@ -22,5 +23,5 @@ public class DefectPage {
     private List<String> healthy;
     private List<String> patients;
     private List<String> diff;
-    private Map<String, Object> extInfo;
+    private Json extInfo;
 }

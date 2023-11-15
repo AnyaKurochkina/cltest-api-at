@@ -2,18 +2,19 @@ package core.helper.http;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import core.helper.Page;
 import io.restassured.path.json.JsonPath;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.SneakyThrows;
-import models.AbstractEntity;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
 import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Objects;
+import java.util.TimeZone;
 
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 
@@ -74,6 +75,8 @@ public class Response {
     @SneakyThrows
     private <T> T extractValue(TypeReference<T> valueTypeRef) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
         return objectMapper.readValue(responseMessage, valueTypeRef);
     }
 
