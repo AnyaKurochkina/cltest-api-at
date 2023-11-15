@@ -30,7 +30,7 @@ public class LoadBalancerSniNegativeTest extends Tests {
     void notValidMaxName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpFrontend(balancer);
-            AssertResponse.run(() -> balancer.addRouteSni(addRoute(frontend.getDefaultBackendNameTcp(), addTcpGslb(balancer, frontend).getGlobalname(), false)));
+            AssertResponse.run(() -> balancer.addRouteSni(addRoute(balancer, frontend.getDefaultBackendNameTcp(), addTcpGslb(balancer, frontend).getGlobalname(), false)));
         }
     }
 
@@ -61,7 +61,7 @@ public class LoadBalancerSniNegativeTest extends Tests {
                 Gslb gslb = addTcpGslb(balancer, frontend);
                 for(RouteSni.Route route: routeSni.getRoutes()) {
                     backendName = route.getBackendName();
-                    balancer.addRouteSni(addRoute(backendName, gslb.getGlobalname(),true));
+                    balancer.addRouteSni(addRoute(balancer, backendName, gslb.getGlobalname(),true));
                 }
             } catch (Throwable e) {
                 assertTrue(e.getMessage().contains("Backend `" + backendName + "` already using in sni route!"));

@@ -25,7 +25,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
-import static api.cloud.orderService.loadBalancer.LoadBalancerPositiveNameTest.balancer;
 
 
 @Epic("Продукты")
@@ -92,7 +91,7 @@ public class LoadBalancerSniTest extends Tests {
         balancer.addAliases(route, Arrays.asList(RouteSni.Alias.builder().name(new Generex("aliassnitcp[0-9]{10}").random()).build(), RouteSni.Alias.builder().name(new Generex("aliassnitcp[0-9]{10}").random()).build()));
     }
 
-    static RouteSni addRoute(String backendName, String globalName, boolean valid) {
+    static RouteSni addRoute(LoadBalancer balancer, String backendName, String globalName, boolean valid) {
         String globalNameFull = OrderServiceSteps.getProductsField(balancer, String.format("data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}.globalname", globalName), String.class);
         List<RouteSni.Route> routes = Collections.singletonList(new RouteSni.Route(backendName, new Generex(valid ? "snitcp[0-9]{10}" : "[a-z0-9]{256}").random()));
         return RouteSni.builder().routes(routes).globalname(globalNameFull).build();
@@ -148,7 +147,7 @@ public class LoadBalancerSniTest extends Tests {
                 .frontend(frontend.getFrontendName())
                 .build();
         balancer.addGslb(gslb);
-        RouteSni route = addRoute(backend.getBackendName(), gslb.getGlobalname(),true);
+        RouteSni route = addRoute(balancer, backend.getBackendName(), gslb.getGlobalname(),true);
         balancer.addRouteSni(route);
         return route;
     }
