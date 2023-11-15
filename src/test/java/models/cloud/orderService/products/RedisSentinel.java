@@ -91,7 +91,7 @@ public class RedisSentinel extends IProduct {
     //Изменить конфигурацию
     public void resize(Flavor flavor) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
-                .data(new JSONObject().put("flavor", serialize(flavor)).put("warning", new JSONObject()).put("check_agree", true)).build());
+                .data(new JSONObject().put("flavor", flavor.toJson()).put("warning", new JSONObject()).put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
