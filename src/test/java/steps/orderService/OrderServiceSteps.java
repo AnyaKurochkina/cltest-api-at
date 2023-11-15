@@ -264,7 +264,7 @@ public class OrderServiceSteps extends Steps {
         do {
             Waiting.sleep(20000);
             status = getStatus(orderId, projectId);
-        } while ((status.equals("pending") || status.equals("changing") || status.isEmpty())
+        } while ((status.equals("pending") || status.equals("changing")|| status.equals("removing") || status.isEmpty())
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
     }
 
