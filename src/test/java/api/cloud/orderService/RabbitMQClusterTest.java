@@ -32,8 +32,8 @@ import static core.utils.AssertUtils.assertContains;
 @DisabledIfEnv("ift")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("rabbitmqcluster"), @Tag("prod")})
 public class RabbitMQClusterTest extends Tests {
-    private final static String ADP = RandomStringUtils.randomAlphabetic(5).toLowerCase();
-    private final static String RIS_CODE = RandomStringUtils.randomAlphabetic(5).toLowerCase();
+    private final static String ADP = RandomStringUtils.randomNumeric(5).toLowerCase();
+    private final static String RIS_CODE = RandomStringUtils.randomNumeric(5).toLowerCase();
 
     @TmsLink("377645")
     @Source(ProductArgumentsProvider.PRODUCTS)
