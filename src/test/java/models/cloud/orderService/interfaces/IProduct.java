@@ -398,7 +398,7 @@ public abstract class IProduct extends Entity {
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
-                .data(new JSONObject().put("flavor", serialize(flavor)).put("warning", new JSONObject()).put("accept", true)).build());
+                .data(new JSONObject().put("flavor", flavor.toJson()).put("warning", new JSONObject()).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
