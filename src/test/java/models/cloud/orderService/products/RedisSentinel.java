@@ -119,7 +119,7 @@ public class RedisSentinel extends IProduct {
 
     public void resetPassword() {
         String password = "UEijLKcQJN2pZ0Iqvxh1EXCuZ86pPGiEpdxwLRLWL4QnIOG2KPlGrw5jkLEScQZ9";
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_revert_config").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("reset_sentinel_redis_user_password").product(this)
                 .data(new JSONObject().put("redis_password", password).put("user_name", appUser)).build());
         appUserPassword = password;
         save();
