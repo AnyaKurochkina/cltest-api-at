@@ -311,7 +311,7 @@ public abstract class IProduct extends Entity {
 
     public boolean isActionExist(String action) {
         Assumptions.assumeTrue(isDev(), "Тест включен только для dev среды");
-        return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name == '%s'}", action));
+        return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name.contains('%s')}", action));
     }
 
     protected void checkConnectDb(String dbName, String user, String password, String url) throws ConnectException {
