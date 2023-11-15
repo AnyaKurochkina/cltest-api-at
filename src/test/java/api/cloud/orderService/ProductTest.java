@@ -28,7 +28,7 @@ public class ProductTest extends Tests {
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
     @TmsLink("584453")
-    @ParameterizedTest(name = "[{index}] Перенос заказа. ВМ {0} при одинаковых префиксах")
+    @ParameterizedTest(name = "Перенос заказа. ВМ {0} при одинаковых префиксах")
     public void moveProductWithEqualsPrefix(Astra resource) {
         try (Astra product = resource.createObjectExclusiveAccess()) {
             Project projectSource = Project.builder().id(product.getProjectId()).build().createObject();
@@ -91,7 +91,7 @@ public class ProductTest extends Tests {
     }
 
 //    @Source(ProductArgumentsProvider.ONE_PRODUCT)
-//    @ParameterizedTest(name = "[{index}] Перенос заказа. ВМ {0} при одинаковых префиксах")
+//    @ParameterizedTest(name = "Перенос заказа. ВМ {0} при одинаковых префиксах")
 //    @DisplayName("Списание средств за продукт")
 //    public void moveProductWithoutEqualsPrefix(Rhel resource) {
 //        try (Rhel product = resource.createObjectExclusiveAccess()) {

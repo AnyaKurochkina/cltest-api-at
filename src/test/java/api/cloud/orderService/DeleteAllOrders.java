@@ -33,11 +33,11 @@ import static api.routes.VpcApi.getSecurityGroupsApiV1ProjectsProjectNameSecurit
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteAllOrders extends Tests {
 
-    @ParameterizedTest(name = "[{index}] {0}")
+    @ParameterizedTest(name = "[{1}] {0}")
     @Tag("deleteAll")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Удаление всех успешных заказов из проекта")
-    public void deleteOrders(String env) {
+    public void deleteOrders(String env, Integer num) {
         OrderServiceSteps.deleteOrders(env, label -> label.startsWith("AT-API"));
     }
 

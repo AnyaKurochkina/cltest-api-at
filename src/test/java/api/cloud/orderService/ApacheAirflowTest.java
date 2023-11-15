@@ -50,8 +50,8 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("1421430")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Создать {0}")
+    void create(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         //noinspection EmptyTryBlock
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
@@ -61,8 +61,8 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("1421459")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expand(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Расширить {0}")
+    void expand(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.expandMountPoint();
@@ -72,8 +72,8 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить сертификаты {0}")
-    void updateCerts(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Обновить сертификаты {0}")
+    void updateCerts(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.updateCerts();
@@ -83,8 +83,8 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить группы добавления DAG-файлов {0}")
-    void updateGroupAddDagFiles(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Изменить группы добавления DAG-файлов {0}")
+    void updateGroupAddDagFiles(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             String accessGroupTechNew = apacheAirflow.accessGroup("service-accounts", "AT airflow new group");
@@ -95,8 +95,8 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Установить Cloudera CDH {0}")
-    void airflowInstallExtras(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Установить Cloudera CDH {0}")
+    void airflowInstallExtras(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.airflowInstallExtras();
@@ -111,8 +111,8 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить группы доступа к консоли управления {0}")
-    void airflowChangeWebAccess(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Изменить группы доступа к консоли управления {0}")
+    void airflowChangeWebAccess(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.airflowChangeWebAccess(Arrays.asList(apacheAirflow.additionalAccessGroup(), apacheAirflow.accessGroup()));
@@ -122,8 +122,8 @@ public class ApacheAirflowTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
-    void updateOs(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Обновить ОС {0}")
+    void updateOs(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.updateOs();
@@ -134,8 +134,8 @@ public class ApacheAirflowTest extends Tests {
     @MarkDelete
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
-    void delete(ApacheAirflow product, PostgreSQL ignore) {
+    @ParameterizedTest(name = "[{2}] Удалить {0}")
+    void delete(ApacheAirflow product, PostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow airflow = product.createObjectExclusiveAccess()) {
             airflow.deleteObject();
