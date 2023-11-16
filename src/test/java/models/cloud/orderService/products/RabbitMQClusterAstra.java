@@ -30,7 +30,7 @@ import java.util.Random;
 @NoArgsConstructor
 @SuperBuilder
 public class RabbitMQClusterAstra extends IProduct {
-    private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.any{it.name=='%s'}";
+    private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.any{it.name.contains('%s')}";
     private final static String RABBIT_CLUSTER_VHOST = "data.find{it.data.config.containsKey('vhosts')}.data.config.vhosts.any{it.name=='%s'}";
     private final static String RABBIT_CLUSTER_VHOST_ACCESS = "data.find{it.data.config.containsKey('vhost_access')}.data.config.vhost_access.any{it.vhost_name=='%s'}";
     String role;
@@ -115,10 +115,9 @@ public class RabbitMQClusterAstra extends IProduct {
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
-        super.updateCerts("rabbitmq_update_certs_release");
-//        dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, "attrs.preview_items.data.find{it.config.containsKey('certificate_expiration')}.config.certificate_expiration"));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_update_certs_release").product(this)
+                .data(new JSONObject().put("dumb", "empty").put("accept", true)).build());
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, certPath));
-//        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата больше либо равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 

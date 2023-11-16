@@ -4,9 +4,9 @@
     "product_id": "dd04d23b-44c9-4c4a-81bc-55302f39a655",
     "attrs": {
       "platform": "ceph",
-      "availability_zone": "5",
+      "data_center": "5",
       "net_segment": "prod-srv-app",
-      "storage_type": "nvme"
+      "storage_type": "hdd"
     },
     "count": 1,
     "label": "S3 CEPH Tenant",

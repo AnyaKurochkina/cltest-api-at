@@ -35,6 +35,7 @@ public class ActionParameters {
         public ActionParametersBuilder product(IProduct product) {
             this.projectId = product.getProjectId();
             this.orderId = product.getOrderId();
+            this.product = product;
             return this;
         }
     }
