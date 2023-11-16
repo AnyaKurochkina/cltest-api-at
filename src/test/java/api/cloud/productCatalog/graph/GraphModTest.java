@@ -215,7 +215,7 @@ public class GraphModTest extends Tests {
     }
 
     @DisplayName("Получение графа с несуществующим ключем в модификациях")
-    @TmsLink("")
+    @TmsLink("SOUL-8276")
     @Test
     public void getGraphWithNotExistKeysInModificationTest() {
         String key = RandomStringUtils.randomAlphabetic(5).toLowerCase();
