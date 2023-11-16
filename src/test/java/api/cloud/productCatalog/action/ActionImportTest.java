@@ -217,5 +217,33 @@ public class ActionImportTest extends Tests {
         Action actionById = getActionById(action.getActionId());
         assertEquals(description, actionById.getDescription());
     }
+
+    @DisplayName("Проверка current_version при импорте уже существующего действия")
+    @TmsLink("SOUL-7756")
+    @Test
+    public void checkCurrentVersionWhenAlreadyExistActionImportTest() {
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/checkCurrentVersion.json";
+        Action action = Action.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
+                .version("1.0.1")
+                .build()
+                .createObject();
+        DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
+        action.deleteObject();
+        Action createdAction = Action.builder()
+                .name(action.getName())
+                .version("1.0.0")
+                .build()
+                .createObject();
+        partialUpdateAction(createdAction.getActionId(), new JSONObject()
+                .put("priority", 4)
+                .put("version", "1.1.1"));
+        partialUpdateAction(createdAction.getActionId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        importAction(filePath);
+        DataFileHelper.delete(filePath);
+        Action actionById = getActionById(createdAction.getActionId());
+        assertEquals("1.1.1", actionById.getCurrentVersion());
+    }
 }
 

@@ -10,10 +10,8 @@ import models.cloud.authorizer.Project;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static core.utils.AssertUtils.assertContains;
 
@@ -56,8 +54,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -75,7 +73,7 @@ public class PostgreSQL extends AbstractPostgreSQL {
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
@@ -107,7 +105,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
     }
 
     public void resize(Flavor newFlavor) {
-        OrderServiceSteps.executeAction("resize_two_layer", this, new JSONObject("{\"flavor\": " + newFlavor.toString() + ",\"warning\":{}}").put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
+                .data(new JSONObject().put("flavor", newFlavor.toString()).put("warning", new Object()).put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(newFlavor.data.cpus, cpusAfter);
@@ -117,12 +116,12 @@ public class PostgreSQL extends AbstractPostgreSQL {
     }
 
     @Override
-    protected void cmdRestartPostgres(){
+    protected void cmdRestartPostgres() {
         executeSsh("sudo -i systemctl restart postgresql-*");
     }
 
     @Override
-    protected void cmdSetMaxConnections(int connections){
+    protected void cmdSetMaxConnections(int connections) {
         String cmd = String.format("sudo -iu postgres psql -c \"Alter system set max_connections to '%s';\"", connections);
         assertContains(executeSsh(cmd), "ALTER SYSTEM");
     }

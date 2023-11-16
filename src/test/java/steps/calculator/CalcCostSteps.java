@@ -28,19 +28,15 @@ public class CalcCostSteps extends Steps {
         return cost;
     }
 
-    /**
-     * @param  product продукт реализующий абстрактный класс {@code IProduct}
-     * @return текущий расход в минуту. Может вернуть {@code Null}
-     */
     @Step("Получение расхода для заказа")
-    public static Float getCostByUid(IProduct product) {
+    public static Float getCostByUid(String orderId, String projectId) {
         Float cost = new Http(CalculatorURL)
-                    .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
-                    .get("/api/v1/projects/{}/order/{}/cost/", product.getProjectId(), product.getOrderId())
+                    .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                    .get("/api/v1/projects/{}/order/{}/cost/", projectId, orderId)
                     .assertStatus(200)
                     .jsonPath()
                     .get("cost");
-        log.info("Расход для заказа {}: {}", product.getOrderId(), cost);
+        log.info("Расход для заказа {}: {}", orderId, cost);
         return cost;
     }
 }

@@ -65,7 +65,6 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             PostgreSqlClusterAstraOrderPage orderPage = new PostgreSqlClusterAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             if (product.isDev() || product.isTest() )
@@ -117,7 +116,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Получить актуальную конфигурацию")
     void getActualConfiguration() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::getActualConfiguration);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::getActualConfiguration);
     }
 
     @Test
@@ -135,7 +134,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQL Cluster Astra Linux. Максимизировать max_connections")
     void changeMaxConnections() {
         PostgreSqlClusterAstraPage pSqlPage = new PostgreSqlClusterAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("538"));
     }
 
     @Test

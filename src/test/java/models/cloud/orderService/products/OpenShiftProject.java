@@ -1,18 +1,18 @@
 package models.cloud.orderService.products;
 
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.orderService.ResourcePool;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Role;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.portalBack.PortalBackSteps;
 
@@ -39,14 +39,14 @@ public class OpenShiftProject extends IProduct {
         jsonTemplate = "/orders/openshift_project.json";
         productName = "OpenShift project (Ключ Астром)";
         initProduct();
-        if(roles == null) {
+        if (roles == null) {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(getProjectId(), "", "compute");
             roles = Collections.singletonList(new Role("edit", accessGroup));
         }
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         return this;
     }
 
@@ -71,7 +71,7 @@ public class OpenShiftProject extends IProduct {
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .set("$.order.label", getLabel())
@@ -86,11 +86,11 @@ public class OpenShiftProject extends IProduct {
                 shdQuoteValue,
                 roles.get(0).getGroupId());
         roles.get(0).setName("view");
-        OrderServiceSteps.executeAction("update_openshift_project", this, new JSONObject(data), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("update_openshift_project").product(this).data(new JSONObject(data)).build());
         save();
         Assertions.assertEquals(2, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.data.config.quota.memory"), "Память не изменилась");
         Assertions.assertEquals("view", OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.data.config.roles[0].role"), "Роль не изменилась");
-        if (shdQuoteValue.equals("1")){
+        if (shdQuoteValue.equals("1")) {
             Assertions.assertEquals(1, OrderServiceSteps.getProductsField(this, "data.find{it.type=='project'}.data.config.quota.storage.sc-nfs-netapp-q"), "СХД не изменился на 1");
         }
     }

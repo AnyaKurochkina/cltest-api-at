@@ -13,6 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -31,17 +32,17 @@ public class Ubuntu extends IProduct {
         jsonTemplate = "/orders/ubuntu_general_application.json";
         productName = "Ubuntu Linux";
         initProduct();
-        if(osVersion == null)
+        if (osVersion == null)
             osVersion = getRandomOsVersion();
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
-        if(flavor == null)
+        if (flavor == null)
             flavor = getMinFlavor();
         return this;
     }
@@ -60,7 +61,7 @@ public class Ubuntu extends IProduct {
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup())
@@ -73,7 +74,7 @@ public class Ubuntu extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     //Перезагрузить по питанию
@@ -100,7 +101,7 @@ public class Ubuntu extends IProduct {
         resize("resize_vm", flavor);
     }
 
-    public void expandMountPoint(){
+    public void expandMountPoint() {
         expandMountPoint("expand_mount_point_new", "/app", 10);
     }
 

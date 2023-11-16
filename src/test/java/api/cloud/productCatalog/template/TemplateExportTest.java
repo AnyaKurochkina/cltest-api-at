@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 import static steps.productCatalog.TemplateSteps.*;
 
@@ -77,5 +78,20 @@ public class TemplateExportTest extends Tests {
         assertEquals(template.getLastVersion(), jsonObject.get("last_version_str").toString());
         assertEquals(template.getName(), jsonObject.get("name").toString());
         assertEquals(template.getVersion(), jsonObject.get("version").toString());
+    }
+
+    @DisplayName("Проверка current_version при экспорте шаблона")
+    @TmsLink("SOUL-7773")
+    @Test
+    public void checkCurrentVersionTemplateExportTest() {
+        String templateName = "check_current_version_template_export_test_api";
+        Template template = createTemplateByName(templateName);
+        partialUpdateTemplate(template.getId(), new JSONObject()
+                .put("priority", 5)
+                .put("version", "1.1.1"));
+        partialUpdateTemplate(template.getId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        String currentVersion = exportTemplateById(template.getId()).jsonPath().getString("Template.current_version");
+        assertNull(currentVersion);
     }
 }

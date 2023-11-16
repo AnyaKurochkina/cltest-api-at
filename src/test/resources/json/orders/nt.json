@@ -12,12 +12,13 @@
       "platform": "vSphere",
       "on_support": false,
       "os_version": "7.9",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       }
     },
     "count": 1,
-    "label": "NT-TEST"
+    "label": "NT-TEST",
+    "lifetime": null
   }
 }

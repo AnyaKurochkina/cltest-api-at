@@ -29,6 +29,7 @@ Redis:
 ApacheKafkaCluster:
   - options:
       - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
 
 PostgresSQLCluster:
   - options:

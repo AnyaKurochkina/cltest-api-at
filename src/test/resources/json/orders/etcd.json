@@ -15,11 +15,12 @@
       "extra_nics": [],
       "on_support": false,
       "os_version": "1.7",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
       "nodes_count": 3,
+      "use_ssl": false,
       "cluster_name": "cluster_name",
       "etcd_version": "3.5.1",
       "etcd_password": "MQVyiHVxApaGiaOPCvh6HPvfPaHKo15RIHH",
@@ -46,6 +47,7 @@
       ]
     },
     "count": 1,
-    "label": "Etcd"
+    "label": "Etcd",
+    "lifetime": null
   }
 }

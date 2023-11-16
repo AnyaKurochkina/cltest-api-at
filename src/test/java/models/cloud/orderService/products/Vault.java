@@ -16,6 +16,7 @@ import models.cloud.orderService.interfaces.ProductStatus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Arrays;
@@ -49,7 +50,7 @@ public class Vault extends IProduct {
 
     public void addRule(String group, String ... policies){
         JSONObject body = new JSONObject().put("name", new JSONArray().put(group)).put("policies", new JSONArray(policies));
-        OrderServiceSteps.executeAction("vault_add_acl", this, body);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vault_add_acl").product(this).data(body).build());
         @SuppressWarnings(value = "unchecked")
         List<String> list = OrderServiceSteps.getProductsField(this, String.format(POLICIES_PATH, group), List.class);
         assertEqualsList(list, Arrays.asList(policies));
@@ -57,14 +58,14 @@ public class Vault extends IProduct {
 
     public void changeRule(String group, String ... policies){
         JSONObject body = new JSONObject().put("name", group).put("policies", new JSONArray(policies));
-        OrderServiceSteps.executeAction("vault_set_acl", this, body);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vault_set_acl").product(this).data(body).build());
         @SuppressWarnings(value = "unchecked")
         List<String> list = OrderServiceSteps.getProductsField(this, String.format(POLICIES_PATH, group), List.class);
         assertEqualsList(list, Arrays.asList(policies));
     }
 
     public void deleteRule(String group){
-        OrderServiceSteps.executeAction("vault_delete_acl", this, new JSONObject().put("name", group));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vault_delete_acl").product(this).data(new JSONObject().put("name", group)).build());
         Assertions.assertFalse(OrderServiceSteps.getProductsField(this, String.format(ACL_PATH, group), Boolean.class));
     }
 

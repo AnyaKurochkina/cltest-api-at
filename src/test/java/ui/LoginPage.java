@@ -28,13 +28,13 @@ public abstract class LoginPage {
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
-        TypifiedElement.checkProject();
         final String theme = "\"light\"";
         final String key = "themeType";
         if(!Objects.equals(Selenide.sessionStorage().getItem(key), theme)) {
             Selenide.sessionStorage().setItem(key, theme);
-            TypifiedElement.refreshPage();
+            Selenide.refresh();
         }
+        TypifiedElement.checkProject();
     }
 
     protected void signInRole(Role role) {

@@ -29,7 +29,6 @@ public class NewOrderPage {
     protected Input countInput = Input.byLabel("Количество");
     protected Input labelInput = Input.byLabel("Метка");
     protected Select segmentSelect = Select.byLabel("Сетевой сегмент");
-    protected Select dataCentreSelect = Select.byLabel("Дата-центр");
     protected Select platformSelect = Select.byLabel("Платформа");
     protected Select osVersionSelect = Select.byLabel("Версия ОС");
     protected Select versionWildfly = Select.byLabel("Версия Wildfly");
@@ -39,6 +38,8 @@ public class NewOrderPage {
     protected Select roleSelect = Select.byLabel("Роль");
     protected Select groupSelect = Select.byLabel("Группы");
     protected Select group2Select = Select.byLabel("Группы",2);
+    protected Select groupManagerSelect = Select.byLabel("Manager");
+    protected Select groupAdministratorSelect = Select.byLabel("Administrator");
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     //раскрывающийся список

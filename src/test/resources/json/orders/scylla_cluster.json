@@ -15,7 +15,7 @@
       "extra_nics": [],
       "on_support": true,
       "os_version": "1.7",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "test-srv-perf"
       },
@@ -50,6 +50,7 @@
       ]
     },
     "count": 1,
-    "label": "ScyllaDB Cluster Astra"
+    "label": "ScyllaDB Cluster Astra",
+    "lifetime": null
   }
 }

@@ -58,7 +58,6 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
             PostgreSqlAstraOrderPage orderPage = new PostgreSqlAstraOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(product.accessGroup());
@@ -135,7 +134,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Расширить точку монтирования")
     void expandDisk() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", $x("(//td[.='postgresql'])[1]")));
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", $x("(//td[.='—'])[1]")));
     }
 
     @Test

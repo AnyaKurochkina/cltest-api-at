@@ -35,7 +35,8 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     private String title;
     private String version_changed_by_user;
     private String version;
-    private String current_version;
+    @JsonProperty("current_version")
+    private String currentVersion;
     private String object_info;
     private String last_version;
     private String version_create_dt;
@@ -61,7 +62,7 @@ public class Jinja2Template extends Entity implements IProductCatalog {
                 .set("$.jinja2_data", jinja2Data)
                 .set("$.version_changed_by_user", version_changed_by_user)
                 .setIfNullRemove("$.version", version)
-                .set("$.current_version", current_version)
+                .set("$.current_version", currentVersion)
                 .set("$.last_version", last_version)
                 .set("$.version_create_dt", version_create_dt)
                 .set("$.version_list", version_list)

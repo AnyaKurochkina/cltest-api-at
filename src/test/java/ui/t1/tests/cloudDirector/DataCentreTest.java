@@ -101,12 +101,6 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("692723"), @TmsLink("692724")})
     @DisplayName("VMware. Управление дисковой подсистемой VDC. Добавление/Удаление профиля")
     public void addProfileTest() {
-//        String name = "";
-//        if (Configure.ENV.equals("t1prod")) {
-//            name = "SP-Common01";
-//        } else {
-//            name = "SP-Common01";
-//        }
         StorageProfile profile = new StorageProfile("SP-Common01", "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())

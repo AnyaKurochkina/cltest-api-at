@@ -35,6 +35,8 @@ public class ImagesTest extends AbstractComputeTest {
         new IndexPage().goToImages().selectImage(disk.getName()).markForDeletion(new ImageEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setUserImage(disk.getName())
                 .setDeleteOnTermination(true)
                 .setName(disk.getName())

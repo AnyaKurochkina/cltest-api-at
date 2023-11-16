@@ -12,13 +12,13 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.GlobalUser;
-import models.cloud.authorizer.Organization;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
@@ -63,8 +63,8 @@ public class Artemis extends IProduct {
             artemisVersion = getRandomProductVersionByPathEnum("artemis_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -81,14 +81,13 @@ public class Artemis extends IProduct {
     }
 
     public JSONObject toJson() {
-        Organization org = Organization.builder().type("default").build().createObject();
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.cluster_name", "at-" + new Random().nextInt())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.artemis_version", artemisVersion)
@@ -131,7 +130,7 @@ public class Artemis extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     public void createService(String name, String ownerCert) {
@@ -139,7 +138,7 @@ public class Artemis extends IProduct {
                 .set("$.name", name)
                 .set("$.owner_cert", ownerCert)
                 .build();
-        OrderServiceSteps.executeAction("vtb-artemis_create_service", this, obj, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("artemis_create_service").product(this).data(obj).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
@@ -161,26 +160,28 @@ public class Artemis extends IProduct {
     }
 
     public void createClient(Client client) {
-        OrderServiceSteps.executeAction("vtb-artemis_create_client", this, serialize(client), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_create_client").product(this).data(serialize(client)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(CLIENT_NAME_PATH, client.getName())));
-        if(!client.getServiceNames().isEmpty())
-            for(String serviceName : client.getServiceNames())
+        if (!client.getServiceNames().isEmpty())
+            for (String serviceName : client.getServiceNames())
                 Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(RELATIONSHIP_PATH, client.getName(), serviceName)));
     }
 
     public void deleteClient(String name) {
-        OrderServiceSteps.executeAction("vtb-artemis_delete_client", this, new JSONObject("{\"name\":\"" + name + "\"}"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_delete_client").product(this)
+                .data(new JSONObject().put("name", name)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(CLIENT_NAME_PATH, name)));
     }
 
 
     public void deleteService(String name) {
-        OrderServiceSteps.executeAction("vtb-artemis_delete_service", this, new JSONObject("{\"name\":\"" + name + "\"}"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_delete_service").product(this)
+                .data(new JSONObject().put("name", name)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
     public void exportConf() {
-        OrderServiceSteps.executeAction("vtb-artemis_export_conf", this, null);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_export_conf").product(this).build());
         GlobalUser user = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)
@@ -195,6 +196,7 @@ public class Artemis extends IProduct {
     }
 
     public static String CERT_END_DATE = "data.find{it.data.config.containsKey('cert_end_date')}.data.config.cert_end_date";
+
     @SneakyThrows
     public void updateCerts() {
         Date dateBeforeUpdate;

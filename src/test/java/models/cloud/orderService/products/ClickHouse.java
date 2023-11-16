@@ -13,6 +13,7 @@ import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.net.ConnectException;
@@ -80,13 +81,13 @@ public class ClickHouse extends IProduct {
             clickhouseBb = "dbname";
         if (chVersion == null)
             chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
-        if(segment == null)
+        if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
-        if(platform == null)
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
+        if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
-        if(domain == null)
+        if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         if (flavor == null)
             flavor = getMinFlavor();
@@ -100,11 +101,11 @@ public class ClickHouse extends IProduct {
     }
 
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction(REFRESH_VM_CONFIG, this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(REFRESH_VM_CONFIG).product(this).build());
     }
 
     public void removeDb(String dbName) {
-        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DB, this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(CLICKHOUSE_DELETE_DB).product(this).data(new JSONObject().put("db_name", dbName)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
@@ -112,20 +113,22 @@ public class ClickHouse extends IProduct {
 
     public void resetPasswordOwner() {
         String password = "uAhHmuyQnT2kCvTpOPgw9JIab0OwNvyj";
-        OrderServiceSteps.executeAction("clickhouse_reset_db_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", clickhouseUser, password)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_reset_db_user_password").product(this)
+                .data(new JSONObject().put("user_name", clickhouseUser).put("user_password", password)).build());
         clickhousePassword = password;
         save();
     }
 
     public void resetPasswordCustomer() {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction("clickhouse_reset_ch_customer_password", this, new JSONObject(String.format("{\"user_name\":\"ch_customer\",\"user_password\":\"%s\"}", password)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_reset_ch_customer_password").product(this)
+                .data(new JSONObject().put("user_name", "ch_customer").put("user_password", password)).build());
         chCustomerPassword = password;
         save();
     }
 
     public void certsInfo() {
-        OrderServiceSteps.executeAction("clickhouse_certs_info", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_certs_info").product(this).build());
     }
 
     @SneakyThrows
@@ -140,7 +143,8 @@ public class ClickHouse extends IProduct {
     }
 
     public void removeDbmsUser(String username, String dbName) {
-        OrderServiceSteps.executeAction(CLICKHOUSE_DELETE_DBMS_USER, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(CLICKHOUSE_DELETE_DBMS_USER).product(this)
+                .data(new JSONObject().put("user_name", username)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
                 String.format("Пользователь: %s не удалился из базы данных: %s", username, dbName));
@@ -151,7 +155,8 @@ public class ClickHouse extends IProduct {
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction(CLICKHOUSE_CREATE_DB, this, new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq\"}", dbName)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(CLICKHOUSE_CREATE_DB).product(this)
+                .data(new JSONObject().put("db_name", dbName).put("db_admin_pass", "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq")).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);
@@ -159,9 +164,9 @@ public class ClickHouse extends IProduct {
     }
 
     public void createDbmsUser(String username, String dbRole, String dbName) {
-        OrderServiceSteps.executeAction(CLICKHOUSE_CREATE_DBMS_USER,
-                this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"txLhQ3UoykznQ2i2qD_LEMUQ_-U\"}",
-                        dbName, dbRole, username)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(CLICKHOUSE_CREATE_DBMS_USER).product(this)
+                .data(new JSONObject().put("comment", "testapi").put("db_name", dbName).put("dbms_role", dbRole)
+                        .put("user_name", username).put("user_password", "txLhQ3UoykznQ2i2qD_LEMUQ_-U")).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, username)),
                 "Имя пользователя отличается от создаваемого");
@@ -171,22 +176,26 @@ public class ClickHouse extends IProduct {
     }
 
     public void createUserAccount(String user, String password) {
-        OrderServiceSteps.executeAction("clickhouse_create_local_tuz", this, new JSONObject().put("user_name", user).put("user_password", password), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_create_local_tuz").product(this)
+                .data(new JSONObject().put("user_name", user).put("user_password", password)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s не найден", user));
     }
 
     public void deleteUserAccount(String user) {
-        OrderServiceSteps.executeAction("clickhouse_remove_local_tuz", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_remove_local_tuz").product(this)
+                .data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s найден", user));
     }
 
     public void addUserAd(String user) {
-        OrderServiceSteps.executeAction("clickhouse_create_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_create_new_tuz_ad").product(this)
+                .data(new JSONObject().put("user_name", user)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s не найден", user));
     }
 
     public void deleteUserAd(String user) {
-        OrderServiceSteps.executeAction("clickhouse_remove_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_remove_new_tuz_ad").product(this)
+                .data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s найден", user));
     }
 
@@ -201,12 +210,13 @@ public class ClickHouse extends IProduct {
                 "    }\n" +
                 "  ]\n" +
                 "}");
-        OrderServiceSteps.executeAction("clickhouse_create_new_app_user_group_ad", this, object, getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_create_new_app_user_group_ad").product(this).data(object).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s не найдена", user));
     }
 
     public void deleteGroupAd(String user) {
-        OrderServiceSteps.executeAction("clickhouse_remove_new_app_user_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_remove_new_app_user_group_ad").product(this)
+                .data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s найдена", user));
     }
 
@@ -221,12 +231,13 @@ public class ClickHouse extends IProduct {
                 "    }\n" +
                 "  ]\n" +
                 "}");
-        OrderServiceSteps.executeAction("clickhouse_create_new_app_admin_group_ad", this, object, getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_create_new_app_admin_group_ad").product(this).data(object).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s не найдена", user));
     }
 
     public void deleteGroupAdmin(String user) {
-        OrderServiceSteps.executeAction("clickhouse_remove_new_app_admin_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_remove_new_app_admin_group_ad").product(this)
+                .data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
     }
 
@@ -266,7 +277,7 @@ public class ClickHouse extends IProduct {
                 .set("$.order.attrs.ch_customer_password", chCustomerPassword)
                 .set("$.order.attrs.ch_version", chVersion)
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform",  getPlatform())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.os_version", osVersion)
@@ -290,8 +301,8 @@ public class ClickHouse extends IProduct {
                     ((String) OrderServiceSteps.getProductsField(this, CONNECTION_URL))
                             .replaceFirst("/play", "")
                             .replaceFirst("https:", "clickhouse:"));
-        } catch (ConnectException e){
-            if(!e.getMessage().contains("(UNKNOWN_DATABASE)"))
+        } catch (ConnectException e) {
+            if (!e.getMessage().contains("(UNKNOWN_DATABASE)"))
                 throw e;
         }
     }

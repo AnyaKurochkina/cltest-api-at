@@ -54,7 +54,6 @@ class UiKafkaServiceCheckUntilOrderTest extends Tests {
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getNameTopic().setValue("topic");
         orderPage.getDomain().set(product.getDomain());
-        orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
     }
 
 }

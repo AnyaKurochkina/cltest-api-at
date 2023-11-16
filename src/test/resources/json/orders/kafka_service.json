@@ -7,7 +7,7 @@
       "domain": "corp.dev.vtb",
       "platform": "kafka_topic",
       "topic_name": "1418_topic_name",
-      "data_center": "5",
+      "availability_zone": "5",
       "net_segment": "dev-srv-app",
       "cluster_name": "taas-kafka-0001",
       "is_retention_ms": true,
@@ -15,6 +15,7 @@
       "retention_ms": 1800000
     },
     "count": 1,
-    "label": "Kafka Topic как услуга"
+    "label": "Kafka Topic как услуга",
+    "lifetime": null
   }
 }

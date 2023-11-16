@@ -22,8 +22,7 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
@@ -74,7 +73,7 @@ public class GraphExportTest extends Tests {
     }
 
     @DisplayName("Проверка поля ExportedObjects при экспорте графа")
-    @TmsLink("SOUL-")
+    @TmsLink("SOUL-7080")
     @Test
     public void checkExportedObjectsFieldGraphTest() {
         String graphName = "graph_exported_objects_test_api";
@@ -106,5 +105,20 @@ public class GraphExportTest extends Tests {
         List<String> actualTagList = exportObjectByIdWithTags("graphs", graph.getGraphId()).jsonPath().getList("Graph.tag_name_list");
         assertEquals(actualTagList, expectedTagList);
         deleteGraphByName(graphName);
+    }
+
+    @DisplayName("Проверка current_version при экспорте графа")
+    @TmsLink("SOUL-7759")
+    @Test
+    public void checkCurrentVersionGraphExportTest() {
+        String graphName = "check_current_version_graph_export_test_api";
+        Graph graph = createGraph(graphName);
+        partialUpdateGraph(graph.getGraphId(), new JSONObject()
+                .put("damage_order_on_error", true)
+                .put("version", "1.1.1"));
+        partialUpdateGraph(graph.getGraphId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        String currentVersion = exportGraphById(graph.getGraphId()).jsonPath().getString("Graph.current_version");
+        assertNull(currentVersion);
     }
 }
