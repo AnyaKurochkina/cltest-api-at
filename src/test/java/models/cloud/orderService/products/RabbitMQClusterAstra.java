@@ -90,19 +90,22 @@ public class RabbitMQClusterAstra extends IProduct {
     }
 
     //Создать пользователя RabbitMQ
-    public void rabbitmqCreateUser(String apd, String risCode, String userName) {
-        JSONObject jsonObject = new JSONObject().append("rabbitmq_users", new JSONObject().put("apd", apd).put("ris_code", risCode).put("name", userName))
+    public void rabbitmqCreateUser(String apd, String risCode, String user) {
+        JSONObject jsonObject = new JSONObject().append("rabbitmq_users", new JSONObject().put("apd", apd).put("ris_code", risCode).put("name", user))
                 .put("env_prefix", getEnv().toLowerCase());
         OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_create_user_release").product(this)
                 .data(jsonObject).build());
-        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, userName), String.class),
-                "У продукта отсутствует пользователь " + userName);
+        Assertions.assertNotNull(fullUserName(user), "У продукта отсутствует пользователь " + user);
+    }
+
+    private String fullUserName(String user){
+        return OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), String.class);
     }
 
     public void rabbitmqDeleteUser(String user) {
-        String fullName = OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), String.class);
-        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_users_release").product(this).data(new JSONObject().put("name", fullName)).build());
-        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), String.class), "У продукта присутствует пользователь " + user);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_users_release").product(this)
+                .data(new JSONObject().put("name", fullUserName(user))).build());
+        Assertions.assertNull(fullUserName(user), "У продукта присутствует пользователь " + user);
     }
 
     @Step("Удаление продукта")
@@ -144,14 +147,14 @@ public class RabbitMQClusterAstra extends IProduct {
 
     public void editVhostAccess(String user, List<String> permissions, String vhost) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_edit_vhost_access_release").product(this)
-                .data(new JSONObject("{\"user_name\": \"" + user + "\", \"vhost_permissions\": [{\"permissions\": " + JsonHelper.toJson(permissions) + ", \"vhost_name\": \"" + vhost + "\"}]}")).build());
+                .data(new JSONObject("{\"user_name\": \"" + fullUserName(user) + "\", \"vhost_access\": [{\"permissions\": " + JsonHelper.toJson(permissions) + ", \"vhost_name\": \"" + vhost + "\"}]}")).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,
                 String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Отсутствует vhost access " + vhost);
     }
 
     public void deleteVhostAccess(String user, String vhost) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_vhost_access_release").product(this)
-                .data(new JSONObject().put("user_name", user).put("vhost_name", vhost)).build());
+                .data(new JSONObject().put("user_name", fullUserName(user)).put("vhost_name", vhost)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this,
                 String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost)), "Присутствует vhost access " + vhost);
     }
