@@ -30,7 +30,7 @@ import java.util.Random;
 @NoArgsConstructor
 @SuperBuilder
 public class RabbitMQClusterAstra extends IProduct {
-    private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.any{it.name.contains('%s')}";
+    private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.find{it.name.contains('%s')}";
     private final static String RABBIT_CLUSTER_VHOST = "data.find{it.data.config.containsKey('vhosts')}.data.config.vhosts.any{it.name=='%s'}";
     private final static String RABBIT_CLUSTER_VHOST_ACCESS = "data.find{it.data.config.containsKey('vhost_access')}.data.config.vhost_access.any{it.vhost_name=='%s'}";
     String role;
@@ -95,12 +95,14 @@ public class RabbitMQClusterAstra extends IProduct {
                 .put("env_prefix", getEnv().toLowerCase());
         OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_create_user_release").product(this)
                 .data(jsonObject).build());
-        Assertions.assertTrue((OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, userName), Boolean.class)), "У продукта отсутствует пользователь " + userName);
+        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, userName), String.class),
+                "У продукта отсутствует пользователь " + userName);
     }
 
     public void rabbitmqDeleteUser(String user) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_users_release").product(this).data(new JSONObject().put("name", user)).build());
-        Assertions.assertFalse((OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), Boolean.class)), "У продукта присутствует пользователь " + user);
+        String fullName = OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), String.class);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_delete_users_release").product(this).data(new JSONObject().put("name", fullName)).build());
+        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), String.class), "У продукта присутствует пользователь " + user);
     }
 
     @Step("Удаление продукта")
