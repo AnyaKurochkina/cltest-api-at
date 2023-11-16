@@ -163,6 +163,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateInformationCert);
     }
+
     @Test
     @Order(17)
     @TmsLink("")
@@ -171,7 +172,6 @@ public class UiClickHouseClusterTest extends UiProductTest {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateCertificate);
     }
-
 
     @Test
     @Order(100)

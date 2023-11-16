@@ -57,7 +57,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
             ScyllaDbClusterOrderPage orderPage = new ScyllaDbClusterOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             if(product.isDev())

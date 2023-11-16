@@ -11,6 +11,7 @@ import models.cloud.subModels.Db;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -32,8 +33,6 @@ public class ScyllaDbCluster extends IProduct {
     Flavor flavor;
     @Builder.Default
     public List<Db> database = new ArrayList<>();
-    //    @Builder.Default
-    //    public List<DbUser> usersWidthPermission = new ArrayList<>();
     @Builder.Default
     public List<String> users = new ArrayList<>();
 
@@ -67,8 +66,8 @@ public class ScyllaDbCluster extends IProduct {
             dc3 = 0;
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
@@ -86,7 +85,7 @@ public class ScyllaDbCluster extends IProduct {
                 .set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.scylladb_version", version)
@@ -104,7 +103,7 @@ public class ScyllaDbCluster extends IProduct {
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction("scylladb_create_db", this, new JSONObject(String.format("{db_name: \"%s\"}", dbName)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("scylladb_create_db").product(this).data(new JSONObject().put("db_name", dbName)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
@@ -116,7 +115,8 @@ public class ScyllaDbCluster extends IProduct {
     public void createDbmsUser(String username, String password, String role) {
         if (users.contains(username))
             return;
-        OrderServiceSteps.executeAction("scylladb_create_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\",\"dbms_role\":\"%s\"}", username, password, role)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("scylladb_create_dbms_user").product(this)
+                .data(new JSONObject().put("user_name", username).put("user_password", password).put("dbms_role", role)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)), "Имя пользователя отличается от создаваемого");
         log.info("createDbmsUser = " + username);
         users.add(username);
@@ -125,7 +125,8 @@ public class ScyllaDbCluster extends IProduct {
 
     // admin, user
     public void addPermissionsUser(String dbName, String username) {
-        OrderServiceSteps.executeAction("scylladb_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("scylladb_dbms_permissions").product(this)
+                .data(new JSONObject().put("user_name", username).put("db_name", dbName)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права пользователю не выданы");
 //        usersWidthPermission.add(new DbUser(dbName, username));
         log.info("addPermissionsUser = " + username);
@@ -133,7 +134,8 @@ public class ScyllaDbCluster extends IProduct {
     }
 
     public void removePermissionsUser(String dbName, String username) {
-        OrderServiceSteps.executeAction("scylladb_remove_dbms_permissions", this, new JSONObject(String.format("{\"db_name\":\"%s\",\"user_name\":\"%s\"}", dbName, username)));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("scylladb_remove_dbms_permissions").product(this)
+                .data(new JSONObject().put("user_name", username).put("db_name", dbName)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PERMISSIONS_PATH, dbName, username)), "Права у пользователя остались");
 //        usersWidthPermission.remove(new DbUser(dbName, username));
         log.info("removePermissionsUser = " + username);
@@ -142,12 +144,14 @@ public class ScyllaDbCluster extends IProduct {
 
     //16-63
     public void resetPassword(String username, String password) {
-        OrderServiceSteps.executeAction("scylladb_reset_user_password", this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("scylladb_reset_user_password").product(this)
+                .data(new JSONObject().put("user_name", username).put("user_password", password)).build());
     }
 
     //Удалить пользователя
     public void removeDbmsUser(String username) {
-        OrderServiceSteps.executeAction("scylladb_remove_dbms_user", this, new JSONObject(String.format("{\"user_name\":\"%s\"}", username)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("scylladb_remove_dbms_user").product(this)
+                .data(new JSONObject().put("user_name", username)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERNAME_PATH, username)),
                 String.format("Пользователь: %s не удалился", username));
         users.remove(username);
@@ -156,7 +160,8 @@ public class ScyllaDbCluster extends IProduct {
 
     //Удалить БД
     public void removeDb(String dbName) {
-        OrderServiceSteps.executeAction("scylladb_remove_db", this, new JSONObject("{\"db_name\": \"" + dbName + "\"}"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("scylladb_remove_db").product(this)
+                .data(new JSONObject().put("db_name", dbName)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
@@ -164,7 +169,7 @@ public class ScyllaDbCluster extends IProduct {
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     public void expandMountPoint() {

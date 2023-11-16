@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
-import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -192,7 +191,7 @@ public class AuditPage extends EntityPage {
     public AuditPage checkResponseFullViewContains(String value, String contextId) {
         openRecordByContextId(contextId);
         showFullView.getButton().scrollIntoView(scrollCenter).click();
-        Waiting.sleep(500);
+        Waiting.sleep(2000);
         Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed(),
                 "Ответ не содержит " + value);
         closeFullViewButton.click();

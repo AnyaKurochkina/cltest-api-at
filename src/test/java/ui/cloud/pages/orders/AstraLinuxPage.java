@@ -85,7 +85,10 @@ public class AstraLinuxPage extends IProductPage {
         btnGeneralInfo.click();
         Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип","snapshot"));
     }
-
+    public void reInventory() {
+        new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Реинвентаризация ВМ (Linux)");
+    }
     public void deleteSnapshot() {
         new Table("Имя",2).getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new Table("Имя").getFirstValueByColumn("Имя"), "Удалить снапшот");

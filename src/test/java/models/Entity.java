@@ -12,13 +12,15 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.SneakyThrows;
 import lombok.experimental.SuperBuilder;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.annotation.*;
+import java.util.concurrent.locks.Lock;
 
 @NoArgsConstructor
 @SuperBuilder
-@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId", "skip"})
+@JsonIgnoreProperties(value = {"objectClassName", "uuid", "configurationId", "skip", "mock"})
 public abstract class Entity implements AutoCloseable {
     public String objectClassName;
     public String uuid;
@@ -26,6 +28,10 @@ public abstract class Entity implements AutoCloseable {
     String configurationId;
     @Getter @Setter
     boolean skip;
+    @Getter @Setter
+    private boolean mock;
+    @Getter @Setter
+    private Lock mockReentrantLock;
 
     public abstract Entity init();
 
@@ -49,6 +55,13 @@ public abstract class Entity implements AutoCloseable {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         return new JSONObject(objectMapper.writeValueAsString(object));
+    }
+
+    @SneakyThrows
+    public static JSONArray serializeList(Object object) {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        return new JSONArray(objectMapper.writeValueAsString(object));
     }
 
     @SneakyThrows

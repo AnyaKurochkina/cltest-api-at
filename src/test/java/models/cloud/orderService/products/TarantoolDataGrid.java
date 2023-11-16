@@ -1,6 +1,5 @@
 package models.cloud.orderService.products;
 
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.Data;
@@ -12,9 +11,9 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
-import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.List;
@@ -30,30 +29,25 @@ public class TarantoolDataGrid extends IProduct {
     public static final String SERVICE_PATH = "data.find{it.type=='cluster'}.data.config.cluster.find{it.instance=='%s'}.state";
     @ToString.Include
     String osVersion;
-    Flavor flavor;
     String tarantoolVersion;
 
     @Override
     public Entity init() {
         jsonTemplate = "/orders/tarantool.json";
         productName = "Tarantool Data Grid Astra";
-        if(Configure.ENV.equalsIgnoreCase("ift"))
-            productName = "Tarantool Data Grid - Astra Linux";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         if (tarantoolVersion == null)
             tarantoolVersion = getRandomProductVersionByPathEnum("tarantool_version.enum");
-        if (flavor == null)
-            flavor = getMinFlavor();
         return this;
     }
 
@@ -69,9 +63,8 @@ public class TarantoolDataGrid extends IProduct {
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
-                .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.access_group[0]", accessGroup())
@@ -88,29 +81,29 @@ public class TarantoolDataGrid extends IProduct {
 
     @Step("Создать резервную копию")
     public void backup() {
-        OrderServiceSteps.executeAction("tdg_backup", this, new JSONObject().put("dumb", "empty"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("tdg_backup").product(this).data(new JSONObject().put("dumb", "empty")).build());
         Assertions.assertEquals(1, (Integer) OrderServiceSteps.getProductsField(this, BACKUP_PATH), "Отсутствует backup");
     }
 
     @Step("Обновить сертификаты")
     public void updateCerts() {
-        OrderServiceSteps.executeAction("tdg_update_certs", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("tdg_update_certs").product(this).build());
     }
 
     @Step("Остановить сервисы")
     public void stopInstances(List<String> services) {
         JSONObject data = new JSONObject().put("type", "Instance").put("instances", services);
-        OrderServiceSteps.executeAction("tdg_stop_instances", this, data, this.getProjectId());
-        for(String service : services)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("tdg_stop_instances").product(this).data(data).build());
+        for (String service : services)
             Assertions.assertEquals("off", OrderServiceSteps.getProductsField(this,
-                String.format(SERVICE_PATH, service)), "Статус сервиса " + service);
+                    String.format(SERVICE_PATH, service)), "Статус сервиса " + service);
     }
 
     @Step("Запустить сервисы")
     public void startInstances(List<String> services) {
         JSONObject data = new JSONObject().put("type", "Instance").put("instances", services);
-        OrderServiceSteps.executeAction("tdg_start_instances", this, data, this.getProjectId());
-        for(String service : services)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("tdg_start_instances").product(this).data(data).build());
+        for (String service : services)
             Assertions.assertEquals("on", OrderServiceSteps.getProductsField(this,
                     String.format(SERVICE_PATH, service)), "Статус сервиса " + service);
     }
@@ -118,7 +111,7 @@ public class TarantoolDataGrid extends IProduct {
     @Step("Перезапустить сервисы")
     public void restartInstances(List<String> services) {
         JSONObject data = new JSONObject().put("type", "Instance").put("instances", services);
-        OrderServiceSteps.executeAction("tdg_restart_instances", this, data, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("tdg_restart_instances").product(this).data(data).build());
     }
 
     @Step("Удалить")

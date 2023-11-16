@@ -9,7 +9,7 @@
   "ad_integration": true,
   "extra_nics": [
   ],
-  "data_center": "5",
+  "availability_zone": "5",
   "default_nic": {
     "net_segment": "test-srv-perf"
   },
@@ -28,5 +28,6 @@
       ]
     }
   ],
-  "kibana_password": "Aa56Rrdsfdfd"
+  "kibana_password": "Aa56Rrdsfdfd",
+  "lifetime": null
 }

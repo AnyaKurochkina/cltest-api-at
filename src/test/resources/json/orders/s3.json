@@ -4,7 +4,7 @@
     "product_id": "dd04d23b-44c9-4c4a-81bc-55302f39a655",
     "attrs": {
       "platform": "ceph",
-      "data_center": "5",
+      "availability_zone": "5",
       "net_segment": "prod-srv-app",
       "storage_type": "nvme"
     },

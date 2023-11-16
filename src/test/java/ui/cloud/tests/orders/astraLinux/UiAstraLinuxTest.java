@@ -52,7 +52,6 @@ public class UiAstraLinuxTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             AstraLinuxOrderPage orderPage = new AstraLinuxOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -189,6 +188,14 @@ public class UiAstraLinuxTest extends UiProductTest {
     void updateGroup() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::updateOs);
+    }
+    @Test
+    @Order(16)
+    @TmsLink("1723138")
+    @DisplayName("UI AstraLinux. Реинвентаризация ВМ (Linux)")
+    void reInventory() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::reInventory);
     }
 
     @Test

@@ -25,7 +25,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("RabbitMQClusterAstra")
 @Tags({@Tag("ui"), @Tag("ui_rabbit_mq_cluster_astra")})
 public class UiRabbitMqClusterAstraTest extends UiProductTest {
-    RabbitMQClusterAstra product;// = RabbitMQClusterAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/1b806df5-c1d1-4879-94f6-883bb88a5367/main?context=proj-iv550odo9a&type=project&org=vtb");
+    RabbitMQClusterAstra product;// = RabbitMQClusterAstra.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/1cd0d80b-ed4d-4967-8ff3-6e29ef894941/main?context=proj-ln4zg69jek&type=project&org=vtb");
     String nameUser = "atUser";
     String nameHost = "atHostName";
 
@@ -50,12 +50,11 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
             RabbitMqClusterAstraOrderPage orderPage = new RabbitMqClusterAstraOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
+            orderPage.getGroupManagerSelect().set(accessGroup);
             if (product.isDev())
-                    orderPage.getGroup2Select().set(accessGroup);
+                    orderPage.getGroupAdministratorSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -77,7 +76,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @TmsLink("1727719")
     @Order(2)
-    @DisplayName("UI RabbitMQClusterAstra. Проверка полей заказа")
+    @DisplayName("UI RabbitMQClusterAstra. Проверка развертывания в истории действий")
     void
     checkHeaderHistoryTable() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
@@ -113,7 +112,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @DisplayName("UI RabbitMqClusterAstraPage. Создать пользователя RabbitMQ")
     void addUser() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addUser(nameUser));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addUser(nameUser,"14888", "104878"));
     }
     @Test
     @Order(6)
@@ -121,8 +120,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @DisplayName("UI RabbitMqClusterAstraPage. Проверка уникальности имени пользователя Rabbit MQ")
     void checkUniquenessAddUser() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.checkUniquenessAddUser(nameUser));
-
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.checkUniquenessAddUser(nameUser,"14888", "104878"));
     }
 
     @Test
@@ -149,36 +147,24 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
 
     @Test
     @Order(9)
-    @TmsLink("1060331")
-    @Disabled
-    @DisplayName("UI RabbitMqClusterAstra. Добавить права на виртуальные хосты RabbitMQ")
-    void addPermissions() {
-        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addPermissions(nameUser,nameHost));
-    }
-
-    @Test
-    @Order(10)
     @TmsLink("1060335")
     @DisplayName("UI RabbitMqClusterAstra. Редактировать права на виртуальные хосты RabbitMQ")
     void editPermissions() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        //rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addPermissions(nameUser,nameHost));
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.editPermissions(nameUser,nameHost));
     }
 
     @Test
-    @Order(11)
+    @Order(10)
     @TmsLink("1060337")
     @DisplayName("UI RabbitMqClusterAstra. Удалить права на виртуальный хост RabbitMQ")
     void deletePermissions() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addPermissions(nameUser,nameHost));
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deletePermissions(nameUser));
     }
 
     @Test
-    @Order(12)
+    @Order(11)
     @TmsLink("1060321")
     @DisplayName("UI RabbitMqClusterAstraPage. Удалить виртуальные хосты RabbitMQ")
     void deleteVirtualHosts() {
@@ -187,17 +173,18 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(13)
+    @Order(12)
     @TmsLink("1060320")
     @DisplayName("UI RabbitMqClusterAstraPage. Удалить пользователя RabbitMQ")
     void deleteUser() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteUser(nameUser));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteUser());
     }
+
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(14)
+    @Order(13)
     @TmsLink("1060327")
     @DisplayName("UI RabbitMqClusterAstraPage. Проверить конфигурацию")
     void checkConfiguration() {
@@ -207,7 +194,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(15)
+    @Order(14)
     @TmsLink("1060333")
     @DisplayName("UI RabbitMqClusterAstraPage. Проверка доступа к Web интерфейсу управления через AD")
     void openAdminConsole() {
@@ -216,15 +203,16 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(16)
+    @Order(15)
     @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Ре-балансировка очередей")
+    @DisplayName("UI RabbitMqClusterAstra. Балансировка очередей")
     void reBalanceQueue() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::reBalanceQueue);
     }
+
     @Test
-    @Order(17)
+    @Order(16)
     @TmsLink("")
     @DisplayName("UI RabbitMqClusterAstra. Синхронизировать данные кластера RabbitMQ")
     void synchronizeData() {
@@ -233,38 +221,40 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(18)
+    @Order(17)
     @TmsLink("")
+    @Disabled
     @DisplayName("UI RabbitMqClusterAstra. Удалить группу доступа на WEB интерфейс")
     void deleteGroup() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("manager"));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("Manager"));
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Изменить группу доступа на WEB интерфейс")
+    void changeGroup() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("Administrator", product.additionalAccessGroup()));
     }
 
     @Test
     @Order(19)
     @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Добавить роль на Web интерфейс")
-    void addRole() {
+    @DisplayName("UI RabbitMqClusterAstra. Вертикальное масштабирование кластера")
+    void verticalScaling() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.addRole("manager",product.additionalAccessGroup()));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::verticalScaling);
     }
 
     @Test
     @Order(20)
     @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Изменить группу доступа на WEB интерфейс")
-    void changeGroup() {
+    @DisplayName("UI RabbitMqClusterAstra. Обновить операционную систему")
+    void updateOs() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("manager", product.additionalAccessGroup()));
-    }
-    @Test
-    @Order(21)
-    @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Вертикальное масштабирование кластера")
-    void verticalScaling() {
-        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::verticalScaling);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::updateOs);
     }
 
     @Test

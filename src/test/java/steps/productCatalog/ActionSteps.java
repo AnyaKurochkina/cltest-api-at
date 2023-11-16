@@ -59,7 +59,7 @@ public class ActionSteps extends Steps {
                 .post(actionUrl);
     }
 
-    @Step("Создание действия")
+    @Step("Создание действия c именем {name}")
     public static Action createAction(String name) {
         return Action.builder()
                 .name(name)

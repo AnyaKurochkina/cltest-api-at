@@ -190,6 +190,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_item_change", skipItemChange)
                 .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
                 .setIfNullRemove("$.skip_item_with_secondary_rel", skipItemWithSecondaryRel)
+                .setIfNullRemove("$.is_for_items", isForItems)
                 .build();
     }
 

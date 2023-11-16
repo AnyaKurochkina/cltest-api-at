@@ -10,6 +10,7 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.ObjectPoolService;
 import models.cloud.orderService.interfaces.IProduct;
+import models.cloud.orderService.interfaces.ProductStatus;
 import org.json.JSONObject;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
@@ -21,6 +22,8 @@ import steps.Steps;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
@@ -62,10 +65,26 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         final Class<?>[] parameterTypes = context.getRequiredTestMethod().getParameterTypes();
         String className = context.getRequiredTestMethod().getDeclaringClass().getSimpleName();
         String methodName = context.getRequiredTestMethod().getName();
+        Class<?> argument = Arrays.stream(parameterTypes)
+                .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
+        Field mockField = Arrays.stream(context.getRequiredTestClass().getDeclaredFields())
+                .filter(method -> method.isAnnotationPresent(Mock.class))
+                .filter(method -> argument.isAssignableFrom((Class<?>) method.getType()))
+                .findFirst()
+                .orElse(null);
+        if(Objects.nonNull(mockField)){
+            if(!Modifier.isStatic(mockField.getModifiers()))
+                throw new Exception("Поле с аннотацией Mock должно быть статическим");
+            mockField.setAccessible(true);
+            IProduct object = (IProduct) mockField.get(context.getTestClass().orElseThrow(Exception::new));
+            object.setStatus(ProductStatus.CREATED);
+            ObjectPoolService.addEntity(object);
+            list.add(addParameters(object, parameterTypes.length));
+            return list;
+        }
+
         if (Configure.isIntegrationTestIt()) {
             List<Configuration> confMap = TestProperties.getInstance().getConfigMapsByTest(context.getRequiredTestMethod());
-            Class<?> argument = Arrays.stream(parameterTypes)
-                    .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
 
             for (Configuration configuration : confMap) {
                 if (configuration.getConfMap().isEmpty()) {

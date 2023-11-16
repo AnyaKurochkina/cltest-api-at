@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.Collections;
@@ -39,9 +40,9 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
                     () -> checkIncorrectTopic(kafka,
                             new KafkaTopic("delete", 1, 1800000, "*TopicName")),
                     () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("delete",  51,  1800000, "_TopicName")),
+                            new KafkaTopic("delete", 51, 1800000, "_TopicName")),
                     () -> checkIncorrectTopic(kafka,
-                            new KafkaTopic("create",  1,  1800000, "TopicName")));
+                            new KafkaTopic("create", 1, 1800000, "TopicName")));
         }
     }
 
@@ -57,9 +58,9 @@ public class ApacheKafkaClusterNegativeTest extends Tests {
         }
     }
 
-    public void checkIncorrectTopic(ApacheKafkaCluster kafkaCluster, KafkaTopic topic){
-        OrderServiceSteps.sendAction(KAFKA_CREATE_TOPICS, kafkaCluster, new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}"), kafkaCluster.getProjectId())
-                .assertStatus(422);
+    public void checkIncorrectTopic(ApacheKafkaCluster kafkaCluster, KafkaTopic topic) {
+        OrderServiceSteps.sendAction(ActionParameters.builder().name(KAFKA_CREATE_TOPICS).product(kafkaCluster)
+                .data(new JSONObject("{\"topics\": " + JsonHelper.toJson(topic) + "}")).build()).assertStatus(422);
     }
 
 }

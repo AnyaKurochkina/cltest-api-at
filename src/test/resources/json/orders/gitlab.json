@@ -18,6 +18,7 @@
       }
     },
     "count": 1,
-    "label": "Группа Gitlab"
+    "label": "Группа Gitlab",
+    "lifetime": null
   }
 }

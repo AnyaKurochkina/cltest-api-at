@@ -55,7 +55,6 @@ public class UiRedisAstraTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             RedisAstraOrderPage orderPage = new RedisAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getUserInput().setValue(RedisAstraOrderPage.userNameRedisSentinel);
             orderPage.getGeneratePassButton().click();
@@ -159,8 +158,9 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Мониторинг ОС")
     void monitoringOs() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.checkMonitoringOs();
+        redisPage.checkClusterMonitoringOs();
     }
+
     @Test
     @Order(28)
     @TmsLink("1296747")
