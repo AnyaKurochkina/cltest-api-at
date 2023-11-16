@@ -113,7 +113,7 @@ public class ItemTest extends Tests {
     }
 
     @DisplayName("Получение списка items по фильтру include_deleted=true")
-    @TmsLink("")
+    @TmsLink("SOUL-8274")
     @Test
     public void getItemListWithStateNotEqualsDeleted() {
         List<Item> itemList = getItemsListByFilter("include_deleted=true");
@@ -121,7 +121,7 @@ public class ItemTest extends Tests {
     }
 
     @DisplayName("Перевод item в state = problem")
-    @TmsLink("")
+    @TmsLink("SOUL-8275")
     @Test
     public void changeItemStateToProblem() {
         Item item = createItem(project);
