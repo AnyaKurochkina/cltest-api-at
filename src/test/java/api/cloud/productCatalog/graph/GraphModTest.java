@@ -235,7 +235,7 @@ public class GraphModTest extends Tests {
         Graph graph = Graph.builder()
                 .name("get_graph_with_out_context_test_api")
                 .version("1.0.0")
-                .modifications(Arrays.asList(jsonSchema))
+                .modifications(Collections.singletonList(jsonSchema))
                 .build()
                 .createObject();
         String errorMsg = getResponseGraphByIdContext(project.getId(), graph.getGraphId()).extractAs(ErrorMessage.class).getMessage();
