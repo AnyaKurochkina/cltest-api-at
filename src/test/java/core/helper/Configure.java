@@ -50,6 +50,16 @@ public class Configure {
     public static String ServiceManagerProxy;
     public static String Auditor;
     public static String SccmManager;
+    public static String VictoriaProxy;
+    public static String SuggestionsBack;
+    public static String WaitingService;
+    public static String SecretService;
+    public static String IssueCollectorService;
+    public static String CalculationManager;
+    public static String Naming;
+    public static String OrchestratorWeb;
+    public static String TagsService;
+    public static String SelectorAllocator;
 
     static {
         try {
@@ -104,6 +114,16 @@ public class Configure {
             Auditor = KONG_URL + "auditor";
             SccmManager = KONG_URL + "sccm-manager";
             ServiceManagerProxy = KONG_URL + "service-manager-proxy";
+            VictoriaProxy = KONG_URL + "victoria-proxy";
+            SuggestionsBack = KONG_URL + "suggestions-back";
+            WaitingService = KONG_URL + "waiting-service";
+            SecretService = KONG_URL + "secret-service";
+            IssueCollectorService = KONG_URL + "issue-collector-service";
+            CalculationManager = KONG_URL + "calculationmanager";
+            Naming = KONG_URL + "naming";
+            OrchestratorWeb = KONG_URL + "orchestrator-web";
+            TagsService = KONG_URL + "tags-service";
+            SelectorAllocator = KONG_URL + "selector-allocator";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();
