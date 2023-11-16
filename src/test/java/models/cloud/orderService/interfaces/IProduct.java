@@ -89,6 +89,7 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String segment;
     @Setter
+    @Getter
     protected String availabilityZone, domain;
 
     protected String jsonTemplate;
@@ -124,10 +125,6 @@ public abstract class IProduct extends Entity {
     public String getLink() {
         log.debug("Get Link: {}", link);
         return link;
-    }
-
-    public String getAvailabilityZone() {
-        return Objects.requireNonNull(availabilityZone, "Поле availabilityZone пустое");
     }
 
     public String getDomain() {
@@ -478,7 +475,8 @@ public abstract class IProduct extends Entity {
     //Расширить
     protected void expandMountPoint(String action, String mount, int size) {
         Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
-        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(new JSONObject().put("size", size).put("mount", mount)).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().filter(String.format("extra_mounts.find{it.mount == '%s'}", mount))
+                .name(action).product(this).data(new JSONObject().put("size", size).put("mount", mount)).build());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }

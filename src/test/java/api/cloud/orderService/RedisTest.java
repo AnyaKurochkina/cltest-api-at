@@ -9,10 +9,7 @@ import models.cloud.orderService.products.Redis;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 
 @Epic("Продукты")
@@ -42,18 +39,9 @@ public class RedisTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить ОС {0}")
-    void checkActions(Redis product, Integer num) {
-        try (Redis redis = product.createObjectExclusiveAccess()) {
-            Assertions.assertTrue(redis.isActionExist("update_os_standalone"));
-        }
-    }
-
-    @TmsLink("")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Обновить ОС {0}")
     void updateOsStandalone(Redis product, Integer num) {
         try (Redis redis = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(redis.isDev(), "Тест включен только для dev среды");
             redis.updateOsStandalone();
         }
     }

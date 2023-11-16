@@ -181,7 +181,7 @@ public class Artemis extends IProduct {
     }
 
     public void exportConf() {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_export_conf").product(this).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().role(Role.ORDER_SERVICE_ADMIN).name("vtb-artemis_export_conf").product(this).build());
         GlobalUser user = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
         new Http(StateServiceURL)

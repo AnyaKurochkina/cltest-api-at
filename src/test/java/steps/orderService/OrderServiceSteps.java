@@ -74,7 +74,7 @@ public class OrderServiceSteps extends Steps {
 
     public static String getStatus(String orderId, String projectId) {
         return new Http(OrderServiceURL)
-                .disableAttachmentLog()
+//                .disableAttachmentLog()
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
@@ -266,6 +266,7 @@ public class OrderServiceSteps extends Steps {
             status = getStatus(orderId, projectId);
         } while ((status.equals("pending") || status.equals("changing")|| status.equals("removing") || status.isEmpty())
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+        log.info("Ожидание заказа. Финальный статус {}", status);
     }
 
     @Step("Получение warning по orderId = {orderId}")
