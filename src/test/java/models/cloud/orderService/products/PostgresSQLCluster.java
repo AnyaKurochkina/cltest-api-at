@@ -68,7 +68,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Override
     public void createDb(String dbName) {
-        if (getEnv().equalsIgnoreCase("LT")) {
+        if (getEnv().equalsIgnoreCase("LT") || isProd()) {
             if (database.contains(new Db(dbName)))
                 return;
             JSONObject data = new JSONObject().put("db_name", dbName).put("db_admin_pass", adminPassword).put("conn_limit", 11);
