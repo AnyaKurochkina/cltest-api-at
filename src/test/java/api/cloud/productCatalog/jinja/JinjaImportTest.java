@@ -44,8 +44,8 @@ public class JinjaImportTest extends Tests {
         String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/multiJinja2.json";
         DataFileHelper.write(filePath, exportJinjaById(jinja.getId()).toString());
         DataFileHelper.write(filePath2, exportJinjaById(jinja2.getId()).toString());
-        deleteJinjaByName(jinjaName);
-        deleteJinjaByName(jinjaName2);
+        jinja.deleteObject();
+        jinja2.deleteObject();
         importObjects("jinja2_templates", filePath, filePath2);
         DataFileHelper.delete(filePath);
         DataFileHelper.delete(filePath2);

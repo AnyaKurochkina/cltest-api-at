@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductCatalogSteps;
 
+import static core.helper.StringUtils.getRandomStringApi;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ActionSteps.getActionById;
@@ -214,5 +215,43 @@ public class GraphUsedListTest extends Tests {
         assertEquals(actionVersion, response.jsonPath().getString("version[1]"));
         assertEquals(serviceVersion, response.jsonPath().getString("version[2]"));
         assertEquals(productVersion, response.jsonPath().getString("version[0]"));
+    }
+
+    @DisplayName("Получение списка объектов использующих граф после удаления объектов")
+    @TmsLink("")
+    @Test
+    public void getUsedGraphListAfterProductDeletedTest() {
+        Graph usedGraphApi = Graph.builder()
+                .name("used_graph_with_deleted_object_api")
+                .build()
+                .createObject();
+        String usedGraphId = usedGraphApi.getGraphId();
+
+        Product createProductResponse = Product.builder()
+                .name(getRandomStringApi(6))
+                .graphId(usedGraphId)
+                .build()
+                .createObject();
+
+        Service createServiceResponse = Service.builder()
+                .name(getRandomStringApi(6))
+                .title("service_title")
+                .isPublished(false)
+                .graphId(usedGraphId)
+                .build()
+                .createObject();
+
+        Action createActionResponse = Action.builder()
+                .name(getRandomStringApi(6))
+                .graphId(usedGraphId)
+                .build()
+                .createObject();
+
+        assertEquals(3, getObjectArrayUsedGraph(usedGraphId).getList("").size());
+        createActionResponse.deleteObject();
+        createProductResponse.deleteObject();
+        createServiceResponse.deleteObject();
+
+        assertEquals(0, getObjectArrayUsedGraph(usedGraphId).getList("").size());
     }
 }
