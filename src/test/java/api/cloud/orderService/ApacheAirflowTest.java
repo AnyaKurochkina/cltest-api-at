@@ -51,7 +51,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Создать {0}")
-    void create(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void create(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         //noinspection EmptyTryBlock
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
@@ -62,7 +62,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Расширить {0}")
-    void expand(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void expand(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.expandMountPoint();
@@ -73,7 +73,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Обновить сертификаты {0}")
-    void updateCerts(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void updateCerts(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.updateCerts();
@@ -84,7 +84,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Изменить группы добавления DAG-файлов {0}")
-    void updateGroupAddDagFiles(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void updateGroupAddDagFiles(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             String accessGroupTechNew = apacheAirflow.accessGroup("service-accounts", "AT airflow new group");
@@ -96,7 +96,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Установить Cloudera CDH {0}")
-    void airflowInstallExtras(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void airflowInstallExtras(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.airflowInstallExtras();
@@ -112,7 +112,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Изменить группы доступа к консоли управления {0}")
-    void airflowChangeWebAccess(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void airflowChangeWebAccess(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.airflowChangeWebAccess(Arrays.asList(apacheAirflow.additionalAccessGroup(), apacheAirflow.accessGroup()));
@@ -123,7 +123,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Обновить ОС {0}")
-    void updateOs(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void updateOs(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.updateOs();
@@ -135,7 +135,7 @@ public class ApacheAirflowTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Удалить {0}")
-    void delete(ApacheAirflow product, PostgreSQL ignore, Integer num) {
+    void delete(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
         createPostgres(product);
         try (ApacheAirflow airflow = product.createObjectExclusiveAccess()) {
             airflow.deleteObject();
