@@ -30,7 +30,7 @@ import java.util.Random;
 @NoArgsConstructor
 @SuperBuilder
 public class RabbitMQClusterAstra extends IProduct {
-    private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.find{it.name.contains('%s')}";
+    private final static String RABBITMQ_USER = "data.find{it.type=='cluster'}.data.config.users.find{it.name.contains('%s')}.name";
     private final static String RABBIT_CLUSTER_VHOST = "data.find{it.data.config.containsKey('vhosts')}.data.config.vhosts.any{it.name=='%s'}";
     private final static String RABBIT_CLUSTER_VHOST_ACCESS = "data.find{it.data.config.containsKey('vhost_access')}.data.config.vhost_access.any{it.vhost_name=='%s'}";
     String role;
