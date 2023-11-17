@@ -6,6 +6,8 @@ import org.openqa.selenium.By;
 import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.Slider;
+import ui.elements.TextArea;
+import ui.models.cloudDirector.StorageProfile;
 
 import static com.codeborne.selenide.Selenide.$;
 import static ui.cloud.pages.orders.OrderUtils.clickOrder;
@@ -32,8 +34,14 @@ public class DataCentreCreatePage {
         return this;
     }
 
-    public DataCentreCreatePage setDataCentreProfile(String profile) {
-        Select.byXpath("//tbody//button[@title='Open']").setContains(profile);
+    public DataCentreCreatePage setDataCentreProfile(StorageProfile profile) {
+        Select.byXpath("//tbody//button[@title='Open']").setContains(profile.getLimit());
+        TextArea.byName("limit").setValue(profile.getLimit());
+        return this;
+    }
+
+    public DataCentreCreatePage setRouterBandwidth(String mbs) {
+        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(mbs);
         return this;
     }
 

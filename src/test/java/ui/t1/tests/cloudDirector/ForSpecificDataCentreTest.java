@@ -13,7 +13,7 @@ import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
-import ui.models.StorageProfile;
+import ui.models.cloudDirector.StorageProfile;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
@@ -28,8 +28,8 @@ import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
 public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
-    private String orgName = "org-nzfrg964e8-03f7ba6e385-at-ui";
-    private String vdcName = "ajejxzdjaq-at-ui";
+    private String orgName = "t1-cloud-rtk-alan";
+    private String vdcName = "nsssss";
 
     @Test
     @Order(4)

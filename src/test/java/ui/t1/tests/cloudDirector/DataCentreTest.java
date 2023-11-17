@@ -14,7 +14,8 @@ import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
-import ui.models.StorageProfile;
+import ui.models.cloudDirector.StorageProfile;
+import ui.models.cloudDirector.Vdc;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
@@ -35,12 +36,15 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     public void createDataCentre() {
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
-                .addDataCentre(dataCentreName)
+                .addDataCentre(testVdc)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
                 .checkCreate(true)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(dataCentreName));
+        new VMwareOrganizationPage()
+                .selectDataCentre(testVdc.getName())
+                .checkVdcParams(testVdc);
     }
 
     @Test
@@ -49,9 +53,10 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Создание второго VDC  в одной организации")
     public void createSecondDataCentreTest() {
         String secondDataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
+        Vdc secondVdc = new Vdc(secondDataCentreName, "2", "4", new StorageProfile("Standart", "10"));
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
-                .addDataCentre(secondDataCentreName)
+                .addDataCentre(secondVdc)
                 .waitChangeStatus()
                 .selectDataCentre(secondDataCentreName)
                 .checkCreate(true)
@@ -68,7 +73,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLink("570222")
     @DisplayName("VMware. Проверка уникальности имени VDC")
     public void createDataCentreWithSameNameTest() {
-        new IndexPage().goToCloudDirector()
+        new IndexPage()
+                .goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentreWithExistName(dataCentreName);
     }
@@ -78,7 +84,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("158901"), @TmsLink("767870")})
     @DisplayName("VMware. Зарезервировать/отозвать внешние IP адреса")
     public void reserveExternalIPAddressesTest() {
-        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
+        DataCentrePage dataCentrePage = new IndexPage()
+                .goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addIpAddresses(2));

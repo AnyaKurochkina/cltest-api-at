@@ -5,7 +5,8 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
-import ui.models.StorageProfile;
+import ui.models.cloudDirector.StorageProfile;
+import ui.models.cloudDirector.Vdc;
 import ui.t1.pages.IProductT1Page;
 
 import java.time.Duration;
@@ -21,6 +22,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
 
     private final SelenideElement totalRam = $x("//span[text() = 'RAM, ГБ']//preceding-sibling::div//span[2]");
     private final SelenideElement totalCPU = $x("//span[text() = 'CPU, ядра']//preceding-sibling::div//span[2]");
+    private final SelenideElement totalStorage = $x("//span[text() = 'Storage, Гб']//preceding-sibling::div//span[2]");
 
     private final SelenideElement VMwareOrgPage = $x("//*[text() = 'VMware организация']");
 
@@ -36,15 +38,16 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     }
 
     public void addIpAddresses(int ipQty) {
-        runActionWithParameters(PUBLIC_IP_ADDRESSES, "Зарезервировать внешние IP адреса", "Подтвердить", () ->
+        runActionWithParameters(ROUTER_INFO, "Резервирование дополнительных IP адресов", "Подтвердить", () ->
                 Slider.byLabel("Количество дополнительных внешних IPv4 адресов").setValue(ipQty));
         Waiting.sleep(5000);
         generalInformation.click();
+        new RouterTable().getRow(0).get().click();
+        new Table("Дополнительные IP адреса").getRow(0).get().click();
         assertEquals(ipQty, new IpTable().getRows().size());
     }
 
     public void changeRouterConfig(String speed, String configType) {
-
         runActionWithParameters(ROUTER_INFO, "Изменить конфигурацию", "Подтвердить", () ->
         {
             Slider.byLabel("Лимит пропускной способности канала, Мбит/сек").setValue(speed);
@@ -95,7 +98,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         while (count > 0) {
             runActionWithoutParameters(new IpTable().getRows().first().$x(".//button"), "Освободить");
             Waiting.sleep(1000);
-            generalInformation.click();
+            //generalInformation.click();
             count--;
         }
     }
@@ -112,17 +115,17 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         assertEquals(String.valueOf(ram), totalRam.getText());
     }
 
+    @Step("Проверка параметров созданного VDC")
+    public void checkVdcParams(Vdc vdc) {
+        assertEquals(vdc.getCpu(), totalCPU.getText());
+        assertEquals(vdc.getRam(), totalRam.getText());
+        assertEquals(vdc.getStorageProfile().getLimit(), totalStorage.getText());
+    }
+
     @Step("Переход на страницу VMware организация")
     public VMwareOrganizationPage goToVMwareOrgPage() {
         VMwareOrgPage.click();
         return new VMwareOrganizationPage();
-    }
-
-    private static class IpTable extends Table {
-
-        public IpTable() {
-            super("IP-адрес", 2);
-        }
     }
 
     private static class StorageProfileTable extends Table {
@@ -135,7 +138,14 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     private static class RouterTable extends Table {
 
         public RouterTable() {
-            super("High availability");
+            super("Пропускная способность, Мбит/сек");
+        }
+    }
+
+    private static class IpTable extends Table {
+
+        public IpTable() {
+            super("IP адрес");
         }
     }
 }
