@@ -1,23 +1,22 @@
 package api.cloud.stateService.item;
 
 import api.Tests;
+import core.helper.JsonHelper;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
-import models.cloud.productCatalog.action.Action;
-import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.Item;
 import models.cloud.stateService.extRelations.ExtRelation;
+import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.productCatalog.ActionSteps.createAction;
-import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.stateService.ExtRelationsStep.createExtRelation;
 import static steps.stateService.ExtRelationsStep.deleteExtRelation;
 import static steps.stateService.StateServiceSteps.*;
@@ -29,8 +28,6 @@ import static steps.stateService.StateServiceSteps.*;
 public class ItemTest extends Tests {
 
     private static Project project;
-    private static Action action;
-    private static Graph graph;
     private static final String projects = "projects";
     private static final List<Integer> relationsIdsForDelete = new ArrayList<>();
 
@@ -40,8 +37,6 @@ public class ItemTest extends Tests {
                 .isForOrders(true)
                 .build()
                 .createObject();
-        action = createAction();
-        graph = createGraph();
     }
 
     @AfterAll
@@ -107,5 +102,34 @@ public class ItemTest extends Tests {
                 false);
         relationsIdsForDelete.add(extRelation.getId());
         List<Item> secondaryItemsList = getItemsListWithOutSecondaryRelation(primaryItem.getItemId());
+    }
+
+    @DisplayName("Получение списка items по фильтру include_deleted=true")
+    @TmsLink("SOUL-8274")
+    @Test
+    public void getItemListWithStateNotEqualsDeleted() {
+        List<Item> itemList = getItemsListByFilter("include_deleted=true");
+        assertTrue(itemList.stream().anyMatch(x -> x.getData().get("state").equals("deleted")), "Item со state = deleted не найден");
+    }
+
+    @DisplayName("Перевод item в state = problem")
+    @TmsLink("SOUL-8275")
+    @Test
+    public void changeItemStateToProblem() {
+        String status = "problem";
+        Item item = createItem(project);
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEventWithOneEvent.json")
+                .set("$.order_id", item.getOrderId())
+                .set("$.graph_id", item.getGraphId())
+                .set("$.action_id", item.getActionId())
+                .set("$.events[0].item_id", item.getItemId())
+                .set("$.events[0].graph_id",  item.getGraphId())
+                .set("$.events[0].action_id", item.getActionId())
+                .set("$.events[0].order_id", item.getOrderId())
+                .set("$.events[0].status", status)
+                .build();
+        createBulkAddEvent(project.getId(), json2).assertStatus(201);
+        Item itemById = getItemById(item.getItemId());
+        assertEquals(status, itemById.getData().get("state"));
     }
 }

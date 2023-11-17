@@ -1,0 +1,18 @@
+{
+  "order_id": "c002ecbb-f485-462f-b181-c0b3e441ad19",
+  "action_id": "${action_id}",
+  "graph_id": "8975c85e-3f90-482f-a765-86a06013aa27",
+  "events": [
+    {
+      "create_dt": "2023-09-29T13:13:12.530751+03:00",
+      "order_id": "7d28361a-9fdd-4c28-a135-f5b07cf7513e",
+      "action_id": "${action_id}",
+      "graph_id": "8975c85e-3f90-482f-a765-86a06013aa27",
+      "item_id": "${Псевдо случайынй uuid}",
+      "type": "vm",
+      "subtype": "state",
+      "status": "on",
+      "data": {}
+    }
+  ]
+}

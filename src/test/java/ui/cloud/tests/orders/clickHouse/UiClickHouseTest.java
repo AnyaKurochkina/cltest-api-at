@@ -32,8 +32,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 public class UiClickHouseTest extends UiProductTest {
 
-    ClickHouse product;
-    //= ClickHouse.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/db/orders/d8821a31-4503-4a49-a50c-7de2ad39a7bc/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ClickHouse product; // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f96d603-1454-47fb-90f3-94d3073a1037/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameAD = "at_ad_user";
 
@@ -116,7 +115,6 @@ public class UiClickHouseTest extends UiProductTest {
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::restart);
     }
 
-
     @Test
     @Disabled("Проверяется у Astra Linux")
     @Order(4)
@@ -146,7 +144,6 @@ public class UiClickHouseTest extends UiProductTest {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::resetPasswordDb);
     }
-
 
     @Test
     @Order(7)
@@ -224,7 +221,6 @@ public class UiClickHouseTest extends UiProductTest {
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.deleteGroupAdmin(group));
     }
 
-
     @Test
     @Order(15)
     @TmsLinks({@TmsLink("330325"), @TmsLink("330330")})
@@ -254,6 +250,24 @@ public class UiClickHouseTest extends UiProductTest {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
         clickHousePage.checkClusterMonitoringOs();
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse. Обновить информацию о сертификатах Clickhouse")
+    void updateInformationCert() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::updateInformationCert);
+    }
+
+    @Test
+    @Order(19)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse. Обновить сертификаты Clickhouse")
+    void updateCertificate() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::updateCertificate);
     }
 
     @Test
