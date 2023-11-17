@@ -22,6 +22,7 @@ public class Backend {
     Boolean advancedCheck = false;
     @Builder.Default
     String balancingAlgorithm = "leastconn";
+    @EqualsAndHashCode.Include
     String backendName;
 
     /* tcp-check*/
