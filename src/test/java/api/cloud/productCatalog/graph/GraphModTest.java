@@ -4,11 +4,15 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.authorizer.Project;
+import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.productCatalog.Env;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.Modification;
 import models.cloud.productCatalog.graph.RootPath;
 import models.cloud.productCatalog.graph.UpdateType;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -18,6 +22,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.GraphSteps.*;
 
@@ -207,5 +212,33 @@ public class GraphModTest extends Tests {
         Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=test&env_name=lt");
         assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
         assertEquals(uiData, createdGraph.getUiSchema().get("title"));
+    }
+
+    @DisplayName("Получение графа с несуществующим ключем в модификациях")
+    @TmsLink("SOUL-8276")
+    @Test
+    public void getGraphWithNotExistKeysInModificationTest() {
+        String key = RandomStringUtils.randomAlphabetic(5).toLowerCase();
+        Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix("DEV"))
+                .build()
+                .createObject();
+        String jsonData = "dev_title";
+        Modification jsonSchema = Modification.builder()
+                .name("json_schema_dev_mod")
+                .envNames(Collections.singletonList("DEV"))
+                .order(1)
+                .path(format("{}.sdf", key))
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data(jsonData)
+                .build();
+        Graph graph = Graph.builder()
+                .name("get_graph_with_out_context_test_api")
+                .version("1.0.0")
+                .modifications(Collections.singletonList(jsonSchema))
+                .build()
+                .createObject();
+        String errorMsg = getResponseGraphByIdContext(project.getId(), graph.getGraphId()).extractAs(ErrorMessage.class).getMessage();
+        assertEquals(format("No {} key in {} dictionary for schema (json_schema)", key), errorMsg);
     }
 }

@@ -43,12 +43,14 @@ public class LoadBalancer extends IProduct {
     @Builder.Default
     List<Gslb> gslbs = new ArrayList<>();
     @Builder.Default
-    List<RouteSni> routes = new ArrayList<>();
+    List<RouteSni.Route> routes = new ArrayList<>();
     private final String FRONTEND_PATH = "data.find{it.type=='cluster'}.data.config.frontends.find{it.frontend_name == '%s'}";
     private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
     private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
     private final String ROUTE_PATH = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s')}";
+    private final String ROUTE_PATH_BACKEND = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s') && it.backend_name.contains('%s')}";
     private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}[-2]";
+    private final String ALIAS_PATH = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.aliases.contains('%s')}";
 
     @Override
     public Entity init() {
@@ -167,15 +169,26 @@ public class LoadBalancer extends IProduct {
         save();
     }
 
-    public void addRouteSni(RouteSni route) {
-        if (routes.contains(route))
-            return;
+    public void addRouteSni(RouteSni routeSni) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_route_sni").product(this)
-                .data(new JSONObject(JsonHelper.toJson(route))).build());
-        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
-                String.format(ROUTE_PATH, route.getRoutes().get(0).getName()), RouteSni.RouteCheck.class), "route не создался");
-        routes.add(route);
+                .data(new JSONObject(JsonHelper.toJson(routeSni))).build());
+        for(RouteSni.Route route : routeSni.getRoutes()) {
+            Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
+                    String.format(ROUTE_PATH, route.getName()), RouteSni.RouteCheck.class),"route не создался");
+            routes.add(route);
+        }
         save();
+    }
+
+    public void addAliases(RouteSni routeSni, List<RouteSni.Alias> aliases) {
+        for(RouteSni.Route route: routeSni.getRoutes()) {
+            OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_alias_for_sni").product(this)
+                    .data(new JSONObject().put("globalname", route.getName() + "." + routeSni.getGlobalname()).put("aliases", aliases)).build());
+            for(RouteSni.Alias alias: aliases) {
+                Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
+                        String.format(ALIAS_PATH, alias.getName()), RouteSni.RouteCheck.class), "Псевдоним не добавлен");
+            }
+        }
     }
 
     public void deleteBackend(Backend backend) {
@@ -238,6 +251,24 @@ public class LoadBalancer extends IProduct {
     public void deleteGslbSource(String globalName) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_gslb_release_delete_publication")
                 .product(this).data(new JSONObject().put("globalname", globalName)).build());
+    }
+
+    public void deleteRouteSni(RouteSni routeSni) {
+        for(RouteSni.Route route: routeSni.getRoutes()) {
+            routes.remove(route);
+            OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_sni_route").product(this)
+                    .data(new JSONObject().put("sni_route", route.getName() + "." + routeSni.getGlobalname())).build());
+            Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, route.getName()), RouteSni.RouteCheck.class));
+        }
+        save();
+    }
+
+    public void editRouteSni(RouteSni routeSni, String backendName) {
+        for(RouteSni.Route route: routeSni.getRoutes()) {
+            OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_edit_route_sni").product(this)
+                    .data(new JSONObject().put("backend_name", backendName).put("sni_route", route.getName() + "." + routeSni.getGlobalname())).build());
+            Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH_BACKEND, route.getName(), backendName), RouteSni.RouteCheck.class), "route не изменен");
+        }
     }
 
     public Boolean isStateContains(String name) {
