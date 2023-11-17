@@ -206,6 +206,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @ParameterizedTest(name = "[{1}] Вертикальное масштабирование {0}")
     void resize(ApacheKafkaCluster product, Integer num) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeFalse(kafka.isProd(), "Тест включен только для dev и test сред");
             kafka.resize();
         }
     }
