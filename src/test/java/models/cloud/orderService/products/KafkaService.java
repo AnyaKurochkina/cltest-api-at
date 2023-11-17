@@ -37,6 +37,7 @@ public class KafkaService extends IProduct {
         jsonTemplate = "/orders/kafka_service.json";
         productName = "Kafka Topic как услуга";
         initProduct();
+        availabilityZone = "";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if(dataCentre == null)
