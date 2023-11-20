@@ -104,8 +104,8 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение деталей audit {entityName} с audit_id {auditId}")
-    public static void getObjectAudit(String entityName, String auditId) {
-         new Http(ProductCatalogURL)
+    public static Response getObjectAudit(String entityName, String auditId) {
+         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/{}/audit_details/?audit_id={}", entityName, auditId)
                 .assertStatus(200);
