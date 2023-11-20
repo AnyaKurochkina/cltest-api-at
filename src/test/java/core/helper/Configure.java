@@ -60,6 +60,7 @@ public class Configure {
     public static String OrchestratorWeb;
     public static String TagsService;
     public static String SelectorAllocator;
+    public static String VcloudConnector;
 
     static {
         try {
@@ -124,6 +125,7 @@ public class Configure {
             OrchestratorWeb = KONG_URL + "orchestrator-web";
             TagsService = KONG_URL + "tags-service";
             SelectorAllocator = KONG_URL + "selector-allocator";
+            VcloudConnector = KONG_URL + "vcloud-connector";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();

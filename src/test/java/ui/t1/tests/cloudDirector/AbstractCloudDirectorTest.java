@@ -37,13 +37,13 @@ public abstract class AbstractCloudDirectorTest extends Tests {
         name = UUID.randomUUID().toString().substring(25) + "-at-ui";
         vmWareOrganization = createVMwareOrganization(name, project.getId());
         dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
-        testVdc = new Vdc(dataCentreName, "2", "4", new StorageProfile("High", "20"));
+        testVdc = new Vdc(dataCentreName, "2", "4", new StorageProfile("Standard", "20"));
     }
 
     @BeforeEach
     @Title("Авторизация на портале")
     public void beforeEach() {
-        new T1LoginPage("proj-vrr9y4bhlg")
+        new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
     }
 

@@ -35,7 +35,10 @@ public class DataCentreCreatePage {
     }
 
     public DataCentreCreatePage setDataCentreProfile(StorageProfile profile) {
-        Select.byXpath("//tbody//button[@title='Open']").setContains(profile.getLimit());
+        Select profileStorage = Select.byXpath("//tbody//button[@title='Open']");
+        if (!profileStorage.getValue().contains(profile.getName())) {
+            profileStorage.setContains(profile.getName());
+        }
         TextArea.byName("limit").setValue(profile.getLimit());
         return this;
     }

@@ -34,6 +34,8 @@ public class VmWareOrganization extends Entity {
     private String projectName;
     @JsonProperty("availability_zone_name")
     private String availabilityZoneName;
+    @JsonProperty("edge_gateway_type")
+    private String edgeGatewayType;
 
     @Override
     public Entity init() {
