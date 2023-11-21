@@ -40,7 +40,7 @@ public class ApacheAirflowTest extends Tests {
             String dbName = "airflow";
             postgreSQL.createDb(dbName);
             product.setPgAdminPassword(postgreSQL.getAdminPassword());
-            product.setDbServer(postgreSQL.pgcIp());
+            product.setDbServer(postgreSQL.pgcHost());
             product.setDbUser(new DbUser(dbName, dbName + "_admin"));
         } finally {
             postgreSQL.close();

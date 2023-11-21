@@ -86,8 +86,9 @@ public class PostgreSQL extends AbstractPostgreSQL {
     }
 
     @Override
-    public String pgcIp() {
-        return (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.hostname.contains('-pgc')}.ip");
+    public String pgcHost() {
+        return OrderServiceSteps.getObjectClass(this, "product_data.find{it.hostname.contains('-pgc')}.hostname", String.class)
+                + "." + getDomain();
     }
 
     @Step("Удаление продукта")

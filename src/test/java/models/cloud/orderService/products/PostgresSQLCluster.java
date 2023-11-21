@@ -5,6 +5,7 @@ import core.helper.JsonTemplate;
 import core.helper.StringUtils;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
+import io.restassured.common.mapper.TypeRef;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
@@ -113,9 +114,9 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
 
     @Override
     @SuppressWarnings("unchecked")
-    public String pgcIp() {
-        return (String) OrderServiceSteps.getProductsField(this, "product_data.findAll{it.hostname.contains('-pgc')}.ip", List.class).stream()
-                .collect(Collectors.joining(","));
+    public String pgcHost() {
+        return OrderServiceSteps.getObjectClass(this, "product_data.findAll{it.hostname.contains('-pgc')}.hostname",
+                        new TypeRef<List<String>>() {}).stream().collect(Collectors.joining(",", "", "." + getDomain()));
     }
 
     @Override
