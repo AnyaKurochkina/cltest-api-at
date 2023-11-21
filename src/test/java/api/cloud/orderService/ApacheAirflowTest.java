@@ -103,7 +103,7 @@ public class ApacheAirflowTest extends Tests {
             if (apacheAirflow.isDev()) {
                 String ip = (String) OrderServiceSteps.getProductsField(apacheAirflow, "product_data[0].ip");
                 assertContains(apacheAirflow.executeSsh(SshClient.builder().host(ip).env(apacheAirflow.envType()).build(),
-                        "ls /app"), "  cloudera  ", "  extras  ");
+                        "ls /app"), "cloudera", "extras");
             }
         }
     }
