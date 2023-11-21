@@ -165,8 +165,9 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Мониторинг ОС")
     void monitoringOs() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.checkMonitoringOs();
+        redisPage.checkClusterMonitoringOs();
     }
+
     @Test
     @Order(28)
     @TmsLink("1296747")

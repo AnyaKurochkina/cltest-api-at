@@ -52,9 +52,9 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getGroupSelect().set(accessGroup);
+            orderPage.getGroupManagerSelect().set(accessGroup);
             if (product.isDev())
-                    orderPage.getGroup2Select().set(accessGroup);
+                    orderPage.getGroupAdministratorSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -76,7 +76,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @TmsLink("1727719")
     @Order(2)
-    @DisplayName("UI RabbitMQClusterAstra. Проверка графа в истории действий")
+    @DisplayName("UI RabbitMQClusterAstra. Проверка развертывания в истории действий")
     void
     checkHeaderHistoryTable() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);

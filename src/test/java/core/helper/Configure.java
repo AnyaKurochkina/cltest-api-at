@@ -44,6 +44,22 @@ public class Configure {
     public static String RestrictionServiceUrl;
     public static String Budget;
     public static String SyncService;
+    public static String LucrumService;
+    public static String SelectorCp;
+    public static String SelectorInventory;
+    public static String ServiceManagerProxy;
+    public static String Auditor;
+    public static String SccmManager;
+    public static String VictoriaProxy;
+    public static String SuggestionsBack;
+    public static String WaitingService;
+    public static String SecretService;
+    public static String IssueCollectorService;
+    public static String CalculationManager;
+    public static String Naming;
+    public static String OrchestratorWeb;
+    public static String TagsService;
+    public static String SelectorAllocator;
 
     static {
         try {
@@ -92,6 +108,22 @@ public class Configure {
             RestrictionServiceUrl = KONG_URL + "restriction-service";
             Budget = KONG_URL + "budget";
             SyncService = KONG_URL + "sync-service";
+            LucrumService = KONG_URL + "lucrum-service";
+            SelectorCp = KONG_URL + "selector-cp";
+            SelectorInventory = KONG_URL + "selector-inventory";
+            Auditor = KONG_URL + "auditor";
+            SccmManager = KONG_URL + "sccm-manager";
+            ServiceManagerProxy = KONG_URL + "service-manager-proxy";
+            VictoriaProxy = KONG_URL + "victoria-proxy";
+            SuggestionsBack = KONG_URL + "suggestions-back";
+            WaitingService = KONG_URL + "waiting-service";
+            SecretService = KONG_URL + "secret-service";
+            IssueCollectorService = KONG_URL + "issue-collector-service";
+            CalculationManager = KONG_URL + "calculationmanager";
+            Naming = KONG_URL + "naming";
+            OrchestratorWeb = KONG_URL + "orchestrator-web";
+            TagsService = KONG_URL + "tags-service";
+            SelectorAllocator = KONG_URL + "selector-allocator";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();

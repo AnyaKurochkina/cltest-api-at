@@ -73,13 +73,11 @@ public class ClickHouseClusterPage extends IProductPage {
     public void updateInformationCert() {
         new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить информацию о сертификатах Clickhouse Cluster");
-        new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void updateCertificate() {
         new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты Clickhouse Cluster");
-        new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopHard() {

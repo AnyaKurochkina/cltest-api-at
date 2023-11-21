@@ -191,7 +191,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     @DisplayName("UI Redis Sentinel Astra. Мониторинг ОС")
     void monitoringOs() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.checkMonitoringOs();
+        redisPage.checkClusterMonitoringOs();
     }
 
     @Test
