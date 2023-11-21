@@ -30,8 +30,8 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
     String versionWildFly = "23.0.2.Final";
-    String versionJava = "11.0.12";
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba4245b1-c393-4ae6-bdf9-c846411edfcc/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    String versionJava = "11";
+    WildFly product; // = WildFly.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/e8b85b2a-ae30-486f-8f65-a3a55534c22e/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -106,8 +106,11 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Обновить сертификат WildFly")
     void updateCertificate() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificate);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateWithoutChange);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateGlobal);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateF5);
     }
+
 
     @Test
     @Order(5)
@@ -162,7 +165,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", product.accessGroup()));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("superuser", product.accessGroup()));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(product.accessGroup())));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
@@ -182,7 +185,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @Disabled("Проверяется у Astra Linux")
     @Order(12)
     @TmsLink("")
-    @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
+    @DisplayName("UI WildFlyAstra. Вертикальное масштабирование WildFly")
     void vmActCheckConfig() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);

@@ -4,6 +4,7 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Redis;
+import models.cloud.orderService.products.RedisSentinel;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
@@ -17,7 +18,7 @@ import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class RedisAstraPage extends IProductPage {
+public class RedisSentinelAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_DB = "Базы данных";
@@ -44,35 +45,35 @@ public class RedisAstraPage extends IProductPage {
     SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
 
 
-    public RedisAstraPage(Redis product) {
+    public RedisSentinelAstraPage(RedisSentinel product) {
         super(product);
     }
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(expectedStatus);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(expectedStatus);
     }
 
     public void start() {
-        checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
         runActionWithoutParameters(BLOCK_APP, "Включить");
-        checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
-        checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить");
-        checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void checkConfiguration() {
-        checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
         new Table("Роли узла").getRowByIndex(0).scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
-    public void resetPassword(String name) {
+    public void resetPasswordSentinel(String name) {
         runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль (удалить)", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль (удалить)");
@@ -80,7 +81,7 @@ public class RedisAstraPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
     }
-    public void resetPasswordUser(String name) {
+    public void resetPassword(String name) {
         runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль пользователя", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль пользователя");
@@ -111,27 +112,27 @@ public class RedisAstraPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new RedisSentinelAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
     public void updateOs() {
         runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
-        new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new RedisSentinelAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Перезагрузить");
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void getActualConfiguration() {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Получить актуальную конфигурацию");
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void changeTransactionIsolation(String value) {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation", "Подтвердить", () -> {
             Select.byLabel("default_transaction_isolation").set(value);
         });
@@ -141,7 +142,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void changeMaxConnections(String value) {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить max_connections", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Изменить max_connections");
             dlg.setInputValue("max_connections", value);
@@ -152,13 +153,13 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void stopHard() {
-        checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
-        checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void changeConfiguration() {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
@@ -171,7 +172,7 @@ public class RedisAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
     public void changeConfigurationSentinel() {
-        new RedisAstraPage.VirtualMachineTable().checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable().checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () -> {
@@ -185,7 +186,7 @@ public class RedisAstraPage extends IProductPage {
     }
     public  void changeParamNotify(String param)
     {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
             Select.byLabel("Параметр notify-keyspace-events").set(param);
         });
@@ -202,7 +203,7 @@ public class RedisAstraPage extends IProductPage {
 
 
     public void createDb(String name) {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_LIMIT_CONNECT).isColumnValueContains("", name))) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -218,7 +219,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void addUserDb(String nameDb, String nameUserDb, String comment) {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_NAME_DB).isColumnValueContains("", nameDb + "_" + nameUserDb))) {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -237,7 +238,7 @@ public class RedisAstraPage extends IProductPage {
     }
 
     public void removeDb(String name) {
-        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (new Table(HEADER_LIMIT_CONNECT).isColumnValueEquals("", name)) {
             btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();

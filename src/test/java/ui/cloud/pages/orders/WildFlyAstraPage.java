@@ -2,6 +2,7 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.*;
 import core.helper.Configure;
 import io.qameta.allure.Step;
+import javafx.scene.control.RadioButton;
 import models.cloud.orderService.products.WildFly;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -56,15 +57,13 @@ public class WildFlyAstraPage extends IProductPage {
 
     public void changeConfiguration() {
         checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        btnGeneralInfo.click();
-        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () -> {
-            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+        runActionWithParameters(getActionsMenuButton("", 2), "Вертикальное масштабирование WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
         });
         btnGeneralInfo.click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -118,11 +117,45 @@ public class WildFlyAstraPage extends IProductPage {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    @Step("Обновить сертификат WildFly")
-    public void updateCertificate() {
+    @Step("Обновить сертификат без изменений WildFly")
+    public void updateCertificateWithoutChange() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+        });
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    @Step("Обновить сертификат. Глобальный тип  WildFly")
+    public void updateCertificateGlobal() {
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+            RadioGroup.byLabel("Выберите метод").select("Добавить/изменить альтернативные имена");
+            Select.byLabel("Тип балансировщика").set("Глобальный");
+            Input.byLabel("Имя глобальной записи").setValue("global");
+        });
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    @Step("Обновить сертификат. Локальный тип  WildFly")
+    public void updateCertificateLocal() {
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+            RadioGroup.byLabel("Выберите метод").select("Добавить/изменить альтернативные имена");
+            Select.byLabel("Тип балансировщика").set("Локальный");
+            Input.byLabel("Имя глобальной записи").setValue("local");
+        });
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+    @Step("Обновить сертификат. F5 тип  WildFly")
+    public void updateCertificateF5() {
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+            RadioGroup.byLabel("Выберите метод").select("Добавить/изменить альтернативные имена");
+            Select.byLabel("Тип балансировщика").set("F5");
+            Button.byXpath("//button[contains(@class, 'array-item-add')]").click();
+            Input.byLabel("Доменное имя балансировщика F5").setValue("f5");
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
