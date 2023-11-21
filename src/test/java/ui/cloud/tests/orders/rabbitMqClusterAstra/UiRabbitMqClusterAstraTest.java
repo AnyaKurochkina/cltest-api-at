@@ -76,7 +76,7 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @TmsLink("1727719")
     @Order(2)
-    @DisplayName("UI RabbitMQClusterAstra. Проверка полей заказа")
+    @DisplayName("UI RabbitMQClusterAstra. Проверка графа в истории действий")
     void
     checkHeaderHistoryTable() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);

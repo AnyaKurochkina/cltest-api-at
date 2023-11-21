@@ -33,7 +33,7 @@ import static ui.cloud.pages.orders.RedisAstraOrderPage.userNameRedisSentinel;
 @Tags({@Tag("ui"), @Tag("ui_redis_sentinel_astra")})
 public class UiRedisSentinelAstraTest extends UiProductTest {
 
-    Redis product; // = Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/093356ae-9ca4-498d-85fa-5b9671eea39d/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    Redis product = Redis.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/0b31ecea-97b7-4a46-9e8f-00483556cf9a/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -86,7 +86,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     @Test
     @TmsLink("")
     @Order(2)
-    @DisplayName("UI Redis Sentinel Astra. Проверка полей заказа")
+    @DisplayName("UI Redis Sentinel Astra. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         redisPage.checkHeadersHistory();
@@ -204,6 +204,14 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
             RedisAstraPage redisPage = new RedisAstraPage(product);
             redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.changeParamNotify("KEA"));
         }
+    }
+    @Test
+    @Order(20)
+    @TmsLink("")
+    @DisplayName("UI Redis Sentinel Astra. Обновить ОС")
+    void updateOs() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::updateOs);
     }
 
     @Test

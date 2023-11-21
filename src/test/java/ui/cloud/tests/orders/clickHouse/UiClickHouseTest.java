@@ -96,7 +96,7 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @TmsLink("1236735")
     @Order(2)
-    @DisplayName("UI ClickHouse. Проверка полей заказа")
+    @DisplayName("UI ClickHouse. Проверка графа в истории действий")
     void
     checkHeaderHistoryTable() {
         ClickHousePage clickHousePage = new ClickHousePage(product);

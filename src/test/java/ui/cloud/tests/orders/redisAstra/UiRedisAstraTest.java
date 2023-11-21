@@ -83,7 +83,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @Test
     @TmsLink("1236732")
     @Order(2)
-    @DisplayName("UI RedisAstra. Проверка полей заказа")
+    @DisplayName("UI RedisAstra. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         redisPage.checkHeadersHistory();
@@ -122,7 +122,7 @@ public class UiRedisAstraTest extends UiProductTest {
 
     @Test
     @Order(19)
-    @TmsLink("796997")
+    @TmsLink("")
     @DisplayName("UI RedisAstra. Сбросить пароль (удалить)")
     void resetPasswordSentinel() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
@@ -134,7 +134,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Сбросить пароль пользователя")
     void resetPassword() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::resetPassword);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel));
     }
 
     @Test
