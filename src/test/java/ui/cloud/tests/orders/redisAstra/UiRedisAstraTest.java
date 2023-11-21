@@ -177,6 +177,14 @@ public class UiRedisAstraTest extends UiProductTest {
             redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.changeParamNotify("KEA"));
         }
     }
+    @Test
+    @Order(29)
+    @TmsLink("")
+    @DisplayName("UI RedisAstra. Обновить ОС")
+    void updateOs() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::updateOs);
+    }
 
     @Test
     @Order(100)
