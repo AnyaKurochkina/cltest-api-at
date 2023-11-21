@@ -1,8 +1,10 @@
 package ui.cloud.pages.orders;
-import com.codeborne.selenide.*;
+
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import core.helper.Configure;
 import io.qameta.allure.Step;
-import javafx.scene.control.RadioButton;
 import models.cloud.orderService.products.WildFly;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -10,7 +12,6 @@ import ui.elements.*;
 
 import java.net.MalformedURLException;
 
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
