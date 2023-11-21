@@ -79,7 +79,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @TmsLink("1319683")
     @Order(2)
-    @DisplayName("UI ApacheKafkaCluster. Проверка полей заказа")
+    @DisplayName("UI ApacheKafkaCluster. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.getBtnGeneralInfo().click();
