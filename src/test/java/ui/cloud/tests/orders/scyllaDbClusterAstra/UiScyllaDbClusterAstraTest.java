@@ -82,7 +82,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     @Test
     @TmsLink("1368046")
     @Order(2)
-    @DisplayName("UI Scylla_db_cluster_astra. Проверка полей заказа")
+    @DisplayName("UI Scylla_db_cluster_astra. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.checkHeadersHistory();

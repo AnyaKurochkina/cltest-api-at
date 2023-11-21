@@ -14,6 +14,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.SneakyThrows;
 import models.cloud.productCatalog.ImportObject;
+import models.cloud.productCatalog.ProductAudit;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -90,6 +91,43 @@ public class ProductCatalogSteps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post("/api/v1/check_item_restrictions/");
+    }
+
+    @Step("Получение списка audit для {entityName} с id {id}")
+    public static List<ProductAudit> getObjectAuditList(String entityName, String id) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/{}/{}/audit/", entityName, id)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductAudit.class);
+    }
+
+    @Step("Получение деталей audit {entityName} с audit_id {auditId}")
+    public static Response getObjectAudit(String entityName, String auditId) {
+         return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/{}/audit_details/?audit_id={}", entityName, auditId)
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка уникальных obj_keys для аудита {entityName}")
+    public static void getUniqueObjectKeysListAudit(String entityName) {
+        new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/{}/audit_object_keys/", entityName)
+                .assertStatus(200);
+    }
+
+    @Step("Получение списка аудита {entityName} для obj_keys")
+    public static List<ProductAudit> getAuditListForObjKeys(String entityName, String keyValue) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
+                .post("/api/v1/{}/audit_by_object_keys/", entityName)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductAudit.class);
     }
 
     @Step("Получение версии продуктового каталога")

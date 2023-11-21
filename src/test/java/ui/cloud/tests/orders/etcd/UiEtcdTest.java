@@ -88,7 +88,7 @@ public class UiEtcdTest extends UiProductTest {
     @Test
     @TmsLink("")
     @Order(2)
-    @DisplayName("UI Etcd. Проверка полей заказа")
+    @DisplayName("UI Etcd. Проверка графа в истории действий")
     void
     checkHeaderHistoryTable() {
         EtcdPage etcdPage = new EtcdPage(product);
