@@ -26,8 +26,8 @@ public class EtcdTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Etcd product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(Etcd product, Integer num) {
         //noinspection EmptyTryBlock
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
         }
@@ -36,8 +36,8 @@ public class EtcdTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверка создания {0}")
-    void checkCreate(Etcd product) {
+    @ParameterizedTest(name = "[{1}] Проверка создания {0}")
+    void checkCreate(Etcd product, Integer num) {
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
             etcd.checkUserGroupBySsh();
         }
@@ -46,8 +46,8 @@ public class EtcdTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить точку монтирования {0}")
-    void expandMountPoint(Etcd product) {
+    @ParameterizedTest(name = "[{1}] Расширить точку монтирования {0}")
+    void expandMountPoint(Etcd product, Integer num) {
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
             etcd.expandMountPoint("/app/etcd/data");
         }
@@ -56,8 +56,8 @@ public class EtcdTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверить конфигурацию {0}")
-    void refreshVmConfig(Etcd product) {
+    @ParameterizedTest(name = "[{1}] Проверить конфигурацию {0}")
+    void refreshVmConfig(Etcd product, Integer num) {
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
             etcd.refreshVmConfig();
         }
@@ -66,8 +66,8 @@ public class EtcdTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
-    void resetPassword(Etcd product) {
+    @ParameterizedTest(name = "[{1}] Сбросить пароль {0}")
+    void resetPassword(Etcd product, Integer num) {
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
             etcd.resetPassword("OyrjONmSaArAd7NkqCBdXxlvpy51");
         }
@@ -76,8 +76,8 @@ public class EtcdTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создание сертификата для пользователя etcd {0}")
-    void createCerts(Etcd product) {
+    @ParameterizedTest(name = "[{1}] Создание сертификата для пользователя etcd {0}")
+    void createCerts(Etcd product, Integer num) {
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
             etcd.createCerts();
         }
@@ -85,9 +85,9 @@ public class EtcdTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Etcd product) {
+    void delete(Etcd product, Integer num) {
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
             etcd.deleteObject();
         }

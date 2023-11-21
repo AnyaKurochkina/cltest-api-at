@@ -86,8 +86,9 @@ public class PostgreSQL extends AbstractPostgreSQL {
     }
 
     @Override
-    public String pgcIp() {
-        return (String) OrderServiceSteps.getProductsField(this, "product_data.find{it.hostname.contains('-pgc')}.ip");
+    public String pgcHost() {
+        return OrderServiceSteps.getObjectClass(this, "product_data.find{it.hostname.contains('-pgc')}.hostname", String.class)
+                + "." + getDomain();
     }
 
     @Step("Удаление продукта")
@@ -106,7 +107,7 @@ public class PostgreSQL extends AbstractPostgreSQL {
 
     public void resize(Flavor newFlavor) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
-                .data(new JSONObject().put("flavor", newFlavor.toString()).put("warning", new Object()).put("check_agree", true)).build());
+                .data(new JSONObject().put("flavor", newFlavor.toJson()).put("warning", new JSONObject()).put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(newFlavor.data.cpus, cpusAfter);

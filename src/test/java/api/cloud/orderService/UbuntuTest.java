@@ -22,8 +22,8 @@ public class UbuntuTest extends Tests {
 
     @TmsLink("391696")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(Ubuntu product, Integer num) {
         //noinspection EmptyTryBlock
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
         }
@@ -32,8 +32,8 @@ public class UbuntuTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
-    void checkActions(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Обновить ОС {0}")
+    void checkActions(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             Assertions.assertTrue(ubuntu.isActionExist("update_os_vm"));
         }
@@ -42,8 +42,8 @@ public class UbuntuTest extends Tests {
     @TmsLink("391706")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.expandMountPoint();
         }
@@ -53,8 +53,8 @@ public class UbuntuTest extends Tests {
     @TmsLink("391692")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.restart();
         }
@@ -64,8 +64,8 @@ public class UbuntuTest extends Tests {
     @TmsLink("391695")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.stopSoft();
             ubuntu.start();
@@ -75,8 +75,8 @@ public class UbuntuTest extends Tests {
     @TmsLink("391697")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
-    void resize(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Изменить конфигурацию {0}")
+    void resize(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.resize(ubuntu.getMaxFlavorLinuxVm());
         }
@@ -85,8 +85,8 @@ public class UbuntuTest extends Tests {
     @TmsLink("654208")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверить конфигурацию {0}")
-    void refreshVmConfig(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Проверить конфигурацию {0}")
+    void refreshVmConfig(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.refreshVmConfig();
         }
@@ -96,8 +96,8 @@ public class UbuntuTest extends Tests {
     @TmsLinks({@TmsLink("391693"), @TmsLink("391694")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.stopHard();
             ubuntu.start();
@@ -106,8 +106,8 @@ public class UbuntuTest extends Tests {
 
     @TmsLink("1090961")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверка прав у ролей пользователя {0}")
-    void checkCreate(Ubuntu product) {
+    @ParameterizedTest(name = "[{1}] Проверка прав у ролей пользователя {0}")
+    void checkCreate(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.checkUserGroupBySsh();
         }
@@ -116,9 +116,9 @@ public class UbuntuTest extends Tests {
     @TmsLink("391691")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Ubuntu product) {
+    void delete(Ubuntu product, Integer num) {
         try (Ubuntu ubuntu = product.createObjectExclusiveAccess()) {
             ubuntu.deleteObject();
         }

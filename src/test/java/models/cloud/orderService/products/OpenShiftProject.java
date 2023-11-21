@@ -33,6 +33,7 @@ public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
     @Singular
     public List<Role> roles;
+    String dataCentre;
 
     @Override
     public Entity init() {
@@ -45,8 +46,8 @@ public class OpenShiftProject extends IProduct {
         }
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (availabilityZone == null)
-            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
         return this;
     }
 
@@ -71,7 +72,7 @@ public class OpenShiftProject extends IProduct {
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.availability_zone", getAvailabilityZone())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .set("$.order.label", getLabel())

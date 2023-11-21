@@ -1,7 +1,7 @@
 {
   "order": {
     "attrs": {
-      "availability_zone": "5",
+      "data_center": "5",
       "net_segment": "dev-srv-app",
       "quota": {
         "cpu": 1.0,

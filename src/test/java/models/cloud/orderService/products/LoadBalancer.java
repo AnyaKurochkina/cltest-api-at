@@ -338,7 +338,7 @@ public class LoadBalancer extends IProduct {
     }
 
     public void resizeClusterVms(Flavor flavor) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofMinutes(30))
                 .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
@@ -348,7 +348,7 @@ public class LoadBalancer extends IProduct {
 
     public void addHaproxy(int haproxyCount) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_add_haproxy").checkPrebilling(false).product(this)
-                .data(new JSONObject().put("new_haproxy_count", haproxyCount).put("check_agree", true)).timeout(Duration.ofMinutes(40)).build());
+                .data(new JSONObject().put("new_haproxy_count", haproxyCount).put("check_agree", true)).timeout(Duration.ofMinutes(50)).build());
     }
 
     public void complexCreate(ComplexCreate complex) {

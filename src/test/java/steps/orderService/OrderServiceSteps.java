@@ -42,7 +42,7 @@ public class OrderServiceSteps extends Steps {
 
     public static void checkOrderStatus(String exp_status, IProduct product) {
         String orderStatus = "";
-        int counter = 90;
+        int counter = 100;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.isEmpty() || orderStatus.equals("changing")) && counter > 0) {
@@ -74,7 +74,7 @@ public class OrderServiceSteps extends Steps {
 
     public static String getStatus(String orderId, String projectId) {
         return new Http(OrderServiceURL)
-                .disableAttachmentLog()
+//                .disableAttachmentLog()
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
@@ -252,7 +252,7 @@ public class OrderServiceSteps extends Steps {
         }
         if (!actionStatus.equalsIgnoreCase("success")) {
             String error = StateServiceSteps.getErrorFromStateService(orderId);
-            if (Objects.isNull(error))
+            if (Objects.isNull(error) || error.equals("[]"))
                 error = "Действие не выполнено по таймауту";
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", orderId, actionStatus, error));
         }
@@ -264,8 +264,9 @@ public class OrderServiceSteps extends Steps {
         do {
             Waiting.sleep(20000);
             status = getStatus(orderId, projectId);
-        } while (status.equals("pending") || status.equals("changing")
+        } while ((status.equals("pending") || status.equals("changing")|| status.equals("removing") || status.isEmpty())
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+        log.info("Ожидание заказа. Финальный статус {}", status);
     }
 
     @Step("Получение warning по orderId = {orderId}")
@@ -313,6 +314,26 @@ public class OrderServiceSteps extends Steps {
                     .jsonPath()
                     .get("list.collect{e -> e}.shuffled()[0].code");
         }
+    }
+
+    public static String getDataCentre(IProduct product) {
+        String dc = "50";
+        log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
+        Organization org = Organization.builder().type("default").build().createObject();
+        List<String> list = new Http(OrderServiceURL)
+                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
+                        product.getSegment(),
+                        org.getName(),
+                        product.getProductCatalogName(),
+                        product.getProjectId())
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list.findAll{it.status == 'available'}.code");
+        if (list.contains(dc))
+            return dc;
+        Assertions.assertFalse(list.isEmpty(), "Список available ДЦ пуст");
+        return list.get(new Random().nextInt(list.size()));
     }
 
     @Step("Получение зоны доступности для сегмента сети {product.segment}")

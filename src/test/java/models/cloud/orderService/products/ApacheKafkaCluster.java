@@ -21,6 +21,7 @@ import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -168,7 +169,7 @@ public class ApacheKafkaCluster extends IProduct {
     }
 
     public void resize() {
-        resize("kafka_resize_cluster_vms");
+        resize("resize_kafka_cluster_vms");
     }
 
     @Override
@@ -176,7 +177,7 @@ public class ApacheKafkaCluster extends IProduct {
         List<Flavor> list = ReferencesStep.getProductFlavorsLinkedListByFilter(this);
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
-        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).timeout(Duration.ofMinutes(40))
                 .data(new JSONObject("{\"flavor\": " + flavor.toString() + ",\"warning\":{}}").put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
