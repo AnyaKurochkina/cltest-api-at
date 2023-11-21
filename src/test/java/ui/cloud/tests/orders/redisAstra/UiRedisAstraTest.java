@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Redis;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -124,17 +123,17 @@ public class UiRedisAstraTest extends UiProductTest {
     @Order(19)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Сбросить пароль (удалить)")
-    void resetPasswordSentinel() {
+    void resetPassword() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPasswordSentinel(RedisAstraOrderPage.userNameRedisSentinel));
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel));
     }
     @Test
     @Order(20)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Сбросить пароль пользователя")
-    void resetPassword() {
+    void resetPasswordUser() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel));
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPasswordUser(RedisAstraOrderPage.userNameRedisSentinel));
     }
 
     @Test
