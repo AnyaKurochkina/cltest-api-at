@@ -102,7 +102,7 @@ public class RedisSentinel extends IProduct {
     public void checkConnect() {
         String url = "";
         try {
-            url = (String) OrderServiceSteps.getProductsField(this, "redis://" + CONNECTION_URL + "[0]");
+            url = "redis://" + OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[0]");
             Jedis jedis = new Jedis(url);
             jedis.auth(appUser, appUserPassword);
             jedis.close();
