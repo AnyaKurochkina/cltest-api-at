@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
+import java.util.LinkedHashMap;
+
 @Log4j2
 @Builder
 @Getter
@@ -36,5 +38,5 @@ public class ProductAudit{
 	private String version;
 
 	@JsonProperty("obj_keys")
-	private Object objKeys;
+	private LinkedHashMap<String, String> objKeys;
 }

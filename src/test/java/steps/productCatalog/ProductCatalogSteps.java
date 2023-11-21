@@ -111,12 +111,23 @@ public class ProductCatalogSteps {
                 .assertStatus(200);
     }
 
-    @Step("Получение списока уникальных obj_keys для аудита {entityName}")
+    @Step("Получение списка уникальных obj_keys для аудита {entityName}")
     public static void getUniqueObjectKeysListAudit(String entityName) {
         new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/{}/audit_object_keys/", entityName)
                 .assertStatus(200);
+    }
+
+    @Step("Получение списка аудита {entityName} для obj_keys")
+    public static List<ProductAudit> getAuditListForObjKeys(String entityName, String keyValue) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
+                .post("/api/v1/{}/audit_by_object_keys/", entityName)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductAudit.class);
     }
 
     @Step("Получение версии продуктового каталога")
