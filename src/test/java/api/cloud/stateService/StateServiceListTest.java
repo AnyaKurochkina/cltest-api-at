@@ -323,4 +323,13 @@ public class StateServiceListTest extends Tests {
         deleteExtRelation("projects", project.getId(), extRelation2.getId());
     }
 
+    @Test
+    @DisplayName("Негативный тест на получении ошибки при использовании неподдерживаемого фильтра")
+    @TmsLink("SOUL-8316")
+    public void checkGetItemListWithIncorrectFilter() {
+       String msg = getResponseByFilter("type__iconstains=instance").assertStatus(400).toString();
+       assertEquals("\"Error: Unsupported lookup 'iconstains' for CharField or join on the field not permitted, perhaps you meant icontains or contains?\"",
+               msg);
+    }
+
 }
