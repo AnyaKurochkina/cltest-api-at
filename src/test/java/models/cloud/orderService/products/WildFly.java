@@ -27,7 +27,7 @@ public class WildFly extends IProduct {
     String osVersion;
     @ToString.Include
     String wildFlyVersion;
-    private static String otherJavaVersion = "11.0.12";
+    private static String otherJavaVersion = "11";
     String javaVersion;
     Flavor flavor;
 
