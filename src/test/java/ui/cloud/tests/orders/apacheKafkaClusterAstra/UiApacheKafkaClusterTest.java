@@ -2,6 +2,7 @@ package ui.cloud.tests.orders.apacheKafkaClusterAstra;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -31,8 +32,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    ApacheKafkaCluster product;
-    //=ApacheKafkaCluster.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/application_integration/orders/cae6f318-c6ad-49d7-b764-615ca79f0652/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/f59d51f4-463f-46cc-9071-da3bc5317159/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -55,8 +55,8 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             ApacheKafkaClusterOrderPage orderPage = new ApacheKafkaClusterOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
+            orderPage.getConfigCluster().set("kafka-4:zookeeper-3");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -79,7 +79,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     @Test
     @TmsLink("1319683")
     @Order(2)
-    @DisplayName("UI ApacheKafkaCluster. Проверка полей заказа")
+    @DisplayName("UI ApacheKafkaCluster. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
         pSqlPage.getBtnGeneralInfo().click();
@@ -324,6 +324,14 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
         pSqlPage.checkClusterMonitoringOs();
     }
 
+    @Test
+    @Order(28)
+    @TmsLink("")
+    @DisplayName("UI ApacheKafkaCluster. Горизонтальное масштабирование")
+    void horizontalScaling() {
+        ApacheKafkaClusterPage pSqlPage = new ApacheKafkaClusterPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE,pSqlPage::horizontalScaling);
+    }
     @Test
     @Order(100)
     @TmsLink("852007")

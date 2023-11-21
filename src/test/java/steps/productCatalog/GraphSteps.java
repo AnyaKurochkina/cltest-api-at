@@ -341,6 +341,14 @@ public class GraphSteps extends Steps {
                 .extractAs(Graph.class);
     }
 
+    @Step("Получение графа по Id и контексту")
+    public static Response getResponseGraphByIdContext(String projectId, String objectId) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .get("/api/v1/projects/{}/graphs/{}/", projectId, objectId)
+                .assertStatus(400);
+    }
+
     @Step("Удаление графа по Id без токена")
     public static Response deleteGraphByIdWithOutToken(String id) {
         return new Http(ProductCatalogURL)

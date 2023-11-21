@@ -57,7 +57,6 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
             ScyllaDbClusterOrderPage orderPage = new ScyllaDbClusterOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             if(product.isDev())
@@ -83,7 +82,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     @Test
     @TmsLink("1368046")
     @Order(2)
-    @DisplayName("UI Scylla_db_cluster_astra. Проверка полей заказа")
+    @DisplayName("UI Scylla_db_cluster_astra. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
         scyllaPage.checkHeadersHistory();

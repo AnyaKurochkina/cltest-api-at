@@ -32,7 +32,6 @@ public class ProductInjector implements TestInstancePostProcessor {
                 }
                 else
                     product.setPlatform("OpenStack");
-                    product.setDataCentre("КШ37 Коровинское шоссе, д.37");
                 product.init();
                 field.set(testInstance, product);
             }

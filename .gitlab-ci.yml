@@ -15,7 +15,7 @@ variables:
     description: "-Dtest= VirtualMachineTest#vmList"
   GROUPS:
     value: ""
-    description: "-Dgroups="
+    description: "-Dgroups=t1_ui_cloud_compute&smoke"
   THREAD_COUNT:
     value: "4"
     description: "-Djunit.jupiter.execution.parallel.config.fixed.parallelism=$THREAD_COUNT"
@@ -64,8 +64,9 @@ test:
     - FILE_CONTENT=$(grep -zoP '"text":\s"\K[^"]*' output.txt)
     - FILE_CONTENT="${FILE_CONTENT//Доброе утро, мои хорошие!/}"
     - FILE_CONTENT="${FILE_CONTENT//passed/✅}"
-    - FILE_CONTENT="${FILE_CONTENT//broken/🆘}"
-    - FILE_CONTENT="${FILE_CONTENT//failed/🆘}"
+    - FILE_CONTENT="${FILE_CONTENT//broken/❌}"
+    - FILE_CONTENT="${FILE_CONTENT//failed/❌}"
+    - FILE_CONTENT="${FILE_CONTENT//skipped/✔️}"
     - FILE_CONTENT="${FILE_CONTENT}\nhttp://10.13.20.10/~qa-admin/logs/$CURR_DATE/allure-maven-plugin/"
     - BLOCK_SIZE=4000
     - MESSAGE=""

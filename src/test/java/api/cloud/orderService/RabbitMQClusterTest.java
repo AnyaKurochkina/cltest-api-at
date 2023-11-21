@@ -172,7 +172,7 @@ public class RabbitMQClusterTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Произвести ре-балансировку очередей {0}")
+    @ParameterizedTest(name = "[{index}] Произвести балансировку очередей {0}")
     void queueRebalancing(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.queueRebalancing();
@@ -185,6 +185,24 @@ public class RabbitMQClusterTest extends Tests {
     void dataSynchronization(RabbitMQClusterAstra product) {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.dataSynchronization();
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Обновить операционную систему {0}")
+    void updateOs(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            rabbit.updateOs();
+        }
+    }
+
+    @TmsLink("")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Вертикальное масштабирование {0}")
+    void verticalScaling(RabbitMQClusterAstra product) {
+        try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            rabbit.verticalScaling();
         }
     }
 

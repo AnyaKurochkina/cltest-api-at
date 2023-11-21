@@ -27,7 +27,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String BLOCK_PERMISSIONS = "Права доступа";
     private static final String BLOCK_GROUP_AD_WEB= "Группы доступа на WEB интерфейс";
     private static final String HEADER_NAME_USER = "Имя";
-    private static final String HEADER_GROUP = "Группа";
+    private static final String HEADER_GROUP = "Manager";
     private static final String HEADER_GROUPS = "Группы";
     private static final String HEADER_ROLE = "Роль";
     private static final String HEADER_CONSOLE = "Точка подключения";
@@ -57,23 +57,23 @@ public class RabbitMqClusterAstraPage extends IProductPage {
 
     @Override
     protected void checkPowerStatus(String expectedStatus) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(expectedStatus);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(expectedStatus);
     }
 
     public void start() {
-        checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
         runActionWithoutParameters(BLOCK_CLUSTER, "Включить");
-        checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopSoft() {
-        checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_CLUSTER, "Выключить");
-        checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     public void checkConfiguration() {
-        checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).checkPreBilling(false).checkAlert(false).node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
@@ -91,49 +91,59 @@ public class RabbitMqClusterAstraPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new VirtualMachineTable("Статус").checkPowerStatus(VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
     public void restart() {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_CLUSTER, "Перезагрузить");
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void stopHard() {
-        checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_CLUSTER, "Выключить принудительно");
-        checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
+        checkPowerStatus(VirtualMachineTable.POWER_STATUS_OFF);
     }
 
     @Step("Обновить сертификаты RabbitMQ")
     public void updateCertificate() {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить сертификаты", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    @Step("Ре-балансировка очередей")
+    @Step("Балансировка очередей")
     public void reBalanceQueue() {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Произвести балансировку очередей", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
+
     @Step("Синхронизировать данные кластера RabbitMQ")
     public void synchronizeData() {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Синхронизировать данные кластера", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
+    @Step("Обновить операционную систему")
+    public void updateOs() {
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CLUSTER, "Обновить операционную систему", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+        });
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+    }
+
     @Step("Вертикальное масштабирование")
     public void verticalScaling() {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_CLUSTER, "Вертикальное масштабирование", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Вертикальное масштабирование");
@@ -145,39 +155,44 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    public void addUser(String nameUser) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    public void addUser(String nameUser,String numberApd,String numberRis) {
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser))) {
             runActionWithParameters(BLOCK_USERS, "Создать пользователя", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Создать пользователя");
-                dlg.setInputValue("Введите имя пользователя", nameUser);
+                dlg.setInputValue("Введите номер системы APD", numberApd);
+                dlg.setInputValue("Введите номер системы в RIS", numberRis);
+                dlg.setInputValue("Уникальное имя клиента", nameUser);
             });
             btnGeneralInfo.click();
             Assertions.assertTrue(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser), "Пользователь не существует");
         }
     }
 
-    public void checkUniquenessAddUser(String nameUser) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    public void checkUniquenessAddUser(String nameUser,String numberApd,String numberRis) {
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_USERS, "Создать пользователя", "Отмена", () -> {
             Dialog dlg = Dialog.byTitle("Создать пользователя");
-            dlg.setInputValue("Введите имя пользователя", nameUser);
+            dlg.setInputValue("Введите номер системы APD", numberApd);
+            dlg.setInputValue("Введите номер системы в RIS", numberRis);
+            dlg.setInputValue("Уникальное имя клиента", nameUser);
             assertContains("Имя пользователя должно быть уникальным");
         }, ActionParameters.builder().checkAlert(false).build());
     }
 
-    public void deleteUser(String nameUser) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(getActionsMenuButton(nameUser, 1), "Удалить пользователя");
+    public void deleteUser() {
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        String userName = new Table("Имя").getValueByColumnInFirstRow("Имя").getText();
+        runActionWithoutParameters(getActionsMenuButton(userName, 1), "Удалить пользователя");
         btnGeneralInfo.click();
-        Assertions.assertFalse(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser), "Ошибка удаления вируалного хоста");
+        Assertions.assertFalse(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, userName), "Ошибка удаления вируалного хоста");
     }
 
     public void createVirtualHosts(String nameHost) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost))) {
             runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Создать виртуальные хосты", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Создать виртуальные хосты");
@@ -189,7 +204,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     public void checkUniquenessСreateVirtualHosts(String nameHost) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Создать виртуальные хосты", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Создать виртуальные хосты");
             dlg.setInputValue("Введите имя виртуального хоста", nameHost);
@@ -199,7 +214,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     public void deleteVirtualHosts(String nameHost) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Удалить виртуальные хосты", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Удалить виртуальные хосты");
             Select.byLabel("Выберите хосты для удаления").set(nameHost);
@@ -210,7 +225,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     public void addPermissions(String nameUser, String nameHost) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER_PERMISSIONS).isColumnValueContains(HEADER_NAME_USER_PERMISSIONS, nameUser))) {
             runActionWithParameters(BLOCK_PERMISSIONS, "Добавить права на виртуальные хосты", "Подтвердить", () -> {
                 Dialog dlg = Dialog.byTitle("Добавить права на виртуальные хосты");
@@ -226,27 +241,28 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     public void editPermissions(String nameUser, String nameHost) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_PERMISSIONS, "Редактировать права на виртуальные хосты", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Редактировать права на виртуальные хосты");
+            String userName = new Table("Имя").getValueByColumnInFirstRow("Имя").getText();
             dlg.setSelectValue("Пользователь", nameUser);
             Select.byLabel("Виртуальный хост").set(nameHost);
             CheckBox.byLabel("Чтение").setChecked(true);
         });
         btnGeneralInfo.click();
         Assertions.assertTrue(new Table(HEADER_NAME_USER_PERMISSIONS).isColumnValueContains(HEADER_NAME_USER_PERMISSIONS, nameUser), "Ошибка редактирования прав");
-
     }
 
     public void deletePermissions(String nameUser) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Роли узла").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(getActionsMenuButton(nameUser, 2), "Удалить права на виртуальный хост");
+        new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
+        String userName = new Table("Имя").getValueByColumnInFirstRow("Имя").getText();
+        runActionWithoutParameters(getActionsMenuButton(userName, 2), "Удалить права на виртуальный хост");
         btnGeneralInfo.click();
         Assertions.assertFalse(new Table(HEADER_NAME_USER_PERMISSIONS).isColumnValueContains(HEADER_NAME_USER_PERMISSIONS, nameUser), "Ошибка удаления прав");
     }
 
     public void removeDb(String name) {
-        new RabbitMqClusterAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RabbitMqClusterAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new VirtualMachineTable("Статус").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithoutParameters(name, "Удалить БД");
         btnGeneralInfo.click();
@@ -284,14 +300,13 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     @Step("Изменить группу  доступа с ролью {role}")
     public void changeGroupWeb(String role, String group) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        if(new Table(HEADER_GROUP).isColumnValueContains(HEADER_ROLE, role)){
-        runActionWithParameters(role, "Редактировать группы доступа", "Подтвердить", () -> {
-            Select.byLabel(HEADER_GROUPS).set(group);
+        runActionWithParameters(BLOCK_GROUP_AD_WEB, "Редактировать группы доступа", "Подтвердить", () -> {
+            Select.byLabel(role).set(group);
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();
-        Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_ROLE, role), "Ошибка изменения группы");
-    }}
+        Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(role, group), "Ошибка изменения группы");
+    }
 
     @Step("Добавить роль {role}")
     public void addRole(String role,String group) {
@@ -306,8 +321,8 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     @Step("Удалить группы доступа {role}")
     public void deleteGroupWeb(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        runActionWithParameters(role, "Редактировать группы доступа", "Подтвердить", () -> {
-            Select.byLabel(HEADER_GROUPS).clear();
+        runActionWithParameters(BLOCK_GROUP_AD_WEB, "Редактировать группы доступа", "Подтвердить", () -> {
+            Select.byLabel(role).clear();
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();

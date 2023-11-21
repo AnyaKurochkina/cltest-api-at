@@ -13,6 +13,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
@@ -45,8 +46,8 @@ public class ElasticsearchOpensearchCluster extends IProduct {
             kibanaPassword = "RnXLM4Ms3XQi";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
@@ -72,7 +73,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
                 .set("$.order.attrs.flavor_master", new JSONObject(flavorMaster.toString()))
                 .set("$.order.attrs.kibana_password", kibanaPassword)
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.elasticsearch_version", elasticsearchVersion)
@@ -97,18 +98,18 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.default_nic.net_segment", getSegment())
-                .set("$.data_center", getDataCentre())
+                .set("$.availability_zone", getAvailabilityZone())
                 .set("$.kibana_password", kibanaPassword)
                 .set("$.ad_logon_grants[0].groups[0]", accessGroup())
                 .remove("$.ad_logon_grants", !isDev())
                 .set("$.on_support", getSupport())
                 .build();
-        OrderServiceSteps.executeAction("add_dedicated_kibana_node", this, object, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("add_dedicated_kibana_node").product(this).data(object).build());
     }
 
     //Проверить конфигурацию
     public void refreshVmConfig() {
-        OrderServiceSteps.executeAction("check_vm", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("check_vm").product(this).build());
     }
 
     //Перезагрузить по питанию

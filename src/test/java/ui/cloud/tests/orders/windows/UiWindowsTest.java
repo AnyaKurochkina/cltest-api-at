@@ -56,7 +56,6 @@ public class UiWindowsTest extends UiProductTest {
             WindowsOrderPage orderPage = new WindowsOrderPage();
             //orderPage.getOsVersion().select(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().setByDataValue(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getRoleServer().setContains("Autotests");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -82,7 +81,7 @@ public class UiWindowsTest extends UiProductTest {
     @Test
     @TmsLink("976726")
     @Order(2)
-    @DisplayName("UI Windows. Проверка полей заказа")
+    @DisplayName("UI Windows. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnGeneralInfo().click();

@@ -98,10 +98,8 @@ public interface TypifiedElement {
         throw new TimeoutException("Return empty string, duration: " + duration);
     }
 
-    //TODO: До фикса доступа к балансу учеток закрываем все окна
     static void checkProject() {
-//        new Alert().checkColor(Alert.Color.GREEN).checkText("Выбран контекст").close();
-        Alert.closeAll();
+        Alert.green("Выбран контекст");
     }
 
     static void refreshPage() {
@@ -116,12 +114,7 @@ public interface TypifiedElement {
         checkProject();
     }
 
-    /**
-     * Открытие страницы и игнорирование WebDriverException (баг в ChromeDriver)
-     */
     static void open(String url) {
-        try {
             Selenide.open(url);
-        } catch (WebDriverException ignored) {}
     }
 }

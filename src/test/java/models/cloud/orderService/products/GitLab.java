@@ -13,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.authorizer.AuthorizerSteps;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -61,18 +62,22 @@ public class GitLab extends IProduct {
 
     @Step("Создать CI/CD переменную для GitLab группы")
     public void createVariable(Variable attrs) {
-        OrderServiceSteps.executeAction("create_gitlab_group_variable", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("create_gitlab_group_variable").product(this)
+                .data(new JSONObject(JsonHelper.toJson(attrs))).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(XPATH_GROUP_VARIABLE, attrs.key)), "Переменная не создалась");
     }
 
     @Step("Обновить переменную")
     public void updateVariable(Variable attrs) {
-        OrderServiceSteps.executeAction("update_gitlab_variable", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("update_gitlab_variable").product(this)
+                .data(new JSONObject(JsonHelper.toJson(attrs))).build());
     }
 
     @Step("Удалить переменную")
     public void deleteVariable(Variable attrs) {
-        OrderServiceSteps.executeAction("delete_gitlab_variable", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("delete_gitlab_variable").product(this)
+                .data(new JSONObject(JsonHelper.toJson(attrs))).build());
+
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(XPATH_GROUP_VARIABLE, attrs.key)), "Переменная не удалилась");
     }
 
@@ -85,62 +90,66 @@ public class GitLab extends IProduct {
             user.put("name", user.get("firstname"));
             user.remove("firstname");
         }
-        OrderServiceSteps.executeAction("add_user_to_gitlab_group", this,
-                new JSONObject().put("access_level", accessLevel).put("users", users), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("add_user_to_gitlab_group").product(this)
+                .data(new JSONObject().put("access_level", accessLevel).put("users", users)).build());
+
     }
 
     @Step("Изменить пользователя")
     public void updateUser(JSONObject user, String role) {
-        OrderServiceSteps.executeAction("update_gitlab_user", this, user.put("role", role), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("update_gitlab_user").product(this).data(user.put("role", role)).build());
     }
 
     @Step("Удалить пользователя")
     public void deleteUser(JSONObject user) {
-        OrderServiceSteps.executeAction("delete_gitlab_user", this, user, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("delete_gitlab_user").product(this).data(user).build());
     }
 
     @Step("Создать проект GitLab")
     public void createProject(Project project) {
-        if(projects.contains(project.name))
+        if (projects.contains(project.name))
             return;
-        OrderServiceSteps.executeAction("create_gitlab_project", this, new JSONObject(JsonHelper.toJson(project)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("create_gitlab_project").product(this)
+                .data(new JSONObject(JsonHelper.toJson(project))).build());
         projects.add(project.name);
         save();
     }
 
     @Step("Создать CI/CD переменную для GitLab проекта")
     public void createProjectVariable(Variable attrs) {
-        OrderServiceSteps.executeAction("create_gitlab_project_variable", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("create_gitlab_project_variable").product(this)
+                .data(new JSONObject(JsonHelper.toJson(attrs))).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(XPATH_GROUP_VARIABLE, attrs.key)), "Переменная не создалась");
     }
 
     @Step("Обновить переменную для GitLab проекта")
     public void updateProjectVariable(Variable attrs) {
-        OrderServiceSteps.executeAction("update_gitlab_variable", this, new JSONObject(JsonHelper.toJson(attrs)).put("environment_scope", "*"), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("update_gitlab_variable").product(this)
+                .data(new JSONObject(JsonHelper.toJson(attrs)).put("environment_scope", "*")).build());
     }
 
     @Step("Удалить переменную для GitLab проекта")
     public void deleteProjectVariable(Variable attrs) {
-        OrderServiceSteps.executeAction("delete_gitlab_variable", this, new JSONObject(JsonHelper.toJson(attrs)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("delete_gitlab_variable").product(this).data(new JSONObject(JsonHelper.toJson(attrs))).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(XPATH_GROUP_VARIABLE, attrs.key)), "Переменная не удалилась");
     }
 
     @Step("Создать токен")
     public void createProjectToken(String name, List<String> scopes) {
-        OrderServiceSteps.executeAction("create_project_token_gitlab", this,
-                new JSONObject().put("name", name).put("scopes", new JSONArray(scopes)));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("create_project_token_gitlab").product(this)
+                .data(new JSONObject().put("name", name).put("scopes", new JSONArray(scopes))).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(XPATH_TOKEN, name)), "Токен не создался");
     }
 
     @Step("Отозвать токен")
     public void deleteProjectToken(JSONObject token) {
-        OrderServiceSteps.executeAction("delete_project_token_gitlab", this, token, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("delete_project_token_gitlab").product(this).data(token).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(XPATH_TOKEN, token.get("name"))), "Токен не был удален");
     }
 
     @Step("Удалить проект GitLab")
     public void deleteProject(Project project) {
-        OrderServiceSteps.executeAction("delete_gitlab_project", this, new JSONObject(), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("delete_gitlab_project").product(this).data(new JSONObject()).build());
         projects.remove(project.name);
         save();
     }

@@ -20,8 +20,8 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static steps.productCatalog.Jinja2Steps.createJinja;
-import static steps.productCatalog.Jinja2Steps.exportJinjaById;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static steps.productCatalog.Jinja2Steps.*;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectsById;
 
 @Tag("product_catalog")
@@ -59,7 +59,7 @@ public class JinjaExportTest extends Tests {
     }
 
     @DisplayName("Проверка поля ExportedObjects при экспорте jinja")
-    @TmsLink("SOUL-")
+    @TmsLink("SOUL-7082")
     @Test
     public void checkExportedObjectsFieldJinjaTest() {
         String jinjaName = "jinja_exported_objects_test_api";
@@ -71,5 +71,20 @@ public class JinjaExportTest extends Tests {
         assertEquals(jinja.getLast_version(), jsonObject.get("last_version_str").toString());
         assertEquals(jinja.getName(), jsonObject.get("name").toString());
         assertEquals(jinja.getVersion(), jsonObject.get("version").toString());
+    }
+
+    @DisplayName("Проверка current_version при экспорте jinja")
+    @TmsLink("SOUL-7769")
+    @Test
+    public void checkCurrentVersionJinjaExportTest() {
+        String jinjaName = "check_current_version_jinja_export_test_api";
+        Jinja2Template jinja = createJinja(jinjaName);
+        partialUpdateJinja2(jinja.getId(), new JSONObject()
+                .put("jinja2_template", "test_api")
+                .put("version", "1.1.1"));
+        partialUpdateJinja2(jinja.getId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        String currentVersion = exportJinjaById(jinja.getId()).jsonPath().getString("Jinja2Template.current_version");
+        assertNull(currentVersion);
     }
 }

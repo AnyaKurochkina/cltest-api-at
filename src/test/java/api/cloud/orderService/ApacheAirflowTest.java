@@ -1,6 +1,7 @@
 package api.cloud.orderService;
 
 import api.Tests;
+import core.utils.ssh.SshClient;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -17,6 +18,10 @@ import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
+import java.util.Arrays;
+
+import static core.utils.AssertUtils.assertContains;
+
 
 @Epic("Продукты")
 @Feature("Apache Airflow")
@@ -31,12 +36,15 @@ public class ApacheAirflowTest extends Tests {
             abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
 
         postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess();
-        String dbName = "airflow";
-        postgreSQL.createDb(dbName);
-        product.setPgAdminPassword(postgreSQL.getAdminPassword());
-        product.setDbServer((String) OrderServiceSteps.getProductsField(postgreSQL, "product_data.find{it.hostname.contains('-pgc')}.ip"));
-        product.setDbUser(new DbUser(dbName, dbName + "_admin"));
-        postgreSQL.close();
+        try {
+            String dbName = "airflow";
+            postgreSQL.createDb(dbName);
+            product.setPgAdminPassword(postgreSQL.getAdminPassword());
+            product.setDbServer(postgreSQL.pgcIp());
+            product.setDbUser(new DbUser(dbName, dbName + "_admin"));
+        } finally {
+            postgreSQL.close();
+        }
     }
 
     @TmsLink("1421430")
@@ -58,6 +66,67 @@ public class ApacheAirflowTest extends Tests {
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.expandMountPoint();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Обновить сертификаты {0}")
+    void updateCerts(ApacheAirflow product, PostgreSQL ignore) {
+        createPostgres(product);
+        try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
+            apacheAirflow.updateCerts();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Изменить группы добавления DAG-файлов {0}")
+    void updateGroupAddDagFiles(ApacheAirflow product, PostgreSQL ignore) {
+        createPostgres(product);
+        try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
+            String accessGroupTechNew = apacheAirflow.accessGroup("service-accounts", "AT airflow new group");
+            apacheAirflow.updateGroupAddDagFiles(accessGroupTechNew);
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Установить Cloudera CDH {0}")
+    void airflowInstallExtras(ApacheAirflow product, PostgreSQL ignore) {
+        createPostgres(product);
+        try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
+            apacheAirflow.airflowInstallExtras();
+            if (apacheAirflow.isDev()){
+                String ip = (String) OrderServiceSteps.getProductsField(apacheAirflow, "product_data[0].ip");
+                assertContains(apacheAirflow.executeSsh(SshClient.builder().host(ip).env(apacheAirflow.envType()).build(),
+                        "ls /app"), "  cloudera  ", "  extras  ");
+            }
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Изменить группы доступа к консоли управления {0}")
+    void airflowChangeWebAccess(ApacheAirflow product, PostgreSQL ignore) {
+        createPostgres(product);
+        try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
+            apacheAirflow.airflowChangeWebAccess(Arrays.asList(apacheAirflow.additionalAccessGroup(), apacheAirflow.accessGroup()));
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
+    void updateOs(ApacheAirflow product, PostgreSQL ignore) {
+        createPostgres(product);
+        try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
+            apacheAirflow.updateOs();
         }
     }
 

@@ -11,6 +11,7 @@ import models.cloud.subModels.DbUser;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.util.ArrayList;
@@ -38,11 +39,13 @@ public abstract class AbstractPostgreSQL extends IProduct {
     protected Flavor flavor;
     protected String adminPassword;
 
+    public abstract String pgcIp();
+
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
-        OrderServiceSteps.executeAction("postgresql_create_db", this,
-                new JSONObject(String.format("{db_name: \"%s\", db_admin_pass: \"%s\", conn_limit: -1}", dbName, adminPassword)), this.getProjectId());
+        JSONObject data = new JSONObject().put("db_name", dbName).put("db_admin_pass", adminPassword).put("conn_limit", -1);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_create_db").product(this).data(data).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
@@ -51,7 +54,8 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void setConnLimit(String dbName, int count) {
-        OrderServiceSteps.executeActionWidthFilter("postgresql_db_set_conn_limit", this, new JSONObject().put("conn_limit", count), this.getProjectId(), filterBd(dbName));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_db_set_conn_limit").product(this)
+                .data(new JSONObject().put("conn_limit", count)).filter(filterBd(dbName)).build());
         Assertions.assertEquals(count, (Integer) OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
         if (isDev() && this instanceof PostgreSQL)
             Assertions.assertEquals(String.valueOf(count), StringUtils.findByRegex("\\s([0-9]*)\\n\\(",
@@ -59,12 +63,13 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void removeConnLimit(String dbName) {
-        OrderServiceSteps.executeActionWidthFilter("postgresql_db_remove_conn_limit", this, new JSONObject().put("conn_limit", -1), this.getProjectId(), filterBd(dbName));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_db_remove_conn_limit").product(this)
+                .data(new JSONObject().put("conn_limit", -1)).filter(filterBd(dbName)).build());
         Assertions.assertEquals(0, OrderServiceSteps.getProductsField(this, String.format(DB_CONN_LIMIT, dbName)));
     }
 
     void addMountPoint(String action, String mount) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject().put("mount", mount), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(new JSONObject().put("mount", mount)).build());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, 0));
         Assertions.assertTrue(sizeAfter > 0);
     }
@@ -83,7 +88,8 @@ public abstract class AbstractPostgreSQL extends IProduct {
 
     public void updateMaxConnections() {
         String loadProfile = (String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='app'}.data.config.load_profile");
-        OrderServiceSteps.executeAction("postgresql_update_max_connections", this, new JSONObject().put("load_profile", loadProfile), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_update_max_connections").product(this)
+                .data(new JSONObject().put("load_profile", loadProfile)).build());
     }
 
     public String getCurrentMaxConnections() {
@@ -109,21 +115,21 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     public void getConfiguration() {
-        OrderServiceSteps.executeAction("postgresql_get_configuration", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_get_configuration").product(this).build());
     }
 
     public void updatePostgresql() {
-        OrderServiceSteps.executeAction("postgresql_update_postgresql", this, new JSONObject().put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_update_postgresql").product(this).data(new JSONObject().put("check_agree", true)).build());
     }
 
     public void updateOs() {
-        OrderServiceSteps.executeAction("postgresql_update_os", this, new JSONObject().put("check_agree", true), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_update_os").product(this).data(new JSONObject().put("check_agree", true)).build());
     }
 
     public void updateExtensions(String dbName, List<String> extensions) {
-        OrderServiceSteps.executeActionWidthFilter("postgresql_db_update_extensions", this, new JSONObject()
-                .put("extensions_updated", extensions)
-                .put("extensions", new ArrayList<>()), this.getProjectId(), filterBd(dbName));
+        JSONObject data = new JSONObject().put("extensions_updated", extensions).put("extensions", new ArrayList<>());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_db_update_extensions").product(this)
+                .data(data).filter(filterBd(dbName)).build());
         AssertUtils.assertEqualsList(extensions, OrderServiceSteps.getProductsField(this, String.format(EXTENSIONS_LIST, dbName), List.class));
     }
 
@@ -133,7 +139,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
             String cmd = String.format("sudo -iu postgres psql %s -d %s -c \"create extension %s with schema %s;\"", extParameters, dbName, extension, dbName);
             assertContains(executeSsh(cmd), "CREATE EXTENSION");
         }
-        OrderServiceSteps.executeActionWidthFilter("postgresql_db_get_extensions", this, null, this.getProjectId(), filterBd(dbName));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_db_get_extensions").product(this).filter(filterBd(dbName)).build());
         if (isDev())
             Assertions.assertTrue(OrderServiceSteps.getProductsField(this, String.format(EXTENSIONS_LIST, dbName), List.class).contains(extension));
     }
@@ -144,14 +150,16 @@ public abstract class AbstractPostgreSQL extends IProduct {
 
     //Удалить БД
     public void removeDb(String dbName) {
-        OrderServiceSteps.executeActionWidthFilter("postgresql_remove_db", this, null, this.getProjectId(), filterBd(dbName));
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_remove_db").product(this).filter(filterBd(dbName)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)));
         database.removeIf(db -> db.getNameDB().equals(dbName));
         save();
     }
 
     public void createDbmsUser(String action, String username, String dbRole, String dbName) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"comment\":\"testapi\",\"db_name\":\"%s\",\"dbms_role\":\"%s\",\"user_name\":\"%s\",\"user_password\":\"pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ\"}", dbName, dbRole, username)), this.getProjectId());
+        JSONObject data = new JSONObject().put("comment", "testapi").put("db_name", dbName).put("dbms_role", dbRole)
+                .put("user_name", username).put("user_password", "pXiAR8rrvIfYM1.BSOt.d-ZWyWb7oymoEstQ");
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(data).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 "Имя пользователя отличается от создаваемого");
@@ -160,33 +168,32 @@ public abstract class AbstractPostgreSQL extends IProduct {
         save();
     }
 
-    public String getIp() {
-        return ((String) OrderServiceSteps.getProductsField(this, "data.find{it.type=='vm'}.data.config.default_v4_address"));
-    }
-
     //Сбросить пароль пользователя
     public void resetPassword(String action, String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
+                .data(new JSONObject().put("user_name", username).put("user_password", password)).build());
     }
 
     //Сбросить пароль владельца
     public void resetDbOwnerPassword(String action, String username) {
         String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
-        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\",\"user_password\":\"%s\"}", username, password)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
+                .data(new JSONObject().put("user_name", username).put("user_password", password)).build());
         this.adminPassword = password;
         save();
     }
 
     //Изменить default_transaction_isolation
     public void updateDti(String defaultTransactionIsolation) {
-        OrderServiceSteps.executeAction("postgresql_update_dti", this,
-                new JSONObject(String.format("{\"default_transaction_isolation\":\"%s\"}", defaultTransactionIsolation)), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_update_dti").product(this)
+                .data(new JSONObject().put("default_transaction_isolation", defaultTransactionIsolation)).build());
     }
 
     //Удалить пользователя
     public void removeDbmsUser(String action, String username, String dbName) {
-        OrderServiceSteps.executeAction(action, this, new JSONObject(String.format("{\"user_name\":\"%s\"}", String.format("%s_%s", dbName, username))), this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
+                .data(new JSONObject().put("user_name",  String.format("%s_%s", dbName, username))).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));

@@ -1,5 +1,6 @@
 package models.cloud.productCatalog.action;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
@@ -35,7 +36,7 @@ public class Action extends Entity {
     @JsonProperty("current_version")
     private String currentVersion;
     private Integer priority;
-    @JsonProperty("icon_store_id")
+    @JsonAlias({"icon_store_id", "icon_store"})
     private String iconStoreId;
     @JsonProperty("icon_url")
     private String iconUrl;
@@ -138,6 +139,8 @@ public class Action extends Entity {
     private Boolean skipItemChange;
     @JsonProperty("skip_item_with_secondary_rel")
     private Boolean skipItemWithSecondaryRel;
+    @JsonProperty("is_for_items")
+    private Boolean isForItems;
 
     @Override
     public Entity init() {
@@ -188,6 +191,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_item_change", skipItemChange)
                 .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
                 .setIfNullRemove("$.skip_item_with_secondary_rel", skipItemWithSecondaryRel)
+                .setIfNullRemove("$.is_for_items", isForItems)
                 .build();
     }
 

@@ -10,6 +10,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.graph.Graph;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -178,5 +179,33 @@ public class GraphImportTest extends Tests {
         DataFileHelper.delete(filePath);
         Graph graphById = getGraphById(graph.getGraphId());
         assertEquals(description, graphById.getDescription());
+    }
+
+    @DisplayName("Проверка current_version при импорте уже существующего графа")
+    @TmsLink("SOUL-7758")
+    @Test
+    public void checkCurrentVersionWhenAlreadyExistGraphImportTest() {
+        String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/checkCurrentVersion.json";
+        Graph graph = Graph.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
+                .version("1.0.1")
+                .build()
+                .createObject();
+        DataFileHelper.write(filePath, exportGraphById(graph.getGraphId()).toString());
+        graph.deleteObject();
+        Graph createdGraph = Graph.builder()
+                .name(graph.getName())
+                .version("1.0.0")
+                .build()
+                .createObject();
+        partialUpdateGraph(createdGraph.getGraphId(), new JSONObject()
+                .put("damage_order_on_error", true)
+                .put("version", "1.1.1"));
+        partialUpdateGraph(createdGraph.getGraphId(), new JSONObject()
+                .put("current_version", "1.1.1"));
+        importGraph(filePath);
+        DataFileHelper.delete(filePath);
+        Graph graphById = getGraphById(createdGraph.getGraphId());
+        assertEquals("1.1.1", graphById.getCurrentVersion());
     }
 }

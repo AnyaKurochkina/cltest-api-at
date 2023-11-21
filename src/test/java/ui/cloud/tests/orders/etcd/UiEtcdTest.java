@@ -64,7 +64,6 @@ public class UiEtcdTest extends UiProductTest {
             Alert.green("Значение скопировано");
             orderPage.getNumberNodes().set("3");
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getDataCentreSelect().set(product.getDataCentre());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -89,7 +88,7 @@ public class UiEtcdTest extends UiProductTest {
     @Test
     @TmsLink("")
     @Order(2)
-    @DisplayName("UI Etcd. Проверка полей заказа")
+    @DisplayName("UI Etcd. Проверка графа в истории действий")
     void
     checkHeaderHistoryTable() {
         EtcdPage etcdPage = new EtcdPage(product);

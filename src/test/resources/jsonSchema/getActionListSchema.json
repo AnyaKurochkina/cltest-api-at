@@ -89,6 +89,9 @@
             "is_safe": {
               "type": "boolean"
             },
+            "is_for_items": {
+              "type": "boolean"
+            },
             "is_delayable": {
               "type": "boolean"
             },
@@ -120,6 +123,7 @@
             "required_item_statuses",
             "allowed_developers",
             "restricted_developers",
+            "is_for_items",
             "icon_url",
             "is_safe",
             "is_delayable",

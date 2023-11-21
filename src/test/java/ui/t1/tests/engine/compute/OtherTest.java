@@ -243,7 +243,10 @@ public class OtherTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Подключение диска из снимка на базе подключенного диска")
     void createSnapshotFromAttachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .setName(getRandomName())
@@ -345,7 +348,10 @@ public class OtherTest extends AbstractComputeTest {
     void scenario1() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setName(getRandomName())
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setDeleteOnTermination(true)
                 .addSecurityGroups(securityGroup)

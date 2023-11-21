@@ -9,6 +9,7 @@ import models.cloud.orderService.products.Astra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -46,6 +47,7 @@ public class AstraTest extends Tests {
     @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
     void updateOsVm(Astra product) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
             astra.updateOsVm();
         }
     }

@@ -15,7 +15,7 @@
 				"path": "C",
 				"size": 80
 			},
-			"data_center": "50",
+			"availability_zone": "50",
 			"default_nic": {
 				"net_segment": "test-srv-perf"
 			},

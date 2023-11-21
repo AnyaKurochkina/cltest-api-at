@@ -1,0 +1,15 @@
+{
+	"flavor": {
+		"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+		"cpus": 2,
+		"memory": 4,
+		"name": "c2m4"
+	},
+	"check_agree": true,
+	"extra_mounts": {
+		"mount": "/app",
+		"file_system": "xfs",
+		"size": 31
+	},
+	"current_flavor": "30"
+}

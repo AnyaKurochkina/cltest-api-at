@@ -72,17 +72,18 @@ public class RedisAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
-    public void resetPasswordSentinel(String name) {
-        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль", "Подтвердить", () ->
+    public void resetPassword(String name) {
+        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль (удалить)", "Подтвердить", () ->
         {
-            Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
+            Dialog dlgActions = Dialog.byTitle("Сбросить пароль (удалить)");
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");
         });
-    } public void resetPassword() {
-        runActionWithParameters(getActionsMenuButton("default",2), "Сбросить пароль", "Подтвердить", () ->
+    }
+    public void resetPasswordUser(String name) {
+        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль пользователя", "Подтвердить", () ->
         {
-            Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
+            Dialog dlgActions = Dialog.byTitle("Сбросить пароль пользователя");
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");
         });
@@ -110,6 +111,10 @@ public class RedisAstraPage extends IProductPage {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
+        new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+    }
+    public void updateOs() {
+        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
         new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 

@@ -23,7 +23,7 @@
       "on_support": false,
       "os_version": "1.7",
       "zk_version": "3.7.0",
-      "data_center": "5",
+      "availability_zone": "5",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
@@ -84,6 +84,7 @@
       ]
     },
     "count": 1,
-    "label": "ClickHouse Cluster"
+    "label": "ClickHouse Cluster",
+    "lifetime": null
   }
 }

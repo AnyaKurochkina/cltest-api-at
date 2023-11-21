@@ -11,6 +11,7 @@ import models.cloud.orderService.interfaces.IProduct;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.references.ReferencesStep;
 
@@ -62,8 +63,8 @@ public class ClickHouseCluster extends IProduct {
             chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if(dataCentre == null)
-            setDataCentre(OrderServiceSteps.getDataCentre(this));
+        if (availabilityZone == null)
+            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
         if(domain == null)
@@ -113,7 +114,7 @@ public class ClickHouseCluster extends IProduct {
                 .set("$.order.attrs.ch_customer_password", chCustomerPassword)
                 .set("$.order.attrs.ch_version", chVersion)
                 .set("$.order.attrs.default_nic.net_segment", getSegment())
-                .set("$.order.attrs.data_center", getDataCentre())
+                .set("$.order.attrs.availability_zone", getAvailabilityZone())
                 .set("$.order.attrs.platform", getPlatform())
                 .set("$.order.attrs.ch_db_name", clickhouseBb)
                 .set("$.order.attrs.flavor_ch", new JSONObject(flavorCh.toString()))
@@ -135,7 +136,8 @@ public class ClickHouseCluster extends IProduct {
 
     public void resetPasswordCustomer() {
         String password = "RXlpeN0MztCYS3XDP6i75";
-        OrderServiceSteps.executeAction("clickhouse_cluster_reset_db_user_password", this, new JSONObject().put("user_name", "ch_customer").put("user_password", password), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_reset_db_user_password").product(this)
+                .data(new JSONObject().put("user_name", "ch_customer").put("user_password", password)).build());
         chCustomerPassword = password;
         save();
     }
@@ -154,32 +156,37 @@ public class ClickHouseCluster extends IProduct {
     }
 
     public void createUserAccount(String user, String password) {
-        OrderServiceSteps.executeAction("clickhouse_cluster_create_local_tuz", this, new JSONObject().put("user_name", user).put("user_password", password), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_create_local_tuz").product(this)
+                .data(new JSONObject().put("user_name", user).put("user_password", password)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s не найден", user));
     }
 
     public void addUserAd(String user) {
-        OrderServiceSteps.executeAction("clickhouse_cluster_create_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_create_new_tuz_ad")
+                .product(this).data(new JSONObject().put("user_name", user)).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s не найден", user));
     }
 
     public void deleteUserAccount(String user) {
-        OrderServiceSteps.executeAction("clickhouse_cluster_remove_local_tuz", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_remove_local_tuz")
+                .product(this).data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS, user)), String.format("Пользователь %s найден", user));
     }
 
     public void deleteUserAd(String user) {
-        OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_tuz_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_remove_new_tuz_ad")
+                .product(this).data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USERS_AD, user)), String.format("Пользователь %s найден", user));
     }
 
     public void deleteGroupAdmin(String user) {
-        OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_app_admin_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_remove_new_app_admin_group_ad")
+                .product(this).data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s найдена", user));
     }
 
     public void certsInfo() {
-        OrderServiceSteps.executeAction("clickhouse_cluster_certs_info", this, null, this.getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_certs_info").product(this).build());
     }
 
     public void addGroupAdmin(String user) {
@@ -193,12 +200,14 @@ public class ClickHouseCluster extends IProduct {
                 "    }\n" +
                 "  ]\n" +
                 "}");
-        OrderServiceSteps.executeAction("clickhouse_cluster_create_new_app_admin_group_ad", this, object, getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_create_new_app_admin_group_ad")
+                .product(this).data(object).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_ADMIN_GROUP, user)), String.format("Группа %s не найдена", user));
     }
 
     public void deleteGroupAd(String user) {
-        OrderServiceSteps.executeAction("clickhouse_cluster_remove_new_app_user_group_ad", this, new JSONObject().put("user_name", user), getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_remove_new_app_user_group_ad")
+                .product(this).data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s найдена", user));
     }
 
@@ -213,7 +222,8 @@ public class ClickHouseCluster extends IProduct {
                 "    }\n" +
                 "  ]\n" +
                 "}");
-        OrderServiceSteps.executeAction("clickhouse_cluster_create_new_app_user_group_ad", this, object, getProjectId());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("clickhouse_cluster_create_new_app_user_group_ad")
+                .product(this).data(object).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_USER_GROUP, user)), String.format("Группа %s не найдена", user));
     }
 }
