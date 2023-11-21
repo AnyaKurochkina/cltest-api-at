@@ -57,7 +57,6 @@ public abstract class Entity implements AutoCloseable {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         objectMapper.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
-        objectMapper.setDateFormat(new StdDateFormat().withColonInTimeZone(true).withColonInTimeZone(true));
         return new JSONObject(objectMapper.writeValueAsString(object));
     }
 
