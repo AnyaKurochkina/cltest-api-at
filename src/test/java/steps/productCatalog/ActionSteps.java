@@ -60,9 +60,9 @@ public class ActionSteps extends Steps {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("objects_change", new JSONArray().put(new JSONObject().put("id", id)
-                        .put("params", new JSONObject().put("is_for_item", isForItem)))))
+                        .put("params", new JSONObject().put("is_for_items", isForItem)))))
                 .post(actionUrl + "mass_change/")
-                .assertStatus(201);
+                .assertStatus(200);
     }
 
     @Step("Создание действия")

@@ -88,7 +88,7 @@ public class ProductSteps extends Steps {
                 .body(new JSONObject().put("objects_change", new JSONArray().put(new JSONObject().put("id", id)
                         .put("params", new JSONObject().put("is_open", isOpen)))))
                 .post(productUrl + "mass_change/")
-                .assertStatus(201);
+                .assertStatus(200);
     }
 
     @Step("Получение продукта по имени {name}")
