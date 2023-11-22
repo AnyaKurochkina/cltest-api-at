@@ -136,7 +136,7 @@ public class ActionsListPage extends EntityListPage {
         return this;
     }
 
-    @Step("Поиск и открытие страницы графа '{name}'")
+    @Step("Поиск и открытие страницы действия '{name}'")
     public ActionPage findAndOpenActionPage(String name) {
         search(name);
         DataTable table = new DataTable(NAME_COLUMN);
