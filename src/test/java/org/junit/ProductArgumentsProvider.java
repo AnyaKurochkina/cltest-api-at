@@ -117,8 +117,8 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 Class<?> c = entity.getClass();
                 if (finalClazz.isInstance(entity)) {
                     final String key = className + "#" + methodName;
+                    counter++;
                     if(filter.containsKey(key)) {
-                        counter++;
                         if(filter.get(key).contains(String.valueOf(counter))) {
                             list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length, counter));
                             if (variableName == ONE_PRODUCT)

@@ -23,6 +23,7 @@ import java.util.List;
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversHttp;
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
 
+//@Execution(ExecutionMode.SAME_THREAD)
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
@@ -30,7 +31,7 @@ public class LoadBalancerTest extends Tests {
 
 //    @Mock
 //    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
-//            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
+//            .buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ef286138-92e8-4fc8-9ece-a37a8ddd0b73/main?context=proj-csyn7gq5se&type=project&org=vtb");
 
     @TmsLink("1286242")
     @Tag("actions")
@@ -119,8 +120,7 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("backend_tcp_width_check")
-                    .advancedCheck(true)
-                    .checkUri("/status")
+                    .advancedCheck(false)
                     .build();
             balancer.addBackend(backend);
             if (balancer.isDev())
@@ -174,8 +174,6 @@ public class LoadBalancerTest extends Tests {
                     .servers(serversHttp)
                     .mode("http")
                     .backendName("backend_http_width_check")
-                    .advancedCheck(true)
-                    .checkUri("/status")
                     .build();
             balancer.addBackend(backend);
             balancer.addFrontend(Frontend.builder()

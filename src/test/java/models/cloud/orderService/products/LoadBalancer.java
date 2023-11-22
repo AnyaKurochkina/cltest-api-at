@@ -300,7 +300,8 @@ public class LoadBalancer extends IProduct {
     }
 
     public void expandMountPoint() {
-        expandMountPoint("balancer_release_expand_mount_point", "/app", 10);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_expand_mount_point").product(this)
+                .data(new JSONObject().put("size", 10).put("mount", "/app")).build());
     }
 
     public void resize(Flavor flavor) {
