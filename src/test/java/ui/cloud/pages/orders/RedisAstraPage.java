@@ -115,7 +115,7 @@ public class RedisAstraPage extends IProductPage {
     }
     public void updateOs() {
         runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
-        new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
