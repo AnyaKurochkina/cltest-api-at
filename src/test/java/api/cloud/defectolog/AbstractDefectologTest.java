@@ -13,6 +13,7 @@ import models.cloud.tagService.TagServiceSteps;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Tag("defectolog")
+@Tags({@Tag("regress"), @Tag("defectolog")})
 @DisabledIfEnv("prod")
 public class AbstractDefectologTest extends AbstractTagServiceTest {
 
