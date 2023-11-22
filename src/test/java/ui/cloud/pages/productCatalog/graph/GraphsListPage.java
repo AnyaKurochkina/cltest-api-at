@@ -33,7 +33,7 @@ public class GraphsListPage extends EntityListPage {
     private final SelenideElement nameRequiredFieldHint = $x("//input[@name='name']/parent::div/following-sibling::div");
     private final SelenideElement authorRequiredFieldHint = $x("//input[@name='author']/parent::div/following-sibling::div");
     private final SelenideElement sortByCreateDate = $x("//div[text()='Дата создания']");
-    private final SelenideElement usageLink = $x("//a[text()='Перейти в Использование']");
+    private final Button usageLinkButton = Button.byText("Перейти в использование");
 
     public GraphsListPage() {
         graphsPageTitle.shouldBe(Condition.visible);
@@ -85,7 +85,7 @@ public class GraphsListPage extends EntityListPage {
         delete(nameColumn, graph.getName());
         new DeleteDialog().submitAndCheckNotDeletable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
-        usageLink.click();
+        usageLinkButton.click();
         new GraphPage().checkTabIsSelected("Использование");
         return new GraphPage();
     }
