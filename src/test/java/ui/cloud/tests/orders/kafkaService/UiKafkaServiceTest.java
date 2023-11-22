@@ -75,7 +75,7 @@ public class UiKafkaServiceTest extends UiProductTest {
     @Test
     @TmsLink("")
     @Order(2)
-    @DisplayName("UI KafkaService. Проверка полей заказа")
+    @DisplayName("UI KafkaService. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         KafkaServicePage servicePage = new KafkaServicePage(product);
         servicePage.getBtnGeneralInfo().click();

@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
 import models.cloud.authorizer.Folder;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
@@ -72,7 +73,7 @@ public abstract class AbstractComputeTest extends Tests {
     static {
         Folder folderPollProject = Folder.builder().title("ProjectPool").build().onlyGetObject();
         ResourceManagerSteps.getChildren(folderPollProject.getName()).forEach(e -> {
-            historyMutex.put(e, new Object());
+            historyMutex.put(e, new JSONObject());
             projectCountMap.put(e, 0);
         });
     }

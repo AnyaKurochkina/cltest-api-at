@@ -20,17 +20,17 @@ public class MoonTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("847365")
-    @ParameterizedTest(name = "[{index}] Создание проекта {0}")
-    void create(Moon product) {
+    @ParameterizedTest(name = "[{1}] Создание проекта {0}")
+    void create(Moon product, Integer num) {
         //noinspection EmptyTryBlock
         try (Moon moon = product.createObjectExclusiveAccess()) {}
     }
 
     @TmsLink("847367")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удаление проекта {0}")
+    @ParameterizedTest(name = "[{1}] Удаление проекта {0}")
     @MarkDelete
-    void delete(Moon product) {
+    void delete(Moon product, Integer num) {
         try (Moon moon = product.createObjectExclusiveAccess()) {
             moon.deleteObject();
         }

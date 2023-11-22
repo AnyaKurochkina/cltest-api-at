@@ -1,6 +1,8 @@
 package api.cloud.orderService;
 
 import api.Tests;
+import core.enums.Role;
+import core.helper.http.Http;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -24,8 +26,8 @@ public class AstraTest extends Tests {
     @Tag("actions")
     @Tag("health_check")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Astra product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(Astra product, Integer num) {
         //noinspection EmptyTryBlock
         try (Astra astra = product.createObjectExclusiveAccess()) {
         }
@@ -34,8 +36,8 @@ public class AstraTest extends Tests {
     @TmsLink("391705")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(Astra product) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.expandMountPoint();
         }
@@ -44,8 +46,8 @@ public class AstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить ОС {0}")
-    void updateOsVm(Astra product) {
+    @ParameterizedTest(name = "[{1}] Обновить ОС {0}")
+    void updateOsVm(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
             astra.updateOsVm();
@@ -56,8 +58,8 @@ public class AstraTest extends Tests {
     @TmsLink("391699")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(Astra product) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.restart();
         }
@@ -66,10 +68,16 @@ public class AstraTest extends Tests {
     @TmsLink("1685463")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Реинвентаризация ВМ (Linux) {0}")
-    void updateVmInfo(Astra product) {
+    @ParameterizedTest(name = "[{1}] Реинвентаризация ВМ (Linux) {0}")
+    void updateVmInfo(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.updateVmInfo();
+            Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
+            Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
+            try {
+                astra.updateVmInfo();
+            } finally {
+                Http.removeFixedRole();
+            }
         }
     }
 
@@ -77,8 +85,8 @@ public class AstraTest extends Tests {
     @TmsLink("391702")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(Astra product) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.stopSoft();
             astra.start();
@@ -88,8 +96,8 @@ public class AstraTest extends Tests {
     @TmsLink("391704")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
-    void resize(Astra product) {
+    @ParameterizedTest(name = "[{1}] Изменить конфигурацию {0}")
+    void resize(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.resize(astra.getMaxFlavorLinuxVm());
         }
@@ -99,8 +107,8 @@ public class AstraTest extends Tests {
     @TmsLinks({@TmsLink("391700"), @TmsLink("391701")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(Astra product) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.stopHard();
             astra.start();
@@ -109,8 +117,8 @@ public class AstraTest extends Tests {
 
     @TmsLink("1090927")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверка прав у ролей пользователя {0}")
-    void checkCreate(Astra product) {
+    @ParameterizedTest(name = "[{1}] Проверка прав у ролей пользователя {0}")
+    void checkCreate(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.checkUserGroupBySsh();
         }
@@ -118,8 +126,8 @@ public class AstraTest extends Tests {
 
     @TmsLink("382910")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
-    void checkCreateAd(Astra product) {
+    @ParameterizedTest(name = "[{1}] AD Проверка создания {0}")
+    void checkCreateAd(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.checkCertsBySsh();
         }
@@ -127,20 +135,26 @@ public class AstraTest extends Tests {
 
     @TmsLinks({@TmsLink("1733768"), @TmsLink("1733769")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать/удалить снапшот {0}")
-    void createSnapshot(Astra product) {
+    @ParameterizedTest(name = "[{1}] Создать/удалить снапшот {0}")
+    void createSnapshot(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
-            astra.createSnapshot(1);
-            astra.deleteSnapshot();
+            Assumptions.assumeTrue(astra.isDev(), "Тест включен только для dev среды");
+            Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
+            try {
+                astra.createSnapshot(1);
+                astra.deleteSnapshot();
+            } finally {
+                Http.removeFixedRole();
+            }
         }
     }
 
     @TmsLink("391698")
     @Tag("health_check")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Astra product) {
+    void delete(Astra product, Integer num) {
         try (Astra astra = product.createObjectExclusiveAccess()) {
             astra.deleteObject();
         }

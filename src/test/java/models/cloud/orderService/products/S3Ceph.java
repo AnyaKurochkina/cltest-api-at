@@ -29,7 +29,7 @@ public class S3Ceph extends IProduct {
         initProduct();
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (availabilityZone == null)
+        if(availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         return this;
     }
