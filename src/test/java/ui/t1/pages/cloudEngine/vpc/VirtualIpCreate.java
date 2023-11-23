@@ -17,6 +17,7 @@ public class VirtualIpCreate {
     private Boolean l2;
     private Boolean internet;
     private String networkInterface;
+    private String vMac;
 
     private String ip;
 
@@ -47,6 +48,12 @@ public class VirtualIpCreate {
     public VirtualIpCreate setL2(Boolean l2) {
         Switch.byText("Задействовать L2").setEnabled(l2);
         this.l2 = l2;
+        return this;
+    }
+
+    public VirtualIpCreate setVMac(String vMac) {
+        Input.byLabel("vMAC-адрес").setValue(vMac);
+        this.vMac = vMac;
         return this;
     }
 
