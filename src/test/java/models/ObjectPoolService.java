@@ -216,6 +216,15 @@ public class ObjectPoolService {
         awaitTerminationAfterShutdown(threadPool);
     }
 
+    private static boolean containsClassOrSuperclass(Set<Class<?>> classSet, Class<?> targetClass) {
+        for (Class<?> clazz : classSet) {
+            if (clazz.isAssignableFrom(targetClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static void removeProducts(Set<Class<?>> currentClassListArgument) {
         List<String> createdEntitiesCopy = new ArrayList<>(createdEntities);
         for (String key : createdEntitiesCopy) {
@@ -229,7 +238,7 @@ public class ObjectPoolService {
                 }
                 if (objectPoolEntity.getStatus() != ObjectStatus.CREATED)
                     continue;
-                if (currentClassListArgument.contains(objectPoolEntity.getClazz()))
+                if (containsClassOrSuperclass(currentClassListArgument, objectPoolEntity.getClazz()))
                     continue;
                 Entity entity = objectPoolEntity.get();
                 if (!(entity instanceof IProduct))

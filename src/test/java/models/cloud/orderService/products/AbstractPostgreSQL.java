@@ -39,7 +39,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     protected Flavor flavor;
     protected String adminPassword;
 
-    public abstract String pgcIp();
+    public abstract String pgcHost();
 
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))

@@ -27,6 +27,7 @@ public class RouteSni {
     }
 
     @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     public static class RouteCheck {
         int index;
         List<String> aliases;

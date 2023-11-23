@@ -35,8 +35,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286242")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(LoadBalancer product, Integer num) {
         //noinspection EmptyTryBlock
         try (LoadBalancer ignored = product.createObjectExclusiveAccess()) {
         }
@@ -46,8 +46,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286247")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.restart();
         }
@@ -56,8 +56,8 @@ public class LoadBalancerTest extends Tests {
     @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.stopSoft();
             balancer.start();
@@ -67,8 +67,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286249")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
-    void resize(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Изменить конфигурацию {0}")
+    void resize(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.resize(balancer.getMaxFlavorLinuxVm());
         }
@@ -77,8 +77,8 @@ public class LoadBalancerTest extends Tests {
     @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.stopHard();
             balancer.start();
@@ -88,8 +88,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286250")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] TCP публикация с простой проверкой доступности {0}")
-    void tcpSimple(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] TCP публикация с простой проверкой доступности {0}")
+    void tcpSimple(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             addTcpSimple(balancer);
         }
@@ -113,8 +113,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286253")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] TCP публикация с проверкой доступности по http ссылке {0}")
-    void tcp(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] TCP публикация с проверкой доступности по http ссылке {0}")
+    void tcp(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
@@ -138,8 +138,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286255")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] HTTP публикация с простой проверкой доступности {0}")
-    void httpSimple(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] HTTP публикация с простой проверкой доступности {0}")
+    void httpSimple(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             addHttpSimple(balancer);
         }
@@ -167,8 +167,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286256")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] HTTP публикация с проверкой доступности по http ссылке {0}")
-    void http(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] HTTP публикация с проверкой доступности по http ссылке {0}")
+    void http(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversHttp)
@@ -190,8 +190,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286258")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Глобальная TCP публикация {0}")
-    void addTcpGslb(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Глобальная TCP публикация {0}")
+    void addTcpGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             balancer.addGslb(Gslb.builder()
@@ -204,8 +204,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286259")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Глобальная HTTP публикация {0}")
-    void addHttpGslb(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Глобальная HTTP публикация {0}")
+    void addHttpGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             balancer.addGslb(Gslb.builder()
@@ -218,8 +218,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286260")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удаление бэкенда {0}")
-    void deleteBackend(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Удаление бэкенда {0}")
+    void deleteBackend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
@@ -234,8 +234,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286261")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удаление фронтенда {0}")
-    void deleteFrontend(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Удаление фронтенда {0}")
+    void deleteFrontend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             balancer.deleteFrontend(frontend);
@@ -245,8 +245,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286262")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удаление GSLB публикации {0}")
-    void deleteGsbl(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Удаление GSLB публикации {0}")
+    void deleteGsbl(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
@@ -261,8 +261,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286265")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Синхронизировать информацию о конфигурации глобальных публикаций {0}")
-    void gslbSync(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Синхронизировать информацию о конфигурации глобальных публикаций {0}")
+    void gslbSync(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.gslbSync();
         }
@@ -271,8 +271,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1286266")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удаление всех GSLB публикаций в заказе {0}")
-    void deleteAllGslb(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Удаление всех GSLB публикаций в заказе {0}")
+    void deleteAllGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
@@ -287,8 +287,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("1676788")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Откат конфигурации {0}")
-    void revertConfig(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Откат конфигурации {0}")
+    void revertConfig(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
@@ -304,8 +304,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменение фронтенда {0}")
-    void editFrontend(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Изменение фронтенда {0}")
+    void editFrontend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             frontend.setDefaultBackendName(frontend.getDefaultBackendNameHttp());
@@ -316,8 +316,8 @@ public class LoadBalancerTest extends Tests {
 
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Изменение бэкенда {0}")
-    void editBackend(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Изменение бэкенда {0}")
+    void editBackend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
@@ -331,8 +331,8 @@ public class LoadBalancerTest extends Tests {
 
     @TmsLink("SOUL-8013")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание проверки доступности. httpchk {0}")
-    void createHeathCheck(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Создание проверки доступности. httpchk {0}")
+    void createHeathCheck(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
@@ -359,8 +359,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8012")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Синхронизация конфигурации {0}")
-    void fullSync(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Синхронизация конфигурации {0}")
+    void fullSync(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.fullSync();
         }
@@ -369,8 +369,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8011")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Включить/Выключить maintenance {0}")
-    void changePublicationsMaintenanceMode(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Включить/Выключить maintenance {0}")
+    void changePublicationsMaintenanceMode(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             String hostname = OrderServiceSteps.getObjectClass(balancer,"data.find{it.type=='cluster'}.data.config.cluster_nodes[0].name", String.class);
             ChangePublicationsMaintenanceMode modeOff = ChangePublicationsMaintenanceMode.builder().state("inactive")
@@ -385,8 +385,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8010")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменение таймаутов {0}")
-    void editTimeouts(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Изменение таймаутов {0}")
+    void editTimeouts(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.editTimeouts(300000, 300000, 300000);
         }
@@ -395,8 +395,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8009")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновление ОС {0}")
-    void updateOs(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Обновление ОС {0}")
+    void updateOs(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.updateOs();
         }
@@ -405,8 +405,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8008")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновление сертификатов {0}")
-    void updateCertificates(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Обновление сертификатов {0}")
+    void updateCertificates(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.updateCertificates("all");
         }
@@ -415,8 +415,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8007")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Вертикальное масштабирование {0}")
-    void resizeClusterVms(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Вертикальное масштабирование {0}")
+    void resizeClusterVms(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.resizeClusterVms(balancer.getMaxFlavor());
         }
@@ -425,8 +425,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8006")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Горизонтальное масштабирование {0}")
-    void addHaproxy(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Горизонтальное масштабирование {0}")
+    void addHaproxy(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.addHaproxy(6);
             startAllHosts(balancer);
@@ -445,8 +445,8 @@ public class LoadBalancerTest extends Tests {
     @TmsLink("SOUL-8005")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Увеличить дисковое пространство {0}")
-    void expandMountPoint(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Увеличить дисковое пространство {0}")
+    void expandMountPoint(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.expandMountPoint();
         }
@@ -456,8 +456,8 @@ public class LoadBalancerTest extends Tests {
     @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Комплексное создание {0}")
-    void complexCreate(LoadBalancer product) {
+    @ParameterizedTest(name = "[{1}] Комплексное создание {0}")
+    void complexCreate(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversTcp).backendName("complex_backend3").advancedCheck(false).build();
             Frontend frontend = Frontend.builder().frontendName("complex_frontend3").frontendPort(80)
@@ -477,9 +477,9 @@ public class LoadBalancerTest extends Tests {
 
     @TmsLink("1286267")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(LoadBalancer product) {
+    void delete(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.deleteObject();
         }

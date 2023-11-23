@@ -93,7 +93,7 @@ public class Redis extends IProduct {
     //Изменить конфигурацию
     public void resize(Flavor flavor) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
-                .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true).put("warning", new Object())).build());
+                .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true).put("warning", new JSONObject())).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -128,7 +128,11 @@ public class Redis extends IProduct {
     }
 
     public void changeNotifyKeyspaceEvents(String attr) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("change_redis_param_notify").product(this)
+        String actionName = "change_redis_param_notify";
+        if (isProd()) {
+            actionName = "change_redis_param_notify_cluster";
+        }
+        OrderServiceSteps.runAction(ActionParameters.builder().name(actionName).product(this)
                 .data(new JSONObject().put("notify_keyspace_events", attr)).build());
     }
 
