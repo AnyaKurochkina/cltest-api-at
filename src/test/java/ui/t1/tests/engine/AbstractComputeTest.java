@@ -55,7 +55,7 @@ public abstract class AbstractComputeTest extends Tests {
     protected String defaultSubNetwork = "default";
     protected String securityGroup = "default";
     protected String flavorName = "Intel";
-    private final String entitiesPrefix = "at-" + this.getClass().getSimpleName();
+    private final String entitiesPrefix = "at-" + this.getClass().getSimpleName().toLowerCase();
     protected static final String sshKey = "AT-default";
 
     protected static final String CONNECT_INTERNET_COMMAND = "curl --connect-timeout 1 -Is http://yandex.ru";
