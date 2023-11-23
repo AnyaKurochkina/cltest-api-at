@@ -53,8 +53,7 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
             TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
-            //orderPage.getFlavorSelectCluster().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getFlavorSelectCluster().set("tdg:rps-2000:storage-6GB");
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroupSelectTarantool().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());

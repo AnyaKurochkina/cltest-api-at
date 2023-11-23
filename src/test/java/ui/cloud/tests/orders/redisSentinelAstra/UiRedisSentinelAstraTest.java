@@ -101,7 +101,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     @DisplayName("UI Redis Sentinel Astra. Расширить точку монтирования")
     void expandDisk() {
         RedisSentinelAstraPage redisPage = new RedisSentinelAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis", "20", new Table("Роли узла").getRowByIndex(0)));
+        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis/data", "20", new Table("Роли узла").getRowByIndex(0)));
     }
 
     @Test

@@ -74,9 +74,9 @@ public class RedisSentinelAstraPage extends IProductPage {
     }
 
     public void resetPasswordSentinel(String name) {
-        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль (удалить)", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль", "Подтвердить", () ->
         {
-            Dialog dlgActions = Dialog.byTitle("Сбросить пароль (удалить)");
+            Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");
         });

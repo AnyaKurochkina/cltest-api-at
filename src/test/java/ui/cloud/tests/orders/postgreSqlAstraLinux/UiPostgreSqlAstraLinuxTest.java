@@ -35,6 +35,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     PostgreSQL product;// = PostgreSQL.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/d4ac7f9d-60fc-480e-ba5f-81273f22b273/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     String nameDb = "at_db";
+    String limit = "20";
     String shortNameUserDB = "at_user";
     String fullNameUserDB = "at_db_at_user";
 
@@ -283,6 +284,57 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(26)
     @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Актуализировать версию СУБД")
+    void updateVersionDb
+            () {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::updateVersionDb
+        );
+    }
+    @Test
+    @Order(27)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_backup")
+    void adPgBackup
+            () {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::adPgBackup
+        );
+    }
+    @Test
+    @Order(28)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_audit")
+    void addPgAudit
+            () {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::addPgAudit
+        );
+    }
+    @Test
+    @Order(29)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_walarchive")
+    void addPgWalarchive
+            () {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::addPgWalarchive
+        );
+    }
+    @Test
+    @Order(30)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Обновить ОС")
+    void updateOs
+            () {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::updateOs
+        );
+    }
+
+    @Test
+    @Order(31)
+    @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Показать удаленные БД")
     void showDeleteDB() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -290,7 +342,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(27)
+    @Order(32)
     @TmsLink("1296731")
     @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
     void monitoringOs() {

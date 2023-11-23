@@ -12,7 +12,7 @@ public class TarantoolDataGridAstraPage extends IProductPage {
     private static final String HEADER_CONF_CLUSTER = "Конфигурация кластера";
     private static final String STATUS = "Статус";
     protected Button btnCluster = Button.byElement(Selenide.$x("//button[.='Кластер']"));
-
+    String instance = "zorg-core-01";
 
     SelenideElement cpu = $x("(//h5)[1]");
     SelenideElement ram = $x("(//h5)[2]");
@@ -54,7 +54,7 @@ public class TarantoolDataGridAstraPage extends IProductPage {
         btnCluster.click();
         runActionWithParameters(HEADER_CONF_CLUSTER, "Остановка сервисов TDG", "Подтвердить", () -> {
             Select.byLabel("Тип").set("Instance");
-            Select.byLabel("Инстансы").set("zorg-core-01");
+            Select.byLabel("Инстансы").set(instance);
         });
         new TarantoolDataGridAstraPage.VirtualMachineTable().checkPowerStatus(TarantoolDataGridAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -64,7 +64,7 @@ public class TarantoolDataGridAstraPage extends IProductPage {
         btnCluster.click();
         runActionWithParameters(HEADER_CONF_CLUSTER, "Запуск сервисов TDG", "Подтвердить", () -> {
             Select.byLabel("Тип").set("Instance");
-            Select.byLabel("Инстансы").set("zorg-core-01");
+            Select.byLabel("Инстансы").set(instance);
         });
         new TarantoolDataGridAstraPage.VirtualMachineTable().checkPowerStatus(TarantoolDataGridAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -74,7 +74,7 @@ public class TarantoolDataGridAstraPage extends IProductPage {
         btnCluster.click();
         runActionWithParameters(HEADER_CONF_CLUSTER, "Перезапуск сервисов TDG", "Подтвердить", () -> {
             Select.byLabel("Тип").set("Instance");
-            Select.byLabel("Инстансы").set("zorg-core-01");
+            Select.byLabel("Инстансы").set(instance);
         });
         new TarantoolDataGridAstraPage.VirtualMachineTable().checkPowerStatus(TarantoolDataGridAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }

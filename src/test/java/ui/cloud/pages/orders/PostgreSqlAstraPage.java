@@ -15,6 +15,7 @@ import java.util.List;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -82,13 +83,13 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Перезагрузить");
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
-
+    @Step("Получить актуальную конфигурацию")
     public void getActualConfiguration() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Получить актуальную конфигурацию");
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(WindowsPage.VirtualMachineTable.POWER_STATUS_ON);
     }
-
+    @Step("Изменить default_transaction_isolation")
     public void changeTransactionIsolation(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить default_transaction_isolation", "Подтвердить", () -> {
@@ -98,7 +99,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         Assertions.assertEquals(value.toLowerCase(), default_transaction_isolation.getText(), "default_transaction_isolation " +
                 "не соответствует установленному значению ");
     }
-
+    @Step("Максимизировать max_connections")
     public void changeMaxConnections(String value) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Максимизировать max_connections");
@@ -106,7 +107,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         Assertions.assertEquals(value, max_connections.getText(), "Максимальное количество подключений " +
                 "не соответствует установленному значению ");
     }
-
+    @Step("Обновить минорную версию СУБД")
     public void updateMinorVersion() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Обновить минорную версию СУБД", "Подтвердить", () -> {
@@ -119,7 +120,34 @@ public class PostgreSqlAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
+    @Step("Актуализировать версию СУБД")
+    public void updateVersionDb() {
+        checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Актуализировать версию СУБД");
+    }
+    @Step("Обновить ОС")
+    public void updateOs() {
+        checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
+    }
+    @Step("Добавить точку монтирования /pg_audit")
+    public void addPgAudit() {
+        checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Добавить точку монтирования /pg_audit");
+    }
 
+    @Step("Добавить точку монтирования /pg_walarchive")
+    public void addPgWalarchive() {
+        checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Добавить точку монтирования /pg_walarchive");
+    }
+    @Step("Добавить точку монтирования /pg_backup")
+    public void adPgBackup() {
+        checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_APP, "Добавить точку монтирования /pg_backup");
+    }
+
+    @Step("Изменить конфигурацию")
     public void changeConfiguration() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
@@ -134,6 +162,7 @@ public class PostgreSqlAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
+    @Step("Добавить БД")
     public void createDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -149,7 +178,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Assertions.assertEquals(name, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, name).getValueByColumn(HEADER_NAME_DB));
         }
     }
-
+    @Step("Добавить пользователя")
     public void addUserDb(String nameDb, String nameUserDb, String comment) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -168,7 +197,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Assertions.assertEquals(nameDb, new Table(HEADER_NAME_DB).getRowByColumnValue(HEADER_NAME_DB, nameDb).getValueByColumn(HEADER_NAME_DB), "БД не принадлежит пользователю");
         }
     }
-
+    @Step("Актуализировать extensions")
     public void updateExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -177,16 +206,34 @@ public class PostgreSqlAstraPage extends IProductPage {
             runActionWithoutParameters(getHeaderBlock(name), "Актуализировать extensions");
         }
     }
-
+    @Step("Назначить предел подключений")
+    public void setLimitConnection(String quantity) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, quantity)) {
+            btnGeneralInfo.click();
+            runActionWithParameters(quantity, "Назначить предел подключений", "Подтвердить", () -> Input.byLabel("Предел подключений").setValue(quantity));
+        }
+    }
+    @Step("Убрать предел подключений")
+    public void deleteLimitConnection(String quantity) {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, quantity)) {
+            btnGeneralInfo.click();
+            runActionWithoutParameters(quantity, "Убрать предел подключений");
+        }
+    }
+    @Step("Изменить extensions")
     public void changeExtensions(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name)) {
             btnGeneralInfo.click();
-            runActionWithParameters(getHeaderBlock(name), "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
+            runActionWithParameters(getActionsMenuButton(name), "Изменить extensions", "Подтвердить", () -> DropDown.byXpath("//input[@spellcheck='false']/..").select("citext"));
         }
     }
-
+    @Step("Удалить БД")
     public void removeDb(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -198,14 +245,14 @@ public class PostgreSqlAstraPage extends IProductPage {
         Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueEquals(HEADER_NAME_DB, name), "БД существует");
 
     }
-
+    @Step("Показать удаленные БД")
     public void showDeleteDB(String name) {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnGeneralInfo.click();
         showDeleteSwitch.setEnabled(true);
         Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, name), "БД не обнаружена");
     }
-
+    @Step("Расширить точку монтирования /pg_data (standalone)")
     public void enlargeDisk(String name, String size, SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
@@ -224,7 +271,7 @@ public class PostgreSqlAstraPage extends IProductPage {
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
     }
-
+    @Step("Сбросить пароль БД")
     public void resetPasswordDb() {
         new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         btnDb.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
@@ -234,7 +281,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
     }
-
+    @Step("Сбросить пароль пользователя БД")
     public void resetPasswordUserDb(String nameUserDB) {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
@@ -243,7 +290,7 @@ public class PostgreSqlAstraPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
     }
-
+    @Step("Удалить пользователя")
     public void deleteUserDb(String nameUser) {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (new Table(HEADER_NAME_DB).isColumnValueContains("", nameUser)) {
