@@ -3,13 +3,11 @@ package ui.t1.pages.cloudDirector;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import ui.elements.Input;
-import ui.elements.Select;
-import ui.elements.Slider;
-import ui.elements.TextArea;
+import ui.elements.*;
 import ui.models.cloudDirector.StorageProfile;
 
 import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$x;
 import static ui.cloud.pages.orders.OrderUtils.clickOrder;
 
 public class DataCentreCreatePage {
@@ -35,7 +33,7 @@ public class DataCentreCreatePage {
     }
 
     public DataCentreCreatePage setDataCentreProfile(StorageProfile profile) {
-        Select profileStorage = Select.byXpath("//tbody//button[@title='Open']");
+        Select profileStorage = new Select(new Table($x("//table")).getRow(0).getElementByColumn("Профиль оборудования *"));
         if (!profileStorage.getValue().contains(profile.getName())) {
             profileStorage.setContains(profile.getName());
         }
@@ -44,7 +42,7 @@ public class DataCentreCreatePage {
     }
 
     public DataCentreCreatePage setRouterBandwidth(String mbs) {
-        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(mbs);
+        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").clickSelectAndSet(mbs);
         return this;
     }
 

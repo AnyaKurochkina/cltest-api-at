@@ -1,6 +1,5 @@
 package ui.t1.tests.cloudDirector;
 
-import core.helper.Configure;
 import core.utils.Waiting;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -28,8 +27,8 @@ import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
 public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
-    private String orgName = "t1-cloud-rtk-alan";
-    private String vdcName = "nsssss";
+    private String orgName = "ift-ec6821aa04a-at-ui";
+    private String vdcName = "khkgnauftk-at-ui";
 
     @Test
     @Order(4)
@@ -46,7 +45,8 @@ public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("158901"), @TmsLink("767870")})
     @DisplayName("VMware. Зарезервировать/отозвать внешние IP адреса")
     public void reserveExternalIPAddressesTest() {
-        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
+        DataCentrePage dataCentrePage = new IndexPage()
+                .goToCloudDirector()
                 .goToOrganization(orgName)
                 .selectDataCentre(vdcName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addIpAddresses(2));
@@ -69,13 +69,7 @@ public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("692723"), @TmsLink("692724")})
     @DisplayName("VMware. Управление дисковой подсистемой VDC. Добавление/Удаление профиля")
     public void addProfileTest() {
-        String name = "";
-        if (Configure.ENV.equals("t1prod")) {
-            name = "C03-SP-Standard";
-        } else {
-            name = "SP-Standart";
-        }
-        StorageProfile profile = new StorageProfile(name, "11");
+        StorageProfile profile = new StorageProfile("SP-High", "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(orgName)
                 .selectDataCentre(vdcName);
@@ -92,7 +86,7 @@ public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
                 .goToCloudDirector()
                 .goToOrganization(orgName)
                 .selectDataCentre(vdcName);
-        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Compact"));
     }
 
     @Test

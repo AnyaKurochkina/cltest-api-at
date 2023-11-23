@@ -28,7 +28,11 @@ public class TextArea implements TypifiedElement {
     }
 
     public static TextArea byName(String name) {
-        return new TextArea($x("//textarea[@name='{}']", name));
+        return TextArea.byName(name, 1);
+    }
+
+    public static TextArea byName(String name, int index) {
+        return new TextArea($x("(//textarea[@name='{}'])" + postfix, name, TypifiedElement.getIndex(index)));
     }
 
     public static TextArea byXPath(@Language("XPath") String xPath) {

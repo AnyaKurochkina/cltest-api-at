@@ -33,6 +33,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
 
     @Test
     @Order(1)
+    @DisplayName("VMware. Создание VDC.")
     public void createDataCentre() {
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
@@ -108,11 +109,11 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("692723"), @TmsLink("692724")})
     @DisplayName("VMware. Управление дисковой подсистемой VDC. Добавление/Удаление профиля")
     public void addProfileTest() {
-        StorageProfile profile = new StorageProfile("SP-Common01", "11");
+        StorageProfile profile = new StorageProfile("SP-High", "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.EQUALS, () -> dataCentrePage.addProfile(profile));
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addProfile(profile));
         dataCentrePage.runActionWithCheckCost(CompareType.LESS, () -> dataCentrePage.deleteProfile(profile));
     }
 
