@@ -291,7 +291,7 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("revert_config")
-                    .advancedCheck(true)
+                    .advancedCheck(false)
                     .checkUri("/status")
                     .build();
             balancer.revertConfig(backend);

@@ -334,12 +334,12 @@ public class LoadBalancer extends IProduct {
     }
 
     public void updateCertificates(String method) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_certificates").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_certificates").timeout(Duration.ofMinutes(50)).product(this)
                 .data(new JSONObject().put("method", method)).build());
     }
 
     public void resizeClusterVms(Flavor flavor) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofMinutes(30))
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofMinutes(50))
                 .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
