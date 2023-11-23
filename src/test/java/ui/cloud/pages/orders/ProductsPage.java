@@ -3,6 +3,7 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
@@ -20,6 +21,10 @@ public class ProductsPage {
     private final Button applyButton = Button.byText("Применить");
     ElementsCollection products = $$x("//img/ancestor::button//h4");
     ElementsCollection expandButtons = $$x("//h4[contains(text(),'Посмотреть еще')]/ancestor::button");
+
+    public ProductsPage() {
+        WebDriverRunner.getWebDriver().manage().window().maximize();
+    }
 
     @Step("Выбрать категорию '{value}'")
     public ProductsPage selectCategory(String value) {

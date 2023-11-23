@@ -31,6 +31,7 @@ public class ImportGraphTest extends GraphBaseTest {
                         .version("1.0.0")
                         .description(json.getString("Graph.description"))
                         .author(json.getString("Graph.author"))
+                        .object_info(json.getString("Graph.object_info"))
                         .build());
         deleteGraphByApi(name);
     }

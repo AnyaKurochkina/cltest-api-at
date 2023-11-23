@@ -18,6 +18,7 @@ import ui.elements.Input;
 import ui.elements.Select;
 import ui.elements.TextArea;
 
+import java.time.Duration;
 import java.util.ArrayList;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -27,7 +28,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class TemplatePage extends EntityPage {
     private final String saveTemplateAlertText = "Шаблон успешно изменен";
     private final SelenideElement templatesListLink = $x("//a[text() = 'Список шаблонов узлов']");
-    private final SelenideElement templateVersion = $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
     private final TextArea descriptionTextArea = TextArea.byName("description");
     private final Input runQueueInput = Input.byName("run");
     private final Input rollbackQueueInput = Input.byName("rollback");
@@ -73,7 +73,7 @@ public class TemplatePage extends EntityPage {
 
     @Step("Проверка, что отображаемая версия шаблона равна '{version}'")
     public TemplatePage checkTemplateVersion(String version) {
-        templateVersion.shouldHave(Condition.exactText(version));
+        Waiting.find(() -> versionSelect.getValue().equals(version), Duration.ofSeconds(5));
         return this;
     }
 
@@ -89,8 +89,7 @@ public class TemplatePage extends EntityPage {
         checkTemplateVersion(template.getVersion());
         goToParamsTab();
         String printedOutputJSON = new JSONArray((ArrayList) template.getPrintedOutput()).toString();
-        Assertions.assertEquals(printedOutputJSON, printedOutput.getElement().getValue()
-                .replaceAll("\\s", ""));
+        Assertions.assertEquals(printedOutputJSON, printedOutput.getWhitespacesRemovedValue());
         return this;
     }
 

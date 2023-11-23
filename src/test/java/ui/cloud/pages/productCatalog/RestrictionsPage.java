@@ -10,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class RestrictionsPage extends EntityPage {
 
     private final Button addContextRestrictionButton = Button
-            .byXpath("//*[text()='Контекстные ограничения']/..//following-sibling::button");
+            .byXpath("//*[text()='Контекстные ограничения']/..//following::button[1]");
     private final Button addButton = Button.byXpath("//div[@role='dialog']//button[.='Добавить']");
     private final Button saveButton = Button.byXpath("//div[@role='dialog']//button[.='Сохранить']");
     private final Select orgSelect = Select.byLabel("Организация");

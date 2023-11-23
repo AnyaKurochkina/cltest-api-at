@@ -17,6 +17,7 @@
     "type": "action",
     "allowed_developers": [],
     "restricted_developers": [],
+    "object_info": "graph info",
     "version_arr": [
       1,
       0,

@@ -47,7 +47,7 @@ public class UiGrafanaTest extends UiProductTest {
     void orderGrafana() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .selectProduct(product.getProductName());
