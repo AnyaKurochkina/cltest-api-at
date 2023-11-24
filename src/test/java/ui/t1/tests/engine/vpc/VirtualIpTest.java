@@ -34,11 +34,11 @@ public class VirtualIpTest extends AbstractComputeTest {
     private final EntitySupplier<VirtualIpCreate> vipSupSlave = lazy(() -> virtualIpCreateWidthVMac("77:77:77:00:00:02"));
 
     private final EntitySupplier<Void> prepareVmWidthVip = lazy(() -> {
-        virtualMachineCreate(vipSup.get());
+        virtualMachineCreate(vipSup.get(), randomVm.get());
         return null;
     });
     private final EntitySupplier<Void> prepareVmWidthVipSlave = lazy(() -> {
-        virtualMachineCreate(vipSupSlave.get());
+        virtualMachineCreate(vipSupSlave.get(), randomVm.copy().get());
         return null;
     });
 
@@ -50,8 +50,7 @@ public class VirtualIpTest extends AbstractComputeTest {
         return v;
     }
 
-    private void virtualMachineCreate(VirtualIpCreate vip){
-        VmCreate vm = randomVm.get();
+    private void virtualMachineCreate(VirtualIpCreate vip, VmCreate vm){
         String publicIp = randomPublicIp.get();
 
         String localIp = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getLocalIp();
