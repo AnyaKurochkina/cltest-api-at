@@ -9,7 +9,6 @@ import ui.elements.Button;
 import ui.elements.Select;
 import ui.elements.TypifiedElement;
 
-import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 
 public class SelectBox implements TypifiedElement {
@@ -37,11 +36,12 @@ public class SelectBox implements TypifiedElement {
 
     public static void setUserImage(String image) {
         if (!Button.byText("Пользовательские").isVisible()) {
-            Select.byXpath("//*[@id = 'Cloud Marketplace']/following-sibling::div/button").set("Пользовательские");
+            $x("//*[@id = 'Cloud Marketplace']/following-sibling::div/button").click();
+            $x("//div[@role ='listbox']//*[text() = 'Пользовательские']").click();
         } else {
             Button.byId("Пользовательские").click();
         }
-        Select.byPlaceholder("выберите").setStart(image);
+        Select.byXpath("//input[@placeholder='выберите']/../..").setStart(image);
     }
 
     private void select(String text) {
