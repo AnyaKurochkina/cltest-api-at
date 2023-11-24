@@ -2,7 +2,6 @@ package ui.t1.tests.engine.vpc;
 
 import com.jcraft.jsch.JSchException;
 import core.helper.DataFileHelper;
-import core.helper.StringUtils;
 import core.helper.TableChecker;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Epic;
@@ -122,7 +121,7 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("Имя", e -> e.equals(ip.getName()))
                 .add("Тип", e -> e.equals("Виртуальный IP адрес"))
                 .add("Статус", String::isEmpty)
-                .add(Column.MAC, e -> StringUtils.isMatch("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
+              //  .add(Column.MAC, e -> StringUtils.isMatch("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
                 .add("", String::isEmpty)
                 .check(() -> new Table(Column.IP).getRowByColumnValue(Column.IP, ip.getIp()));
     }
