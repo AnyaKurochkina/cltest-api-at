@@ -95,7 +95,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(5)
     @TmsLink("993396")
-    @Disabled
+//    @Disabled
     @DisplayName("UI PostgreSQLAstra. Перезагрузить")
     void restart() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -126,7 +126,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Максимизировать max_connections")
     void changeMaxConnections() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("284"));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeMaxConnections("367"));
     }
 
     @Test
@@ -135,7 +135,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Расширить точку монтирования")
     void expandDisk() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", $x("(//td[.='—'])[1]")));
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, () -> pSqlPage.enlargeDisk("/pg_data", "20", $x("(//td[.='vm'])[1]")));
     }
 
     @Test
@@ -144,7 +144,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Изменить конфигурацию")
     void changeConfiguration() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::changeConfiguration);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::changeConfiguration);
     }
 
     @Test
@@ -242,7 +242,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Order(22)
     @TmsLinks({@TmsLink("993397"), @TmsLink("993401")})
-    @Disabled
+//    @Disabled
     @DisplayName("UI PostgreSQLAstra. Выключить принудительно / Включить")
     void stopHard() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -257,7 +257,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @DisplayName("UI PostgreSQLAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.deleteGroup("user");
+        pSqlPage.deleteGroup("superuser");
         pSqlPage.addGroup("superuser", Collections.singletonList(product.accessGroup()));
     }
 
@@ -328,7 +328,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     void updateOs
             () {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
-        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::updateOs
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::updateOs
         );
     }
 

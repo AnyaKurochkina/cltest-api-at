@@ -33,7 +33,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product =PostgresSQLCluster.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/4e0871a3-8a7d-4f63-b208-0ac952fab0b8/main?context=proj-gxsz4e3shy&type=project&org=vtb");
+    PostgresSQLCluster product;// =PostgresSQLCluster.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/7efe0c78-35a9-429a-a428-dc4d740ad5a8/main?context=proj-mq4fb3xa5w&type=project&org=vtb");
     String nameDb = "at_db";
     String nameSlot = "at_slot";
     String limit = "20";
