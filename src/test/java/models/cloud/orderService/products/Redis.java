@@ -94,7 +94,7 @@ public class Redis extends IProduct {
     public void resize(Flavor flavor) {
         String actionName = "resize_two_layer";
         if (isProd()) {
-            actionName = "resize_vw";
+            actionName = "resize_vm";
         }
         OrderServiceSteps.runAction(ActionParameters.builder().name(actionName).product(this)
                 .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true).put("warning", new JSONObject())).build());
