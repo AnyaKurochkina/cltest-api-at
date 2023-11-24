@@ -210,7 +210,7 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
             balancer.addGslbUseCache(Gslb.builder()
-                    .globalname("randomPrefix + glb-http-public-" + balancer.getEnv().toLowerCase())
+                    .globalname(randomPrefix + "glb-http-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend.getFrontendName())
                     .build());
         }
