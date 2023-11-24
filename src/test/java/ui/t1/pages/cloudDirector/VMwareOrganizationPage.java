@@ -2,13 +2,13 @@ package ui.t1.pages.cloudDirector;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
-import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.pages.orders.OrderStatus;
+import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
+import ui.models.cloudDirector.Vdc;
 
 import java.time.Duration;
 
@@ -61,13 +61,14 @@ public class VMwareOrganizationPage {
     }
 
     @Step("Создание виртуального дата центра")
-    public VMwareOrganizationPage addDataCentre(String name) {
+    public VMwareOrganizationPage addDataCentre(Vdc vdc) {
         new DataCentreTable().clickAdd();
         return new DataCentreCreatePage()
-                .setCpu("2")
-                .setRam("4")
-                .setDataCentreProfile("High")
-                .setDataCentreName(name)
+                .setCpu(vdc.getCpu())
+                .setRam(vdc.getRam())
+                .setDataCentreProfile(vdc.getStorageProfile())
+                .setRouterBandwidth("200")
+                .setDataCentreName(vdc.getName())
                 .orderDataCentre();
     }
 
@@ -75,21 +76,18 @@ public class VMwareOrganizationPage {
     public void addDataCentreWithExistName(String name) {
         new DataCentreTable().clickAdd();
         new DataCentreCreatePage()
-                .setDataCentreProfile("High")
                 .setDataCentreName(name)
                 .orderDataCentreWithSameName();
     }
 
     @Step("Выбор виртуального дата центра с именем {name}")
     public DataCentrePage selectDataCentre(String name) {
-        Waiting.sleep(500);
         new DataCentreTable().getRowByColumnValue("Название", name).get().click();
         return new DataCentrePage();
     }
 
     @Step("Проверка существования дата центра в таблице с именем {name}")
     public boolean isDataCentreExist(String name) {
-        Waiting.sleep(500);
         return new DataCentreTable().isColumnValueEquals("Название", name);
     }
 

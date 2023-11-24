@@ -1,7 +1,7 @@
 {
   "vdc_organization": {
     "project_name": "proj-1r93axzk9n",
-    "availability_zone_name": "az1",
-    "name": "sdfsdf1234"
+    "name": "sdfsdf1234",
+    "availability_zone_name": "az1"
   }
 }

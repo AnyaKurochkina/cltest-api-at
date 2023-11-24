@@ -11,6 +11,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.extesions.ConfigExtension;
+import ui.models.cloudDirector.StorageProfile;
+import ui.models.cloudDirector.Vdc;
 import ui.t1.pages.T1LoginPage;
 
 import java.util.UUID;
@@ -28,12 +30,14 @@ public abstract class AbstractCloudDirectorTest extends Tests {
     VmWareOrganization vmWareOrganization;
     String name;
     String dataCentreName;
+    Vdc testVdc;
 
     public AbstractCloudDirectorTest() {
         project = Project.builder().isForOrders(true).build().createObject();
         name = UUID.randomUUID().toString().substring(25) + "-at-ui";
         vmWareOrganization = createVMwareOrganization(name, project.getId());
-        dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "-at-ui";
+        dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
+        testVdc = new Vdc(dataCentreName, "2", "4", new StorageProfile("Standart", "20"));
     }
 
     @BeforeEach

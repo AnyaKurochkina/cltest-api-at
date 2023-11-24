@@ -10,6 +10,8 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import steps.authorizer.AuthorizerSteps;
 import ui.extesions.ConfigExtension;
+import ui.models.cloudDirector.StorageProfile;
+import ui.models.cloudDirector.Vdc;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
@@ -79,12 +81,13 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Удаление организации с Виртуальным дата-центром")
     void deleteVMwareOrganizationWithVDCTest() {
         String dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "-at-ui";
+        Vdc vdc = new Vdc(dataCentreName, "2", "4", new StorageProfile("High", "12"));
         String orgName = new IndexPage()
                 .goToCloudDirector()
                 .create(UUID.randomUUID().toString().substring(25) + "-at-ui");
         assertTrue(new CloudDirectorPage()
                 .goToOrganization(orgName)
-                .addDataCentre(dataCentreName)
+                .addDataCentre(vdc)
                 .waitChangeStatus()
                 .goToCloudDirectorPage()
                 .deleteWithOrders(orgName)
