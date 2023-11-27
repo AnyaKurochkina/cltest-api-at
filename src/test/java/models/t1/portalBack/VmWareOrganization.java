@@ -32,7 +32,10 @@ public class VmWareOrganization extends Entity {
     private String id;
     @JsonProperty("project_name")
     private String projectName;
-
+    @JsonProperty("availability_zone_name")
+    private String availabilityZoneName;
+    @JsonProperty("edge_gateway_type")
+    private String edgeGatewayType;
 
     @Override
     public Entity init() {
@@ -44,6 +47,7 @@ public class VmWareOrganization extends Entity {
         return JsonHelper.getJsonTemplate("/t1/createOrg.json")
                 .set("$.vdc_organization.name", name)
                 .set("$.vdc_organization.project_name", projectName)
+                .set("$.vdc_organization.availability_zone_name", availabilityZoneName)
                 .build();
     }
 

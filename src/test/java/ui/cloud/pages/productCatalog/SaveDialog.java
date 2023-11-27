@@ -12,7 +12,6 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SaveDialog extends Dialog {
-    private final SelenideElement saveAsNextVersionCheckBox = $x("//input[@name = 'saveAsNextVersion']");
     private final SelenideElement saveButton = $x("//div[@role='dialog']//div[text() = 'Сохранить']/parent::button");
     private final SelenideElement cancelButton = $x("//div[@role='dialog']//div[text() = 'Отмена']/parent::button");
     private final Input newVersionInput = Input.byName("newVersion");
@@ -23,26 +22,23 @@ public class SaveDialog extends Dialog {
 
     @Step("Проверка невозможности сохранения с некорректной версией '{newVersion}'")
     public void checkSaveWithInvalidVersion(String newVersion, String currentVersion) {
-        saveAsNextVersionCheckBox.click();
-        setInputValue("Новая версия", newVersion);
-        assertTrue($x("//p[text() = 'Версия должна быть выше, чем " + currentVersion + "']").isDisplayed());
+        setInputByName("newVersion", newVersion);
+        assertTrue($x("//*[text() = 'Версия должна быть выше, чем " + currentVersion + "']").isDisplayed());
         assertFalse(saveButton.isEnabled());
         cancelButton.shouldBe(Condition.enabled).click();
     }
 
     @Step("Сохранение с указанной версией '{newVersion}'")
     public void saveWithVersion(String newVersion, String alertText) {
-        saveAsNextVersionCheckBox.click();
-        setInputValue("Новая версия", newVersion);
+        setInputByName("newVersion", newVersion);
         saveButton.shouldBe(Condition.enabled).click();
         Alert.green(alertText);
     }
 
     @Step("Проверка невозможности сохранения с версией некорректного формата '{newVersion}'")
     public void checkSaveWithInvalidVersionFormat(String newVersion) {
-        saveAsNextVersionCheckBox.click();
-        setInputValue("Новая версия", newVersion);
-        assertTrue($x("//p[text() = 'Некорректный формат номера версии']").isDisplayed());
+        setInputByName("newVersion", newVersion);
+        assertTrue($x("//*[text() = 'Некорректный формат номера версии']").isDisplayed());
         assertFalse(saveButton.isEnabled());
         cancelButton.shouldBe(Condition.enabled).click();
     }
@@ -53,14 +49,8 @@ public class SaveDialog extends Dialog {
         Alert.green(alertText);
     }
 
-    @Step("Сохранение со следующей патч версией без проверки уведомления")
-    public void saveWithNextPatchVersion() {
-        saveButton.shouldBe(Condition.enabled).click();
-    }
-
     @Step("Проверка предлагаемой для сохранения версии и сохранение")
     public void checkNextVersionAndSave(String nextVersion, String alertText) {
-        saveAsNextVersionCheckBox.click();
         newVersionInput.getInput().shouldHave(Condition.exactValue(nextVersion));
         saveButton.shouldBe(Condition.enabled).click();
         Alert.green(alertText);

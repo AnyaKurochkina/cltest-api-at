@@ -45,6 +45,7 @@ public class EntityPage {
             .$x("following::div[text()='Формат файла не поддерживается. Поддерживаемые форматы: png, jpeg, svg']");
     private final SelenideElement iconTooLargeHint = iconInput.getInput()
             .$x("following::div[text()='Размер не должен превышать 100 КБ']");
+    protected final SelenideElement objectInfoEditor = $x("//div[@class='jodit-wysiwyg']");
 
     @Step("Сохранение объекта без изменения версии")
     public EntityPage saveWithoutPatchVersion(String alertText) {

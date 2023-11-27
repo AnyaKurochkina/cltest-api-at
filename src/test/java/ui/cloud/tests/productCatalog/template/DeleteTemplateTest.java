@@ -19,6 +19,7 @@ import ui.elements.Alert;
 import java.util.Collections;
 import java.util.UUID;
 
+import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 import static ui.cloud.pages.productCatalog.template.TemplatesListPage.goToUsageButton;
 import static ui.cloud.pages.productCatalog.template.TemplatesListPage.nameColumn;
@@ -70,7 +71,7 @@ public class DeleteTemplateTest extends TemplateBaseTest {
                 .name("1")
                 .description("1")
                 .sourceId(String.valueOf(template.getId()))
-                .sourceType("subgraph")
+                .sourceType(TEMPLATE.getValue())
                 .build()
                 .toJson();
         JSONObject graphJSON = new JSONObject().put("graph", Collections.singletonList(graphItem));

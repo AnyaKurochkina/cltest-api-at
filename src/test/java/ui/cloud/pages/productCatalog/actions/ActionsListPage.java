@@ -10,6 +10,7 @@ import models.cloud.productCatalog.action.Action;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityListPage;
+import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -28,8 +29,8 @@ public class ActionsListPage extends EntityListPage {
         actionPageTitle.shouldBe(Condition.visible);
     }
 
-    @Step("Создание действия")
-    public ActionPage createAction() {
+    @Step("Открытие диалога создания действия")
+    public ActionPage openAddActionDialog() {
         TestUtils.scrollToTheTop();
         addNewObjectButton.click();
         return new ActionPage();
@@ -133,5 +134,15 @@ public class ActionsListPage extends EntityListPage {
         search(value);
         assertTrue(new Table(NAME_COLUMN).isEmpty());
         return this;
+    }
+
+    @Step("Поиск и открытие страницы действия '{name}'")
+    public ActionPage findAndOpenActionPage(String name) {
+        search(name);
+        DataTable table = new DataTable(NAME_COLUMN);
+        new DataTable(NAME_COLUMN).searchAllPages(t -> table.isColumnValueContains(NAME_COLUMN, name))
+                .getRowByColumnValueContains(NAME_COLUMN, name).get().click();
+        Waiting.sleep(1000);
+        return new ActionPage();
     }
 }
