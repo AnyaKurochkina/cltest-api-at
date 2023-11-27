@@ -308,6 +308,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @ParameterizedTest(name = "[{1}] Добавить точку монтирования /pg_walarchive {0}")
     void addMountPointPgWalarchive(PostgresSQLCluster product, Integer num) {
         try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+            List<String> envs = Arrays.asList("LT", "PROD");
+            Assumptions.assumeFalse(envs.contains(product.getEnv()), "Тест выключен для сред " + Arrays.toString(envs.toArray()));
             postgreSQL.addMountPointPgWalarchive();
         }
     }

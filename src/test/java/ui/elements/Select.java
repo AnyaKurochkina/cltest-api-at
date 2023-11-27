@@ -27,7 +27,7 @@ public class Select implements TypifiedElement {
     protected SelenideElement element;
 
     public Button getBtnOpen() {
-        return Button.byElement(element.$x(".//*[name()='path' and starts-with(@d,'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74')]/.. | .//button[@aria-label='Open'] | .//*[name()='path' and starts-with(@d,'M7 10l5 5 5-5z')]/.."));
+        return Button.byElement(element.$x(".//*[name()='path' and starts-with(@d,'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74')]/.. | .//button[@aria-label='Open'] | .//*[name()='path' and starts-with(@d,'M7 10l5 5 5-5z')]/../.."));
     }
 
     public Select(SelenideElement element) {
@@ -84,21 +84,6 @@ public class Select implements TypifiedElement {
         if (currentTitle.equals(value))
             return value;
         getBtnOpen().click();
-        if (value.equals(RANDOM_VALUE))
-            setItem(getRandomIndex());
-        else
-            getOptions().filter(Condition.exactText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        return value;
-    }
-
-    @Step("Select. Выбрать элемент с названием '{value}'")
-    public String clickSelectAndSet(String value) {
-        hover();
-        Waiting.sleep(() -> !getValue().isEmpty(), Duration.ofSeconds(1));
-        String currentTitle = getValue();
-        if (currentTitle.equals(value))
-            return value;
-        element.click();
         if (value.equals(RANDOM_VALUE))
             setItem(getRandomIndex());
         else

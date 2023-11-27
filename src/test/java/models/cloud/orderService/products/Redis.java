@@ -92,7 +92,11 @@ public class Redis extends IProduct {
 
     //Изменить конфигурацию
     public void resize(Flavor flavor) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
+        String actionName = "resize_two_layer";
+        if (isProd()) {
+            actionName = "resize_vm";
+        }
+        OrderServiceSteps.runAction(ActionParameters.builder().name(actionName).product(this)
                 .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("check_agree", true).put("warning", new JSONObject())).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);

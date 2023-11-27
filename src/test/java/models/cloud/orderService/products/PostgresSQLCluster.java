@@ -113,10 +113,9 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     transient String leaderIp;
 
     @Override
-    @SuppressWarnings("unchecked")
     public String pgcHost() {
         return OrderServiceSteps.getObjectClass(this, "product_data.findAll{it.hostname.contains('-pgc')}.hostname",
-                        new TypeRef<List<String>>() {}).stream().collect(Collectors.joining(",", "", "." + getDomain()));
+                        new TypeRef<List<String>>() {}).stream().map(e -> e + "." + getDomain()).collect(Collectors.joining(","));
     }
 
     @Override

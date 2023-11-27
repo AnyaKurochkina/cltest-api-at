@@ -44,7 +44,7 @@ public class LoadBalancerBackendChangeNegativeTest extends Tests {
     void notValidBackendServerName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().name("not_valid").build());
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () ->
                     balancer.editBackend(backend.getBackendName(), "delete", servers));
             AssertUtils.assertContains(throwable.getMessage(), "The entered servers were not found in the specified backend");
@@ -57,7 +57,7 @@ public class LoadBalancerBackendChangeNegativeTest extends Tests {
     void notValidBackendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().address("10.10.10.10").port(80).name("name").build());
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             AssertResponse.run(() -> balancer.editBackend(backend.getBackendName(), "not_valid", servers)).status(422).responseContains("action");
         }
     }

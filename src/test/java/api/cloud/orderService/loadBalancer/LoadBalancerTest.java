@@ -7,6 +7,7 @@ import io.qameta.allure.TmsLink;
 import io.restassured.common.mapper.TypeRef;
 import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.*;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -23,6 +24,7 @@ import java.util.List;
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversHttp;
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
 
+//@Execution(ExecutionMode.SAME_THREAD)
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
@@ -30,7 +32,9 @@ public class LoadBalancerTest extends Tests {
 
 //    @Mock
 //    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
-//            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/fbc09bfe-e7fe-4709-852b-260d79ea7479/main?context=proj-114wetem0c&type=project&org=vtb");
+//            .buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ef286138-92e8-4fc8-9ece-a37a8ddd0b73/main?context=proj-csyn7gq5se&type=project&org=vtb");
+
+    private static final String randomPrefix = RandomStringUtils.randomNumeric(4);
 
     @TmsLink("1286242")
     @Tag("actions")
@@ -101,12 +105,12 @@ public class LoadBalancerTest extends Tests {
                 .backendName("backend_tcp_simple")
                 .advancedCheck(false)
                 .build();
-        balancer.addBackend(backend);
+        balancer.addBackendUseCache(backend);
         Frontend frontend = Frontend.builder()
                 .frontendName("frontend_tcp_simple")
                 .defaultBackendNameTcp(backend.getBackendName())
                 .build();
-        balancer.addFrontend(frontend);
+        balancer.addFrontendUseCache(frontend);
         return frontend;
     }
 
@@ -119,17 +123,16 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("backend_tcp_width_check")
-                    .advancedCheck(true)
-                    .checkUri("/status")
+                    .advancedCheck(false)
                     .build();
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             if (balancer.isDev())
                 Assertions.assertTrue(balancer.isStateContains(backend.getBackendName()));
             final Frontend frontendTcpWidthCheck = Frontend.builder()
                     .frontendName("frontend_tcp_width_check")
                     .defaultBackendNameTcp(backend.getBackendName())
                     .build();
-            balancer.addFrontend(frontendTcpWidthCheck);
+            balancer.addFrontendUseCache(frontendTcpWidthCheck);
             if (balancer.isDev())
                 Assertions.assertTrue(balancer.isStateContains(frontendTcpWidthCheck.getFrontendName()));
         }
@@ -153,14 +156,14 @@ public class LoadBalancerTest extends Tests {
                 .balancingAlgorithm("roundrobin")
                 .advancedCheck(false)
                 .build();
-        balancer.addBackend(backend);
+        balancer.addBackendUseCache(backend);
         Frontend frontend = Frontend.builder()
                 .frontendName("frontend_http_simple")
                 .mode("http")
                 .frontendPort(80)
                 .defaultBackendNameHttp(backend.getBackendName())
                 .build();
-        balancer.addFrontend(frontend);
+        balancer.addFrontendUseCache(frontend);
         return frontend;
     }
 
@@ -174,11 +177,9 @@ public class LoadBalancerTest extends Tests {
                     .servers(serversHttp)
                     .mode("http")
                     .backendName("backend_http_width_check")
-                    .advancedCheck(true)
-                    .checkUri("/status")
                     .build();
-            balancer.addBackend(backend);
-            balancer.addFrontend(Frontend.builder()
+            balancer.addBackendUseCache(backend);
+            balancer.addFrontendUseCache(Frontend.builder()
                     .frontendName("frontend_http_width_check")
                     .mode("http")
                     .frontendPort(80)
@@ -194,8 +195,8 @@ public class LoadBalancerTest extends Tests {
     void addTcpGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
-            balancer.addGslb(Gslb.builder()
-                    .globalname("glb-tcp-public-" + balancer.getEnv().toLowerCase())
+            balancer.addGslbUseCache(Gslb.builder()
+                    .globalname(randomPrefix + "glb-tcp-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend.getFrontendName())
                     .build());
         }
@@ -208,8 +209,8 @@ public class LoadBalancerTest extends Tests {
     void addHttpGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
-            balancer.addGslb(Gslb.builder()
-                    .globalname("glb-http-public-" + balancer.getEnv().toLowerCase())
+            balancer.addGslbUseCache(Gslb.builder()
+                    .globalname(randomPrefix + "glb-http-public-" + balancer.getEnv().toLowerCase())
                     .frontend(frontend.getFrontendName())
                     .build());
         }
@@ -226,7 +227,7 @@ public class LoadBalancerTest extends Tests {
                     .backendName("backend_for_remove")
                     .advancedCheck(false)
                     .build();
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             balancer.deleteBackend(backend);
         }
     }
@@ -250,10 +251,10 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
-                    .globalname("glb-tcp-public" + balancer.getEnv().toLowerCase())
+                    .globalname(randomPrefix + "glb-tcp-public" + balancer.getEnv().toLowerCase())
                     .frontend(frontend.getFrontendName())
                     .build();
-            balancer.addGslb(gslb);
+            balancer.addGslbUseCache(gslb);
             balancer.deleteGslb(gslb);
         }
     }
@@ -276,10 +277,10 @@ public class LoadBalancerTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addTcpSimple(balancer);
             Gslb gslb = Gslb.builder()
-                    .globalname("glb-tcp-public-delete-all" + balancer.getEnv().toLowerCase())
+                    .globalname(randomPrefix + "glb-tcp-public-delete-all" + balancer.getEnv().toLowerCase())
                     .frontend(frontend.getFrontendName())
                     .build();
-            balancer.addGslb(gslb);
+            balancer.addGslbUseCache(gslb);
             balancer.deleteAllGslb();
         }
     }
@@ -293,7 +294,7 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("revert_config")
-                    .advancedCheck(true)
+                    .advancedCheck(false)
                     .checkUri("/status")
                     .build();
             balancer.revertConfig(backend);
@@ -324,7 +325,7 @@ public class LoadBalancerTest extends Tests {
                     .backendName("backend_for_edit9")
                     .advancedCheck(false)
                     .build();
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             balancer.editBackend(backend.getBackendName(), "delete", serversTcp);
         }
     }
@@ -339,7 +340,7 @@ public class LoadBalancerTest extends Tests {
                     .backendName("backend_for_heath")
                     .advancedCheck(false)
                     .build();
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
                     .protocol("httpchk")
                     .checkStrings(Collections.singletonList(CheckString.builder()
@@ -438,8 +439,10 @@ public class LoadBalancerTest extends Tests {
     private void startAllHosts(LoadBalancer balancer) {
         List<String> hostnames = OrderServiceSteps.getObjectClass(balancer,
                 "data.find{it.type=='cluster'}.data.config.cluster_nodes.findAll{it.main_status=='off'}.name", new TypeRef<List<String>>() {});
-        ChangePublicationsMaintenanceMode modeOn = ChangePublicationsMaintenanceMode.builder().state("active").hostnameOff(hostnames).build();
-        balancer.changePublicationsMaintenanceMode(modeOn);
+        if(!hostnames.isEmpty()) {
+            ChangePublicationsMaintenanceMode modeOn = ChangePublicationsMaintenanceMode.builder().state("active").hostnameOff(hostnames).build();
+            balancer.changePublicationsMaintenanceMode(modeOn);
+        }
     }
 
     @TmsLink("SOUL-8005")
