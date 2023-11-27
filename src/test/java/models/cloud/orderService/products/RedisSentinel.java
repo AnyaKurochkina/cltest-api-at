@@ -91,7 +91,7 @@ public class RedisSentinel extends IProduct {
     //Изменить конфигурацию
     public void resize(Flavor flavor) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("resize_two_layer").product(this)
-                .data(new JSONObject().put("flavor", flavor.toString()).put("warning", new Object()).put("check_agree", true)).build());
+                .data(new JSONObject().put("flavor", flavor.toJson()).put("warning", new JSONObject()).put("check_agree", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -102,7 +102,7 @@ public class RedisSentinel extends IProduct {
     public void checkConnect() {
         String url = "";
         try {
-            url = (String) OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[0]");
+            url = "redis://" + OrderServiceSteps.getProductsField(this, CONNECTION_URL + "[0]");
             Jedis jedis = new Jedis(url);
             jedis.auth(appUser, appUserPassword);
             jedis.close();
@@ -119,7 +119,7 @@ public class RedisSentinel extends IProduct {
 
     public void resetPassword() {
         String password = "UEijLKcQJN2pZ0Iqvxh1EXCuZ86pPGiEpdxwLRLWL4QnIOG2KPlGrw5jkLEScQZ9";
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_revert_config").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("reset_sentinel_redis_user_password").product(this)
                 .data(new JSONObject().put("redis_password", password).put("user_name", appUser)).build());
         appUserPassword = password;
         save();

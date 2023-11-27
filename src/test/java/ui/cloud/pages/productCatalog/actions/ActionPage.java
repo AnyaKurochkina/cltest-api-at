@@ -26,6 +26,7 @@ import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.GraphSteps.getGraphById;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
@@ -37,7 +38,6 @@ public class ActionPage extends EntityPage {
     private final SelenideElement locationInOrderTab = $x("//*[text()= 'Расположение в заказе']");
     private final SelenideElement graphTab = $x("//*[text() = 'Граф']");
     private final SelenideElement paramsTab = $x("//button[span[text()='Параметры']]");
-    private final Select graphVersionDropDown = Select.byLabel("Значение");
     private final SelenideElement dataConfigPath = $x("//input[@name = 'data_config_path']");
     private final SelenideElement dataConfigKey = $x("//input[@name = 'data_config_key']");
     private final SelenideElement data = $x("//*[@placeholder = 'Введите данные через запятую']");
@@ -48,6 +48,7 @@ public class ActionPage extends EntityPage {
     private final MultiSelect requiredItemStatusesSelect = MultiSelect.byLabel("Обязательные статусы item");
     private final MultiSelect requiredOrderStatusesSelect = MultiSelect.byLabel("Обязательные статусы заказа");
     private final Button registerButton = Button.byText("Зарегистрировать");
+    private final Tab objectInfoTab = Tab.byText("Информация о действии");
 
     public ActionPage() {
         actionsListLink.shouldBe(Condition.visible);
@@ -62,9 +63,11 @@ public class ActionPage extends EntityPage {
         titleInput.getInput().shouldHave(Condition.exactValue(action.getTitle()));
         descriptionTextArea.getElement().shouldHave(Condition.exactValue(action.getDescription()));
         goToGraphTab();
-        Graph graph = GraphSteps.getGraphById(action.getGraphId());
+        Graph graph = getGraphById(action.getGraphId());
         Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
         Assertions.assertEquals(action.getGraphVersion(), graphVersionSelect.getValue());
+        objectInfoTab.switchTo();
+        assertEquals(action.getObject_info(),objectInfoEditor.getText());
         return this;
     }
 
@@ -97,7 +100,7 @@ public class ActionPage extends EntityPage {
     public ActionPage changeGraphVersion(String value) {
         graphTab.click();
         TestUtils.wait(2000);
-        graphVersionDropDown.set(value);
+        graphVersionSelect.set(value);
         return this;
     }
 
@@ -180,37 +183,40 @@ public class ActionPage extends EntityPage {
     }
 
     @Step("Запонение полей для создания действия и сохранение")
-    public ActionsListPage fillAndSave(String name, String title, String description, ItemStatus status, OrderStatus orderStatus, ActionType actionType,
-                                       String configPath, String configKey, String valueOfData, String graphTitle, EventType eventType, EventProvider eventProvider) {
+    public ActionsListPage setAttributesAndSave(Action action) {
         WebDriverRunner.getWebDriver().manage().window().maximize();
-        nameInput.setValue(name);
-        titleInput.setValue(title);
-        descriptionTextArea.setValue(description);
-        requiredItemStatusesSelect.set(status.getValue());
-        requiredOrderStatusesSelect.set(orderStatus.getValue());
-        Select.byName("type").set(actionType.getValue());
+        nameInput.setValue(action.getName());
+        titleInput.setValue(action.getTitle());
+        descriptionTextArea.setValue(action.getDescription());
+        requiredItemStatusesSelect.set(action.getRequiredItemStatuses().get(0));
+        requiredOrderStatusesSelect.set(action.getRequiredOrderStatuses().get(0).toString());
+        Select.byName("type").set(action.getType());
         paramsTab.scrollIntoView(false).click();
         addTypeAndProviderButton.click();
         Table table = new Table("Тип");
         Select eventTypeDropDown = new Select(table.getRow(0).get().$x("(.//div[select])[1]"));
         Select eventProviderDropDown = new Select(table.getRow(0).get().$x("(.//div[select])[2]"));
+        String eventType = action.getEventTypeProvider().get(0).getEvent_type();
         //TODO DropDown не сразу раскрывается
         for (int i = 0; i < 10; i++) {
             eventTypeDropDown.getElement().$x(".//*[name()='svg']").click();
             Waiting.sleep(1500);
-            if ($x("//div[. = '" + eventType.getValue() + "']").isDisplayed()) break;
+            if ($x("//div[. = '" + eventType + "']").isDisplayed()) break;
         }
-        $x("//div[. = '" + eventType.getValue() + "']").click();
-        eventProviderDropDown.set(eventProvider.getValue());
+        $x("//div[. = '" + eventType + "']").click();
+        eventProviderDropDown.set(action.getEventTypeProvider().get(0).getEvent_provider());
         table.getRow(0).get().$x(".//button[.='Сохранить']").click();
         locationInOrderTab.click();
-        dataConfigPath.setValue(configPath);
-        dataConfigKey.setValue(configKey);
-        data.setValue(valueOfData);
+        dataConfigPath.setValue(action.getDataConfigPath());
+        dataConfigKey.setValue(action.getDataConfigKey());
+        data.setValue(action.getDataConfigFields().get(0).toString());
         graphTab.click();
-        graphInput.click();
-        graphSelect.setContains(graphTitle);
-        TestUtils.scrollToTheBottom();
+        Graph graph = getGraphById(action.getGraphId());
+        graphSelect.setContains(graph.getTitle());
+        Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(15));
+        graphVersionSelect.set(action.getGraphVersion());
+        objectInfoTab.switchTo();
+        objectInfoEditor.setValue(action.getObject_info());
         saveButton.click();
         backButton.click();
         return new ActionsListPage();

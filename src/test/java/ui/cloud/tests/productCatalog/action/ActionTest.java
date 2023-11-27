@@ -48,12 +48,31 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .createObject();
         String name = "create_action_test_ui";
-        assertTrue(new ControlPanelIndexPage().goToActionsListPage()
-                .createAction()
-                .fillAndSave(name, "create_action_test_ui", "test",
-                        ItemStatus.ON, OrderStatus.DAMAGED, ActionType.ON, "configPath", "configKey",
-                        "valueOfData", graph.getTitle(), EventType.VM, EventProvider.VSPHERE)
-                .isActionDisplayed(name), "Созданное действие не найдено в списке действий.");
+        Action action = Action.builder()
+                .name(name)
+                .title("create_action_test_ui")
+                .description("test")
+                .graphId(graph.getGraphId())
+                .number(0)
+                .requiredItemStatuses(Collections.singletonList(ItemStatus.ON.getValue()))
+                .requiredOrderStatuses(Collections.singletonList(OrderStatus.DAMAGED))
+                .type(ActionType.ON.getValue())
+                .dataConfigPath("configPath")
+                .dataConfigKey("configKey")
+                .dataConfigFields(Collections.singletonList("valueOfData"))
+                .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
+                        .event_type(EventType.VM.getValue())
+                        .event_provider(EventProvider.VSPHERE.getValue())
+                        .build()))
+                .version("1.0.0")
+                .graphVersion("1.0.0")
+                .object_info("Action info")
+                .build();
+        new ControlPanelIndexPage().goToActionsListPage()
+                .openAddActionDialog()
+                .setAttributesAndSave(action)
+                .findAndOpenActionPage(action.getName())
+                .checkAttributes(action);
         deleteActionByName(name);
     }
 

@@ -30,17 +30,18 @@ public class SelectBox implements TypifiedElement {
     public static void setMarketplaceImage(String image) {
         Button.byText("Cloud Marketplace").click();
         Button.byText("Показать еще").click();
-        findImage(() -> $x("//span[starts-with(text(),'{}')]", image).click(), image);
+        findImage(() -> Button.byElement($x("(//span[starts-with(text(),'{}')])[last()]", image)).click(), image);
         Button.byText("Использовать").click();
     }
 
     public static void setUserImage(String image) {
         if (!Button.byText("Пользовательские").isVisible()) {
-            Select.byXpath("//*[@id = 'Cloud Marketplace']/following-sibling::div/button").set("Пользовательские");
+            $x("//*[@id = 'Cloud Marketplace']/following-sibling::div/button").click();
+            $x("//div[@role ='listbox']//*[text() = 'Пользовательские']").click();
         } else {
             Button.byId("Пользовательские").click();
         }
-        Select.byPlaceholder("выберите").setStart(image);
+        Select.byXpath("//input[@placeholder='выберите']/../..").setStart(image);
     }
 
     private void select(String text) {

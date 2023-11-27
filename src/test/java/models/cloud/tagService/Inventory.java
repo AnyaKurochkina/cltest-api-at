@@ -40,7 +40,8 @@ public class Inventory extends Entity {
     @Override
     public Entity init() {
         Objects.requireNonNull(context, "Не задан контекст");
-        contextPath = Optional.ofNullable(contextPath).orElse(context.getContextPath());
+        if(Objects.isNull(contextPath))
+            contextPath = context.getContextPath();
         id = Optional.ofNullable(id).orElse(UUID.randomUUID().toString());
         objectType = Optional.ofNullable(objectType).orElse(DEFAULT_TYPE);
         return this;

@@ -1,4 +1,4 @@
-package ui.models;
+package ui.models.cloudDirector;
 
 import lombok.Data;
 

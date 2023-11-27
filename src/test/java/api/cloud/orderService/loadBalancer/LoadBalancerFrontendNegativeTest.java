@@ -30,13 +30,14 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание http Frontend c tcp Backend {0}")
     void notValidBackendServerName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-        Frontend frontend = Frontend.builder()
-                .frontendName("frontend_name")
-                .defaultBackendNameHttp(LoadBalancerBackendChangeNegativeTest.backend.getBackendName())
-                .build();
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
+            Frontend frontend = Frontend.builder()
+                    .frontendName("frontend_name")
+                    .defaultBackendNameHttp(LoadBalancerBackendChangeNegativeTest.backend.getBackendName())
+                    .build();
 
-        Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () -> balancer.addFrontend(frontend));
-        AssertUtils.assertContains(throwable.getMessage(), "tcp");
+            Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () -> balancer.addFrontend(frontend));
+            AssertUtils.assertContains(throwable.getMessage(), "tcp");
         }
     }
 
@@ -45,13 +46,14 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Frontend. Невалидный backend_name {0}")
     void notValidFrontendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-        Frontend frontend = Frontend.builder()
-                .frontendName(new Generex("[a-zA-Z0-9]{256}").random())
-                .defaultBackendNameTcp(LoadBalancerBackendChangeNegativeTest.backend.getBackendName())
-                .build();
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
+            Frontend frontend = Frontend.builder()
+                    .frontendName(new Generex("[a-zA-Z0-9]{256}").random())
+                    .defaultBackendNameTcp(LoadBalancerBackendChangeNegativeTest.backend.getBackendName())
+                    .build();
 
-        Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () -> balancer.addFrontend(frontend));
-        AssertUtils.assertContains(throwable.getMessage(), "frontend_name");
+            Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () -> balancer.addFrontend(frontend));
+            AssertUtils.assertContains(throwable.getMessage(), "frontend_name");
         }
     }
 
@@ -61,13 +63,13 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
     @ParameterizedTest(name = "Изменение Frontend с другим Backend {0}")
     void notValidBackendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-        Frontend frontend = Frontend.builder()
-                .frontendName("http")
-                .defaultBackendName("11")
-                .frontendPort(900)
-                .mode("http")
-                .build();
-        balancer.editFrontEnd(frontend, false, "not_valid_backend", 901);
+            Frontend frontend = Frontend.builder()
+                    .frontendName("http")
+                    .defaultBackendName("11")
+                    .frontendPort(900)
+                    .mode("http")
+                    .build();
+            balancer.editFrontEnd(frontend, false, "not_valid_backend", 901);
         }
     }
 

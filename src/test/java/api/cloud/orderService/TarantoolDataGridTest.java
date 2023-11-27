@@ -27,8 +27,8 @@ public class TarantoolDataGridTest extends Tests {
     @TmsLink("1746053")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(TarantoolDataGrid product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(TarantoolDataGrid product, Integer num) {
         //noinspection EmptyTryBlock
         try (TarantoolDataGrid tarantool = product.createObjectExclusiveAccess()) {
         }
@@ -37,8 +37,8 @@ public class TarantoolDataGridTest extends Tests {
     @TmsLink("1746057")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать резервную копию {0}")
-    void backup(TarantoolDataGrid product) {
+    @ParameterizedTest(name = "[{1}] Создать резервную копию {0}")
+    void backup(TarantoolDataGrid product, Integer num) {
         try (TarantoolDataGrid tarantool = product.createObjectExclusiveAccess()) {
             tarantool.backup();
         }
@@ -47,8 +47,8 @@ public class TarantoolDataGridTest extends Tests {
     @TmsLink("1746073")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновить сертификаты {0}")
-    void updateCerts(TarantoolDataGrid product) {
+    @ParameterizedTest(name = "[{1}] Обновить сертификаты {0}")
+    void updateCerts(TarantoolDataGrid product, Integer num) {
         try (TarantoolDataGrid tarantool = product.createObjectExclusiveAccess()) {
             tarantool.updateCerts();
         }
@@ -57,8 +57,8 @@ public class TarantoolDataGridTest extends Tests {
     @TmsLink("1746075")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Остановить/запустить сервисы {0}")
-    void stopInstances(TarantoolDataGrid product) {
+    @ParameterizedTest(name = "[{1}] Остановить/запустить сервисы {0}")
+    void stopInstances(TarantoolDataGrid product, Integer num) {
         try (TarantoolDataGrid tarantool = product.createObjectExclusiveAccess()) {
             tarantool.stopInstances(services);
             tarantool.startInstances(services);
@@ -68,8 +68,8 @@ public class TarantoolDataGridTest extends Tests {
     @TmsLink("1746100")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезапустить сервисы {0}")
-    void restartInstances(TarantoolDataGrid product) {
+    @ParameterizedTest(name = "[{1}] Перезапустить сервисы {0}")
+    void restartInstances(TarantoolDataGrid product, Integer num) {
         try (TarantoolDataGrid tarantool = product.createObjectExclusiveAccess()) {
             tarantool.restartInstances(services);
         }
@@ -77,9 +77,9 @@ public class TarantoolDataGridTest extends Tests {
 
     @TmsLink("1746103")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(TarantoolDataGrid product) {
+    void delete(TarantoolDataGrid product, Integer num) {
         try (TarantoolDataGrid tarantool = product.createObjectExclusiveAccess()) {
             tarantool.deleteObject();
         }

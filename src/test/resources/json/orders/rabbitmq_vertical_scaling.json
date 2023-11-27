@@ -9,7 +9,7 @@
 	"extra_mounts": {
 		"mount": "/app",
 		"file_system": "xfs",
-		"size": 31
+		"size": 50
 	},
 	"current_flavor": "30"
 }

@@ -17,6 +17,7 @@ public class VirtualIpCreate {
     private Boolean l2;
     private Boolean internet;
     private String networkInterface;
+    private String vMac;
 
     private String ip;
 
@@ -50,6 +51,12 @@ public class VirtualIpCreate {
         return this;
     }
 
+    public VirtualIpCreate setVMac(String vMac) {
+        Input.byLabel("vMAC-адрес").setValue(vMac);
+        this.vMac = vMac;
+        return this;
+    }
+
     public VirtualIpCreate setInternet(Boolean internet) {
         Switch.byText("Разрешить доступ в Интернет").setEnabled(internet);
         this.internet = internet;
@@ -66,17 +73,18 @@ public class VirtualIpCreate {
     public VirtualIpCreate clickOrder() {
         Button.byText("Заказать").click();
         Alert.green("Заказ успешно создан");
-        boolean isEmpty = new VirtualIpList.IpTable().isEmpty();
+        VirtualIpList.IpTable ipTable = new VirtualIpList.IpTable();
+        boolean isEmpty = ipTable.isEmpty();
         OrderUtils.waitCreate(() -> {
             if(!isEmpty) {
-                String oldIp = new VirtualIpList.IpTable().getFirstValueByColumn(Column.IP_ADDRESS);
-                Waiting.find(()-> !new VirtualIpList.IpTable().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofSeconds(80));
+                String oldIp = ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
+                Waiting.find(()-> ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofSeconds(80));
             }
             else
-                Waiting.find(()-> !new VirtualIpList.IpTable().isEmpty(), Duration.ofMinutes(2));
-            Waiting.find(()-> !new VirtualIpList.IpTable().getFirstValueByColumn("Сеть").equals("—"), Duration.ofMinutes(1));
+                Waiting.find(()-> !ipTable.update().isEmpty(), Duration.ofMinutes(2));
+            Waiting.find(()-> !ipTable.update().getFirstValueByColumn("Сеть").equals("—"), Duration.ofMinutes(1));
         });
-        ip = new VirtualIpList.IpTable().getFirstValueByColumn(Column.IP_ADDRESS);
+        ip = ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
         return this;
     }
 }

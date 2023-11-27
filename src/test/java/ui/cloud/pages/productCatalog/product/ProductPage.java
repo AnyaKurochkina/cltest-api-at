@@ -178,7 +178,7 @@ public class ProductPage extends EntityPage {
 
     @Step("Проверка, что отображаемая версия равна '{version}'")
     public ProductPage checkVersion(String version) {
-        this.selectedVersion.scrollIntoView(false).shouldHave(Condition.exactText(version));
+        Waiting.find(() -> versionSelect.getValue().equals(version), Duration.ofSeconds(5));
         return this;
     }
 
