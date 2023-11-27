@@ -42,7 +42,7 @@ public class DataCentreCreatePage {
     }
 
     public DataCentreCreatePage setRouterBandwidth(String mbs) {
-        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").clickSelectAndSet(mbs);
+        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(mbs);
         return this;
     }
 

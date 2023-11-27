@@ -48,7 +48,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
 
     public void changeRouterConfig(String speed, String configType) {
         runActionWithParameters(ROUTER_INFO, "Изменить лимит пропускной способности", "Подтвердить", () ->
-                        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").clickSelectAndSet(speed),
+                        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(speed),
                 ActionParameters.builder()
                         .waitChangeStatus(true)
                         .timeout(Duration.ofMinutes(3))
