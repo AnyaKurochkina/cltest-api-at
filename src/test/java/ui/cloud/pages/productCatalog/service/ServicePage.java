@@ -15,6 +15,8 @@ import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
+import java.time.Duration;
+
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.back;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -136,8 +138,7 @@ public class ServicePage extends EntityPage {
 
     @Step("Проверка, что отображаемая версия равна '{version}'")
     public ServicePage checkVersion(String version) {
-        TestUtils.scrollToTheTop();
-        this.selectedVersion.shouldHave(Condition.exactText(version));
+        Waiting.find(() -> versionSelect.getValue().equals(version), Duration.ofSeconds(5));
         return this;
     }
 

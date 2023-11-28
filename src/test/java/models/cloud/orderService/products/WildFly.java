@@ -27,7 +27,7 @@ public class WildFly extends IProduct {
     String osVersion;
     @ToString.Include
     String wildFlyVersion;
-    private static String otherJavaVersion = "11.0.12";
+    private static String otherJavaVersion = "11";
     String javaVersion;
     Flavor flavor;
 
@@ -50,7 +50,7 @@ public class WildFly extends IProduct {
 //            wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
             wildFlyVersion = "23.0.2.Final";
         if (javaVersion == null)
-            javaVersion = "1.8.0";
+            javaVersion = "8";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
         if (availabilityZone == null)

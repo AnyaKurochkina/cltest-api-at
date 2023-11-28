@@ -8,7 +8,6 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.graph.GraphPage;
 import ui.cloud.pages.productCatalog.template.TemplatePage;
 import ui.elements.Table;
 

@@ -32,8 +32,8 @@ public class LoadBalancerNegativeActionsTest extends Tests {
     @ParameterizedTest(name = "Удалить GSLB. Невалидный globalname {0}")
     void removeGslbNotValidGlobalName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
-            balancer.addFrontend(LoadBalancerBackendChangeNegativeTest.frontend);
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
+            balancer.addFrontendUseCache(LoadBalancerBackendChangeNegativeTest.frontend);
             String gslb = new Generex("[a-z]{64}").random();
             AssertResponse.run(() -> balancer.deleteGslbSource(gslb)).status(422).responseContains("globalname");
         }

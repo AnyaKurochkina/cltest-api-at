@@ -27,7 +27,7 @@ public class LoadBalancerNegativeActionsEmptyParametersTest extends Tests {
     @ParameterizedTest(name = "Создание проверки доступности. httpchk без check_uri {0}")
     void createHeathCheckWithoutCheckUri(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
             HealthCheck healthCheck = HealthCheck.builder().backendName(LoadBalancerBackendChangeNegativeTest.backend.getBackendName())
                     .protocol("httpchk")
                     .checkStrings(Collections.singletonList(CheckString.builder()
@@ -49,7 +49,7 @@ public class LoadBalancerNegativeActionsEmptyParametersTest extends Tests {
     @ParameterizedTest(name = "Создание проверки доступности. httpchk без check_method {0}")
     void createHeathCheckWithoutCheckMethod(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
             HealthCheck healthCheck = HealthCheck.builder().backendName(LoadBalancerBackendChangeNegativeTest.backend.getBackendName())
                     .protocol("httpchk")
                     .checkStrings(Collections.singletonList(CheckString.builder()
@@ -71,7 +71,7 @@ public class LoadBalancerNegativeActionsEmptyParametersTest extends Tests {
     @ParameterizedTest(name = "Создание проверки доступности. checkStrings без check_strings.string_use_ssl {0}")
     void createHeathCheckWithoutCheckMethodStringUseSsl(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
             HealthCheck healthCheck = HealthCheck.builder().backendName(LoadBalancerBackendChangeNegativeTest.backend.getBackendName())
                     .checkStrings(Collections.singletonList(CheckString.builder()
                             .stringType("connect")

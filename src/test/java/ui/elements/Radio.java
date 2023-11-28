@@ -18,6 +18,9 @@ public class Radio implements TypifiedElement {
     public static Radio byValue(String value){
         return new Radio($x("//input[@value='{}']", value));
     }
+    public static Radio byName(String name, int index){
+        return new Radio($x("(//input[@name='{}'])" + postfix, name, TypifiedElement.getIndex(index)));
+    }
 
     public boolean isChecked(){
         return radio.isSelected();

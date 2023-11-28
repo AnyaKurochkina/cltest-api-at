@@ -25,8 +25,8 @@ public class RhelTest extends Tests {
 
     @TmsLink("377711")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Rhel product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(Rhel product, Integer num) {
         //noinspection EmptyTryBlock
         try (Rhel rhel = product.createObjectExclusiveAccess()){}
     }
@@ -34,8 +34,8 @@ public class RhelTest extends Tests {
     @TmsLink("377705")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(Rhel product) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(Rhel product, Integer num) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.expandMountPoint();
         }
@@ -44,8 +44,8 @@ public class RhelTest extends Tests {
     @TmsLink("377707")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(Rhel product) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(Rhel product, Integer num) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.restart();
         }
@@ -54,8 +54,8 @@ public class RhelTest extends Tests {
     @TmsLink("377710")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(Rhel product) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(Rhel product, Integer num) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.stopSoft();
             rhel.start();
@@ -65,8 +65,8 @@ public class RhelTest extends Tests {
     @TmsLink("377712")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
-    void resize(Rhel product) {
+    @ParameterizedTest(name = "[{1}] Изменить конфигурацию {0}")
+    void resize(Rhel product, Integer num) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.stopHard();
             try {
@@ -80,8 +80,8 @@ public class RhelTest extends Tests {
     @TmsLinks({@TmsLink("377708"),@TmsLink("377709")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(Rhel product) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(Rhel product, Integer num) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.stopHard();
             rhel.start();
@@ -90,9 +90,9 @@ public class RhelTest extends Tests {
 
     @TmsLink("377706")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Rhel product) {
+    void delete(Rhel product, Integer num) {
         try (Rhel rhel = product.createObjectExclusiveAccess()) {
             rhel.deleteObject();
         }

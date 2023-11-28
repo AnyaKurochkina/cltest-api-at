@@ -24,7 +24,7 @@ import java.util.UUID;
 
 @Feature("Просмотр аудита в Control panel")
 @ExtendWith(ConfigExtension.class)
-public class AuditTest extends Tests {
+public class ControlPanelAuditTest extends Tests {
 
     private final String graphsObject = "graphs";
     private final String noValue = "—";

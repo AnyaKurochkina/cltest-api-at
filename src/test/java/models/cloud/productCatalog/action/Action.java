@@ -1,5 +1,6 @@
 package models.cloud.productCatalog.action;
 
+import com.fasterxml.jackson.annotation.JsonAlias;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
@@ -35,7 +36,7 @@ public class Action extends Entity {
     @JsonProperty("current_version")
     private String currentVersion;
     private Integer priority;
-    @JsonProperty("icon_store_id")
+    @JsonAlias({"icon_store_id", "icon_store"})
     private String iconStoreId;
     @JsonProperty("icon_url")
     private String iconUrl;

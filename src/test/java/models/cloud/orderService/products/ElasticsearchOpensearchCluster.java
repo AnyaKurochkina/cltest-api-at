@@ -98,7 +98,7 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         JSONObject object = JsonHelper.getJsonTemplate("/orders/elastic_open_search_add_kibana.json")
                 .set("$.flavor_kibana", new JSONObject(flavorKibana.toString()))
                 .set("$.default_nic.net_segment", getSegment())
-                .set("$.availability_zone", getAvailabilityZone())
+                .set("$.data_center", OrderServiceSteps.getDataCentre(this))
                 .set("$.kibana_password", kibanaPassword)
                 .set("$.ad_logon_grants[0].groups[0]", accessGroup())
                 .remove("$.ad_logon_grants", !isDev())

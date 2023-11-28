@@ -16,8 +16,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZonedDateTime;
 import java.util.Collections;
-import java.util.Date;
 
 import static models.cloud.tagService.TagServiceSteps.inventoryFilterV2;
 import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
@@ -42,7 +42,7 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
                 .build();
 
         FilterResultV2 filterResult = inventoryFilterV2(context, filter).getList().get(0);
-        Assertions.assertTrue(filterResult.getCreatedAt().before(filterResult.getUpdatedAt()));
+        Assertions.assertTrue(filterResult.getCreatedAt().isBefore(filterResult.getUpdatedAt()));
     }
 
     @Test
@@ -58,12 +58,13 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
                 .allowEmptyTagFilter(true)
                 .inventoryPks(Collections.singletonList(inventory.getId()))
                 .build();
-        Date updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+        ZonedDateTime updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
 
         Waiting.sleep(1000);
         inventoryTagsV2(context, inventory.getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), randomName())));
-        Date updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
-        Assertions.assertTrue(updatedAt.before(updatedAtAfterUpdate));
+        ZonedDateTime updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+//        Date updatedAtAfterUpdate = inventoryTagListV2(context, inventory.getId()).getList().get(0).getUpdatedAt();
+        Assertions.assertTrue(updatedAt.isBefore(updatedAtAfterUpdate));
     }
 
     @Test
@@ -79,7 +80,7 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
                 .allowEmptyTagFilter(true)
                 .inventoryPks(Collections.singletonList(inventory.getId()))
                 .build();
-        Date updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+        ZonedDateTime updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
 
         Waiting.sleep(1000);
         PutInventoryRequest.PutInventory putInventory = PutInventoryRequest.PutInventory.builder()
@@ -89,7 +90,7 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
                 .build();
         PutInventoryRequest request = PutInventoryRequest.builder().inventory(putInventory).build();
         TagServiceSteps.updateInventoriesV2(request);
-        Date updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
-        Assertions.assertTrue(updatedAt.before(updatedAtAfterUpdate));
+        ZonedDateTime updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+        Assertions.assertTrue(updatedAt.isBefore(updatedAtAfterUpdate));
     }
 }

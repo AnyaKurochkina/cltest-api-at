@@ -47,7 +47,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     void orderScyllaDB() {
         double prebillingCost;
         try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+            String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
                     .expandProductsList()

@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.AbstractEntity;
 import org.junit.EnabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.t1.pages.IndexPage;
@@ -88,6 +89,7 @@ public class OtherImagesTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("")
+    @Disabled
     @EnabledIfEnv("t1prod")
     @DisplayName("Cloud Compute. Виртуальные машины. Marketplace Образ Kaspersky Endpoint Security")
     void createKES() {

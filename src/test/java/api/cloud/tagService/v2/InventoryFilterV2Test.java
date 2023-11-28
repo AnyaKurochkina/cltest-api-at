@@ -3,6 +3,7 @@ package api.cloud.tagService.v2;
 import api.cloud.tagService.AbstractTagServiceTest;
 import core.enums.Role;
 import core.helper.http.AssertResponse;
+import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -366,5 +367,27 @@ public class InventoryFilterV2Test extends AbstractTagServiceTest {
                 .build();
         FilterResultV2Page filterResult = inventoryFilterV2(context, filter);
         Assertions.assertEquals(filterResult.getList().get(0).getTags(), Collections.singletonMap(tList.get(0).getKey(), tagValue), "Неверный response_tags");
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory. Фильтр V2 по distinct")
+    void checkFilterDistinct() {
+        List<String> tagsValues = Arrays.asList("distinct_tags", "distinct_tags_second");
+        List<Tag> tList = generateTags(2);
+        List<Inventory> iList = generateInventories(2);
+
+        inventoryTagsV2(context, iList.get(0).getId(),null, Arrays.asList(new InventoryTagsV2.Tag(tList.get(0).getKey(), tagsValues.get(0)),
+                new InventoryTagsV2.Tag(tList.get(1).getKey(), tagsValues.get(1))));
+        inventoryTagsV2(context, iList.get(1).getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tList.get(0).getKey(), tagsValues.get(0))));
+
+        Filter filter = Filter.builder()
+                .distinct(tagsValues)
+                .tags(new Filter.Tag()
+                        .addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), tagsValues.get(0), "exact")))
+                .build();
+
+        FilterResultV2Page filterResult = inventoryFilterV2(context, filter, new QueryBuilder().add("ordering", String.join(",", tagsValues)));
+        Assertions.assertEquals(filterResult.getMeta().getTotalCount(), 1, "Неверное количество inventories");
     }
 }
