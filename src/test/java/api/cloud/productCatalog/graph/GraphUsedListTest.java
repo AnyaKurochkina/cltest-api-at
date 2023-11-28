@@ -218,7 +218,7 @@ public class GraphUsedListTest extends Tests {
     }
 
     @DisplayName("Получение списка объектов использующих граф после удаления объектов")
-    @TmsLink("")
+    @TmsLink("SOUL-8280")
     @Test
     public void getUsedGraphListAfterProductDeletedTest() {
         Graph usedGraphApi = Graph.builder()
