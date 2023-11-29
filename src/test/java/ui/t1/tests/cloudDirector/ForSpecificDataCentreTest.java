@@ -27,8 +27,8 @@ import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
 public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
-    private String orgName = "ift-ec6821aa04a-at-ui";
-    private String vdcName = "khkgnauftk-at-ui";
+    private String orgName = "org-745ms323e2-317c5fe8577-at-ui";
+    private String vdcName = "ddcjrvqmvz-at-ui";
 
     @Test
     @Order(4)
