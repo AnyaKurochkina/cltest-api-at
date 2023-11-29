@@ -40,7 +40,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .addDataCentre(testVdc)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
-                .checkCreate(true)
+                .checkCreate(false)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(dataCentreName));
         new VMwareOrganizationPage()
@@ -126,7 +126,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Compact"));
     }
 
     @Test
