@@ -23,7 +23,7 @@ public class ProductsListPage extends EntityListPage {
     @Step("Проверка заголовков списка продуктов")
     public ProductsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Категория", "Статус", "Теги", "", "");
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Категория", "Статус", "Теги", "", "");
         return this;
     }
 

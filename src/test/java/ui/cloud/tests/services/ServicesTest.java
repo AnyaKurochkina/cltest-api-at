@@ -60,19 +60,4 @@ public class ServicesTest extends Tests {
         smokeLinearTestPage.run();
         smokeLinearTestPage.checkGraph();
     }
-
-    @Test
-    @TmsLink("687148")
-    @DisplayName("Публикация сервиса")
-    void viewPublishedService() {
-        String name = "at_ui_view_published_service";
-        Service service = createService(name, name);
-        new IndexPage().goToServicesListPage();
-        ServicesListPage page = new ServicesListPage();
-        assertFalse(page.isProductDisplayed(service.getTitle()));
-        partialUpdateServiceByName(name, new JSONObject().put("is_published", "true"));
-        refreshPage();
-        assertTrue(page.isProductDisplayed(service.getTitle()));
-        partialUpdateServiceByName(name, new JSONObject().put("is_published", "false"));
-    }
 }

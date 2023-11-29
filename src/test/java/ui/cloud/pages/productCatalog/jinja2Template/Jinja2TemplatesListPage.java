@@ -34,6 +34,7 @@ public class Jinja2TemplatesListPage extends EntityListPage {
         checkSortingByStringField("Наименование");
         checkSortingByStringField(nameColumn);
         checkSortingByDateField("Дата создания");
+        checkSortingByDateField("Дата изменения");
         return this;
     }
 

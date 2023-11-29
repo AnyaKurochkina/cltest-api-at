@@ -22,7 +22,7 @@ public class Jinja2TemplatesListTest extends Jinja2TemplateBaseTest {
         new ControlPanelIndexPage()
                 .goToJinja2TemplatesListPage();
         assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Описание", "", "");
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Описание", "", "");
         Jinja2TemplatesListPage page = new Jinja2TemplatesListPage();
         page.checkSorting().checkPagination();
     }
