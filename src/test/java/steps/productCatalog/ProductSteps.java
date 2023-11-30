@@ -9,6 +9,7 @@ import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.product.ProductOrderRestriction;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -67,7 +68,7 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Получение списка продуктов по фильтрам")
-    public static List<Product> getProductListByFilters(String...filter) {
+    public static List<Product> getProductListByFilters(String... filter) {
         String filters = String.join("&", filter);
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
@@ -75,6 +76,19 @@ public class ProductSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetProductList.class)
                 .getList();
+    }
+
+    /*
+    На данный момент массово можно изменить только один параметр is_open
+     */
+    @Step("Массовое изменение параметров продукта")
+    public static Response massChangeProductParam(List<String> id, boolean isOpen) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("objects_change", new JSONArray().put(new JSONObject().put("id", id)
+                        .put("params", new JSONObject().put("is_open", isOpen)))))
+                .post(productUrl + "mass_change/")
+                .assertStatus(200);
     }
 
     @Step("Получение продукта по имени {name}")

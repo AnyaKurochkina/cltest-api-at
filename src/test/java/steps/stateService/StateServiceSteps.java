@@ -284,6 +284,14 @@ public class StateServiceSteps extends Steps {
                 .getList();
     }
 
+    @Step("Получение списка items по фильтру {filter}")
+    public static Response getResponseByFilter(String filter) {
+        return new Http(StateServiceURL)
+                .withServiceToken()
+                .get("/api/v1/items/?{}", filter);
+
+    }
+
     @Step("Получение списка items со всеми child")
     public static Response getItemsListWithAllChild(String filter, String value) {
         return new Http(StateServiceURL)

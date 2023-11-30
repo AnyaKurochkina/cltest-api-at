@@ -12,6 +12,7 @@ import models.cloud.productCatalog.action.GetActionList;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.Steps;
@@ -49,6 +50,19 @@ public class ActionSteps extends Steps {
                 .compareWithJsonSchema("jsonSchema/getActionListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetActionList.class).getMeta();
+    }
+
+    /*
+    На данный момент можно изменить только один параметр is_for_item
+     */
+    @Step("Массовое изменение параметров действия")
+    public static Response massChangeActionParam(List<String> id, boolean isForItem) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("objects_change", new JSONArray().put(new JSONObject().put("id", id)
+                        .put("params", new JSONObject().put("is_for_items", isForItem)))))
+                .post(actionUrl + "mass_change/")
+                .assertStatus(200);
     }
 
     @Step("Создание действия")
@@ -211,11 +225,11 @@ public class ActionSteps extends Steps {
 
     @Step("Частичное обновление действия по имени {name}")
     public static void partialUpdateActionByName(String name, JSONObject object) {
-         new Http(ProductCatalogURL)
+        new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(actionUrlV2 + name + "/")
-                 .assertStatus(200);
+                .assertStatus(200);
     }
 
     @Step("Получение списка действия по имени")
@@ -270,7 +284,7 @@ public class ActionSteps extends Steps {
     }
 
     @Step("Получение списка действий по фильтрам")
-    public static List<Action> getActionListByFilters(String...filter) {
+    public static List<Action> getActionListByFilters(String... filter) {
         String filters = String.join("&", filter);
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
