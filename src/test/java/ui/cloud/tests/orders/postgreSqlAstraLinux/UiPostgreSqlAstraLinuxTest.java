@@ -228,9 +228,31 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.changeExtensions(nameDb));
     }
 
-
     @Test
     @Order(21)
+    @TmsLink("")
+    @EnabledIfEnv("prod")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Назначить предел подключений")
+    void setLimitConnection() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.setLimitConnection(limit));
+    }
+
+    @Test
+    @Order(22)
+    @TmsLink("")
+    @EnabledIfEnv("prod")
+    @DisplayName("UI PostgreSQL Cluster Astra Linux. Удалить предел подключений")
+    void deleteLimitConnection() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.createDb(nameDb));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.setLimitConnection(limit));
+        pSqlPage.runActionWithCheckCost(CompareType.EQUALS, () -> pSqlPage.deleteLimitConnection(limit));
+    }
+
+    @Test
+    @Order(23)
     @TmsLink("993400")
     @DisplayName("UI PostgreSQLAstra. Удалить БД")
     void removeDb() {
@@ -264,7 +286,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Disabled("Проверяется у Astra Linux")
     @TmsLink("1091055")
-    @Order(24)
+    @Order(26)
     @DisplayName("UI PostgreSQLAstra. Изменить состав группы доступа")
     void updateGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -273,7 +295,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(25)
+    @Order(27)
     @TmsLink("1429077")
     @DisplayName("UI PostgreSQLAstra. Обновить минорную версию СУБД")
     void updateMinorVersion() {
@@ -282,7 +304,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(26)
+    @Order(28)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Актуализировать версию СУБД")
     void updateVersionDb
@@ -292,7 +314,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         );
     }
     @Test
-    @Order(27)
+    @Order(29)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_backup")
     void adPgBackup
@@ -302,7 +324,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         );
     }
     @Test
-    @Order(28)
+    @Order(30)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_audit")
     void addPgAudit
@@ -312,7 +334,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         );
     }
     @Test
-    @Order(29)
+    @Order(31)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_walarchive")
     void addPgWalarchive
@@ -322,7 +344,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         );
     }
     @Test
-    @Order(30)
+    @Order(32)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Обновить ОС")
     void updateOs
@@ -333,7 +355,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(31)
+    @Order(33)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Показать удаленные БД")
     void showDeleteDB() {
@@ -342,7 +364,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(32)
+    @Order(34)
     @TmsLink("1296731")
     @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
     void monitoringOs() {

@@ -52,10 +52,10 @@ public class UiPodmanTest extends UiProductTest {
                     .clickOrderMore()
                     .selectCategory("Контейнеры")
                     .expandProductsList()
-                    .selectProduct(product.getProductName());
+                    .selectProduct("Podman (Astra)");
             PodmanOrderPage orderPage = new PodmanOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            //orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
