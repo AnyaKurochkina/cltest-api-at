@@ -55,6 +55,8 @@ GenericMonitoring:
   - options:
 GenericDatabase:
   - options:
+GenericArangoDB:
+  - options:
 ApacheAirflow:
   - options:
 ClickHouse:
