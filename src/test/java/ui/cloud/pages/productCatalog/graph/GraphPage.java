@@ -23,18 +23,24 @@ import ui.elements.*;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Getter
 public class GraphPage extends EntityPage {
     protected final String saveGraphAlertText = "Граф успешно сохранен";
     protected final Tab generalInfoTab = Tab.byText("Общая информация");
     private final Tab orderParamsTab = Tab.byText("Параметры заказа");
+    private final Tab objectInfoTab = Tab.byText("Информация о графе");
     private final SelenideElement graphsListLink = $x("//a[text() = 'Список графов']");
     private final TextArea descriptionTextArea = TextArea.byName("description");
     private final Input authorInput = Input.byName("author");
     private final Button usageButton = Button.byText("Перейти в использование");
     private final String nameColumn = "Имя";
     private final RadioGroup typeRadioGroup = RadioGroup.byFieldsetLabel("Тип");
+    private final Button orderFormTab = Button.byText("Форма заказа");
+    private final Button plannerTab = Button.byText("Планировщик");
+    private final Button addOptionButton = Button.byText("Добавить конфигурацию");
+    private final Button saveOptionButton = Button.byXpath("//div[@role='dialog']//button[.='Сохранить']");
 
     public GraphPage() {
         graphsListLink.shouldBe(Condition.visible);
@@ -48,6 +54,8 @@ public class GraphPage extends EntityPage {
         typeRadioGroup.select(graph.getType());
         descriptionTextArea.setValue(graph.getDescription());
         authorInput.setValue(graph.getAuthor());
+        objectInfoTab.switchTo();
+        objectInfoEditor.setValue(graph.getObject_info());
         return new GraphPage();
     }
 
@@ -58,6 +66,8 @@ public class GraphPage extends EntityPage {
         checkGraphVersion(graph.getVersion());
         descriptionTextArea.getElement().shouldHave(Condition.exactText(graph.getDescription()));
         authorInput.getInput().shouldHave(Condition.exactValue(graph.getAuthor()));
+        objectInfoTab.switchTo();
+        assertEquals(graph.getObject_info(),objectInfoEditor.getText());
         return new GraphPage();
     }
 

@@ -44,6 +44,14 @@ GenericDatabase:
       - { platform: "OpenStack", env: "HOTFIX" }
       - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
+GenericArangoDB:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
+
 ApacheAirflow:
   - options:
       - { platform: "OpenStack", env: "DEV" }
@@ -145,7 +153,7 @@ Astra:
 
 LoadBalancer:
   - options:
-      - { platform: "OpenStack", env: "DEV", segment: "b2b-hce-ts-dev-srv-app" }
+      - { platform: "OpenStack", env: "DEV" }
       - { platform: "OpenStack", env: "LT" }
       - { platform: "OpenStack", env: "IFT" }
       - { platform: "OpenStack", env: "HOTFIX" }

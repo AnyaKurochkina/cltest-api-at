@@ -129,13 +129,13 @@ public class EditNodeTest extends GraphBaseTest {
                 .put("printed_output_can_be_overridden", false));
         GraphNodesPage page = new GraphNodesPage();
         page.getSaveButton().click();
-        Alert.red("Переопределение printed_output в ноде (1) запрещено шаблоном");
+        Alert.red("Overriding printed_output in node (1) is prohibited by the template.");
         page.openEditDialog(node);
         //TODO баг, что не отображается текст $x("//div[text()='Проверьте корректность заполнения полей']").shouldBe(Condition.visible);
         page.getParamsTab().click();
         page.getPrintedOutputHint().shouldHave(Condition
                 .exactText("Переопределение запрещено в шаблоне. Очистите поле или включите переопределение Printed output в шаблоне узлов"));
-        page.getPrintedOutputTextArea().clear();
+        page.getPrintedOutputTextArea().setValue("{}");
         page.getFormSaveNodeButton().click();
         page.saveGraphWithPatchVersion();
     }
@@ -259,6 +259,7 @@ public class EditNodeTest extends GraphBaseTest {
         GraphNodesPage page = new GraphNodesPage();
         page.getNodeName().setValue(node.getName());
         page.getNodeDescription().setValue(node.getDescription());
+        page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
         page.getSourceVersionSelect().set("1.0.1");
         Waiting.sleep(2000);

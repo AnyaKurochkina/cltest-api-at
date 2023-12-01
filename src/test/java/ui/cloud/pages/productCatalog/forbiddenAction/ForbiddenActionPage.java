@@ -27,7 +27,7 @@ public class ForbiddenActionPage extends EntityPage {
             nameInput.getInput().$x("./following::div[text()='Необходимо ввести код запрещенного действия']");
     private final SelenideElement nonUniqueNameValidationHint =
             nameInput.getInput().$x("./following::div[text()='Запрещенное действие с таким кодом уже существует. " +
-                    "Выберите другое действие или направление разрешения']");
+                    "Выберите другое действие или направление запрета']");
     private final SelenideElement titleRequiredFieldHint =
             titleInput.getInput().$x("./following::div[text()='Необходимо добавить минимум одну запись']");
     private final SelenideElement actionRequiredFieldHint =

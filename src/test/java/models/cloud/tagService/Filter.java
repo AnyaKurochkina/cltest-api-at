@@ -27,6 +27,7 @@ public class Filter {
     List<String> inventoryTypes;
     List<String> roles;
     UserInfo impersonate;
+    List<String> distinct;
 
     @Data @Builder @AllArgsConstructor @NoArgsConstructor
     @JsonInclude(JsonInclude.Include.NON_NULL)

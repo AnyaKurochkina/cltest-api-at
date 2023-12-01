@@ -38,17 +38,13 @@ public class LoadBalancerBackendChangeNegativeTest extends Tests {
     static Frontend frontend = Frontend.builder().frontendName(new Generex("load_balancer_negative_test-[0-9]{4}")
             .random()).mode("tcp").defaultBackendNameTcp(backend.getBackendName()).build();
 
-    @Mock
-    static LoadBalancer balancer = LoadBalancer.builder().build()
-            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/network/orders/37c93f8e-c2ee-40cb-a5d2-008524676f3f/main?context=proj-ln4zg69jek&type=project&org=vtb");
-
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "Редактирование Backend. delete. Несуществующий server.name {0}")
     void notValidBackendServerName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().name("not_valid").build());
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () ->
                     balancer.editBackend(backend.getBackendName(), "delete", servers));
             AssertUtils.assertContains(throwable.getMessage(), "The entered servers were not found in the specified backend");
@@ -61,7 +57,7 @@ public class LoadBalancerBackendChangeNegativeTest extends Tests {
     void notValidBackendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().address("10.10.10.10").port(80).name("name").build());
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             AssertResponse.run(() -> balancer.editBackend(backend.getBackendName(), "not_valid", servers)).status(422).responseContains("action");
         }
     }

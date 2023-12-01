@@ -22,6 +22,10 @@ GenericDatabase:
   - options:
       - { platform: "OpenStack", env: "DEV" }
 
+GenericArangoDB:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+
 ApacheAirflow:
   - options:
       - { platform: "OpenStack", env: "DEV" }

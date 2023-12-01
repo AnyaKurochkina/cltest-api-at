@@ -273,7 +273,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Перевести сервера бэкенда в Active/StandBy режим. Невалидный state {0}")
     void changeActiveStandbyModeNotValidState(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
             StandbyMode standbyMode = StandbyMode.builder().backendName(LoadBalancerBackendChangeNegativeTest.backend.getBackendName()).
                     serverNames(Collections.singletonList("10.0.0.9")).state("not_valid").build();
             AssertResponse.run(() -> balancer.changeActiveStandbyMode(standbyMode)).status(422).responseContains("state");
@@ -285,9 +285,9 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создать GSLB. Невалидный globalname {0}")
     void changeActiveStandbyModeNotValidGlobalname(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.addBackend(LoadBalancerBackendChangeNegativeTest.backend);
-            balancer.addFrontend(LoadBalancerBackendChangeNegativeTest.frontend);
-            Gslb gslb = Gslb.builder().frontend(LoadBalancerBackendChangeNegativeTest.frontend).globalname(new Generex("[a-z]{65}").random()).build();
+            balancer.addBackendUseCache(LoadBalancerBackendChangeNegativeTest.backend);
+            balancer.addFrontendUseCache(LoadBalancerBackendChangeNegativeTest.frontend);
+            Gslb gslb = Gslb.builder().frontend(LoadBalancerBackendChangeNegativeTest.frontend.getFrontendName()).globalname(new Generex("[a-z]{65}").random()).build();
             AssertResponse.run(() -> balancer.addGslb(gslb)).status(422).responseContains("globalname");
         }
     }

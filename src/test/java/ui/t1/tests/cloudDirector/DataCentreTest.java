@@ -14,7 +14,8 @@ import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
-import ui.models.StorageProfile;
+import ui.models.cloudDirector.StorageProfile;
+import ui.models.cloudDirector.Vdc;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
@@ -32,15 +33,19 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
 
     @Test
     @Order(1)
+    @DisplayName("VMware. Создание VDC.")
     public void createDataCentre() {
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
-                .addDataCentre(dataCentreName)
+                .addDataCentre(testVdc)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
-                .checkCreate(true)
+                .checkCreate(false)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(dataCentreName));
+        new VMwareOrganizationPage()
+                .selectDataCentre(testVdc.getName())
+                .checkVdcParams(testVdc);
     }
 
     @Test
@@ -49,9 +54,10 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Создание второго VDC  в одной организации")
     public void createSecondDataCentreTest() {
         String secondDataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
+        Vdc secondVdc = new Vdc(secondDataCentreName, "2", "4", new StorageProfile("High", "10"));
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
-                .addDataCentre(secondDataCentreName)
+                .addDataCentre(secondVdc)
                 .waitChangeStatus()
                 .selectDataCentre(secondDataCentreName)
                 .checkCreate(true)
@@ -68,7 +74,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLink("570222")
     @DisplayName("VMware. Проверка уникальности имени VDC")
     public void createDataCentreWithSameNameTest() {
-        new IndexPage().goToCloudDirector()
+        new IndexPage()
+                .goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentreWithExistName(dataCentreName);
     }
@@ -78,7 +85,8 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("158901"), @TmsLink("767870")})
     @DisplayName("VMware. Зарезервировать/отозвать внешние IP адреса")
     public void reserveExternalIPAddressesTest() {
-        DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
+        DataCentrePage dataCentrePage = new IndexPage()
+                .goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addIpAddresses(2));
@@ -101,17 +109,11 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @TmsLinks({@TmsLink("692723"), @TmsLink("692724")})
     @DisplayName("VMware. Управление дисковой подсистемой VDC. Добавление/Удаление профиля")
     public void addProfileTest() {
-//        String name = "";
-//        if (Configure.ENV.equals("t1prod")) {
-//            name = "SP-Common01";
-//        } else {
-//            name = "SP-Common01";
-//        }
-        StorageProfile profile = new StorageProfile("SP-Common01", "11");
+        StorageProfile profile = new StorageProfile("SP-High", "11");
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.EQUALS, () -> dataCentrePage.addProfile(profile));
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addProfile(profile));
         dataCentrePage.runActionWithCheckCost(CompareType.LESS, () -> dataCentrePage.deleteProfile(profile));
     }
 
@@ -124,7 +126,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Large"));
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.changeRouterConfig("500", "Compact"));
     }
 
     @Test

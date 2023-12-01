@@ -9,7 +9,9 @@ import models.cloud.tagService.Filter;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.Tag;
 import models.cloud.tagService.TagServiceSteps;
-import models.cloud.tagService.v1.*;
+import models.cloud.tagService.v1.CreateOrUpdateLinksWithInventoriesRequest;
+import models.cloud.tagService.v1.FilterResultV1Item;
+import models.cloud.tagService.v1.InventoryTagsV1;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,7 +19,8 @@ import org.junit.jupiter.api.Test;
 import java.util.Collections;
 import java.util.Date;
 
-import static models.cloud.tagService.TagServiceSteps.*;
+import static models.cloud.tagService.TagServiceSteps.inventoryFilterV1;
+import static models.cloud.tagService.TagServiceSteps.inventoryTagsV1;
 
 @Epic("Сервис тегов")
 @Feature("Проверка Inventory V1")

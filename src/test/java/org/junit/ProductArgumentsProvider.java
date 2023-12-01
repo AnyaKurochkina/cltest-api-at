@@ -53,7 +53,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                     .filter(p -> Objects.nonNull(p.getEnv()))
                     .filter(distinctByKey(IProduct::getEnv))
                     .collect(Collectors.toList())
-                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv())));
+                    .forEach(entity -> list.add(Arguments.arguments(entity.getEnv(), 1)));
             return list.stream();
         }
     }
@@ -79,7 +79,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             IProduct object = (IProduct) mockField.get(context.getTestClass().orElseThrow(Exception::new));
             object.setStatus(ProductStatus.CREATED);
             ObjectPoolService.addEntity(object);
-            list.add(addParameters(object, parameterTypes.length));
+            list.add(addParameters(object, parameterTypes.length, 1));
             return list;
         }
 
@@ -93,14 +93,14 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                         if (argument.isInstance(entity)) {
                             Entity e = ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c);
                             e.setConfigurationId(configuration.getId());
-                            list.add(addParameters(e, parameterTypes.length));
+                            list.add(addParameters(e, parameterTypes.length, null));
                             break;
                         }
                     }
                 } else {
                     Entity entity = ObjectPoolService.fromJson(new JSONObject(configuration.getConfMap()).toString(), argument);
                     entity.setConfigurationId(configuration.getId());
-                    list.add(addParameters(entity, parameterTypes.length));
+                    list.add(addParameters(entity, parameterTypes.length, null));
                 }
             }
         } else {
@@ -117,15 +117,15 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
                 Class<?> c = entity.getClass();
                 if (finalClazz.isInstance(entity)) {
                     final String key = className + "#" + methodName;
+                    counter++;
                     if(filter.containsKey(key)) {
-                        counter++;
                         if(filter.get(key).contains(String.valueOf(counter))) {
-                            list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length));
+                            list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length, counter));
                             if (variableName == ONE_PRODUCT)
                                 break;
                         }
                     }
-                    else list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length));
+                    else list.add(addParameters(ObjectPoolService.fromJson(ObjectPoolService.toJson(entity), c), parameterTypes.length, counter));
                     if (variableName == ONE_PRODUCT)
                         break;
                 }
@@ -134,10 +134,12 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         return list;
     }
 
-    private static Arguments addParameters(Object arg, int size) {
+    private static Arguments addParameters(Object arg, int size, Integer counter) {
         if (size == 1)
             return Arguments.of(arg);
-        return Arguments.of(arg, null);
+        if (size == 2)
+            return Arguments.of(arg, counter);
+        return Arguments.of(arg, null, counter);
     }
 
     @Override

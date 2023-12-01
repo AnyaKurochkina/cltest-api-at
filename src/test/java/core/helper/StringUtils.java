@@ -6,6 +6,7 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.intellij.lang.annotations.Language;
 
@@ -123,5 +124,13 @@ public final class StringUtils {
 
     public static boolean isNullOrEmpty(String value) {
         return value == null || value.length() == 0;
+    }
+
+    public static String getRandomStringApi(int count) {
+        return RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_api_test";
+    }
+
+    public static String getRandomStringUi(int count) {
+        return RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_ui_test";
     }
 }

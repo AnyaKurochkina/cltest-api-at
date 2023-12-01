@@ -4,7 +4,7 @@ S3Ceph:
       - { env: "IFT" }
       - { env: "HOTFIX" }
       - { env: "LT" }
-      - { env: "PROD", dataCentre: "5" }
+      - { env: "PROD" }
 
 OpenShiftProject:
   - options:
@@ -40,6 +40,14 @@ GenericMonitoring:
       - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
 
 GenericDatabase:
+  - options:
+      - { platform: "OpenStack", env: "DEV" }
+      - { platform: "OpenStack", env: "LT" }
+      - { platform: "OpenStack", env: "IFT" }
+      - { platform: "OpenStack", env: "HOTFIX" }
+      - { platform: "OpenStack", env: "PROD", segment: "prod-srv-app" }
+
+GenericArangoDB:
   - options:
       - { platform: "OpenStack", env: "DEV" }
       - { platform: "OpenStack", env: "LT" }

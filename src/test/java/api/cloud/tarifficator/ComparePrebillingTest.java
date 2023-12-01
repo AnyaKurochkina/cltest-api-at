@@ -25,8 +25,8 @@ public class ComparePrebillingTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @DisabledIfEnv("prod")
     @TmsLink("654182")
-    @ParameterizedTest(name = "[{index}] Сравнение стоимости продукта {0} в предбиллинге с ценами активного ТПО")
-    public void compareTariffs(Astra resource){
+    @ParameterizedTest(name = "[{1}] Сравнение стоимости продукта {0} в предбиллинге с ценами активного ТПО")
+    public void compareTariffs(Astra resource, Integer num){
         try (IProduct product = resource.createObjectExclusiveAccess()) {
             String tariffPlanId = CostSteps.getActiveTariffId();
             HashMap<String, Double> activeTariffPlanPrice = CostSteps.getPrices(tariffPlanId);

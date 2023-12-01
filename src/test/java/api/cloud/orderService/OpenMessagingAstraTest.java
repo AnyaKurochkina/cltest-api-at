@@ -23,8 +23,8 @@ public class OpenMessagingAstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(OpenMessagingAstra product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(OpenMessagingAstra product, Integer num) {
         //noinspection EmptyTryBlock
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {}
     }
@@ -32,8 +32,8 @@ public class OpenMessagingAstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Обновление установки {0}")
-    void expandMountPoint(OpenMessagingAstra product) {
+    @ParameterizedTest(name = "[{1}] Обновление установки {0}")
+    void expandMountPoint(OpenMessagingAstra product, Integer num) {
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
             astra.upgradeSetup();
         }
@@ -41,9 +41,9 @@ public class OpenMessagingAstraTest extends Tests {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(OpenMessagingAstra product) {
+    void delete(OpenMessagingAstra product, Integer num) {
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
             astra.deleteObject();
         }

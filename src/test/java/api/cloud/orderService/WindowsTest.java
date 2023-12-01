@@ -23,8 +23,8 @@ public class WindowsTest extends Tests {
 
     @TmsLinks({@TmsLink("377721"), @TmsLink("470095")})
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Windows product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(Windows product, Integer num) {
         //noinspection EmptyTryBlock
         try (Windows windows = product.createObjectExclusiveAccess()) {}
     }
@@ -32,8 +32,8 @@ public class WindowsTest extends Tests {
     @TmsLink("377724")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Добавить диск {0}")
-    void addDisk(Windows product) {
+    @ParameterizedTest(name = "[{1}] Добавить диск {0}")
+    void addDisk(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.addDisk("I");
         }
@@ -42,8 +42,8 @@ public class WindowsTest extends Tests {
     @TmsLink("377715")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить диск {0}")
-    void expandMountPoint(Windows product) {
+    @ParameterizedTest(name = "[{1}] Расширить диск {0}")
+    void expandMountPoint(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.addDisk("K");
             windows.expandMountPoint("K");
@@ -53,8 +53,8 @@ public class WindowsTest extends Tests {
     @TmsLink("694091")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить диск {0}")
-    void deleteMountPoint(Windows product) {
+    @ParameterizedTest(name = "[{1}] Удалить диск {0}")
+    void deleteMountPoint(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.addDisk("L");
             windows.unmountDisk("L");
@@ -65,8 +65,8 @@ public class WindowsTest extends Tests {
     @TmsLink("694092")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Подключить диск {0}")
-    void mountPoint(Windows product) {
+    @ParameterizedTest(name = "[{1}] Подключить диск {0}")
+    void mountPoint(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.addDisk("S");
             windows.unmountDisk("S");
@@ -77,8 +77,8 @@ public class WindowsTest extends Tests {
     @TmsLink("694093")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Отключить диск {0}")
-    void unmountPoint(Windows product) {
+    @ParameterizedTest(name = "[{1}] Отключить диск {0}")
+    void unmountPoint(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.addDisk("T");
             windows.unmountDisk("T");
@@ -89,8 +89,8 @@ public class WindowsTest extends Tests {
     @TmsLink("377717")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(Windows product) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.restart();
         }
@@ -100,8 +100,8 @@ public class WindowsTest extends Tests {
     @TmsLink("377720")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(Windows product) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.stopSoft();
             windows.start();
@@ -111,8 +111,8 @@ public class WindowsTest extends Tests {
     @TmsLink("377722")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
-    void resize(Windows product) {
+    @ParameterizedTest(name = "[{1}] Изменить конфигурацию {0}")
+    void resize(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
 //            windows.stopHard();
 //            try {
@@ -126,8 +126,8 @@ public class WindowsTest extends Tests {
     @TmsLink("654229")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверить конфигурацию {0}")
-    void refreshVmConfig(Windows product) {
+    @ParameterizedTest(name = "[{1}] Проверить конфигурацию {0}")
+    void refreshVmConfig(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.refreshVmConfig();
         }
@@ -137,8 +137,8 @@ public class WindowsTest extends Tests {
     @TmsLinks({@TmsLink("377718"),@TmsLink("377719")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(Windows product) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.stopHard();
             windows.start();
@@ -149,8 +149,8 @@ public class WindowsTest extends Tests {
     @TmsLinks({@TmsLink("1427063"),@TmsLink("1427065")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Ключ astrom добавить/удалить {0}")
-    void astrom(Windows product) {
+    @ParameterizedTest(name = "[{1}] Ключ astrom добавить/удалить {0}")
+    void astrom(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.astromAdd();
             windows.astromDelete();
@@ -159,9 +159,9 @@ public class WindowsTest extends Tests {
 
     @TmsLink("377716")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Windows product) {
+    void delete(Windows product, Integer num) {
         try (Windows windows = product.createObjectExclusiveAccess()) {
             windows.deleteObject();
         }

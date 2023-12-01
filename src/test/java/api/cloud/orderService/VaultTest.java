@@ -23,8 +23,8 @@ public class VaultTest extends Tests {
     @TmsLink("1431949")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Vault product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(Vault product, Integer num) {
         //noinspection EmptyTryBlock
         try (Vault vault = product.createObjectExclusiveAccess()) {
         }
@@ -33,8 +33,8 @@ public class VaultTest extends Tests {
     @TmsLinks({@TmsLink("1431950"), @TmsLink("1431951")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Добавить/Удалить право доступа {0}")
-    void createRule(Vault product) {
+    @ParameterizedTest(name = "[{1}] Добавить/Удалить право доступа {0}")
+    void createRule(Vault product, Integer num) {
         try (Vault vault = product.createObjectExclusiveAccess()) {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(vault.getProjectId(), "", "vlt");
             vault.addRule(accessGroup, "user-ro", "portal-ro", "user-rw");
@@ -45,8 +45,8 @@ public class VaultTest extends Tests {
     @TmsLink("1431952")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Изменить право доступа {0}")
-    void editRule(Vault product) {
+    @ParameterizedTest(name = "[{1}] Изменить право доступа {0}")
+    void editRule(Vault product, Integer num) {
         try (Vault vault = product.createObjectExclusiveAccess()) {
             String accessGroup = PortalBackSteps.getRandomAccessGroup(vault.getProjectId(),
                     OrderServiceSteps.getDomainByProject(vault.getProjectId()), "vlt");
@@ -57,9 +57,9 @@ public class VaultTest extends Tests {
 
     @TmsLink("1431953")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Vault product) {
+    void delete(Vault product, Integer num) {
         try (Vault vault = product.createObjectExclusiveAccess()) {
             vault.deleteObject();
         }

@@ -8,5 +8,5 @@
   "slow_consumer_threshold": -1,
   "slow_consumer_check_period": 10,
   "name": "ghgh",
-  "owner_cert": "gfhgh"
+  "owner_cert": "CN=gfhgh"
 }

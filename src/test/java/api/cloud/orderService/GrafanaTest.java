@@ -20,8 +20,8 @@ public class GrafanaTest extends Tests {
     @TmsLink("1731001")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Grafana product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(Grafana product, Integer num) {
         //noinspection EmptyTryBlock
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
         }
@@ -30,8 +30,8 @@ public class GrafanaTest extends Tests {
     @TmsLink("1731002")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(Grafana product) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(Grafana product, Integer num) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
             grafana.expandMountPoint();
         }
@@ -40,8 +40,8 @@ public class GrafanaTest extends Tests {
     @TmsLink("1731003")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Сбросить пароль {0}")
-    void resetPassword(Grafana product) {
+    @ParameterizedTest(name = "[{1}] Сбросить пароль {0}")
+    void resetPassword(Grafana product, Integer num) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
             grafana.resetPassword("Ha81GpR75Dhet6yY0t4DBBNjJ6imn");
         }
@@ -49,8 +49,8 @@ public class GrafanaTest extends Tests {
 
     @TmsLink("1731006")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
-    void checkCreate(Grafana product) {
+    @ParameterizedTest(name = "[{1}] AD Проверка создания {0}")
+    void checkCreate(Grafana product, Integer num) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
             grafana.checkCertsBySsh();
         }
@@ -58,9 +58,9 @@ public class GrafanaTest extends Tests {
 
     @TmsLink("1731008")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Grafana product) {
+    void delete(Grafana product, Integer num) {
         try (Grafana grafana = product.createObjectExclusiveAccess()) {
             grafana.deleteObject();
         }
