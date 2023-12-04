@@ -4,7 +4,9 @@ import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import models.t1.cdn.GetSourceGroupList;
+import models.t1.cdn.Resource;
 import models.t1.cdn.SourceGroup;
+import org.json.JSONObject;
 import steps.Steps;
 
 import java.util.List;
@@ -34,5 +36,15 @@ public class CdnSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetSourceGroupList.class)
                 .getList();
+    }
+
+    @Step("Создание ресурса")
+    public static Resource createResource(String projectId, JSONObject resource) {
+        return new Http(CdnProxy)
+                .setRole(Role.CLOUD_ADMIN)
+                .body(resource)
+                .post(apiUrl + "projects/{}/resources", projectId)
+                .assertStatus(201)
+                .extractAs(Resource.class);
     }
 }

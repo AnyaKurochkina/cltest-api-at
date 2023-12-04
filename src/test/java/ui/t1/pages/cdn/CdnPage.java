@@ -26,14 +26,9 @@ public class CdnPage {
         addButton.click();
         Dialog addResourceDialog = Dialog.byTitle("Добавить ресурс");
         addResourceDialog.setInputByName("domainName", resource.getDomainName());
-        addResourceDialog.setInputByName("hostnames-0", resource.getHostName());
+        addResourceDialog.setInputByName("hostnames-0", resource.getHostnames().get(0));
         addResourceDialog.clickButton("Создать");
-        Waiting.findWithRefresh(() -> !new ResourcesTable().getRowByColumnValue("Название", resource.getHostName())
-                .getValueByColumn("Статус")
-                .equals("Разворачивается"), Duration.ofMinutes(15));
-        String status = new ResourcesTable().getRowByColumnValue("Название", resource.getHostName())
-                .getValueByColumn("Статус");
-        assertEquals("Активный", status);
+        waitChangeStatus(resource.getHostnames().get(0));
         return this;
     }
 
@@ -71,6 +66,16 @@ public class CdnPage {
     public boolean isEntityExist(String name) {
         Waiting.sleep(2000);
         return new ResourcesTable().isColumnValueEquals("Название", name);
+    }
+
+    @Step("Ожидание смены статуса ресурсной записи на Активный")
+    public void waitChangeStatus(String resourceName) {
+        Waiting.findWithRefresh(() -> !new ResourcesTable().getRowByColumnValue("Название", resourceName)
+                .getValueByColumn("Статус")
+                .equals("Разворачивается"), Duration.ofMinutes(15));
+        String status = new ResourcesTable().getRowByColumnValue("Название", resourceName)
+                .getValueByColumn("Статус");
+        assertEquals("Активный", status);
     }
 
     private void deleteEntity(String name) {
