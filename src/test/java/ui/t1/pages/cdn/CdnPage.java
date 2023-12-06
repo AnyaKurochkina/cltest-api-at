@@ -78,6 +78,12 @@ public class CdnPage {
         assertEquals("Активный", status);
     }
 
+    @Step("Переход на страницу ресурса с именем {resourceName}")
+    public ResourcePage goToResourcePage(String resourceName) {
+        new ResourcesTable().getRowByColumnValue("Название", resourceName).getElementByColumnIndex(5).click();
+        return new ResourcePage(resourceName);
+    }
+
     private void deleteEntity(String name) {
         ResourcesTable table = new ResourcesTable();
         Menu.byElement(table.searchAllPages(t -> table.isColumnValueContains("Название", name))

@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.elements.*;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
 
@@ -85,13 +86,14 @@ public class ServiceAccountPage {
         Dialog.byTitle("Создать статический ключ")
                 .setTextarea(TextArea.byName("description"), description)
                 .clickButton("Создать");
+        Waiting.find(() -> Dialog.byTitle("Статический ключ создан").getDialog().isDisplayed(), Duration.ofMinutes(3));
         String id = $x("//*[text() = 'Access key:']/following-sibling::div").getText();
         String secret = $x("//*[text() = 'Secret key:']/following-sibling::div").getText();
         JSONObject jsonObject = new JSONObject()
                 .put("access_id", id)
                 .put("secret_key", secret);
         Button.byText("Скопировать данные формы").click();
-        Button.byText("Закрыть");
+        Button.byText("Закрыть").click();
         return jsonObject;
     }
 

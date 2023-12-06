@@ -2,16 +2,13 @@ package models.t1.cdn;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.json.JSONObject;
 
 import java.util.List;
 @Builder
 @NoArgsConstructor
-@Getter
+@Data
 @AllArgsConstructor
 public class Resource{
 	private String hostHeader;
@@ -24,6 +21,8 @@ public class Resource{
 	private Object originGroup;
 	private String sourceType;
 	private String domainName;
+	@JsonProperty("request_id")
+	private String requestId;
 	private String hostType;
 	@JsonProperty("redirect_https_to_http")
 	private Boolean redirectHttpsToHttp;
@@ -42,6 +41,7 @@ public class Resource{
 				.set("$.certType", certType)
 				.set("$.active", active)
 				.set("$.sslData", sslData)
+				.set("$.request_id", requestId)
 				.set("$.hostnames", hostnames)
 				.set("$.originProtocol", originProtocol)
 				.set("$.originGroup", originGroup)

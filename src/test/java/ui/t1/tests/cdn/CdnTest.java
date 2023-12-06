@@ -17,7 +17,9 @@ import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cdn.CdnPage;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -57,11 +59,22 @@ public class CdnTest extends Tests {
     @TmsLink("")
     public void editResourceTest() {
         String resourceName = "editresource.ya.ru";
-        Resource resource = new Resource("mirror.yandex.ru", Collections.singletonList("editresource.ya.ru"));
+        List<String> hostNames = new ArrayList<>();
+        hostNames.add(resourceName);
+        Resource resource = new Resource("mirror.yandex.ru", hostNames);
         createResource(project.getId(), resource.toJson());
         new IndexPage()
                 .goToCdn()
                 .waitChangeStatus(resourceName);
+        resource.setActive(false);
+        resource.setHostType("client");
+        resource.setOriginProtocol("HTTPS");
+        hostNames.add("mail.ru");
+        hostNames.add("vk.ru");
+        resource.setHostnames(resource.getHostnames());
+        new CdnPage()
+                .goToResourcePage(resourceName)
+                .editResource(resource);
 
     }
 

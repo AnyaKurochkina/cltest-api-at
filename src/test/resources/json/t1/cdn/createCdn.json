@@ -13,5 +13,6 @@
   ],
   "hostType": "main",
   "originProtocol": "HTTP",
-  "hostHeader": ""
+  "hostHeader": "",
+  "request_id": ""
 }
