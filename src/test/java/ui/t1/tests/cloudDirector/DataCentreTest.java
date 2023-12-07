@@ -40,7 +40,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .addDataCentre(testVdc)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
-                .checkCreate(false)
+                .checkCreate(true)
                 .goToVMwareOrgPage()
                 .isDataCentreExist(dataCentreName));
         new VMwareOrganizationPage()
@@ -140,7 +140,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         Waiting.sleep(10000);
         dataCentrePage.switchProtectOrder(true);
         try {
-            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить", "Удалить", () -> {
+            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить VDC", "Удалить", () -> {
                 Dialog dlgActions = Dialog.byTitle("Удаление");
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
