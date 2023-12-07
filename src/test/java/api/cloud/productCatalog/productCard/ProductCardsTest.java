@@ -48,7 +48,6 @@ public class ProductCardsTest {
                 .name("create_product_card_with_out_test_api")
                 .title("create_product_card_with_out_test_api")
                 .description("test_api")
-                .number(1)
                 .cardItems(Collections.emptyList())
                 .build()
                 .createObject();
@@ -79,7 +78,6 @@ public class ProductCardsTest {
                 .name("create_product_card_with_card_items_test_api")
                 .title("create_product_card_with_card_items_title_test_api")
                 .description("test_api")
-                .number(1)
                 .cardItems(cardItemsList)
                 .build()
                 .createObject();
@@ -167,7 +165,6 @@ public class ProductCardsTest {
                 .name("apply_product_card_test_api")
                 .title("apply_product_card_title_test_api")
                 .description("test_api")
-                .number(1)
                 .cardItems(cardItemsList)
                 .build()
                 .createObject();
