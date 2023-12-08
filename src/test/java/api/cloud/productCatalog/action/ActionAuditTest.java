@@ -1,10 +1,12 @@
 package api.cloud.productCatalog.action;
 
 import api.Tests;
+import core.enums.Role;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.keyCloak.UserInfo;
 import models.cloud.productCatalog.ProductAudit;
 import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -18,6 +20,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.keyCloak.KeyCloakSteps.getUserInfo;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.*;
 
@@ -79,5 +82,18 @@ public class ActionAuditTest extends Tests {
         List<ProductAudit> auditListForObjKeys = getAuditListForObjKeys(ENTITY_TYPE, testAction.getName());
         auditListForObjKeys.forEach(x -> assertEquals(x.getObjKeys().get("name"), testAction.getName()));
         deleteActionByName(testAction.getName());
+    }
+
+    @DisplayName("Получение списка audit для определенного действия")
+    @TmsLink("")
+    @Test
+    public void getAuditUserInfoWhoDidChangesTest() {
+        Action action = createAction();
+        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
+        UserInfo userInfo = getUserInfo(Role.PRODUCT_CATALOG_ADMIN);
+        ProductAudit productAudit = objectAuditList.get(0);
+        assertEquals(userInfo.getEmail(), productAudit.getUserEmail());
+        assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName());
+        assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName());
     }
 }
