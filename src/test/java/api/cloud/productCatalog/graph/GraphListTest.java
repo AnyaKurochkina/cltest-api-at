@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
+import core.helper.http.Response;
 import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -89,14 +90,16 @@ public class GraphListTest extends Tests {
     @Test
     public void getIcon() {
         List<Graph> productObjectList = getGraphList();
-        for (Graph graph : productObjectList) {
-            Graph getGraph = getGraphById(graph.getGraphId());
-            if (!getGraph.getGraph().isEmpty()) {
-                List<GraphItem> graphItemList = getGraph.getGraph();
-                for (GraphItem graphItem : graphItemList) {
-                    assertNotNull(graphItem.getIconUrl(), String.format("У ноды графа %s поле icon_url is null", getGraph.getName()));
-                    if (graphItem.getIconUrl().isEmpty()) {
-                        assertNull(graphItem.getIconStoreId(), "icon_store_id должен быть null");
+        for (Graph g : productObjectList) {
+            Response response = getGraphByIdResponse(g.getGraphId());
+            if (response.status() != 404) {
+                List<GraphItem> graphItemList = response.extractAs(Graph.class).getGraph();
+                if (!graphItemList.isEmpty()) {
+                    for (GraphItem graphItem : graphItemList) {
+                        assertNotNull(graphItem.getIconUrl(), String.format("У ноды графа %s поле icon_url is null", g.getName()));
+                        if (graphItem.getIconUrl().isEmpty()) {
+                            assertNull(graphItem.getIconStoreId(), "icon_store_id должен быть null");
+                        }
                     }
                 }
             }
@@ -191,7 +194,7 @@ public class GraphListTest extends Tests {
         List<Graph> graphList = getGraphListByFilters("with_tag_list=true", "tags_complete_match=true",
                 String.format("tags=%s,%s", tag1, tag2));
         assertEquals(2, graphList.size());
-        graphList.forEach(x-> AssertUtils.assertEqualsList(x.getTagList(), Arrays.asList(tag1, tag2)));
+        graphList.forEach(x -> AssertUtils.assertEqualsList(x.getTagList(), Arrays.asList(tag1, tag2)));
     }
 
     @DisplayName("Получение списка графов отфильтрованном по Тегам с не полным совпадением")

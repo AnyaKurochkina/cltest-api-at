@@ -29,7 +29,6 @@ public class ProductCard extends Entity {
     private String name;
     private String title;
     private String description;
-    private Integer number;
     private String id;
     @JsonProperty("tag_list")
     private List<String> tagList;
@@ -56,7 +55,6 @@ public class ProductCard extends Entity {
         return JsonHelper.getJsonTemplate("productCatalog/productCard/createProductCard.json")
                 .set("$.name", name)
                 .set("$.title", title)
-                .set("$.number", number)
                 .set("$.description", description)
                 .setIfNullRemove("$.card_items", cards)
                 .setIfNullRemove("$.tag_list", tagList)

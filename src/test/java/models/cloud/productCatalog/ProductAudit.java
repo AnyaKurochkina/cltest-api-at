@@ -25,6 +25,12 @@ public class ProductAudit{
 	@JsonProperty("user__email")
 	private String userEmail;
 
+	@JsonProperty("user__first_name")
+	private String userFirstName;
+
+	@JsonProperty("user__last_name")
+	private String userLastName;
+
 	@JsonProperty("create_dt")
 	private String createDt;
 
