@@ -105,8 +105,8 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(10)
-    @Disabled
     @TmsLink("")
     @DisplayName("UI Redis Sentinel Astra. Изменить конфигурацию")
     void changeConfiguration() {
@@ -115,6 +115,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(11)
     @TmsLink("")
     @DisplayName("UI Redis Sentinel Astra. Проверить конфигурацию")
@@ -153,6 +154,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
 
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink(""), @TmsLink("")})
     @Order(15)
     @DisplayName("UI Redis Sentinel Astra. Удалить и добавить группу доступа")
@@ -164,6 +166,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @TmsLink("")
     @Order(16)
     @DisplayName("UI Redis Sentinel Astra. Изменить состав группы доступа")
