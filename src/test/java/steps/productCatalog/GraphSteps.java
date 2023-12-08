@@ -139,12 +139,17 @@ public class GraphSteps extends Steps {
                 .createObject();
     }
 
-    @Step("Получение графа по Id {objectId}")
     public static Graph getGraphById(String objectId) {
+        return getGraphByIdResponse(objectId)
+                .assertStatus(200)
+                .extractAs(Graph.class);
+    }
+
+    @Step("Получение графа по Id {objectId}")
+    public static Response getGraphByIdResponse(String objectId) {
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + objectId + "/")
-                .extractAs(Graph.class);
+                .get(graphUrl + objectId + "/");
     }
 
     @Step("Получение графа по имени {name}")
@@ -455,7 +460,7 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Получение списка графов по фильтрам")
-    public static List<Graph> getGraphListByFilters(String...filter) {
+    public static List<Graph> getGraphListByFilters(String... filter) {
         String filters = String.join("&", filter);
         return new Http(ProductCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
