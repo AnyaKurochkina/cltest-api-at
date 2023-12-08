@@ -85,8 +85,8 @@ public class ActionAuditTest extends Tests {
         deleteActionByName(testAction.getName());
     }
 
-    @DisplayName("Получение списка audit для определенного действия")
-    @TmsLink("")
+    @DisplayName("Получение информации о пользователе в списке Аудита.")
+    @TmsLink("SOUL-8457")
     @Test
     public void getAuditUserInfoWhoDidChangesTest() {
         Action action = createAction();
@@ -99,7 +99,7 @@ public class ActionAuditTest extends Tests {
     }
 
     @DisplayName("Получение списка audit по фильтру user__icontains")
-    @TmsLink("")
+    @TmsLink("SOUL-8458")
     @Test
     public void getObjectAuditWithFilterByUserEmailTest() {
         String name = RandomStringUtils.randomAlphabetic(6).toLowerCase();

@@ -27,7 +27,7 @@ public class AllowedActionAuditTest extends Tests {
     private final static String ENTITY_TYPE = "allowed_actions";
 
     @DisplayName("Получение списка audit для obj_key allowed_action")
-    @TmsLink("")
+    @TmsLink("SOUL-8455")
     @Test
     public void getAuditListWithObjKeyAllowedActionTest() {
         AllowedAction testAction = createAllowedAction(getRandomStringApi(6));

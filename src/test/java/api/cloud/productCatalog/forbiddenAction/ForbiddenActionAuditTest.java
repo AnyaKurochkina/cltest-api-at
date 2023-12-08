@@ -27,7 +27,7 @@ public class ForbiddenActionAuditTest extends Tests {
     private final static String ENTITY_TYPE = "forbidden_actions";
 
     @DisplayName("Получение списка audit для obj_key forbidden_actions")
-    @TmsLink("")
+    @TmsLink("SOUL-8456")
     @Test
     public void getAuditListWithObjKeyForbiddenActionTest() {
         ForbiddenAction testAction = createForbiddenAction(getRandomStringApi(6));
