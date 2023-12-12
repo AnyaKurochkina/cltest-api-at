@@ -22,10 +22,7 @@ import steps.Steps;
 
 import java.time.Duration;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static core.helper.Configure.StateServiceURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -414,21 +411,35 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение длительности узлов по actionId {actionId}")
     public static void getNodesDuration(String[] actionId) {
-        ArrayList<String> durations = new ArrayList<>();
+        HashMap<String, ArrayList<Integer>> map = new HashMap<>();
         for (String act: actionId) {
-        List<ActionStateService> actionsList = getActionListByFilter("action_id", act);
-        for (ActionStateService action : actionsList) {
-            if (action.getStatus().contains("completed") && action.getSubtype().equals("run_node")) {
-                ActionStateService actionStarted = actionsList.stream()
-                        .filter(a -> a.getStatus().equals(action.getStatus().replace("completed", "started")))
-                        .findFirst().get();
-                long millis = Duration.
-                        between(ZonedDateTime.parse(actionStarted.getCreateDt()), ZonedDateTime.parse(action.getCreateDt())).toMillis();
-                durations.add(action.getStatus().split(":")[0] + "," + millis);
+            List<ActionStateService> actionsList = getActionListByFilter("action_id", act);
+            for (ActionStateService action : actionsList) {
+                if (action.getStatus().contains("completed") && action.getSubtype().equals("run_node")) {
+                    ActionStateService actionStarted = actionsList.stream()
+                            .filter(a -> a.getStatus().equals(action.getStatus().replace("completed", "started")))
+                            .findFirst().get();
+                    Integer millis = Math.toIntExact(Duration.
+                            between(ZonedDateTime.parse(actionStarted.getCreateDt()), ZonedDateTime.parse(action.getCreateDt())).toMillis());
+                    if (!map.containsKey(action.getStatus().split(":")[0])){
+                        ArrayList<Integer> list = new ArrayList<>();
+                        list.add(millis);
+                        map.put(action.getStatus().split(":")[0], list);
+                    }else {
+                        map.get(action.getStatus().split(":")[0]).add(millis);
+                    }
+                }
             }
         }
+        ArrayList<String> outList = new ArrayList();
+        map.forEach((k, v) ->{
+            outList.add(k + "," + v.stream().mapToInt(Integer::intValue).min().orElse(0) + "," + v.stream().mapToInt(Integer::intValue).average().orElse(0) + "," + v.stream().mapToInt(Integer::intValue).max().orElse(0));
+        });
+        Collections.sort(outList);
+        for (String k: outList) {
+            System.out.println(k + "\r");
         }
-        durations.forEach(System.out::println);
+
     }
 
     @Data
