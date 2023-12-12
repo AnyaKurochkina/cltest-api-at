@@ -50,7 +50,7 @@ public class OrgDirectionsListPage extends EntityListPage {
 
     public OrgDirectionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Описание", "", "");
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Описание", "", "");
         return this;
     }
 

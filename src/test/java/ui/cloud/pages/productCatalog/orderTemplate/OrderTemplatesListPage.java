@@ -40,7 +40,7 @@ public class OrderTemplatesListPage extends EntityListPage {
     @Step("Проверка заголовков списка шаблонов отображения")
     public OrderTemplatesListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Описание", "Тип", "Провайдер", "Состояние",
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Описание", "Тип", "Провайдер", "Состояние",
                 "Теги", "", "");
         return this;
     }

@@ -93,7 +93,7 @@ public class GraphsListPage extends EntityListPage {
     @Step("Проверка заголовков списка графов")
     public GraphsListPage checkGraphsListHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Описание", "Теги", "", "");
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Описание", "Теги", "", "");
         return this;
     }
 
