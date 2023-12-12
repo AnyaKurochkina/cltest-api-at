@@ -28,7 +28,7 @@ import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
 @Getter
 public class IndexPage {
-    Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектное хранилище S3']");
+    Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектные хранилища']");
     Button linkOldCloudStorageS3 = Button.byXpath("//a[@href='/buckets']");
     Button linkNewCloudStorageS3 = Button.byXpath("//a[@href='/new-buckets']");
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
