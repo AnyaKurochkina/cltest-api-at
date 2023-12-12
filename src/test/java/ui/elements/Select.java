@@ -27,7 +27,10 @@ public class Select implements TypifiedElement {
     protected SelenideElement element;
 
     public Button getBtnOpen() {
-        return Button.byElement(element.$x(".//*[name()='path' and starts-with(@d,'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74')]/.. | .//button[@aria-label='Open'] | .//*[name()='path' and starts-with(@d,'M7 10l5 5 5-5z')]/../.."));
+        return Button.byElement(element.$x(".//*[name()='path' and starts-with(@d,'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74')]/.. " +
+                "| .//button[@aria-label='Open'] " +
+                "| .//*[name()='path' and starts-with(@d,'M7 10l5 5 5-5z')]/../.. " +
+                "| .//*[name()='path' and starts-with(@d,'M3 12a9 9 0 1 1 18 0')]/.."));
     }
 
     public Select(SelenideElement element) {

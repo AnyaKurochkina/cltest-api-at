@@ -139,7 +139,7 @@ public class EntityPage {
     public void addExistingTag(String name) {
         tagsTab.switchTo();
         addTagButton.click();
-        Select.byPlaceholder("Выберите тег или введите новый").set(name);
+        Select.byXpath("//input[@placeholder='Выберите тег или введите новый']/ancestor::div[select]").set(name);
         new Table("Наименование").getRow(0).get().$$x(".//button").get(1).click();
     }
 
