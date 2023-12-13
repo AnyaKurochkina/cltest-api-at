@@ -35,6 +35,7 @@ public class Backend {
     Integer checkInterval;
     String pattern;
     String data;
+    Boolean cookieStatus = false;
 
     /* httpchk GET*/
     String checkMethod;
