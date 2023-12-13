@@ -21,6 +21,8 @@ public class Backend {
     @Builder.Default
     Boolean advancedCheck = false;
     @Builder.Default
+    Boolean cookieStatus = false;
+    @Builder.Default
     String balancingAlgorithm = "leastconn";
     @EqualsAndHashCode.Include
     String backendName;
@@ -35,7 +37,6 @@ public class Backend {
     Integer checkInterval;
     String pattern;
     String data;
-    Boolean cookieStatus = false;
 
     /* httpchk GET*/
     String checkMethod;

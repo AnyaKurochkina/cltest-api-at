@@ -154,6 +154,7 @@ public class LoadBalancerTest extends Tests {
                 .backendName("backend_http_simple")
                 .mode("http")
                 .balancingAlgorithm("roundrobin")
+                .cookieStatus(false)
                 .advancedCheck(false)
                 .build();
         balancer.addBackendUseCache(backend);
