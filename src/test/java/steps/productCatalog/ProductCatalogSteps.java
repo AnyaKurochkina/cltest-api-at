@@ -103,6 +103,16 @@ public class ProductCatalogSteps {
                 .getList("list", ProductAudit.class);
     }
 
+    @Step("Получение списка audit для {entityName} с id {id} и фитром {filter}")
+    public static List<ProductAudit> getObjectAuditListWithFilter(String entityName, String id, String filter) {
+        return new Http(ProductCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/{}/{}/audit/?{}", entityName, id, filter)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductAudit.class);
+    }
+
     @Step("Получение деталей audit {entityName} с audit_id {auditId}")
     public static Response getObjectAudit(String entityName, String auditId) {
          return new Http(ProductCatalogURL)

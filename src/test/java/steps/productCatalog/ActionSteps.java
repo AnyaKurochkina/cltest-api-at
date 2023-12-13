@@ -223,6 +223,14 @@ public class ActionSteps extends Steps {
                 .patch(actionUrl + id + "/");
     }
 
+    @Step("Частичное обновление действия")
+    public static Response partialUpdateActionWithAnotherRole(String id, JSONObject object, Role role) {
+        return new Http(ProductCatalogURL)
+                .setRole(role)
+                .body(object)
+                .patch(actionUrl + id + "/");
+    }
+
     @Step("Частичное обновление действия по имени {name}")
     public static void partialUpdateActionByName(String name, JSONObject object) {
         new Http(ProductCatalogURL)
