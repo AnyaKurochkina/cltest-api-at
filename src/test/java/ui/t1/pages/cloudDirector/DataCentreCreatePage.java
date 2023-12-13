@@ -42,6 +42,7 @@ public class DataCentreCreatePage {
     }
 
     public DataCentreCreatePage setRouterBandwidth(String mbs) {
+        CheckBox.byId("root_configure_router").setChecked(true);
         Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(mbs);
         return this;
     }

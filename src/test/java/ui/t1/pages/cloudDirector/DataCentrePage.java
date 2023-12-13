@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
-    public static final String ROUTER_INFO = "Информация о маршрутизаторе";
+    public static final String ROUTER_INFO = "Маршрутизатор";
 
     private final SelenideElement totalRam = $x("//span[text() = 'RAM, Гб']//preceding-sibling::div//span[2]");
     private final SelenideElement totalCPU = $x("//span[text() = 'CPU, ядра']//preceding-sibling::div//span[2]");
@@ -28,7 +28,7 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     private final Button generalInformation = Button.byText("Общая информация");
 
     public void delete() {
-        runActionWithParameters(INFO_DATA_CENTRE, "Удалить", "Удалить", () ->
+        runActionWithParameters(INFO_DATA_CENTRE, "Удалить VDC", "Удалить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Удаление");
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
