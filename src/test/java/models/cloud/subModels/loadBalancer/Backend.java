@@ -21,11 +21,11 @@ public class Backend {
     @Builder.Default
     Boolean advancedCheck = false;
     @Builder.Default
-    Boolean cookieStatus = false;
-    @Builder.Default
     String balancingAlgorithm = "leastconn";
     @EqualsAndHashCode.Include
     String backendName;
+    Boolean keepLive;
+    Boolean cookieStatus;
 
     /* tcp-check*/
     Integer checkPort;

@@ -156,6 +156,11 @@ public class LoadBalancerTest extends Tests {
                 .balancingAlgorithm("roundrobin")
                 .cookieStatus(false)
                 .advancedCheck(false)
+                .keepLive(false)
+                .checkInterval(5000)
+                .checkFall(3)
+                .checkRise(3)
+                .checkUri("/")
                 .build();
         balancer.addBackendUseCache(backend);
         Frontend frontend = Frontend.builder()

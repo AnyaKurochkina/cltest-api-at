@@ -11,7 +11,6 @@ import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Server;
-import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -29,8 +28,8 @@ import java.util.List;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerBackendChangeNegativeTest extends Tests {
 
-    static List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").build(),
-            Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
+    static List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").slowStart(0).build(),
+            Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").slowStart(0).build());
     static List<Server> serversHttp = Arrays.asList(Server.builder().address("10.226.48.194").port(80).name("d5soul-ngc004lk.corp.dev.vtb").build(),
             Server.builder().address("10.226.99.132").port(80).name("d5soul-ngc005lk.corp.dev.vtb").build());
 
