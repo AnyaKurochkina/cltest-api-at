@@ -2,16 +2,24 @@ package api.cloud.orderService.loadBalancer;
 
 import api.Tests;
 import com.mifmif.common.regex.Generex;
-import io.qameta.allure.*;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
+import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
-import models.cloud.subModels.loadBalancer.*;
-import org.junit.Mock;
+import models.cloud.subModels.loadBalancer.Backend;
+import models.cloud.subModels.loadBalancer.Frontend;
+import models.cloud.subModels.loadBalancer.Gslb;
+import models.cloud.subModels.loadBalancer.RouteSni;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
 
@@ -68,6 +76,7 @@ public class LoadBalancerPositiveNameTest extends Tests {
                 .match("string")
                 .checkRise(3)
                 .checkInterval(5000)
+                .cookieStatus(false)
                 .pattern(pattern)
                 .data(pattern)
                 .build();

@@ -222,7 +222,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendServerPort(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().name("name").address("10.226.48.10").port(0).build());
-            Backend backend = Backend.builder().backendName("not_valid_servers_port").servers(servers).build();
+            Backend backend = Backend.builder().backendName("not_valid_servers_port").cookieStatus(false).servers(servers).build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("servers.0.port");
         }
     }
