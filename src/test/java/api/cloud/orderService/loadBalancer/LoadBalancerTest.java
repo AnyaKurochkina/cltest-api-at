@@ -9,7 +9,6 @@ import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.*;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.MarkDelete;
-import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -31,9 +30,9 @@ import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegat
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerTest extends Tests {
 
-    @Mock
-    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("DEV").segment("dev-srv-app").build()
-            .buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/5b7832e1-eee2-4627-90f0-7acd7b504b54/backends?context=proj-ln4zg69jek&type=project&org=vtb");
+//    @Mock
+//    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
+//            .buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ef286138-92e8-4fc8-9ece-a37a8ddd0b73/main?context=proj-csyn7gq5se&type=project&org=vtb");
 
     private static final String randomPrefix = RandomStringUtils.randomNumeric(4);
 
