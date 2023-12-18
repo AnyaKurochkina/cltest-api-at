@@ -20,8 +20,9 @@ public class ClickHouseClusterOrderPage extends NewOrderPage {
     Select group2 = Select.byXpath("(//div[label[text()='Группы']]/div)[2]");
     Select group3 = Select.byXpath("(//div[label[text()='Группы']]/div)[3]");
     Select group4 = Select.byXpath("(//div[label[text()='Группы']]/div)[4]");
-    SelenideElement generatePassButton1 = $x("//button[@aria-label='generate']");
+    SelenideElement generatePassButton1 = $x("(//input[@name='passwordGenerator'])[1]");
     SelenideElement generatePassButton2 = $x("(//button[@aria-label='generate'])[2]");
+
 
     public ClickHouseClusterOrderPage() {
         labelInput.setValue(labelValue);

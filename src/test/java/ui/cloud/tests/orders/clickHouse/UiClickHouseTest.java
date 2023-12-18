@@ -35,7 +35,7 @@ public class UiClickHouseTest extends UiProductTest {
     ClickHouse product; // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f96d603-1454-47fb-90f3-94d3073a1037/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     String nameAD = "at_ad_user";
-
+    String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
     String nameLocalAD = "at_local_user";
 
     @BeforeEach
@@ -59,9 +59,8 @@ public class UiClickHouseTest extends UiProductTest {
             ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             if(product.isDev())
-                orderPage.getNameUser().setValue("at_user");
-            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            Alert.green("Значение скопировано");
+                orderPage.getNameUser().setValue(nameAD);
+            orderPage.getGeneratePassButton1().setValue(userPasswordFullRight);
             if(product.isDev())
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
                 Alert.green("Значение скопировано");
@@ -138,7 +137,6 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(6)
     @TmsLink("1162627")
-    @Disabled
     @DisplayName("UI ClickHouse. Сбросить пароль владельца БД")
     void resetPasswordDb() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -151,7 +149,7 @@ public class UiClickHouseTest extends UiProductTest {
     @DisplayName("UI ClickHouse . Cбросить пароль ТУЗ с полными правами")
     void resetPasswordFullRights() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.resetPasswordFullRights("at_user"));
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.resetPasswordFullRights(nameAD));
     }
 
     @Test
@@ -270,6 +268,14 @@ public class UiClickHouseTest extends UiProductTest {
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::updateCertificate);
     }
 
+    @Test
+    @Order(20)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Проверка доступа к Web интерфейсу управления через AD")
+    void openAdminConsole() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::openPointConnect);
+    }
     @Test
     @Order(100)
     @TmsLink("330328")

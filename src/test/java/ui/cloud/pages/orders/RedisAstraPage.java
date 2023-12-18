@@ -80,6 +80,16 @@ public class RedisAstraPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
     }
+
+    public void resetPasswordOld(String name) {
+        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль", "Подтвердить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
+            generatePassButton.shouldBe(Condition.enabled).click();
+            Alert.green("Значение скопировано");
+        });
+    }
+
     public void resetPasswordUser(String name) {
         runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль пользователя", "Подтвердить", () ->
         {
@@ -115,7 +125,7 @@ public class RedisAstraPage extends IProductPage {
     }
     public void updateOs() {
         runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
-        new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {

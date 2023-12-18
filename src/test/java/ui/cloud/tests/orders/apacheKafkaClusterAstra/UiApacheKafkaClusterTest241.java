@@ -2,12 +2,10 @@ package ui.cloud.tests.orders.apacheKafkaClusterAstra;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.helper.Configure;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ApacheKafkaCluster;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.*;
@@ -26,7 +24,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Epic("UI Продукты")
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
-public class UiApacheKafkaClusterTest extends UiProductTest {
+public class UiApacheKafkaClusterTest241 extends UiProductTest {
     List<String> name= Arrays.asList("name1","name2");
     List<Acl> args= Arrays.asList(
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
@@ -56,7 +54,8 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getConfigCluster().set("kafka-4:zookeeper-3");
+            orderPage.getOsVersionSelect().set("2.13-2.4.1");
+            orderPage.getConfigCluster().set("one_dc:kafka-4:zookeeper-3");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());

@@ -15,10 +15,7 @@ import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
-import ui.cloud.pages.orders.ClickHouseClusterPage;
-import ui.cloud.pages.orders.OrderUtils;
-import ui.cloud.pages.orders.OrdersPage;
+import ui.cloud.pages.orders.*;
 import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.extesions.UiProductTest;
@@ -33,12 +30,12 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product;
-    //=ClickHouseCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/74c978dc-9482-48e3-b8d0-371096655026/main?context=proj-iv550odo9a&type=project&org=vtb");
+    ClickHouseCluster product;// =ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f0cfd9f-13b4-415b-9349-ed1ac8315b0c/main?context=proj-ln4zg69jek&type=project&org=vtb");
+
+    SelenideElement node = $x("(//td[.='clickhouse'])[1]");
+    String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
     String nameAD = "at_ad_user";
     String nameLocalAD = "at_local_user";
-    SelenideElement node = $x("(//td[.='clickhouse'])[1]");
-
     @BeforeEach
     @Title("Авторизация на портале")
     void beforeEach() {
@@ -61,9 +58,8 @@ public class UiClickHouseClusterTest extends UiProductTest {
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getNameCluster().setValue("cluster");
             if(product.isDev())
-                orderPage.getNameUser().setValue("at_user");
-            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            Alert.green("Значение скопировано");
+                orderPage.getNameUser().setValue(nameAD);
+            orderPage.getGeneratePassButton1().setValue(userPasswordFullRight);
             if(product.isDev())
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
                 Alert.green("Значение скопировано");
@@ -249,6 +245,15 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void updateCertificate() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateCertificate);
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Проверка доступа к Web интерфейсу управления через AD")
+    void openAdminConsole() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::openPointConnect);
     }
 
     @Test

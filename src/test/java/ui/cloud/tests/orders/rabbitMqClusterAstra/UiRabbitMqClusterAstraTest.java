@@ -223,20 +223,20 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
     @Test
     @Order(17)
     @TmsLink("")
-    @Disabled
-    @DisplayName("UI RabbitMqClusterAstra. Удалить группу доступа на WEB интерфейс")
-    void deleteGroup() {
+    @DisplayName("UI RabbitMqClusterAstra. Изменить группу доступа на WEB интерфейс")
+    void changeGroup() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("Manager"));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("Administrator", product.additionalAccessGroup()));
     }
 
     @Test
     @Order(18)
     @TmsLink("")
-    @DisplayName("UI RabbitMqClusterAstra. Изменить группу доступа на WEB интерфейс")
-    void changeGroup() {
+    @Disabled
+    @DisplayName("UI RabbitMqClusterAstra. Удалить группу доступа на WEB интерфейс")
+    void deleteGroup() {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
-        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.changeGroupWeb("Administrator", product.additionalAccessGroup()));
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.deleteGroupWeb("Manager"));
     }
 
     @Test

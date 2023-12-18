@@ -148,6 +148,16 @@ public class UiPodmanTest extends UiProductTest {
     }
 
     @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI Podman. Обновить ОС")
+    void updateOs() {
+        PodmanPage podmanPage = new PodmanPage(product);
+        podmanPage.runActionWithCheckCost(CompareType.EQUALS, podmanPage::updateOs);
+    }
+
+
+    @Test
     @Order(100)
     @TmsLink("851392")
     @DisplayName("UI Podman. Удалить рекурсивно")

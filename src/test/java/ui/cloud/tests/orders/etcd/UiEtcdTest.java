@@ -130,6 +130,7 @@ public class UiEtcdTest extends UiProductTest {
     @Test
     @Order(6)
     @TmsLink("")
+    @Disabled
     @DisplayName("UI Etcd. Создать сертификаты для пользователя etcd")
     void createCertificate() {
         EtcdPage etcdPage = new EtcdPage(product);

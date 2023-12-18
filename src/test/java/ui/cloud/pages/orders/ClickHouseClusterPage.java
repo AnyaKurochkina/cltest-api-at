@@ -1,7 +1,9 @@
 package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import core.helper.Configure;
 import models.cloud.orderService.products.ClickHouseCluster;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
@@ -10,12 +12,28 @@ import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Table;
 
+import java.net.MalformedURLException;
+
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class ClickHouseClusterPage extends IProductPage {
+    public String getNameLocalAD() {
+        return nameLocalAD;
+    }
+    public String getNameAD() {
+        return nameAD;
+    }
+
+    public String getUserPasswordFullRight() {
+        return userPasswordFullRight;
+    }
+
+    String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
+    String nameAD = "at_ad_user";
+    String nameLocalAD = "at_local_user";
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String HEADER_USER_LOCAL = "ТУЗ Локальные";
@@ -25,10 +43,13 @@ public class ClickHouseClusterPage extends IProductPage {
     private static final String HEADER_DB_USERS = "ch_customer";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
-
+    private static final String HEADER_CONSOLE = "Точка подключения";
+    SelenideElement usernameInput = Selenide.$x("//input[@id='user']");
+    SelenideElement passwordInput = Selenide.$x("//input[@id='password']");
     SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
     SelenideElement btnUsers = $x("//button[.='Пользователи']");
     SelenideElement btnGroups = $x("//button[.='Группы']");
+
 
     public ClickHouseClusterPage(ClickHouseCluster product) {
         super(product);
@@ -78,6 +99,19 @@ public class ClickHouseClusterPage extends IProductPage {
     public void updateCertificate() {
         new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты Clickhouse Cluster");
+    }
+    public void openPointConnect() throws MalformedURLException, InterruptedException {
+        String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        Selenide.open(url);
+        Selenide.$x("//textarea[@id='query']").setValue("show databases");
+        signIn(getNameAD(),getUserPasswordFullRight());
+        Selenide.$x("//span[contains(text(), '✔')]").shouldBe(Condition.visible);
+    }
+
+    private void signIn(String user, String password){
+        usernameInput.shouldBe(Condition.visible).setValue(user);
+        passwordInput.shouldBe(Condition.visible).setValue(password);
+        Selenide.$x("//button[@id='run']").click();
     }
 
     public void stopHard() {

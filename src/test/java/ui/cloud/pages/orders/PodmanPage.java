@@ -8,10 +8,7 @@ import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Dialog;
-import ui.elements.DropDown;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.util.List;
 
@@ -156,12 +153,16 @@ public class PodmanPage extends IProductPage {
         Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
                 value));
     }
+    public void updateOs() {
+        runActionWithParameters(BLOCK_APP, "Обновить ОС", "Подтвердить", () -> {
+           // CheckBox.byLabel("Я подтверждаю, что уведомлен, что в процессе выполнения действия может быть выполнена последовательная перезагрузка нод кластера").setChecked(true);
+        });
+    }
 
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }
-
         @Override
         public String getPowerStatus() {
             return getPowerStatus(POWER);

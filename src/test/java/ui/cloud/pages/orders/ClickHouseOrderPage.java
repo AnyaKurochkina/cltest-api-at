@@ -17,7 +17,7 @@ public class ClickHouseOrderPage extends NewOrderPage {
     Select group4 = Select.byLabel("Группы", 4);
     Input nameUser = Input.byLabel("Имя пользователя (админ с полными правами)");
     Input nameDB = Input.byLabel("Имя базы данных");
-    SelenideElement generatePassButton1 = $x("//button[@aria-label='generate']");
+    SelenideElement generatePassButton1 = $x("(//input[@name='passwordGenerator'])[1]");
     SelenideElement generatePassButton2 = $x("(//button[@aria-label='generate'])[2]");
 
     public ClickHouseOrderPage() {

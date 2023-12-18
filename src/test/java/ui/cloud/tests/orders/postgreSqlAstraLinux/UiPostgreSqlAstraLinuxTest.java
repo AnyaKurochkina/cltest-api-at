@@ -307,12 +307,12 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Order(28)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Актуализировать версию СУБД")
-    void updateVersionDb
-            () {
+    void updateVersionDb() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         pSqlPage.runActionWithCheckCost(CompareType.EQUALS, pSqlPage::updateVersionDb
         );
     }
+
     @Test
     @Order(29)
     @TmsLink("")
@@ -323,6 +323,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::adPgBackup
         );
     }
+
     @Test
     @Order(30)
     @TmsLink("")
@@ -333,6 +334,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::addPgAudit
         );
     }
+
     @Test
     @Order(31)
     @TmsLink("")
@@ -343,6 +345,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
         pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::addPgWalarchive
         );
     }
+
     @Test
     @Order(32)
     @TmsLink("")
