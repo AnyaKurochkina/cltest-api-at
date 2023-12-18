@@ -61,6 +61,8 @@ public class Configure {
     public static String TagsService;
     public static String SelectorAllocator;
     public static String VcloudConnector;
+    public static String S3StorageOld;
+    public static String S3StorageNew;
 
     static {
         try {
@@ -126,6 +128,8 @@ public class Configure {
             TagsService = KONG_URL + "tags-service";
             SelectorAllocator = KONG_URL + "selector-allocator";
             VcloudConnector = KONG_URL + "vcloud-connector";
+            S3StorageOld = KONG_URL + "storage";
+            S3StorageNew = KONG_URL + "storage-new";
             PowerDns = getAppProp("url.powerdns");
 
             initApiRoutes();
