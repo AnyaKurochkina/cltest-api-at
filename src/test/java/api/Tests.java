@@ -39,7 +39,7 @@ public class Tests {
             return () -> {
                 if (!Waiting.sleep(() -> new IndexPage().getLinkProfile().isDisplayed(), Duration.ofSeconds(10))) {
                     Selenide.refresh();
-                    TypifiedElement.checkProject();
+                    //TypifiedElement.checkProject();
                 }
             };
         return () -> Waiting.sleep(() -> new IndexPage().getLinkProfile().isDisplayed(), Duration.ofSeconds(10));

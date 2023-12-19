@@ -84,6 +84,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         new IndexPage().goToVirtualMachine();
         new TableChecker()
                 .add("", String::isEmpty)
+                .add("", String::isEmpty)
                 .add(Column.NAME, e -> e.equals(vm.getName()))
                 .add("Статус", e -> e.equals("Включено"))
                 .add("Платформа", e -> e.length() > 5)
