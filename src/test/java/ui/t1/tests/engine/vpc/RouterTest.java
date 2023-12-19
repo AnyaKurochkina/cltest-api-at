@@ -60,8 +60,8 @@ public class RouterTest extends AbstractComputeTest {
                 .add(Column.NAME, e -> e.equals(router.getName()))
                 .add("Регион", e -> e.equals(router.getRegion()))
                 .add("Публичный IP", e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
-                .add("Подключенные сети", e -> e.length() > 4)
-                .add("Дата создания", e -> e.equals(router.getNetworks().get(0)))
+                .add("Подключенные сети", e -> e.equals(router.getNetworks().get(0)))
+                .add("Дата создания", e -> e.length() > 4)
                 .add("", String::isEmpty)
                 .check(() -> new RouterList.RouterTable().getRowByColumnValue(Column.NAME, router.getName()));
     }
