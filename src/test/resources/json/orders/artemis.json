@@ -1,8 +1,10 @@
 {
   "order": {
-    "project_name": "proj-frybyv41jh",
-    "product_id": "04ff13b0-57d2-42d6-a786-440aaae23337",
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "9416d52f-b50c-4cc6-8623-12af7729074b",
     "attrs": {
+      "AMQP": true,
+      "CORE": true,
       "domain": "corp.dev.vtb",
       "flavor": {
         "cpus": 2,
@@ -10,18 +12,15 @@
         "uuid": "930a8be8-1c71-4730-b881-0633a56b7f2b",
         "memory": 8
       },
+      "layout": "490e71af-c78e-4af8-95ae-3a6231b06dfc",
       "platform": "OpenStack",
-      "boot_disk": {
-        "size": 50
-      },
       "extra_nics": [],
-      "on_support": false,
-      "os_version": "7.9",
-      "availability_zone": "5",
+      "on_support": true,
+      "os_version": "1.7",
       "default_nic": {
         "net_segment": "dev-srv-app"
       },
-      "cluster_name": "vtb-artemis-0002",
+      "cluster_name": "artemis-ap-0704",
       "extra_mounts": [
         {
           "path": "/app",
@@ -31,20 +30,13 @@
       ],
       "ad_integration": true,
       "artemis_version": "2.19.1",
-      "type_load_balancer": "ON_DEMAND",
+      "title_protocols": {},
       "geo_distribution": true,
-      "layout": "",
-      "ad_logon_grants": [
-        {
-          "role": "user",
-          "groups": [
-            "cloud-zorg-xfgbboi"
-          ]
-        }
-      ]
+      "availability_zone": "msk-north",
+      "type_load_balancer": "ON_DEMAND"
     },
     "count": 1,
-    "label": "VTB Apache ActiveMQ Artemis",
+    "label": "VTB Artemis",
     "lifetime": null
   }
 }

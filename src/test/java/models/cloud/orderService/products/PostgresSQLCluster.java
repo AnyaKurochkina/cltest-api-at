@@ -284,4 +284,11 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
                 dbName + "_reader=r/" + dbName + "_admin", dbName + "_admin=arwdDxt/" + dbName + "_admin");
     }
 
+    public void etcdAddMountPointAppBackup() {
+        addMountPoint("postgresql_cluster_etcd_add_mount_point_app_backup", "/app/backup");
+    }
+
+    public void addMountPointAppLogs() {
+        addMountPoint("postgresql_cluster_add_mount_point_app_logs", "/app/logs");
+    }
 }
