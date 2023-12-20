@@ -30,7 +30,6 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.elements.Alert.checkNoRedAlerts;
-import static ui.elements.TypifiedElement.postfix;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Log4j2
@@ -72,7 +71,7 @@ public abstract class IProductPage {
     }
 
     public static SelenideElement getActionsMenuButton(String header, int index) {
-        return $x("(//*[.='{}']/parent::*//button[@id='actions-menu-button'])" + postfix, header, TypifiedElement.getIndex(index));
+        return TypifiedElement.getNearElement("button[@id='actions-menu-button']", String.format("*[.='%s']", header));
     }
 
     @Step("Получение таблицы по заголовку")
