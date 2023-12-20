@@ -205,8 +205,7 @@ public class ReferencesStep extends Steps {
         return new Http(ReferencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
-                .post(API_V_1_PRIVATE_DIRECTORIES)
-                .assertStatus(400);
+                .post(API_V_1_PRIVATE_DIRECTORIES);
     }
 
     @Step("Получение directory по имени для приватных ролей")

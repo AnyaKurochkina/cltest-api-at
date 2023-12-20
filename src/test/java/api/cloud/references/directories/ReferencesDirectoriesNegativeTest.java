@@ -28,13 +28,28 @@ public class ReferencesDirectoriesNegativeTest extends Tests {
     @DisplayName("Негативный тест на создание directory c именем содержащим недопустимые символы")
     @TmsLink("843052")
     @ParameterizedTest(name = "{index} - {0} is a invalid name")
-    @ValueSource(strings = {".", " ", "create_dir_test_api@"})
+    @ValueSource(strings = {".", "create_dir_test_api@", ".random_name"})
     public void createDirectoryWithInvalidNameTest(String name) {
         JSONObject jsonObject = JsonHelper.getJsonTemplate(DIRECTORIES_JSON_TEMPLATE)
                 .set("name", name)
                 .set("description", "description")
                 .build();
-        Response response = createDirectoryWithInvalidName(jsonObject);
+        Response response = createDirectoryWithInvalidName(jsonObject).assertStatus(400);
         assertEquals(Collections.singletonList("Can't create object with name: " + name), response.jsonPath().get());
+    }
+
+    @DisplayName("Негативный тест на создание directory c пустым именем")
+    @TmsLink("SOUL-8620")
+    @ParameterizedTest(name = "{index} - {0} is a invalid name")
+    @ValueSource(strings = {"", " "})
+    public void createDirectoryWithEmptyNameTest(String name) {
+        JSONObject jsonObject = JsonHelper.getJsonTemplate(DIRECTORIES_JSON_TEMPLATE)
+                .set("name", name)
+                .set("description", "description")
+                .build();
+
+        Response response = createDirectoryWithInvalidName(jsonObject).assertStatus(400);
+
+        assertEquals("This field may not be blank.", response.jsonPath().getList("name").get(0));
     }
 }

@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.references.ReferencesStep.*;
@@ -55,7 +56,7 @@ public class ReferencesUpdateDataTest extends Tests {
     }
 
     @DisplayName("Добавление ключа в существующий Page через updateData")
-    @TmsLink("")
+    @TmsLink("SOUL-8621")
     @Test
     public void addKeyToExistPageTest() {
         UpdateData data = UpdateData.builder()
@@ -71,7 +72,7 @@ public class ReferencesUpdateDataTest extends Tests {
     }
 
     @DisplayName("Обновление value у существующего key в Page через updateData")
-    @TmsLink("")
+    @TmsLink("SOUL-8622")
     @Test
     public void updateKeyValueExistPageTest() {
         LinkedHashMap<String, String> updateData = new LinkedHashMap<String, String>() {{
@@ -94,7 +95,7 @@ public class ReferencesUpdateDataTest extends Tests {
     }
 
     @DisplayName("Добавление ключа в существующий Page по uuid страницы без указания Directories через updateData")
-    @TmsLink("")
+    @TmsLink("SOUL-8623")
     @Test
     public void addKeyToExistPageByUUIDWithOutDirectoriesTest() {
         UpdateData data = UpdateData.builder()
@@ -109,7 +110,7 @@ public class ReferencesUpdateDataTest extends Tests {
     }
 
     @DisplayName("Добавление ключа в существующий Page по name страницы без указания Directories через updateData")
-    @TmsLink("")
+    @TmsLink("SOUL-8624")
     @Test
     public void addKeyToExistPageByNameWithOutDirectoriesTest() {
         UpdateData data = UpdateData.builder()
@@ -118,11 +119,13 @@ public class ReferencesUpdateDataTest extends Tests {
                     put("test_key", "test_value");
                 }})
                 .build();
-        uncheckedUpdateDataPageRequest(data).assertStatus(500);
+        String errorMessage = uncheckedUpdateDataPageRequest(data).assertStatus(400).jsonPath()
+                .getList("errors", String.class).get(0);
+        assertEquals("Value (Directory) is required if the (Page) type is not uuid", errorMessage);
     }
 
     @DisplayName("Добавление ключа без указания Page через updateData")
-    @TmsLink("")
+    @TmsLink("SOUL-8625")
     @Test
     public void addKeyWithoutPageTest() {
         UpdateData data = UpdateData.builder()
@@ -131,11 +134,13 @@ public class ReferencesUpdateDataTest extends Tests {
                     put("test_key", "test_value");
                 }})
                 .build();
-        uncheckedUpdateDataPageRequest(data).assertStatus(500);
+        String errorMessage = uncheckedUpdateDataPageRequest(data).assertStatus(400).jsonPath()
+                .getList("errors", String.class).get(0);
+        assertEquals("Missing required query params: (page)", errorMessage);
     }
 
     @DisplayName("Добавление ключа в несуществующий Page и Directories по имени через updateData.")
-    @TmsLink("")
+    @TmsLink("SOUL-8626")
     @Test
     public void addKeyToNotExistPageAndDirectoriesTest() {
         String directoryName = StringUtils.getRandomStringApi(6);
@@ -155,7 +160,7 @@ public class ReferencesUpdateDataTest extends Tests {
     }
 
     @DisplayName("Добавление ключа в несуществующий Page и Directories по uuid через updateData.")
-    @TmsLink("")
+    @TmsLink("SOUL-8627")
     @Test
     public void addKeyToNotExistPageAndDirectoriesByNameTest() {
         String directoryUUID = UUID.randomUUID().toString();
@@ -168,6 +173,8 @@ public class ReferencesUpdateDataTest extends Tests {
                 }})
                 .build();
 
-        uncheckedUpdateDataPageRequest(data).assertStatus(404);
+        List<String> errors = uncheckedUpdateDataPageRequest(data).assertStatus(400).jsonPath().getList("errors", String.class);
+        assertTrue(errors.contains(format("Directory with id={} does not exist", directoryUUID)));
+        assertTrue(errors.contains(format("Page with id={} does not exist", pageUUID)));
     }
 }
