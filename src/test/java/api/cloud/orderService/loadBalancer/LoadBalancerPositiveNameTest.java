@@ -68,7 +68,6 @@ public class LoadBalancerPositiveNameTest extends Tests {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName(backendName)
-                .advancedCheck(true)
                 .checkPort(new Random().nextInt(35678) + 10000)
                 .advCheck("tcp-check")
                 .checkFall(3)

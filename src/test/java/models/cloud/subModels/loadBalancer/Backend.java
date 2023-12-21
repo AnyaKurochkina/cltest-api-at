@@ -19,8 +19,6 @@ public class Backend {
     String mode = "tcp";
     List<Server> servers;
     @Builder.Default
-    Boolean advancedCheck = false; //Проверить нужно ли это поле теперь?
-    @Builder.Default
     String balancingAlgorithm = "leastconn";
     @EqualsAndHashCode.Include
     String backendName;

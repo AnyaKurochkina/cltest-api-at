@@ -53,7 +53,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendCheckUri(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_httpchk_check_uri")
-                    .advancedCheck(true)
                     .advCheck("httpchk")
                     .checkUri("0")
                     .build();
@@ -78,7 +77,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendCheckPort(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_port")
-                    .advancedCheck(true)
                     .advCheck("tcp-check")
                     .checkPort(65535)
                     .checkSsl("disabled")
@@ -97,7 +95,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendAdvCheck(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_adv_check")
-                    .advancedCheck(true)
                     .advCheck("not_valid")
                     .checkPort(65533)
                     .checkSsl("disabled")
@@ -116,7 +113,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendCheckFall(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_fall")
-                    .advancedCheck(true)
                     .advCheck("tcp-check")
                     .checkPort(65532)
                     .checkSsl("disabled")
@@ -135,7 +131,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendCheckSsl(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_ssl")
-                    .advancedCheck(true)
                     .advCheck("tcp-check")
                     .checkPort(65532)
                     .checkSsl("not_valid")
@@ -154,7 +149,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendMatch(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_match")
-                    .advancedCheck(true)
                     .advCheck("tcp-check")
                     .checkPort(65532)
                     .checkSsl("disabled")
@@ -173,7 +167,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendCheckMethod(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_method")
-                    .advancedCheck(true)
                     .advCheck("tcp-check")
                     .checkPort(65532)
                     .checkSsl("disabled")
@@ -189,7 +182,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendVersionAndHeaders(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_version_and_headers")
-                    .advancedCheck(true)
                     .mode("http")
                     .advCheck("httpchk")
                     .checkPort(65531)
@@ -244,7 +236,6 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendPattern(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_pattern")
-                    .advancedCheck(true)
                     .advCheck("tcp-check")
                     .checkPort(65532)
                     .checkSsl("disabled")

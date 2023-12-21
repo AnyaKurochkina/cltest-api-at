@@ -103,7 +103,6 @@ public class LoadBalancerTest extends Tests {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName("backend_tcp_simple")
-                .advancedCheck(false)
                 .build();
         balancer.addBackendUseCache(backend);
         Frontend frontend = Frontend.builder()
@@ -123,7 +122,6 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("backend_tcp_width_check")
-                    .advancedCheck(false)
                     .build();
             balancer.addBackendUseCache(backend);
             if (balancer.isDev())
@@ -155,7 +153,6 @@ public class LoadBalancerTest extends Tests {
                 .mode("http")
                 .balancingAlgorithm("roundrobin")
                 .cookieStatus(false)
-                .advancedCheck(false)
                 .keepLive(false)
                 .checkInterval(5000)
                 .checkFall(3)
@@ -232,7 +229,6 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("backend_for_remove")
-                    .advancedCheck(false)
                     .cookieStatus(false)
                     .build();
             balancer.addBackendUseCache(backend);
@@ -302,7 +298,6 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("revert_config")
-                    .advancedCheck(false)
                     .checkUri("/status")
                     .build();
             balancer.revertConfig(backend);
@@ -332,7 +327,6 @@ public class LoadBalancerTest extends Tests {
                     .servers(serversTcp)
                     .backendName("backend_for_edit9")
                     .cookieStatus(false)
-                    .advancedCheck(false)
                     .build();
             balancer.addBackendUseCache(backend);
             balancer.editBackend(backend.getBackendName(), "delete", serversTcp);
@@ -347,7 +341,6 @@ public class LoadBalancerTest extends Tests {
             Backend backend = Backend.builder()
                     .servers(serversTcp)
                     .backendName("backend_for_heath")
-                    .advancedCheck(false)
                     .build();
             balancer.addBackendUseCache(backend);
             HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
@@ -471,7 +464,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Комплексное создание {0}")
     void complexCreate(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversTcp).backendName("complex_backend3").advancedCheck(false).build();
+            Backend backend = Backend.builder().servers(serversTcp).backendName("complex_backend3").build();
             Frontend frontend = Frontend.builder().frontendName("complex_frontend3").frontendPort(80)
                     .defaultBackendNameTcp(backend.getBackendName()).build();
             HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())

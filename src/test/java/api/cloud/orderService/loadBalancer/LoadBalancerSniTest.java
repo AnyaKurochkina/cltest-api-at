@@ -99,7 +99,6 @@ public class LoadBalancerSniTest extends Tests {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName(new Generex("backend_tcp_[0-9]{10}").random())
-                .advancedCheck(false)
                 .build();
         balancer.addBackend(backend);
         Frontend frontend = Frontend.builder()
@@ -133,7 +132,6 @@ public class LoadBalancerSniTest extends Tests {
                 .servers(serversTcp)
                 .backendName(new Generex("backend_tcp_[0-9]{10}").random())
                 .cookieStatus(false)
-                .advancedCheck(false)
                 .build();
         balancer.addBackend(backend);
         Frontend frontend = Frontend.builder()
