@@ -37,7 +37,7 @@ public class OrganizationsPage {
         OrganizationTable table = new OrganizationTable();
         Menu.byElement(table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, orgName))
                         .getRowByColumnValue(OrganizationTable.COLUMN_NAME, orgName)
-                        .getElementByColumnIndex(3)
+                        .getElementByColumnIndex(4)
                         .$("button"))
                 .select("Удалить");
         Dialog.byTitle("Удаление организации")
@@ -48,10 +48,9 @@ public class OrganizationsPage {
 
     @Step("Проверка существования организации")
     public boolean isOrgExist(String name) throws NotFoundElementException {
-        OrganizationTable table = new OrganizationTable();
         boolean result = false;
         try {
-            result = table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, name))
+            result = new OrganizationTable().searchAllPages(t -> new OrganizationTable().isColumnValueEquals(OrganizationTable.COLUMN_NAME, name))
                     .isColumnValueEquals(OrganizationTable.COLUMN_NAME, name);
         } catch (NotFoundElementException ignore) {
 
