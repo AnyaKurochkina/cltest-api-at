@@ -18,6 +18,7 @@ import java.util.List;
 import static core.helper.StringUtils.getRandomStringApi;
 import static steps.productCatalog.Jinja2Steps.*;
 import static steps.productCatalog.TemplateSteps.createTemplateByName;
+import static steps.productCatalog.TemplateSteps.getTemplateByName;
 
 @Log4j2
 @Builder
@@ -60,7 +61,7 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     @Override
     public Entity init() {
         if (templateId == null) {
-            Template template = createTemplateByName(getRandomStringApi(6));
+            Template template = getTemplateByName("jinja2_template");
             templateId = template.getId();
             templateVersion = "";
             templateVersionPattern = "";

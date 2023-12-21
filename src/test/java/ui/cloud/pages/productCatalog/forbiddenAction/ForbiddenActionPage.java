@@ -121,10 +121,10 @@ public class ForbiddenActionPage extends EntityPage {
 
     @Step("Заполнение атрибутов запрещенного действия '{forbiddenAction.name}'")
     public ForbiddenActionPage setAttributes(ForbiddenAction forbiddenAction) {
+        descriptionTextArea.setValue(forbiddenAction.getDescription());
         Action action = getActionById(forbiddenAction.getActionId());
         actionSelect.setContains(action.getName());
         titleInput.setValue(forbiddenAction.getTitle());
-        descriptionTextArea.setValue(forbiddenAction.getDescription());
         direction.select(forbiddenAction.getDirection()
                 .replace("child_to_parent", "Запрет детей для родителя")
                 .replace("parent_to_child", "Запрет родителя для детей"));

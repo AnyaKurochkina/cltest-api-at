@@ -283,14 +283,15 @@ public class GraphNodesPage extends GraphPage {
     }
 
     @Step("Проверка, что узел '{node.name}' найден при поиске '{text}'")
-    public GraphNodesPage findNode(String text, GraphItem node) {
+    public GraphNodesPage findNode(String param, GraphItem node) {
         if (Objects.isNull(node.getNumber())) {
             node.setNumber(1);
         }
-        searchNodesInput.setValue(text);
-        TestUtils.wait(500);
+        searchNodesInput.setValue(param);
+        Waiting.sleep(500);
         $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
                 .shouldBe(Condition.visible);
+        $x("//span[text()='\"{}\"']", param).shouldBe(Condition.visible);
         return this;
     }
 
