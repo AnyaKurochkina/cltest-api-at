@@ -1,7 +1,6 @@
 package models.cloud.productCatalog.jinja2;
 
 import api.cloud.productCatalog.IProductCatalog;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
@@ -27,7 +26,6 @@ import static steps.productCatalog.TemplateSteps.createTemplateByName;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Jinja2Template extends Entity implements IProductCatalog {
 
     @JsonProperty("jinja2_template")
