@@ -1,8 +1,8 @@
 package steps.portalBack;
 
 import core.enums.Role;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -12,7 +12,7 @@ import steps.Steps;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
-import static core.helper.Configure.PortalBackURL;
+import static core.helper.Configure.portalBackURL;
 
 @Log4j2
 public class AccessGroupSteps extends Steps {
@@ -27,7 +27,7 @@ public class AccessGroupSteps extends Steps {
         String[] arr = new String[]{username};
         JsonHelper.getJsonTemplate("/accessGroup/users.json")
                 .set("$.users", arr)
-                .send(PortalBackURL)
+                .send(portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .post("/v1/projects/{}/access_groups/{}/group_users", group.getProjectName(), group.getPrefixName())
                 .assertStatus(201);
@@ -37,7 +37,7 @@ public class AccessGroupSteps extends Steps {
     @SneakyThrows
     @Step("Удаление пользователя в группе доступа")
     public static void removeUserFromGroup(AccessGroup group, String user) {
-        new Http(PortalBackURL)
+        new Http(portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .delete("/v1/projects/{}/access_groups/{}/group_users?unique_name={}", group.getProjectName(), group.getPrefixName(), URLEncoder.encode(user, String.valueOf(StandardCharsets.UTF_8)))
                 .assertStatus(204);

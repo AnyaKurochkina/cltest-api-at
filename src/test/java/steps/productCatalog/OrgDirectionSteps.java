@@ -14,7 +14,7 @@ import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class OrgDirectionSteps extends Steps {
@@ -23,7 +23,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Получение списка сервисов использующих направление")
     public static Response getServiceUsedOrgDirection(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl + "{}/used/", id)
                 .compareWithJsonSchema("jsonSchema/orgDirection/getUsedServiceListSchema.json")
@@ -33,7 +33,7 @@ public class OrgDirectionSteps extends Steps {
     @Step("Получение списка направлений")
     //todo сравнение с jsonShema
     public static List<OrgDirection> getOrgDirectionList() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl)
                 .assertStatus(200)
@@ -41,7 +41,7 @@ public class OrgDirectionSteps extends Steps {
     }
 
     public static GetOrgDirectionList getOrgDirectionsList() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl)
                 .assertStatus(200)
@@ -50,7 +50,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Проверка существования направления по имени")
     public static boolean isOrgDirectionExists(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
@@ -58,7 +58,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Получение направления по имени")
     public static OrgDirection getOrgDirectionByName(String name) {
-        List<OrgDirection> list = new Http(ProductCatalogURL)
+        List<OrgDirection> list = new Http(productCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get(orgDirUrl + "?{}", "name=" + name)
                 .extractAs(GetOrgDirectionList.class).getList();
@@ -68,7 +68,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Удаление направления по id")
     public static void deleteOrgDirectionById(String id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(orgDirUrl + id + "/")
                 .assertStatus(204);
@@ -76,7 +76,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Удаление направления по name {name}")
     public static void deleteOrgDirectionByName(String name) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(orgDirUrl2 + name + "/")
                 .assertStatus(204);
@@ -84,7 +84,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Создание направления")
     public static Response createOrgDirection(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(orgDirUrl);
@@ -100,7 +100,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Импорт направления")
     public static ImportObject importOrgDirection(String pathName) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(orgDirUrl + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
@@ -111,7 +111,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Получение направления по Id {objectId}")
     public static OrgDirection getOrgDirectionById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl + objectId + "/")
                 .extractAs(OrgDirection.class);
@@ -119,7 +119,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Получение направления по name {name}")
     public static OrgDirection getOrgDirectionByNameV2(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl2 + name + "/")
                 .extractAs(OrgDirection.class);
@@ -127,7 +127,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Экспорт направления по Id")
     public static Response exportOrgDirectionById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);
@@ -135,7 +135,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Частичное обновление направления")
     public static void partialUpdateOrgDirection(String id, JSONObject object) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(orgDirUrl + id + "/");
@@ -143,7 +143,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Копирование направления по Id")
     public static void copyOrgDirection(String objectId) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(orgDirUrl + objectId + "/copy/")
                 .assertStatus(200);
@@ -151,7 +151,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Сортировка направлений по дате создания")
     public static boolean orderingOrgDirectionByCreateData() {
-        List<OrgDirection> list = new Http(ProductCatalogURL)
+        List<OrgDirection> list = new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl + "?ordering=create_dt")
                 .assertStatus(200)
@@ -168,7 +168,7 @@ public class OrgDirectionSteps extends Steps {
 
     @Step("Сортировка направлений по дате создания")
     public static boolean orderingOrgDirectionByUpdateData() {
-        List<OrgDirection> list = new Http(ProductCatalogURL)
+        List<OrgDirection> list = new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(orgDirUrl + "?ordering=update_dt")
                 .assertStatus(200)

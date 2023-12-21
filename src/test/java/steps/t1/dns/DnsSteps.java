@@ -21,7 +21,7 @@ public class DnsSteps extends Steps {
 
     @Step("Создание приватной zone")
     public static DnsZone createPrivateZone(JSONObject object, String projectId) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .withServiceToken()
                 .body(object)
                 .post(API_URL + "projects/{}/zones", projectId)
@@ -31,7 +31,7 @@ public class DnsSteps extends Steps {
 
     @Step("Создание zone")
     public static DnsZone createZone(JSONObject object, String projectId) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(API_URL + "projects/{}/zones", projectId)
@@ -41,7 +41,7 @@ public class DnsSteps extends Steps {
 
     @Step("Создание zone")
     public static Response createZoneResponse(JSONObject object, String projectId) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(API_URL + "projects/{}/zones", projectId);
@@ -49,7 +49,7 @@ public class DnsSteps extends Steps {
 
     @Step("Получение zone по id={zoneId}")
     public static DnsZone getZoneById(String projectId, String zoneId) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .get(API_URL + "projects/{}/zones/{}", projectId, zoneId)
                 .assertStatus(200)
@@ -58,7 +58,7 @@ public class DnsSteps extends Steps {
 
     @Step("Создание Rrset")
     public static List<Rrset> createRrset(String projectId, String zoneId, JSONObject json) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .body(json)
                 .post(API_URL + "projects/{}/zones/{}/rrsets", projectId, zoneId)
@@ -69,7 +69,7 @@ public class DnsSteps extends Steps {
 
     @Step("Удаление zone")
     public static void deleteZone(String zoneId, String projectId) {
-        new Http(DNSService)
+        new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .delete(API_URL + "projects/{}/zones/{}", projectId, zoneId)
                 .assertStatus(200);
@@ -84,7 +84,7 @@ public class DnsSteps extends Steps {
 
     @Step("Удаление Rrset")
     public static void deleteRrset(String projectId, String zoneId, String rrsetId) {
-        new Http(DNSService)
+        new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .delete(API_URL + "projects/{}/zones/{}/rrsets/{}", projectId, zoneId, rrsetId)
                 .assertStatus(200);
@@ -92,7 +92,7 @@ public class DnsSteps extends Steps {
 
     @Step("Удаление zone из PowerDns")
     public static void deleteZoneFromPowerDns(String zoneId) {
-        new Http(PowerDns)
+        new Http(powerDns)
                 .setWithoutToken()
                 .addHeader("X-Api-Key", apiKey)
                 .delete(API_URL + "servers/localhost/zones/{}", zoneId)
@@ -101,7 +101,7 @@ public class DnsSteps extends Steps {
 
     @Step("Получение списка zone в PowerDns")
     public static List<PowerDnsZone> getZonePowerDnsList() {
-        return new Http(PowerDns)
+        return new Http(powerDns)
                 .setWithoutToken()
                 .addHeader("X-Api-Key", apiKey)
                 .get(API_URL + "servers/localhost/zones")
@@ -112,7 +112,7 @@ public class DnsSteps extends Steps {
 
     @Step("Получение zone в PowerDns по ZoneId")
     public static PowerDnsZone getZonePowerDnsById(String domainName) {
-        return new Http(PowerDns)
+        return new Http(powerDns)
                 .setWithoutToken()
                 .addHeader("X-Api-Key", apiKey)
                 .get(API_URL + "servers/localhost/zones/{}", domainName)
@@ -145,7 +145,7 @@ public class DnsSteps extends Steps {
 
     @Step("Получение списка зон")
     public static List<DnsZone> getZoneList(String projectId) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .get(API_URL + "projects/{}/zones", projectId)
                 .assertStatus(200)
@@ -154,7 +154,7 @@ public class DnsSteps extends Steps {
 
     @Step("Получение списка Rrsets")
     public static List<Rrset> getRrsetList(String zoneId, String projectId) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .get(API_URL + "projects/{}/zones/{}/rrsets", projectId, zoneId)
                 .assertStatus(200)
@@ -163,7 +163,7 @@ public class DnsSteps extends Steps {
 
     @Step("Частичное обновление зоны")
     public static DnsZone partialUpdateZone(JSONObject json, String zoneId, String projectId) {
-        return new Http(DNSService)
+        return new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .body(json)
                 .patch(API_URL + "projects/{}/zones/{}", projectId, zoneId)
@@ -173,7 +173,7 @@ public class DnsSteps extends Steps {
 
     @Step("Частичное обновление Rrset")
     public static void partialUpdateRrset(String projectId, String zoneId, String rrsetId, JSONObject json) {
-        new Http(DNSService)
+        new Http(dnsService)
                 .setRole(CLOUD_ADMIN)
                 .body(json)
                 .patch(API_URL + "projects/{}/zones/{}/rrsets/{}", projectId, zoneId, rrsetId)
