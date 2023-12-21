@@ -3,12 +3,14 @@ package ui.t1.tests.s3.cloudStorageS3New;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Story;
 import io.qameta.allure.TmsLink;
+import models.t1.s3_storage.S3StorageCreateResponse;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
-import steps.t1.s3_storage.S3StorageClient;
+import steps.t1.s3_storage.AbstractS3StorageClient;
 import steps.t1.s3_storage.S3StorageClientNew;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.Objects.AccessBucketLevel;
+import ui.t1.tests.engine.EntitySupplier;
 import ui.t1.tests.s3.AbstractStorageTest;
 
 @BlockTests
@@ -17,23 +19,23 @@ import ui.t1.tests.s3.AbstractStorageTest;
 @Story("Объектное хранилище S3")
 public class ObjectsTest extends AbstractStorageTest {
 
-    private static final S3StorageClient S_3_STORAGE_CLIENT_NEW = new S3StorageClientNew();
+    private static final AbstractS3StorageClient<?> S3_STORAGE_CLIENT_NEW = new S3StorageClientNew();
 
-    @AfterAll
-    public static void clearTestData() {
-        if (!bucketsForDelete.isEmpty()) {
-            bucketsForDelete.forEach(s3 ->S_3_STORAGE_CLIENT_NEW.deleteS3(s3.getName(), projectId));
-        }
-    }
+    private final EntitySupplier<S3StorageCreateResponse> s3Bucket = lazy(() -> S3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+    private final EntitySupplier<S3StorageCreateResponse> s3BucketWithVersioning = lazy(() -> {
+        S3StorageCreateResponse s3StorageCreateResponse = S3_STORAGE_CLIENT_NEW.createS3(name, projectId);
+        S3_STORAGE_CLIENT_NEW.addVersioningToBucketS3(name, projectId);
+        return s3StorageCreateResponse;
+    });
 
     @Test
     @Order(1)
     @TmsLink("994567")
     @DisplayName("Объекты. Загрузить объект")
     void uploadObject() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
@@ -45,9 +47,9 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520456")
     @DisplayName("Объекты. Получить ссылку на объект")
     void getObjectLnk() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
@@ -60,9 +62,9 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520445")
     @DisplayName("Объекты. Переименовать объект")
     void renameObject() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
@@ -77,10 +79,9 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520489")
     @DisplayName("Объекты. Восстановить удаленные объекты в бакете с версионированием")
     void restoreVersObject() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
-        S_3_STORAGE_CLIENT_NEW.addVersioningToBucketS3(name, projectId);
+        S3StorageCreateResponse bucket = s3BucketWithVersioning.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
@@ -99,9 +100,9 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("675556")
     @DisplayName("Объекты. Восстановить удаленные объекты в бакете без версионирования")
     void restoreUnVersObject() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
@@ -117,9 +118,9 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520533")
     @DisplayName("Объекты. Открыть доступ")
     void openObjectPublicAccess() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
@@ -132,15 +133,15 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520411")
     @DisplayName("Объекты. Скачать объект")
     void downloadObject() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
-                .updateObjectName("333.png", "334.png")
-                .checkObjectExists("334.png", true)
-                .downloadObject("334.png");
+                .updateObjectName("333.png", "335.png")
+                .checkObjectExists("335.png", true)
+                .downloadObject("335.png");
     }
 
     @Test
@@ -148,9 +149,9 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("994567")
     @DisplayName("Объекты. Удалить несколько объектов")
     void deleteObject() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObjects(AccessBucketLevel.OWNER_ONLY, "src/test/resources/s3files/333.png", "src/test/resources/s3files/444.png")

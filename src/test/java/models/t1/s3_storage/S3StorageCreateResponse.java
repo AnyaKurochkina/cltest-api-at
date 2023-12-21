@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class S3StorageCreateResponse {
 
-        public String name;
+    private String name;
         public LocalDateTime createdAt;
         public int totalObjects;
         public int totalSize;

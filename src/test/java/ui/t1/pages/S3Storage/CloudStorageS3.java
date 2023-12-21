@@ -1,19 +1,20 @@
 package ui.t1.pages.S3Storage;
 
-import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import ui.elements.DataTable;
 
-import static core.helper.StringUtils.$x;
+public class CloudStorageS3 extends DataTable {
 
-public class CloudStorageS3 {
 
-    private final SelenideElement addButton = $x("//*[contains(@data-testid,'add-button')]//button");
+    private final BucketList bList = new BucketList();
 
-    private BucketList bList = new BucketList();
+    public CloudStorageS3() {
+        super("Название бакета");
+    }
 
     @Step("Добавление бакета '{bucketName}' с версионированием '{isVersioned}'")
     public CreateBucketForm addBucket(String bucketName, Boolean isVersioned) {
-        addButton.click();
+        clickAdd();
         return new CreateBucketForm(bucketName, isVersioned);
     }
 
