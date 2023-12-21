@@ -144,7 +144,7 @@ public class GraphNegativeTest extends Tests {
     }
 
     @DisplayName("Негативный тест на создание графа с пустым именем")
-    @TmsLink("")
+    @TmsLink("SOUL-8661")
     @Test
     public void createGraphsWithEmptyNameModTest() {
         Modification jsonSchema = Modification.builder()
