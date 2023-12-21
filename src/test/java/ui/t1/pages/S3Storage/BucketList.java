@@ -10,7 +10,7 @@ public class BucketList {
     private final String fBucketName = "Название бакета";
 
     @Step("Открытие страницы просмотра данных бакета '{bucketName}'")
-    public void OpenBucket(String bucketName){
+    public void openBucket(String bucketName) {
         DataTable bucketList = new DataTable(fBucketName);
         bucketList.getRowByColumnValue(fBucketName, bucketName)
                   .getElementByColumn(fBucketName)

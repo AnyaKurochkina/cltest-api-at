@@ -19,7 +19,7 @@ public class CloudStorageS3 {
 
     @Step("Открытие страницы бакета '{bucketName}'")
     public BucketPage openBucket(String bucketName) {
-        bList.OpenBucket(bucketName);
+        bList.openBucket(bucketName);
         return new BucketPage();
     }
 
