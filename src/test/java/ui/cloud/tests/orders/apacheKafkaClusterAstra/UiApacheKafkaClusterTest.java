@@ -24,7 +24,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Epic("UI Продукты")
 @Feature("ApacheKafkaCluster")
 @Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
-public class UiApacheKafkaClusterTest241 extends UiProductTest {
+public class UiApacheKafkaClusterTest extends UiProductTest {
     List<String> name= Arrays.asList("name1","name2");
     List<Acl> args= Arrays.asList(
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),

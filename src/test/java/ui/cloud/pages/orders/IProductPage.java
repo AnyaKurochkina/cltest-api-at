@@ -363,7 +363,32 @@ public abstract class IProductPage {
             Assertions.assertEquals(0.0d, getOrderCost(), 0.001d);
         }
     }
-
+    @SneakyThrows
+    @Step("Запуск действия с проверкой стоимости")
+    public void runActionWithCheckCost(CompareType type, Executable executable,ActionParameters params) {
+        TypifiedElement.refreshPage();
+        waitChangeStatus();
+        double currentCost = getOrderCost();
+        executable.execute();
+        if (prebillingCostValue == null)
+            return;
+        TypifiedElement.refreshPage();
+//        currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(10));
+        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(5),
+                "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
+        if (currentCost == prebillingCostValue && prebillingCostValue == 0)
+            return;
+        if (type == CompareType.MORE)
+            Assertions.assertTrue(prebillingCostValue > currentCost, String.format("%f <= %f", prebillingCostValue, currentCost));
+        else if (type == CompareType.LESS)
+            Assertions.assertTrue(prebillingCostValue < currentCost, String.format("%f >= %f", prebillingCostValue, currentCost));
+        else if (type == CompareType.EQUALS)
+            Assertions.assertEquals(prebillingCostValue, currentCost, 0.01d);
+        else if (type == CompareType.ZERO) {
+            Assertions.assertEquals(0.0d, prebillingCostValue, 0.001d);
+            Assertions.assertEquals(0.0d, getOrderCost(), 0.001d);
+        }
+    }
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
         History history = new History();
