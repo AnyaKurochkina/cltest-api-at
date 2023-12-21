@@ -24,7 +24,7 @@ import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static core.helper.Configure.StateServiceURL;
+import static core.helper.Configure.stateServiceURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -34,7 +34,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Создание BulkAddAction")
     public static Response createBulkAddAction(String projectId, JSONObject json) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .body(json)
                 .post("/api/v1/projects/{}/actions/bulk-add-action/", projectId);
@@ -42,7 +42,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Создание BulkAddEvent")
     public static Response createBulkAddEvent(String projectId, JSONObject json) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .body(json)
                 .post("/api/v1/projects/{}/events/bulk-add-event/", projectId);
@@ -90,7 +90,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка id из списка items")
     public static List<String> getOrdersIdList(String projectId) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/", projectId)
                 .assertStatus(200)
@@ -100,7 +100,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items по контексту projects")
     public static Response getProjectItemsList(String projectId) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/", projectId)
                 .assertStatus(200);
@@ -108,7 +108,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка item_id и order_id")
     public static Response getItemIdOrderIdList() {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/order_id/")
                 .assertStatus(200);
@@ -117,14 +117,14 @@ public class StateServiceSteps extends Steps {
     @Step("Получение списка item_id и order_id по фильтру item_id")
     public static Response getItemIdOrderIdListByItemsIds(String... itemIds) {
         String ids = String.join(",", itemIds);
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/order_id/?item_id__in=" + ids);
     }
 
     @Step("Получение списка items c actions(active=true) по контексту projects")
     public static Item getProjectItemsWithIsActiveActions(String projectId, String itemId) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/?item_id={}&active=true&with_actions=true", projectId, itemId)
                 .assertStatus(200)
@@ -134,7 +134,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items у которых parent {isExist}")
     public static List<Item> getItemsWithParentExist(boolean isExist) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/?parent_exists={}", isExist)
                 .assertStatus(200)
@@ -144,7 +144,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items with actions по контексту и по фильтру {filter}")
     public static List<Item> getItemsWithActionsByFilter(String projectId, String filter, String value) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/projects/{}/items/?with_actions=true&{}={}", projectId, filter, value)
                 .assertStatus(200)
@@ -154,7 +154,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items with folder и по фильтру {filter}")
     public static List<Item> getItemsWithActionsByFilter(String filter, String value) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/?{}={}&with_folder=true", filter, value)
                 .assertStatus(200)
@@ -164,7 +164,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items по значению ключа {key} в data.config")
     public static List<Item> getItemsByDataConfigKey(String key, String value) {
-        List<Item> result = new Http(StateServiceURL)
+        List<Item> result = new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/?data__config__{}={}", key, value)
                 .assertStatus(200)
@@ -176,7 +176,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение версии state service")
     public static Response getStateServiceVersion() {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/version/")
                 .assertStatus(200);
@@ -184,7 +184,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Создаем Event")
     public static Response createEventStateService(JSONObject body) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .body(body)
                 .post("/api/v1/events/")
@@ -193,7 +193,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение статуса health")
     public static String getHealthStateService() {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/health/")
                 .assertStatus(200)
@@ -203,7 +203,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items с параметром with_parent_item=true")
     public static List<Item> getItemsWithParentItem() {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/?with_parent_item=true")
                 .assertStatus(200)
@@ -213,7 +213,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение item по id = {itemId} с параметром with_parent_item=true")
     public static List<Item> getItemByItemIdWithParentItem(String itemId) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/{}/?with_parent_item=true", itemId)
                 .assertStatus(200)
@@ -223,7 +223,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items")
     public static List<Item> getItemsList() {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/")
                 .assertStatus(200)
@@ -233,7 +233,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка primary items, в которых искомый item_id значится как secondary")
     public static List<Item> getPrimaryItemsList(String id) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/as_secondary_items/?item_id={}", id)
                 .assertStatus(200)
@@ -243,7 +243,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка secondary items, в которых искомый item_id значится как primary")
     public static List<Item> getSecondaryItemsList(String id) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/as_primary_items/?item_id={}", id)
                 .assertStatus(200)
@@ -253,7 +253,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items у которых нет primary связи с конкретным item_id")
     public static List<Item> getItemsListWithOutPrimaryRelation(String id) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/?ext_rel_primary_not={}", id)
                 .assertStatus(200)
@@ -263,7 +263,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items у которых нет secondary связи с конкретным item_id")
     public static List<Item> getItemsListWithOutSecondaryRelation(String id) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/?ext_rel_secondary_not={}", id)
                 .assertStatus(200)
@@ -273,7 +273,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items по фильтру {filter}")
     public static List<Item> getItemsListByFilter(String filter) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/?{}", filter)
                 .assertStatus(200)
@@ -283,7 +283,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items по фильтру {filter}")
     public static Response getResponseByFilter(String filter) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/?{}", filter);
 
@@ -291,7 +291,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items со всеми child")
     public static Response getItemsListWithAllChild(String filter, String value) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/items/all_children_list/?{}={}", filter, value)
                 .assertStatus(200);
@@ -300,7 +300,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение списка items по фильтру {filter}")
     public static Response getItemsListByFilter(String contextId, String filter) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/?{}", contextId, filter)
                 .assertStatus(200);
@@ -308,7 +308,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение item по id={id} и фильтру {filter}")
     public static Item getItemByIdAndFilter(String id, String filter) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/{}/?{}", id, filter)
                 .assertStatus(200)
@@ -317,7 +317,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение item по id={id}")
     public static Item getItemById(String id) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/items/{}/", id)
                 .assertStatus(200)
@@ -326,7 +326,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение статистики по Items и контексту")
     public static Response getItemStatByProjectId(String projectId) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/stats/", projectId)
                 .assertStatus(200);
@@ -334,7 +334,7 @@ public class StateServiceSteps extends Steps {
 
     @Step("Получение последней ошибки в проекте по контексту")
     public static String getLastErrorByProjectId(String projectId) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/actions/?status=error", projectId)
                 .assertStatus(200)
@@ -343,7 +343,7 @@ public class StateServiceSteps extends Steps {
     }
 
     public static List<ShortItem> getItems(String id) {
-        List<Item> list = new Http(StateServiceURL)
+        List<Item> list = new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/items/?page=1&per_page=10000&data__state__in=off,on", id)
                 .assertStatus(200)
@@ -392,7 +392,7 @@ public class StateServiceSteps extends Steps {
 
 
     public static List<ActionStateService> getActionListByFilter(String filter, String value) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .get("/api/v1/actions/?{}={}&per_page=500", filter, value)
                 .assertStatus(200)
@@ -401,7 +401,7 @@ public class StateServiceSteps extends Steps {
     }
 
     public static List<EventStateService> getEventListByFilter(String filter, String value) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/events/?{}={}", filter, value)
                 .assertStatus(200)
