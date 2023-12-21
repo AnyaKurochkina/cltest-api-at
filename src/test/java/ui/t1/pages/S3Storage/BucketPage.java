@@ -1,5 +1,7 @@
 package ui.t1.pages.S3Storage;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Step;
 import ui.elements.Tab;
 import ui.t1.pages.S3Storage.AccessRules.AccessRulesLayer;
@@ -31,7 +33,9 @@ public class BucketPage {
 
     @Step("Переход на вкладку 'Незавершенные загрузки' в бакете")
     public IncompleteDownloadsLayer gotoAccessIncompleteDownloadsLayer(){
-        Tab.byText("Незавершенные загрузки").switchTo();
+        Selenide.$x("//*[text()='Незавершенные загрузки']/ancestor::button")
+                .shouldBe(Condition.visible.because("Вкладка незавершенные загрузки должна отображаться"))
+                .click();
         return new IncompleteDownloadsLayer();
     }
 

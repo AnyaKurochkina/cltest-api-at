@@ -8,7 +8,7 @@ import ui.elements.Select;
 
 import static core.helper.StringUtils.$x;
 
-@Getter
+@Getter()
 public class ClickHouseClusterOrderPage extends NewOrderPage {
 
     Select numberNodes = Select.byLabel("Количество нод кластера по типу");

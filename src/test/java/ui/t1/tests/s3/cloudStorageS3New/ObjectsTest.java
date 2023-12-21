@@ -18,6 +18,8 @@ import ui.t1.tests.s3.AbstractStorageTest;
 public class ObjectsTest extends AbstractStorageTest {
 
     private static final S3StorageClient S_3_STORAGE_CLIENT_NEW = new S3StorageClientNew();
+    private final static String PNG_333 = "src/test/resources/s3files/333.png";
+    private final static String PNG_444 = "src/test/resources/s3files/444.png";
 
     @AfterAll
     public static void clearTestData() {
@@ -50,7 +52,7 @@ public class ObjectsTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .getObjectLink("333.png");
     }
@@ -65,7 +67,7 @@ public class ObjectsTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .updateObjectName("333.png", "334.png")
                 .checkObjectExists("333.png", false)
@@ -83,7 +85,7 @@ public class ObjectsTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .deleteObject("333.png")
                 .checkObjectExists("333.png", false)
@@ -104,7 +106,7 @@ public class ObjectsTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .deleteObject("333.png")
                 .checkObjectExists("333.png", false)
@@ -122,7 +124,7 @@ public class ObjectsTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .openObjectAccess("333.png");
     }
@@ -137,7 +139,7 @@ public class ObjectsTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .updateObjectName("333.png", "334.png")
                 .checkObjectExists("334.png", true)
                 .downloadObject("334.png");
@@ -153,7 +155,7 @@ public class ObjectsTest extends AbstractStorageTest {
                 .openBucket(name)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObjects(AccessBucketLevel.OWNER_ONLY, "src/test/resources/s3files/333.png", "src/test/resources/s3files/444.png")
+                .addObjects(AccessBucketLevel.OWNER_ONLY, PNG_333, PNG_444)
                 .deleteObjects("333.png", "444.png");
     }
 }

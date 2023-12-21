@@ -7,6 +7,7 @@ import lombok.extern.log4j.Log4j2;
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 public class S3StorageCreateResponse {
 
         public String name;
