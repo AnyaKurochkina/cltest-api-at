@@ -6,10 +6,11 @@ import io.qameta.allure.TmsLinks;
 import models.t1.s3_storage.S3StorageCreateResponse;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
-import steps.t1.s3_storage.S3StorageClient;
+import steps.t1.s3_storage.AbstractS3StorageClient;
 import steps.t1.s3_storage.S3StorageClientNew;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.Objects.AccessBucketLevel;
+import ui.t1.tests.engine.EntitySupplier;
 import ui.t1.tests.s3.AbstractStorageTest;
 
 @BlockTests
@@ -17,21 +18,18 @@ import ui.t1.tests.s3.AbstractStorageTest;
 @Feature("Бакеты")
 public class BucketTest extends AbstractStorageTest {
 
-    private static final S3StorageClient S_3_STORAGE_CLIENT_NEW = new S3StorageClientNew();
-    @AfterAll
-    public static void clearTestData() {
-        if (!bucketsForDelete.isEmpty()) {
-            bucketsForDelete.forEach(s3 ->S_3_STORAGE_CLIENT_NEW.deleteS3(s3.getName(), projectId));
-        }
-    }
+    private static final AbstractS3StorageClient<?> S3_STORAGE_CLIENT_NEW = new S3StorageClientNew();
+
+    private final EntitySupplier<S3StorageCreateResponse> s3Bucket = lazy(() -> S3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+
     @Test
     @Order(1)
     @TmsLinks({@TmsLink("542274"), @TmsLink("542728")})
     @DisplayName("Бакет. Добавить бакет без версионирования")
     void addBucketWithoutVer() {
-        bucketsForDelete.add(S3StorageCreateResponse.builder().name(name).build());
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .addBucket(name, false)
+                .addBucket(bucket.getName(), false)
                 .createBucket()
                 .checkBucketExistence(name, true);
     }
@@ -41,9 +39,9 @@ public class BucketTest extends AbstractStorageTest {
     @TmsLink("542254")
     @DisplayName("Бакет. Добавить бакет с версионированием")
     void addBucketWithVer() {
-        bucketsForDelete.add(S3StorageCreateResponse.builder().name(name).build());
+        S3StorageCreateResponse bucket = s3Bucket.get();
         new IndexPage().goToNewS3CloudStoragePage()
-                .addBucket(name, false)
+                .addBucket(bucket.getName(), false)
                 .createBucket()
                 .checkBucketExistence(name, true);
     }
@@ -75,10 +73,10 @@ public class BucketTest extends AbstractStorageTest {
     @TmsLink("SOUL-118")
     @DisplayName("Бакет. ЖЦ. Незавершенные загрузки")
     void uploadObjectWithFailTest() {
-        bucketsForDelete.add(S_3_STORAGE_CLIENT_NEW.createS3(name, projectId));
+        S3StorageCreateResponse bucket = s3Bucket.get();
         String fileName = "big_file.rar";
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObjectWithFail("src/test/resources/s3files/" + fileName, AccessBucketLevel.OWNER_ONLY, projectId)
