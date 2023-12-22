@@ -31,7 +31,7 @@ public class BucketTest extends AbstractStorageTest {
         new IndexPage().goToNewS3CloudStoragePage()
                 .addBucket(bucket.getName(), false)
                 .createBucket()
-                .checkBucketExistence(name, true);
+                .checkBucketExistence(bucket.getName(), true);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class BucketTest extends AbstractStorageTest {
         new IndexPage().goToNewS3CloudStoragePage()
                 .addBucket(bucket.getName(), false)
                 .createBucket()
-                .checkBucketExistence(name, true);
+                .checkBucketExistence(bucket.getName(), true);
     }
 
     @Test
@@ -81,7 +81,7 @@ public class BucketTest extends AbstractStorageTest {
                 .clickUploadObject()
                 .addObjectWithFail("src/test/resources/s3files/" + fileName, AccessBucketLevel.OWNER_ONLY, projectId)
                 .goToNewS3CloudStoragePage()
-                .openBucket(name)
+                .openBucket(bucket.getName())
                 .gotoAccessIncompleteDownloadsLayer()
                 .checkIncompleteDownloadFileIsAppear(fileName);
     }
