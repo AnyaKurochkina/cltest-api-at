@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudStorageS3;
+package ui.t1.tests.s3.cloudStorageS3;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -7,6 +7,7 @@ import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.CORS.CORSModal.Method;
 import ui.t1.pages.S3Storage.CORS.CORSModal.AccessControls;
+import ui.t1.tests.s3.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)

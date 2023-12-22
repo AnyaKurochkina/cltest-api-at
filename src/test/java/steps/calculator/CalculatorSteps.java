@@ -7,7 +7,7 @@ import lombok.SneakyThrows;
 import models.cloud.calculator.CostOrder;
 import steps.Steps;
 
-import static core.helper.Configure.CalculatorURL;
+import static core.helper.Configure.calculatorURL;
 
 public class CalculatorSteps extends Steps {
 
@@ -18,7 +18,7 @@ public class CalculatorSteps extends Steps {
 
     @Step("Получение информации в калькуляторе о заказе {orderId}")
     public static CostOrder getCostOrderByOrderId(String orderId) {
-        String response = new Http(CalculatorURL)
+        String response = new Http(calculatorURL)
                 .get("/orders/{}/", orderId)
                 .assertStatus(200)
                 .toString();

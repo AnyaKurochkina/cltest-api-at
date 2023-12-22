@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudStorageS3New;
+package ui.t1.tests.s3.cloudStorageS3;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -6,7 +6,7 @@ import io.qameta.allure.TmsLinks;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
-import ui.t1.tests.cloudStorageS3.AbstractStorageTest;
+import ui.t1.tests.s3.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -18,7 +18,7 @@ public class BucketTest extends AbstractStorageTest {
     @TmsLinks({@TmsLink("542274"), @TmsLink("542728")})
     @DisplayName("Бакет. Добавить бакет без версионирования")
     void addBucketWithoutVer() {
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, false)
                 .createBucket()
                 .checkBucketExistence(name, true)
@@ -31,7 +31,7 @@ public class BucketTest extends AbstractStorageTest {
     @TmsLink("542254")
     @DisplayName("Бакет. Добавить бакет с версионированием")
     void addBucketWithVer() {
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
                 .checkBucketExistence(name, true)
@@ -45,7 +45,7 @@ public class BucketTest extends AbstractStorageTest {
     @DisplayName("Бакет. Проверка уникальности имени бакета")
     void checkSameBuckets() {
         String newName = getRandomBucketName();
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
                 .checkBucketExistence(name, true)

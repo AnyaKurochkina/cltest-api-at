@@ -1,4 +1,4 @@
-package ui.t1.tests.cloudStorageS3New;
+package ui.t1.tests.s3.cloudStorageS3;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -6,7 +6,7 @@ import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.AccessRules.AccessRulesModal.AccessRulesTypes;
-import ui.t1.tests.cloudStorageS3.AbstractStorageTest;
+import ui.t1.tests.s3.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -20,7 +20,7 @@ public class AccessRulesTest extends AbstractStorageTest {
     @DisplayName("Правила доступа. Добавить правило доступа ")
     void addAccessRule() {
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, false)
                 .createBucket()
                 .openBucket(name)
@@ -31,7 +31,7 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .createAccessRule()
                 .checkRule("Никита Паринов", true);
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
     }
 
@@ -41,7 +41,7 @@ public class AccessRulesTest extends AbstractStorageTest {
     @DisplayName("Правила доступа. Редактировать правило доступа ")
     void editAccessRule() {
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, false)
                 .createBucket()
                 .openBucket(name)
@@ -62,7 +62,7 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .checkRule(true, AccessRulesTypes.WRITEACL)
                 .closeAccessRule();
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
     }
 
@@ -72,7 +72,7 @@ public class AccessRulesTest extends AbstractStorageTest {
     @DisplayName("Правила доступа. Удалить правило доступа ")
     void deleteAccessRule() {
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, false)
                 .createBucket()
                 .openBucket(name)
@@ -84,7 +84,7 @@ public class AccessRulesTest extends AbstractStorageTest {
                 .deleteAccessRule("Никита Паринов")
                 .checkRule("Никита Паринов", false);
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
     }
 }

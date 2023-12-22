@@ -51,7 +51,7 @@ import java.sql.DriverManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static core.helper.Configure.OrderServiceURL;
+import static core.helper.Configure.orderServiceURL;
 import static core.utils.AssertUtils.assertContains;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static steps.productCatalog.GraphSteps.getGraphByIdAndEnv;
@@ -504,7 +504,7 @@ public abstract class IProduct extends Entity {
         log.info("Отправка запроса на создание заказа " + productName);
         JSONObject data = deleteObjectIfNotFoundInUiSchema(toJson(), getProductId());
         data = new JsonTemplate(data).set("$.order.lifetime", "172800").build();
-        JsonPath jsonPath = new Http(OrderServiceURL)
+        JsonPath jsonPath = new Http(orderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                 .body(data)
                 .post("/v1/projects/" + projectId + "/orders")

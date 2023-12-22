@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
-import static core.helper.Configure.StateServiceURL;
+import static core.helper.Configure.stateServiceURL;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 
@@ -202,7 +202,7 @@ public class Artemis extends IProduct {
         OrderServiceSteps.runAction(ActionParameters.builder().role(Role.ORDER_SERVICE_ADMIN).name("vtb-artemis_export_conf").product(this).build());
         GlobalUser user = GlobalUser.builder().role(Role.ORDER_SERVICE_ADMIN).build().createObject();
         //Проверяем что письмо успешно отправлено в сс (статус, емэйл и кол-во аттачей)
-        new Http(StateServiceURL)
+        new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/projects/{}/actions/?order_id={}", projectId, orderId)
                 .assertStatus(200)
