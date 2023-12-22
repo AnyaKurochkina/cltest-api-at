@@ -27,11 +27,9 @@ public class BucketTest extends AbstractStorageTest {
     @TmsLinks({@TmsLink("542274"), @TmsLink("542728")})
     @DisplayName("Бакет. Добавить бакет без версионирования")
     void addBucketWithoutVer() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .addBucket(bucket.getName(), false)
-                .createBucket()
-                .checkBucketExistence(bucket.getName(), true);
+                .checkBucketExistence(bucketName, true);
     }
 
     @Test
@@ -39,11 +37,9 @@ public class BucketTest extends AbstractStorageTest {
     @TmsLink("542254")
     @DisplayName("Бакет. Добавить бакет с версионированием")
     void addBucketWithVer() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .addBucket(bucket.getName(), false)
-                .createBucket()
-                .checkBucketExistence(bucket.getName(), true);
+                .checkBucketExistence(bucketName, true);
     }
 
     @Test
@@ -73,15 +69,15 @@ public class BucketTest extends AbstractStorageTest {
     @TmsLink("SOUL-118")
     @DisplayName("Бакет. ЖЦ. Незавершенные загрузки")
     void uploadObjectWithFailTest() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         String fileName = "big_file.rar";
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObjectWithFail("src/test/resources/s3files/" + fileName, AccessBucketLevel.OWNER_ONLY, projectId)
                 .goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoAccessIncompleteDownloadsLayer()
                 .checkIncompleteDownloadFileIsAppear(fileName);
     }

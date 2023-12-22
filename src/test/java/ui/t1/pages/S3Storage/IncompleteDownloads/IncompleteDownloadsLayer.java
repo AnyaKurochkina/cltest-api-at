@@ -1,7 +1,6 @@
 package ui.t1.pages.S3Storage.IncompleteDownloads;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
 import lombok.NoArgsConstructor;
 import ui.elements.DataTable;
 import ui.elements.Table;
@@ -18,8 +17,7 @@ public class IncompleteDownloadsLayer extends AbstractLayerS3<IncompleteDownload
     }
 
     public void checkIncompleteDownloadFileIsAppear(String text){
-        new Table(Selenide.$x("(.//table[@class=\"MuiTable-root\"])[2]"))
-                .getRow(0).getElementByColumn("Название")
+        new Table("Название").getRow(0).getElementByColumn("Название")
                 .shouldHave(Condition.text(text));
     }
 }
