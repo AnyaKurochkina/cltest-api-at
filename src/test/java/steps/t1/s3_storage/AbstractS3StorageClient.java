@@ -31,7 +31,7 @@ public abstract class AbstractS3StorageClient<T extends S3Entity> extends Steps 
         return response;
     }
 
-    @Step("Добавление верисонирования к s3 storage с именем: {name}, в проекте: {projectId}")
+    @Step("Добавление версионирования к s3 storage с именем: {name}, в проекте: {projectId}")
     public void addVersioningToBucketS3(String name, String projectId) {
         String status = new Http(getS3StorageUrl())
                 .setRole(Role.CLOUD_ADMIN)
