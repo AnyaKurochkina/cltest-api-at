@@ -6,7 +6,6 @@ import io.qameta.allure.Step;
 import models.cloud.orderService.products.Ubuntu;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.openqa.selenium.NotFoundException;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
@@ -15,7 +14,6 @@ import ui.elements.Table;
 
 import java.util.List;
 
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -86,6 +84,16 @@ public class UbuntuLinuxPage extends IProductPage {
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
+    }
+
+    public void addKeyAstrom() {
+        checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
+    }
+
+    public void delKeyAstrom() {
+        checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")

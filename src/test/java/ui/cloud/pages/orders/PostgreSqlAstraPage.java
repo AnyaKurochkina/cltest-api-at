@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.PostgreSQL;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
@@ -20,7 +19,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 public class PostgreSqlAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
-    private static final String BLOCK_VM = "Виртуальная машина";
+    private static final String BLOCK_VM = "Виртуальные машины";
     private static final String BLOCK_DB = "Базы данных";
     private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
     private static final String BLOCK_DB_AT_USER = "at_db_at_user";
@@ -248,6 +247,16 @@ public class PostgreSqlAstraPage extends IProductPage {
             btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
             Assertions.assertFalse(new Table(HEADER_NAME_DB).isColumnValueContains("", BLOCK_DB_AT_USER), "Ошибка удаления пользователя БД");
         }
+    }
+
+    public void addKeyAstrom() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
+    }
+
+    public void delKeyAstrom() {
+        new PostgreSqlAstraPage.VirtualMachineTable().checkPowerStatus(PostgreSqlAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
     }
 
     public SelenideElement getRoleNode() {

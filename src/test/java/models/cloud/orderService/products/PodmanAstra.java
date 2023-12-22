@@ -21,7 +21,7 @@ import steps.orderService.OrderServiceSteps;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class Podman extends IProduct {
+public class PodmanAstra extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
@@ -30,7 +30,7 @@ public class Podman extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/podman.json";
         if(productName == null)
-            productName = "Podman";
+            productName = "Podman (Astra)";
         initProduct();
         if(osVersion == null)
             osVersion = getRandomOsVersion();

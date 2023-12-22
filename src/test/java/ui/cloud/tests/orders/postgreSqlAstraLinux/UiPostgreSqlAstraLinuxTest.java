@@ -7,10 +7,8 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PostgreSQL;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -92,7 +90,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(5)
+    @Order(3)
     @TmsLink("993396")
     @Disabled
     @DisplayName("UI PostgreSQLAstra. Перезагрузить")
@@ -102,7 +100,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(6)
+    @Order(4)
     @TmsLink("993391")
     @DisplayName("UI PostgreSQLAstra. Получить актуальную конфигурацию")
     void getActualConfiguration() {
@@ -111,7 +109,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(7)
+    @Order(5)
     @TmsLink("993402")
     @DisplayName("UI PostgreSQLAstra. Изменить default_transaction_isolation на REPEATABLE READ")
     void changeTransactionIsolation() {
@@ -120,7 +118,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(8)
+    @Order(6)
     @TmsLink("993392")
     @DisplayName("UI PostgreSQLAstra. Максимизировать max_connections")
     void changeMaxConnections() {
@@ -129,7 +127,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(9)
+    @Order(7)
     @TmsLink("993389")
     @DisplayName("UI PostgreSQLAstra. Расширить точку монтирования")
     void expandDisk() {
@@ -138,7 +136,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(10)
+    @Order(8)
     @TmsLink("993393")
     @DisplayName("UI PostgreSQLAstra. Изменить конфигурацию")
     void changeConfiguration() {
@@ -148,7 +146,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(11)
+    @Order(9)
     @TmsLink("994656")
     @DisplayName("UI PostgreSQLAstra. Проверить конфигурацию")
     void vmActCheckConfig() {
@@ -157,7 +155,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(12)
+    @Order(10)
     @TmsLink("993398")
     @DisplayName("UI PostgreSQLAstra. Добавить БД")
     void createDb() {
@@ -166,7 +164,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(15)
+    @Order(11)
     @TmsLink("993388")
     @DisplayName("UI PostgreSQLAstra. Сбросить пароль владельца БД")
     void resetPasswordDb() {
@@ -176,7 +174,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(16)
+    @Order(12)
     @TmsLink("993394")
     @DisplayName("UI PostgreSQLAstra. Добавить пользователя БД")
     void addUserDb() {
@@ -186,7 +184,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(17)
+    @Order(13)
     @TmsLink("993387")
     @DisplayName("UI PostgreSQLAstra. Сбросить пароль пользователя БД")
     void resetPasswordUserDb() {
@@ -197,7 +195,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(18)
+    @Order(14)
     @TmsLink("993395")
     @DisplayName("UI PostgreSQLAstra. Удалить пользователя БД")
     void deleteUserDb() {
@@ -208,7 +206,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(19)
+    @Order(15)
     @TmsLink("1171237")
     @DisplayName("UI PostgreSQLAstra. Актуализировать extensions")
     void updateExtensions() {
@@ -218,7 +216,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(20)
+    @Order(16)
     @TmsLink("1171241")
     @DisplayName("UI PostgreSQLAstra. Изменить extensions")
     void changeExtensions() {
@@ -229,7 +227,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
 
 
     @Test
-    @Order(21)
+    @Order(17)
     @TmsLink("993400")
     @DisplayName("UI PostgreSQLAstra. Удалить БД")
     void removeDb() {
@@ -239,7 +237,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(22)
+    @Order(18)
     @TmsLinks({@TmsLink("993397"), @TmsLink("993401")})
     @Disabled
     @DisplayName("UI PostgreSQLAstra. Выключить принудительно / Включить")
@@ -252,7 +250,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink("1091014"), @TmsLink("1091010")})
-    @Order(23)
+    @Order(19)
     @DisplayName("UI PostgreSQLAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -263,7 +261,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     @Test
     @Disabled("Проверяется у Astra Linux")
     @TmsLink("1091055")
-    @Order(24)
+    @Order(20)
     @DisplayName("UI PostgreSQLAstra. Изменить состав группы доступа")
     void updateGroup() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
@@ -272,7 +270,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(25)
+    @Order(21)
     @TmsLink("1429077")
     @DisplayName("UI PostgreSQLAstra. Обновить минорную версию СУБД")
     void updateMinorVersion() {
@@ -281,7 +279,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(26)
+    @Order(22)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Показать удаленные БД")
     void showDeleteDB() {
@@ -290,13 +288,31 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(27)
+    @Order(23)
     @TmsLink("1296731")
     @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
     void monitoringOs() {
         PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
         new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
         pSqlPage.checkClusterMonitoringOs();
+    }
+
+    @Test
+    @Order(24)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.MORE, pSqlPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(25)
+    @TmsLink("")
+    @DisplayName("UI PostgreSQLAstra. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        PostgreSqlAstraPage pSqlPage = new PostgreSqlAstraPage(product);
+        pSqlPage.runActionWithCheckCost(CompareType.LESS, pSqlPage::delKeyAstrom);
     }
 
     @Test

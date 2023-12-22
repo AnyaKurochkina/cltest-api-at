@@ -30,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_redis_astra")})
 public class UiRedisAstraTest extends UiProductTest {
 
-    Redis product;// = Redis.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/9121cf13-4723-4bd7-9ea7-77319da23191/main?context=proj-gxsz4e3shy&type=project&org=vtb");
+    Redis product = Redis.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/1b3823b6-4860-4bbf-a3e9-ef750c218584/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -92,7 +92,7 @@ public class UiRedisAstraTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(9)
+    @Order(3)
     @TmsLink("796991")
     @DisplayName("UI RedisAstra. Расширить точку монтирования")
     void expandDisk() {
@@ -101,7 +101,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(10)
+    @Order(4)
     @TmsLink("797003")
     @DisplayName("UI RedisAstra. Изменить конфигурацию")
     void changeConfiguration() {
@@ -111,7 +111,7 @@ public class UiRedisAstraTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(11)
+    @Order(5)
     @TmsLink("797006")
     @DisplayName("UI RedisAstra. Проверить конфигурацию")
     void vmActCheckConfig() {
@@ -120,7 +120,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(19)
+    @Order(6)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Сбросить пароль (удалить)")
     void resetPassword() {
@@ -128,7 +128,7 @@ public class UiRedisAstraTest extends UiProductTest {
         redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel));
     }
     @Test
-    @Order(20)
+    @Order(7)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Сбросить пароль пользователя")
     void resetPasswordUser() {
@@ -139,7 +139,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @Test
     @Disabled("Проверяется у Astra Linux")
     @TmsLinks({@TmsLink("1454017"), @TmsLink("1454015")})
-    @Order(25)
+    @Order(8)
     @DisplayName("UI RedisAstra. Удалить и добавить группу доступа")
     void deleteGroup() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
@@ -150,7 +150,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @Test
     @Disabled("Проверяется у Astra Linux")
     @TmsLink("1454016")
-    @Order(26)
+    @Order(9)
     @DisplayName("UI RedisAstra. Изменить состав группы доступа")
     void updateGroup() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
@@ -159,7 +159,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(27)
+    @Order(10)
     @TmsLink("1296747")
     @DisplayName("UI RedisAstra. Мониторинг ОС")
     void monitoringOs() {
@@ -168,7 +168,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(28)
+    @Order(11)
     @TmsLink("1296747")
     @DisplayName("UI RedisAstra. Изменить параметр notify-keyspace-events")
     void changeParamNotify() {
@@ -178,12 +178,30 @@ public class UiRedisAstraTest extends UiProductTest {
         }
     }
     @Test
-    @Order(29)
+    @Order(12)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Обновить ОС")
     void updateOs() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
         redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::updateOs);
+    }
+
+    @Test
+    @Order(13)
+    @TmsLink("")
+    @DisplayName("UI RedisAstra. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.MORE, redisPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(14)
+    @TmsLink("")
+    @DisplayName("UI RedisAstra. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        RedisAstraPage redisPage = new RedisAstraPage(product);
+        redisPage.runActionWithCheckCost(CompareType.LESS, redisPage::delKeyAstrom);
     }
 
     @Test

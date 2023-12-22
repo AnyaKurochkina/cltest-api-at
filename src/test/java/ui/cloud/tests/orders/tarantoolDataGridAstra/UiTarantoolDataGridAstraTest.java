@@ -5,10 +5,7 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.TarantoolDataGrid;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
@@ -16,12 +13,9 @@ import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
 import ui.elements.Graph;
-import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
@@ -150,6 +144,24 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
     void monitoringOs() {
         TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
         tarantoolDataGridAstraPage.checkMonitoringOs();
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.MORE, tarantoolDataGridAstraPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.LESS, tarantoolDataGridAstraPage::delKeyAstrom);
     }
 
     @Test

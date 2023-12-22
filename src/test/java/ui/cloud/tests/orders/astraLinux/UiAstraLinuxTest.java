@@ -8,7 +8,6 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Astra;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
@@ -196,6 +195,24 @@ public class UiAstraLinuxTest extends UiProductTest {
     void reInventory() {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::reInventory);
+    }
+
+    @Test
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI AstraLinux. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, astraLinuxPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI AstraLinux. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.LESS, astraLinuxPage::delKeyAstrom);
     }
 
     @Test

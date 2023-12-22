@@ -1,11 +1,11 @@
-package ui.cloud.tests.orders.podmanRhel;
+package ui.cloud.tests.orders.podmanAstra;
 
 import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.Podman;
+import models.cloud.orderService.products.PodmanAstra;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
@@ -19,12 +19,12 @@ import ui.extesions.ProductInjector;
 @Epic("UI Продукты")
 @ExtendWith(ConfigExtension.class)
 @ExtendWith(ProductInjector.class)
-@Feature("Podman")
-@Tags({@Tag("ui"), @Tag("ui_podman")})
-class UiPodmanCheckUntilOrderTest extends Tests {
+@Feature("Podman (Astra)")
+@Tags({@Tag("ui"), @Tag("ui_podman_astra")})
+class UiPodmanAstraCheckUntilOrderTest extends Tests {
 
-    Podman product;
-    //product = Podman.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
+    PodmanAstra product;
+    //product = PodmanAstra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

@@ -1,11 +1,17 @@
 package ui.cloud.pages.orders;
+
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.TarantoolDataGrid;
-import ui.elements.*;
+import ui.elements.Button;
+import ui.elements.Dialog;
+import ui.elements.Select;
+import ui.elements.Table;
+
 import static core.helper.StringUtils.$x;
 
 public class TarantoolDataGridAstraPage extends IProductPage {
+    private static final String BLOCK_VM = "Виртуальные машины";
     private static final String BLOCK_APP = "Приложение";
     private static final String HEADER_CERTIFICATE = "Сертификаты";
     private static final String HEADER_COPY = "Резервные копии";
@@ -83,6 +89,16 @@ public class TarantoolDataGridAstraPage extends IProductPage {
         checkPowerStatus(TarantoolDataGridAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(TarantoolDataGridAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
+    }
+
+    public void addKeyAstrom() {
+        new TarantoolDataGridAstraPage.VirtualMachineTable().checkPowerStatus(TarantoolDataGridAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
+    }
+
+    public void delKeyAstrom() {
+        new TarantoolDataGridAstraPage.VirtualMachineTable().checkPowerStatus(TarantoolDataGridAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
     }
 
     public class VirtualMachineTable extends VirtualMachine {

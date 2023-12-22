@@ -7,14 +7,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.WildFly;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -216,6 +214,24 @@ public class UiWildFlyAstraTest extends UiProductTest {
     void changeJavaWildFly() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly,versionJava));
+    }
+
+    @Test
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+        wildFlyPage.runActionWithCheckCost(CompareType.MORE, wildFlyPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+        wildFlyPage.runActionWithCheckCost(CompareType.LESS, wildFlyPage::delKeyAstrom);
     }
 
     @Test
