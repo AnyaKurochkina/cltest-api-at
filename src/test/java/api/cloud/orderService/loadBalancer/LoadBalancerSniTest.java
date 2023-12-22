@@ -11,10 +11,8 @@ import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Gslb;
 import models.cloud.subModels.loadBalancer.RouteSni;
-import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -101,7 +99,6 @@ public class LoadBalancerSniTest extends Tests {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName(new Generex("backend_tcp_[0-9]{10}").random())
-                .advancedCheck(false)
                 .build();
         balancer.addBackend(backend);
         Frontend frontend = Frontend.builder()
@@ -134,7 +131,7 @@ public class LoadBalancerSniTest extends Tests {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName(new Generex("backend_tcp_[0-9]{10}").random())
-                .advancedCheck(false)
+                .cookieStatus(false)
                 .build();
         balancer.addBackend(backend);
         Frontend frontend = Frontend.builder()

@@ -12,7 +12,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 import static core.enums.Role.CLOUD_ADMIN;
-import static core.helper.Configure.ImageService;
+import static core.helper.Configure.imageService;
 
 public class ImageServiceSteps extends Steps {
 
@@ -20,7 +20,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение списка image groups")
     public static List<ImageGroup> getImageGroupsList(boolean isNeedAll) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/image_groups?need_all={}", isNeedAll)
                 .assertStatus(200)
@@ -30,7 +30,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение списка categories")
     public static List<Categories> getCategoriesList() {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/categories")
                 .assertStatus(200)
@@ -40,7 +40,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение версии сервиса")
     public static Response getImageServiceVersion() {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/version")
                 .assertStatus(200);
@@ -48,7 +48,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение статуса health")
     public static String getHealthStatusImageService() {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get("/api/v1/healthcheck")
                 .assertStatus(200)
@@ -58,7 +58,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение списка marketing")
     public static List<Marketing> getMarketingList() {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/marketing")
                 .assertStatus(200)
@@ -68,7 +68,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение списка Logo")
     public static List<Logo> getLogoList() {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/logo")
                 .assertStatus(200)
@@ -78,7 +78,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение списка image")
     public static List<Image> getImageList() {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/images")
                 .assertStatus(200)
@@ -88,7 +88,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение списка image groups по region {region}")
     public static List<ImageGroup> getImageGroupsListByRegion(String region) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/image_groups?availability_zone={}", region)
                 .assertStatus(200)
@@ -98,7 +98,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение image groups по id {id}")
     public static ImageGroup getImageGroup(String id) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/image_groups/{}", id)
                 .assertStatus(200)
@@ -107,7 +107,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение logo по id {id}")
     public static Logo getLogoById(String id) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/logo/{}", id)
                 .assertStatus(200)
@@ -138,7 +138,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение marketing по id {id}")
     public static Marketing getMarketingById(String id) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/marketing/{}", id)
                 .assertStatus(200)
@@ -147,7 +147,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение Category по id {id}")
     public static Categories getCategoryById(String id) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/categories/{}", id)
                 .assertStatus(200)
@@ -172,7 +172,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Получение image по id {id}")
     public static Image getImageById(String id) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .get(apiUrl + "/images/{}", id)
                 .assertStatus(200)
@@ -192,7 +192,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Удаление image groups по id {id}")
     public static void deleteImageGroupById(String id) {
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .delete(apiUrl + "/image_groups/{}", id)
                 .assertStatus(200);
@@ -201,7 +201,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Удаление image groups по name {name}")
     public static void deleteImageGroupByName(String name) {
         String id = Objects.requireNonNull(getImageGroupByName(name)).getId();
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .delete(apiUrl + "/image_groups/{}", id)
                 .assertStatus(200);
@@ -209,7 +209,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Удаление marketing по id {id}")
     public static void deleteMarketingById(String id) {
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .delete(apiUrl + "/marketing/{}", id)
                 .assertStatus(200);
@@ -217,7 +217,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Удаление logo по id {id}")
     public static Response deleteLogoById(String id) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .delete(apiUrl + "/logo/{}", id)
                 .assertStatus(200);
@@ -225,7 +225,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Удаление Categories по id {id}")
     public static void deleteCategoryById(String id) {
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .delete(apiUrl + "/categories/{}", id)
                 .assertStatus(200);
@@ -233,14 +233,14 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Удаление logo по id {id}")
     public static Response getDeleteLogoByIdResponse(String id) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .delete(apiUrl + "/logo/{}", id);
     }
 
     @Step("Частичное обновление image groups по id {id}")
     public static void partialUpdateImageGroupById(String id, JSONObject body) {
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch(apiUrl + "/image_groups/{}", id)
@@ -249,7 +249,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Частичное обновление logo по id {id}")
     public static void partialUpdateLogoById(String id, JSONObject body) {
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch(apiUrl + "/logo/{}", id)
@@ -259,7 +259,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Обновление category по id {id}")
     public static void updateCategoryById(String id, String name) {
         JSONObject body = new JSONObject().put("name", name);
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch(apiUrl + "/categories/{}", id)
@@ -271,7 +271,7 @@ public class ImageServiceSteps extends Steps {
     При обновлении маркетинга, поле name обязательно в теле запроса.
      */
     public static void partialUpdateMarketingById(String id, JSONObject body) {
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch(apiUrl + "/marketing/{}", id)
@@ -284,7 +284,7 @@ public class ImageServiceSteps extends Steps {
       в body метода передается json в формате : {"marketing_info_id" : "id"}
      */
     public static void partialUpdateImageById(String id, JSONObject body) {
-        new Http(ImageService)
+        new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(body)
                 .patch(apiUrl + "/images/{}", id)
@@ -293,7 +293,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Создание image groups")
     public static ImageGroup createImageGroup(JSONObject object) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(apiUrl + "/image_groups")
@@ -306,7 +306,7 @@ public class ImageServiceSteps extends Steps {
         Optional<Categories> categoryByName = getCategoryByName(name);
         categoryByName.ifPresent(categories -> deleteCategoryById(categories.getId()));
         JSONObject object = new JSONObject().put("name", name);
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(apiUrl + "/categories")
@@ -317,7 +317,7 @@ public class ImageServiceSteps extends Steps {
     @Step("Создание categories")
     public static Response createCategoriesResponse(String name) {
         JSONObject object = new JSONObject().put("name", name);
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(apiUrl + "/categories");
@@ -325,7 +325,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Создание marketing")
     public static Marketing createMarketing(JSONObject object) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(apiUrl + "/marketing")
@@ -344,7 +344,7 @@ public class ImageServiceSteps extends Steps {
 
     @Step("Создание Logo")
     public static Logo createLogo(JSONObject object) {
-        return new Http(ImageService)
+        return new Http(imageService)
                 .setRole(CLOUD_ADMIN)
                 .body(object)
                 .post(apiUrl + "/logo")

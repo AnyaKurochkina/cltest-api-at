@@ -4,10 +4,9 @@ import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
-import models.cloud.orderService.interfaces.IProduct;
 import steps.Steps;
 
-import static core.helper.Configure.CalculatorURL;
+import static core.helper.Configure.calculatorURL;
 
 @Log4j2
 public class CalcCostSteps extends Steps {
@@ -18,7 +17,7 @@ public class CalcCostSteps extends Steps {
      */
     @Step("Получение расхода для папки/проекта")
     public static Float getCostByPath(String path) {
-        Float cost = new Http(CalculatorURL)
+        Float cost = new Http(calculatorURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
@@ -30,7 +29,7 @@ public class CalcCostSteps extends Steps {
 
     @Step("Получение расхода для заказа")
     public static Float getCostByUid(String orderId, String projectId) {
-        Float cost = new Http(CalculatorURL)
+        Float cost = new Http(calculatorURL)
                     .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                     .get("/api/v1/projects/{}/order/{}/cost/", projectId, orderId)
                     .assertStatus(200)

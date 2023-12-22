@@ -7,6 +7,7 @@ import api.cloud.defectolog.models.StartTask;
 import api.routes.DefectologApi;
 import core.enums.Role;
 import core.helper.http.Http;
+import core.helper.http.QueryBuilder;
 import io.qameta.allure.Step;
 import models.Entity;
 
@@ -20,7 +21,8 @@ public class DefectologSteps {
 
     @Step("Получение списка дефектов")
     public static DefectsList defectsList() {
-        return Http.builder().setRole(Role.SUPERADMIN).api(DefectologApi.defectsList).extractAllPages(DefectsList.class);
+        return Http.builder().setRole(Role.SUPERADMIN).api(DefectologApi.defectsList,
+                new QueryBuilder().add("ordering", "-created_at")).extractAs(DefectsList.class);
     }
 
     @Step("Получение defect по id {id}")

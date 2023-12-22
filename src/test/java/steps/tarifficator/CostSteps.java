@@ -22,8 +22,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static core.helper.Configure.CalculatorURL;
-import static core.helper.Configure.TarifficatorURL;
+import static core.helper.Configure.calculatorURL;
+import static core.helper.Configure.tarifficatorURL;
 
 @Log4j2
 public class CostSteps extends Steps {
@@ -50,7 +50,7 @@ public class CostSteps extends Steps {
 
     @Step("Получение расхода для папки/проекта")
     public static double getConsumptionByPath(String path) {
-        double consumption = new Http(CalculatorURL)
+        double consumption = new Http(calculatorURL)
                 .setRole(Role.ORDER_SERVICE_ADMIN)
                 .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
@@ -66,7 +66,7 @@ public class CostSteps extends Steps {
         Float consumption = null;
         for (int i = 0; i < 15; i++) {
             Waiting.sleep(20000);
-            consumption = new Http(CalculatorURL)
+            consumption = new Http(calculatorURL)
                     .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                     .get("/api/v1/projects/{}/order/{}/cost/", product.getProjectId(), product.getOrderId())
                     .assertStatus(200)
@@ -123,7 +123,7 @@ public class CostSteps extends Steps {
                 costItem.put("data", item.get("data"));
                 template.append("items", costItem);
             }
-            return new Http(TarifficatorURL)
+            return new Http(tarifficatorURL)
                     .setProjectId(project.id, Role.ORDER_SERVICE_ADMIN)
                     .body(template)
                     .post("/v1/cost_items")
@@ -132,7 +132,7 @@ public class CostSteps extends Steps {
                     .get(path);
         }
 
-        JsonPath response = new Http(TarifficatorURL)
+        JsonPath response = new Http(tarifficatorURL)
                 .setProjectId(project.id, Role.ORDER_SERVICE_ADMIN)
                 .body(template)
                 .post("/v1/cost")
@@ -161,7 +161,7 @@ public class CostSteps extends Steps {
         template.put("project_name", project.id);
         template.getJSONObject("order").put("product_id", productId);
 
-        return new Http(TarifficatorURL)
+        return new Http(tarifficatorURL)
                 .setProjectId(project.id, Role.ORDER_SERVICE_ADMIN)
                 .body(template)
                 .post("/v1/cost")
@@ -179,7 +179,7 @@ public class CostSteps extends Steps {
                 .set("$.action_name", action.getName())
                 .set("$.id", action.getOrderId())
                 .set("$.order.attrs", action.getData())
-                .send(TarifficatorURL)
+                .send(tarifficatorURL)
                 .setProjectId(action.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .post("/v1/cost")
                 .assertStatus(200)
@@ -209,7 +209,7 @@ public class CostSteps extends Steps {
 
     @Step("Запрос цен по ID тарифного плана")
     public static HashMap<String, Double> getPrices(String tariffPlanId) {
-        JSONArray consumption = new Http(TarifficatorURL)
+        JSONArray consumption = new Http(tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .get("/v1/tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
@@ -226,7 +226,7 @@ public class CostSteps extends Steps {
 
     @Step("Получение ID активного тарифного плана")
     public static String getActiveTariffId() {
-        return new Http(TarifficatorURL)
+        return new Http(tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .get("/v1/tariff_plans?include=total_count&page=1&per_page=10&f[base]=false&f[organization_name]=vtb&sort=status&acc=up&f[status][]=active")
                 .assertStatus(200)

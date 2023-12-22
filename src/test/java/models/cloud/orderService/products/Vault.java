@@ -22,7 +22,7 @@ import steps.orderService.OrderServiceSteps;
 import java.util.Arrays;
 import java.util.List;
 
-import static core.helper.Configure.OrderServiceURL;
+import static core.helper.Configure.orderServiceURL;
 import static core.utils.AssertUtils.assertEqualsList;
 
 @EqualsAndHashCode(callSuper = true)
@@ -72,7 +72,7 @@ public class Vault extends IProduct {
     @Override
     @Step("Заказ продукта")
     protected void create() {
-        orderId = new Http(OrderServiceURL)
+        orderId = new Http(orderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                 .post("/v1/projects/{}/orders/vault_service", projectId)
                 .assertStatus(201)

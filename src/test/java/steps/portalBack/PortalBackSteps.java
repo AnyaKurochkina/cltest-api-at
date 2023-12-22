@@ -8,7 +8,6 @@ import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.portalBack.AccessGroup;
-import models.cloud.productCatalog.InformationSystem;
 import steps.Steps;
 
 import java.util.List;
@@ -17,7 +16,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static core.helper.Configure.PortalBackURL;
+import static core.helper.Configure.portalBackURL;
 
 public class PortalBackSteps extends Steps {
 
@@ -61,7 +60,7 @@ public class PortalBackSteps extends Steps {
     public static List<ProjectEnvironmentPrefix> getProjectEnvironmentPrefixes(String informationSystemId) {
         String folderName = ((Folder) Folder.builder().kind(Folder.DEFAULT).build().createObject()).getName();
         @SuppressWarnings(value = "unchecked")
-        List<ProjectEnvironmentPrefix> environmentPrefixes = (List<ProjectEnvironmentPrefix>) listEntities(PortalBackURL, "/v1/folders/" + folderName +
+        List<ProjectEnvironmentPrefix> environmentPrefixes = (List<ProjectEnvironmentPrefix>) listEntities(portalBackURL, "/v1/folders/" + folderName +
                 "/information_systems/" + informationSystemId + "/environment_prefixes?reserved=false&status=available", ProjectEnvironmentPrefix.class, "list", Role.CLOUD_ADMIN);
         environmentPrefixes.forEach(PortalBackSteps::setEnvType);
         return environmentPrefixes;
@@ -81,7 +80,7 @@ public class PortalBackSteps extends Steps {
 
     @Step("Получение пользователя из LDAP")
     public static String getUsers(Project project, String username, String domain) {
-        return new Http(PortalBackURL)
+        return new Http(portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .get("/v1/users?q={}&project_name={}&domain={}", username, project.getId(), domain)
                 .assertStatus(200)
@@ -91,7 +90,7 @@ public class PortalBackSteps extends Steps {
 
     @Step("Получение случайной группы доступа")
     public static String getRandomAccessGroup(String projectId, String domain, String type) {
-        String accessGroup = new Http(PortalBackURL)
+        String accessGroup = new Http(portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .get("/v1/projects/{}/access_groups?f[purpose]={}&page=1&per_page=25", projectId, type)
                 .assertStatus(200)
@@ -105,7 +104,7 @@ public class PortalBackSteps extends Steps {
 
     @Step("Получение группы доступа по описанию")
     public static String getAccessGroupByDesc(String projectId, String desc, String type, String domain) {
-        String accessGroup = new Http(PortalBackURL)
+        String accessGroup = new Http(portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .get("/v1/projects/{}/access_groups?f[accounts_type]={}&domain={}&page=1&per_page=25", projectId, type, domain)
                 .assertStatus(200)
@@ -115,7 +114,7 @@ public class PortalBackSteps extends Steps {
     }
 
     public static String getInformationSystemId(String organizationName, String informationSystemCode) {
-        return new Http(PortalBackURL)
+        return new Http(portalBackURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/v1/organizations/{}/information_systems?q={}", organizationName, informationSystemCode)
                 .assertStatus(200)

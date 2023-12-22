@@ -20,7 +20,7 @@ import java.time.Duration;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Epic("Cloud Compute")
 @Feature("Сетевые интерфейсы")
-public class NetworkInterfacesMultiSelectTest extends AbstractComputeTest {
+public class InterfacesMultiSelectTest extends AbstractComputeTest {
 
     @Test
     @TmsLink("")

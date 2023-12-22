@@ -1,7 +1,6 @@
 package api.cloud.authorizer;
 
-import api.cloud.secretService.models.UserPage;
-import api.routes.TagServiceAPI;
+import api.Tests;
 import core.enums.Role;
 import core.helper.http.Http;
 import io.qameta.allure.Epic;
@@ -10,17 +9,13 @@ import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.authorizer.ServiceAccount;
-import models.cloud.keyCloak.ServiceAccountToken;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import api.Tests;
 import steps.keyCloak.KeyCloakSteps;
 
-import static api.routes.PortalApi.getV2SshKeys;
-import static api.routes.SecretServiceAdminAPI.getV1Users;
-import static core.helper.Configure.ResourceManagerURL;
+import static core.helper.Configure.resourceManagerURL;
 
 @Epic("Управление")
 @Feature("Сервисные аккаунты")
@@ -36,7 +31,7 @@ public class ServiceAccountTest extends Tests {
     void createServiceAccount() {
         try (ServiceAccount account = ServiceAccount.builder().title("deleteServiceAccount").build().createObjectExclusiveAccess()) {
             String token = KeyCloakSteps.getNewToken(account);
-            new Http(ResourceManagerURL)
+            new Http(resourceManagerURL)
                     .setWithoutToken().addHeader("Authorization", "bearer " + token)
                     .get("/v1/organizations")
                     .assertStatus(200);

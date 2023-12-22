@@ -32,7 +32,8 @@ public class Astra extends IProduct {
     @Override
     public Entity init() {
         jsonTemplate = "/orders/astra_general_application.json";
-        productName = "Astra Linux";
+        if (productName == null)
+            productName = "Astra Linux";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();

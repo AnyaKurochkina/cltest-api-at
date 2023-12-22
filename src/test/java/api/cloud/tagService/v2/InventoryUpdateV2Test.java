@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 import static models.cloud.tagService.TagServiceSteps.inventoryFilterV2;
@@ -34,7 +34,7 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
         Tag tag = generateTags(1).get(0);
         Inventory inventory = generateInventories(1).get(0);
         Waiting.sleep(1000);
-        inventoryTagsV2(context, inventory.getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), tagValue)));
+        inventoryTagsV2(context, inventory.getId(), null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), tagValue)));
 
         Filter filter = Filter.builder()
                 .allowEmptyTagFilter(true)
@@ -52,17 +52,17 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
         String tagValue = randomName();
         Tag tag = generateTags(1).get(0);
         Inventory inventory = generateInventories(1).get(0);
-        inventoryTagsV2(context, inventory.getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), tagValue)));
+        inventoryTagsV2(context, inventory.getId(), null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), tagValue)));
 
         Filter filter = Filter.builder()
                 .allowEmptyTagFilter(true)
                 .inventoryPks(Collections.singletonList(inventory.getId()))
                 .build();
-        ZonedDateTime updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+        LocalDateTime updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
 
         Waiting.sleep(1000);
-        inventoryTagsV2(context, inventory.getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), randomName())));
-        ZonedDateTime updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+        inventoryTagsV2(context, inventory.getId(), null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), randomName())));
+        LocalDateTime updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
 //        Date updatedAtAfterUpdate = inventoryTagListV2(context, inventory.getId()).getList().get(0).getUpdatedAt();
         Assertions.assertTrue(updatedAt.isBefore(updatedAtAfterUpdate));
     }
@@ -74,13 +74,13 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
         String tagValue = randomName();
         Tag tag = generateTags(1).get(0);
         Inventory inventory = generateInventories(1).get(0);
-        inventoryTagsV2(context, inventory.getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), tagValue)));
+        inventoryTagsV2(context, inventory.getId(), null, Collections.singletonList(new InventoryTagsV2.Tag(tag.getKey(), tagValue)));
 
         Filter filter = Filter.builder()
                 .allowEmptyTagFilter(true)
                 .inventoryPks(Collections.singletonList(inventory.getId()))
                 .build();
-        ZonedDateTime updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+        LocalDateTime updatedAt = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
 
         Waiting.sleep(1000);
         PutInventoryRequest.PutInventory putInventory = PutInventoryRequest.PutInventory.builder()
@@ -90,7 +90,7 @@ public class InventoryUpdateV2Test extends AbstractTagServiceTest {
                 .build();
         PutInventoryRequest request = PutInventoryRequest.builder().inventory(putInventory).build();
         TagServiceSteps.updateInventoriesV2(request);
-        ZonedDateTime updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
+        LocalDateTime updatedAtAfterUpdate = inventoryFilterV2(context, filter).getList().get(0).getUpdatedAt();
         Assertions.assertTrue(updatedAt.isBefore(updatedAtAfterUpdate));
     }
 }

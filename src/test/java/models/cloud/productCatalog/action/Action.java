@@ -141,6 +141,8 @@ public class Action extends Entity {
     private Boolean skipItemWithSecondaryRel;
     @JsonProperty("is_for_items")
     private Boolean isForItems;
+    @JsonProperty("is_only_for_api")
+    private Boolean isOnlyForApi;
 
     @Override
     public Entity init() {
@@ -192,6 +194,7 @@ public class Action extends Entity {
                 .setIfNullRemove("$.skip_on_prebilling", skipOnPrebilling)
                 .setIfNullRemove("$.skip_item_with_secondary_rel", skipItemWithSecondaryRel)
                 .setIfNullRemove("$.is_for_items", isForItems)
+                .setIfNullRemove("$.is_only_for_api", isOnlyForApi)
                 .build();
     }
 
