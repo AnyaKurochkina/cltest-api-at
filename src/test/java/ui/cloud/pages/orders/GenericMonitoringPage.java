@@ -73,14 +73,14 @@ public class GenericMonitoringPage extends IProductPage {
             Select.byLabel("Срок хранения в днях").set("1");
         });
         btnGeneralInfo.click();
-        Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
+        getTableByHeader("Снапшоты").asserts().checkColumnContainsValue("Тип", "snapshot");
     }
 
     public void deleteSnapshot() {
         new Table("Имя", 2).getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new Table("Имя").getFirstValueByColumn("Имя"), "Удалить снапшот");
         btnGeneralInfo.click();
-        Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
+        getTableByHeader("Снапшоты").asserts().checkColumnContainsValue("Тип", "snapshot");
     }
 
     public void reInventory() {
@@ -165,8 +165,7 @@ public class GenericMonitoringPage extends IProductPage {
         Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-        Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
-                value));
+        getTableByHeader("Дополнительные диски").asserts().checkColumnContainsValue(HEADER_DISK_SIZE, value);
     }
 
     public class VirtualMachineTable extends VirtualMachine {

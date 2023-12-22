@@ -45,11 +45,11 @@ public abstract class IProductPage {
     protected Tab generalInfoTab = Tab.byText("Общая информация");
     protected Tab historyTab = Tab.byText("История действий");
     IProduct product;
-    public final SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
-    public final SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
-    public final Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
-    public final SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
-    public final SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
+    protected final SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
+    protected final SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
+    protected final Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
+    protected final SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
+    protected final SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))

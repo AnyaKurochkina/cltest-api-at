@@ -115,7 +115,7 @@ public class GrafanaPage extends IProductPage {
         });
         btnGeneralInfo.click();
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
-        Assertions.assertTrue(getTableByHeader(BLOCK_SNAPSHOT).isColumnValueContains("Тип", "snapshot"));
+        getTableByHeader(BLOCK_SNAPSHOT).asserts().checkColumnContainsValue("Тип", "snapshot");
     }
 
     public void deleteSnapshot() {
@@ -124,7 +124,7 @@ public class GrafanaPage extends IProductPage {
         runActionWithoutParameters(new Table("Дата удаления").getFirstValueByColumn("Имя"), "Удалить снапшот");
         btnGeneralInfo.click();
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getTableByHeader(BLOCK_SNAPSHOT).isColumnValueContains("Тип", "snapshot"));
+        getTableByHeader(BLOCK_SNAPSHOT).asserts().checkColumnContainsValue("Тип", "snapshot");
     }
 
     public void restart() {
@@ -174,8 +174,7 @@ public class GrafanaPage extends IProductPage {
         runActionWithoutParameters(new GrafanaPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
         btnGeneralInfo.click();
         new Table("Тип").getRow(0).get().scrollIntoView(scrollCenter).click();
-        Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
-                role));
+        getTableByHeader("Роли").asserts().checkColumnContainsValue("", role);
     }
 
     public void resetPassword() {
@@ -211,8 +210,7 @@ public class GrafanaPage extends IProductPage {
         Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-        Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
-                value));
+        getTableByHeader("Дополнительные диски").asserts().checkColumnContainsValue(HEADER_DISK_SIZE, value);
     }
 
     public class VirtualMachineTable extends VirtualMachine {

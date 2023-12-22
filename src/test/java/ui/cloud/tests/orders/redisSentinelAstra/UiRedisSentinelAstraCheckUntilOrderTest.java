@@ -29,7 +29,7 @@ class UiRedisSentinelAstraCheckUntilOrderTest extends Tests {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         product.setProductName("Redis Sentinel Astra (Redis с репликацией)");
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
