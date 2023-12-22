@@ -62,7 +62,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     public void checkConfiguration(SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
-        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(node).build());
     }
 

@@ -86,6 +86,16 @@ public class UbuntuLinuxPage extends IProductPage {
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
+    public void addKeyAstrom() {
+        checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
+    }
+
+    public void delKeyAstrom() {
+        checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
+    }
+
     @Step("Добавить новые группы {group} с ролью {role}")
     public void addGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);

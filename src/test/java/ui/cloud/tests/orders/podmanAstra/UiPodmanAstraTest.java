@@ -1,4 +1,4 @@
-package ui.cloud.tests.orders.podmanRhel;
+package ui.cloud.tests.orders.podmanAstra;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
@@ -6,7 +6,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Podman;
+import models.cloud.orderService.products.PodmanAstra;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -26,11 +26,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
-@Feature("Podman")
-@Tags({@Tag("ui"), @Tag("ui_podman")})
-public class UiPodmanTest extends UiProductTest {
+@Feature("Podman (Astra)")
+@Tags({@Tag("ui"), @Tag("ui_podman_astra")})
+public class UiPodmanAstraTest extends UiProductTest {
 
-    private Podman product;// = Podman.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/containers/orders/9c0628a1-2553-4ac3-ab22-07a8a9c71457/main?context=proj-lww1vo6okh&type=project&org=vtb");
+    private PodmanAstra product;// = PodmanAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/92155aeb-773d-4a86-9c17-d9237d6e35b3/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -42,7 +42,7 @@ public class UiPodmanTest extends UiProductTest {
     @Test
     @TmsLink("851389")
     @Order(1)
-    @DisplayName("UI Podman. Заказ")
+    @DisplayName("UI PodmanAstra. Заказ")
     void orderPodman() {
         double prebillingCost;
         try {
@@ -51,10 +51,10 @@ public class UiPodmanTest extends UiProductTest {
                     .clickOrderMore()
                     .selectCategory("Контейнеры")
                     .expandProductsList()
-                    .selectProduct("Podman (Astra)");
+                    .selectProduct(product.getProductName());
             PodmanOrderPage orderPage = new PodmanOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            //orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
@@ -65,103 +65,120 @@ public class UiPodmanTest extends UiProductTest {
                     .getElementByColumn("Продукт")
                     .hover()
                     .click();
-            PodmanPage podmanPage = new PodmanPage(product);
-            podmanPage.waitChangeStatus(Duration.ofMinutes(25));
-            podmanPage.checkLastAction("Развертывание");
+            PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+            podmanAstraPage.waitChangeStatus(Duration.ofMinutes(25));
+            podmanAstraPage.checkLastAction("Развертывание");
         } catch (Throwable e) {
             product.setError(e.toString());
             throw e;
         }
-        PodmanPage podmanPage = new PodmanPage(product);
-        checkOrderCost(prebillingCost, podmanPage);
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        checkOrderCost(prebillingCost, podmanAstraPage);
     }
 
     @Test
     @TmsLink("1349840")
     @Order(2)
-    @DisplayName("UI Podman. Проверка развертывания в истории действий")
+    @DisplayName("UI PodmanAstra. Проверка развертывания в истории действий")
     void checkHeaderHistoryTable() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.getGeneralInfoTab().switchTo();
-        podmanPage.checkHeadersHistory();
-        podmanPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.getGeneralInfoTab().switchTo();
+        podmanAstraPage.checkHeadersHistory();
+        podmanAstraPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(5)
+    @Order(3)
     @TmsLink("851388")
-    @DisplayName("UI Podman. Расширить точку монтирования")
+    @DisplayName("UI PodmanAstra. Расширить точку монтирования")
     void expandDisk() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.MORE, () -> podmanPage
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.MORE, () -> podmanAstraPage
                 .enlargeDisk("/app", "20", new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(6)
+    @Order(4)
     @TmsLink("1295870")
-    @DisplayName("UI Podman. Проверить конфигурацию")
+    @DisplayName("UI PodmanAstra. Проверить конфигурацию")
     void vmActCheckConfig() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanAstraPage
                 .checkConfiguration(new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(8)
+    @Order(5)
     @TmsLinks({@TmsLink("1091838"), @TmsLink("1091841")})
-    @DisplayName("UI Podman. Удалить и добавить группу доступа")
+    @DisplayName("UI PodmanAstra. Удалить и добавить группу доступа")
     void addGroup() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanAstraPage
                 .deleteGroup("podman_admin", new Table("Роли узла").getRow(0).get()));
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage
+        podmanAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanAstraPage
                 .addGroup("podman_admin", Collections.singletonList(product.accessGroup()),
                         new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(9)
+    @Order(6)
     @TmsLink("1091844")
-    @DisplayName("UI Podman. Изменить состав группы")
+    @DisplayName("UI PodmanAstra. Изменить состав группы")
     void changeGroup() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanPage.updateGroup("podman_admin",
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> podmanAstraPage.updateGroup("podman_admin",
                 Arrays.asList(product.accessGroup(), product.additionalAccessGroup()),
                 new Table("Роли узла").getRow(0).get()));
     }
 
     @Test
-    @Order(10)
+    @Order(7)
     @TmsLink("1296740")
-    @DisplayName("UI Podman. Мониторинг ОС")
+    @DisplayName("UI PodmanAstra. Мониторинг ОС")
     void monitoringOs() {
-        PodmanPage podmanPage = new PodmanPage(product);
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
         new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
-        podmanPage.checkClusterMonitoringOs();
+        podmanAstraPage.checkClusterMonitoringOs();
     }
 
     @Test
-    @Order(11)
+    @Order(8)
     @TmsLink("")
     @DisplayName("UI Podman. Обновить ОС")
     void updateOs() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, podmanPage::updateOs);
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.EQUALS, podmanAstraPage::updateOs);
     }
 
+    @Test
+    @Order(9)
+    @TmsLink("")
+    @DisplayName("UI PodmanAstra. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.MORE, podmanAstraPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("")
+    @DisplayName("UI PodmanAstra. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.LESS, podmanAstraPage::delKeyAstrom);
+    }
 
     @Test
     @Order(100)
     @TmsLink("851392")
     @DisplayName("UI Podman. Удалить рекурсивно")
     void delete() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.LESS, podmanPage::delete);
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.LESS, podmanAstraPage::delete);
     }
 }

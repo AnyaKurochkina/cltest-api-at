@@ -21,7 +21,7 @@ import steps.orderService.OrderServiceSteps;
 @Data
 @NoArgsConstructor
 @SuperBuilder
-public class Podman extends IProduct {
+public class PodmanAstra extends IProduct {
     @ToString.Include
     String osVersion;
     Flavor flavor;
