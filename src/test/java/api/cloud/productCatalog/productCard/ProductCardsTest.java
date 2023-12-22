@@ -5,6 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
@@ -25,6 +26,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.helper.StringUtils.convertStringVersionToIntArrayVersion;
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -126,7 +129,7 @@ public class ProductCardsTest {
         assertEquals(productCard.getName() + "-clone", copiedProductCard.getName());
     }
 
-    @DisplayName("Применение продуктовой карты")
+    @DisplayName("Применение продуктовой карты.")
     @Test
     @TmsLink("SOUL-7693")
     public void applyProductCardTest() {
@@ -179,6 +182,54 @@ public class ProductCardsTest {
         assertEquals(action, actionByName);
         deleteProductByName(product.getName());
         deleteActionByName(action.getName());
+    }
+
+    @DisplayName("Применение продуктовой карты объектов версии которых не совпадают.")
+    @Test
+    @TmsLink("SOUL-8693")
+    public void applyProductCardObjectVersionsNotEqualsTest() {
+        String actionName = "action_for_apply_card_items_not_equals_objects_test_api";
+        String actionVersion = "1.0.2";
+        try {
+            Graph graphForAction = createGraph();
+            JSONObject actionJson = Action.builder()
+                    .name(actionName)
+                    .graphId(graphForAction.getGraphId())
+                    .version(actionVersion)
+                    .build()
+                    .init()
+                    .toJson();
+            Action action = createAction(actionJson).assertStatus(201).extractAs(Action.class);
+            CardItems actionCard = CardItems.builder().objType("Action")
+                    .objId(action.getActionId())
+                    .versionArr(convertStringVersionToIntArrayVersion(actionVersion))
+                    .build();
+
+            List<CardItems> cardItemsList = new ArrayList<>();
+            cardItemsList.add(actionCard);
+
+            ProductCard productCard = ProductCard.builder()
+                    .name("apply_product_card_test_api")
+                    .title("apply_product_card_title_test_api")
+                    .description("test_api")
+                    .cardItems(cardItemsList)
+                    .build()
+                    .createObject();
+            partialUpdateAction(action.getActionId(), new JSONObject().put("type", "on"));
+
+            ImportObject object = applyProductCard(productCard.getId()).jsonPath().getList("imported_objects", ImportObject.class)
+                    .get(0);
+            assertAll(
+                    () -> assertEquals(actionName, object.getObjectName()),
+                    () -> assertEquals(action.getActionId(), object.getObjectId()),
+                    () -> assertEquals(format("Error loading dump: Версия \"{}\" Action:{} уже существует, но с другим наполнением. Измените значение версии (\"version_arr: {}\") у импортируемого объекта и попробуйте снова.", actionVersion, actionName, convertStringVersionToIntArrayVersion(actionVersion))
+                            , object.getMessages().get(0))
+            );
+        } catch (Exception ignore) {
+
+        } finally {
+            deleteActionByName(actionName);
+        }
     }
 
     @DisplayName("Обновление продуктовой карты")
