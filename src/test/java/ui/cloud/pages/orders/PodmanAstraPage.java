@@ -23,7 +23,6 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 public class PodmanAstraPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
-    private static final String BLOCK_VM = "Виртуальные машины";
     private static final String HEADER_NAME_DB = "Имя базы данных";
     private static final String POWER = "Статус";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";

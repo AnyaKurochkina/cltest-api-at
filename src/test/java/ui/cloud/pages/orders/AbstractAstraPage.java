@@ -5,7 +5,7 @@ import models.cloud.orderService.interfaces.IProduct;
 
 public abstract class AbstractAstraPage extends IProductPage {
 
-    private static final String BLOCK_VM = "Виртуальные машины";
+    protected static final String BLOCK_VM = "Виртуальные машины";
 
     public AbstractAstraPage(IProduct product) {
         super(product);
