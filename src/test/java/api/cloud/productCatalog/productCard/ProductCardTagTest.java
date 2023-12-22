@@ -16,8 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductCardSteps.*;
 
 @Tag("product_catalog")
@@ -58,6 +57,21 @@ public class ProductCardTagTest extends Tests {
         partialUpdateProductCard(createdProductCard.getId(), new JSONObject().put("tag_list", tagList));
         createdProductCard = getProductCard(productCard.getId());
         AssertUtils.assertEqualsList(tagList, createdProductCard.getTagList());
+    }
+
+    @DisplayName("Получения списка product card с тегами")
+    @TmsLink("SOUL-8675")
+    @Test
+    public void getProductCardListWithTagListTest() {
+        List<String> tagList = Arrays.asList("product_card_tag_test_value", "product_card_tag_test_value2");
+        ProductCard.builder()
+                .name("at_api_check_tag_list_value_product_card")
+                .title("AT API Product")
+                .tagList(tagList)
+                .build()
+                .createObject();
+        List<ProductCard> productCardListWithTags = getProductCardListWithTags();
+        productCardListWithTags.forEach(x -> assertNotNull(x.getTagList()));
     }
 }
 
