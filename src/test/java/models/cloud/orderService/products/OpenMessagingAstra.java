@@ -79,6 +79,6 @@ public class OpenMessagingAstra extends IProduct {
     }
 
     public void upgradeSetup() {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("open-messaging_upgrade_setup").product(this).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("open-messaging_upgrade_setup_release").product(this).build());
     }
 }

@@ -379,6 +379,7 @@ public abstract class IProduct extends Entity {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
+        domain = OrderServiceSteps.getDomainByProject(projectId);
         this.link = link;
         return (T) this;
     }

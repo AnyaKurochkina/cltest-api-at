@@ -100,9 +100,9 @@ public class Artemis extends IProduct {
     }
 
 
-    //Перезагрузить по питанию
+    //Перезапуск кластера
     public void restart() {
-        restart("reset_vm");
+        restart("vtb-artemis_restart");
     }
 
     //Выключить принудительно
@@ -140,6 +140,24 @@ public class Artemis extends IProduct {
                 .build();
         OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_create_service").product(this).data(obj).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
+    }
+
+    public void verticalScaling() {
+        final Flavor maxFlavor = getMaxFlavor();
+        JSONObject data = JsonHelper.getJsonTemplate("/orders/artemis_vertical_scaling.json")
+                .set("$.current_flavor", flavor.getName())
+                .set("$.state_service_flavor_name", flavor.getName())
+                .set("$.state_service_ram", flavor.getMemory())
+                .set("$.state_service_cpu", flavor.getCpus())
+                .set("$.flavor", new JSONObject(maxFlavor.toString())).build();
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_vertical_scaling_cluster").product(this).data(data).build());
+        flavor = maxFlavor;
+        save();
+    }
+
+    public void switchProtocol(boolean core, boolean amqp) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb_artemis_switch_protocol").product(this)
+                .data(new JSONObject().put("AMQP", amqp).put("CORE", core)).build());
     }
 
     @Data
@@ -198,15 +216,23 @@ public class Artemis extends IProduct {
     public static String CERT_END_DATE = "data.find{it.data.config.containsKey('cert_end_date')}.data.config.cert_end_date";
 
     @SneakyThrows
-    public void updateCerts() {
+    public void updateCertsArtemis(String action) {
         Date dateBeforeUpdate;
         Date dateAfterUpdate;
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
         dateBeforeUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, CERT_END_DATE));
-        super.updateCerts("vtb-artemis_update-cert");
+        super.updateCerts(action);
         dateAfterUpdate = dateFormat.parse((String) OrderServiceSteps.getProductsField(this, CERT_END_DATE));
-        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate), "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
+        Assertions.assertEquals(-1, dateBeforeUpdate.compareTo(dateAfterUpdate),
+                "Предыдущая дата обновления сертификата больше либо равна новой дате обновления сертификата ");
+    }
 
+    public void updateCertsArtemis() {
+        updateCertsArtemis("vtb-artemis_update-cert");
+    }
+
+    public void updateExpiredCertsArtemis() {
+        updateCertsArtemis("vtb-artemis_update-expired-cert");
     }
 
     @Step("Удаление продукта")

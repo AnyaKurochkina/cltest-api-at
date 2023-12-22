@@ -213,8 +213,11 @@ public class RabbitMQClusterAstra extends IProduct {
     }
 
     public void verticalScaling() {
+        final Flavor maxFlavor = getMaxFlavor();
         JSONObject data = JsonHelper.getJsonTemplate("/orders/rabbitmq_vertical_scaling.json")
-                .set("$.flavor", new JSONObject(getMaxFlavor().toString())).build();
+                .set("$.flavor", new JSONObject(maxFlavor.toString())).build();
         OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_vertical_scaling_release").product(this).data(data).build());
+        flavor = maxFlavor;
+        save();
     }
 }
