@@ -6,7 +6,6 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
-import models.t1.s3_storage.S3StorageCreateResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -16,8 +15,6 @@ import ru.testit.annotations.Title;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.T1LoginPage;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
 @Log4j2
@@ -27,7 +24,6 @@ import java.util.Locale;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractStorageTest extends Tests {
 
-    protected static final List<S3StorageCreateResponse> bucketsForDelete = new ArrayList<>();
     protected static String projectId;
     private final String entitiesPrefix = "AT-" + this.getClass().getSimpleName();
     protected String name;
