@@ -15,14 +15,13 @@ import static core.helper.StringUtils.$x;
 
 public class WindowsPage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
-
     private static final String HEADER_CONNECT_STATUS = "Статус подключения";
     private static final SelenideElement acceptCheckBoxDeletionProtect = Selenide.$x("//*[text()='Подтвердить']");
     private static final String HEADER_PATH = "Путь";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public WindowsPage(Windows product) {
         super(product);

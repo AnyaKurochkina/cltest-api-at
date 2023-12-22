@@ -35,7 +35,7 @@ public class ServiceRestrictionTest extends Tests {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(project.getId())
                 .signIn(Role.DAY2_SERVICE_MANAGER);
     }

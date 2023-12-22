@@ -34,7 +34,7 @@ public class UiRedisAstraTest extends UiProductTest {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -125,15 +125,16 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Сбросить пароль (удалить)")
     void resetPassword() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel));
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel, "Сбросить пароль (удалить)"));
     }
+
     @Test
     @Order(7)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Сбросить пароль пользователя")
     void resetPasswordUser() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPasswordUser(RedisAstraOrderPage.userNameRedisSentinel));
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel, "Сбросить пароль пользователя"));
     }
 
     @Test
@@ -177,6 +178,7 @@ public class UiRedisAstraTest extends UiProductTest {
             redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.changeParamNotify("KEA"));
         }
     }
+
     @Test
     @Order(12)
     @TmsLink("")

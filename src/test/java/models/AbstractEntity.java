@@ -42,7 +42,8 @@ public abstract class AbstractEntity {
     private static void deleteEntity(AbstractEntity e) {
         try {
             e.delete();
-        } catch (Throwable ignored) {
+        } catch (Throwable ex) {
+            ex.printStackTrace();
         }
     }
 

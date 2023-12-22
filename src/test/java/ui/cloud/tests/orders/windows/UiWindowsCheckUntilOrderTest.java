@@ -10,8 +10,8 @@ import models.cloud.orderService.products.Windows;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.WindowsOrderPage;
 import ui.extesions.ConfigExtension;
@@ -23,13 +23,13 @@ import ui.extesions.ProductInjector;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 class UiWindowsCheckUntilOrderTest extends Tests {
-    Windows product;
+   private Windows product;
     //= Windows.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/compute/orders/8f8ca2bb-242a-46dc-8699-09f5c7fb373f/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

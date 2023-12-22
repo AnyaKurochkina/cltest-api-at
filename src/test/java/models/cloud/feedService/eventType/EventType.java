@@ -14,7 +14,7 @@ import steps.feedService.FeedServiceSteps;
 import java.util.List;
 import java.util.Objects;
 
-import static core.helper.Configure.FeedServiceURL;
+import static core.helper.Configure.feedServiceURL;
 import static steps.feedService.FeedServiceSteps.deleteEvent;
 import static steps.feedService.FeedServiceSteps.getEventList;
 
@@ -69,7 +69,7 @@ public class EventType extends Entity {
             }
             FeedServiceSteps.deleteEventType(eventTypeByName.getId());
         }
-        id = new Http(FeedServiceURL)
+        id = new Http(feedServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(feedService)
@@ -81,7 +81,7 @@ public class EventType extends Entity {
     @Override
     @Step("Удаление EventType")
     protected void delete() {
-        new Http(FeedServiceURL)
+        new Http(feedServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(feedService + id + "/")
                 .assertStatus(204);

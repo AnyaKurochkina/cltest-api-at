@@ -1,5 +1,6 @@
 package api.cloud.tarifficator;
 
+import api.Tests;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.CustomDate;
@@ -18,7 +19,6 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.tarifficator.TariffPlanSteps;
-import api.Tests;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -72,7 +72,7 @@ public class BaseTariffPlanTest extends Tests {
                 .oldTariffPlanId(tariffPlan.getOldTariffPlanId())
                 .build()
                 .toJson();
-        new Http(Configure.TarifficatorURL)
+        new Http(Configure.tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(object)
                 .post("/v1/tariff_plans")

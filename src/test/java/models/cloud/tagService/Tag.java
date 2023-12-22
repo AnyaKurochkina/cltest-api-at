@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
-import core.helper.Configure;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import lombok.*;
@@ -32,6 +31,7 @@ public class Tag extends Entity {
     String contextPath;
     @JsonIgnore @EqualsAndHashCode.Exclude @ToString.Exclude
     Context context;
+    String valueType;
 
     @Override
     public Entity init() {

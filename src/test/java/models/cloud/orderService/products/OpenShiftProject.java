@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static core.helper.Configure.OrderServiceURL;
+import static core.helper.Configure.orderServiceURL;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -104,7 +104,7 @@ public class OpenShiftProject extends IProduct {
 
     //Проверка на наличие СХД у продукта
     private boolean hasShdQuote() {
-        String jsonArray = new Http(OrderServiceURL)
+        String jsonArray = new Http(orderServiceURL)
                 .setProjectId(getProjectId(), core.enums.Role.ORDER_SERVICE_ADMIN)
                 .get(String.format("/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1&resource_type=cluster:openshift",
                         getProjectId()))

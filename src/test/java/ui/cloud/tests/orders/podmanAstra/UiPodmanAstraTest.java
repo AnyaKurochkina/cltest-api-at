@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.PodmanAstra;
+import models.cloud.orderService.products.Podman;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -34,7 +35,7 @@ public class UiPodmanAstraTest extends UiProductTest {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -51,10 +52,10 @@ public class UiPodmanAstraTest extends UiProductTest {
                     .clickOrderMore()
                     .selectCategory("Контейнеры")
                     .expandProductsList()
-                    .selectProduct(product.getProductName());
+                    .selectProduct("Podman (Astra)");
             PodmanOrderPage orderPage = new PodmanOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            //orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
@@ -163,6 +164,16 @@ public class UiPodmanAstraTest extends UiProductTest {
         PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
         podmanAstraPage.runActionWithCheckCost(CompareType.LESS, podmanAstraPage::delKeyAstrom);
     }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI Podman. Обновить ОС")
+    void updateOs() {
+        PodmanPage podmanPage = new PodmanPage(product);
+        podmanPage.runActionWithCheckCost(CompareType.EQUALS, podmanPage::updateOs);
+    }
+
 
     @Test
     @Order(100)

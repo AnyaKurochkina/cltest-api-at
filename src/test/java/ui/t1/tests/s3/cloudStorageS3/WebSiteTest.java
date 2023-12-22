@@ -1,11 +1,12 @@
-package ui.t1.tests.cloudStorageS3;
+package ui.t1.tests.s3.cloudStorageS3;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.S3Storage.Objects.ObjectsModal.AccessLevel;
+import ui.t1.pages.S3Storage.Objects.AccessBucketLevel;
+import ui.t1.tests.s3.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -25,12 +26,12 @@ public class WebSiteTest extends AbstractStorageTest {
 
                 .gotoObjectsLayer()
 
-                .uploadObject()
-                .addObject("src/test/resources/s3files/index.html", AccessLevel.READFORALL)
+                .clickUploadObject()
+                .addObject("src/test/resources/s3files/index.html", AccessBucketLevel.READ_FOR_ALL)
                 .checkObjectExists("index.html", true)
 
-                .uploadObject()
-                .addObject("src/test/resources/s3files/error.html", AccessLevel.READFORALL)
+                .clickUploadObject()
+                .addObject("src/test/resources/s3files/error.html", AccessBucketLevel.READ_FOR_ALL)
                 .checkObjectExists("error.html", true)
                 .gotoWebSiteLayerr()
 
@@ -55,8 +56,8 @@ public class WebSiteTest extends AbstractStorageTest {
 
                 .gotoObjectsLayer()
 
-                .uploadObject()
-                .addObjects( AccessLevel.READFORALL,
+                .clickUploadObject()
+                .addObjects( AccessBucketLevel.READ_FOR_ALL,
                         "src/test/resources/s3files/index.html",
                         "src/test/resources/s3files/index1.html",
                         "src/test/resources/s3files/error.html",

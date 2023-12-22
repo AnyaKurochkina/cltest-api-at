@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.GenericDatabase;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -30,11 +29,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_generic_database")})
 public class UiGenericDatabaseTest extends UiProductTest {
 
-    GenericDatabase product;// = GenericDatabase.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/a5204c6a-6f7e-4284-a432-1f79e88d7cfd/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private GenericDatabase product;// = GenericDatabase.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/a5204c6a-6f7e-4284-a432-1f79e88d7cfd/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -189,7 +188,7 @@ public class UiGenericDatabaseTest extends UiProductTest {
     @DisplayName("UI GenericDatabase. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         GenericDatabasePage genericDatabasePage = new GenericDatabasePage(product);
-        genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, ()-> genericDatabasePage.issueClientCertificate("Certificate"));
+        genericDatabasePage.runActionWithCheckCost(CompareType.EQUALS, () -> genericDatabasePage.issueClientCertificate("Certificate"));
     }
 
     @Test
