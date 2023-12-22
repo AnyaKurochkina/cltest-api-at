@@ -10,7 +10,6 @@ import models.cloud.orderService.products.Grafana;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -31,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_Grafana")})
 public class UiGrafanaTest extends UiProductTest {
 
-    Grafana product; // = Grafana.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/5b2343c6-7c16-4fdf-8a03-4f5a0295f16d/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private Grafana product; // = Grafana.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/5b2343c6-7c16-4fdf-8a03-4f5a0295f16d/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -213,15 +212,16 @@ public class UiGrafanaTest extends UiProductTest {
     @DisplayName("UI Grafana. Выпустить клиентский сертификат")
     void issueClientCertificate() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
-        grafanaPage.runActionWithCheckCost(CompareType.EQUALS,  () -> grafanaPage.issueClientCertificate("Cert"));
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS, () -> grafanaPage.issueClientCertificate("Cert"));
     }
+
     @Test
     @Order(15)
     @TmsLink("")
     @DisplayName("UI Grafana. Обновить ОС")
     void updateOs() {
         GrafanaPage grafanaPage = new GrafanaPage(product);
-        grafanaPage.runActionWithCheckCost(CompareType.EQUALS,  grafanaPage::updateOs);
+        grafanaPage.runActionWithCheckCost(CompareType.EQUALS, grafanaPage::updateOs);
     }
 
     @Test

@@ -1,8 +1,13 @@
 package ui.cloud.pages.orders;
+
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.TarantoolDataGrid;
-import ui.elements.*;
+import ui.elements.Button;
+import ui.elements.Dialog;
+import ui.elements.Select;
+import ui.elements.Table;
+
 import static core.helper.StringUtils.$x;
 
 public class TarantoolDataGridAstraPage extends IProductPage {
@@ -12,10 +17,10 @@ public class TarantoolDataGridAstraPage extends IProductPage {
     private static final String HEADER_CONF_CLUSTER = "Конфигурация кластера";
     private static final String STATUS = "Статус";
     protected Button btnCluster = Button.byElement(Selenide.$x("//button[.='Кластер']"));
-    String instance = "zorg-core-01";
+    private final String instance = "zorg-core-01";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public TarantoolDataGridAstraPage(TarantoolDataGrid product) {
         super(product);
@@ -25,6 +30,7 @@ public class TarantoolDataGridAstraPage extends IProductPage {
     protected void checkPowerStatus(String expectedStatus) {
         new TarantoolDataGridAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(expectedStatus);
     }
+
     public void delete() {
         runActionWithParameters(getActionsMenuButton("",2), "Удалить рекурсивно", "Удалить", () ->
         {

@@ -15,7 +15,6 @@ import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -33,7 +32,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
 
-    PostgresSQLCluster product;// =PostgresSQLCluster.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/7efe0c78-35a9-429a-a428-dc4d740ad5a8/main?context=proj-mq4fb3xa5w&type=project&org=vtb");
+    private PostgresSQLCluster product;// =PostgresSQLCluster.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/7efe0c78-35a9-429a-a428-dc4d740ad5a8/main?context=proj-mq4fb3xa5w&type=project&org=vtb");
     String nameDb = "at_db";
     String nameSlot = "at_slot";
     String limit = "20";
@@ -67,7 +66,7 @@ public class UiPostgreSqlClusterAstraLinuxTest extends UiProductTest {
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            if (product.isDev() || product.isTest() )
+            if (product.isDev() || product.isTest())
                 orderPage.getGroupSelect().set(accessGroup);
             if (product.isDev())
                 orderPage.getRoleSelect().set("user");

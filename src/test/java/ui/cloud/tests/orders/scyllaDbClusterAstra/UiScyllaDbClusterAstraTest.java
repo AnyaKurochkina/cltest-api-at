@@ -7,14 +7,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ScyllaDbCluster;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -30,9 +28,9 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_scylla_db_cluster_astra")})
 public class UiScyllaDbClusterAstraTest extends UiProductTest {
 
-    ScyllaDbCluster product; // =ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba6960f7-b68c-4920-8d14-d2819060424f/main?context=proj-ln4zg69jek&type=project&org=vtb");
-    String nameDb = "at_db";
-    String shortNameUserDB = "at_user";
+    private ScyllaDbCluster product; // =ScyllaDbCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba6960f7-b68c-4920-8d14-d2819060424f/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private final String nameDb = "at_db";
+    private final String shortNameUserDB = "at_user";
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -59,7 +57,7 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            if(product.isDev())
+            if (product.isDev())
                 orderPage.getGroupSelect().set(accessGroup);
             preBillingProductPrice = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             orderPage.orderClick();

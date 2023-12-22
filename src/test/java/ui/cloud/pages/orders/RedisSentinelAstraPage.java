@@ -3,7 +3,6 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.cloud.orderService.products.Redis;
 import models.cloud.orderService.products.RedisSentinel;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -35,14 +34,13 @@ public class RedisSentinelAstraPage extends IProductPage {
     private static final String HEADER_COMMENTS = "Комментарий";
 
 
-
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
-    SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
-    SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
+    private final SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    private final SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
+    private final SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
+    private final SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
 
 
     public RedisSentinelAstraPage(RedisSentinel product) {
@@ -74,15 +72,16 @@ public class RedisSentinelAstraPage extends IProductPage {
     }
 
     public void resetPasswordSentinel(String name) {
-        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton(name, 2), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");
         });
     }
+
     public void resetPassword(String name) {
-        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль пользователя", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton(name, 2), "Сбросить пароль пользователя", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль пользователя");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -90,13 +89,14 @@ public class RedisSentinelAstraPage extends IProductPage {
         });
     }
 
-    public void deleteUser(String name){
-        runActionWithParameters(getActionsMenuButton(name,2), "Удалить пользователя", "Подтвердить", () -> {
+    public void deleteUser(String name) {
+        runActionWithParameters(getActionsMenuButton(name, 2), "Удалить пользователя", "Подтвердить", () -> {
         });
         btnGeneralInfo.click();
-        Assertions.assertFalse(getActionsMenuButton(name,2).exists(), "Ошибка удаления пользователя БД");
+        Assertions.assertFalse(getActionsMenuButton(name, 2).exists(), "Ошибка удаления пользователя БД");
     }
-    public void createUser (String nameUser){
+
+    public void createUser(String nameUser) {
         runActionWithParameters(BLOCK_DB_USERS, "Создать пользователя", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Создать пользователя");
             dlg.setInputValue("Пользователь", nameUser);
@@ -106,6 +106,7 @@ public class RedisSentinelAstraPage extends IProductPage {
         btnGeneralInfo.click();
         Assertions.assertTrue(getActionsMenuButton(nameUser).exists(), "Пользователь не существует");
     }
+
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
@@ -114,6 +115,7 @@ public class RedisSentinelAstraPage extends IProductPage {
         });
         new RedisSentinelAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
+
     public void updateOs() {
         runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
         new RedisSentinelAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
@@ -171,6 +173,7 @@ public class RedisSentinelAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
     public void changeConfigurationSentinel() {
         new RedisSentinelAstraPage.VirtualMachineTable().checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
@@ -184,8 +187,8 @@ public class RedisSentinelAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
-    public  void changeParamNotify(String param)
-    {
+
+    public void changeParamNotify(String param) {
         new RedisSentinelAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisSentinelAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
             Select.byLabel("Параметр notify-keyspace-events").set(param);

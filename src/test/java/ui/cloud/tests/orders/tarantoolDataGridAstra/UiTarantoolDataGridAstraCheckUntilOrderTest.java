@@ -5,14 +5,12 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.TarantoolDataGrid;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.AstraLinuxOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.TarantoolDataGridAstraOrderPage;
 import ui.extesions.ConfigExtension;
@@ -25,7 +23,7 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("ui_tarantool_data_grid_astra")})
 class UiTarantoolDataGridAstraCheckUntilOrderTest extends Tests {
 
-    TarantoolDataGrid product;
+   private TarantoolDataGrid product;
     //product = TarantoolDataGrid.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach

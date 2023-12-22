@@ -3,13 +3,10 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import core.helper.Configure;
 import io.qameta.allure.Step;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Grafana;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import org.openqa.selenium.NotFoundException;
 import ui.elements.*;
 
 import java.net.MalformedURLException;
@@ -27,11 +24,11 @@ public class GrafanaPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_CONSOLE = "Точка подключения";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
-    SelenideElement usernameInput = Selenide.$x("//input[@name='user']");
-    SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
+    private final SelenideElement usernameInput = Selenide.$x("//input[@name='user']");
+    private final SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public GrafanaPage(Grafana product) {
         super(product);
@@ -59,6 +56,7 @@ public class GrafanaPage extends IProductPage {
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
     }
+
     public void updateOs() {
         new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
@@ -87,6 +85,7 @@ public class GrafanaPage extends IProductPage {
         });
         new GrafanaPage.VirtualMachineTable(STATUS).checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
+
     public void reInventory() {
         new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
@@ -94,13 +93,14 @@ public class GrafanaPage extends IProductPage {
     }
 
     public void openPointConnect() throws MalformedURLException, InterruptedException {
-        String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url);
-        signIn("admin","admin");
+        signIn("admin", "admin");
         Selenide.$x("//span[text()='Skip']").shouldBe(Condition.visible).click();
         Selenide.$x("//h1[text()='Welcome to Grafana']").shouldBe(Condition.visible);
     }
-    private void signIn(String user, String password){
+
+    private void signIn(String user, String password) {
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
@@ -115,7 +115,7 @@ public class GrafanaPage extends IProductPage {
         });
         btnGeneralInfo.click();
         new Table("Имя").getRow(0).get().scrollIntoView(scrollCenter).click();
-        Assertions.assertTrue(getTableByHeader(BLOCK_SNAPSHOT).isColumnValueContains("Тип","snapshot"));
+        Assertions.assertTrue(getTableByHeader(BLOCK_SNAPSHOT).isColumnValueContains("Тип", "snapshot"));
     }
 
     public void deleteSnapshot() {
@@ -177,9 +177,10 @@ public class GrafanaPage extends IProductPage {
         Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
                 role));
     }
+
     public void resetPassword() {
         new GrafanaPage.VirtualMachineTable().checkPowerStatus(GrafanaPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(getActionsMenuButton("Пользователи",1), "Сбросить пароль", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton("Пользователи", 1), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
@@ -218,6 +219,7 @@ public class GrafanaPage extends IProductPage {
         public VirtualMachineTable() {
             super("Роли узла");
         }
+
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

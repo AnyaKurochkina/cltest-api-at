@@ -30,21 +30,22 @@ public class S3CephTenantPage extends IProductPage {
     private static final String HEADER_LIST_POLICY = "Список политик";
     private static final String HEADER_RIGHTS = "Права";
     private static final String HEADER_RULE = "Имя правила";
-    String nameRuleLifeCycle = "name";
+    private final String nameRuleLifeCycle = "name";
 
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement btnAccessPolicy = $x("//button[.='Политики доступа']");
-    Button btnRule = Button.byText("Правила жизненного цикла");
-    Button btnRuleCorse = Button.byText("Правила CORS");
-    SelenideElement generatePassButton1 = $x("//button[@aria-label='generate']");
-    SelenideElement generatePassButton2 = $x("(//button[@aria-label='generate'])[2]");
+    private final SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    private final SelenideElement btnAccessPolicy = $x("//button[.='Политики доступа']");
+    private final Button btnRule = Button.byText("Правила жизненного цикла");
+    private final Button btnRuleCorse = Button.byText("Правила CORS");
+    private final SelenideElement generatePassButton1 = $x("//button[@aria-label='generate']");
+    private final SelenideElement generatePassButton2 = $x("(//button[@aria-label='generate'])[2]");
 
     public S3CephTenantPage(S3Ceph product) {
         super(product);
     }
 
     @Override
-    protected void checkPowerStatus(String expectedStatus) {}
+    protected void checkPowerStatus(String expectedStatus) {
+    }
 
     public SelenideElement getRoleNode() {
         return new Table("Версионирование").getRow(0).get();
@@ -171,7 +172,7 @@ public class S3CephTenantPage extends IProductPage {
         generalInfoTab.switchTo();
         getRoleNode().click();
         btnRule.click();
-        Assertions.assertFalse(new Table(HEADER_NAME_RULE).isColumnValueContains(HEADER_NAME_RULE,nameRuleLifeCycle), "Ошибка удаления правила ");
+        Assertions.assertFalse(new Table(HEADER_NAME_RULE).isColumnValueContains(HEADER_NAME_RULE, nameRuleLifeCycle), "Ошибка удаления правила ");
     }
 
     public void addUser(String name) {

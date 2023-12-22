@@ -5,17 +5,13 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.orderService.products.KafkaService;
-import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.ApacheKafkaClusterOrderPage;
 import ui.cloud.pages.orders.KafkaServiceOrderPage;
-import ui.cloud.pages.orders.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 
@@ -27,7 +23,7 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("ui_Kafka_service")})
 class UiKafkaServiceCheckUntilOrderTest extends Tests {
 
-    KafkaService product; // = KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/1e521f86-97f9-4bef-bea4-136aa41d5053/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private KafkaService product; // = KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/1e521f86-97f9-4bef-bea4-136aa41d5053/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
 
     @BeforeEach

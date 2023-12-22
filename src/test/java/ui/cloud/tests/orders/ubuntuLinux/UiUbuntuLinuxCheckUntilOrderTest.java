@@ -6,13 +6,12 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.Ubuntu;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.UbuntuLinuxOrderPage;
 import ui.extesions.ConfigExtension;
@@ -25,7 +24,7 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
 class UiUbuntuLinuxCheckUntilOrderTest extends Tests {
 
-    Ubuntu product;
+    private Ubuntu product;
     //product = Ubuntu.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach

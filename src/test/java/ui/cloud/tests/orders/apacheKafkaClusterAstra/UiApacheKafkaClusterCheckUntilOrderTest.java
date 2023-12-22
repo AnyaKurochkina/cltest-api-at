@@ -9,7 +9,8 @@ import models.cloud.orderService.products.ApacheKafkaCluster;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.ApacheKafkaClusterOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.extesions.ConfigExtension;
@@ -23,7 +24,7 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("ui_ApacheKafkaCluster")})
 class UiApacheKafkaClusterCheckUntilOrderTest extends Tests {
 
-    ApacheKafkaCluster product;
+    private ApacheKafkaCluster product;
     //= ApacheKafkaCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/25771046-8bce-407d-bbcd-7ca3fe38a051/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
 

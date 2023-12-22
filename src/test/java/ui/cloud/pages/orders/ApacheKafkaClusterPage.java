@@ -38,14 +38,14 @@ public class ApacheKafkaClusterPage extends IProductPage {
     private static final String HEADER_QUOTAS = "Размер квоты producer (байт/с)";
 
 
-    SelenideElement btnTopics = $x("//button[.='Топики']");
-    SelenideElement btnAclTopics = $x("//button[.='ACL на топики']");
-    SelenideElement btnAclTrans = $x("//button[.='ACL на транзакции']");
-    SelenideElement btnIdempAcl = $x("//button[.='Идемпотентные ACL']");
-    SelenideElement btnQuotas = $x("//button[.='Квоты']");
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
-    SelenideElement btnAdd = $x("//button[contains(@class, 'array-item-add')]");
+    private final SelenideElement btnTopics = $x("//button[.='Топики']");
+    private final SelenideElement btnAclTopics = $x("//button[.='ACL на топики']");
+    private final SelenideElement btnAclTrans = $x("//button[.='ACL на транзакции']");
+    private final SelenideElement btnIdempAcl = $x("//button[.='Идемпотентные ACL']");
+    private final SelenideElement btnQuotas = $x("//button[.='Квоты']");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement btnAdd = $x("//button[contains(@class, 'array-item-add')]");
 
 
     public ApacheKafkaClusterPage(ApacheKafkaCluster product) {
@@ -110,6 +110,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
     public void horizontalScaling() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
@@ -121,6 +122,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         });
 
     }
+
     public void changeNameCluster(String name) {
         runActionWithParameters(BLOCK_CLUSTER, "Изменить имя кластера", "Подтвердить", () -> {
             Dialog dlg = new Dialog("Изменить имя кластера");
@@ -164,7 +166,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     public void updateKernelVtb() {
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновление ядра Kafka до версии 2.8.2", "Подтвердить", () -> {
-           CheckBox.byLabel("Я прочитал предупреждение выше и понимаю, что я делаю.").setChecked(true);
+            CheckBox.byLabel("Я прочитал предупреждение выше и понимаю, что я делаю.").setChecked(true);
         });
         new VirtualMachineTable(STATUS).checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -397,7 +399,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
     }
 
     public void createQuotas(String name) {
-     btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         if (!(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueContains(HEADER_ACL_IDEMPOTENT, name))) {
             runActionWithParameters("Квоты", "Пакетное создание квот Kafka", "Подтвердить", () -> {
                 RadioGroup.byLabel("Выберите квоту").select("По умолчанию (все клиенты)");
@@ -410,11 +412,11 @@ public class ApacheKafkaClusterPage extends IProductPage {
     }
 
     public void deleteQuotas(String name) {
-     btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-            runActionWithParameters("Квоты", "Пакетное удаление квот Kafka", "Подтвердить", () -> {
-                RadioGroup.byLabel("Выберите квоту").select("По умолчанию (все клиенты)");
-            });
-            btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+        runActionWithParameters("Квоты", "Пакетное удаление квот Kafka", "Подтвердить", () -> {
+            RadioGroup.byLabel("Выберите квоту").select("По умолчанию (все клиенты)");
+        });
+        btnQuotas.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         btnIdempAcl.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         Assertions.assertFalse(new Table(HEADER_ACL_IDEMPOTENT).isColumnValueEquals("", name), "Ошибка удаления квоты");
 

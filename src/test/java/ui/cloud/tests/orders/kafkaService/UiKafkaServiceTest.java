@@ -5,33 +5,30 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.ApacheKafkaCluster;
 import models.cloud.orderService.products.KafkaService;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.*;
+import ui.cloud.pages.orders.KafkaServiceOrderPage;
+import ui.cloud.pages.orders.KafkaServicePage;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.OrdersPage;
 import ui.elements.Graph;
-import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
 
 import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
-import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
 @Feature("KafkaService")
 @Tags({@Tag("ui"), @Tag("KafkaService")})
 public class UiKafkaServiceTest extends UiProductTest {
 
-    String name="acl";
-
-    KafkaService product;// = KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/1e521f86-97f9-4bef-bea4-136aa41d5053/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private final String name = "acl";
+    private KafkaService product;// = KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/1e521f86-97f9-4bef-bea4-136aa41d5053/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -91,7 +88,7 @@ public class UiKafkaServiceTest extends UiProductTest {
     @DisplayName("UI KafkaService.Пакетное создание ACL")
     void createAclTrans() {
         KafkaServicePage servicePage = new KafkaServicePage(product);
-        servicePage.runActionWithCheckCost(CompareType.EQUALS, () ->servicePage.createBatchAcl(name));
+        servicePage.runActionWithCheckCost(CompareType.EQUALS, () -> servicePage.createBatchAcl(name));
     }
 
     @Test
@@ -100,7 +97,7 @@ public class UiKafkaServiceTest extends UiProductTest {
     @DisplayName("UI KafkaService.Пакетное создание групповой ACL")
     void createGroupAcl() {
         KafkaServicePage servicePage = new KafkaServicePage(product);
-        servicePage.runActionWithCheckCost(CompareType.EQUALS, () ->servicePage.createGroupAcl(name));
+        servicePage.runActionWithCheckCost(CompareType.EQUALS, () -> servicePage.createGroupAcl(name));
     }
 
 
@@ -130,4 +127,4 @@ public class UiKafkaServiceTest extends UiProductTest {
         KafkaServicePage servicePage = new KafkaServicePage(product);
         servicePage.runActionWithCheckCost(CompareType.ZERO, servicePage::delete);
     }
- }
+}

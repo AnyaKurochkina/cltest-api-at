@@ -8,7 +8,10 @@ import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.*;
+import ui.elements.Dialog;
+import ui.elements.DropDown;
+import ui.elements.Select;
+import ui.elements.Table;
 
 import java.util.List;
 
@@ -23,8 +26,8 @@ public class PodmanPage extends IProductPage {
     private static final String POWER = "Статус";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public PodmanPage(Podman product) {
         super(product);
@@ -154,9 +157,7 @@ public class PodmanPage extends IProductPage {
                 value));
     }
     public void updateOs() {
-        runActionWithParameters(BLOCK_APP, "Обновить ОС", "Подтвердить", () -> {
-           // CheckBox.byLabel("Я подтверждаю, что уведомлен, что в процессе выполнения действия может быть выполнена последовательная перезагрузка нод кластера").setChecked(true);
-        });
+        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
     }
 
     public class VirtualMachineTable extends VirtualMachine {

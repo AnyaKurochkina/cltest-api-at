@@ -33,9 +33,8 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_Etcd")})
 public class UiEtcdTest extends UiProductTest {
 
-    Etcd product;// = Etcd.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/48c224c9-38cf-4dc1-b78c-bb14e47985cf/main?context=proj-iv550odo9a&type=project&org=vtb");
-    String nameUser = "at_user";
-
+    private Etcd product;// = Etcd.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/48c224c9-38cf-4dc1-b78c-bb14e47985cf/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private final String nameUser = "at_user";
 
 
     @BeforeEach

@@ -26,7 +26,7 @@ import java.time.Duration;
 @Tags({@Tag("ui"), @Tag("ui_s3_ceph_tenant")})
 public class UiS3CephTenantTest extends UiProductTest {
 
-    S3Ceph product;// = S3Ceph.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/object_storage/orders/0c8f067e-8b4e-4ab3-b469-69694702c34c/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private S3Ceph product;// = S3Ceph.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/object_storage/orders/0c8f067e-8b4e-4ab3-b469-69694702c34c/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -205,7 +205,7 @@ public class UiS3CephTenantTest extends UiProductTest {
     @TmsLink("891766")
     @DisplayName("UI S3CephTenant. Удалить тенант")
     void deleteTenant() {
-        S3CephTenantPage s3CepthPages = new S3CephTenantPage (product);
+        S3CephTenantPage s3CepthPages = new S3CephTenantPage(product);
         s3CepthPages.runActionWithCheckCost(CompareType.LESS, () -> s3CepthPages.deleteTenant());
     }
 }

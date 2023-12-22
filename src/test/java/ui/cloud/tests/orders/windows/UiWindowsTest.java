@@ -30,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product;
+    private Windows product;
     //=Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/d83b7cd3-f4c0-4797-a922-6d3ab3bfe780/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
@@ -255,6 +255,7 @@ public class UiWindowsTest extends UiProductTest {
         WindowsPage winPage = new WindowsPage(product);
         winPage.deleteKeyAstrom();
     }
+
     @Test
     @Order(20)
     @TmsLink("")

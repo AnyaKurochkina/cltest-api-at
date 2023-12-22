@@ -22,7 +22,7 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui_redis_astra")})
 class UiRedisAstraCheckUntilOrderTest extends Tests {
 
-    Redis product;
+    private Redis product;
     // =Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach

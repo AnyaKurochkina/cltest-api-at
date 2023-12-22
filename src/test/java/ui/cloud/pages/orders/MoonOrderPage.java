@@ -10,9 +10,9 @@ import java.util.UUID;
 @Getter
 public class MoonOrderPage extends NewOrderPage {
 
-    DropDown cluster = DropDown.byLabel("Кластер OpenShift");
-    Input countSession = Input.byLabel("Количество параллельных сессий");
-    Input projectName = Input.byLabel("Имя проекта");
+    private final DropDown cluster = DropDown.byLabel("Кластер OpenShift");
+    private final Input countSession = Input.byLabel("Количество параллельных сессий");
+    private final Input projectName = Input.byLabel("Имя проекта");
 
     String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 

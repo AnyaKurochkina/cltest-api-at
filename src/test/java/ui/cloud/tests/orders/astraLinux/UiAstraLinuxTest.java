@@ -8,7 +8,6 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Astra;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
@@ -30,7 +29,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_astra_linux")})
 public class UiAstraLinuxTest extends UiProductTest {
 
-    Astra product;//= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/ad94c8ba-573d-4857-84b9-f10282b7624f/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private Astra product;//= Astra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/compute/orders/ad94c8ba-573d-4857-84b9-f10282b7624f/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -181,6 +180,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::deleteSnapshot);
     }
+
     @Test
     @Order(15)
     @TmsLink("")
@@ -189,6 +189,7 @@ public class UiAstraLinuxTest extends UiProductTest {
         AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
         astraLinuxPage.runActionWithCheckCost(CompareType.EQUALS, astraLinuxPage::updateOs);
     }
+
     @Test
     @Order(16)
     @TmsLink("1723138")

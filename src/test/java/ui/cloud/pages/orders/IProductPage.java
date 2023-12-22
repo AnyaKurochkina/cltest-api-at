@@ -40,17 +40,17 @@ public abstract class IProductPage {
     private static final String HEADER_GROUP = "Группы";
     protected final SelenideElement prebillingCostElement = Selenide
             .$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[(contains(.,'₽/сут.') and contains(.,',')) or text()='без изменений']");
-    private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
+    public final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
     protected Tab generalInfoTab = Tab.byText("Общая информация");
     protected Tab historyTab = Tab.byText("История действий");
     IProduct product;
-    SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
-    SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
-    Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
-    SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
-    SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
+    public final SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
+    public final SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
+    public final Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
+    public final SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
+    public final SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
@@ -363,32 +363,7 @@ public abstract class IProductPage {
             Assertions.assertEquals(0.0d, getOrderCost(), 0.001d);
         }
     }
-    @SneakyThrows
-    @Step("Запуск действия с проверкой стоимости")
-    public void runActionWithCheckCost(CompareType type, Executable executable,ActionParameters params) {
-        TypifiedElement.refreshPage();
-        waitChangeStatus();
-        double currentCost = getOrderCost();
-        executable.execute();
-        if (prebillingCostValue == null)
-            return;
-        TypifiedElement.refreshPage();
-//        currentOrderCost.shouldBe(Condition.matchText(doubleToString(prebillingCostValue)), Duration.ofMinutes(10));
-        Waiting.find(() -> prebillingCostValue.equals(getOrderCost()), Duration.ofMinutes(5),
-                "Стоимость предбиллинга экшена не равна стоимости после выполнения действия");
-        if (currentCost == prebillingCostValue && prebillingCostValue == 0)
-            return;
-        if (type == CompareType.MORE)
-            Assertions.assertTrue(prebillingCostValue > currentCost, String.format("%f <= %f", prebillingCostValue, currentCost));
-        else if (type == CompareType.LESS)
-            Assertions.assertTrue(prebillingCostValue < currentCost, String.format("%f >= %f", prebillingCostValue, currentCost));
-        else if (type == CompareType.EQUALS)
-            Assertions.assertEquals(prebillingCostValue, currentCost, 0.01d);
-        else if (type == CompareType.ZERO) {
-            Assertions.assertEquals(0.0d, prebillingCostValue, 0.001d);
-            Assertions.assertEquals(0.0d, getOrderCost(), 0.001d);
-        }
-    }
+
     @Step("Проверка выполнения действия {action}")
     public void checkLastAction(String action) {
         History history = new History();

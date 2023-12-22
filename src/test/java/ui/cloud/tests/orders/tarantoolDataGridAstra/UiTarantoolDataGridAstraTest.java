@@ -5,23 +5,20 @@ import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.TarantoolDataGrid;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.*;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.OrdersPage;
+import ui.cloud.pages.orders.TarantoolDataGridAstraOrderPage;
+import ui.cloud.pages.orders.TarantoolDataGridAstraPage;
 import ui.elements.Graph;
-import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
 
 import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
@@ -30,7 +27,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_tarantool_data_grid_astra")})
 public class UiTarantoolDataGridAstraTest extends UiProductTest {
 
-    TarantoolDataGrid product; // = TarantoolDataGrid.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/db/orders/6da3b2b7-d956-4f5c-83a3-11b7b2da9490/main?context=proj-gxsz4e3shy&type=project&org=vtb");
+    private TarantoolDataGrid product; // = TarantoolDataGrid.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/db/orders/6da3b2b7-d956-4f5c-83a3-11b7b2da9490/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
