@@ -17,7 +17,7 @@ import java.util.List;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class AstraLinuxPage extends IProductPage {
+public class AstraLinuxPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_SNAPSHOT = "Снапшоты";
@@ -117,16 +117,6 @@ public class AstraLinuxPage extends IProductPage {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
-    }
-
-    public void addKeyAstrom() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
-    }
-
-    public void delKeyAstrom() {
-        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")

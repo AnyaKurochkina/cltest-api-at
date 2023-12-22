@@ -17,7 +17,7 @@ import java.util.List;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class UbuntuLinuxPage extends IProductPage {
+public class UbuntuLinuxPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String HEADER_NAME_DB = "Имя базы данных";
@@ -84,16 +84,6 @@ public class UbuntuLinuxPage extends IProductPage {
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_OFF);
-    }
-
-    public void addKeyAstrom() {
-        checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
-    }
-
-    public void delKeyAstrom() {
-        checkPowerStatus(UbuntuLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")
