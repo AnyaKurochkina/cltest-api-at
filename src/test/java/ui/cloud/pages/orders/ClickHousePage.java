@@ -110,8 +110,7 @@ public class ClickHousePage extends IProductPage {
         Assertions.assertEquals(String.valueOf(value), getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-        Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
-                String.valueOf(value)));
+        getTableByHeader("Дополнительные диски").asserts().checkColumnContainsValue(HEADER_DISK_SIZE, String.valueOf(value));
     }
 
     public void resetPasswordDb() {
