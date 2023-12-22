@@ -30,7 +30,7 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_redis_astra")})
 public class UiRedisAstraTest extends UiProductTest {
 
-    Redis product = Redis.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/1b3823b6-4860-4bbf-a3e9-ef750c218584/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private Redis product;// = Redis.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/9121cf13-4723-4bd7-9ea7-77319da23191/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

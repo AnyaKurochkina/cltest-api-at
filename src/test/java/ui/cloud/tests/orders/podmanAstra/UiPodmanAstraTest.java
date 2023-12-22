@@ -31,7 +31,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_podman_astra")})
 public class UiPodmanAstraTest extends UiProductTest {
 
-    PodmanAstra product = PodmanAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/92155aeb-773d-4a86-9c17-d9237d6e35b3/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private PodmanAstra product;// = PodmanAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/92155aeb-773d-4a86-9c17-d9237d6e35b3/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -52,10 +52,10 @@ public class UiPodmanAstraTest extends UiProductTest {
                     .clickOrderMore()
                     .selectCategory("Контейнеры")
                     .expandProductsList()
-                    .selectProduct("Podman (Astra)");
+                    .selectProduct(product.getProductName());
             PodmanOrderPage orderPage = new PodmanOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            //orderPage.getOsVersionSelect().set(product.getOsVersion());
+            orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
@@ -150,6 +150,15 @@ public class UiPodmanAstraTest extends UiProductTest {
     @Test
     @Order(8)
     @TmsLink("")
+    @DisplayName("UI Podman. Обновить ОС")
+    void updateOs() {
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.EQUALS, podmanAstraPage::updateOs);
+    }
+
+    @Test
+    @Order(9)
+    @TmsLink("")
     @DisplayName("UI PodmanAstra. Установить Ключ-Астром")
     void addKeyAstrom() {
         PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
@@ -157,23 +166,13 @@ public class UiPodmanAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     @TmsLink("")
     @DisplayName("UI PodmanAstra. Удалить Ключ-Астром")
     void delKeyAstrom() {
         PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
         podmanAstraPage.runActionWithCheckCost(CompareType.LESS, podmanAstraPage::delKeyAstrom);
     }
-
-    @Test
-    @Order(11)
-    @TmsLink("")
-    @DisplayName("UI Podman. Обновить ОС")
-    void updateOs() {
-        PodmanPage podmanPage = new PodmanPage(product);
-        podmanPage.runActionWithCheckCost(CompareType.EQUALS, podmanPage::updateOs);
-    }
-
 
     @Test
     @Order(100)
