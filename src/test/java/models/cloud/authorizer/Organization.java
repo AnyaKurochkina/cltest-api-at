@@ -9,7 +9,7 @@ import lombok.Getter;
 import models.Entity;
 import org.json.JSONObject;
 
-import static core.helper.Configure.ResourceManagerURL;
+import static core.helper.Configure.resourceManagerURL;
 
 @Builder
 @Getter
@@ -33,7 +33,7 @@ public class Organization extends Entity {
     @Override
     @Step("Получение организации")
     protected void create() {
-        JsonPath path = new Http(ResourceManagerURL)
+        JsonPath path = new Http(resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/organizations?page=1&per_page=25")
                 .assertStatus(200)

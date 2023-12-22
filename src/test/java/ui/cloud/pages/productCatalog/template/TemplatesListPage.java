@@ -63,7 +63,7 @@ public class TemplatesListPage extends EntityListPage {
     @Step("Проверка заголовков списка шаблонов")
     public TemplatesListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Описание", "Теги", "", "");
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Описание", "Теги", "", "");
         return this;
     }
 

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Assertions;
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.productCatalog.VisualTemplateSteps.*;
 
@@ -86,7 +86,7 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
             partialUpdateVisualTemplate(objectId, new JSONObject().put("is_active", false));
             deleteVisualTemplateById(objectId);
         }
-        ItemVisualTemplate itemVisualTemplate = new Http(ProductCatalogURL)
+        ItemVisualTemplate itemVisualTemplate = new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post("/api/v1/item_visual_templates/")

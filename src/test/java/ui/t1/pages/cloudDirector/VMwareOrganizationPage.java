@@ -51,7 +51,7 @@ public class VMwareOrganizationPage {
         new UsersTable().clickAdd();
         Dialog.byTitle("Добавить пользователя")
                 .setInputValue("Логин локального пользователя", login)
-                .setSelectValue(new Select(roleDropDown), role)
+                .setSelectValue(Select.byLabel("Роль"), role)
                 .setInputValue("Пароль", password)
                 .setInputValue("Подтверждение пароля", password)
                 .clickButton("Добавить");
@@ -111,7 +111,7 @@ public class VMwareOrganizationPage {
         Dialog.byTitle("Редактировать пользователя")
                 .setInputValue("ФИО", fio)
                 .setInputValue("Email", email)
-                .setSelectValue(new Select(roleDropDown), role)
+                .setSelectValue(Select.byLabel("Роль"), role)
                 .clickButton("Сохранить");
         TestUtils.wait(2000);
         assertTrue(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, login), "Пользователь отсутсвует.");

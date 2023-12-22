@@ -7,7 +7,7 @@ import models.cloud.productCatalog.product.Product;
 import org.json.JSONObject;
 import steps.Steps;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 
 public class ProductPrivateSteps extends Steps {
 
@@ -16,7 +16,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Получение действия по Id")
     public static Product getProductPrivateById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .get(adminUrl + objectId + "/")
                 .extractAs(Product.class);
@@ -24,7 +24,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Получение действия по имени {name}")
     public static Product getProductPrivateByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .get(adminUrlV2 + name + "/")
                 .extractAs(Product.class);
@@ -32,7 +32,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Создание действия")
     public static Product createProductPrivate(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .body(body)
                 .post(adminUrl)
@@ -42,7 +42,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Создание действия")
     public static Product createProductPrivateV2(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .body(body)
                 .post(adminUrlV2)
@@ -52,7 +52,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Удаление действия по id")
     public static void deleteProductPrivateById(String id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .withServiceToken()
                 .delete(adminUrl + id + "/")
                 .assertStatus(204);
@@ -60,7 +60,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Удаление действия по имени {name}")
     public static void deleteProductPrivateByName(String name) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .withServiceToken()
                 .delete(adminUrlV2 + name + "/")
                 .assertStatus(204);
@@ -68,7 +68,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Копирование действия по Id")
     public static Product copyProductPrivateById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .post(adminUrl + objectId + "/copy/")
                 .assertStatus(200)
@@ -77,7 +77,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Копирование действия по имени {name}")
     public static Product copyProductPrivateByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .post(adminUrlV2 + name + "/copy/")
                 .assertStatus(200)
@@ -86,7 +86,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Частичное обновление действия")
     public static Response partialUpdatePrivateProduct(String id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .body(object)
                 .patch(adminUrl + id + "/");
@@ -94,7 +94,7 @@ public class ProductPrivateSteps extends Steps {
 
     @Step("Частичное обновление действия по имени {name}")
     public static Response partialUpdateProductPrivateByName(String name, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .body(object)
                 .patch(adminUrlV2 + name + "/");

@@ -7,7 +7,7 @@ import models.t1.portalBack.VmWareOrganizationUser;
 import org.json.JSONObject;
 import steps.Steps;
 
-import static core.helper.Configure.PortalBackURL;
+import static core.helper.Configure.portalBackURL;
 
 public class VdcOrganizationUserSteps extends Steps {
 
@@ -18,7 +18,7 @@ public class VdcOrganizationUserSteps extends Steps {
                 .build()
                 .init()
                 .toJson();
-        return new Http(PortalBackURL)
+        return new Http(portalBackURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(jsonObject)
                 .post("/v1/projects/{}/vdc_organizations/{}/vdc_organization_users", projectId, orgName)

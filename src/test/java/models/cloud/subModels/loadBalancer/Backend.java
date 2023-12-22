@@ -19,11 +19,11 @@ public class Backend {
     String mode = "tcp";
     List<Server> servers;
     @Builder.Default
-    Boolean advancedCheck = false;
-    @Builder.Default
     String balancingAlgorithm = "leastconn";
     @EqualsAndHashCode.Include
     String backendName;
+    Boolean keepLive;
+    Boolean cookieStatus;
 
     /* tcp-check*/
     Integer checkPort;

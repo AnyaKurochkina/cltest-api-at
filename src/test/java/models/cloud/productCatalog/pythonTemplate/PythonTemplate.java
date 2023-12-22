@@ -5,12 +5,15 @@ import core.helper.JsonHelper;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
+import static core.helper.StringUtils.getRandomStringApi;
 import static steps.productCatalog.PythonTemplateSteps.*;
+import static steps.productCatalog.TemplateSteps.createTemplateByName;
 
 @Log4j2
 @Builder
@@ -50,11 +53,23 @@ public class PythonTemplate extends Entity {
 	private String createDt;
 	@JsonProperty("id")
 	private String id;
+	@JsonProperty("template_id")
+	private Integer templateId;
+	@JsonProperty("template_version")
+	private String templateVersion;
+	@JsonProperty("template_version_pattern")
+	private String templateVersionPattern;
 	@JsonProperty("python_data")
 	private Object pythonData;
 
 	@Override
 	public Entity init() {
+		if (templateId == null) {
+			Template template = createTemplateByName(getRandomStringApi(6));
+			templateId = template.getId();
+			templateVersion = "";
+			templateVersionPattern = "";
+		}
 		return this;
 	}
 
@@ -75,6 +90,9 @@ public class PythonTemplate extends Entity {
 				.set("$.object_info", objectInfo)
 				.set("$.version_changed_by_user", versionChangedByUser)
 				.set("$.python_data", pythonData)
+				.set("$.template_id", templateId)
+				.set("$.template_version", templateVersion)
+				.set("$.template_version_pattern", templateVersionPattern)
 				.build();
 	}
 

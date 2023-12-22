@@ -202,7 +202,7 @@ public class AuditPage extends EntityPage {
     private void checkAuditIsLoaded() {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
-            TypifiedElement.refreshPage();
+            Selenide.refresh();
             if (Tab.byText("История изменений").getElement().exists()) new EntityPage().goToAuditTab();
         }
     }
@@ -279,10 +279,8 @@ public class AuditPage extends EntityPage {
         TestUtils.scrollToTheTop();
         periodSelect.set("задать период");
         beginDateInput.setValue(beginDate);
-        beginTimeSelect.getElement().$x(".//*[name()='svg']").click();
         beginTimeSelect.set("00:00");
         endDateInput.setValue(endDate);
-        endTimeSelect.getElement().$x(".//*[name()='svg']").click();
         endTimeSelect.set("23:30");
         applyFiltersByDateButton.click();
         return this;

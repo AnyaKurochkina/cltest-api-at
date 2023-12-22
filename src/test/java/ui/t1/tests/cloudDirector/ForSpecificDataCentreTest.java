@@ -27,8 +27,8 @@ import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
 public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
-    private String orgName = "ift-ec6821aa04a-at-ui";
-    private String vdcName = "khkgnauftk-at-ui";
+    private String orgName = "org-745ms323e2-36191634f6e-at-ui";
+    private String vdcName = "kqgvzoqlcb-at-ui";
 
     @Test
     @Order(4)
@@ -97,10 +97,10 @@ public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(orgName)
                 .selectDataCentre(vdcName);
-        Waiting.sleep(10000);
+        Waiting.sleep(5000);
         dataCentrePage.switchProtectOrder(true);
         try {
-            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить", "Удалить", () -> {
+            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить VDC", "Удалить", () -> {
                 Dialog dlgActions = Dialog.byTitle("Удаление");
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());

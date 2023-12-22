@@ -33,12 +33,27 @@ public class StateServiceTest extends Tests {
     @Test
     @Disabled("Для вычисления длительности выполнения узлов при заказе/действии")
     public void getStateServiceNodesDuration() {
-        String[] actions = new String[] {"de2fb5b7-9211-43ca-afac-8c2166dee386", "5ee959c1-253d-4669-94a6-5de3fedceeab", "d0c6ef6b-5965-4f79-a9c0-f71f2f8a64f4",
-                "b742cda5-48ec-4b41-ba4e-7d118df134e6", "a5cb7230-d5ad-4203-8ef3-37fdea373b97", "b6a72062-07e5-48f9-9bb6-77a29ae1ed34", "02216196-46c5-42a4-a2f0-e694425e90b9",
-                "f0d577a6-e663-4a68-8edc-28da87b29ec9", "6b71cf6f-5599-43ef-b85c-d28c4f8fdddf", "1facc47d-79b2-4b55-9b8e-e1736358354f", "5cd1539b-6a02-4959-b9a8-c22e38303fb2",
-                "30b82f8d-0e9f-4b3f-8994-13a101025d57", "7ec1ffba-1307-496a-bf59-d0aa3d5d8962", "e715f1fb-51e7-43ee-8280-acffdf013c90", "aab6cfb3-17b8-4785-8d68-9aed2fff7bd3",
-                "3519e4e3-4692-4b1e-9795-6699630dd28d", "521e508e-5100-4276-b9f2-4fd00f12befe", "a8e40fda-619b-47ff-b555-2bcf0a0cef8d", "cbfb8672-fd37-4d0b-88ac-d7b87f9b5b7f",
-                "e481d162-1303-44ef-bc72-fe84500e41c0"};
+        String[] actions = new String[] {"e16629d7-7645-443c-881f-5b3dc73cd634",
+                "44727fe8-562e-41f9-a486-6e80a0edd129",
+                "6687783b-e609-44db-aa96-3789200456dc",
+                "1b76b2cf-c6dc-429e-a980-ef01c3615169",
+                "999b0e8b-247e-4fce-824b-47cbc0084207",
+                "26e0e7d1-e64d-49a8-a935-6b544916db75",
+                "d33d8070-ebf7-4a1f-824e-025538eddb97",
+                "2cb97f0b-74a8-491e-9d35-430282082c05",
+                "3cceb3b5-8dc5-4a9e-b152-63d9156bf0ed",
+                "c490b62b-0410-40a0-9c42-7ee36ba53659",
+                "28036e31-ad51-42ff-8bfb-b67e5b60df37",
+                "7c3df685-b9af-4921-82bb-0516997100ed",
+                "a85f5192-03d3-4d2e-891c-6e5e5f3745a4",
+                "5049edf8-954b-4ae2-a3c7-3c13dd2619e3",
+                "c14ce18d-63f4-4543-a8c3-5ac532ea6a9d",
+                "2a04aae1-6167-46da-b18a-5dc422304e66",
+                "e7ac5286-9d97-4091-a56d-c6fd46d54f24",
+                "8af3546f-76f2-4c83-a0a6-dc814183c292",
+                "5473d97a-3a13-4ad3-b172-2a89743874bd",
+                "4ed5d6b6-a1be-430c-8b0e-392e06905f72"
+        };
         getNodesDuration(actions);
     }
 

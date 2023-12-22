@@ -10,7 +10,7 @@ import models.Entity;
 import org.json.JSONObject;
 import steps.feedService.FeedServiceSteps;
 
-import static core.helper.Configure.FeedServiceURL;
+import static core.helper.Configure.feedServiceURL;
 
 @Log4j2
 @Getter
@@ -55,7 +55,7 @@ public class TargetService extends Entity {
         if (targetServiceByName != null) {
             FeedServiceSteps.deleteTargetService(targetServiceByName.getId());
         }
-        id = new Http(FeedServiceURL)
+        id = new Http(feedServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(feedService)
@@ -67,7 +67,7 @@ public class TargetService extends Entity {
     @Override
     @Step("Удаление TargetService")
     protected void delete() {
-        new Http(FeedServiceURL)
+        new Http(feedServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(feedService + id + "/")
                 .assertStatus(204);
