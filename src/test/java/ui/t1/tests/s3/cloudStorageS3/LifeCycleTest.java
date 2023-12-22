@@ -1,13 +1,13 @@
-package ui.t1.tests.cloudStorageS3New;
+package ui.t1.tests.s3.cloudStorageS3;
 
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.S3Storage.LifeCycle.LifeCycleModal.LifeCycleConditionTriggers;
 import ui.t1.pages.S3Storage.LifeCycle.LifeCycleModal.LifeCycleRuleTypes;
-import ui.t1.tests.cloudStorageS3.AbstractStorageTest;
+import ui.t1.pages.S3Storage.LifeCycle.LifeCycleModal.LifeCycleConditionTriggers;
+import ui.t1.tests.s3.AbstractStorageTest;
 
 @BlockTests
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -20,7 +20,7 @@ public class LifeCycleTest extends AbstractStorageTest {
     @DisplayName("Бакет. ЖЦ. Добавить")
     void addLifeCycle() {
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
                 .openBucket(name)
@@ -35,7 +35,7 @@ public class LifeCycleTest extends AbstractStorageTest {
                 .createLifeCycle()
                 .checkLifeCycleExists("Name", true);
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
 
     }
@@ -46,7 +46,7 @@ public class LifeCycleTest extends AbstractStorageTest {
     @DisplayName("Бакет. ЖЦ. Удалить")
     void deleteLifeCycle() {
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
                 .openBucket(name)
@@ -63,7 +63,7 @@ public class LifeCycleTest extends AbstractStorageTest {
                 .deleteLifeCycle("Name")
                 .checkLifeCycleExists("Name", false);
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
 
     }
@@ -74,7 +74,7 @@ public class LifeCycleTest extends AbstractStorageTest {
     @DisplayName("Бакет. ЖЦ. Редактировать")
     void editLifeCycle() {
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .addBucket(name, true)
                 .createBucket()
                 .openBucket(name)
@@ -98,7 +98,7 @@ public class LifeCycleTest extends AbstractStorageTest {
                 .checkLifeCycleExists("Name", true);
 
 
-        new IndexPage().goToNewS3CloudStoragePage()
+        new IndexPage().goToS3CloudStoragePage()
                 .deleteBucket(name);
 
     }

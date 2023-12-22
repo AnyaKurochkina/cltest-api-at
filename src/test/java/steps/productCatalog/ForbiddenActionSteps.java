@@ -14,7 +14,7 @@ import steps.Steps;
 import java.io.File;
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 
 public class ForbiddenActionSteps extends Steps {
@@ -23,7 +23,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Проверка существования запрещенного действия продуктового каталога по имени")
     public static boolean isForbiddenActionExists(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
@@ -40,7 +40,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Создание запрещенного действия")
     public static Response createForbiddenAction(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(endPoint);
@@ -49,7 +49,7 @@ public class ForbiddenActionSteps extends Steps {
     @Step("Поиск ID запрещенного действия продуктового каталога по имени с использованием multiSearch")
     public static Integer getForbiddenActionIdByNameWithMultiSearch(String name) {
         Integer objectId = null;
-        List<ForbiddenAction> list = new Http(ProductCatalogURL)
+        List<ForbiddenAction> list = new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(GetForbiddenActionList.class).getList();
@@ -65,7 +65,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Удаление запрещенного действия по id")
     public static void deleteForbiddenActionById(Integer id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(endPoint + id + "/")
                 .assertStatus(204);
@@ -77,7 +77,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Получение запрещенного действия по Id")
     public static ForbiddenAction getForbiddenActionById(Integer objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + objectId + "/")
                 .extractAs(ForbiddenAction.class);
@@ -85,7 +85,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Импорт запрещенного действия")
     public static ImportObject importForbiddenAction(String pathName) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(endPoint + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
@@ -96,7 +96,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Частичное обновление запрещенного действия")
     public static Response partialUpdateForbiddenAction(Integer id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(endPoint + id + "/");
@@ -104,7 +104,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Обновление запрещенного действия")
     public static Response updateForbiddenAction(Integer id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .put(endPoint + id + "/")
@@ -113,7 +113,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Экспорт запрещенного действия по Id")
     public static Response exportForbiddenActionById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);
@@ -121,7 +121,7 @@ public class ForbiddenActionSteps extends Steps {
 
     @Step("Копирование запрещенного действия по id {id}")
     public static ForbiddenAction copyForbiddenActionById(Integer id, JSONObject jsonObject) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post(endPoint + "{}/copy/", id)

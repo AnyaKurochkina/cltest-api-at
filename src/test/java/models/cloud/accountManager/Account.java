@@ -56,7 +56,7 @@ public class Account extends Entity {
     @Override
     @Step("Создание счета")
     protected void create() {
-        accountId = new Http(Configure.AccountManagerURL)
+        accountId = new Http(Configure.accountManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post(String.format("/api/v1/folders/%s/accounts", folderId))
@@ -68,7 +68,7 @@ public class Account extends Entity {
     @Override
     @Step("Удаление счета")
     protected void delete() {
-        new Http(Configure.AccountManagerURL)
+        new Http(Configure.accountManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/api/v1/folders/{}/accounts", folderId)
                 .assertStatus(200);

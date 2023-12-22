@@ -13,7 +13,7 @@ import steps.Steps;
 import java.io.File;
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 
 public class TagSteps extends Steps {
 
@@ -22,7 +22,7 @@ public class TagSteps extends Steps {
 
     @Step("Получение списка Тегов")
     public static List<Tag> getTagList() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(tagUrl)
                 .assertStatus(200)
@@ -31,7 +31,7 @@ public class TagSteps extends Steps {
 
     @Step("Проверка существования Тега по имени")
     public static boolean isTagExists(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(tagUrl + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
@@ -39,7 +39,7 @@ public class TagSteps extends Steps {
 
     @Step("Получение Тега по имени {name}")
     public static Tag getTagByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(tagV2 + name + "/")
                 .assertStatus(200)
@@ -48,7 +48,7 @@ public class TagSteps extends Steps {
 
     @Step("Получение списка объектов использующих Тег")
     public static Response getTagUsedObjectsByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(tagV2 + name + "/used/");
     }
@@ -58,7 +58,7 @@ public class TagSteps extends Steps {
         if (isTagExists(name)) {
             deleteTagByName(name);
         }
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("name", name))
                 .post(tagUrl)
@@ -68,7 +68,7 @@ public class TagSteps extends Steps {
 
     @Step("Создание Тега")
     public static Response createTagByNameResponse(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("name", name))
                 .post(tagUrl);
@@ -76,7 +76,7 @@ public class TagSteps extends Steps {
 
     @Step("Удаление Тега по имени {name}")
     public static void deleteTagByName(String name) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(tagUrl + name + "/")
                 .assertStatus(204);
@@ -84,14 +84,14 @@ public class TagSteps extends Steps {
 
     @Step("Удаление Тега по имени {name}")
     public static Response deleteTagByNameResponse(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(tagUrl + name + "/");
     }
 
     @Step("Копирование Тега по имени {name}")
     public static Tag copyTagByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(tagUrl + name + "/copy/")
                 .assertStatus(200)
@@ -100,7 +100,7 @@ public class TagSteps extends Steps {
 
     @Step("Экспорт Тега по имени {name}")
     public static Response exportTagByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(tagUrl + name + "/obj_export/?as_file=true")
                 .assertStatus(200);
@@ -108,7 +108,7 @@ public class TagSteps extends Steps {
 
     @Step("Импорт Тега")
     public static ImportObject importTag(String pathName) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(tagUrl + "obj_import/", "file", new File(pathName))
                 .jsonPath()

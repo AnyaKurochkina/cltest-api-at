@@ -17,7 +17,7 @@ import steps.Steps;
 import java.io.File;
 import java.util.List;
 
-import static core.helper.Configure.RpcRouter;
+import static core.helper.Configure.rpcRouter;
 
 public class ExchangeSteps extends Steps {
 
@@ -25,7 +25,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Удаление Exchange по id {id}")
     public static Response deleteExchange(Integer id) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(exchangeV1 + "{}/", id);
     }
@@ -36,7 +36,7 @@ public class ExchangeSteps extends Steps {
                 .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_exchange_api_test")
                 .build()
                 .toJson();
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(exchange)
                 .post(exchangeV1)
@@ -51,7 +51,7 @@ public class ExchangeSteps extends Steps {
                 .name(RandomStringUtils.randomAlphabetic(8).toLowerCase() + "_exchange_api_test")
                 .build()
                 .toJson();
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(exchange)
                 .post(exchangeV1)
@@ -61,7 +61,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Проверка существования Exchange по name {name}")
     public static boolean isExchangeExist(String name) {
-        List<ExchangeResponse> list = new Http(RpcRouter)
+        List<ExchangeResponse> list = new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1 + "?name__exact={}", name)
                 .assertStatus(200)
@@ -72,7 +72,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Получение Exchange по name {name}")
     public static ExchangeResponse getExchangeByName(String name) {
-        List<ExchangeResponse> list = new Http(RpcRouter)
+        List<ExchangeResponse> list = new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1 + "?name__exact={}", name)
                 .assertStatus(200)
@@ -83,7 +83,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Получение объектов использующих Exchange по id {id}")
     public static Response getObjectsUsedExchange(Integer id) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1 + "{}/used/", id)
                 .assertStatus(200);
@@ -91,7 +91,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Получение списка объектов используемых в Exchange")
     public static Response getObjectsUsingExchange(Integer id) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1 + "{}/using_objects/", id)
                 .assertStatus(200);
@@ -99,7 +99,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Получение списка Exchange отсортированного по {fieldName}")
     public static List<ExchangeResponse> getOrderingByFieldExchangeList(String fieldName) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1 + "?ordering={}", fieldName)
                 .assertStatus(200)
@@ -109,7 +109,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Получение Exchange по id {id}")
     public static ExchangeResponse getExchangeById(Integer id) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1 + "{}/", id)
                 .assertStatus(200)
@@ -118,7 +118,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Обновление Exchange")
     public static ExchangeResponse updateExchange(Integer id, JSONObject jsonObject) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .put(exchangeV1 + "{}/", id)
@@ -128,7 +128,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Частичное обновление Exchange")
     public static void partialUpdateExchange(Integer id, JSONObject jsonObject) {
-        new Http(RpcRouter)
+        new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .patch(exchangeV1 + "{}/", id)
@@ -137,7 +137,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Получение списка Exchange")
     public static List<ExchangeResponse> getExchangeList() {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1)
                 .assertStatus(200)
@@ -147,7 +147,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Копирование Exchange")
     public static ExchangeResponse copyExchange(Integer id) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(exchangeV1 + "{}/copy/", id)
                 .assertStatus(200)
@@ -157,7 +157,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Экспорт Exchange")
     public static Response exportExchange(Integer id) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(exchangeV1 + "{}/obj_export/?as_file=true", id)
                 .assertStatus(200);
@@ -165,7 +165,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Экспорт нескольких Exchange по Id")
     public static Response exportExchangeById(JSONObject json) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .post(exchangeV1 + "objects_export/")
@@ -174,7 +174,7 @@ public class ExchangeSteps extends Steps {
 
     @Step("Импорт Exchange")
     public static ImportObject importExchange(String pathName) {
-        return new Http(RpcRouter)
+        return new Http(rpcRouter)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(exchangeV1 + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")

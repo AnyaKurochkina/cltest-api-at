@@ -225,9 +225,9 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Изменить extensions {0}")
     void updateExtensions(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName);
-            postgreSQL.updateExtensions(dbName, Arrays.asList("pg_trgm", "hstore"));
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb(dbName);
+            postgres.updateExtensions(dbName, Arrays.asList("pg_trgm", "hstore"));
         }
     }
 
@@ -236,9 +236,9 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Актуализировать extensions {0}")
     void getExtensions(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName);
-            postgreSQL.getExtensions(dbName, "ltree");
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb(dbName);
+            postgres.getExtensions(dbName, "ltree");
         }
     }
 
@@ -247,8 +247,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Получить актуальную конфигурацию {0}")
     void getConfiguration(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.getConfiguration();
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.getConfiguration();
         }
     }
 
@@ -257,18 +257,18 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Максимизировать max_connections {0}")
     void updateMaxConnections(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            if(postgreSQL.isDev()) {
-                postgreSQL.updateMaxConnectionsBySsh(500);
-                postgreSQL.updateMaxConnections();
-                Assertions.assertEquals(500, Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            if(postgres.isDev()) {
+                postgres.updateMaxConnectionsBySsh(500);
+                postgres.updateMaxConnections();
+                Assertions.assertEquals(500, Integer.valueOf(postgres.getCurrentMaxConnections()));
 
-                postgreSQL.updateMaxConnectionsBySsh(99);
-                postgreSQL.updateMaxConnections();
-                Assertions.assertEquals(postgreSQL.maxConnections(), Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
+                postgres.updateMaxConnectionsBySsh(99);
+                postgres.updateMaxConnections();
+                Assertions.assertEquals(postgres.maxConnections(), Integer.valueOf(postgres.getCurrentMaxConnections()));
             }
-            postgreSQL.updateMaxConnections();
-            Assertions.assertEquals(postgreSQL.maxConnections(), Integer.valueOf(postgreSQL.getCurrentMaxConnections()));
+            postgres.updateMaxConnections();
+            Assertions.assertEquals(postgres.maxConnections(), Integer.valueOf(postgres.getCurrentMaxConnections()));
         }
     }
 
@@ -277,8 +277,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Изменить default_transaction_isolation {0}")
     void updateDti(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.updateDti("REPEATABLE READ");
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.updateDti("REPEATABLE READ");
         }
     }
 
@@ -287,8 +287,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить минорную версию СУБД {0}")
     void updatePostgresql(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.updatePostgresql();
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.updatePostgresql();
         }
     }
 
@@ -297,8 +297,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Актуализировать версию СУБД {0}")
     void updateVersionDb(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.updateVersionDb();
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.updateVersionDb();
         }
     }
 
@@ -307,10 +307,10 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Добавить точку монтирования /pg_walarchive {0}")
     void addMountPointPgWalarchive(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
             List<String> envs = Arrays.asList("LT", "PROD");
             Assumptions.assumeFalse(envs.contains(product.getEnv()), "Тест выключен для сред " + Arrays.toString(envs.toArray()));
-            postgreSQL.addMountPointPgWalarchive();
+            postgres.addMountPointPgWalarchive();
         }
     }
 
@@ -319,8 +319,8 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Настроить кластер для интеграции с Debezium {0}")
     void configureDebezium(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.configureDebezium();
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.configureDebezium();
         }
     }
 
@@ -329,9 +329,9 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Настроить БД для интеграции с Debezium {0}")
     void configureDebeziumDb(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName);
-            postgreSQL.configureDebeziumDb();
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb(dbName);
+            postgres.configureDebeziumDb();
         }
     }
 
@@ -340,10 +340,10 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Создать/удалить логический слот {0}")
     void createLogicalSlot(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName);
-            postgreSQL.createLogicalSlot("slot_name");
-            postgreSQL.removeLogicalSlot("slot_name");
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb(dbName);
+            postgres.createLogicalSlot("slot_name");
+            postgres.removeLogicalSlot("slot_name");
         }
     }
 
@@ -352,10 +352,50 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Создать/удалить публикацию {0}")
     void createPublication(PostgresSQLCluster product, Integer num) {
-        try (PostgresSQLCluster postgreSQL = product.createObjectExclusiveAccess()) {
-            postgreSQL.createDb(dbName);
-            postgreSQL.createPublication("pub_dbzm");
-            postgreSQL.removePublication("pub_dbzm");
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.createDb(dbName);
+            postgres.createPublication("pub_dbzm");
+            postgres.removePublication("pub_dbzm");
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Добавить точку монтирования /pg_audit {0}")
+    void addMountPointPgAudit(PostgresSQLCluster product, Integer num) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.addMountPointPgAudit();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Добавить точку монтирования /pg_backup {0}")
+    void addMountPointPgBackup(PostgresSQLCluster product, Integer num) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.addMountPointPgBackup();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Добавить на хост etcd точку монтирования /app/backup (5gb) {0}")
+    void etcdAddMountPointAppBackup(PostgresSQLCluster product, Integer num) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.etcdAddMountPointAppBackup();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Добавить на хост etcd точку монтирования /app/logs (10gb) {0}")
+    void addMountPointAppLogs(PostgresSQLCluster product, Integer num) {
+        try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            postgres.addMountPointAppLogs();
         }
     }
 

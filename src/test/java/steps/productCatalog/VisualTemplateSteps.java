@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 
 public class VisualTemplateSteps extends Steps {
 
@@ -25,7 +25,7 @@ public class VisualTemplateSteps extends Steps {
     @Step("Получение списка шаблонов отображения")
     public static List<ItemVisualTemplate> getVisualTemplateList() {
         //todo сравнение с jsonshema
-        return  new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl)
                 .assertStatus(200)
@@ -34,7 +34,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение шаблона отображения по Id")
     public static ItemVisualTemplate getVisualTemplateById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + objectId + "/")
                 .extractAs(ItemVisualTemplate.class);
@@ -42,14 +42,14 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Удаление шаблона отображения по Id")
     public static Response deleteVisualTemplateById(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(visualTemplateUrl + id + "/");
     }
 
     @Step("Получение списка шаблонов отображения отсортированного по дате создания")
     public static List<ItemVisualTemplate> getItemVisualTemplateListOrdering(String filter) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + "?ordering={}", filter)
                 .assertStatus(200)
@@ -59,7 +59,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение шаблона отображения по имени {name}")
     public static ItemVisualTemplate getVisualTemplateByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl2 + name + "/")
                 .extractAs(ItemVisualTemplate.class);
@@ -67,7 +67,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение шаблона визуализации по event_type и event_provider")
     public static ItemVisualTemplate getItemVisualTemplateByTypeProvider(String eventType, String eventProvider) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + "item_visual_template/" + eventType + "/" + eventProvider + "/")
                 .assertStatus(200)
@@ -76,7 +76,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Проверка существования шаблона визуализации по имени")
     public static boolean isVisualTemplateExists(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
@@ -84,7 +84,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Частичное обновление шаблона визуализации")
     public static Response partialUpdateVisualTemplate(String id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(visualTemplateUrl + id + "/")
@@ -93,7 +93,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение Meta данных списка шаблонов визуализаций")
     public static Meta getMetaVisualTemplateList() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl)
                 .assertStatus(200)
@@ -102,7 +102,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение списка шаблонов визуализаций по фильтру")
     public static List<ItemVisualTemplate> getVisualTemplateListByFilter(String filter) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + filter)
                 .assertStatus(200)
@@ -111,7 +111,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Импорт шаблона визуализаций")
     public static ImportObject importVisualTemplate(String pathName) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(visualTemplateUrl + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
@@ -122,7 +122,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Копирование шаблона визуализации по Id")
     public static ItemVisualTemplate copyVisualTemplateById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(visualTemplateUrl + objectId + "/copy/")
                 .assertStatus(200)
@@ -131,7 +131,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Копирование шаблона визуализации по name {name}")
     public static ItemVisualTemplate copyVisualTemplateByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(visualTemplateUrl2 + name + "/copy/")
                 .assertStatus(200)
@@ -140,7 +140,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Создание шаблона визуализаций")
     public static Response createVisualTemplate(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(visualTemplateUrl);
@@ -168,7 +168,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Экспорт шаблона визуализаций по Id {id}")
     public static Response exportVisualTemplateById(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + id + "/obj_export/?as_file=true")
                 .assertStatus(200);
@@ -176,7 +176,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Удаление шаблона по имени {name}")
     public static void deleteVisualTemplateByName(String name) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(visualTemplateUrl2 + name + "/")
                 .assertStatus(204);
@@ -185,7 +185,7 @@ public class VisualTemplateSteps extends Steps {
     @Step("Добавление списка Тегов шаблону визуализаций")
     public static void addTagListToVisualTemplate(List<String> tagsList, String... name) {
         String names = String.join(",", name);
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(visualTemplateUrl + "add_tag_list/?name__in=" + names)
@@ -195,7 +195,7 @@ public class VisualTemplateSteps extends Steps {
     @Step("Удаление списка Тегов шаблона визуализации")
     public static void removeTagListToVisualTemplate(List<String> tagsList, String... name) {
         String names = String.join(",", name);
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(visualTemplateUrl + "remove_tag_list/?name__in=" + names)
@@ -204,7 +204,7 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение списка шаблонов визуализиций по фильтру")
     public static List<ItemVisualTemplate> getVisualTemplateListByFilter(String filter, Object value) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + "?{}={}", filter, value)
                 .assertStatus(200)
@@ -215,7 +215,7 @@ public class VisualTemplateSteps extends Steps {
     @Step("Получение списка шаблонов визуализиций по фильтрам")
     public static List<ItemVisualTemplate> getVisualTemplateListByFilters(String...filter) {
         String filters = String.join("&", filter);
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl + "?" + filters)
                 .assertStatus(200)

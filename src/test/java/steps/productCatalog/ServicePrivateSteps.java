@@ -6,7 +6,7 @@ import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import steps.Steps;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 
 public class ServicePrivateSteps extends Steps {
 
@@ -15,7 +15,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Получение сервиса по Id")
     public static Service getServicePrivateById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .get(adminUrl + objectId + "/")
                 .extractAs(Service.class);
@@ -23,7 +23,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Получение сервиса по имени {name}")
     public static Service getServicePrivateByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .get(adminUrlV2 + name + "/")
                 .extractAs(Service.class);
@@ -31,7 +31,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Создание сервиса")
     public static Service createServicePrivate(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .body(body)
                 .post(adminUrl)
@@ -41,7 +41,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Создание сервиса")
     public static Service createServicePrivateV2(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .withServiceToken()
                 .body(body)
                 .post(adminUrlV2)
@@ -51,7 +51,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Удаление сервиса по id")
     public static void deleteServicePrivateById(String id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .withServiceToken()
                 .delete(adminUrl + id + "/")
                 .assertStatus(204);
@@ -59,7 +59,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Удаление сервиса по имени {name}")
     public static void deleteServicePrivateByName(String name) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .withServiceToken()
                 .delete(adminUrlV2 + name + "/")
                 .assertStatus(204);
@@ -67,7 +67,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Частичное обновление сервиса")
     public static void partialUpdatePrivateService(String id, JSONObject object) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .withServiceToken()
                 .body(object)
                 .patch(adminUrl + id + "/")
@@ -76,7 +76,7 @@ public class ServicePrivateSteps extends Steps {
 
     @Step("Частичное обновление сервиса по имени {name}")
     public static void partialUpdateServicePrivateByName(String name, JSONObject object) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .withServiceToken()
                 .body(object)
                 .patch(adminUrlV2 + name + "/")

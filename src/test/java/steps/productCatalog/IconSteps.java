@@ -11,14 +11,14 @@ import steps.Steps;
 
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 
 public class IconSteps extends Steps {
     private static final String endPoint = "/api/v1/icons/";
 
     @Step("Создание иконки")
     public static Icon createIcon(JSONObject json) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .post(endPoint)
@@ -28,7 +28,7 @@ public class IconSteps extends Steps {
 
     @Step("Проверка существования Иконки по имени")
     public static boolean isIconExists(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
@@ -36,7 +36,7 @@ public class IconSteps extends Steps {
 
     @Step("Удаление иконки по id")
     public static void deleteIconById(String id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(endPoint + id + "/");
     }
@@ -44,7 +44,7 @@ public class IconSteps extends Steps {
     @Step("Поиск ID иконки продуктового каталога по имени с использованием multiSearch")
     public static String getIconIdByNameWithMultiSearch(String name) {
         String objectId = null;
-        List<Icon> list = new Http(ProductCatalogURL)
+        List<Icon> list = new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(endPoint + "?include=total_count&page=1&per_page=50&multisearch=" + name)
                 .assertStatus(200).extractAs(GetIconList.class).getList();

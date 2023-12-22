@@ -75,7 +75,7 @@ public class Folder extends Entity {
     }
 
     public void edit() {
-        String titleNew = new Http(Configure.ResourceManagerURL)
+        String titleNew = new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .patch("/v1/folders/{}", name)
@@ -87,13 +87,13 @@ public class Folder extends Entity {
     }
 
     public static Folder getParent(Folder folder) {
-        String parentId = new Http(Configure.ResourceManagerURL)
+        String parentId = new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/folders/{}", folder.getName())
                 .assertStatus(200)
                 .jsonPath()
                 .getString("data.parent");
-        JsonPath path = new Http(Configure.ResourceManagerURL)
+        JsonPath path = new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/folders/{}", parentId)
                 .assertStatus(200)
@@ -108,7 +108,7 @@ public class Folder extends Entity {
     protected void create() {
         Organization org = Organization.builder().type("default").build().createObject();
         String url = kind.equals(BUSINESS_BLOCK) ? String.format("/v1/organizations/%s/folders", org.getName()) : String.format("/v1/folders/%s/folders", parentId);
-        name = new Http(Configure.ResourceManagerURL)
+        name = new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post(url)
@@ -117,7 +117,7 @@ public class Folder extends Entity {
                 .getString("data.name");
 
         if (!Configure.isT1())
-            new Http(Configure.PortalBackURL)
+            new Http(Configure.portalBackURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .body(new JSONObject().put("information_system_ids", informationSystemIds))
                     .post("/v1/folders/{}/information_systems/add_to_folder", name)
@@ -127,7 +127,7 @@ public class Folder extends Entity {
     @Override
     @Step("Удаление папки")
     protected void delete() {
-        new Http(Configure.ResourceManagerURL)
+        new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/folders/" + name)
                 .assertStatus(204);
