@@ -30,11 +30,11 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_podman_astra")})
 public class UiPodmanAstraTest extends UiProductTest {
 
-    PodmanAstra product = PodmanAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/92155aeb-773d-4a86-9c17-d9237d6e35b3/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private PodmanAstra product;// = PodmanAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/92155aeb-773d-4a86-9c17-d9237d6e35b3/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -149,6 +149,15 @@ public class UiPodmanAstraTest extends UiProductTest {
     @Test
     @Order(8)
     @TmsLink("")
+    @DisplayName("UI Podman. Обновить ОС")
+    void updateOs() {
+        PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
+        podmanAstraPage.runActionWithCheckCost(CompareType.EQUALS, podmanAstraPage::updateOs);
+    }
+
+    @Test
+    @Order(9)
+    @TmsLink("")
     @DisplayName("UI PodmanAstra. Установить Ключ-Астром")
     void addKeyAstrom() {
         PodmanAstraPage podmanAstraPage = new PodmanAstraPage(product);
@@ -156,7 +165,7 @@ public class UiPodmanAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(9)
+    @Order(10)
     @TmsLink("")
     @DisplayName("UI PodmanAstra. Удалить Ключ-Астром")
     void delKeyAstrom() {

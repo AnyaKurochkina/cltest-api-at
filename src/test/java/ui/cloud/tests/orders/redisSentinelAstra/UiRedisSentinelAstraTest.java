@@ -7,7 +7,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Redis;
 import models.cloud.orderService.products.RedisSentinel;
 import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
@@ -34,11 +33,11 @@ import static ui.cloud.pages.orders.RedisAstraOrderPage.userNameRedisSentinel;
 @Tags({@Tag("ui"), @Tag("ui_redis_sentinel_astra")})
 public class UiRedisSentinelAstraTest extends UiProductTest {
 
-    RedisSentinel product;// = Redis.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/0b31ecea-97b7-4a46-9e8f-00483556cf9a/main?context=proj-gxsz4e3shy&type=project&org=vtb");
+    private RedisSentinel product;// = Redis.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/0b31ecea-97b7-4a46-9e8f-00483556cf9a/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         product.setProductName("Redis Sentinel Astra (Redis с репликацией)");
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
@@ -101,7 +100,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
     @DisplayName("UI Redis Sentinel Astra. Расширить точку монтирования")
     void expandDisk() {
         RedisSentinelAstraPage redisPage = new RedisSentinelAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis", "20", new Table("Роли узла").getRowByIndex(0)));
+        redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.enlargeDisk("/app/redis/data", "20", new Table("Роли узла").getRowByIndex(0)));
     }
 
     @Test
@@ -209,6 +208,7 @@ public class UiRedisSentinelAstraTest extends UiProductTest {
             redisPage.runActionWithCheckCost(CompareType.MORE, () -> redisPage.changeParamNotify("KEA"));
         }
     }
+
     @Test
     @Order(20)
     @TmsLink("")

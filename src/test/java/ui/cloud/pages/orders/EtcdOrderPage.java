@@ -11,11 +11,11 @@ import static core.helper.StringUtils.$x;
 @Getter
 public class EtcdOrderPage extends NewOrderPage {
 
-    Select numberNodes = Select.byLabel("Количество нод");
-    Input nameUser = Input.byLabel("Пользователь etcd");
-    Input nameCluster = Input.byLabel("Имя кластера");
-    Input nameDB = Input.byLabel("Имя базы данных");
-    SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
+    private final Select numberNodes = Select.byLabel("Количество нод");
+    private final Input nameUser = Input.byLabel("Пользователь etcd");
+    private final Input nameCluster = Input.byLabel("Имя кластера");
+    private final Input nameDB = Input.byLabel("Имя базы данных");
+    private final SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
 
 
     public EtcdOrderPage() {

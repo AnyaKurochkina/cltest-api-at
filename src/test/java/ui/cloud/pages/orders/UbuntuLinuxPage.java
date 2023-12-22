@@ -24,8 +24,8 @@ public class UbuntuLinuxPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public UbuntuLinuxPage(Ubuntu product) {
         super(product);

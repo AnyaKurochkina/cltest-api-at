@@ -12,10 +12,10 @@ import static com.codeborne.selenide.Selenide.$x;
 @Getter
 public class KafkaServiceOrderPage extends NewOrderPage {
 
-    Input nameCluster = Input.byLabel("Имя кластера *");
-    Input nameTopic = Input.byLabel("Имя Topic");
-    protected Select sizeTopic = Select.byLabel("Размер топика Apache Kafka");
-    SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
+    private final Input nameCluster = Input.byLabel("Имя кластера *");
+    private final Input nameTopic = Input.byLabel("Имя Topic");
+    private final Select sizeTopic = Select.byLabel("Размер топика Apache Kafka");
+    private final SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
     private final SelenideElement topicService = $x("//div[contains(text(),'Топик kafka как услуга')]");
 
     public KafkaServiceOrderPage() {

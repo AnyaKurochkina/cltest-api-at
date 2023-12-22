@@ -24,11 +24,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_openmessaging_astra")})
 public class UiOpenMessagingAstraTest extends UiProductTest {
 
-    OpenMessagingAstra product;// = OpenMessagingAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/323af104-d7ee-4f4c-8c2c-f57805328c98/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private OpenMessagingAstra product;// = OpenMessagingAstra.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/323af104-d7ee-4f4c-8c2c-f57805328c98/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -67,6 +67,7 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
         OpenMessagingAstraPage openMessagingAstraPage = new OpenMessagingAstraPage(product);
         checkOrderCost(prebillingCost, openMessagingAstraPage);
     }
+
     @Test
     @TmsLink("")
     @Order(2)
@@ -78,6 +79,7 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
         openMessagingAstraPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[2]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
     }
+
     @Test
     @Order(3)
     @TmsLink("")
@@ -86,6 +88,7 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
         OpenMessagingAstraPage openMessagingAstraPage = new OpenMessagingAstraPage(product);
         openMessagingAstraPage.runActionWithCheckCost(CompareType.EQUALS, openMessagingAstraPage::updateInstallation);
     }
+
     @Test
     @Order(4)
     @TmsLink("")
@@ -94,6 +97,7 @@ public class UiOpenMessagingAstraTest extends UiProductTest {
         OpenMessagingAstraPage openMessagingAstraPage = new OpenMessagingAstraPage(product);
         openMessagingAstraPage.checkClusterMonitoringOs();
     }
+
     @Test
     @Order(100)
     @TmsLink("")

@@ -46,7 +46,7 @@ public class ProductRestrictionTest extends Tests {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(project.getId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

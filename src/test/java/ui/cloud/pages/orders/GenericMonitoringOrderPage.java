@@ -8,7 +8,7 @@ import java.util.UUID;
 @Getter
 public class GenericMonitoringOrderPage extends NewOrderPage {
 
-    String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
+    private final String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public GenericMonitoringOrderPage() {
         labelInput.setValue(labelValue);

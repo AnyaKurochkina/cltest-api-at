@@ -8,9 +8,12 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
-import models.cloud.tagService.*;
-import models.cloud.tagService.v2.FilterResultV2Page;
+import models.cloud.tagService.Filter;
+import models.cloud.tagService.Inventory;
+import models.cloud.tagService.Tag;
+import models.cloud.tagService.TagServiceSteps;
 import models.cloud.tagService.v2.FilterResultV2;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.InventoryTagsV2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -23,7 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static models.cloud.tagService.Inventory.DEFAULT_TYPE;
-import static models.cloud.tagService.TagServiceSteps.*;
+import static models.cloud.tagService.TagServiceSteps.inventoryFilterV2;
+import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 
 @Epic("Сервис тегов")
 @Feature("Фильтр Inventory V2")
@@ -366,7 +370,8 @@ public class InventoryFilterV2Test extends AbstractTagServiceTest {
                 .responseTags(Collections.singletonList(tList.get(0).getKey()))
                 .build();
         FilterResultV2Page filterResult = inventoryFilterV2(context, filter);
-        Assertions.assertEquals(filterResult.getList().get(0).getTags(), Collections.singletonMap(tList.get(0).getKey(), tagValue), "Неверный response_tags");
+        Assertions.assertEquals(filterResult.getList().get(0).getTags().get(tList.get(0).getKey()).toString(),
+                String.format("\"%s\"",tagValue), "Неверный response_tags");
     }
 
     @Test

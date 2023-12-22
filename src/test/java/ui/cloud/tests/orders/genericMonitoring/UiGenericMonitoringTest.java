@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.GenericMonitoring;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -30,11 +29,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_generic_monitoring")})
 public class UiGenericMonitoringTest extends UiProductTest {
 
-    GenericMonitoring product;// = GenericMonitoring.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b7202e43-ca1a-4300-be33-8da921183d11/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    private GenericMonitoring product;// = GenericMonitoring.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/b7202e43-ca1a-4300-be33-8da921183d11/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

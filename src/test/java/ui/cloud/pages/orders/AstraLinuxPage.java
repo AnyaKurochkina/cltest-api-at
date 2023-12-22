@@ -25,8 +25,8 @@ public class AstraLinuxPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public AstraLinuxPage(Astra product) {
         super(product);
@@ -83,21 +83,24 @@ public class AstraLinuxPage extends IProductPage {
             Select.byLabel("Срок хранения в днях").set("1");
         });
         btnGeneralInfo.click();
-        Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип","snapshot"));
+        Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
     }
+
     public void reInventory() {
         new AstraLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Реинвентаризация ВМ (Linux)");
     }
+
     public void deleteSnapshot() {
-        new Table("Имя",2).getRow(0).get().scrollIntoView(scrollCenter).click();
+        new Table("Имя", 2).getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new Table("Имя").getFirstValueByColumn("Имя"), "Удалить снапшот");
         btnGeneralInfo.click();
         Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
     }
+
     public void updateOs() {
-            checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-            runActionWithoutParameters(BLOCK_VM, "Обновить ОС");
+        checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Обновить ОС");
     }
 
     private SelenideElement getSnapshotMenuElement(String name) {

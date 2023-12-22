@@ -11,7 +11,10 @@ import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.*;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.OrdersPage;
+import ui.cloud.pages.orders.TarantoolDataGridAstraOrderPage;
+import ui.cloud.pages.orders.TarantoolDataGridAstraPage;
 import ui.elements.Graph;
 import ui.extesions.UiProductTest;
 
@@ -24,11 +27,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_tarantool_data_grid_astra")})
 public class UiTarantoolDataGridAstraTest extends UiProductTest {
 
-    TarantoolDataGrid product; // = TarantoolDataGrid.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/db/orders/6da3b2b7-d956-4f5c-83a3-11b7b2da9490/main?context=proj-gxsz4e3shy&type=project&org=vtb");
+    private TarantoolDataGrid product; // = TarantoolDataGrid.builder().build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/db/orders/6da3b2b7-d956-4f5c-83a3-11b7b2da9490/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -47,8 +50,7 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
             TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
-            //orderPage.getFlavorSelectCluster().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+            orderPage.getFlavorSelectCluster().set("tdg:rps-2000:storage-6GB");
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroupSelectTarantool().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());

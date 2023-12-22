@@ -64,7 +64,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
     @Step("Создание статического ключа досутпа hcp bucket")
     public void createStaticKey() {
-        accessId = new Http(Configure.IamURL)
+        accessId = new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(new JSONObject("{\"access_key\":{\"description\":\"Ключ\",\"password\":\"JP1mD3rlh67Hek@zb%ClSCFUxvUj4q6Z0ZfjfnK3VQhXt5xMLplE$B7237FPHu\"}}"))
                 .post("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
@@ -73,7 +73,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
                 .getString("data.access_id");
 
         sleep(10000);
-        JsonPath jsonPathStatus = new Http(Configure.IamURL)
+        JsonPath jsonPathStatus = new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                 .assertStatus(200)
@@ -85,7 +85,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
     @Step("Удаление статического ключа доступа hcp bucket")
     public void deleteStaticKey() {
-        new Http(Configure.IamURL)
+        new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/projects/{}/service_accounts/{}/access_keys/{}", projectId, id, id)
                 .assertStatus(204);
@@ -96,7 +96,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         log.info("Проверка статуса статического ключа");
         while (!keyStatus.equals("[active]") && counter > 0) {
             sleep(10000);
-            jsonPath = new Http(Configure.IamURL)
+            jsonPath = new Http(Configure.iamURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .get("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
                     .assertStatus(200)
@@ -115,7 +115,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
     @Step("Создание статического ключа")
     public void createStaticKeyNewStorage() {
-        accessId = new Http(Configure.IamURL)
+        accessId = new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(new JSONObject("{\"access_key\":{\"description\":\"Ключ\",\"product_name\":\"storage-new\"}}"))
                 .post("/v1/projects/{}/service_accounts/{}/access_keys", projectId, id)
@@ -126,7 +126,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
 
     @Step("Удаление статического ключа")
     public void deleteStaticKeyNewStorage(String keyId) {
-        new Http(Configure.IamURL)
+        new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/projects/{}/service_accounts/{}/access_keys/{}?product_name=storage-new", projectId, id, keyId)
                 .assertStatus(204);
@@ -137,7 +137,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         JsonPath jsonPath = JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.service_account.policy.bindings.[0].role", newRole.toString())
                 .set("$.service_account.title", title)
-                .send(Configure.IamURL)
+                .send(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .patch("/v1/projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(200)
@@ -150,7 +150,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     @Override
     @Step("Создание сервисного аккаунта")
     protected void create() {
-        JsonPath jsonPath = new Http(Configure.IamURL)
+        JsonPath jsonPath = new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post("/v1/projects/{}/service_accounts", projectId)
@@ -161,7 +161,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
         id = jsonPath.get("data.name");
 
         if (withApiKey) {
-            jsonPath = new Http(Configure.IamURL)
+            jsonPath = new Http(Configure.iamURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .body(toJson())
                     .post("/v1/projects/{}/service_accounts/{}/api_keys", projectId, id)
@@ -175,7 +175,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
     @Step("Удаление сервисного аккаунта")
     protected void delete() {
         if (withApiKey) {
-            new Http(Configure.IamURL)
+            new Http(Configure.iamURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .delete("/v1/projects/{}/service_accounts/{}/api_keys/{}", projectId, id, id)
                     .assertStatus(204);
@@ -185,7 +185,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
             log.info("Проверка статуса статического ключа");
             while (counter > 0) {
                 sleep(10000);
-                apiKeyResponse = new Http(Configure.IamURL)
+                apiKeyResponse = new Http(Configure.iamURL)
                         .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/{}/service_accounts/{}", projectId, id)
                         .assertStatus(200)
@@ -201,7 +201,7 @@ public class ServiceAccount extends Entity implements KeyCloakClient {
             Assertions.assertNull(apiKeyResponse.get("data.api_key"));
         }
 
-        new Http(Configure.IamURL)
+        new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/projects/{}/service_accounts/{}", projectId, id)
                 .assertStatus(204);

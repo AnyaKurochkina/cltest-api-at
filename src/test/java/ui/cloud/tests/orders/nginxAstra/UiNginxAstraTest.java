@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Nginx;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
@@ -29,11 +28,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_nginx_astra")})
 public class UiNginxAstraTest extends UiProductTest {
 
-    Nginx product;// = Nginx.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/web/orders/8606c9be-6bdd-4c30-9627-effe1f33ccea/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    private Nginx product;// = Nginx.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/web/orders/8606c9be-6bdd-4c30-9627-effe1f33ccea/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

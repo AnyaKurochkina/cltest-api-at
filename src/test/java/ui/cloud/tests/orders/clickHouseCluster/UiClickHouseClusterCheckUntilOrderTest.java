@@ -11,9 +11,9 @@ import models.cloud.orderService.products.ClickHouseCluster;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.orders.ClickHouseClusterOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
 
@@ -24,12 +24,12 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 class UiClickHouseClusterCheckUntilOrderTest extends Tests {
 
-    ClickHouseCluster product;
+    private ClickHouseCluster product;
     //  product = ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

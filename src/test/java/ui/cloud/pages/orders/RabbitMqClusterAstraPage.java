@@ -25,7 +25,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String BLOCK_USERS = "Пользователи";
     private static final String BLOCK_VIRTUAL_HOSTS = "Виртуальные хосты";
     private static final String BLOCK_PERMISSIONS = "Права доступа";
-    private static final String BLOCK_GROUP_AD_WEB= "Группы доступа на WEB интерфейс";
+    private static final String BLOCK_GROUP_AD_WEB = "Группы доступа на WEB интерфейс";
     private static final String HEADER_NAME_USER = "Имя";
     private static final String HEADER_GROUP = "Manager";
     private static final String HEADER_GROUPS = "Группы";
@@ -37,19 +37,20 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String HEADER_DB_USERS = "ch_customer";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement btnGroups = $x("//button[.='Группы']");
-    SelenideElement usernameInput = Selenide.$x("//input[@name='username']");
-    SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
+    private final SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    private final SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    private final SelenideElement btnGroups = $x("//button[.='Группы']");
+    private final SelenideElement usernameInput = Selenide.$x("//input[@name='username']");
+    private final SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
 
     public RabbitMqClusterAstraPage(RabbitMQClusterAstra product) {
         super(product);
     }
-    private void signIn(String user, String password){
+
+    private void signIn(String user, String password) {
         usernameInput.shouldBe(Condition.visible).val(user);
         passwordInput.shouldBe(Condition.visible).val(password);
         passwordInput.submit();
@@ -78,9 +79,9 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     public void openPointConnect() throws MalformedURLException, InterruptedException {
-        String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url);
-        signIn(Configure.getAppProp("dev.user2"),Configure.getAppProp("dev.password"));
+        signIn(Configure.getAppProp("dev.user2"), Configure.getAppProp("dev.password"));
         Selenide.$x("//a[text()='Overview']").shouldBe(Condition.visible);
     }
 
@@ -132,6 +133,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         });
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
+
     @Step("Обновить операционную систему")
     public void updateOs() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
@@ -158,7 +160,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    public void addUser(String nameUser,String numberApd,String numberRis) {
+    public void addUser(String nameUser, String numberApd, String numberRis) {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         if (!(new Table(HEADER_NAME_USER, 1).isColumnValueContains(HEADER_NAME_USER, nameUser))) {
             runActionWithParameters(BLOCK_USERS, "Создать пользователя", "Подтвердить", () -> {
@@ -172,7 +174,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         }
     }
 
-    public void checkUniquenessAddUser(String nameUser,String numberApd,String numberRis) {
+    public void checkUniquenessAddUser(String nameUser, String numberApd, String numberRis) {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_USERS, "Создать пользователя", "Отмена", () -> {
             Dialog dlg = Dialog.byTitle("Создать пользователя");
@@ -285,6 +287,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
                 value));
     }
+
     @Step("Добавить новые группы на WEB интерфейс {group} с ролью {nameGroup}")
     public void addGroupWeb(String role, String nameGroup) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
@@ -294,7 +297,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
         btnGeneralInfo.click();
-       Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_GROUP, nameGroup), "Ошибка создания группы");
+        Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_GROUP, nameGroup), "Ошибка создания группы");
     }
 
     @Step("Изменить группу  доступа с ролью {role}")
@@ -309,7 +312,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     @Step("Добавить роль {role}")
-    public void addRole(String role,String group) {
+    public void addRole(String role, String group) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_GROUP_AD_WEB, "Добавить роль", "Подтвердить", () -> {
             Select.byLabel(HEADER_GROUPS).set(group);
@@ -318,6 +321,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         btnGeneralInfo.click();
         Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(HEADER_GROUP, group), "Ошибка добавления роли");
     }
+
     @Step("Удалить группы доступа {role}")
     public void deleteGroupWeb(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
