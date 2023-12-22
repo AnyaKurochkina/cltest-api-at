@@ -5,7 +5,10 @@ import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.KafkaService;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.*;
+import ui.elements.CheckBox;
+import ui.elements.Dialog;
+import ui.elements.Input;
+import ui.elements.Table;
 
 import java.time.Duration;
 
@@ -19,9 +22,9 @@ public class KafkaServicePage extends IProductPage {
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_CLUSTER = "Кластер";
     private static final String STATUS = "Роли узла";
-    SelenideElement btnAclAccess = $x("//button[.='ACL на доступ']");
-    SelenideElement btnAclGroup = $x("//button[.='ACL на группы']");
-    SelenideElement btnAdd = $x("//button[contains(@class, 'array-item-add')]");
+    private final SelenideElement btnAclAccess = $x("//button[.='ACL на доступ']");
+    private final SelenideElement btnAclGroup = $x("//button[.='ACL на группы']");
+    private final SelenideElement btnAdd = $x("//button[contains(@class, 'array-item-add')]");
 
     public KafkaServicePage(KafkaService product) {
         super(product);

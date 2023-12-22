@@ -43,7 +43,7 @@ public class AbstractUserNotifications extends Tests {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new T1LoginPage(project.getId())
                 .signIn(Role.NOTIFICATIONS_USER);
     }

@@ -10,8 +10,8 @@ import models.cloud.orderService.products.PostgresSQLCluster;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.cloud.pages.orders.PostgreSqlClusterAstraOrderPage;
 import ui.extesions.ConfigExtension;
@@ -24,12 +24,12 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("ui_postgre_sql_cluster_astra")})
 class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
 
-    PostgresSQLCluster product;
+    private PostgresSQLCluster product;
     //= PostgresSQLCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/714818a6-66f0-4939-830e-73cb627c5acc/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -51,7 +51,7 @@ class UiPostgreSqlClusterAstraLinuxCheckUntilOrderTest extends Tests {
         orderPage.getOsVersionSelect().set(product.getOsVersion());
         orderPage.getPlatformSelect().set(product.getPlatform());
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-        if (product.isDev() || product.isTest() )
+        if (product.isDev() || product.isTest())
             orderPage.getGroupSelect().set(accessGroup);
         if (product.isDev())
             orderPage.getRoleSelect().set("user");

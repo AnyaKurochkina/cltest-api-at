@@ -13,7 +13,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
-import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -22,7 +21,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-import static core.helper.StringUtils.*;
+import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.format;
 
 @Getter
 public class Table implements TypifiedElement {
@@ -252,5 +252,30 @@ public class Table implements TypifiedElement {
 
     public static boolean isExist(String column) {
         return Waiting.sleep(() -> $x(tableXpath, column).isDisplayed(), Duration.ofSeconds(5));
+    }
+
+    public Asserts asserts() {
+        return new Asserts();
+    }
+
+    public class Asserts {
+
+        @Step("[Проверка] Колонка: {0}, содержит значение: {1}")
+        public void checkColumnContainsValue(String column, String value) {
+            String errorMessage;
+            errorMessage = column.isEmpty()
+                    ? String.format("Колонка, должна содержать значение: %s", value)
+                    : String.format("Колонка с именем: %s, должна содержать значение: %s", column, value);
+            Assertions.assertTrue(isColumnValueContains(column, value), errorMessage);
+        }
+
+        @Step("[Проверка] Колонка: {0}, не содержит значение: {1}")
+        public void checkColumnNotContainsValue(String column, String value) {
+            String errorMessage;
+            errorMessage = column.isEmpty()
+                    ? String.format("Колонка, не должна содержать значение: %s", value)
+                    : String.format("Колонка с именем: %s, не должна содержать значение: %s", column, value);
+            Assertions.assertFalse(isColumnValueContains(column, value), errorMessage);
+        }
     }
 }

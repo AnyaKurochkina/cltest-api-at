@@ -8,10 +8,8 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Ubuntu;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -31,11 +29,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
 public class UiUbuntuLinuxTest extends UiProductTest {
 
-    Ubuntu product; //= Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/bed207dc-ccbc-49fb-92fa-d889fc22e2c3/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    private Ubuntu product; //= Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/bed207dc-ccbc-49fb-92fa-d889fc22e2c3/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

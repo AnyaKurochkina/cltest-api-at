@@ -47,7 +47,7 @@ public class DefectologTest extends AbstractDefectologTest {
     });
 
     @BeforeEach
-    void beforeEach() {
+    public void beforeEach() {
         init.run();
     }
 

@@ -35,8 +35,8 @@ public class ScyllaDbClusterPage extends IProductPage {
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
     AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public ScyllaDbClusterPage(ScyllaDbCluster product) {

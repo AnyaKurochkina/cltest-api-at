@@ -19,8 +19,8 @@ import static com.codeborne.selenide.Selenide.$$x;
 public class ProductsPage {
     private final Select categorySelect = Select.byLabel("Категория");
     private final Button applyButton = Button.byText("Применить");
-    ElementsCollection products = $$x("//img/ancestor::button//h4");
-    ElementsCollection expandButtons = $$x("//h4[contains(text(),'Посмотреть еще')]/ancestor::button");
+    private final ElementsCollection products = $$x("//img/ancestor::button//h4");
+    private final ElementsCollection expandButtons = $$x("//h4[contains(text(),'Посмотреть еще')]/ancestor::button");
 
     public ProductsPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();

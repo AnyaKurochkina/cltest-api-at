@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Podman;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -31,11 +30,11 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_podman")})
 public class UiPodmanTest extends UiProductTest {
 
-    Podman product;// = Podman.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/containers/orders/9c0628a1-2553-4ac3-ab22-07a8a9c71457/main?context=proj-lww1vo6okh&type=project&org=vtb");
+    private Podman product;// = Podman.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/containers/orders/9c0628a1-2553-4ac3-ab22-07a8a9c71457/main?context=proj-lww1vo6okh&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -52,10 +51,10 @@ public class UiPodmanTest extends UiProductTest {
                     .clickOrderMore()
                     .selectCategory("Контейнеры")
                     .expandProductsList()
-                    .selectProduct(product.getProductName());
+                    .selectProduct("Podman (Astra)");
             PodmanOrderPage orderPage = new PodmanOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
+            //orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);
@@ -146,6 +145,16 @@ public class UiPodmanTest extends UiProductTest {
         new Table("Роли узла").getRow(0).get().scrollIntoView(scrollCenter).click();
         podmanPage.checkClusterMonitoringOs();
     }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI Podman. Обновить ОС")
+    void updateOs() {
+        PodmanPage podmanPage = new PodmanPage(product);
+        podmanPage.runActionWithCheckCost(CompareType.EQUALS, podmanPage::updateOs);
+    }
+
 
     @Test
     @Order(100)

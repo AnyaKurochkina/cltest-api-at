@@ -1,9 +1,10 @@
 package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import lombok.Getter;
 import models.cloud.orderService.products.ClickHouseCluster;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
@@ -15,7 +16,11 @@ import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
+@Getter
 public class ClickHouseClusterPage extends IProductPage {
+
+    private final String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
+    private final String nameAD = "at_ad_user";
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String HEADER_USER_LOCAL = "ТУЗ Локальные";
@@ -25,10 +30,15 @@ public class ClickHouseClusterPage extends IProductPage {
     private static final String HEADER_DB_USERS = "ch_customer";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
-
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement btnGroups = $x("//button[.='Группы']");
+    private static final String HEADER_CONSOLE = "Точка подключения";
+    private final SelenideElement usernameInput = Selenide.$x("//input[@id='user']");
+    private final SelenideElement passwordInput = Selenide.$x("//input[@id='password']");
+    private final SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    private final SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    private final SelenideElement btnGroups = $x("//button[.='Группы']");
+    private final SelenideElement inputWindow = Selenide.$x("//textarea[@id='query']");
+    private final SelenideElement successfulСheck = Selenide.$x("//span[contains(text(), '✔')]");
+    private final SelenideElement start = Selenide.$x("//button[@id='run']");
 
     public ClickHouseClusterPage(ClickHouseCluster product) {
         super(product);
@@ -70,6 +80,7 @@ public class ClickHouseClusterPage extends IProductPage {
         runActionWithoutParameters(BLOCK_APP, "Перезагрузить");
         new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     public void updateInformationCert() {
         new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить информацию о сертификатах Clickhouse Cluster");
@@ -78,6 +89,20 @@ public class ClickHouseClusterPage extends IProductPage {
     public void updateCertificate() {
         new ClickHouseClusterPage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты Clickhouse Cluster");
+    }
+
+    public void openPointConnect() {
+        String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        Selenide.open(url);
+        inputWindow.setValue("show databases");
+        signIn(getNameAD(), getUserPasswordFullRight());
+        successfulСheck.shouldBe(Condition.visible);
+    }
+
+    private void signIn(String user, String password) {
+        usernameInput.shouldBe(Condition.visible).setValue(user);
+        passwordInput.shouldBe(Condition.visible).setValue(password);
+        start.click();
     }
 
     public void stopHard() {
@@ -120,7 +145,7 @@ public class ClickHouseClusterPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("",2).isColumnValueContains("",name), "Ошибка создания УЗ");
+        Assertions.assertTrue(new Table("", 2).isColumnValueContains("", name), "Ошибка создания УЗ");
     }
 
     public void resetPasswordLA(String name) {
@@ -137,7 +162,7 @@ public class ClickHouseClusterPage extends IProductPage {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(name, "Удалить локальную УЗ");
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("",2).isColumnValueContains("",name), "Ошибка удаления УЗ");
+        Assertions.assertFalse(new Table("", 2).isColumnValueContains("", name), "Ошибка удаления УЗ");
     }
 
     public void addAccountAD(String name) {
@@ -147,7 +172,7 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setInputValue("Имя пользователя", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("",3).isColumnValueContains("",name), "Ошибка создания TУЗ АД");
+        Assertions.assertTrue(new Table("", 3).isColumnValueContains("", name), "Ошибка создания TУЗ АД");
     }
 
     public void resetPasswordAD(String name) {
@@ -166,7 +191,7 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setInputValue("Пользователь БД", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("",3).isColumnValueContains("",name), "Ошибка удаления TУЗ АД");
+        Assertions.assertFalse(new Table("", 3).isColumnValueContains("", name), "Ошибка удаления TУЗ АД");
     }
 
     public void addGroupAD(String nameGroup) {
@@ -176,7 +201,7 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("").isColumnValueContains("",nameGroup), "Ошибка создания AD");
+        Assertions.assertTrue(new Table("").isColumnValueContains("", nameGroup), "Ошибка создания AD");
     }
 
     public void addGroupAdmin(String nameGroup) {
@@ -186,21 +211,21 @@ public class ClickHouseClusterPage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления AD");
+        Assertions.assertTrue(new Table("", 2).isColumnValueContains("", nameGroup), "Ошибка удаления AD");
     }
 
     public void deleteGroupAD(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(nameGroup, "Удалить пользовательскую группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("").isColumnValueContains("",nameGroup), "Ошибка удаления AD");
+        Assertions.assertFalse(new Table("").isColumnValueContains("", nameGroup), "Ошибка удаления AD");
     }
 
     public void deleteGroupAdmin(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(nameGroup, "Удалить админ группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления админ группы");
+        Assertions.assertFalse(new Table("", 2).isColumnValueContains("", nameGroup), "Ошибка удаления админ группы");
     }
 
     public class VirtualMachineTable extends VirtualMachine {

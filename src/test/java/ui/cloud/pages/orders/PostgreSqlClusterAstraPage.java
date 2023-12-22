@@ -5,7 +5,6 @@ import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.PostgresSQLCluster;
-import models.cloud.portalBack.AccessGroup;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
@@ -38,14 +37,14 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     private static final String HEADER_COMMENTS = "Комментарий";
 
 
-    SelenideElement btnDb = $x("//button[.='Владельцы БД']");
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
-    SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
-    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
-    SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-    String accessGroup = product.accessGroup();
+    private final SelenideElement btnDb = $x("//button[.='Владельцы БД']");
+    private final SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
+    private final SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
+    private final SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
+    private final String accessGroup = product.accessGroup();
 
     public PostgreSqlClusterAstraPage(PostgresSQLCluster product) {
         super(product);
@@ -297,7 +296,11 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
                 .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE);
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        runActionWithParameters(BLOCK_APP, "Расширить точку монтирования /pg_data", "Подтвердить", () -> Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size));
+        runActionWithParameters(BLOCK_APP, "Расширить точку монтирования /pg_data", "Подтвердить",
+                () -> {
+                    Input.byLabel("Дополнительный объем дискового пространства, Гб").setValue(size);
+                    CheckBox.byLabel("Я уверен, что хочу расширить точку монтирования /pg_data").setChecked(true);
+                });
         btnGeneralInfo.click();
         node.scrollIntoView(scrollCenter).click();
         String value = String.valueOf(Integer.parseInt(firstSizeDisk) +

@@ -9,7 +9,6 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouseCluster;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
@@ -33,15 +32,16 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_clickhouse_cluster")})
 public class UiClickHouseClusterTest extends UiProductTest {
 
-    ClickHouseCluster product;
-    //=ClickHouseCluster.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/db/orders/74c978dc-9482-48e3-b8d0-371096655026/main?context=proj-iv550odo9a&type=project&org=vtb");
-    String nameAD = "at_ad_user";
-    String nameLocalAD = "at_local_user";
-    SelenideElement node = $x("(//td[.='clickhouse'])[1]");
+    private ClickHouseCluster product;// =ClickHouseCluster.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f0cfd9f-13b4-415b-9349-ed1ac8315b0c/main?context=proj-ln4zg69jek&type=project&org=vtb");
+
+    private final SelenideElement node = $x("(//td[.='clickhouse'])[1]");
+    private final String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
+    private final String nameAD = "at_ad_user";
+    private final String nameLocalAD = "at_local_user";
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -60,20 +60,20 @@ public class UiClickHouseClusterTest extends UiProductTest {
             ClickHouseClusterOrderPage orderPage = new ClickHouseClusterOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getNameCluster().setValue("cluster");
-            if(product.isDev())
-                orderPage.getNameUser().setValue("at_user");
-            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            Alert.green("Значение скопировано");
-            if(product.isDev())
+            if (product.isDev())
+                orderPage.getNameUser().setValue(nameAD);
+            orderPage.getGeneratePassButton1().setValue(userPasswordFullRight);
+            if (product.isDev())
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-                Alert.green("Значение скопировано");
+            Alert.green("Значение скопировано");
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroup2().set(accessGroup);
-            if(product.isDev()){
+            if (product.isDev()) {
                 orderPage.getGroup3().set(accessGroup);
-                orderPage.getGroup4().set(accessGroup);}
+                orderPage.getGroup4().set(accessGroup);
+            }
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()
@@ -154,6 +154,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHouseClusterPage.resetPasswordLA(nameLocalAD));
     }
+
     @Test
     @Order(8)
     @TmsLink("1152774")
@@ -224,6 +225,7 @@ public class UiClickHouseClusterTest extends UiProductTest {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.LESS, clickHouseClusterPage::stopSoft);
     }
+
     @Test
     @Order(15)
     @TmsLink("1296753")
@@ -249,6 +251,15 @@ public class UiClickHouseClusterTest extends UiProductTest {
     void updateCertificate() {
         ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
         clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::updateCertificate);
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Проверка доступа к Web интерфейсу управления через AD")
+    void openAdminConsole() {
+        ClickHouseClusterPage clickHouseClusterPage = new ClickHouseClusterPage(product);
+        clickHouseClusterPage.runActionWithCheckCost(CompareType.EQUALS, clickHouseClusterPage::openPointConnect);
     }
 
     @Test

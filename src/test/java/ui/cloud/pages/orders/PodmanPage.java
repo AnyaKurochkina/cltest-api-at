@@ -26,8 +26,8 @@ public class PodmanPage extends IProductPage {
     private static final String POWER = "Статус";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public PodmanPage(Podman product) {
         super(product);
@@ -156,12 +156,14 @@ public class PodmanPage extends IProductPage {
         Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
                 value));
     }
+    public void updateOs() {
+        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
+    }
 
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }
-
         @Override
         public String getPowerStatus() {
             return getPowerStatus(POWER);

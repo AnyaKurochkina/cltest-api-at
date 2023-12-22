@@ -1,17 +1,16 @@
 package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import models.cloud.orderService.products.ClickHouse;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
 import ui.elements.Dialog;
 import ui.elements.Table;
 
-import java.util.Collections;
-import java.util.List;
+import java.net.MalformedURLException;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
@@ -30,10 +29,17 @@ public class ClickHousePage extends IProductPage {
     private static final String HEADER_GROUP_AD = "Группы пользователей AD";
     private static final String HEADER_GROUP_COLUMN = "Роль";
     private static final String HEADER_GROUP_ADMIN = "Группы прикладных администраторов AD";
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement btnGroups = $x("//button[.='Группы']");
+    private final SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    private final SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    private final SelenideElement btnGroups = $x("//button[.='Группы']");
+    private final SelenideElement usernameInput = Selenide.$x("//input[@id='user']");
+    private final SelenideElement passwordInput = Selenide.$x("//input[@id='password']");
+    private final String nameAD = "at_ad_user";
+    private final String nameLocalAD = "at_local_user";
+    private final String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
 
+
+    private static final String HEADER_CONSOLE = "Точка подключения";
 
     public ClickHousePage(ClickHouse product) {
         super(product);
@@ -104,8 +110,7 @@ public class ClickHousePage extends IProductPage {
         Assertions.assertEquals(String.valueOf(value), getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-        Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
-                String.valueOf(value)));
+        getTableByHeader("Дополнительные диски").asserts().checkColumnContainsValue(HEADER_DISK_SIZE, String.valueOf(value));
     }
 
     public void resetPasswordDb() {
@@ -127,7 +132,7 @@ public class ClickHousePage extends IProductPage {
             Alert.green("Значение скопировано");
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("",2).isColumnValueContains("",name), "Ошибка создания УЗ");
+        Assertions.assertTrue(new Table("", 2).isColumnValueContains("", name), "Ошибка создания УЗ");
     }
 
     public void resetPasswordLA(String name) {
@@ -152,7 +157,7 @@ public class ClickHousePage extends IProductPage {
         btnUsers.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(name, "Удалить локальную УЗ");
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("",2).isColumnValueContains("",name), "Ошибка удаления УЗ");
+        Assertions.assertFalse(new Table("", 2).isColumnValueContains("", name), "Ошибка удаления УЗ");
     }
 
     public void addAccountAD(String name) {
@@ -162,7 +167,7 @@ public class ClickHousePage extends IProductPage {
             dlg.setInputValue("Имя пользователя", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("",3).isColumnValueContains("",name), "Ошибка создания TУЗ АД");
+        Assertions.assertTrue(new Table("", 3).isColumnValueContains("", name), "Ошибка создания TУЗ АД");
     }
 
     public void resetPasswordAD(String name) {
@@ -176,12 +181,12 @@ public class ClickHousePage extends IProductPage {
 
     public void deleteAccountAD(String name) {
         btnUsers.shouldBe(Condition.enabled).click();
-        runActionWithParameters(name, "Удалить ТУЗ AD", "Подтвердить", () -> {
+        runActionWithParameters(getActionsMenuButton(name, 2), "Удалить ТУЗ AD", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Удалить ТУЗ AD");
             dlg.setInputValue("Пользователь БД", name);
         });
         btnUsers.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("",3).isColumnValueContains("",name), "Ошибка удаления TУЗ АД");
+        Assertions.assertFalse(new Table("", 3).isColumnValueContains("", name), "Ошибка удаления TУЗ АД");
     }
 
     public void addGroupAD(String nameGroup) {
@@ -191,7 +196,7 @@ public class ClickHousePage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("").isColumnValueContains("",nameGroup), "Ошибка создания AD");
+        Assertions.assertTrue(new Table("").isColumnValueContains("", nameGroup), "Ошибка создания AD");
     }
 
     public void addGroupAdmin(String nameGroup) {
@@ -201,7 +206,7 @@ public class ClickHousePage extends IProductPage {
             dlg.setSelectValue("Группы", nameGroup);
         });
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertTrue(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления AD");
+        Assertions.assertTrue(new Table("", 2).isColumnValueContains("", nameGroup), "Ошибка удаления AD");
 
     }
 
@@ -210,14 +215,14 @@ public class ClickHousePage extends IProductPage {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(nameGroup, "Удалить пользовательскую группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("").isColumnValueContains("",nameGroup), "Ошибка удаления AD");
+        Assertions.assertFalse(new Table("").isColumnValueContains("", nameGroup), "Ошибка удаления AD");
     }
 
     public void deleteGroupAdmin(String nameGroup) {
         btnGroups.shouldBe(Condition.enabled).click();
         runActionWithoutParameters(nameGroup, "Удалить админ группу");
         btnGroups.shouldBe(Condition.enabled).click();
-        Assertions.assertFalse(new Table("",2).isColumnValueContains("",nameGroup), "Ошибка удаления админ группы");
+        Assertions.assertFalse(new Table("", 2).isColumnValueContains("", nameGroup), "Ошибка удаления админ группы");
     }
 
     public void resetPasswordUserDb() {
@@ -237,6 +242,28 @@ public class ClickHousePage extends IProductPage {
     public void updateCertificate() {
         new ClickHousePage.VirtualMachineTable("Роли узла").checkPowerStatus(ClickHouseClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Обновить сертификаты Clickhouse");
+    }
+
+    private void signIn(String user, String password) {
+        usernameInput.shouldBe(Condition.visible).setValue(user);
+        passwordInput.shouldBe(Condition.visible).setValue(password);
+        Selenide.$x("//button[@id='run']").click();
+    }
+
+    public String getNameAD() {
+        return nameAD;
+    }
+
+    public String getUserPasswordFullRight() {
+        return userPasswordFullRight;
+    }
+
+    public void openPointConnect() throws MalformedURLException, InterruptedException {
+        String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        Selenide.open(url);
+        Selenide.$x("//textarea[@id='query']").setValue("show databases");
+        signIn(getNameAD(), getUserPasswordFullRight());
+        Selenide.$x("//span[contains(text(), '✔')]").shouldBe(Condition.visible);
     }
 
     public class VirtualMachineTable extends VirtualMachine {

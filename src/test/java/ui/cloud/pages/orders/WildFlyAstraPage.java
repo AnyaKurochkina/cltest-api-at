@@ -27,8 +27,8 @@ public class WildFlyAstraPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String STATUS = "Статус";
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
     private final SelenideElement link = $x("/html/body/div[1]/div/div/div/div[2]/div[2]/div/div/div[4]/div/div[3]/div/div[1]/div/div[2]/div[1]/div[2]/div/div/table/tbody/tr/td[3]/div/a");
 
     public WildFlyAstraPage(WildFly product) {
@@ -70,8 +70,8 @@ public class WildFlyAstraPage extends IProductPage {
     }
 
     public void openAdminConsole() throws MalformedURLException, InterruptedException {
-        String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
-        Selenide.open(url+"management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
+        String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        Selenide.open(url + "management", "", Configure.getAppProp("dev.user"), Configure.getAppProp("dev.password"));
         Selenide.open(url);
         $x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible);
     }
@@ -106,14 +106,15 @@ public class WildFlyAstraPage extends IProductPage {
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     @Step("Заменить Java Wildfly")
-    public void changeJavaWildFly(String versionWildFly,String versionJava) {
+    public void changeJavaWildFly(String versionWildFly, String versionJava) {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getActionsMenuButton("", 2), "Заменить Java wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
             Dialog dlg = new Dialog("Заменить Java wildfly");
-            dlg.setSelectValue("Текущая версия Wildfly",versionWildFly);
-            dlg.setSelectValue("Версия java, на которую требуется заменить текущую java",versionJava);
+            dlg.setSelectValue("Текущая версия Wildfly", versionWildFly);
+            dlg.setSelectValue("Версия java, на которую требуется заменить текущую java", versionJava);
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -126,6 +127,7 @@ public class WildFlyAstraPage extends IProductPage {
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     @Step("Обновить сертификат. Глобальный тип  WildFly")
     public void updateCertificateGlobal() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -137,6 +139,7 @@ public class WildFlyAstraPage extends IProductPage {
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     @Step("Обновить сертификат. Локальный тип  WildFly")
     public void updateCertificateLocal() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -148,6 +151,7 @@ public class WildFlyAstraPage extends IProductPage {
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     @Step("Обновить сертификат. F5 тип  WildFly")
     public void updateCertificateF5() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
@@ -236,6 +240,7 @@ public class WildFlyAstraPage extends IProductPage {
         public VirtualMachineTable() {
             super("Роли узла");
         }
+
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }
