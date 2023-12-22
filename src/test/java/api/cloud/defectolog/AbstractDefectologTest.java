@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +36,7 @@ public class AbstractDefectologTest extends AbstractTagServiceTest {
     @Step("Поиск дефекта {internalName} после {dateFrom}")
     protected int findDefectIdByInternalName(String internalName, ZonedDateTime dateFrom) {
         return DefectologSteps.defectsList().stream()
-                .filter(e -> e.getCreatedAt().isAfter((dateFrom)))
+                .filter(e -> e.getCreatedAt().isAfter(dateFrom))
                 .filter(e -> e.getGroup().getInternalName().equals(internalName))
                 .findFirst()
                 .orElseThrow(NotFoundElementException::new).getId();
@@ -45,8 +46,8 @@ public class AbstractDefectologTest extends AbstractTagServiceTest {
     protected ZonedDateTime getDateFromFilter(Inventory inventory, Context context) {
         Filter filter = Filter.builder().allowEmptyTagFilter(true)
                 .inventoryPks(Collections.singletonList(inventory.getId())).build();
-        return TagServiceSteps.inventoryFilterV2(context, filter).getList().get(0)
-                .getCreatedAt().minusSeconds(1);
+        return ZonedDateTime.of(TagServiceSteps.inventoryFilterV2(context, filter).getList().get(0)
+                .getCreatedAt().minusSeconds(1), ZoneId.of("UTC"));
     }
 
     protected DefectPage readDefectPage(int defectId) {

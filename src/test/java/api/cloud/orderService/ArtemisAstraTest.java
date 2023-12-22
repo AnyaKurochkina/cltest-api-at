@@ -103,14 +103,33 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
-    @Disabled
     @TmsLink("982662")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    @ParameterizedTest(name = "[{1}] Перезапуск кластера {0}")
     void restart(Artemis product, Integer num) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.restart();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Вертикальное масштабирование {0}")
+    void verticalScaling(Artemis product, Integer num) {
+        try (Artemis artemis = product.createObjectExclusiveAccess()) {
+            artemis.verticalScaling();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Включение/отключение протоколов {0}")
+    void switchProtocol(Artemis product, Integer num) {
+        try (Artemis artemis = product.createObjectExclusiveAccess()) {
+            artemis.switchProtocol(true, false);
         }
     }
 
@@ -178,9 +197,19 @@ public class ArtemisAstraTest extends Tests {
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновление сертификатов Artemis {0}")
-    void updateCerts(Artemis product, Integer num) {
+    void updateCertsArtemis(Artemis product, Integer num) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.updateCerts();
+            artemis.updateCertsArtemis();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Аварийное обновление сертификатов {0}")
+    void updateExpiredCertsArtemis(Artemis product, Integer num) {
+        try (Artemis artemis = product.createObjectExclusiveAccess()) {
+            artemis.updateExpiredCertsArtemis();
         }
     }
 
