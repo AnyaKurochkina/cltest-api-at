@@ -12,7 +12,7 @@ import steps.Steps;
 
 import java.util.List;
 
-import static core.helper.Configure.StateServiceURL;
+import static core.helper.Configure.stateServiceURL;
 
 @Log4j2
 public class ExtRelationsStep extends Steps {
@@ -25,7 +25,7 @@ public class ExtRelationsStep extends Steps {
                 .secondaryItemId(secondaryItemId)
                 .isExclusive(isExclusive)
                 .build().toJson();
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .body(jsonObject)
                 .post("/api/v1/{}/{}/ext_relations/", contextType, contextId)
@@ -41,7 +41,7 @@ public class ExtRelationsStep extends Steps {
                 .secondaryItemId(secondaryItemId)
                 .isExclusive(isExclusive)
                 .build().toJson();
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .withServiceToken()
                 .body(jsonObject)
                 .post("/api/v1/{}/{}/ext_relations/", contextType, contextId);
@@ -49,7 +49,7 @@ public class ExtRelationsStep extends Steps {
 
     @Step("Удаление ExtRelation")
     public static void deleteExtRelation(String contextType, String contextId, Integer id) {
-        new Http(StateServiceURL)
+        new Http(stateServiceURL)
                 .withServiceToken()
                 .delete("/api/v1/{}/{}/ext_relations/{}/", contextType, contextId, id)
                 .assertStatus(204);
@@ -57,7 +57,7 @@ public class ExtRelationsStep extends Steps {
 
     @Step("Получение ExtRelation по id {id}")
     public static ExtRelation getExtRelationById(String contextType, String contextId, Integer id) {
-        return new Http(StateServiceURL)
+        return new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/{}/{}/ext_relations/{}/", contextType, contextId, id)
                 .assertStatus(200)
@@ -66,7 +66,7 @@ public class ExtRelationsStep extends Steps {
 
     @Step("Проверка существования Relation по id")
     public static boolean isRelationExistById(String contextType, String contextId, Integer id) {
-        List<ExtRelation> list = new Http(StateServiceURL)
+        List<ExtRelation> list = new Http(stateServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/{}/{}/ext_relations/", contextType, contextId, id)
                 .assertStatus(200)

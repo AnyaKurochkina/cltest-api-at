@@ -12,8 +12,9 @@ import steps.feedService.FeedServiceSteps;
 
 import java.util.Objects;
 
-import static core.helper.Configure.FeedServiceURL;
-import static steps.feedService.FeedServiceSteps.*;
+import static core.helper.Configure.feedServiceURL;
+import static steps.feedService.FeedServiceSteps.getFeedTagByKey;
+import static steps.feedService.FeedServiceSteps.isFeedTagExist;
 
 @Log4j2
 @Getter
@@ -60,7 +61,7 @@ public class FeedTag extends Entity {
 		if (isFeedTagExist(key)) {
 			FeedServiceSteps.deleteTag(Objects.requireNonNull(getFeedTagByKey(key)).getId());
 		}
-		id = new Http(FeedServiceURL)
+		id = new Http(feedServiceURL)
 				.setRole(Role.PRODUCT_CATALOG_ADMIN)
 				.body(toJson())
 				.post(feedService)
@@ -72,7 +73,7 @@ public class FeedTag extends Entity {
 	@Override
 	@Step("Удаление Tag")
 	protected void delete() {
-		new Http(FeedServiceURL)
+		new Http(feedServiceURL)
 				.setRole(Role.PRODUCT_CATALOG_ADMIN)
 				.delete(feedService + id + "/")
 				.assertStatus(204);

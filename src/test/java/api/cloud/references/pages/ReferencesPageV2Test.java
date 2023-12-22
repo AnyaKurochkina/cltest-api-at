@@ -15,7 +15,6 @@ import ru.testit.annotations.Title;
 import java.util.ArrayList;
 import java.util.List;
 
-import static core.helper.Configure.RESOURCE_PATH;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.references.ReferencesStep.*;
@@ -26,7 +25,6 @@ import static steps.references.ReferencesStep.*;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ReferencesPageV2Test extends Tests {
     private static final String PAGES_JSON_TEMPLATE = "references/createPages.json";
-    private static final String PAGES_IMPORT_PATH = RESOURCE_PATH + "/json/references/import_pages_api.json";
 
     List<String> deleteList = new ArrayList<>();
     Directories directories;

@@ -50,6 +50,6 @@ public class ReferencesDirectoriesNegativeTest extends Tests {
 
         Response response = createDirectoryWithInvalidName(jsonObject).assertStatus(400);
 
-        assertEquals("This field may not be blank.", response.jsonPath().getList("name").get(0));
+        assertEquals("This field may not be blank.", response.jsonPath().getList("name").get(0), "Сообщение об ошибке не соответствует формату");
     }
 }

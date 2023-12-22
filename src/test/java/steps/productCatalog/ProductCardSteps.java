@@ -15,7 +15,7 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 import static core.helper.StringUtils.convertStringVersionToIntArrayVersion;
 
 public class ProductCardSteps extends Steps {
@@ -33,7 +33,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Создание productCard")
     public static ProductCard createProductCard(JSONObject jsonObject) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post(cardUrl)
@@ -43,7 +43,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Удаление productCard по id {id}")
     public static void deleteProductCard(String id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(cardUrl + id + "/")
                 .assertStatus(204);
@@ -51,7 +51,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Удаление productCard по имени {name}")
     public static void deleteProductCardByName(String name) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(cardhUrl2 + name + "/")
                 .assertStatus(204);
@@ -59,7 +59,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Получение productCard по id {id}")
     public static ProductCard getProductCard(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(cardUrl + id + "/")
                 .assertStatus(200)
@@ -69,7 +69,7 @@ public class ProductCardSteps extends Steps {
     @Step("Добавление списка Тегов product cards")
     public static void addTagListToProductCard(List<String> tagsList, String... name) {
         String names = String.join(",", name);
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(cardUrl + "add_tag_list/?name__in=" + names)
@@ -79,7 +79,7 @@ public class ProductCardSteps extends Steps {
     @Step("Удаление списка Тегов product cards")
     public static void removeTagListToProductCard(List<String> tagsList, String... name) {
         String names = String.join(",", name);
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(cardUrl + "remove_tag_list/?name__in=" + names)
@@ -88,7 +88,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Частичное обновление product cards")
     public static Response partialUpdateProductCard(String id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(cardUrl + id + "/");
@@ -96,7 +96,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Обновление product cards")
     public static Response updateProductCard(String id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .put(cardUrl + id + "/")
@@ -105,7 +105,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Применение product cards")
     public static Response applyProductCard(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(cardUrl + id + "/apply/")
                 .assertStatus(200);
@@ -113,7 +113,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Копирование product cards")
     public static ProductCard copyProductCard(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(cardUrl + id + "/copy/")
                 .assertStatus(200)
@@ -122,7 +122,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Проверка существования product cards по имени {name}")
     public static boolean isProductCardExists(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(cardUrl + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
@@ -130,7 +130,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Экспорт product cards")
     public static Response exportProductCard(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(cardUrl + id + "/obj_export/?as_file=true")
                 .assertStatus(200);
@@ -138,7 +138,7 @@ public class ProductCardSteps extends Steps {
 
     @Step("Импорт product cards")
     public static ImportObject importProductCard(String pathName) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(cardUrl + "obj_import/", "file", new File(pathName))
                 .assertStatus(200)

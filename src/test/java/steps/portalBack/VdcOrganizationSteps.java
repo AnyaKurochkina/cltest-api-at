@@ -7,7 +7,7 @@ import models.t1.portalBack.VmWareOrganization;
 import org.json.JSONObject;
 import steps.Steps;
 
-import static core.helper.Configure.VcloudConnector;
+import static core.helper.Configure.vcloudConnector;
 
 public class VdcOrganizationSteps extends Steps {
 
@@ -19,7 +19,7 @@ public class VdcOrganizationSteps extends Steps {
                 .build()
                 .init()
                 .toJson();
-        return new Http(VcloudConnector)
+        return new Http(vcloudConnector)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(organization)
                 .post("api/v1/projects/{}/vdc_organizations", projectId)
@@ -29,7 +29,7 @@ public class VdcOrganizationSteps extends Steps {
 
     @Step("Удаление VMware организации c именем {orgName}")
     public static void deleteVMwareOrganization(String project, String orgName) {
-        new Http(VcloudConnector)
+        new Http(vcloudConnector)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("api/v1/projects/{}/vdc_organizations/{}", project, orgName)
                 .assertStatus(204);

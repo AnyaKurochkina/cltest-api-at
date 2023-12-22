@@ -13,8 +13,8 @@ import steps.Steps;
 import java.util.List;
 import java.util.Objects;
 
-import static core.helper.Configure.IamURL;
-import static core.helper.Configure.ResourceManagerURL;
+import static core.helper.Configure.iamURL;
+import static core.helper.Configure.resourceManagerURL;
 
 @Log4j2
 public class AuthorizerSteps extends Steps {
@@ -29,7 +29,7 @@ public class AuthorizerSteps extends Steps {
         } else {
             throw new Error("Invalid target: " + target + "\nYour target must start with \"fold\" or \"proj\"");
         }
-        return Objects.requireNonNull(new Http(ResourceManagerURL)
+        return Objects.requireNonNull(new Http(resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get(url)
                 .assertStatus(200)
@@ -47,7 +47,7 @@ public class AuthorizerSteps extends Steps {
         } else {
             url = "/v1/organizations/" + target;
         }
-        return Objects.requireNonNull(new Http(ResourceManagerURL)
+        return Objects.requireNonNull(new Http(resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get(url)
                 .assertStatus(200)
@@ -58,7 +58,7 @@ public class AuthorizerSteps extends Steps {
     @Step("Получение списка пользователей организации по тексту '{text}'")
     public static List<UserItem> findUsers(String text, Organization org) {
         @SuppressWarnings(value = "unchecked")
-        List<UserItem> users = (List<UserItem>) listEntities(IamURL, String.format("/v1/organizations/%s/users/search?search=%s", org.getName(), text), UserItem.class, Role.CLOUD_ADMIN);
+        List<UserItem> users = (List<UserItem>) listEntities(iamURL, String.format("/v1/organizations/%s/users/search?search=%s", org.getName(), text), UserItem.class, Role.CLOUD_ADMIN);
         return users;
     }
 
@@ -66,13 +66,13 @@ public class AuthorizerSteps extends Steps {
     @Step("Получение списка пользователей")
     public static List<UserItem> getUserList(String projectId) {
         @SuppressWarnings(value = "unchecked")
-        List<UserItem> users = (List<UserItem>) listEntities(IamURL, "/v1/projects/" + projectId + "/users?", UserItem.class, Role.CLOUD_ADMIN);
+        List<UserItem> users = (List<UserItem>) listEntities(iamURL, "/v1/projects/" + projectId + "/users?", UserItem.class, Role.CLOUD_ADMIN);
         return users;
     }
 
     @Step("Удаление проекта")
     public static void deleteFolder(String id) {
-        new Http(Configure.ResourceManagerURL)
+        new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/projects/" + id)
                 .assertStatus(204);

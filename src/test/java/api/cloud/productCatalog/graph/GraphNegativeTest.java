@@ -20,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static core.helper.StringUtils.format;
+import static core.helper.StringUtils.getRandomStringApi;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.GraphSteps.*;
 
@@ -140,5 +141,29 @@ public class GraphNegativeTest extends Tests {
                 .toJson();
         String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
         assertEquals(format("Environment type is not in the directory"), error);
+    }
+
+    @DisplayName("Негативный тест на создание графа с пустым именем")
+    @TmsLink("SOUL-8661")
+    @Test
+    public void createGraphsWithEmptyNameModTest() {
+        Modification jsonSchema = Modification.builder()
+                .name("")
+                .envs(Arrays.asList(Env.DEV))
+                .order(1)
+                .path("title")
+                .rootPath(RootPath.JSON_SCHEMA)
+                .updateType(UpdateType.REPLACE)
+                .data("dev_title")
+                .build();
+        JSONObject jsonObject = Graph.builder()
+                .name(getRandomStringApi(6))
+                .version("1.0.0")
+                .modifications(Collections.singletonList(jsonSchema))
+                .build()
+                .init()
+                .toJson();
+        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
+        assertEquals("\"name\": Это поле не может быть пустым.", error);
     }
 }
