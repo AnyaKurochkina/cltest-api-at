@@ -200,6 +200,24 @@ public class UiAstraLinuxTest extends UiProductTest {
     }
 
     @Test
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI AstraLinux. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.MORE, astraLinuxPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI AstraLinux. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        AstraLinuxPage astraLinuxPage = new AstraLinuxPage(product);
+        astraLinuxPage.runActionWithCheckCost(CompareType.LESS, astraLinuxPage::delKeyAstrom);
+    }
+
+    @Test
     @Order(100)
     @TmsLink("382918")
     @DisplayName("UI AstraLinux. Удаление продукта")
