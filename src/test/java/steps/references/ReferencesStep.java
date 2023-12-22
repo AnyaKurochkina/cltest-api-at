@@ -30,6 +30,15 @@ public class ReferencesStep extends Steps {
     private static final String DIRECTORIES_JSON_TEMPLATE = "references/createDirectory.json";
     private static final String PAGES_JSON_TEMPLATE = "references/createPages.json";
 
+    @Step("Экспорт нескольких Pages")
+    public static Response exportMultiPages(String directoriesName, JSONObject json) {
+        return new Http(referencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(json)
+                .post("/api/v1/private/directories/{}/pages/objects_export?as_file=true", directoriesName)
+                .assertStatus(200);
+    }
+
     @Deprecated
     @Step("Получение списка flavors для продукта {product}")
     public static List<Flavor> getProductFlavorsLinkedList(IProduct product) {

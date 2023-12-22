@@ -3,7 +3,6 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.GenericMonitoring;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
@@ -25,8 +24,8 @@ public class GenericMonitoringPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public GenericMonitoringPage(GenericMonitoring product) {
         super(product);
@@ -66,6 +65,7 @@ public class GenericMonitoringPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
     public void сreateSnapshot() {
         runActionWithParameters(BLOCK_VM, "Создать снапшот", "Подтвердить", () ->
         {
@@ -73,15 +73,16 @@ public class GenericMonitoringPage extends IProductPage {
             Select.byLabel("Срок хранения в днях").set("1");
         });
         btnGeneralInfo.click();
-        Assertions.assertTrue(getTableByHeader("Снапшоты").isColumnValueContains("Тип","snapshot"));
+        getTableByHeader("Снапшоты").asserts().checkColumnContainsValue("Тип", "snapshot");
     }
 
     public void deleteSnapshot() {
-        new Table("Имя",2).getRow(0).get().scrollIntoView(scrollCenter).click();
+        new Table("Имя", 2).getRow(0).get().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new Table("Имя").getFirstValueByColumn("Имя"), "Удалить снапшот");
         btnGeneralInfo.click();
-        Assertions.assertFalse(getTableByHeader("Снапшоты").isColumnValueContains("Тип", "snapshot"));
+        getTableByHeader("Снапшоты").asserts().checkColumnContainsValue("Тип", "snapshot");
     }
+
     public void reInventory() {
         new GenericMonitoringPage.VirtualMachineTable(POWER).checkPowerStatus(GenericMonitoringPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Реинвентаризация ВМ (Linux)");
@@ -164,8 +165,7 @@ public class GenericMonitoringPage extends IProductPage {
         Assertions.assertEquals(value, getTableByHeader("Дополнительные точки монтирования")
                         .getRowByColumnValue("", name).getValueByColumn(HEADER_DISK_SIZE),
                 "Неверный размер диска");
-        Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
-                value));
+        getTableByHeader("Дополнительные диски").asserts().checkColumnContainsValue(HEADER_DISK_SIZE, value);
     }
 
     public class VirtualMachineTable extends VirtualMachine {

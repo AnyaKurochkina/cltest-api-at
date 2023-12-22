@@ -29,7 +29,7 @@ class UiScyllaDbClusterAstraCheckUntilOrderTest extends Tests {
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         //product.setProductName("ScyllaDB Cluster RHEL"); //Для RHEL версии
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);

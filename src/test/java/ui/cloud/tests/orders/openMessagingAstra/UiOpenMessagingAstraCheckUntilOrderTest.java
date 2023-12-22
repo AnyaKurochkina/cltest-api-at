@@ -23,12 +23,12 @@ import ui.extesions.ProductInjector;
 @Tags({@Tag("ui"), @Tag("openmessaging_astra")})
 class UiOpenMessagingAstraCheckUntilOrderTest extends Tests {
 
-    OpenMessagingAstra product;
+    private OpenMessagingAstra product;
     //product = OpenMessagingAstra.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

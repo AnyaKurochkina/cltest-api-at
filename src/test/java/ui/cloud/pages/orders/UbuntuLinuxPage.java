@@ -6,7 +6,6 @@ import io.qameta.allure.Step;
 import models.cloud.orderService.products.Ubuntu;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Assumptions;
 import org.openqa.selenium.NotFoundException;
 import ui.elements.CheckBox;
 import ui.elements.Dialog;
@@ -15,7 +14,6 @@ import ui.elements.Table;
 
 import java.util.List;
 
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -26,8 +24,8 @@ public class UbuntuLinuxPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public UbuntuLinuxPage(Ubuntu product) {
         super(product);

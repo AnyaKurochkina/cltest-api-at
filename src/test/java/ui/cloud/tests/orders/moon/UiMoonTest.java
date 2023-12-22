@@ -7,8 +7,13 @@ import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.Moon;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.*;
-import ui.cloud.pages.orders.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.CompareType;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.orders.MoonOrderPage;
+import ui.cloud.pages.orders.MoonPage;
+import ui.cloud.pages.orders.OrderUtils;
+import ui.cloud.pages.orders.OrdersPage;
 import ui.extesions.UiProductTest;
 
 import java.time.Duration;
@@ -18,11 +23,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui_moon")})
 @Log4j2
 public class UiMoonTest extends UiProductTest {
-    Moon product;
+   private Moon product;
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

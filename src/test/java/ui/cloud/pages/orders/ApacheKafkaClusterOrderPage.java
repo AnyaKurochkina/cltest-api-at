@@ -13,6 +13,7 @@ public class ApacheKafkaClusterOrderPage extends NewOrderPage {
     Input nameCluster = Input.byLabel("Имя кластера *");
     SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
     private final Select configCluster = Select.byLabel("Конфигурация кластера");
+    private final Select osVersionKafka = Select.byLabel("Версия Apache Kafka");
 
     public ApacheKafkaClusterOrderPage() {
         labelInput.setValue(labelValue);
