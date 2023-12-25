@@ -18,6 +18,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public class WildFlyAstraPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_CERTIFICATE = "Сертификат WildFly";
+    private static final String BLOCK_VM = "Виртуальные машины";
     private static final String BLOCK_GROUP = "Список групп";
     private static final String HEADER_NAME_GROUP = "Имя группы";
     private static final String HEADER_CONSOLE = "Консоль управления";
@@ -36,6 +37,11 @@ public class WildFlyAstraPage extends AbstractAstraPage {
 
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
+    }
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
     }
 
     @Override

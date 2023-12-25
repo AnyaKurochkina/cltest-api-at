@@ -179,6 +179,11 @@ public class AstraLinuxPage extends AbstractAstraPage {
                 value));
     }
 
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
+    }
+
     public class VirtualMachineTable extends VirtualMachine {
         public VirtualMachineTable(String columnName) {
             super(columnName);

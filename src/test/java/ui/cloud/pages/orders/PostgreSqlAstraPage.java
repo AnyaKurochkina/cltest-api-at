@@ -19,6 +19,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 public class PostgreSqlAstraPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
+    private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_DB = "Базы данных";
     private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
     private static final String BLOCK_DB_AT_USER = "at_db_at_user";
@@ -39,6 +40,11 @@ public class PostgreSqlAstraPage extends AbstractAstraPage {
     private final SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
     private final SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
 
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
+    }
 
     public PostgreSqlAstraPage(PostgreSQL product) {
         super(product);

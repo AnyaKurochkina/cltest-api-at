@@ -19,6 +19,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 public class RedisAstraPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
+    private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_DB = "Базы данных";
     private static final String BLOCK_AT_DB_ADMIN = "at_db_admin";
     private static final String BLOCK_DB_AT_USER = "at_db_at_user";
@@ -41,6 +42,11 @@ public class RedisAstraPage extends AbstractAstraPage {
     private final SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
     private final SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
 
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
+    }
 
     public RedisAstraPage(Redis product) {
         super(product);

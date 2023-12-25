@@ -32,6 +32,11 @@ public class UbuntuLinuxPage extends AbstractAstraPage {
     }
 
     @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
+    }
+
+    @Override
     protected void checkPowerStatus(String expectedStatus) {
         new UbuntuLinuxPage.VirtualMachineTable(POWER).checkPowerStatus(expectedStatus);
     }

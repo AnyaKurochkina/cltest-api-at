@@ -11,6 +11,7 @@ import ui.elements.Table;
 import static core.helper.StringUtils.$x;
 
 public class TarantoolDataGridAstraPage extends AbstractAstraPage {
+    private static final String BLOCK_VM = "Виртуальные машины";
     private static final String BLOCK_APP = "Приложение";
     private static final String HEADER_CERTIFICATE = "Сертификаты";
     private static final String HEADER_COPY = "Резервные копии";
@@ -24,6 +25,11 @@ public class TarantoolDataGridAstraPage extends AbstractAstraPage {
 
     public TarantoolDataGridAstraPage(TarantoolDataGrid product) {
         super(product);
+    }
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
     }
 
     @Override

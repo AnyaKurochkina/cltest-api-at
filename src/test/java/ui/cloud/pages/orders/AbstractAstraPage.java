@@ -5,7 +5,7 @@ import models.cloud.orderService.interfaces.IProduct;
 
 public abstract class AbstractAstraPage extends IProductPage {
 
-    protected static final String BLOCK_VM = "Виртуальные машины";
+    public abstract String getVirtualTableName();
 
     public AbstractAstraPage(IProduct product) {
         super(product);
@@ -14,12 +14,12 @@ public abstract class AbstractAstraPage extends IProductPage {
     @Step("Установка ключа Астром")
     public void addKeyAstrom() {
         checkPowerStatus("Включено");
-        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
+        runActionWithoutParameters(getVirtualTableName(), "Установить Ключ-Астром");
     }
 
     @Step("Удаление ключа Астром")
     public void delKeyAstrom() {
         checkPowerStatus("Включено");
-        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
+        runActionWithoutParameters(getVirtualTableName(), "Удалить Ключ-Астром");
     }
 }
