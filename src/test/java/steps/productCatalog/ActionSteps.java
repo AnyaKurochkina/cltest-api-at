@@ -57,12 +57,17 @@ public class ActionSteps extends Steps {
      */
     @Step("Массовое изменение параметров действия")
     public static Response massChangeActionParam(List<String> id, boolean isForItem) {
+        return uncheckedMassChangeActionParam(id, isForItem)
+                .assertStatus(200);
+    }
+
+    @Step("Массовое изменение параметров действия")
+    public static Response uncheckedMassChangeActionParam(List<String> id, boolean isForItem) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("objects_change", new JSONArray().put(new JSONObject().put("id", id)
                         .put("params", new JSONObject().put("is_for_items", isForItem)))))
-                .post(actionUrl + "mass_change/")
-                .assertStatus(200);
+                .post(actionUrl + "mass_change/");
     }
 
     @Step("Создание действия")
