@@ -1,5 +1,6 @@
 package api.cloud.references.directories;
 
+import api.Tests;
 import core.helper.JsonHelper;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
@@ -9,8 +10,8 @@ import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
-import api.Tests;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Collections;
 
@@ -26,14 +27,29 @@ public class ReferencesDirectoriesNegativeTest extends Tests {
 
     @DisplayName("Негативный тест на создание directory c именем содержащим недопустимые символы")
     @TmsLink("843052")
-    @Test
-    public void createDirectoryWithInvalidNameTest() {
-        String dirName = "create_dir_test_api@";
+    @ParameterizedTest(name = "{index} - {0} is a invalid name")
+    @ValueSource(strings = {".", "create_dir_test_api@", ".random_name"})
+    public void createDirectoryWithInvalidNameTest(String name) {
         JSONObject jsonObject = JsonHelper.getJsonTemplate(DIRECTORIES_JSON_TEMPLATE)
-                .set("name", dirName)
+                .set("name", name)
                 .set("description", "description")
                 .build();
-        Response response = createDirectoryWithInvalidName(jsonObject);
-        assertEquals(Collections.singletonList("Can't create object with name: " + dirName), response.jsonPath().get());
+        Response response = createDirectoryWithInvalidName(jsonObject).assertStatus(400);
+        assertEquals(Collections.singletonList("Can't create object with name: " + name), response.jsonPath().get());
+    }
+
+    @DisplayName("Негативный тест на создание directory c пустым именем")
+    @TmsLink("SOUL-8620")
+    @ParameterizedTest(name = "{index} - {0} is a invalid name")
+    @ValueSource(strings = {"", " "})
+    public void createDirectoryWithEmptyNameTest(String name) {
+        JSONObject jsonObject = JsonHelper.getJsonTemplate(DIRECTORIES_JSON_TEMPLATE)
+                .set("name", name)
+                .set("description", "description")
+                .build();
+
+        Response response = createDirectoryWithInvalidName(jsonObject).assertStatus(400);
+
+        assertEquals("This field may not be blank.", response.jsonPath().getList("name").get(0), "Сообщение об ошибке не соответствует формату");
     }
 }
