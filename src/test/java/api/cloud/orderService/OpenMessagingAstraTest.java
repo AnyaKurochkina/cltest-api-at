@@ -4,13 +4,10 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.OpenMessagingAstra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,6 +33,26 @@ public class OpenMessagingAstraTest extends Tests {
     void expandMountPoint(OpenMessagingAstra product, Integer num) {
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
             astra.upgradeSetup();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Обновить операционную систему {0}")
+    void updateOS(OpenMessagingAstra product, Integer num) {
+        try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            astra.updateOS();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Обновление сертификатов {0}")
+    void updateCerts(OpenMessagingAstra product, Integer num) {
+        try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            astra.updateCerts();
         }
     }
 
