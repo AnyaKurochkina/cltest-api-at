@@ -9,7 +9,7 @@ import java.io.File;
 
 public class DownloadingFilesUtil {
 
-    public static final String DOWNLOADS_DIRECTORY_PATH = new File(Configure.RESOURCE_PATH + "downloads").getAbsolutePath() + "/";
+    public static final String DOWNLOADS_DIRECTORY_PATH = new File(Configure.RESOURCE_PATH + "/downloads").getAbsolutePath() + "/";
 
     /**
      * Пример использования: checkFileExistWithTimeout("src/sd/Audit_Logs_Table.csv", 2);
