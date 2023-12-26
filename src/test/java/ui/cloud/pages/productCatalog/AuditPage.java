@@ -1,5 +1,6 @@
 package ui.cloud.pages.productCatalog;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -320,7 +321,7 @@ public class AuditPage extends EntityPage {
     @Step("Клик по кнопке Экспортировать csv")
     public AuditPage exportCsv() {
         exportCsvButton.getButton()
-                .shouldBe(Condition.enabled)
+                .shouldBe(Tests.activeCnd.because("Кнопка экспортировать csv должна быть видима и кликабельна"))
                 .click();
         return this;
     }
