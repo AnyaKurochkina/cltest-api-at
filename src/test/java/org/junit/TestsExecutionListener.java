@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.helper.http.Path;
+import core.utils.DownloadingFilesUtil;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -62,7 +63,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap());
         // путь к папке загрузки файлов
-        prefs.put("download.default_directory", new File("src/test/resources/downloads").getAbsolutePath());
+        prefs.put("download.default_directory", new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH).getAbsolutePath());
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");

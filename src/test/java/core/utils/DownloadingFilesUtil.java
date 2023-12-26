@@ -1,5 +1,6 @@
 package core.utils;
 
+import core.helper.Configure;
 import io.qameta.allure.Step;
 import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.Assertions;
@@ -8,7 +9,7 @@ import java.io.File;
 
 public class DownloadingFilesUtil {
 
-    public static final String DOWNLOADS_DIRECTORY_PATH = new File("src/test/resources/downloads").getAbsolutePath() + "/";
+    public static final String DOWNLOADS_DIRECTORY_PATH = new File(Configure.RESOURCE_PATH + "downloads").getAbsolutePath() + "/";
 
     /**
      * Пример использования: checkFileExistWithTimeout("src/sd/Audit_Logs_Table.csv", 2);
