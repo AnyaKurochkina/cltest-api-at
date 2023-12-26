@@ -25,7 +25,6 @@ import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -62,6 +61,8 @@ public class TestsExecutionListener implements TestExecutionListener {
         Configuration.browser = "chrome";
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap());
+        // путь к папке загрузки файлов
+        prefs.put("download.default_directory", new File("src/test/resources/downloads").getAbsolutePath());
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");

@@ -49,6 +49,7 @@ public class AuditPage extends EntityPage {
     private final Input statusCodeInput = Input.byLabelV2("Код статуса");
     private final Input objectTypeFilterInput = Input.byLabelV2("Тип объекта");
     private final Input objectIdFilterInput = Input.byLabelV2("ID объекта");
+    private final Button exportCsvButton = Button.byLabel("Экспорт в CSV");
 
     public AuditPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();
@@ -313,6 +314,14 @@ public class AuditPage extends EntityPage {
     @Step("Проверка сортировки по дате и времени")
     public AuditPage checkSortingByDate() {
         EntityListPage.checkSortingByDateField("Дата и время", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        return this;
+    }
+
+    @Step("Клик по кнопке Экспортировать csv")
+    public AuditPage exportCsv() {
+        exportCsvButton.getButton()
+                .shouldBe(Condition.enabled)
+                .click();
         return this;
     }
 

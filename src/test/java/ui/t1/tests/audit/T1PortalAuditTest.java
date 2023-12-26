@@ -2,6 +2,7 @@ package ui.t1.tests.audit;
 
 import api.Tests;
 import core.enums.Role;
+import core.utils.DownloadingFilesUtil;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -145,5 +146,19 @@ public class T1PortalAuditTest extends Tests {
         page.checkRecordDetailsByResponse(project.getId(), projectsObject, requestValue, graph.getGraphId())
                 .checkCopyToClipboard(graph.getGraphId(), project.getId())
                 .checkResponseFullViewContains(graph.getName(), project.getId());
+    }
+
+    @Test
+    @TmsLink("SOUL-4130")
+    @DisplayName("Аудит. Экспортировать CSV")
+    public void auditExportingCsv() {
+        new IndexPage().goToPortalAuditPage()
+                .checkPeriodFieldsAreDisabledForDefaultSortingLastHour()
+                .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), modifyType,
+                        projectsObject, okCode, okStatus)
+                .selectPeriod(AuditPeriod.WEEK)
+                .exportCsv();
+
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory("Audit_Logs_Table.csv");
     }
 }
