@@ -217,24 +217,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
     }
 
     @Test
-    @Order(17)
-    @TmsLink("")
-    @DisplayName("UI WildFlyAstra. Установить Ключ-Астром")
-    void addKeyAstrom() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.MORE, wildFlyPage::addKeyAstrom);
-    }
-
-    @Test
-    @Order(18)
-    @TmsLink("")
-    @DisplayName("UI WildFlyAstra. Удалить Ключ-Астром")
-    void delKeyAstrom() {
-        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.LESS, wildFlyPage::delKeyAstrom);
-    }
-
-    @Test
     @Order(100)
     @TmsLink("908275")
     @DisplayName("UI WildFlyAstra. Удаление продукта")

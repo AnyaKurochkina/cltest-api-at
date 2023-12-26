@@ -21,7 +21,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 
 ;
 
-public class PodmanAstraPage extends IProductPage {
+public class PodmanAstraPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальные машины";
     private static final String HEADER_NAME_DB = "Имя базы данных";
@@ -87,16 +87,6 @@ public class PodmanAstraPage extends IProductPage {
         checkPowerStatus(PodmanAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_APP, "Выключить принудительно");
         checkPowerStatus(PodmanAstraPage.VirtualMachineTable.POWER_STATUS_OFF);
-    }
-
-    public void addKeyAstrom() {
-        new PodmanAstraPage.VirtualMachineTable().checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
-    }
-
-    public void delKeyAstrom() {
-        new PodmanAstraPage.VirtualMachineTable().checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")
@@ -170,6 +160,11 @@ public class PodmanAstraPage extends IProductPage {
     }
     public void updateOs() {
         runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
+    }
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
     }
 
     public class VirtualMachineTable extends VirtualMachine {
