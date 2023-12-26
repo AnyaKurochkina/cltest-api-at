@@ -316,7 +316,6 @@ public class ProductsTest extends Tests {
         Product product = Product.builder()
                 .name("update_product_test_api")
                 .title("AtTestApiProduct")
-
                 .version("1.0.0")
                 .info(info)
                 .build()

@@ -33,12 +33,17 @@ public class ProductCardSteps extends Steps {
 
     @Step("Создание productCard")
     public static ProductCard createProductCard(JSONObject jsonObject) {
+        return uncheckedCreateProductCard(jsonObject)
+                .assertStatus(201)
+                .extractAs(ProductCard.class);
+    }
+
+    @Step("Создание productCard")
+    public static Response uncheckedCreateProductCard(JSONObject jsonObject) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
-                .post(CARD_URL)
-                .assertStatus(201)
-                .extractAs(ProductCard.class);
+                .post(CARD_URL);
     }
 
     @Step("Удаление productCard по id {id}")
