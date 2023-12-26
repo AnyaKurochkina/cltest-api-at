@@ -205,28 +205,27 @@ public class ProductCardsTest {
                     .versionArr(convertStringVersionToIntArrayVersion(actionVersion))
                     .build();
 
-            List<CardItems> cardItemsList = new ArrayList<>();
-            cardItemsList.add(actionCard);
-
             ProductCard productCard = ProductCard.builder()
                     .name("apply_product_card_test_api")
                     .title("apply_product_card_title_test_api")
                     .description("test_api")
-                    .cardItems(cardItemsList)
+                    .cardItems(Collections.singletonList(actionCard))
                     .build()
                     .createObject();
             partialUpdateAction(action.getActionId(), new JSONObject().put("type", "on"));
 
             ImportObject object = applyProductCard(productCard.getId()).jsonPath().getList("imported_objects", ImportObject.class)
-                    .get(0);
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Список Imported objects пустой."));
             assertAll(
-                    () -> assertEquals(actionName, object.getObjectName()),
-                    () -> assertEquals(action.getActionId(), object.getObjectId()),
+                    () -> assertEquals(actionName, object.getObjectName(), "Имя объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
+                    () -> assertEquals(action.getActionId(), object.getObjectId(), "Id объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
                     () -> assertEquals(format("Error loading dump: Версия \"{}\" Action:{} уже существует, но с другим наполнением. Измените значение версии (\"version_arr: {}\") у импортируемого объекта и попробуйте снова.", actionVersion, actionName, convertStringVersionToIntArrayVersion(actionVersion))
                             , object.getMessages().get(0))
             );
-        } catch (Exception ignore) {
-
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             deleteActionByName(actionName);
         }
