@@ -11,6 +11,7 @@ import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
+import ui.t1.tests.audit.AuditPeriod;
 
 import java.time.format.DateTimeFormatter;
 
@@ -51,6 +52,14 @@ public class AuditPage extends EntityPage {
 
     public AuditPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();
+    }
+
+    @Step("[Проверка] Поля начало и окончание периода отключены для дефолтного значения последний 1 час")
+    public AuditPage checkPeriodFieldsAreDisabledForDefaultSortingLastHour() {
+        Assertions.assertEquals(AuditPeriod.LAST_HOUR.getUiValue(), periodSelect.getValue(), "По дефолту выбран период последний 1 час");
+        beginDateInput.getInput().shouldBe(Condition.disabled.because("Поле Дата начала периода должно быть отключено"));
+        endDateInput.getInput().shouldBe(Condition.disabled.because("Поле Дата окончания периода должно быть отключено"));
+        return this;
     }
 
     @Step("Проверка содержания записи в таблице аудита")
@@ -287,9 +296,9 @@ public class AuditPage extends EntityPage {
     }
 
     @Step("Выбор периода времени")
-    public AuditPage selectPeriod(String periodName) {
+    public AuditPage selectPeriod(AuditPeriod periodName) {
         TestUtils.scrollToTheTop();
-        periodSelect.set(periodName);
+        periodSelect.set(periodName.getUiValue());
         return this;
     }
 

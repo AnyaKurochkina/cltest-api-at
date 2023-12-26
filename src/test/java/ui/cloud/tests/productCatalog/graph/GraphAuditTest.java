@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
+import ui.t1.tests.audit.AuditPeriod;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -56,7 +57,7 @@ public class GraphAuditTest extends GraphBaseTest {
         new AuditPage().setFilterByDate(LocalDateTime.now().plusDays(1).format(formatter),
                         LocalDateTime.now().plusDays(2).format(formatter))
                 .checkRecordsNotFoundV2()
-                .selectPeriod("день")
+                .selectPeriod(AuditPeriod.ONE_DAY)
                 .checkRecordWithOperationTypeFound("modify");
     }
 
