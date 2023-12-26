@@ -130,7 +130,7 @@ public class ItemTest extends Tests {
                 .build();
         createBulkAddEvent(project.getId(), json2).assertStatus(201);
         Item itemById = getItemById(item.getItemId());
-        assertEquals(status, itemById.getData().get("state"));
+        assertEquals(status, itemById.getData().get("state"), "Items state не соответствует ожидаемому");
     }
 
     @DisplayName("Проверка что при запросе item по id возвращаются item со state = deleted")
@@ -151,6 +151,6 @@ public class ItemTest extends Tests {
                 .build();
         createBulkAddEvent(project.getId(), json2).assertStatus(201);
         Item itemById = getItemById(item.getItemId());
-        assertEquals(status, itemById.getData().get("state"));
+        assertEquals(status, itemById.getData().get("state"), "Items state не соответствует ожидаемому");
     }
 }
