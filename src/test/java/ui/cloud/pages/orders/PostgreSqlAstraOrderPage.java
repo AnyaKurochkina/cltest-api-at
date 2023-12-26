@@ -7,7 +7,7 @@ import ui.elements.Select;
 @Getter
 public class PostgreSqlAstraOrderPage extends NewOrderPage {
 
-    Select pSqlVersion = Select.byLabel("Версия PostgreSQL");
+    private final Select pSqlVersion = Select.byLabel("Версия PostgreSQL");
 
     public PostgreSqlAstraOrderPage() {
         labelInput.setValue(labelValue);

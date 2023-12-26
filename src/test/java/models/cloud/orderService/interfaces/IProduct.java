@@ -51,7 +51,7 @@ import java.sql.DriverManager;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static core.helper.Configure.OrderServiceURL;
+import static core.helper.Configure.orderServiceURL;
 import static core.utils.AssertUtils.assertContains;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static steps.productCatalog.GraphSteps.getGraphByIdAndEnv;
@@ -89,6 +89,7 @@ public abstract class IProduct extends Entity {
     @Setter
     protected String segment;
     @Setter
+    @Getter
     protected String availabilityZone, domain;
 
     protected String jsonTemplate;
@@ -124,10 +125,6 @@ public abstract class IProduct extends Entity {
     public String getLink() {
         log.debug("Get Link: {}", link);
         return link;
-    }
-
-    public String getAvailabilityZone() {
-        return Objects.requireNonNull(availabilityZone, "Поле availabilityZone пустое");
     }
 
     public String getDomain() {
@@ -311,7 +308,7 @@ public abstract class IProduct extends Entity {
 
     public boolean isActionExist(String action) {
         Assumptions.assumeTrue(isDev(), "Тест включен только для dev среды");
-        return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name == '%s'}", action));
+        return (Boolean) OrderServiceSteps.getProductsField(this, String.format("data.any{it.actions.name.contains('%s')}", action));
     }
 
     protected void checkConnectDb(String dbName, String user, String password, String url) throws ConnectException {
@@ -333,7 +330,7 @@ public abstract class IProduct extends Entity {
         if (envType().contains("prod")) {
             OrderServiceSteps.switchProtect(getOrderId(), getProjectId(), false);
         }
-        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).status(ProductStatus.DELETED).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).expectedStatus("deprovisioned").status(ProductStatus.DELETED).build());
         Assertions.assertEquals(0.0F, CalcCostSteps.getCostByUid(getOrderId(), getProjectId()), 0.0F, "Стоимость после удаления заказа больше 0.0");
         if (Objects.isNull(platform))
             return;
@@ -382,6 +379,7 @@ public abstract class IProduct extends Entity {
         projectId = StringUtils.findByRegex("context=([^&]*)", link);
         orderId = StringUtils.findByRegex("orders/([^/]*)/", link);
         productId = ((String) OrderServiceSteps.getProductsField(this, "product_id"));
+        domain = OrderServiceSteps.getDomainByProject(projectId);
         this.link = link;
         return (T) this;
     }
@@ -398,7 +396,7 @@ public abstract class IProduct extends Entity {
         Assertions.assertTrue(list.size() > 1, "У продукта меньше 2 flavors");
         Flavor flavor = list.get(list.size() - 1);
         OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
-                .data(new JSONObject().put("flavor", flavor.toString()).put("warning", new Object()).put("accept", true)).build());
+                .data(new JSONObject().put("flavor", flavor.toJson()).put("warning", new JSONObject()).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
         Assertions.assertEquals(flavor.data.cpus, cpusAfter, "Конфигурация cpu не изменилась или изменилась неверно");
@@ -478,7 +476,8 @@ public abstract class IProduct extends Entity {
     //Расширить
     protected void expandMountPoint(String action, String mount, int size) {
         Float sizeBefore = (Float) OrderServiceSteps.getProductsField(this, String.format(EXPAND_MOUNT_SIZE, mount, mount));
-        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(new JSONObject().put("size", size).put("mount", mount)).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().filter(String.format("extra_mounts.find{it.mount == '%s'}", mount))
+                .name(action).product(this).data(new JSONObject().put("size", size).put("mount", mount)).build());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, sizeBefore.intValue()));
         Assertions.assertEquals(sizeBefore, sizeAfter - size, 0.05, "sizeBefore >= sizeAfter");
     }
@@ -504,8 +503,8 @@ public abstract class IProduct extends Entity {
     protected void createProduct() {
         log.info("Отправка запроса на создание заказа " + productName);
         JSONObject data = deleteObjectIfNotFoundInUiSchema(toJson(), getProductId());
-        data = new JsonTemplate(data).set("$.order.lifetime", null).build();
-        JsonPath jsonPath = new Http(OrderServiceURL)
+        data = new JsonTemplate(data).set("$.order.lifetime", "172800").build();
+        JsonPath jsonPath = new Http(orderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                 .body(data)
                 .post("/v1/projects/" + projectId + "/orders")

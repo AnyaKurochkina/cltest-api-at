@@ -39,7 +39,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     protected Flavor flavor;
     protected String adminPassword;
 
-    public abstract String pgcIp();
+    public abstract String pgcHost();
 
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
@@ -69,7 +69,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     }
 
     void addMountPoint(String action, String mount) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(new JSONObject().put("mount", mount)).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this).data(new JSONObject().put("mount", mount).put("check_agree", true)).build());
         float sizeAfter = (Float) OrderServiceSteps.getProductsField(this, String.format(CHECK_EXPAND_MOUNT_SIZE, mount, mount, 0));
         Assertions.assertTrue(sizeAfter > 0);
     }

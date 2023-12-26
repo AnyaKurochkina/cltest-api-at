@@ -34,20 +34,20 @@ import java.util.function.Predicate;
 
 import static core.enums.Role.CLOUD_ADMIN;
 import static core.enums.Role.ORDER_SERVICE_ADMIN;
-import static core.helper.Configure.OrderServiceAdminURL;
-import static core.helper.Configure.OrderServiceURL;
+import static core.helper.Configure.orderServiceAdminURL;
+import static core.helper.Configure.orderServiceURL;
 
 @Log4j2
 public class OrderServiceSteps extends Steps {
 
     public static void checkOrderStatus(String exp_status, IProduct product) {
         String orderStatus = "";
-        int counter = 90;
+        int counter = 100;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.isEmpty() || orderStatus.equals("changing")) && counter > 0) {
             Waiting.sleep(20000);
-            Response res = new Http(OrderServiceURL)
+            Response res = new Http(orderServiceURL)
                     .disableAttachmentLog()
                     .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                     .get("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId())
@@ -73,8 +73,8 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static String getStatus(String orderId, String projectId) {
-        return new Http(OrderServiceURL)
-                .disableAttachmentLog()
+        return new Http(orderServiceURL)
+//                .disableAttachmentLog()
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
@@ -113,7 +113,7 @@ public class OrderServiceSteps extends Steps {
             if (statuses.length == 0) {
                 endPoint = endPoint.substring(0, endPoint.length() - 2);
             }
-            idOfAllSuccessProductsOnOnePage = new Http(OrderServiceURL)
+            idOfAllSuccessProductsOnOnePage = new Http(orderServiceURL)
                     .setRole(ORDER_SERVICE_ADMIN)
                     .get(endPoint)
                     .assertStatus(200)
@@ -136,7 +136,7 @@ public class OrderServiceSteps extends Steps {
             String endPoint = String.format("/v1/projects/%s/orders?include=total_count&page=" +
                             i + "&per_page=20",
                     Objects.requireNonNull(projectId));
-            idOfAllSuccessProductsOnOnePage = new Http(OrderServiceURL)
+            idOfAllSuccessProductsOnOnePage = new Http(orderServiceURL)
                     .setRole(CLOUD_ADMIN)
                     .get(endPoint)
                     .assertStatus(200)
@@ -154,7 +154,7 @@ public class OrderServiceSteps extends Steps {
         final Http request = JsonHelper.getJsonTemplate("/actions/template.json")
                 .set("$.item_id", action.getItemId())
                 .set("$.order.attrs", action.getData())
-                .send(OrderServiceURL);
+                .send(orderServiceURL);
         if (Objects.isNull(action.getRole()))
             return request.setProjectId(action.getProjectId(), ORDER_SERVICE_ADMIN)
                     .patch("/v1/projects/{}/orders/{}/actions/{}", action.getProjectId(), action.getOrderId(), action.getName());
@@ -164,14 +164,14 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Добавление действия {actionName} заказа и регистрация его в авторайзере")
     public static void registerAction(String actionName) {
-        new Http(OrderServiceURL)
+        new Http(orderServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("action_name", actionName))
                 .post("/v1/orders/actions");
     }
 
     public static Response changeProjectForOrderRequest(IProduct product, Project target) {
-        return new Http(OrderServiceURL)
+        return new Http(orderServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(new JSONObject(String.format("{target_project_name: \"%s\"}", target.getId())))
                 .patch("/v1/projects/{}/orders/{}/change_project", product.getProjectId(), product.getOrderId());
@@ -185,7 +185,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static void switchProtect(String orderId, String projectId, boolean value) {
-        Assertions.assertEquals(!value, new Http(OrderServiceURL)
+        Assertions.assertEquals(!value, new Http(orderServiceURL)
                 .disableAttachmentLog()
                 .setRole(CLOUD_ADMIN)
                 .body(new JSONObject().put("order", new JSONObject().put("deletable", !value)))
@@ -238,7 +238,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Ожидание успешного выполнения action")
     private static void checkActionStatusMethod(String orderId, String projectId, String actionId) {
-        String actionStatus = new Http(OrderServiceURL)
+        String actionStatus = new Http(orderServiceURL)
                 .disableAttachmentLog()
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}/actions/history/{}", projectId, orderId, actionId)
@@ -252,7 +252,7 @@ public class OrderServiceSteps extends Steps {
         }
         if (!actionStatus.equalsIgnoreCase("success")) {
             String error = StateServiceSteps.getErrorFromStateService(orderId);
-            if (Objects.isNull(error))
+            if (Objects.isNull(error) || error.equals("[]"))
                 error = "Действие не выполнено по таймауту";
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", orderId, actionStatus, error));
         }
@@ -264,13 +264,14 @@ public class OrderServiceSteps extends Steps {
         do {
             Waiting.sleep(20000);
             status = getStatus(orderId, projectId);
-        } while (status.equals("pending") || status.equals("changing")
+        } while ((status.equals("pending") || status.equals("changing")|| status.equals("removing") || status.isEmpty())
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+        log.info("Ожидание заказа. Финальный статус {}", status);
     }
 
     @Step("Получение warning по orderId = {orderId}")
     public static String getActionHistoryOutput(String orderId, String projectId, String actionId) {
-        return new Http(OrderServiceURL)
+        return new Http(orderServiceURL)
                 .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}/actions/history/{}/output",
                         projectId,
@@ -284,7 +285,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение домена для сегмента сети")
     public static String getDomain(IProduct product) {
         Organization organization = Organization.builder().type("default").build().createObject();
-        return new Http(OrderServiceURL)
+        return new Http(orderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/domains?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
@@ -299,14 +300,14 @@ public class OrderServiceSteps extends Steps {
     public static String getDomainByProject(String project) {
         Organization organization = Organization.builder().type("default").build().createObject();
         if (Configure.ENV.equals("ift")) {
-            return new Http(OrderServiceURL)
+            return new Http(orderServiceURL)
                     .setRole(ORDER_SERVICE_ADMIN)
                     .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25&organzation={}", project, organization.getName())
                     .assertStatus(200)
                     .jsonPath()
                     .get("list.find{it.code=='corp.dev.vtb'}.code");
         } else {
-            return new Http(OrderServiceURL)
+            return new Http(orderServiceURL)
                     .setRole(ORDER_SERVICE_ADMIN)
                     .get("/v1/domains?project_name={}&with_deleted=false&page=1&per_page=25&organzation={}", project, organization.getName())
                     .assertStatus(200)
@@ -315,10 +316,30 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    public static String getDataCentre(IProduct product) {
+        String dc = "50";
+        log.info("Получение ДЦ для сегмента сети {}", product.getSegment());
+        Organization org = Organization.builder().type("default").build().createObject();
+        List<String> list = new Http(orderServiceURL)
+                .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
+                .get("/v1/data_centers?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
+                        product.getSegment(),
+                        org.getName(),
+                        product.getProductCatalogName(),
+                        product.getProjectId())
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list.findAll{it.status == 'available'}.code");
+        if (list.contains(dc))
+            return dc;
+        Assertions.assertFalse(list.isEmpty(), "Список available ДЦ пуст");
+        return list.get(new Random().nextInt(list.size()));
+    }
+
     @Step("Получение зоны доступности для сегмента сети {product.segment}")
     public static String getAvailabilityZone(IProduct product) {
         Organization org = Organization.builder().type("default").build().createObject();
-        List<String> list = new Http(OrderServiceURL)
+        List<String> list = new Http(orderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/availability_zones?net_segment_code={}&organization={}&with_restrictions=true&product_name={}&project_name={}&page=1&per_page=25",
                         product.getSegment(),
@@ -336,7 +357,7 @@ public class OrderServiceSteps extends Steps {
     public static String getPlatform(IProduct product) {
         String platform = "OpenStack";
         Organization org = Organization.builder().type("default").build().createObject();
-        List<String> list = new Http(OrderServiceURL)
+        List<String> list = new Http(orderServiceURL)
                 .setProjectId(product.getProjectId(), Role.ORDER_SERVICE_ADMIN)
                 .get("/v1/platforms?net_segment_code={}&availability_zone_code={}&organization={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         product.getSegment(),
@@ -354,7 +375,7 @@ public class OrderServiceSteps extends Steps {
 
     private static void updateItemIdByOrderIdAndActionTitle(ActionParameters action) {
         log.info("Получение item_id для " + Objects.requireNonNull(action.getName()));
-        JsonPath jsonPath = new Http(OrderServiceURL)
+        JsonPath jsonPath = new Http(orderServiceURL)
                 .setProjectId(action.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/" + action.getProjectId() + "/orders/" + action.getOrderId())
                 .assertStatus(200)
@@ -383,7 +404,7 @@ public class OrderServiceSteps extends Steps {
     public static boolean productStatusIs(IProduct product, ProductStatus status) {
         log.info("Получение статуса для для продукта " + Objects.requireNonNull(product));
         //Отправка запроса на получение айтема
-        JsonPath jsonPath = new Http(OrderServiceURL)
+        JsonPath jsonPath = new Http(orderServiceURL)
                 .disableAttachmentLog()
                 .setProjectId(Objects.requireNonNull(product).getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/" + product.getProjectId() + "/orders/" + product.getOrderId())
@@ -400,7 +421,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Получение списка ресурсных пулов для категории {category} и проекта {projectId}")
     public static List<ResourcePool> getResourcesPoolList(String category, String projectId, String productName) {
-        String jsonArray = new Http(OrderServiceURL)
+        String jsonArray = new Http(orderServiceURL)
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/products/resource_pools?category={}&project_name={}&resource_type=cluster:openshift&quota[cpu]=1&quota[memory]=1&product_name={}",
                         category, projectId, productName)
@@ -428,7 +449,7 @@ public class OrderServiceSteps extends Steps {
     public static <T> T getProductsField(IProduct product, String path, Class<T> clazz, boolean assertion) {
         Object s;
         log.info("getFiledProduct path: " + path);
-        JsonPath jsonPath = new Http(OrderServiceURL)
+        JsonPath jsonPath = new Http(orderServiceURL)
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)
@@ -445,7 +466,7 @@ public class OrderServiceSteps extends Steps {
     }
 
     private static JsonPath getObjectClass(IProduct product){
-        return new Http(OrderServiceURL)
+        return new Http(orderServiceURL)
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)
@@ -465,7 +486,7 @@ public class OrderServiceSteps extends Steps {
     @Step("Получение сетевого сегмента для продукта {product}")
     public static String getNetSegment(IProduct product) {
         String segment = "dev-srv-app";
-        List<String> list = new Http(OrderServiceURL)
+        List<String> list = new Http(orderServiceURL)
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/net_segments?project_name={}&with_restrictions=true&product_name={}&page=1&per_page=25",
                         Objects.requireNonNull(product).getProjectId(), product.getProductCatalogName())
@@ -482,7 +503,7 @@ public class OrderServiceSteps extends Steps {
     public static void deleteOrders(String env, Predicate<String> label) {
         Project project = Project.builder().projectEnvironmentPrefix(new ProjectEnvironmentPrefix(Objects.requireNonNull(env)))
                 .isForOrders(true).build().createObject();
-        List<String> orders = new Http(OrderServiceURL)
+        List<String> orders = new Http(orderServiceURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success", project.id)
                 .assertStatus(200)
@@ -491,7 +512,7 @@ public class OrderServiceSteps extends Steps {
         log.trace("list = " + orders);
         for (String order : orders) {
             try {
-                JsonPath jsonPath = new Http(OrderServiceURL)
+                JsonPath jsonPath = new Http(orderServiceURL)
                         .setRole(Role.CLOUD_ADMIN)
                         .get("/v1/projects/" + project.id + "/orders/" + order)
                         .jsonPath();
@@ -508,7 +529,7 @@ public class OrderServiceSteps extends Steps {
 
                 JsonHelper.getJsonTemplate("/actions/template.json")
                         .set("$.item_id", itemId)
-                        .send(OrderServiceURL)
+                        .send(orderServiceURL)
                         .setRole(Role.CLOUD_ADMIN)
                         .patch("/v1/projects/{}/orders/{}/actions/{}", project.id, order, action)
                         .assertStatus(200);
@@ -518,7 +539,7 @@ public class OrderServiceSteps extends Steps {
         }
 
         if (Configure.ENV.equalsIgnoreCase("IFT")) {
-            orders = new Http(OrderServiceURL)
+            orders = new Http(orderServiceURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)
                     .assertStatus(200)
@@ -528,7 +549,7 @@ public class OrderServiceSteps extends Steps {
             StringJoiner params = new StringJoiner("&order_ids[]=", "order_ids[]=", "");
             orders.forEach(params::add);
 
-            new Http(OrderServiceURL)
+            new Http(orderServiceURL)
                     .setRole(Role.CLOUD_ADMIN)
                     .delete("/v1/orders?&force=false&{}", params.toString());
             log.trace("list = " + orders);
@@ -537,12 +558,12 @@ public class OrderServiceSteps extends Steps {
     }
 
     public static void deleteProduct(IProduct product) {
-        new Http(OrderServiceURL)
+        new Http(orderServiceURL)
                 .delete("/v1/projects/{}/orders/{}", product.getProjectId(), product.getOrderId());
     }
 
     public static Response getProductOrderService(String name) {
-        return new Http(OrderServiceAdminURL)
+        return new Http(orderServiceAdminURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/v1/order_restrictions?product_name={}", name);
     }

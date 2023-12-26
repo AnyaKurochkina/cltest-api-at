@@ -24,16 +24,16 @@ public class KafkaServiceTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLink("1232494")
-    @ParameterizedTest(name = "[{index}] Создание {0}")
-    void create(KafkaService product) {
+    @ParameterizedTest(name = "[{1}] Создание {0}")
+    void create(KafkaService product, Integer num) {
         //noinspection EmptyTryBlock
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {}
     }
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLinks({@TmsLink("1232495"), @TmsLink("1232497")})
-    @ParameterizedTest(name = "[{index}] Создание/удаление acl {0}")
-    void createAcl(KafkaService product) {
+    @ParameterizedTest(name = "[{1}] Создание/удаление acl {0}")
+    void createAcl(KafkaService product, Integer num) {
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {
             kafkaService.createAclRole("cert1", KafkaRoles.CONSUMER);
             kafkaService.deleteAclRole("cert1", KafkaRoles.CONSUMER);
@@ -42,8 +42,8 @@ public class KafkaServiceTest extends Tests {
 
     @Source(ProductArgumentsProvider.PRODUCTS)
     @TmsLinks({@TmsLink("1232500"), @TmsLink("1232501")})
-    @ParameterizedTest(name = "[{index}] Создание/удаление acl группы {0}")
-    void createAclGroup(KafkaService product) {
+    @ParameterizedTest(name = "[{1}] Создание/удаление acl группы {0}")
+    void createAclGroup(KafkaService product, Integer num) {
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {
             kafkaService.createAclGroup("1418_topic_name_consumergroup_group");
             kafkaService.deleteAclGroup("1418_topic_name_consumergroup_group");
@@ -52,9 +52,9 @@ public class KafkaServiceTest extends Tests {
 
     @TmsLink("1232502")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удаление {0}")
+    @ParameterizedTest(name = "[{1}] Удаление {0}")
     @MarkDelete
-    void delete(KafkaService product) {
+    void delete(KafkaService product, Integer num) {
         try (KafkaService kafkaService = product.createObjectExclusiveAccess()) {
             kafkaService.deleteObject();
         }

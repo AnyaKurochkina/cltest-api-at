@@ -23,6 +23,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -43,12 +44,14 @@ public class LoadBalancer extends IProduct {
     @Builder.Default
     List<Gslb> gslbs = new ArrayList<>();
     @Builder.Default
-    List<RouteSni> routes = new ArrayList<>();
+    List<RouteSni.Route> routes = new ArrayList<>();
     private final String FRONTEND_PATH = "data.find{it.type=='cluster'}.data.config.frontends.find{it.frontend_name == '%s'}";
     private final String BACKEND_PATH = "data.find{it.type=='cluster'}.data.config.backends.find{it.backend_name == '%s'}";
     private final String GSLIB_PATH = "data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}";
     private final String ROUTE_PATH = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s')}";
-    private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}[-2]";
+    private final String ROUTE_PATH_BACKEND = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.route_name.contains('%s') && it.backend_name.contains('%s')}";
+    private final String BACKUP_LAST_PATH = "data.find{it.type=='cluster'}.data.config.backup_dirs.sort{it.index}[-2].backup_name";
+    private final String ALIAS_PATH = "data.find{it.type=='cluster'}.data.config.sni_routes.find{it.aliases.contains('%s')}";
 
     @Override
     public Entity init() {
@@ -115,13 +118,10 @@ public class LoadBalancer extends IProduct {
 
     public void revertConfig(Backend backend) {
         addBackend(backend);
-        Map<Integer, String> res = OrderServiceSteps.getProductsField(this, BACKUP_LAST_PATH, Map.class);
-        JSONObject data = new JSONObject().put("backup", new JSONObject(res));
+        String backup = OrderServiceSteps.getObjectClass(this, BACKUP_LAST_PATH, String.class);
+        JSONObject data = new JSONObject().put("backup", backup);
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_revert_config").product(this).data(data).build());
-        Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
-                String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
-        backends.remove(backend);
-        save();
+        Assertions.assertFalse(isExistBackend(backend.getBackendName()),"Backend не удален");
     }
 
     public void deleteAllGslb() {
@@ -130,14 +130,59 @@ public class LoadBalancer extends IProduct {
     }
 
     public void addBackend(Backend backend) {
-        if (backends.contains(backend))
-            return;
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_backend").product(this)
                 .data(new JSONObject(JsonHelper.toJson(backend))).build());
-        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
-                String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не создался");
-        backends.add(backend);
+        Assertions.assertTrue(isExistBackend(backend.getBackendName()), "Backend не создался");
+    }
+
+    public void addFrontend(Frontend frontend) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_frontend").product(this)
+                .data(new JSONObject(JsonHelper.toJson(frontend))).build());
+        Assertions.assertTrue(isExistFrontend(frontend.getFrontendName()), "Frontend не создался");
+    }
+
+    public void addGslb(Gslb gslb) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_gslb_release_create_publication")
+                .product(this).data(new JSONObject(JsonHelper.toJson(gslb))).build());
+        Assertions.assertTrue(isExistGslb(gslb.getGlobalname()), "Gslb не создался");
+    }
+
+    public void addRouteSni(RouteSni routeSni) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_route_sni").product(this)
+                .data(new JSONObject(JsonHelper.toJson(routeSni))).build());
+        for(RouteSni.Route route : routeSni.getRoutes()) {
+            Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
+                    String.format(ROUTE_PATH, route.getName()), RouteSni.RouteCheck.class),"route не создался");
+            routes.add(route);
+        }
         save();
+    }
+
+    public void addBackendUseCache(Backend backend) {
+        if (!isExistBackend(backend.getBackendName()))
+            addBackend(backend);
+    }
+
+    public void addFrontendUseCache(Frontend frontend) {
+        if (!isExistFrontend(frontend.getFrontendName()))
+            addFrontend(frontend);
+    }
+
+    public void addGslbUseCache(Gslb gslb) {
+        if (!isExistGslb(gslb.getGlobalname()))
+            addGslb(gslb);
+    }
+
+    private boolean isExistBackend(String name){
+        return Objects.nonNull(OrderServiceSteps.getObjectClass(this, String.format(BACKEND_PATH, name), Backend.class));
+    }
+
+    private boolean isExistFrontend(String name){
+        return Objects.nonNull(OrderServiceSteps.getObjectClass(this, String.format(FRONTEND_PATH, name), Frontend.class));
+    }
+
+    private boolean isExistGslb(String name){
+        return Objects.nonNull(OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, name), Gslb.class));
     }
 
     public void changeActiveStandbyMode(StandbyMode standbyMode) {
@@ -145,46 +190,21 @@ public class LoadBalancer extends IProduct {
                 .product(this).data(serialize(standbyMode)).build());
     }
 
-    public void addFrontend(Frontend frontend) {
-        if (frontends.contains(frontend))
-            return;
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_frontend").product(this)
-                .data(new JSONObject(JsonHelper.toJson(frontend))).build());
-        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
-                String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не создался");
-        frontends.add(frontend);
-        save();
-    }
-
-    public void addGslb(Gslb gslb) {
-        if (gslbs.contains(gslb))
-            return;
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_gslb_release_create_publication")
-                .product(this).data(new JSONObject(JsonHelper.toJson(gslb))).build());
-        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
-                String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не создался");
-        gslbs.add(gslb);
-        save();
-    }
-
-    public void addRouteSni(RouteSni route) {
-        if (routes.contains(route))
-            return;
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_route_sni").product(this)
-                .data(new JSONObject(JsonHelper.toJson(route))).build());
-        Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
-                String.format(ROUTE_PATH, route.getRoutes().get(0).getName()), RouteSni.RouteCheck.class), "route не создался");
-        routes.add(route);
-        save();
+    public void addAliases(RouteSni routeSni, List<RouteSni.Alias> aliases) {
+        for(RouteSni.Route route: routeSni.getRoutes()) {
+            OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_alias_for_sni").product(this)
+                    .data(new JSONObject().put("globalname", route.getName() + "." + routeSni.getGlobalname()).put("aliases", aliases)).build());
+            for(RouteSni.Alias alias: aliases) {
+                Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this,
+                        String.format(ALIAS_PATH, alias.getName()), RouteSni.RouteCheck.class), "Псевдоним не добавлен");
+            }
+        }
     }
 
     public void deleteBackend(Backend backend) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_backend").product(this)
                 .data(new JSONObject().put("backend_name", backend.getBackendName())).build());
-        Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
-                String.format(BACKEND_PATH, backend.getBackendName()), Backend.class), "Backend не удален");
-        backends.remove(backend);
-        save();
+        Assertions.assertFalse(isExistBackend(backend.getBackendName()), "Backend не удален");
         if (isDev())
             Assertions.assertFalse(isStateContains(backend.getBackendName()));
     }
@@ -208,10 +228,7 @@ public class LoadBalancer extends IProduct {
     public void deleteFrontend(Frontend frontend) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_frontend").product(this)
                 .data(new JSONObject().put("frontend_name", frontend.getFrontendName())).build());
-        Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
-                String.format(FRONTEND_PATH, frontend.getFrontendName()), Frontend.class), "Frontend не удален");
-        frontends.remove(frontend);
-        save();
+        Assertions.assertFalse(isExistFrontend(frontend.getFrontendName()), "Frontend не удален");
         if (isDev())
             Assertions.assertFalse(isStateContains(frontend.getFrontendName()));
     }
@@ -219,17 +236,12 @@ public class LoadBalancer extends IProduct {
     public void deleteFrontends(List<Frontend> frontends) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_frontends").product(this)
                 .data(new JSONObject().put("frontends", serializeList(frontends))).build());
-        frontends.forEach(e -> {
-            Assertions.assertNull(OrderServiceSteps.getObjectClass(this,
-                    String.format(FRONTEND_PATH, e.getFrontendName()), Frontend.class), "Frontend не удален");
-            frontends.remove(e);
-        });
-        save();
+        frontends.forEach(e -> Assertions.assertFalse(isExistFrontend(e.getFrontendName()), "Frontend не удален"));
     }
 
     public void deleteGslb(Gslb gslb) {
         gslbs.remove(gslb);
-        gslb = (Gslb) OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class);
+        gslb = OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class);
         deleteGslbSource(gslb.getGlobalname());
         Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(GSLIB_PATH, gslb.getGlobalname()), Gslb.class), "gslb не удален");
         save();
@@ -238,6 +250,24 @@ public class LoadBalancer extends IProduct {
     public void deleteGslbSource(String globalName) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_gslb_release_delete_publication")
                 .product(this).data(new JSONObject().put("globalname", globalName)).build());
+    }
+
+    public void deleteRouteSni(RouteSni routeSni) {
+        for(RouteSni.Route route: routeSni.getRoutes()) {
+            routes.remove(route);
+            OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_sni_route").product(this)
+                    .data(new JSONObject().put("sni_route", route.getName() + "." + routeSni.getGlobalname())).build());
+            Assertions.assertNull(OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH, route.getName()), RouteSni.RouteCheck.class));
+        }
+        save();
+    }
+
+    public void editRouteSni(RouteSni routeSni, String backendName) {
+        for(RouteSni.Route route: routeSni.getRoutes()) {
+            OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_edit_route_sni").product(this)
+                    .data(new JSONObject().put("backend_name", backendName).put("sni_route", route.getName() + "." + routeSni.getGlobalname())).build());
+            Assertions.assertNotNull(OrderServiceSteps.getObjectClass(this, String.format(ROUTE_PATH_BACKEND, route.getName(), backendName), RouteSni.RouteCheck.class), "route не изменен");
+        }
     }
 
     public Boolean isStateContains(String name) {
@@ -269,7 +299,8 @@ public class LoadBalancer extends IProduct {
     }
 
     public void expandMountPoint() {
-        expandMountPoint("balancer_release_expand_mount_point", "/app", 10);
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_expand_mount_point").product(this)
+                .data(new JSONObject().put("size", 10).put("mount", "/app")).build());
     }
 
     public void resize(Flavor flavor) {
@@ -302,12 +333,12 @@ public class LoadBalancer extends IProduct {
     }
 
     public void updateCertificates(String method) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_certificates").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_certificates").timeout(Duration.ofMinutes(50)).product(this)
                 .data(new JSONObject().put("method", method)).build());
     }
 
     public void resizeClusterVms(Flavor flavor) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofMinutes(70))
                 .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
@@ -317,7 +348,7 @@ public class LoadBalancer extends IProduct {
 
     public void addHaproxy(int haproxyCount) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_add_haproxy").checkPrebilling(false).product(this)
-                .data(new JSONObject().put("new_haproxy_count", haproxyCount).put("check_agree", true)).timeout(Duration.ofMinutes(40)).build());
+                .data(new JSONObject().put("new_haproxy_count", haproxyCount).put("check_agree", true)).timeout(Duration.ofMinutes(60)).build());
     }
 
     public void complexCreate(ComplexCreate complex) {

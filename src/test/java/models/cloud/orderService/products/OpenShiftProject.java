@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-import static core.helper.Configure.OrderServiceURL;
+import static core.helper.Configure.orderServiceURL;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
@@ -33,6 +33,7 @@ public class OpenShiftProject extends IProduct {
     public String resourcePoolLabel;
     @Singular
     public List<Role> roles;
+    String dataCentre;
 
     @Override
     public Entity init() {
@@ -45,8 +46,8 @@ public class OpenShiftProject extends IProduct {
         }
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (availabilityZone == null)
-            setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
+        if(dataCentre == null)
+            setDataCentre(OrderServiceSteps.getDataCentre(this));
         return this;
     }
 
@@ -71,7 +72,7 @@ public class OpenShiftProject extends IProduct {
                 .set("$.order.attrs.resource_pool", new JSONObject(resourcePool.toString()))
                 .set("$.order.attrs.roles[0].groups[0]", accessGroup)
                 .set("$.order.project_name", projectId)
-                .set("$.order.attrs.availability_zone", getAvailabilityZone())
+                .set("$.order.attrs.data_center", getDataCentre())
                 .set("$.order.attrs.net_segment", getSegment())
                 .set("$.order.attrs.user_mark", "openshift" + new Random().nextInt())
                 .set("$.order.label", getLabel())
@@ -103,7 +104,7 @@ public class OpenShiftProject extends IProduct {
 
     //Проверка на наличие СХД у продукта
     private boolean hasShdQuote() {
-        String jsonArray = new Http(OrderServiceURL)
+        String jsonArray = new Http(orderServiceURL)
                 .setProjectId(getProjectId(), core.enums.Role.ORDER_SERVICE_ADMIN)
                 .get(String.format("/v1/products/resource_pools?category=container&project_name=%s&quota[storage][sc-nfs-netapp-q]=1&resource_type=cluster:openshift",
                         getProjectId()))

@@ -11,7 +11,6 @@ import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Server;
-import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -29,12 +28,12 @@ import java.util.List;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerBackendChangeNegativeTest extends Tests {
 
-    static List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").build(),
-            Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").build());
+    static List<Server> serversTcp = Arrays.asList(Server.builder().address("10.226.48.194").port(443).name("d5soul-ngc004lk.corp.dev.vtb").slowStart(0).build(),
+            Server.builder().address("10.226.99.132").port(443).name("d5soul-ngc005lk.corp.dev.vtb").slowStart(0).build());
     static List<Server> serversHttp = Arrays.asList(Server.builder().address("10.226.48.194").port(80).name("d5soul-ngc004lk.corp.dev.vtb").build(),
             Server.builder().address("10.226.99.132").port(80).name("d5soul-ngc005lk.corp.dev.vtb").build());
 
-    static Backend backend = Backend.builder().servers(serversHttp).backendName(new Generex("load_balancer_negative_test-[0-9]{4}").random()).build();
+    static Backend backend = Backend.builder().servers(serversHttp).backendName(new Generex("load_balancer_negative_test-[0-9]{4}").random()).cookieStatus(false).build();
     static Frontend frontend = Frontend.builder().frontendName(new Generex("load_balancer_negative_test-[0-9]{4}")
             .random()).mode("tcp").defaultBackendNameTcp(backend.getBackendName()).build();
 
@@ -44,7 +43,7 @@ public class LoadBalancerBackendChangeNegativeTest extends Tests {
     void notValidBackendServerName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().name("not_valid").build());
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () ->
                     balancer.editBackend(backend.getBackendName(), "delete", servers));
             AssertUtils.assertContains(throwable.getMessage(), "The entered servers were not found in the specified backend");
@@ -57,7 +56,7 @@ public class LoadBalancerBackendChangeNegativeTest extends Tests {
     void notValidBackendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().address("10.10.10.10").port(80).name("name").build());
-            balancer.addBackend(backend);
+            balancer.addBackendUseCache(backend);
             AssertResponse.run(() -> balancer.editBackend(backend.getBackendName(), "not_valid", servers)).status(422).responseContains("action");
         }
     }

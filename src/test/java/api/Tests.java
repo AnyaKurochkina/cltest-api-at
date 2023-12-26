@@ -17,7 +17,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
 import ru.testit.utils.UniqueTest;
-import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
 import ui.t1.tests.engine.EntitySupplier;
 
@@ -39,7 +38,6 @@ public class Tests {
             return () -> {
                 if (!Waiting.sleep(() -> new IndexPage().getLinkProfile().isDisplayed(), Duration.ofSeconds(10))) {
                     Selenide.refresh();
-                    TypifiedElement.checkProject();
                 }
             };
         return () -> Waiting.sleep(() -> new IndexPage().getLinkProfile().isDisplayed(), Duration.ofSeconds(10));

@@ -3,13 +3,17 @@ package api.cloud.tagService.v2;
 import api.cloud.tagService.AbstractTagServiceTest;
 import core.enums.Role;
 import core.helper.http.AssertResponse;
+import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
-import models.cloud.tagService.*;
-import models.cloud.tagService.v2.FilterResultV2Page;
+import models.cloud.tagService.Filter;
+import models.cloud.tagService.Inventory;
+import models.cloud.tagService.Tag;
+import models.cloud.tagService.TagServiceSteps;
 import models.cloud.tagService.v2.FilterResultV2;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.InventoryTagsV2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -22,7 +26,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static models.cloud.tagService.Inventory.DEFAULT_TYPE;
-import static models.cloud.tagService.TagServiceSteps.*;
+import static models.cloud.tagService.TagServiceSteps.inventoryFilterV2;
+import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 
 @Epic("Сервис тегов")
 @Feature("Фильтр Inventory V2")
@@ -365,6 +370,29 @@ public class InventoryFilterV2Test extends AbstractTagServiceTest {
                 .responseTags(Collections.singletonList(tList.get(0).getKey()))
                 .build();
         FilterResultV2Page filterResult = inventoryFilterV2(context, filter);
-        Assertions.assertEquals(filterResult.getList().get(0).getTags(), Collections.singletonMap(tList.get(0).getKey(), tagValue), "Неверный response_tags");
+        Assertions.assertEquals(filterResult.getList().get(0).getTags().get(tList.get(0).getKey()).toString(),
+                String.format("\"%s\"",tagValue), "Неверный response_tags");
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory. Фильтр V2 по distinct")
+    void checkFilterDistinct() {
+        List<String> tagsValues = Arrays.asList("distinct_tags", "distinct_tags_second");
+        List<Tag> tList = generateTags(2);
+        List<Inventory> iList = generateInventories(2);
+
+        inventoryTagsV2(context, iList.get(0).getId(),null, Arrays.asList(new InventoryTagsV2.Tag(tList.get(0).getKey(), tagsValues.get(0)),
+                new InventoryTagsV2.Tag(tList.get(1).getKey(), tagsValues.get(1))));
+        inventoryTagsV2(context, iList.get(1).getId(),null, Collections.singletonList(new InventoryTagsV2.Tag(tList.get(0).getKey(), tagsValues.get(0))));
+
+        Filter filter = Filter.builder()
+                .distinct(tagsValues)
+                .tags(new Filter.Tag()
+                        .addFilter(new Filter.Tag.TagFilter(tList.get(0).getKey(), tagsValues.get(0), "exact")))
+                .build();
+
+        FilterResultV2Page filterResult = inventoryFilterV2(context, filter, new QueryBuilder().add("ordering", String.join(",", tagsValues)));
+        Assertions.assertEquals(filterResult.getMeta().getTotalCount(), 1, "Неверное количество inventories");
     }
 }

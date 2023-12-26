@@ -8,7 +8,6 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
@@ -16,8 +15,8 @@ public class EtcdPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
 
     public EtcdPage(Etcd product) {
@@ -92,6 +91,7 @@ public class EtcdPage extends IProductPage {
             Alert.green("Значение скопировано");
         });
     }
+
     public void changeConfiguration() {
         btnGeneralInfo.click();
         getRoleNode().scrollIntoView(scrollCenter).click();
@@ -105,9 +105,11 @@ public class EtcdPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
     public void createCertificate(String name) {
         runActionWithoutParameters(getActionsMenuButton(name), "Создать сертификаты для пользователя etcd");
-        }
+    }
+
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
     }

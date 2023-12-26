@@ -33,29 +33,29 @@ import static api.routes.VpcApi.getSecurityGroupsApiV1ProjectsProjectNameSecurit
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteAllOrders extends Tests {
 
-    @ParameterizedTest(name = "[{index}] {0}")
+    @ParameterizedTest(name = "[{1}] {0}")
     @Tag("deleteAll")
     @Source(ProductArgumentsProvider.ENV)
     @DisplayName("Удаление всех успешных заказов из проекта")
-    public void deleteOrders(String env) {
+    public void deleteOrders(String env, Integer num) {
         OrderServiceSteps.deleteOrders(env, label -> label.startsWith("AT-API"));
     }
 
     @Test
     @DisplayName("Вывод всех ошибочных заказов")
     void printAllErrorOrders() {
-        Http.setFixedRole(Role.CLOUD_ADMIN);
+        Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
         List<Order> orders = new ArrayList<>();
         List<String> projects = Arrays.asList("proj-ln4zg69jek", "proj-rddf0uwi0q", "proj-ahjjqmlgnm",
                 "proj-bhbyhmik3a", "proj-zoz17np8rb", "proj-114wetem0c", "proj-1oob0zjo5h", "proj-6wpfrbes0g", "proj-aei4kz2yu4",
-                "proj-lcwn3pwg7z", "proj-50duh5yxy6", "proj-xryy5l8ei5", "proj-yhi3rxo07h", "proj-5ejgs0vfzf", "proj-nedsjpgpjk");
+                "proj-lcwn3pwg7z", "proj-50duh5yxy6", "proj-xryy5l8ei5", "proj-yhi3rxo07h", "proj-5ejgs0vfzf", "proj-nedsjpgpjk", "proj-urmmc38ka8", "proj-sezxpgqlb6");
         if (Configure.ENV.equals("blue")) {
             projects = Arrays.asList("proj-iv550odo9a", "proj-3wgrmny2yu", "proj-td00y68hfk",
                     "proj-anw4ujlh5u", "proj-bw5aabeuw1", "proj-2xdbtyzqs3", "proj-lww1vo6okh", "proj-7w4eov3old", "proj-99p4fdfs5c",
                     "proj-ytwcbh7rlr", "proj-6sq3n30eh0", "proj-fnxokdmi0b", "proj-i6ul07p131", "proj-pr0n40cx1e", "proj-0c0ki636z5", "proj-p9b5mtehhq");
         }
         for (String projectId : projects) {
-            OrderServiceSteps.getProductsWithStatus(projectId, "changing", "damaged", "failure", "pending", "locked", "deprovisioned_error")
+            OrderServiceSteps.getProductsWithStatus(projectId, "changing", "damaged", "failure", "pending","creation_error","locked", "deprovisioned_error")
                     .forEach(e -> orders.add(new Order(e, projectId, CalcCostSteps.getCostByUid(e, projectId))));
         }
         System.out.println("Битые заказы:");

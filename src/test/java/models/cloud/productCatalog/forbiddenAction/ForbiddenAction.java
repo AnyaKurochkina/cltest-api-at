@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 import static steps.productCatalog.ForbiddenActionSteps.*;
 
 @Log4j2
@@ -85,7 +85,7 @@ public class ForbiddenAction extends Entity {
         if (isForbiddenActionExists(name)) {
             deleteForbiddenActionByName(name);
         }
-        ForbiddenAction forbiddenAction = new Http(ProductCatalogURL)
+        ForbiddenAction forbiddenAction = new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post("/api/v1/forbidden_actions/")

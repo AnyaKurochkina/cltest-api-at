@@ -27,6 +27,10 @@ public class ProductOrderRestriction {
     @JsonProperty("net_segments")
     private List<String> netSegments;
     private List<String> domains;
+    @JsonProperty("product_ids")
+    private List<String> productIds;
+    @JsonProperty("product_names")
+    private List<String> productNames;
     @JsonProperty("information_system_ids")
     private List<String> informSystemIds;
     @JsonProperty("product_name")

@@ -8,14 +8,12 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.ClickHouse;
-import models.cloud.portalBack.AccessGroup;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
-import ui.cloud.pages.orders.ClickHouseOrderPage;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
+import ui.cloud.pages.orders.ClickHouseOrderPage;
 import ui.cloud.pages.orders.NewOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
@@ -29,13 +27,13 @@ import static steps.portalBack.PortalBackSteps.getRandomAccessGroup;
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 class UiClickHouseCheckUntilOrderTest extends Tests {
 
-    ClickHouse product;
+   private ClickHouse product;
     //= ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

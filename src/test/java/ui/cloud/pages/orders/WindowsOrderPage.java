@@ -7,7 +7,7 @@ import ui.elements.Select;
 @Getter
 public class WindowsOrderPage extends NewOrderPage {
 
-    Select roleServer = Select.byLabel("Роль сервера. (данное поле влияет на именование)");
+    private final Select roleServer = Select.byLabel("Роль сервера. (данное поле влияет на именование)");
 
     public WindowsOrderPage() {
         labelInput.setValue(labelValue);

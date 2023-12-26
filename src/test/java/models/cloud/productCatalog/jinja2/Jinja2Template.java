@@ -8,12 +8,15 @@ import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
+import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
+import static core.helper.StringUtils.getRandomStringApi;
 import static steps.productCatalog.Jinja2Steps.*;
+import static steps.productCatalog.TemplateSteps.createTemplateByName;
 
 @Log4j2
 @Builder
@@ -45,9 +48,21 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     private String createDt;
     @JsonProperty("update_dt")
     private String updateDt;
+    @JsonProperty("template_id")
+    private Integer templateId;
+    @JsonProperty("template_version")
+    private String templateVersion;
+    @JsonProperty("template_version_pattern")
+    private String templateVersionPattern;
 
     @Override
     public Entity init() {
+        if (templateId == null) {
+            Template template = createTemplateByName(getRandomStringApi(6));
+            templateId = template.getId();
+            templateVersion = "";
+            templateVersionPattern = "";
+        }
         return this;
     }
 
@@ -66,6 +81,9 @@ public class Jinja2Template extends Entity implements IProductCatalog {
                 .set("$.last_version", last_version)
                 .set("$.version_create_dt", version_create_dt)
                 .set("$.version_list", version_list)
+                .set("$.template_id", templateId)
+                .set("$.template_version", templateVersion)
+                .set("$.template_version_pattern", templateVersionPattern)
                 .build();
     }
 

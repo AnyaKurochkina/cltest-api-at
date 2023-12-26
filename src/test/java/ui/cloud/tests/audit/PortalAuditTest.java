@@ -70,7 +70,7 @@ public class PortalAuditTest extends Tests {
     }
 
     @Test
-    @TmsLink("759370")
+    @TmsLink("SOUL-2321")
     @DisplayName("Просмотр аудита за период")
     public void checkFilterByDate() {
         AuditPage page = new IndexPage().goToPortalAuditPage();
@@ -89,7 +89,7 @@ public class PortalAuditTest extends Tests {
     }
 
     @Test
-    @TmsLink("762461")
+    @TmsLink("SOUL-2324")
     @DisplayName("Сортировка таблицы аудита")
     public void checkAuditTable() {
         new IndexPage().goToPortalAuditPage()
@@ -98,7 +98,7 @@ public class PortalAuditTest extends Tests {
     }
 
     @Test
-    @TmsLink("811980")
+    @TmsLink("SOUL-2325")
     @DisplayName("Фильтрация таблицы аудита")
     public void checkFilters() {
         new IndexPage().goToPortalAuditPage()
@@ -116,7 +116,7 @@ public class PortalAuditTest extends Tests {
     }
 
     @Test
-    @TmsLink("762451")
+    @TmsLink("SOUL-2323")
     @DisplayName("Просмотр записи аудита")
     public void checkAuditRecordDetails() {
         new IndexPage().goToPortalAuditPage()
@@ -133,7 +133,7 @@ public class PortalAuditTest extends Tests {
     }
 
     @Test
-    @TmsLink("1458196")
+    @TmsLink("SOUL-2326")
     @DisplayName("Просмотр записи аудита в родительском контексте")
     public void checkAuditInParentContext() {
         new IndexPage().goToPortalAuditPage();

@@ -5,7 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
-import models.cloud.orderService.products.Podman;
+import models.cloud.orderService.products.PodmanAstra;
 import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
@@ -25,19 +25,19 @@ public class PodmanAstraTest extends Tests {
 
     @TmsLink("820506")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Создать {0}")
-    void create(Podman product) {
+    @ParameterizedTest(name = "[{1}] Создать {0}")
+    void create(PodmanAstra product, Integer num) {
         //noinspection EmptyTryBlock
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
         }
     }
 
     @TmsLink("820507")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Расширить {0}")
-    void expandMountPoint(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+    @ParameterizedTest(name = "[{1}] Расширить {0}")
+    void expandMountPoint(PodmanAstra product, Integer num) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.expandMountPoint();
         }
     }
@@ -46,9 +46,9 @@ public class PodmanAstraTest extends Tests {
     @TmsLink("820504")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Перезагрузить {0}")
-    void restart(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+    @ParameterizedTest(name = "[{1}] Перезагрузить {0}")
+    void restart(PodmanAstra product, Integer num) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.restart();
         }
     }
@@ -57,17 +57,17 @@ public class PodmanAstraTest extends Tests {
     @TmsLink("820501")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить {0}")
-    void stopSoft(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+    @ParameterizedTest(name = "[{1}] Выключить {0}")
+    void stopSoft(PodmanAstra product, Integer num) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.stopSoft();
             podman.start();
         }
     }
 
 //    @Source(ProductArgumentsProvider.PRODUCTS)
-//    @ParameterizedTest(name = "[{index}] Изменить конфигурацию {0}")
-//    void resize(Podman product) {
+//    @ParameterizedTest(name = "[{1}] Изменить конфигурацию {0}")
+//    void resize(Podman product, Integer num) {
 //        try (Podman podman = product.createObjectExclusiveAccess()) {
 //            podman.checkPreconditionStatusProduct(ProductStatus.CREATED);
 //            podman.stopHard();
@@ -83,9 +83,9 @@ public class PodmanAstraTest extends Tests {
     @TmsLinks({@TmsLink("820505"), @TmsLink("820503")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Выключить принудительно/Включить {0}")
-    void stopHard(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+    @ParameterizedTest(name = "[{1}] Выключить принудительно/Включить {0}")
+    void stopHard(PodmanAstra product, Integer num) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.stopHard();
             podman.start();
         }
@@ -93,9 +93,9 @@ public class PodmanAstraTest extends Tests {
 
     @TmsLink("851394")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] AD Проверка создания {0}")
-    void checkCreate(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+    @ParameterizedTest(name = "[{1}] AD Проверка создания {0}")
+    void checkCreate(PodmanAstra product, Integer num) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.checkCertsBySsh();
             assertContains(podman.executeSsh("podman ps -a"),
                     "CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES");
@@ -104,19 +104,19 @@ public class PodmanAstraTest extends Tests {
 
     @TmsLink("1091842")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Проверка прав у ролей пользователя {0}")
-    void checkUserGroup(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+    @ParameterizedTest(name = "[{1}] Проверка прав у ролей пользователя {0}")
+    void checkUserGroup(PodmanAstra product, Integer num) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.checkUserGroupBySsh();
         }
     }
 
     @TmsLink("820502")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{index}] Удалить {0}")
+    @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
-    void delete(Podman product) {
-        try (Podman podman = product.createObjectExclusiveAccess()) {
+    void delete(PodmanAstra product, Integer num) {
+        try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.deleteObject();
         }
     }

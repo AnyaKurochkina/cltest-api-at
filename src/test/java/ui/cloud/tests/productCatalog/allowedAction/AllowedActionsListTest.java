@@ -25,7 +25,7 @@ public class AllowedActionsListTest extends AllowedActionBaseTest {
         new ControlPanelIndexPage()
                 .goToAllowedActionsListPage();
         assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Тип", "Провайдер", "Описание", "", "");
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Тип", "Провайдер", "Описание", "", "");
         AllowedActionsListPage page = new AllowedActionsListPage();
         page.checkSorting().checkPagination();
     }

@@ -49,9 +49,9 @@ public class ActionRestrictionTest extends ActionBaseTest {
     }
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "[{index}] Контекстное ограничение действия по организации")
+    @ParameterizedTest(name = "[{1}] Контекстное ограничение действия по организации")
     @DisplayName("Контекстное ограничение действия по организации")
-    public void checkActionContextRestrictionByOrg(TestProduct p) {
+    public void checkActionContextRestrictionByOrg(TestProduct p, Integer num) {
         TestProduct product = p.createObject();
         String actionName = "at_ui_org_context_restriction";
         createAction(actionName, EventType.VM, EventProvider.QA_AT);
@@ -70,7 +70,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
     }
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "[{index}] Контекстное ограничение действия по информационной системе")
+    @ParameterizedTest(name = "Контекстное ограничение действия по информационной системе")
     @DisplayName("Контекстное ограничение действия по информационной системе")
     public void checkActionContextRestrictionByInfSystem(TestProduct p) {
         TestProduct product = p.createObject();
@@ -100,7 +100,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
     }
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "[{index}] Ограничение действия по параметрам item")
+    @ParameterizedTest(name = "Ограничение действия по параметрам item")
     @DisplayName("Ограничение действия по параметрам item")
     public void checkActionItemRestriction(TestProduct p) {
         TestProduct product = p.createObject();
@@ -121,7 +121,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
     }
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "[{index}] Ограничение действия по ролям")
+    @ParameterizedTest(name = "Ограничение действия по ролям")
     @DisplayName("Ограничение действия по ролям")
     //Для учётки, под которой выполняется тест, должна быть добавлена роль "superadmin-product_catalog" в Keycloak
     public void checkActionRoleRestriction(TestProduct p) {
@@ -142,7 +142,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
     }
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "[{index}] Ограничение действия по пользователям")
+    @ParameterizedTest(name = "Ограничение действия по пользователям")
     @DisplayName("Ограничение действия по пользователям")
     public void checkActionUserRestriction(TestProduct p) {
         TestProduct product = p.createObject();
@@ -169,7 +169,7 @@ public class ActionRestrictionTest extends ActionBaseTest {
     }
 
     @Source(ProductArgumentsProvider.ONE_PRODUCT)
-    @ParameterizedTest(name = "[{index}] Регистрация действия")
+    @ParameterizedTest(name = "Регистрация действия")
     @DisplayName("Регистрация действия")
     @TmsLink("SOUL-6051")
     public void registerActionTest(TestProduct p) {

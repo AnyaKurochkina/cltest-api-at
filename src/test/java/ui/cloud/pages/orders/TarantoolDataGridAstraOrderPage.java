@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 public class TarantoolDataGridAstraOrderPage extends NewOrderPage {
 
-    String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
+    private final String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
     protected Select flavorSelectCluster = Select.byLabel("Конфигурация кластера");
     protected Select versionSelect = Select.byLabel("Версия TDG");
     protected Input appTarantool = Input.byLabel("Размер, Гб",1);

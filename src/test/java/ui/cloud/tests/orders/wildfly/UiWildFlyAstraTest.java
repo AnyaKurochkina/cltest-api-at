@@ -7,14 +7,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.WildFly;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -29,13 +27,13 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("WildFlyAstra")
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
-    String versionWildFly = "23.0.2.Final";
-    String versionJava = "11.0.12";
-    WildFly product;// = WildFly.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/ba4245b1-c393-4ae6-bdf9-c846411edfcc/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private final String versionWildFly = "23.0.2.Final";
+    private final String versionJava = "11";
+    private WildFly product; // = WildFly.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/e8b85b2a-ae30-486f-8f65-a3a55534c22e/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -54,7 +52,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
             WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
             orderPage.getVersionWildfly().set(product.getWildFlyVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getVersionJava().set(product.getJavaVersion());
+            orderPage.getVersionJava().set(versionJava);
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -106,8 +104,11 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Обновить сертификат WildFly")
     void updateCertificate() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificate);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateWithoutChange);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateGlobal);
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateF5);
     }
+
 
     @Test
     @Order(5)
@@ -162,7 +163,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Удалить/добавить/изменить группу доступа")
     void addGroup() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("user", product.accessGroup()));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.deleteGroupInNode("superuser", product.accessGroup()));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.addGroupInNode("superuser", Collections.singletonList(product.accessGroup())));
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.updateGroupInNode("superuser", Arrays.asList(product.accessGroup(), product.additionalAccessGroup())));
     }
@@ -182,7 +183,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @Disabled("Проверяется у Astra Linux")
     @Order(12)
     @TmsLink("")
-    @DisplayName("UI WildFlyAstra. Изменить конфигурацию")
+    @DisplayName("UI WildFlyAstra. Вертикальное масштабирование WildFly")
     void vmActCheckConfig() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::changeConfiguration);
@@ -212,7 +213,25 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Заменить Java Wildfly")
     void changeJavaWildFly() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly,versionJava));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly, versionJava));
+    }
+
+    @Test
+    @Order(17)
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+        wildFlyPage.runActionWithCheckCost(CompareType.MORE, wildFlyPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(18)
+    @TmsLink("")
+    @DisplayName("UI WildFlyAstra. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
+        wildFlyPage.runActionWithCheckCost(CompareType.LESS, wildFlyPage::delKeyAstrom);
     }
 
     @Test

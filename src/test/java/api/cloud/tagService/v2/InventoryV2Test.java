@@ -1,7 +1,9 @@
 package api.cloud.tagService.v2;
 
 import api.cloud.tagService.AbstractTagServiceTest;
+import core.enums.Role;
 import core.helper.http.AssertResponse;
+import core.helper.http.Http;
 import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -21,6 +23,7 @@ import steps.authorizer.AuthorizerSteps;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static api.routes.TagServiceAPI.v2InventoriesCreate;
 import static models.cloud.tagService.TagServiceSteps.inventoryTagsV1;
 
 @Epic("Сервис тегов")
@@ -151,5 +154,14 @@ public class InventoryV2Test extends AbstractTagServiceTest {
                 .build();
         FilterResultV1 filterResult = TagServiceSteps.inventoryFilterV1(context, filter);
         Assertions.assertEquals(1, filterResult.getList().get(0).getTags().size());
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Create. Dictionary не найден")
+    void notFoundDictionary() {
+        AssertResponse.run(() -> Inventory.builder().context(context).objectType("not_found").build().createObjectPrivateAccess())
+                .status(400)
+                .responseContains("Данные не найдены: {'internal_name': 'not_found'}");
     }
 }

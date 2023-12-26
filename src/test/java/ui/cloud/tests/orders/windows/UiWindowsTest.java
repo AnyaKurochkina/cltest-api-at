@@ -30,12 +30,12 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("Windows")
 @Tags({@Tag("ui"), @Tag("ui_windows")})
 public class UiWindowsTest extends UiProductTest {
-    Windows product;
+    private Windows product;
     //=Windows.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/d83b7cd3-f4c0-4797-a922-6d3ab3bfe780/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -81,7 +81,7 @@ public class UiWindowsTest extends UiProductTest {
     @Test
     @TmsLink("976726")
     @Order(2)
-    @DisplayName("UI Windows. Проверка полей заказа")
+    @DisplayName("UI Windows. Проверка графа в истории действий")
     void checkHeaderHistoryTable() {
         WindowsPage winPage = new WindowsPage(product);
         winPage.getBtnGeneralInfo().click();
@@ -255,6 +255,7 @@ public class UiWindowsTest extends UiProductTest {
         WindowsPage winPage = new WindowsPage(product);
         winPage.deleteKeyAstrom();
     }
+
     @Test
     @Order(20)
     @TmsLink("")

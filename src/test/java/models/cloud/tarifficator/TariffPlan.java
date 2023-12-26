@@ -75,7 +75,7 @@ public class TariffPlan extends Entity {
     @Override
     @Step("Создание тарифного плана")
     protected void create() {
-        String id = new Http(Configure.TarifficatorURL)
+        String id = new Http(Configure.tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(toJson())
                 .post("/v1/tariff_plans")

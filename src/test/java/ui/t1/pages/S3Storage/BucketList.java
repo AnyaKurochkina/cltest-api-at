@@ -2,18 +2,15 @@ package ui.t1.pages.S3Storage;
 
 import io.qameta.allure.Step;
 import ui.elements.DataTable;
-import ui.elements.Table;
-import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class BucketList {
     private final String fBucketName = "Название бакета";
-    private final Integer delIdx = 4;
 
     @Step("Открытие страницы просмотра данных бакета '{bucketName}'")
-    public void OpenBucket(String bucketName){
+    public void openBucket(String bucketName) {
         DataTable bucketList = new DataTable(fBucketName);
         bucketList.getRowByColumnValue(fBucketName, bucketName)
                   .getElementByColumn(fBucketName)
@@ -30,10 +27,10 @@ public class BucketList {
     }
 
     @Step("Открытие страницы просмотра данных бакета '{bucketName}'")
-    public DeleteBucketForm DeleteBucket(String bucketName){
+    public DeleteBucketForm deleteBucket(String bucketName){
         DataTable bucketList = new DataTable(fBucketName);
         bucketList.getRowByColumnValue(fBucketName, bucketName)
-                .getElementByColumnIndex(delIdx).$x("..//button").click();
+                .getElementByColumnIndex(4).$x("..//button").click();
         return new DeleteBucketForm();
     }
 }

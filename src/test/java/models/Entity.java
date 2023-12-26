@@ -3,6 +3,7 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
@@ -16,6 +17,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.lang.annotation.*;
+import java.util.TimeZone;
 import java.util.concurrent.locks.Lock;
 
 @NoArgsConstructor
@@ -54,6 +56,7 @@ public abstract class Entity implements AutoCloseable {
     public static JSONObject serialize(Object object) {
         final ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
+        objectMapper.setTimeZone(TimeZone.getTimeZone("Europe/Moscow"));
         return new JSONObject(objectMapper.writeValueAsString(object));
     }
 

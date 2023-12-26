@@ -45,6 +45,7 @@ public class EntityPage {
             .$x("following::div[text()='Формат файла не поддерживается. Поддерживаемые форматы: png, jpeg, svg']");
     private final SelenideElement iconTooLargeHint = iconInput.getInput()
             .$x("following::div[text()='Размер не должен превышать 100 КБ']");
+    protected final SelenideElement objectInfoEditor = $x("//div[@class='jodit-wysiwyg']");
 
     @Step("Сохранение объекта без изменения версии")
     public EntityPage saveWithoutPatchVersion(String alertText) {
@@ -138,7 +139,7 @@ public class EntityPage {
     public void addExistingTag(String name) {
         tagsTab.switchTo();
         addTagButton.click();
-        Select.byPlaceholder("Выберите тег или введите новый").set(name);
+        Select.byXpath("//input[@placeholder='Выберите тег или введите новый']/ancestor::div[select]").set(name);
         new Table("Наименование").getRow(0).get().$$x(".//button").get(1).click();
     }
 

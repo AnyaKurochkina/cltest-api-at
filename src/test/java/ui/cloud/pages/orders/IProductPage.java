@@ -30,7 +30,6 @@ import static com.codeborne.selenide.Selenide.$x;
 import static core.helper.StringUtils.$$x;
 import static core.helper.StringUtils.$x;
 import static ui.elements.Alert.checkNoRedAlerts;
-import static ui.elements.TypifiedElement.postfix;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Log4j2
@@ -40,17 +39,17 @@ public abstract class IProductPage {
     private static final String HEADER_GROUP = "Группы";
     protected final SelenideElement prebillingCostElement = Selenide
             .$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[(contains(.,'₽/сут.') and contains(.,',')) or text()='без изменений']");
-    private final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
+    public final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
     protected Tab generalInfoTab = Tab.byText("Общая информация");
     protected Tab historyTab = Tab.byText("История действий");
     IProduct product;
-    SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
-    SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
-    Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
-    SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
-    SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
+    protected final SelenideElement productName = $x("(//div[@type='large']/descendant::span)[1]");
+    protected final SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
+    protected final Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
+    protected final SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
+    protected final SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
@@ -72,7 +71,7 @@ public abstract class IProductPage {
     }
 
     public static SelenideElement getActionsMenuButton(String header, int index) {
-        return $x("(//*[.='{}']/parent::*//button[@id='actions-menu-button'])" + postfix, header, TypifiedElement.getIndex(index));
+        return TypifiedElement.getNearElement("button[@id='actions-menu-button']", String.format("*[.='%s']", header));
     }
 
     @Step("Получение таблицы по заголовку")

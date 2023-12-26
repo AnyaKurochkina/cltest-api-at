@@ -21,7 +21,8 @@ public class HealthCheckTest extends Tests {
 
     @Test
     public void healthCheckTest() {
-        List<String> urls = Arrays.asList(StateServiceURL, ReferencesURL, SccmManager);
+        List<String> urls = Arrays.asList(stateServiceURL, referencesURL, sccmManager, issueCollectorService, tagsService
+                , selectorAllocator);
         for (String url : urls) {
             String status = new Http(url)
                     .setRole(Role.CLOUD_ADMIN)
@@ -31,29 +32,19 @@ public class HealthCheckTest extends Tests {
                     .getString("status");
             assertEquals("ok", status);
         }
-        List<String> urls2 = Arrays.asList(ProductCatalogURL, CalculatorURL, RestrictionServiceUrl, SyncService, Budget, Day2ServiceURL,
-                AccountManagerURL, FeedServiceURL, SelectorCp, Auditor);
+        List<String> urls2 = Arrays.asList(productCatalogURL, calculatorURL, restrictionServiceUrl, syncService, budget, day2ServiceURL,
+                accountManagerURL, feedServiceURL, selectorCp, auditor, serviceManagerProxy, waitingService, secretService);
         for (String url : urls2) {
             new Http(url)
                     .setRole(Role.CLOUD_ADMIN)
                     .get("/api/v1/health")
                     .assertStatus(200);
         }
-        List<String> urls3 = Arrays.asList(TarifficatorURL, IamURL, PortalBackURL, OrderServiceURL);
+        List<String> urls3 = Arrays.asList(tarifficatorURL, iamURL, portalBackURL, orderServiceURL);
         for (String url : urls3) {
             new Http(url)
                     .setRole(Role.CLOUD_ADMIN)
                     .get("/v1/health")
-                    .assertStatus(200);
-        }
-
-        List<String> urls4 = Arrays.asList(ServiceManagerProxy);
-        for (String url : urls4) {
-            new Http(url)
-                    .withServiceToken()
-                    //.setWithoutToken()
-                    .setRole(Role.CLOUD_ADMIN)
-                    .get("/api/v1/health/")
                     .assertStatus(200);
         }
     }

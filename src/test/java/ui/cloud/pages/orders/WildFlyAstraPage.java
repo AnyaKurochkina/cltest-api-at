@@ -1,5 +1,8 @@
 package ui.cloud.pages.orders;
-import com.codeborne.selenide.*;
+
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import core.helper.Configure;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.WildFly;
@@ -9,14 +12,13 @@ import ui.elements.*;
 
 import java.net.MalformedURLException;
 
-import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class WildFlyAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_CERTIFICATE = "Сертификат WildFly";
-    private static final String BLOCK_VM = "Виртуальная машина";
+    private static final String BLOCK_VM = "Виртуальные машины";
     private static final String BLOCK_GROUP = "Список групп";
     private static final String HEADER_NAME_GROUP = "Имя группы";
     private static final String HEADER_CONSOLE = "Консоль управления";
@@ -25,8 +27,8 @@ public class WildFlyAstraPage extends IProductPage {
     private static final String POWER = "Питание";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String STATUS = "Статус";
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
     private final SelenideElement link = $x("/html/body/div[1]/div/div/div/div[2]/div[2]/div/div/div[4]/div/div[3]/div/div[1]/div/div[2]/div[1]/div[2]/div/div/table/tbody/tr/td[3]/div/a");
 
     public WildFlyAstraPage(WildFly product) {
@@ -56,22 +58,20 @@ public class WildFlyAstraPage extends IProductPage {
 
     public void changeConfiguration() {
         checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        btnGeneralInfo.click();
-        mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
         Flavor maxFlavor = product.getMaxFlavor();
-        runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () -> {
-            CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
+        runActionWithParameters(getActionsMenuButton("", 2), "Вертикальное масштабирование WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение ниже, и понимаю, что я делаю").setChecked(true);
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
         });
         btnGeneralInfo.click();
+        getRoleNode().scrollIntoView(scrollCenter).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
 
     public void openAdminConsole() throws MalformedURLException, InterruptedException {
-        String url=new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
-        Selenide.open(url+"management", "", Configure.getAppProp("dev.user"),Configure.getAppProp("dev.password"));
+        String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
+        Selenide.open(url + "management", "", Configure.getAppProp("dev.user"), Configure.getAppProp("dev.password"));
         Selenide.open(url);
         $x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible);
     }
@@ -106,23 +106,61 @@ public class WildFlyAstraPage extends IProductPage {
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
+
     @Step("Заменить Java Wildfly")
-    public void changeJavaWildFly(String versionWildFly,String versionJava) {
+    public void changeJavaWildFly(String versionWildFly, String versionJava) {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(getActionsMenuButton("", 2), "Заменить Java wildfly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
             Dialog dlg = new Dialog("Заменить Java wildfly");
-            dlg.setSelectValue("Текущая версия Wildfly",versionWildFly);
-            dlg.setSelectValue("Версия java, на которую требуется заменить текущую java",versionJava);
+            dlg.setSelectValue("Текущая версия Wildfly", versionWildFly);
+            dlg.setSelectValue("Версия java, на которую требуется заменить текущую java", versionJava);
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    @Step("Обновить сертификат WildFly")
-    public void updateCertificate() {
+    @Step("Обновить сертификат без изменений WildFly")
+    public void updateCertificateWithoutChange() {
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+        });
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+
+    @Step("Обновить сертификат. Глобальный тип  WildFly")
+    public void updateCertificateGlobal() {
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+            RadioGroup.byLabel("Выберите метод").select("Добавить/изменить альтернативные имена");
+            Select.byLabel("Тип балансировщика").set("Глобальный");
+            Input.byLabel("Имя глобальной записи").setValue("global");
+        });
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+
+    @Step("Обновить сертификат. Локальный тип  WildFly")
+    public void updateCertificateLocal() {
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+            RadioGroup.byLabel("Выберите метод").select("Добавить/изменить альтернативные имена");
+            Select.byLabel("Тип балансировщика").set("Локальный");
+            Input.byLabel("Имя глобальной записи").setValue("local");
+        });
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+
+    @Step("Обновить сертификат. F5 тип  WildFly")
+    public void updateCertificateF5() {
+        new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithParameters(BLOCK_CERTIFICATE, "Обновить сертификат WildFly", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение и согласен с последствиями").setChecked(true);
+            RadioGroup.byLabel("Выберите метод").select("Добавить/изменить альтернативные имена");
+            Select.byLabel("Тип балансировщика").set("F5");
+            Button.byXpath("//button[contains(@class, 'array-item-add')]").click();
+            Input.byLabel("Доменное имя балансировщика F5").setValue("f5");
         });
         new WildFlyAstraPage.VirtualMachineTable().checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -181,6 +219,16 @@ public class WildFlyAstraPage extends IProductPage {
         Assertions.assertFalse(getTableByHeader(HEADER_LIST_GROUP).isColumnValueContains(HEADER_NAME_GROUP, nameGroup), "Ошибка удаления WildFly");
     }
 
+    public void addKeyAstrom() {
+        checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
+    }
+
+    public void delKeyAstrom() {
+        checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
+        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
+    }
+
     public void enlargeDisk(String name, String size, SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
         String firstSizeDisk = getTableByHeader("Дополнительные точки монтирования")
@@ -202,6 +250,7 @@ public class WildFlyAstraPage extends IProductPage {
         public VirtualMachineTable() {
             super("Роли узла");
         }
+
         public VirtualMachineTable(String columnName) {
             super(columnName);
         }

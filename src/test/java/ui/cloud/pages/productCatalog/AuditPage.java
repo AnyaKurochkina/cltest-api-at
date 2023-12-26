@@ -4,7 +4,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.codeborne.selenide.WebDriverRunner;
-import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
@@ -192,7 +191,7 @@ public class AuditPage extends EntityPage {
     public AuditPage checkResponseFullViewContains(String value, String contextId) {
         openRecordByContextId(contextId);
         showFullView.getButton().scrollIntoView(scrollCenter).click();
-        Waiting.sleep(500);
+        Waiting.sleep(2000);
         Assertions.assertTrue($x("//span[text()='\"" + value + "\"']").isDisplayed(),
                 "Ответ не содержит " + value);
         closeFullViewButton.click();
@@ -203,7 +202,7 @@ public class AuditPage extends EntityPage {
     private void checkAuditIsLoaded() {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
-            TypifiedElement.refreshPage();
+            Selenide.refresh();
             if (Tab.byText("История изменений").getElement().exists()) new EntityPage().goToAuditTab();
         }
     }
@@ -280,10 +279,8 @@ public class AuditPage extends EntityPage {
         TestUtils.scrollToTheTop();
         periodSelect.set("задать период");
         beginDateInput.setValue(beginDate);
-        beginTimeSelect.getElement().$x(".//*[name()='svg']").click();
         beginTimeSelect.set("00:00");
         endDateInput.setValue(endDate);
-        endTimeSelect.getElement().$x(".//*[name()='svg']").click();
         endTimeSelect.set("23:30");
         applyFiltersByDateButton.click();
         return this;

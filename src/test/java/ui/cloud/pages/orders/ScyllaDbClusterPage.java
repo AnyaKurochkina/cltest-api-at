@@ -35,8 +35,8 @@ public class ScyllaDbClusterPage extends IProductPage {
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String HEADER_COMMENTS = "Комментарий";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
     AccessGroup accessGroup = AccessGroup.builder().projectName(product.getProjectId()).build().createObject();
 
     public ScyllaDbClusterPage(ScyllaDbCluster product) {
@@ -62,7 +62,7 @@ public class ScyllaDbClusterPage extends IProductPage {
 
     public void checkConfiguration(SelenideElement node) {
         node.scrollIntoView(scrollCenter).click();
-        checkPowerStatus(PodmanPage.VirtualMachineTable.POWER_STATUS_ON);
+        checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(node).build());
     }
 

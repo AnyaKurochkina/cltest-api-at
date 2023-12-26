@@ -3,7 +3,6 @@ package ui.t1.pages.IAM;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
-import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -17,18 +16,19 @@ import java.util.List;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
+import static core.helper.StringUtils.$x;
 
 public class OrgStructurePage {
-    SelenideElement createAction = StringUtils.$x("//div[text() = 'Создать проект']");
-    SelenideElement createFolderAction = StringUtils.$x("//div[text() = 'Создать папку']");
-    SelenideElement selectContextAction = StringUtils.$x("//div[text() = 'Выбрать контекст']");
-    SelenideElement deleteAction = StringUtils.$x("//div[text() = 'Удалить']");
-    SelenideElement editAction = StringUtils.$x("//div[text() = 'Редактировать']");
+    SelenideElement createAction = $x("//div[text() = 'Создать проект']");
+    SelenideElement createFolderAction = $x("//div[text() = 'Создать папку']");
+    SelenideElement selectContextAction = $x("//div[text() = 'Выбрать контекст']");
+    SelenideElement deleteAction = $x("//div[text() = 'Удалить']");
+    SelenideElement editAction = $x("//div[text() = 'Редактировать']");
     Button settings = Button.byXpath("//*[@data-dimension = 's']");
-    SelenideElement changeContext = StringUtils.$x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
+    SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
 
     public OrgStructurePage() {
-        StringUtils.$x("//span[text() = 'Организационная структура']")
+        $x("//span[text() = 'Организационная структура']")
                 .shouldBe(Condition.visible);
     }
 
@@ -53,7 +53,7 @@ public class OrgStructurePage {
 
     @Step("Проверка отсутсвия действия {actionName} у организации")
     public Boolean isActionExist(String actionName) {
-        return StringUtils.$x("//div[text() = '{}']", actionName).exists();
+        return $x("//div[text() = '{}']", actionName).exists();
     }
 
     @Step("Создание проекта с именем {name}")
@@ -80,7 +80,7 @@ public class OrgStructurePage {
 
     @Step("Открыть модальное окно у папки/проекта/организации")
     public ModalWindow openModalWindow(String name) {
-        Waiting.sleep(2000);
+        $x("//button[@aria-label = 'expand row']").shouldBe(Condition.visible);
         Table.Row row = new OrgTable().getRowByColumnValue("Название", name);
         String type = row.getValueByColumn("Тип");
         row.get().click();
@@ -113,7 +113,7 @@ public class OrgStructurePage {
 
     @Step("Создание проекта в структуре папки")
     public OrgStructurePage createProjectInFolder(String folderName, String name) {
-        Waiting.sleep(2000);
+        $x("//button[@aria-label = 'expand row']").shouldBe(Condition.visible);
         new OrgTable().getRowByColumnValue("Название", folderName)
                 .get()
                 .$x(".//button[@id='actions-menu-button']")

@@ -1,7 +1,7 @@
 package ui.t1.pages.S3Storage;
 
-import core.utils.Waiting;
 import io.qameta.allure.Step;
+import lombok.NoArgsConstructor;
 import ui.elements.Button;
 import ui.t1.pages.S3Storage.AccessRules.AccessRulesLayer;
 import ui.t1.pages.S3Storage.CORS.CORSLayer;
@@ -12,14 +12,12 @@ import ui.t1.pages.S3Storage.WebSite.WebSiteLayer;
 
 import static com.codeborne.selenide.Selenide.page;
 
+@NoArgsConstructor
 public class AbstractLayerS3<PageObjectClass> {
     private Button namedLayer;
 
     public AbstractLayerS3(String name){
         namedLayer = Button.byText(name);
-    }
-
-    public AbstractLayerS3(){
     }
 
     public PageObjectClass gotoLayer(Class<PageObjectClass> pageObjectClass){

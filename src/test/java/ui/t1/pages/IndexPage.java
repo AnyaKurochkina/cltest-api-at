@@ -29,7 +29,7 @@ import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
 @Getter
 public class IndexPage {
-    Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектное хранилище S3']");
+    Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектные хранилища']");
     Button linkOldCloudStorageS3 = Button.byXpath("//a[@href='/buckets']");
     Button linkNewCloudStorageS3 = Button.byXpath("//a[@href='/new-buckets']");
     Button linkResources = Button.byXpath("//a[.='Ресурсы']");
@@ -37,7 +37,7 @@ public class IndexPage {
     Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
     Button linkMySubscriptions = Button.byXpath("//a[.='Мои подписки']");
     Button linkSubscriptionsByAdmin = Button.byXpath("//a[.='Подписки пользователей организации']");
-    Button linkCloudEngine = Button.byXpath("//a[.='T1 Cloud Engine']");
+    Button linkCloudEngine = Button.byXpath("//a[.='Cloud Engine']");
     Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
     Button linkDisks = Button.byXpath("//a[.='Диски']");
     Button linkSshKeys = Button.byXpath("//a[.='SSH-ключи']");
@@ -86,7 +86,7 @@ public class IndexPage {
         return new CloudStorageS3();
     }
 
-    @Step("Переход на страницу T1 Cloud Engine")
+    @Step("Переход на страницу Cloud Engine")
     public CloudEngine goToCloudEngine() {
         linkCloudEngine.click();
         return new CloudEngine();
@@ -212,7 +212,7 @@ public class IndexPage {
 
     @Step("Отключить Cloud Engine")
     public void disconnectCloudEngine() {
-        SelenideElement btnAction = getActionsMenuButton("T1 Cloud Engine");
+        SelenideElement btnAction = getActionsMenuButton("Cloud Engine");
         Menu.byElement(btnAction).select("Отключить услугу");
         Button.byText("Отключить").click();
         Waiting.findWithRefresh(() -> !btnAction.isDisplayed(), Duration.ofMinutes(1));

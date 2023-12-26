@@ -10,7 +10,7 @@ import java.util.UUID;
 @Getter
 public class GrafanaOrderPage extends NewOrderPage {
 
-    String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
+    private final String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
     private final Input createUser = Input.byLabel("Имя пользователя");
     private final Button generatePassButton = Button.byAriaLabel("generate");
 

@@ -34,6 +34,7 @@ public class CreateGraphTest extends GraphBaseTest {
                 .version("1.0.0")
                 .description(DESCRIPTION)
                 .author(AUTHOR)
+                .object_info("Graph info")
                 .build();
         new ControlPanelIndexPage().goToGraphsPage()
                 .createGraph(graph)

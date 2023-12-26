@@ -26,6 +26,7 @@ public class IndexPage {
     private final SelenideElement ordersListMenuItem = $x("//div[text()='Список заказов']");
     private final SelenideElement servicesMenuItem = $x("//div[text()='Сервисы']");
     private final SelenideElement servicesListMenuItem = $x("//div[text()='Список сервисов']");
+    private final SelenideElement orderMoreMenuItem = $x("//a[@href='/new-order']");
     private final SelenideElement collapseMenuItem = $x("//div[text()='Свернуть меню']");
     private final SelenideElement expandMenuIcon = $x("//div[contains(@class,'Footer')]//*[name()='svg']");
 
@@ -39,9 +40,7 @@ public class IndexPage {
 
     @Step("Переход на страницу заказа продуктов")
     public ProductsPage clickOrderMore() {
-        ordersListMenuItem.click();
-        Waiting.sleep(5000);
-        createOrderButton.shouldBe(Condition.visible).shouldBe(Condition.enabled).hover().click();
+        orderMoreMenuItem.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return new ProductsPage();
     }
 

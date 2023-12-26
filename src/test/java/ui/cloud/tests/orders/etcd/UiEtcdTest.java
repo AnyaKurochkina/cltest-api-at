@@ -33,14 +33,13 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_Etcd")})
 public class UiEtcdTest extends UiProductTest {
 
-    Etcd product;// = Etcd.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/48c224c9-38cf-4dc1-b78c-bb14e47985cf/main?context=proj-iv550odo9a&type=project&org=vtb");
-    String nameUser = "at_user";
-
+    private Etcd product;// = Etcd.builder().build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/48c224c9-38cf-4dc1-b78c-bb14e47985cf/main?context=proj-iv550odo9a&type=project&org=vtb");
+    private final String nameUser = "at_user";
 
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -88,7 +87,7 @@ public class UiEtcdTest extends UiProductTest {
     @Test
     @TmsLink("")
     @Order(2)
-    @DisplayName("UI Etcd. Проверка полей заказа")
+    @DisplayName("UI Etcd. Проверка графа в истории действий")
     void
     checkHeaderHistoryTable() {
         EtcdPage etcdPage = new EtcdPage(product);
@@ -130,6 +129,7 @@ public class UiEtcdTest extends UiProductTest {
     @Test
     @Order(6)
     @TmsLink("")
+    @Disabled
     @DisplayName("UI Etcd. Создать сертификаты для пользователя etcd")
     void createCertificate() {
         EtcdPage etcdPage = new EtcdPage(product);

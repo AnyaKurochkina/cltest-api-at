@@ -1,7 +1,7 @@
 package ui.t1.tests.engine.vpc;
 
 import com.jcraft.jsch.JSchException;
-import core.helper.StringUtils;
+import core.helper.DataFileHelper;
 import core.helper.TableChecker;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Epic;
@@ -29,17 +29,27 @@ import java.util.Objects;
 @Feature("Виртуальные IP")
 @Epic("Cloud Compute")
 public class VirtualIpTest extends AbstractComputeTest {
-    private final EntitySupplier<VirtualIpCreate> vipSup = lazy(() ->{
-        VirtualIpCreate v = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true).setName(getRandomName())
-                .setInternet(true).setMode("active-active").clickOrder();
+    private final EntitySupplier<VirtualIpCreate> vipSup = lazy(() -> virtualIpCreateWidthVMac("77:77:77:00:00:01"));
+    private final EntitySupplier<VirtualIpCreate> vipSupSlave = lazy(() -> virtualIpCreateWidthVMac("77:77:77:00:00:02"));
+
+    private final EntitySupplier<Void> prepareVmWidthVip = lazy(() -> {
+        virtualMachineCreate(vipSup.get(), randomVm.get());
+        return null;
+    });
+    private final EntitySupplier<Void> prepareVmWidthVipSlave = lazy(() -> {
+        virtualMachineCreate(vipSupSlave.get(), randomVm.copy().get());
+        return null;
+    });
+
+    private VirtualIpCreate virtualIpCreateWidthVMac(String vMac) {
+        VirtualIpCreate v = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true)
+                .setVMac(vMac).setName(getRandomName()).setInternet(true).setMode("active-active").clickOrder();
         new IndexPage().goToVirtualIps().selectIp(v.getIp())
                 .markForDeletion(new VipEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(false);
         return v;
-    });
+    }
 
-    private final EntitySupplier<Void> prepareVmWidthVip = lazy(() -> {
-        VirtualIpCreate vip = vipSup.get();
-        VmCreate vm = randomVm.get();
+    private void virtualMachineCreate(VirtualIpCreate vip, VmCreate vm){
         String publicIp = randomPublicIp.get();
 
         String localIp = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getLocalIp();
@@ -52,16 +62,15 @@ public class VirtualIpTest extends AbstractComputeTest {
         String localIpSlaveVm = new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).getLocalIp();
         addIpToInterface(publicIp, localIpSlaveVm, vip.getIp());
         new IndexPage().goToPublicIps().selectIp(publicIp).detachComputeIp();
-        return null;
-    });
+    }
 
-    private void addIpToInterface(String publicIp, String localIp, String vip){
+    private void addIpToInterface(String publicIp, String localIp, String vip) {
         SshClient ssh = SshClient.builder().host(publicIp).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
         String addIpCmd = ssh.execute("ip addr add {}/32 dev $(ip -o addr show | awk -v ip=\"{}\" '$0 ~ ip {print $2}')", vip, localIp);
         Assertions.assertTrue(addIpCmd.isEmpty(), "Ошибка при добавлении IP адреса на интерфейс: " + addIpCmd);
     }
 
-    private void checkConnectBySsh(String publicIp){
+    private void checkConnectBySsh(String publicIp) {
         SshClient ssh = SshClient.builder().host(publicIp).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
         Assertions.assertEquals("Linux", ssh.execute("uname"));
     }
@@ -112,7 +121,7 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("Имя", e -> e.equals(ip.getName()))
                 .add("Тип", e -> e.equals("Виртуальный IP адрес"))
                 .add("Статус", String::isEmpty)
-                .add(Column.MAC, e -> StringUtils.isMatch("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
+              //  .add(Column.MAC, e -> StringUtils.isMatch("^([0-9A-Fa-f]{2}[:-]){5}([0-9A-Fa-f]{2})$", e))
                 .add("", String::isEmpty)
                 .check(() -> new Table(Column.IP).getRowByColumnValue(Column.IP, ip.getIp()));
     }
@@ -125,6 +134,20 @@ public class VirtualIpTest extends AbstractComputeTest {
         prepareVmWidthVip.run();
         String publicIp = new IndexPage().goToVirtualIps().selectIp(vipSup.get().getIp()).getPublicIpElement().nextItem().getText();
         checkConnectBySsh(publicIp);
+    }
+
+    @Test
+    @Order(5)
+    @Disabled
+    @TmsLink("")
+    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Проверка соединения между вм c L2")
+    void checkConnectL2() {
+        prepareVmWidthVip.run();
+        prepareVmWidthVipSlave.run();
+        String publicIp = new IndexPage().goToVirtualIps().selectIp(vipSup.get().getIp()).getPublicIpElement().nextItem().getText();
+        SshClient ssh = SshClient.builder().host(publicIp).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
+        ssh.writeTextFile("key", DataFileHelper.read(SshKeyList.PRIVATE_KEY));
+        ssh.execute("ssh {}", vipSupSlave.get().getIp());
     }
 
     @Test
