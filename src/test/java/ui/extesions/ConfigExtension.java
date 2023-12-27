@@ -1,12 +1,15 @@
 package ui.extesions;
 
 import com.codeborne.selenide.Configuration;
+import core.utils.DownloadingFilesUtil;
 import lombok.SneakyThrows;
+import org.apache.commons.io.FileUtils;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
@@ -28,7 +31,9 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
     }
 
     @Override
+    @SneakyThrows
     public void afterEach(ExtensionContext extensionContext) {
+        FileUtils.cleanDirectory(new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH));
         closeWebDriver();
     }
 

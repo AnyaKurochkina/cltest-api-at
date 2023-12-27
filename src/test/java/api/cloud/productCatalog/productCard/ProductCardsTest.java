@@ -7,6 +7,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
 import models.cloud.productCatalog.ErrorMessage;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
@@ -27,6 +28,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.helper.StringUtils.convertStringVersionToIntArrayVersion;
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -128,7 +131,7 @@ public class ProductCardsTest {
         assertEquals(productCard.getName() + "-clone", copiedProductCard.getName());
     }
 
-    @DisplayName("Применение продуктовой карты")
+    @DisplayName("Применение продуктовой карты.")
     @Test
     @TmsLink("SOUL-7693")
     public void applyProductCardTest() {
@@ -183,6 +186,53 @@ public class ProductCardsTest {
         deleteActionByName(action.getName());
     }
 
+    @DisplayName("Применение продуктовой карты объектов версии которых не совпадают.")
+    @Test
+    @TmsLink("SOUL-8693")
+    public void applyProductCardObjectVersionsNotEqualsTest() {
+        String actionName = "action_for_apply_card_items_not_equals_objects_test_api";
+        String actionVersion = "1.0.2";
+        try {
+            Graph graphForAction = createGraph();
+            JSONObject actionJson = Action.builder()
+                    .name(actionName)
+                    .graphId(graphForAction.getGraphId())
+                    .version(actionVersion)
+                    .build()
+                    .init()
+                    .toJson();
+            Action action = createAction(actionJson).assertStatus(201).extractAs(Action.class);
+            CardItems actionCard = CardItems.builder().objType("Action")
+                    .objId(action.getActionId())
+                    .versionArr(convertStringVersionToIntArrayVersion(actionVersion))
+                    .build();
+
+            ProductCard productCard = ProductCard.builder()
+                    .name("apply_product_card_test_api")
+                    .title("apply_product_card_title_test_api")
+                    .description("test_api")
+                    .cardItems(Collections.singletonList(actionCard))
+                    .build()
+                    .createObject();
+            partialUpdateAction(action.getActionId(), new JSONObject().put("type", "on"));
+
+            ImportObject object = applyProductCard(productCard.getId()).jsonPath().getList("imported_objects", ImportObject.class)
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Список Imported objects пустой."));
+            assertAll(
+                    () -> assertEquals(actionName, object.getObjectName(), "Имя объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
+                    () -> assertEquals(action.getActionId(), object.getObjectId(), "Id объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
+                    () -> assertEquals(format("Error loading dump: Версия \"{}\" Action:{} уже существует, но с другим наполнением. Измените значение версии (\"version_arr: {}\") у импортируемого объекта и попробуйте снова.", actionVersion, actionName, convertStringVersionToIntArrayVersion(actionVersion))
+                            , object.getMessages().get(0))
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            deleteActionByName(actionName);
+        }
+    }
+
     @DisplayName("Добавление в карту продукта версионный объект, который уже есть в карте, но с другой версией.")
     @Test
     @TmsLink("SOUL-8690")
@@ -224,10 +274,13 @@ public class ProductCardsTest {
             String errorMessage = uncheckedCreateProductCard(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
             assertEquals("There are no unique elements in card_items", errorMessage, "Сообщение об ошибке при создании" +
                     "product card с не уникальными элементами не соответсвует формату");
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             deleteProductByName(productName);
         }
     }
+
 
     @DisplayName("Обновление продуктовой карты")
     @Test

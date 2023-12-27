@@ -109,8 +109,8 @@ public class ProductCardSteps extends Steps {
     }
 
     @Step("Применение product cards")
-    public static void applyProductCard(String id) {
-        new Http(productCatalogURL)
+    public static Response applyProductCard(String id) {
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(CARD_URL + id + "/apply/")
                 .assertStatus(200);
