@@ -33,7 +33,7 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
     @Override
     @SneakyThrows
     public void afterEach(ExtensionContext extensionContext) {
-        FileUtils.cleanDirectory(new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH));
+        FileUtils.deleteDirectory(new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH));
         closeWebDriver();
     }
 
