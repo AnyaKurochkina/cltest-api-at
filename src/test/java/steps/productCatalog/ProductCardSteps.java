@@ -165,4 +165,14 @@ public class ProductCardSteps extends Steps {
                 .versionArr(convertStringVersionToIntArrayVersion(version))
                 .build();
     }
+
+    @Step("Получение списка product cards с тегами")
+    public static List<ProductCard> getProductCardListWithTags() {
+        return new Http(productCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(cardUrl + "?with_tag_list=true")
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductCard.class);
+    }
 }
