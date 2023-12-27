@@ -54,7 +54,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Создание второго VDC  в одной организации")
     public void createSecondDataCentreTest() {
         String secondDataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
-        Vdc secondVdc = new Vdc(secondDataCentreName, "2", "4", new StorageProfile("High", "10"));
+        Vdc secondVdc = new Vdc(secondDataCentreName, "2", "4", new StorageProfile("High", "10"), "200");
         assertTrue(new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentre(secondVdc)

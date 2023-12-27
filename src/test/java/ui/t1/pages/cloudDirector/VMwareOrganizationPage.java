@@ -67,7 +67,7 @@ public class VMwareOrganizationPage {
                 .setCpu(vdc.getCpu())
                 .setRam(vdc.getRam())
                 .setDataCentreProfile(vdc.getStorageProfile())
-                .setRouterBandwidth("200")
+                .setRouterBandwidth(vdc)
                 .setDataCentreName(vdc.getName())
                 .orderDataCentre();
     }

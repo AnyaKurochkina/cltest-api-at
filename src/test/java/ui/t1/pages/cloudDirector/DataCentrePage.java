@@ -12,8 +12,7 @@ import ui.t1.pages.IProductT1Page;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     public static final String INFO_DATA_CENTRE = "Информация о Виртуальном дата-центре";
@@ -44,6 +43,22 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         new RouterTable().getRow(0).get().click();
         new Table("Дополнительные IP адреса").getRow(0).get().click();
         assertEquals(ipQty, new IpTable().getRows().size());
+    }
+
+    public void addEdge(String routerBandwidth) {
+        runActionWithParameters(INFO_DATA_CENTRE, "Создать маршрутизатор (Edge)", "Подтвердить", () ->
+                Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(routerBandwidth));
+        // Waiting.sleep(5000);
+        generalInformation.click();
+        String value = new RouterTable().getFirstValueByColumn("Пропускная способность, Мбит/сек");
+        assertEquals(routerBandwidth, value);
+    }
+
+    public void deleteEdge() {
+        runActionWithoutParameters(new RouterTable().getRows().first().$x(".//button[@id = 'actions-menu-button']"), "Удалить маршрутизатор");
+        // Waiting.sleep(5000);
+        generalInformation.click();
+        assertTrue(new RouterTable().isEmpty(), "Маршрутизатор не удален");
     }
 
     public void changeRouterConfig(String speed, String configType) {
@@ -82,10 +97,9 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
     }
 
     public void deleteProfile(StorageProfile profile) {
-        runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () -> {
-            $x("(//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//button)[3]")
-                    .click();
-        });
+        runActionWithParameters(INFO_DATA_CENTRE, "Управление дисковой подсистемой", "Подтвердить", () ->
+                $x("(//table[thead/tr/th[contains(., 'Профиль оборудования')]]//tr[td][2]//button)[3]")
+                        .click());
         Waiting.sleep(5000);
         generalInformation.click();
         assertFalse(new StorageProfileTable().isColumnValueContains("Имя", profile.getName()));
@@ -97,7 +111,6 @@ public class DataCentrePage extends IProductT1Page<DataCentrePage> {
         while (count > 0) {
             runActionWithoutParameters(new IpTable().getRows().first().$x(".//button"), "Освободить");
             Waiting.sleep(1000);
-            //generalInformation.click();
             count--;
         }
     }
