@@ -123,13 +123,34 @@ public class ItemTest extends Tests {
                 .set("$.graph_id", item.getGraphId())
                 .set("$.action_id", item.getActionId())
                 .set("$.events[0].item_id", item.getItemId())
-                .set("$.events[0].graph_id",  item.getGraphId())
+                .set("$.events[0].graph_id", item.getGraphId())
                 .set("$.events[0].action_id", item.getActionId())
                 .set("$.events[0].order_id", item.getOrderId())
                 .set("$.events[0].status", status)
                 .build();
         createBulkAddEvent(project.getId(), json2).assertStatus(201);
         Item itemById = getItemById(item.getItemId());
-        assertEquals(status, itemById.getData().get("state"));
+        assertEquals(status, itemById.getData().get("state"), "Items state не соответствует ожидаемому");
+    }
+
+    @DisplayName("Проверка что при запросе item по id возвращаются item со state = deleted")
+    @TmsLink("SOUL-8694")
+    @Test
+    public void getItemByIdDeletedItemShouldBeReturnTest() {
+        String status = "deleted";
+        Item item = createItem(project);
+        JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEventWithOneEvent.json")
+                .set("$.order_id", item.getOrderId())
+                .set("$.graph_id", item.getGraphId())
+                .set("$.action_id", item.getActionId())
+                .set("$.events[0].item_id", item.getItemId())
+                .set("$.events[0].graph_id", item.getGraphId())
+                .set("$.events[0].action_id", item.getActionId())
+                .set("$.events[0].order_id", item.getOrderId())
+                .set("$.events[0].status", status)
+                .build();
+        createBulkAddEvent(project.getId(), json2).assertStatus(201);
+        Item itemById = getItemById(item.getItemId());
+        assertEquals(status, itemById.getData().get("state"), "Items state не соответствует ожидаемому");
     }
 }
