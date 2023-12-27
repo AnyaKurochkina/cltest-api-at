@@ -1,10 +1,12 @@
 package api.cloud.productCatalog.productCard;
 
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
+import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
@@ -230,6 +232,55 @@ public class ProductCardsTest {
             deleteActionByName(actionName);
         }
     }
+
+    @DisplayName("Добавление в карту продукта версионный объект, который уже есть в карте, но с другой версией.")
+    @Test
+    @TmsLink("SOUL-8690")
+    public void addAlreadyExistObjectToProductCardWithOtherVersionTest() {
+        String productName = StringUtils.getRandomStringApi(7);
+        try {
+            List<CardItems> cardItemsList = new ArrayList<>();
+            Graph graphForProduct = createGraph();
+            JSONObject productJson = Product.builder()
+                    .name(productName)
+                    .graphId(graphForProduct.getGraphId())
+                    .version("2.0.0")
+                    .build()
+                    .init()
+                    .toJson();
+            Product product = createProduct(productJson);
+            CardItems productCardItem = CardItems.builder().objType("Product")
+                    .objId(product.getProductId())
+                    .versionArr(Arrays.asList(2, 0, 0))
+                    .build();
+
+            partialUpdateProduct(product.getProductId(), new JSONObject().put("max_count", 9));
+            CardItems productCardItem2 = CardItems.builder().objType("Product")
+                    .objId(product.getProductId())
+                    .versionArr(Arrays.asList(2, 0, 1))
+                    .build();
+
+            cardItemsList.add(productCardItem);
+            cardItemsList.add(productCardItem2);
+
+            JSONObject json = ProductCard.builder()
+                    .name("apply_product_card_test_api")
+                    .title("apply_product_card_title_test_api")
+                    .description("test_api")
+                    .cardItems(cardItemsList)
+                    .build()
+                    .init()
+                    .toJson();
+            String errorMessage = uncheckedCreateProductCard(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+            assertEquals("There are no unique elements in card_items", errorMessage, "Сообщение об ошибке при создании" +
+                    "product card с не уникальными элементами не соответсвует формату");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            deleteProductByName(productName);
+        }
+    }
+
 
     @DisplayName("Обновление продуктовой карты")
     @Test
