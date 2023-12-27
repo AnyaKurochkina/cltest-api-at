@@ -175,7 +175,7 @@ public class ProductCardSteps extends Steps {
     public static List<ProductCard> getProductCardListWithTags() {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(cardUrl + "?with_tag_list=true")
+                .get(CARD_URL + "?with_tag_list=true")
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductCard.class);
