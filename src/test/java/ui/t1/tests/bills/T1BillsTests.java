@@ -4,7 +4,6 @@ import api.Tests;
 import core.enums.Role;
 import core.excel.excel_data.bills.BillExcelReader;
 import core.excel.excel_data.bills.model.BillExcel;
-import core.utils.DateUtil;
 import core.utils.DownloadingFilesUtil;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -22,6 +21,8 @@ import ui.t1.pages.bills.RuMonth;
 import java.io.File;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 import static core.utils.DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH;
 
@@ -32,6 +33,8 @@ import static core.utils.DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class T1BillsTests extends Tests {
 
+    // DateTimeFormatter с учетом русского языка и шаблона 03-мар-2023
+    private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final LocalDate expectedStartDateCustomPeriod = LocalDate.of(2023, Month.MARCH, 1);
     private final LocalDate expectedEndDateCustomPeriod = LocalDate.of(2023, Month.APRIL, 1);
     private final LocalDate expectedStartDateNovemberPeriod = LocalDate.of(2023, Month.NOVEMBER, 1);
@@ -107,5 +110,9 @@ public class T1BillsTests extends Tests {
     @Step("Подготовка имени файла в формате: user_bills_from_2023-03-01_till_2023-04-01_for_ift")
     private static String prepareFileName(LocalDate expectedStartDateCustomPeriod, LocalDate expectedEndDateCustomPeriod, String organizationName) {
         return String.format("user_bills_from_%s_till_%s_for_%s.xlsx", expectedStartDateCustomPeriod, expectedEndDateCustomPeriod, organizationName);
+    }
+
+    public static LocalDate convertIntoLocalDate(String stringDate) {
+        return LocalDate.parse(stringDate, LITERAL_MONTH_FORMATTER);
     }
 }
