@@ -9,7 +9,7 @@ public class AbstractBillsPeriodPage {
 
     private final Select organiztionSelect = Select.byLabel("Организация");
     private final Button exportButton = Button.byText("Выгрузить");
-    private final CheckBox exportZeroPriceValuesCheckBox = CheckBox.byXpath("//*[text()='Выгружать нулевые значения стоимости']/preceding::span//input");
+    private final CheckBox exportZeroPriceValuesCheckBox = CheckBox.byLabel("Выгружать нулевые значения стоимости");
 
     @Step("Выбор организации с именем: {0}")
     public AbstractBillsPeriodPage chooseOrganization(String organizationName) {
