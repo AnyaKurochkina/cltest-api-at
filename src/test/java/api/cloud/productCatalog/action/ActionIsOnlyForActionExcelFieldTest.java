@@ -18,7 +18,7 @@ import static steps.productCatalog.ActionSteps.partialUpdateAction;
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionIsOnlyForActionFieldTest extends Tests {
+public class ActionIsOnlyForActionExcelFieldTest extends Tests {
 
     @DisplayName("Проверка дефолтного значения поля is_only_for_api")
     @TmsLink("")

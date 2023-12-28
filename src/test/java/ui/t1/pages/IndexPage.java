@@ -255,7 +255,7 @@ public class IndexPage {
     }
 
     @Step("Переход на страницу Инструменты.Аудит")
-    public BillsPage goToPortalBillsPage() {
+    public BillsPage goToBillsPage() {
         linkTools.click();
         linkBills.click();
         return new BillsPage();
