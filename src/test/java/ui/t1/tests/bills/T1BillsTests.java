@@ -89,7 +89,7 @@ public class T1BillsTests extends Tests {
 
     @Step("Создание периода для проверки в виде 03.03.2023 - 03.04.2023")
     private static String createPeriod(BillExcel randomBill) {
-        return DateUtil.convertIntoLocalDate(randomBill.getStartDate()) + " - " + DateUtil.convertIntoLocalDate(randomBill.getEndDate());
+        return convertIntoLocalDate(randomBill.getStartDate()) + " - " + convertIntoLocalDate(randomBill.getEndDate());
     }
 
     @Step("Получение рандомной строчки из excel документа 'Счета'")
