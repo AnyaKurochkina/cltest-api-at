@@ -190,7 +190,6 @@ public class ArtemisPage extends IProductPage {
             dlgActions.setInputValue("max_expiry_delay", "60001");
             Select.byLabel("address full policy").set("FAIL");
             Select.byLabel("max size Mbytes ").set("150Mb");
-            //Select.byLabel("use_separation").set("false");
             dlgActions.setInputValue("slow_consumer_check_period", "11");
             Select.byLabel("slow_consumer_policy").set("NOTIFY");
             dlgActions.setInputValue("slow_consumer_threshold", "2");
@@ -214,7 +213,6 @@ public class ArtemisPage extends IProductPage {
             Select.byLabel("address full policy").set("FAIL");
             Select.byLabel("slow_consumer_policy").set("NOTIFY");
             dlgActions.setInputValue("slow_consumer_threshold", "2");
-//            Select.byLabel("use_separation").set("false");
         });
         new ArtemisPage.VirtualMachineTable("Роли узла").checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnClients.click();
@@ -317,8 +315,6 @@ public class ArtemisPage extends IProductPage {
     public void emergencyUpdateCertificate() {
         new ArtemisPage.VirtualMachineTable("Роли узла").checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Аварийное обновление сертификатов", "Подтвердить", () -> {
-//            CheckBox.byLabel("Я понимаю все риски, связанные с выполнением данного действия").setChecked(true);
-//            CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
             Selenide.$x("//div[text()='Будет произведено обновление версии инсталяции ВТБ-Артемис.']").shouldBe(Condition.visible);
             Selenide.$x("//span[text()='Обновление происходит с недоступностью ВТБ-Артемис.']").shouldBe(Condition.visible);
         });
@@ -373,28 +369,6 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable("Роли узла").checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-//
-//
-//    public void checkUniquenessСreateVirtualHosts(String nameHost) {
-//        new ArtemisPage.VirtualMachineTable("Роли узла").checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
-//        runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Создать виртуальные хосты", "Подтвердить", () -> {
-//            Dialog dlg = Dialog.byTitle("Создать виртуальные хосты");
-//            dlg.setInputValue("Введите имя виртуального хоста", nameHost);
-//        });
-//        btnGeneralInfo.click();
-//        Assertions.assertTrue(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost), "Ошибка создания вируалного хоста");
-//    }
-//
-//    public void deleteVirtualHosts(String nameHost) {
-//        new ArtemisPage.VirtualMachineTable("Роли узла").checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
-//        runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Удалить виртуальные хосты", "Подтвердить", () -> {
-//            Dialog dlg = Dialog.byTitle("Удалить виртуальные хосты");
-//            Select.byLabel("Выберите хосты для удаления").set(nameHost);
-//        });
-//        btnGeneralInfo.click();
-//        Assertions.assertFalse(new Table(HEADER_NAME_USER, 2).isColumnValueContains(HEADER_NAME_USER, nameHost), "Ошибка удаления вируалного хоста");
-//
-//    }
 
     public void addPermissions(String nameUser, String nameHost) {
         new ArtemisPage.VirtualMachineTable("Роли узла").checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
