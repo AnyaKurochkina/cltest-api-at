@@ -20,8 +20,8 @@ import static core.helper.StringUtils.convertStringVersionToIntArrayVersion;
 
 public class ProductCardSteps extends Steps {
 
-    private static final String cardUrl = "/api/v1/product_cards/";
-    private static final String cardhUrl2 = "/api/v2/product_cards/";
+    private static final String CARD_URL = "/api/v1/product_cards/";
+    private static final String CARD_URL_V2 = "/api/v2/product_cards/";
 
     public static ProductCard createProductCard() {
         return ProductCard.builder()
@@ -33,19 +33,24 @@ public class ProductCardSteps extends Steps {
 
     @Step("Создание productCard")
     public static ProductCard createProductCard(JSONObject jsonObject) {
+        return uncheckedCreateProductCard(jsonObject)
+                .assertStatus(201)
+                .extractAs(ProductCard.class);
+    }
+
+    @Step("Создание productCard")
+    public static Response uncheckedCreateProductCard(JSONObject jsonObject) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
-                .post(cardUrl)
-                .assertStatus(201)
-                .extractAs(ProductCard.class);
+                .post(CARD_URL);
     }
 
     @Step("Удаление productCard по id {id}")
     public static void deleteProductCard(String id) {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(cardUrl + id + "/")
+                .delete(CARD_URL + id + "/")
                 .assertStatus(204);
     }
 
@@ -53,7 +58,7 @@ public class ProductCardSteps extends Steps {
     public static void deleteProductCardByName(String name) {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(cardhUrl2 + name + "/")
+                .delete(CARD_URL_V2 + name + "/")
                 .assertStatus(204);
     }
 
@@ -61,7 +66,7 @@ public class ProductCardSteps extends Steps {
     public static ProductCard getProductCard(String id) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(cardUrl + id + "/")
+                .get(CARD_URL + id + "/")
                 .assertStatus(200)
                 .extractAs(ProductCard.class);
     }
@@ -72,7 +77,7 @@ public class ProductCardSteps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
-                .post(cardUrl + "add_tag_list/?name__in=" + names)
+                .post(CARD_URL + "add_tag_list/?name__in=" + names)
                 .assertStatus(200);
     }
 
@@ -82,7 +87,7 @@ public class ProductCardSteps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
-                .post(cardUrl + "remove_tag_list/?name__in=" + names)
+                .post(CARD_URL + "remove_tag_list/?name__in=" + names)
                 .assertStatus(200);
     }
 
@@ -91,7 +96,7 @@ public class ProductCardSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
-                .patch(cardUrl + id + "/");
+                .patch(CARD_URL + id + "/");
     }
 
     @Step("Обновление product cards")
@@ -99,7 +104,7 @@ public class ProductCardSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
-                .put(cardUrl + id + "/")
+                .put(CARD_URL + id + "/")
                 .assertStatus(200);
     }
 
@@ -107,7 +112,7 @@ public class ProductCardSteps extends Steps {
     public static Response applyProductCard(String id) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(cardUrl + id + "/apply/")
+                .post(CARD_URL + id + "/apply/")
                 .assertStatus(200);
     }
 
@@ -115,7 +120,7 @@ public class ProductCardSteps extends Steps {
     public static ProductCard copyProductCard(String id) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(cardUrl + id + "/copy/")
+                .post(CARD_URL + id + "/copy/")
                 .assertStatus(200)
                 .extractAs(ProductCard.class);
     }
@@ -124,7 +129,7 @@ public class ProductCardSteps extends Steps {
     public static boolean isProductCardExists(String name) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(cardUrl + "exists/?name=" + name)
+                .get(CARD_URL + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
     }
 
@@ -132,7 +137,7 @@ public class ProductCardSteps extends Steps {
     public static Response exportProductCard(String id) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(cardUrl + id + "/obj_export/?as_file=true")
+                .get(CARD_URL + id + "/obj_export/?as_file=true")
                 .assertStatus(200);
     }
 
@@ -140,7 +145,7 @@ public class ProductCardSteps extends Steps {
     public static ImportObject importProductCard(String pathName) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .multiPart(cardUrl + "obj_import/", "file", new File(pathName))
+                .multiPart(CARD_URL + "obj_import/", "file", new File(pathName))
                 .assertStatus(200)
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
                 .jsonPath()
@@ -164,5 +169,15 @@ public class ProductCardSteps extends Steps {
                 .objId(objId)
                 .versionArr(convertStringVersionToIntArrayVersion(version))
                 .build();
+    }
+
+    @Step("Получение списка product cards с тегами")
+    public static List<ProductCard> getProductCardListWithTags() {
+        return new Http(productCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(CARD_URL + "?with_tag_list=true")
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductCard.class);
     }
 }

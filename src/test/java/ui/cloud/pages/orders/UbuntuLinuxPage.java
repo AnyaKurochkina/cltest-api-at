@@ -17,7 +17,7 @@ import java.util.List;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class UbuntuLinuxPage extends IProductPage {
+public class UbuntuLinuxPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String HEADER_NAME_DB = "Имя базы данных";
@@ -29,6 +29,11 @@ public class UbuntuLinuxPage extends IProductPage {
 
     public UbuntuLinuxPage(Ubuntu product) {
         super(product);
+    }
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
     }
 
     @Override

@@ -149,6 +149,24 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
     }
 
     @Test
+    @Order(10)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.MORE, tarantoolDataGridAstraPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI TarantoolDataGrid. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        TarantoolDataGridAstraPage tarantoolDataGridAstraPage = new TarantoolDataGridAstraPage(product);
+        tarantoolDataGridAstraPage.runActionWithCheckCost(CompareType.LESS, tarantoolDataGridAstraPage::delKeyAstrom);
+    }
+
+    @Test
     @Order(100)
     @TmsLink("")
     @DisplayName("UI TarantoolDataGrid. Удаление продукта")

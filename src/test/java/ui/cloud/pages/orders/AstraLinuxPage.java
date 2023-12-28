@@ -17,7 +17,7 @@ import java.util.List;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class AstraLinuxPage extends IProductPage {
+public class AstraLinuxPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_SNAPSHOT = "Снапшоты";
@@ -177,6 +177,11 @@ public class AstraLinuxPage extends IProductPage {
                 "Неверный размер диска");
         Assertions.assertTrue(getTableByHeader("Дополнительные диски").isColumnValueContains(HEADER_DISK_SIZE,
                 value));
+    }
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
     }
 
     public class VirtualMachineTable extends VirtualMachine {

@@ -83,12 +83,17 @@ public class ProductSteps extends Steps {
      */
     @Step("Массовое изменение параметров продукта")
     public static Response massChangeProductParam(List<String> id, boolean isOpen) {
+        return uncheckedMassChangeProductParamResponse(id, isOpen)
+                .assertStatus(200);
+    }
+
+    @Step("Массовое изменение параметров продукта")
+    public static Response uncheckedMassChangeProductParamResponse(List<String> id, boolean isOpen) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("objects_change", new JSONArray().put(new JSONObject().put("id", id)
                         .put("params", new JSONObject().put("is_open", isOpen)))))
-                .post(productUrl + "mass_change/")
-                .assertStatus(200);
+                .post(productUrl + "mass_change/");
     }
 
     @Step("Получение продукта по имени {name}")

@@ -19,6 +19,8 @@ import ui.t1.tests.s3.AbstractStorageTest;
 @Story("Объектное хранилище S3")
 public class ObjectsTest extends AbstractStorageTest {
 
+    private final static String PNG_333 = "src/test/resources/s3files/333.png";
+    private final static String PNG_444 = "src/test/resources/s3files/444.png";
     private static final AbstractS3StorageClient<?> S3_STORAGE_CLIENT_NEW = new S3StorageClientNew();
 
     private final EntitySupplier<S3StorageCreateResponse> s3Bucket = lazy(() -> S3_STORAGE_CLIENT_NEW.createS3(name, projectId));
@@ -33,9 +35,9 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("994567")
     @DisplayName("Объекты. Загрузить объект")
     void uploadObject() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
                 .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
@@ -47,12 +49,12 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520456")
     @DisplayName("Объекты. Получить ссылку на объект")
     void getObjectLnk() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .getObjectLink("333.png");
     }
@@ -62,12 +64,12 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520445")
     @DisplayName("Объекты. Переименовать объект")
     void renameObject() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .updateObjectName("333.png", "334.png")
                 .checkObjectExists("333.png", false)
@@ -79,12 +81,12 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520489")
     @DisplayName("Объекты. Восстановить удаленные объекты в бакете с версионированием")
     void restoreVersObject() {
-        S3StorageCreateResponse bucket = s3BucketWithVersioning.get();
+        String bucketName = s3BucketWithVersioning.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .deleteObject("333.png")
                 .checkObjectExists("333.png", false)
@@ -100,12 +102,12 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("675556")
     @DisplayName("Объекты. Восстановить удаленные объекты в бакете без версионирования")
     void restoreUnVersObject() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .deleteObject("333.png")
                 .checkObjectExists("333.png", false)
@@ -118,12 +120,12 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520533")
     @DisplayName("Объекты. Открыть доступ")
     void openObjectPublicAccess() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .checkObjectExists("333.png", true)
                 .openObjectAccess("333.png");
     }
@@ -133,12 +135,12 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("520411")
     @DisplayName("Объекты. Скачать объект")
     void downloadObject() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObject("src/test/resources/s3files/333.png", AccessBucketLevel.OWNER_ONLY)
+                .addObject(PNG_333, AccessBucketLevel.OWNER_ONLY)
                 .updateObjectName("333.png", "335.png")
                 .checkObjectExists("335.png", true)
                 .downloadObject("335.png");
@@ -149,12 +151,12 @@ public class ObjectsTest extends AbstractStorageTest {
     @TmsLink("994567")
     @DisplayName("Объекты. Удалить несколько объектов")
     void deleteObject() {
-        S3StorageCreateResponse bucket = s3Bucket.get();
+        String bucketName = s3Bucket.get().getName();
         new IndexPage().goToNewS3CloudStoragePage()
-                .openBucket(bucket.getName())
+                .openBucket(bucketName)
                 .gotoObjectsLayer()
                 .clickUploadObject()
-                .addObjects(AccessBucketLevel.OWNER_ONLY, "src/test/resources/s3files/333.png", "src/test/resources/s3files/444.png")
+                .addObjects(AccessBucketLevel.OWNER_ONLY, PNG_333, PNG_444)
                 .deleteObjects("333.png", "444.png");
     }
 }
