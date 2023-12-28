@@ -1,6 +1,9 @@
 package ui.cloud.pages.orders;
 
-import com.codeborne.selenide.*;
+import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import core.exception.CreateEntityException;
 import core.helper.Configure;
 import core.utils.Waiting;
@@ -37,9 +40,14 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public abstract class IProductPage {
 
     private static final String HEADER_GROUP = "Группы";
-    protected final SelenideElement prebillingCostElement = Selenide
-            .$x("//div[contains(.,'Новая стоимость услуги')]/descendant::p[(contains(.,'₽/сут.') and contains(.,',')) or text()='без изменений']");
-    public final SelenideElement currentOrderCost = Selenide.$x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
+    protected final SelenideElement prebillingCostElement = $x(
+            "//div[contains(.,'Новая стоимость услуги')]/descendant::p[" +
+                    "   (contains(.,'₽/сут.') and contains(.,','))" +
+                    "   or text()='без изменений'" +
+                    "   or .='Стоимость будет рассчитана  после создания заказа'" +
+                    "   or .='будет рассчитана после выполнения действия']"
+    );
+    public final SelenideElement currentOrderCost = $x("(//p[contains(.,'₽/сут.') and contains(.,',')])[1]");
     protected Double prebillingCostValue;
     protected Button btnGeneralInfo = Button.byElement($x("//button[.='Общая информация']"));
     protected Tab generalInfoTab = Tab.byText("Общая информация");
@@ -49,7 +57,7 @@ public abstract class IProductPage {
     protected final SelenideElement mainItemPage = $x("(//a[contains(@class, 'Breadcrumb')])[2]");
     protected final Tab monitoringOsTab = Tab.byText("Мониторинг ОС");
     protected final SelenideElement generatePassButton = $x("//button[@aria-label='generate']");
-    protected final SelenideElement noData = Selenide.$x("//*[text() = 'Нет данных для отображения']");
+    protected final SelenideElement noData = $x("//*[text() = 'Нет данных для отображения']");
 
     public IProductPage(IProduct product) {
         if (Objects.nonNull(product.getError()))
@@ -162,8 +170,8 @@ public abstract class IProductPage {
             goToCluster();
         if (params.isWaitChangeStatus())
             waitChangeStatus();
+        getOrderCost();
         if (params.isCheckLastAction()) {
-            Waiting.sleep(1000);
             checkLastAction(action);
         }
     }
@@ -202,8 +210,8 @@ public abstract class IProductPage {
                 waitChangeStatus(params.getTimeout());
             }
         }
+        getOrderCost();
         if (params.isCheckLastAction()) {
-            Waiting.sleep(1000);
             checkLastAction(action);
         }
     }
@@ -321,7 +329,6 @@ public abstract class IProductPage {
         runActionWithoutParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
         Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
                 role));
-
     }
 
     @Step("Удалить группу доступа с ролью {role}  в ноде")
