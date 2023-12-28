@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public enum VtbFieldInfo {
+public enum FieldInfoMapping {
     //Счета
     PROJECT("Проект"),
     SERVICE("Услуга"),

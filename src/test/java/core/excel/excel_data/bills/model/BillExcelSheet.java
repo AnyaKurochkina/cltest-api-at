@@ -2,8 +2,8 @@ package core.excel.excel_data.bills.model;
 
 import core.excel.excel_core.field.AbstractExcelFields;
 import core.excel.excel_core.field.ExcelField;
-import core.excel.excel_core.field.VtbExcelField;
-import core.excel.excel_core.field.VtbFieldInfo;
+import core.excel.excel_core.field.ExcelFieldWithMapping;
+import core.excel.excel_core.field.FieldInfoMapping;
 import core.excel.excel_core.sheet.AbstractExcelSheet;
 
 import java.util.Arrays;
@@ -23,20 +23,20 @@ public class BillExcelSheet extends AbstractExcelSheet<BillExcel> {
         @Override
         public Map<Integer, ExcelField<BillExcel>> getHeaderFieldsMappings() {
             return createFieldsMappings(new HashSet<>(Arrays.asList(
-                    new VtbExcelField<>(VtbFieldInfo.PROJECT, VtbFieldInfo.SERVICE, BillExcel::getProject),
-                    new VtbExcelField<>(VtbFieldInfo.SERVICE, VtbFieldInfo.TARIFF_CLASS_OF_SERVICE, BillExcel::getService),
-                    new VtbExcelField<>(VtbFieldInfo.TARIFF_CLASS_OF_SERVICE, VtbFieldInfo.START_DATE, BillExcel::getTariffClassOfService),
-                    new VtbExcelField<>(VtbFieldInfo.START_DATE, VtbFieldInfo.END_DATE, BillExcel::getStartDate),
-                    new VtbExcelField<>(VtbFieldInfo.END_DATE, VtbFieldInfo.AMOUNT_OF_DAYS_IN_PERIOD, BillExcel::getEndDate),
-                    new VtbExcelField<>(VtbFieldInfo.AMOUNT_OF_DAYS_IN_PERIOD, VtbFieldInfo.UNIT_OF_MEASURING, BillExcel::getAmountOfDaysInPeriod),
-                    new VtbExcelField<>(VtbFieldInfo.UNIT_OF_MEASURING, VtbFieldInfo.UNIT_OF_CALCULATION, BillExcel::getUnitOfMeasuring),
-                    new VtbExcelField<>(VtbFieldInfo.UNIT_OF_CALCULATION, VtbFieldInfo.SUM_CONSUMING_IN_DAYS, BillExcel::getUnitOfCalculation),
-                    new VtbExcelField<>(VtbFieldInfo.SUM_CONSUMING_IN_DAYS, VtbFieldInfo.VOLUME, BillExcel::getSumConsumingInDays),
-                    new VtbExcelField<>(VtbFieldInfo.VOLUME, VtbFieldInfo.PRICE_FOR_DAY_WITHOUT_TAX, BillExcel::getVolume),
-                    new VtbExcelField<>(VtbFieldInfo.PRICE_FOR_DAY_WITHOUT_TAX, VtbFieldInfo.PRICE_FOR_DAY_WITH_TAX, BillExcel::getPriceForDayWithoutTax),
-                    new VtbExcelField<>(VtbFieldInfo.PRICE_FOR_DAY_WITH_TAX, VtbFieldInfo.SUM_WITHOUT_TAX, BillExcel::getPriceForDayWithTax),
-                    new VtbExcelField<>(VtbFieldInfo.SUM_WITHOUT_TAX, VtbFieldInfo.SUM_WITH_TAX, BillExcel::getSumWithoutTax),
-                    new VtbExcelField<>(VtbFieldInfo.SUM_WITH_TAX, BillExcel::getSumWithTax)
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.PROJECT, FieldInfoMapping.SERVICE, BillExcel::getProject),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.SERVICE, FieldInfoMapping.TARIFF_CLASS_OF_SERVICE, BillExcel::getService),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.TARIFF_CLASS_OF_SERVICE, FieldInfoMapping.START_DATE, BillExcel::getTariffClassOfService),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.START_DATE, FieldInfoMapping.END_DATE, BillExcel::getStartDate),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.END_DATE, FieldInfoMapping.AMOUNT_OF_DAYS_IN_PERIOD, BillExcel::getEndDate),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.AMOUNT_OF_DAYS_IN_PERIOD, FieldInfoMapping.UNIT_OF_MEASURING, BillExcel::getAmountOfDaysInPeriod),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.UNIT_OF_MEASURING, FieldInfoMapping.UNIT_OF_CALCULATION, BillExcel::getUnitOfMeasuring),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.UNIT_OF_CALCULATION, FieldInfoMapping.SUM_CONSUMING_IN_DAYS, BillExcel::getUnitOfCalculation),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.SUM_CONSUMING_IN_DAYS, FieldInfoMapping.VOLUME, BillExcel::getSumConsumingInDays),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.VOLUME, FieldInfoMapping.PRICE_FOR_DAY_WITHOUT_TAX, BillExcel::getVolume),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.PRICE_FOR_DAY_WITHOUT_TAX, FieldInfoMapping.PRICE_FOR_DAY_WITH_TAX, BillExcel::getPriceForDayWithoutTax),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.PRICE_FOR_DAY_WITH_TAX, FieldInfoMapping.SUM_WITHOUT_TAX, BillExcel::getPriceForDayWithTax),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.SUM_WITHOUT_TAX, FieldInfoMapping.SUM_WITH_TAX, BillExcel::getSumWithoutTax),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.SUM_WITH_TAX, BillExcel::getSumWithTax)
             )));
         }
     }

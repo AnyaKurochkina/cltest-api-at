@@ -254,7 +254,7 @@ public class IndexPage {
         return new AuditPage();
     }
 
-    @Step("Переход на страницу Инструменты.Аудит")
+    @Step("Переход на страницу Инструменты.Счета")
     public BillsPage goToBillsPage() {
         linkTools.click();
         linkBills.click();
