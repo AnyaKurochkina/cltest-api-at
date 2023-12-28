@@ -1,18 +1,15 @@
 package ui.t1.tests.engine.backup;
 
-import core.helper.TableChecker;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.AbstractEntity;
 import org.junit.jupiter.api.*;
+import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.Column;
+import ui.t1.pages.cloudEngine.backup.Backup;
 import ui.t1.pages.cloudEngine.backup.BackupCreate;
-import ui.t1.pages.cloudEngine.backup.BackupsList;
-import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.tests.engine.AbstractComputeTest;
-import ui.t1.tests.engine.EntitySupplier;
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -20,39 +17,44 @@ import ui.t1.tests.engine.EntitySupplier;
 @Epic("Cloud Compute")
 public class BackupTest extends AbstractComputeTest {
 
-    private final EntitySupplier<BackupCreate> backupSup = lazy(() -> {
-        VmCreate vm = randomVm.get();
-        BackupCreate backupCreate = new IndexPage().goToBackups().addBackup().setAvailabilityZone(availabilityZone).setSourceType("Сервер")
-                .setObjectForBackup(vm.getName()).clickOrder();
-        new BackupsList().selectBackup(backupCreate.getObjectForBackup())
-                .markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
-        return backupCreate;
-    });
-
     @Test
     @Order(1)
-    @TmsLink("")
-    @DisplayName("Cloud Backup. Резервные копии. Создать резервную копию")
-    void create() {
-        backupSup.run();
+    @TmsLink("SOUL-8729")
+    @DisplayName("Cloud Backup. Резервные копии. Восстановить из полной копии")
+    void restoreFromFullBackup() {
+        String vmName = getRandomName();
+        BackupCreate backupCreate = backupSup.get();
+        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        String lastFullCopyName = backup.getLastFullCopyName();
+        backup.selectFullCopy(lastFullCopyName).restore(vmName, sshKey, securityGroup);
+        new IndexPage().goToVirtualMachine().selectCompute(vmName)
+                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkConsole();
     }
 
     @Test
     @Order(2)
-    @TmsLink("")
-    @Tag("smoke")
-    @DisplayName("Cloud Backup. Резервные копии")
-    void backupList() {
+    @TmsLink("SOUL-8728")
+    @DisplayName("Cloud Backup. Резервные копии. Восстановить из инкрементальной копии")
+    void restoreFromIncrementalBackup() {
+        String vmName = getRandomName();
         BackupCreate backupCreate = backupSup.get();
-        new IndexPage().goToBackups();
-        new TableChecker()
-                .add("", String::isEmpty)
-                .add(Column.OBJECT_NAME, e -> e.equals(backupCreate.getObjectForBackup()))
-                .add(Column.AVAILABILITY_ZONE, e -> e.equals(backupCreate.getAvailabilityZone()))
-                .add("Тип объекта", e -> e.equals("instance"))
-                .add("Суммарный размер", e -> e.length() > 3)
-                .add("Дата последней копии", e -> e.length() > 4)
-                .add("", String::isEmpty)
-                .check(() -> new BackupsList.BackupTable().getRowByColumnValue(Column.OBJECT_NAME, backupCreate.getObjectForBackup()));
+        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        String lastFullCopyName = backup.getLastFullCopyName();
+        String incrementalCopyName = backup.createBackup(Backup.TypeBackup.INCREMENTAL);
+        backup.selectFullCopy(lastFullCopyName).selectIncrementalCopy(incrementalCopyName)
+                .restore(vmName, sshKey, securityGroup);
+        new IndexPage().goToVirtualMachine().selectCompute(vmName)
+                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkConsole();
+    }
+
+    @Test
+    @Order(100)
+    @TmsLink("SOUL-7618")
+    @DisplayName("Cloud Backup. Резервные копии. Удалить контейнер")
+    void deleteBackup() {
+        BackupCreate backupCreate = backupSup.get();
+        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        backup.createBackup(Backup.TypeBackup.FULL);
+        backup.runActionWithCheckCost(CompareType.ZERO, backup::delete);
     }
 }

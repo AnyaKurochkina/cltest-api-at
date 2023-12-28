@@ -25,7 +25,6 @@ import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -56,7 +55,7 @@ public class TestsExecutionListener implements TestExecutionListener {
             Configuration.startMaximized = true;
         else
             Configuration.startMaximized = Boolean.parseBoolean(Configure.getAppProp("webdriver.maximized", "false"));
-        Configuration.pageLoadTimeout = 60000;
+        Configuration.pageLoadTimeout = 90000;
         Configuration.timeout = 50000;
         Configuration.driverManagerEnabled = false;
         Configuration.browser = "chrome";

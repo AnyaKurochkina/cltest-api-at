@@ -28,7 +28,7 @@ public class BackupCreate {
     }
 
     public BackupCreate setObjectForBackup(String objectForBackup) {
-        Select.byLabel("Доступные объекты").set(objectForBackup);
+        Select.byLabel("Доступные объекты").setContains(objectForBackup);
         this.objectForBackup = objectForBackup;
         return this;
     }

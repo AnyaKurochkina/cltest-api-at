@@ -50,7 +50,6 @@ public class IndexPage {
     Button linkImages = Button.byXpath("//a[.='Образы']");
     Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
     Button linkBackups = Button.byXpath("//a[.='Резервные копии']");
-
     Button linkHistory = Button.byXpath("//a[.='История действий']");
     Button linkNetworks = Button.byXpath("//a[.='Сети']");
     Button linkTools = Button.byXpath("//a[.='Инструменты']");
