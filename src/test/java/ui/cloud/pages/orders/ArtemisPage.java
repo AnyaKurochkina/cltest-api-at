@@ -24,6 +24,7 @@ public class ArtemisPage extends IProductPage {
     private static final String HEADER_NAME_CLIENT = "Имя клиента";
     private static final String HEADER_NODE_ROLES = "Роли узла";
     private final String nameService = "name_ser_vice";
+    private final SelenideElement fieldNameService = Selenide.$x("//li[text()='name_ser_vice']");
     private final String nameClientWithOutService = "name_cli_ent_without_serv";
     private final String nameClientWithService = "name_cli_ent";
     private final String nameClientTemporary = "name_temporary";
@@ -40,6 +41,7 @@ public class ArtemisPage extends IProductPage {
     private final SelenideElement checkText = Selenide.$x("//span[text()='Обновление происходит без недоступности ВТБ-Артемис.']");
     private final SelenideElement checkUpdateVersion = Selenide.$x("//div[text()='Будет произведено обновление версии инсталяции ВТБ-Артемис.']");
     private final SelenideElement checkTextUpdate = Selenide.$x("//span[text()='Обновление происходит с недоступностью ВТБ-Артемис.']");
+    private final Button addButton = Button.byXpath("//button[contains(@class, 'array-item-add')]");
     private final String lableNameClient = "Имя клиента";
     private final String lableOwnerCertificate = "subject(owner) сертификата клиента";
     private final String lableMinExpiryDelay = "min_expiry_delay";
@@ -48,6 +50,7 @@ public class ArtemisPage extends IProductPage {
     private final String lableSlowConsumerPolicy = "slow_consumer_policy";
     private final String lableSlowConsumerThreshold = "slow_consumer_threshold";
     private final String lableTypeQueue = "тип очереди";
+
 
     public ArtemisPage(Artemis product) {
         super(product);
@@ -212,9 +215,9 @@ public class ArtemisPage extends IProductPage {
             dlgActions.setInputValue(lableNameClient, nameClientWithService);
             dlgActions.setInputValue(lableOwnerCertificate, nameCertClient);
             Select.byLabel(lableTypeQueue).set("own");
-            Button.byXpath("//button[contains(@class, 'array-item-add')]").click();
-            Input.byXpath("//button[@title='Clear']/ancestor::div/input").setValue("name_ser_vice");
-            Selenide.$x("//li[text()='name_ser_vice']").click();
+            addButton.click();
+            clearInput().setValue("name_ser_vice");
+            inputNameService.click();
             dlgActions.setInputValue(lableMinExpiryDelay, "10001");
             dlgActions.setInputValue(lableMaxExpiryDelay, "60001");
             Select.byLabel(lableAddressFullPolicy).set("FAIL");
@@ -235,7 +238,7 @@ public class ArtemisPage extends IProductPage {
             dlgActions.setInputValue(lableNameClient, nameClientTemporary);
             dlgActions.setInputValue(lableOwnerCertificate, nameCertClient);
             Select.byLabel("тип очереди").set("temporary");
-            Input.byXpath("//button[@title='Clear']/ancestor::div/input").setValue("name_ser_vice");
+            clearInput().setValue("name_ser_vice");
             inputNameService.click();
             dlgActions.setInputValue(lableMinExpiryDelay, "10001");
             dlgActions.setInputValue(lableMaxExpiryDelay, "60001");
@@ -254,8 +257,8 @@ public class ArtemisPage extends IProductPage {
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Создание прав доступа клиента", "Подтвердить", () -> {
             Select.byLabel("Список клиентов").set(nameClientWithOutService);
-            Input.byXpath("(//button[@title='Clear']/ancestor::div/input)[2]").setValue("name_ser_vice");
-            Selenide.$x("//li[text()='name_ser_vice']").click();
+            clearInput(2).setValue("name_ser_vice");
+            fieldNameService.click();
         });
     }
 
@@ -266,8 +269,8 @@ public class ArtemisPage extends IProductPage {
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Удаление прав доступа клиента", "Подтвердить", () -> {
             Select.byLabel("Список клиентов").set(nameClientWithOutService);
-            Input.byXpath("(//button[@title='Clear']/ancestor::div/input)[2]").setValue("name_ser_vice");
-            Selenide.$x("//li[text()='name_ser_vice']").click();
+            clearInput(2).setValue("name_ser_vice");
+            fieldNameService.click();
         });
     }
 
@@ -279,7 +282,6 @@ public class ArtemisPage extends IProductPage {
         runActionWithParameters(BLOCK_SERVICE, "Удаление сервиса", "Подтвердить", () -> {
             Select.byLabel("Имя сервиса").set(nameService);
         });
-
         btnService.click();
         Assertions.assertFalse(new Table(HEADER_NAME_SERVICE, 1).isColumnValueContains(HEADER_NAME_SERVICE, nameService), "Ошибка удаления сервиса");
     }
@@ -351,6 +353,14 @@ public class ArtemisPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+
+    public Input clearInput(int index) {
+        return Input.byXpath("(//button[@title='Clear']/ancestor::div/input)[index]");
+    }
+
+    public Input clearInput() {
+        return Input.byXpath("//button[@title='Clear']/ancestor::div/input");
     }
 
     public class VirtualMachineTable extends VirtualMachine {
