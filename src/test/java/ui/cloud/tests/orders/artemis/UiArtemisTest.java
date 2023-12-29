@@ -269,6 +269,15 @@ public class UiArtemisTest extends UiProductTest {
         artemisPage.runActionWithCheckCost(CompareType.MORE, artemisPage::checkConfiguration);
     }
 
+    @Test
+    @Order(22)
+    @TmsLink("")
+    @DisplayName("UI Artemis. Включение\\отключение протоколов")
+    void onOffProtokol() {
+        ArtemisPage artemisPage = new ArtemisPage(product);
+        artemisPage.runActionWithCheckCost(CompareType.MORE, artemisPage::onOffProtokol);
+    }
+
 
     @Test
     @Order(100)

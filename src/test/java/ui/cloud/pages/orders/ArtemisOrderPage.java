@@ -2,6 +2,7 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.elements.Input;
 import ui.elements.Select;
@@ -12,8 +13,8 @@ import static core.helper.StringUtils.$x;
 public class ArtemisOrderPage extends NewOrderPage {
 
     private final Select numberNodes = Select.byLabel("Количество нод кластера по типу");
-    private final Select configureCh = Select.byLabel("Конфигурация Core/RAM ClickHouse");
-    private final Select configureZ = Select.byLabel("Конфигурация Core/RAM Zookeeper");
+    private final Select configureCoreRam = Select.byLabel("Конфигурация Core/RAM ClickHouse");
+    private final Select configureZookeeperSelect = Select.byLabel("Конфигурация Core/RAM Zookeeper");
     private final Input nameUser = Input.byLabel("Имя пользователя (админ с полными правами)");
     private final Input nameCluster = Input.byLabel("Имя кластера");
     private final Input nameDB = Input.byLabel("Имя базы данных");
@@ -24,7 +25,19 @@ public class ArtemisOrderPage extends NewOrderPage {
     private final SelenideElement generatePassButton2 = $x("(//button[@aria-label='generate'])[2]");
 
     public ArtemisOrderPage() {
-        labelInput.setValue(labelValue);
-        platformSelect.getElement().shouldBe(Condition.enabled);
+        setPrefix(labelInput, labelValue);
+        checkVisibleElement(platformSelect);
     }
+
+    @Step("Подстановка префикса")
+    public void setPrefix(Input lable, String labelValue) {
+        lable.setValue(labelValue);
+    }
+
+    @Step("Проверка элемента на видимость")
+    public void checkVisibleElement(Select element) {
+        element.getElement().shouldBe(Condition.enabled);
+    }
+
+
 }
