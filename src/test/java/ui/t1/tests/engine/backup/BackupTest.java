@@ -2,6 +2,7 @@ package ui.t1.tests.engine.backup;
 
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
 import models.AbstractEntity;
 import org.junit.jupiter.api.*;
@@ -22,9 +23,8 @@ public class BackupTest extends AbstractComputeTest {
     @TmsLink("SOUL-8729")
     @DisplayName("Cloud Backup. Резервные копии. Восстановить из полной копии")
     void restoreFromFullBackup() {
+        Backup backup = openBackup();
         String vmName = getRandomName();
-        BackupCreate backupCreate = backupSup.get();
-        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
         String lastFullCopyName = backup.getLastFullCopyName();
         backup.selectFullCopy(lastFullCopyName).restore(vmName, sshKey, securityGroup);
         new IndexPage().goToVirtualMachine().selectCompute(vmName)
@@ -36,9 +36,8 @@ public class BackupTest extends AbstractComputeTest {
     @TmsLink("SOUL-8728")
     @DisplayName("Cloud Backup. Резервные копии. Восстановить из инкрементальной копии")
     void restoreFromIncrementalBackup() {
+        Backup backup = openBackup();
         String vmName = getRandomName();
-        BackupCreate backupCreate = backupSup.get();
-        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
         String lastFullCopyName = backup.getLastFullCopyName();
         String incrementalCopyName = backup.createBackup(Backup.TypeBackup.INCREMENTAL);
         backup.selectFullCopy(lastFullCopyName).selectIncrementalCopy(incrementalCopyName)
@@ -52,9 +51,14 @@ public class BackupTest extends AbstractComputeTest {
     @TmsLink("SOUL-7618")
     @DisplayName("Cloud Backup. Резервные копии. Удалить контейнер")
     void deleteBackup() {
-        BackupCreate backupCreate = backupSup.get();
-        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        Backup backup = openBackup();
         backup.createBackup(Backup.TypeBackup.FULL);
         backup.runActionWithCheckCost(CompareType.ZERO, backup::delete);
+    }
+
+    @Step("Открытие страницы резервной копии")
+    private Backup openBackup() {
+        BackupCreate backupCreate = backupSup.get();
+        return new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
     }
 }

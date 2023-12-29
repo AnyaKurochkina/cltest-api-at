@@ -1,5 +1,6 @@
 package ui.t1.tests.engine.backup;
 
+import core.helper.Report;
 import core.helper.TableChecker;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -33,8 +34,11 @@ public class BackupCrudTest extends AbstractComputeTest {
     @Tag("smoke")
     @DisplayName("Cloud Backup. Резервные копии")
     void backupList() {
-        BackupCreate backupCreate = backupSup.get();
-        new IndexPage().goToBackups();
+        BackupCreate backupCreate = Report.preconditionStep("Открытие страницы списка резервных копий", () -> {
+            BackupCreate bc = backupSup.get();
+            new IndexPage().goToBackups();
+            return bc;
+        });
         new TableChecker()
                 .add("", String::isEmpty)
                 .add(Column.OBJECT_NAME, e -> e.equals(backupCreate.getObjectForBackup()))
@@ -51,8 +55,11 @@ public class BackupCrudTest extends AbstractComputeTest {
     @TmsLink("SOUL-7619")
     @DisplayName("Cloud Backup. Резервные копии. Контейнер")
     void backupPage() {
-        BackupCreate backupCreate = backupSup.get();
-        new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        BackupCreate backupCreate = Report.preconditionStep("Открытие страницы резервной копии", () -> {
+            BackupCreate bc = backupSup.get();
+            new IndexPage().goToBackups().selectBackup(bc.getObjectForBackup());
+            return bc;
+        });
         new TableChecker()
                 .add(Column.NAME, e -> e.length() > 30)
                 .add("Тип", e -> e.equals("Резервная копия"))
@@ -69,8 +76,9 @@ public class BackupCrudTest extends AbstractComputeTest {
     @TmsLinks({@TmsLink("SOUL-7616"), @TmsLink("SOUL-7621")})
     @DisplayName("Cloud Backup. Резервные копии. Создать/удалить резервную копию (Полную)")
     void createIncrementalBackup() {
-        BackupCreate backupCreate = backupSup.get();
-        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        BackupCreate backupCreate = Report.preconditionStep("Создание резервной копии", backupSup::get);
+        Backup backup = Report.preconditionStep("Открытие страницы резервной копии",
+                () -> new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup()));
         String fullCopyName = backup.createBackup(Backup.TypeBackup.FULL);
         FullCopy fullCopy = backup.selectFullCopy(fullCopyName);
         fullCopy.runActionWithCheckCost(CompareType.ZERO, fullCopy::delete);
@@ -81,8 +89,10 @@ public class BackupCrudTest extends AbstractComputeTest {
     @TmsLinks({@TmsLink("SOUL-7617"), @TmsLink("SOUL-7620")})
     @DisplayName("Cloud Backup. Резервные копии. Создать/удалить резервную копию (Инкрементальную)")
     void createFullBackup() {
-        BackupCreate backupCreate = backupSup.get();
-        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        Backup backup = Report.preconditionStep("Открытие страницы резервной копии", () -> {
+            BackupCreate bc = backupSup.get();
+            return new IndexPage().goToBackups().selectBackup(bc.getObjectForBackup());
+        });
         String lastFullCopyName = backup.getLastFullCopyName();
         String incrementalCopyName = backup.createBackup(Backup.TypeBackup.INCREMENTAL);
         IncrementalCopy incrementalCopy = backup.selectFullCopy(lastFullCopyName).selectIncrementalCopy(incrementalCopyName);
@@ -94,8 +104,9 @@ public class BackupCrudTest extends AbstractComputeTest {
     @TmsLink("SOUL-7622")
     @DisplayName("Cloud Backup. Резервные копии. Удалить последнюю полную копию")
     void deleteBackup() {
-        BackupCreate backupCreate = backupSup.get();
-        Backup backup = new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup());
+        BackupCreate backupCreate = Report.preconditionStep("Создание резервной копии", backupSup::get);
+        Backup backup = Report.preconditionStep("Открытие страницы резервной копии",
+                () -> new IndexPage().goToBackups().selectBackup(backupCreate.getObjectForBackup()));
         backup.runActionWithCheckCost(CompareType.ZERO, backup::delete);
         backup.getGeneralInfoTab().switchTo();
         Assertions.assertTrue(new Backup.CopyList().isEmpty(), "Таблица копий не пустая");

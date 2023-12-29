@@ -4,7 +4,7 @@ import io.qameta.allure.Allure;
 
 import java.util.concurrent.Callable;
 
-public class ReportStep {
+public class Report {
 
     public static <T> T actionStep(String stepName, Callable<T> callable) {
         return Allure.step(stepName, callable::call);
