@@ -317,7 +317,6 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_CLUSTER, "Вертикальное масштабирование", "Подтвердить", () -> {
-            Dialog dlg = Dialog.byTitle("Вертикальное масштабирование");
             configureCoreRamSelect.set(NewOrderPage.getFlavor(maxFlavor));
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         }, ActionParameters.builder().timeout(Duration.ofHours(2)).build());
@@ -361,7 +360,7 @@ public class ArtemisPage extends IProductPage {
     }
 
     public Input getElementClear(int index) {
-        return Input.byXpath("(//button[@title='Clear']/ancestor::div/input)[index]");
+        return Input.byXpath("(//button[@title='Clear']/ancestor::div/input)[" + index + "]");
     }
 
     public class VirtualMachineTable extends VirtualMachine {
