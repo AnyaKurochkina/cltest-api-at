@@ -42,20 +42,20 @@ public class ArtemisPage extends IProductPage {
     private final SelenideElement checkUpdateVersion = Selenide.$x("//div[text()='Будет произведено обновление версии инсталяции ВТБ-Артемис.']");
     private final SelenideElement checkTextUpdate = Selenide.$x("//span[text()='Обновление происходит с недоступностью ВТБ-Артемис.']");
     private final Button addButton = Button.byXpath("//button[contains(@class, 'array-item-add')]");
-    private final String lableNameClient = "Имя клиента";
-    private final String lableOwnerCertificate = "subject(owner) сертификата клиента";
-    private final String lableMinExpiryDelay = "min_expiry_delay";
-    private final String lableMaxExpiryDelay = "max_expiry_delay";
-    private final Select selectAddressFullPolicy = Select.byLabel("address full policy");
-    private final Select selectMaxSizeMbtes = Select.byLabel("max size Mbytes");
-    private final Select selectSlowConsumerPolicy = Select.byLabel("slow_consumer_policy");
-    private final String lableSlowConsumerThreshold = "slow_consumer_threshold";
-    private final Select selectTypeQueue = Select.byLabel("тип очереди");
-    private final Select selectConfigureCoreRam = Select.byLabel("Конфигурация Core/RAM");
-    private final Select selectListClient = Select.byLabel("Список клиентов");
-    private final Select selectNameService = Select.byLabel("Имя сервиса");
-    private final Select selectNameClient = Select.byLabel("Имя клиента");
-
+    private final String nameClient = "Имя клиента";
+    private final String ownerCertificate = "subject(owner) сертификата клиента";
+    private final String minExpiryDelay = "min_expiry_delay";
+    private final String maxExpiryDelay = "max_expiry_delay";
+    private final Select addressFullPolicySelect = Select.byLabel("address full policy");
+    private final Select maxSizeMbtesSelect = Select.byLabel("max size Mbytes");
+    private final Select slowConsumerPolicySelect = Select.byLabel("slow_consumer_policy");
+    private final String slowConsumerThreshold = "slow_consumer_threshold";
+    private final Select typeQueueSelect = Select.byLabel("тип очереди");
+    private final Select configureCoreRamSelect = Select.byLabel("Конфигурация Core/RAM");
+    private final Select listClientSelect = Select.byLabel("Список клиентов");
+    private final Select nameServiceSelect = Select.byLabel("Имя сервиса");
+    private final Select nameClientSelect = Select.byLabel("Имя клиента");
+    private final Input getElementClear = Input.byXpath("//button[@title='Clear']/ancestor::div/input");
 
     public ArtemisPage(Artemis product) {
         super(product);
@@ -177,14 +177,14 @@ public class ArtemisPage extends IProductPage {
         runActionWithParameters(BLOCK_SERVICE, "Создание сервиса", "Подтвердить", () -> {
             Dialog dlgActions = Dialog.byTitle("Создание сервиса");
             dlgActions.setInputValue("Имя сервиса", nameService);
-            dlgActions.setInputValue(lableOwnerCertificate, nameCertService);
-            dlgActions.setInputValue(lableMinExpiryDelay, "10001");
-            dlgActions.setInputValue(lableMaxExpiryDelay, "60001");
-            selectAddressFullPolicy.set("FAIL");
-            selectMaxSizeMbtes.set("150Mb");
+            dlgActions.setInputValue(ownerCertificate, nameCertService);
+            dlgActions.setInputValue(minExpiryDelay, "10001");
+            dlgActions.setInputValue(maxExpiryDelay, "60001");
+            addressFullPolicySelect.set("FAIL");
+            maxSizeMbtesSelect.set("150Mb");
             dlgActions.setInputValue("slow_consumer_check_period", "11");
-            selectSlowConsumerPolicy.set("NOTIFY");
-            dlgActions.setInputValue(lableSlowConsumerThreshold, "2");
+            slowConsumerPolicySelect.set("NOTIFY");
+            dlgActions.setInputValue(slowConsumerThreshold, "2");
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnService.click();
@@ -197,14 +197,14 @@ public class ArtemisPage extends IProductPage {
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Создание клиента", "Подтвердить", () -> {
             Dialog dlgActions = Dialog.byTitle("Создание клиента");
-            dlgActions.setInputValue(lableNameClient, nameClientWithOutService);
-            dlgActions.setInputValue(lableOwnerCertificate, nameCertClient);
-            selectTypeQueue.set("own");
-            dlgActions.setInputValue(lableMinExpiryDelay, "10001");
-            dlgActions.setInputValue(lableMaxExpiryDelay, "60001");
-            selectAddressFullPolicy.set("FAIL");
-            selectSlowConsumerPolicy.set("NOTIFY");
-            dlgActions.setInputValue(lableSlowConsumerThreshold, "2");
+            dlgActions.setInputValue(nameClient, nameClientWithOutService);
+            dlgActions.setInputValue(ownerCertificate, nameCertClient);
+            typeQueueSelect.set("own");
+            dlgActions.setInputValue(minExpiryDelay, "10001");
+            dlgActions.setInputValue(maxExpiryDelay, "60001");
+            addressFullPolicySelect.set("FAIL");
+            slowConsumerPolicySelect.set("NOTIFY");
+            dlgActions.setInputValue(slowConsumerThreshold, "2");
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnClients.click();
@@ -217,17 +217,17 @@ public class ArtemisPage extends IProductPage {
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Создание клиента", "Подтвердить", () -> {
             Dialog dlgActions = Dialog.byTitle("Создание клиента");
-            dlgActions.setInputValue(lableNameClient, nameClientWithService);
-            dlgActions.setInputValue(lableOwnerCertificate, nameCertClient);
-            selectTypeQueue.set("own");
+            dlgActions.setInputValue(nameClient, nameClientWithService);
+            dlgActions.setInputValue(ownerCertificate, nameCertClient);
+            typeQueueSelect.set("own");
             addButton.click();
-            clearInput().setValue(nameService);
+            getElementClear.setValue(nameService);
             inputNameService.click();
-            dlgActions.setInputValue(lableMinExpiryDelay, "10001");
-            dlgActions.setInputValue(lableMaxExpiryDelay, "60001");
-            selectAddressFullPolicy.set("FAIL");
-            selectSlowConsumerPolicy.set("NOTIFY");
-            dlgActions.setInputValue(lableSlowConsumerThreshold, "2");
+            dlgActions.setInputValue(minExpiryDelay, "10001");
+            dlgActions.setInputValue(maxExpiryDelay, "60001");
+            addressFullPolicySelect.set("FAIL");
+            slowConsumerPolicySelect.set("NOTIFY");
+            dlgActions.setInputValue(slowConsumerThreshold, "2");
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnClients.click();
@@ -240,16 +240,16 @@ public class ArtemisPage extends IProductPage {
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Создание клиента", "Подтвердить", () -> {
             Dialog dlgActions = Dialog.byTitle("Создание клиента");
-            dlgActions.setInputValue(lableNameClient, nameClientTemporary);
-            dlgActions.setInputValue(lableOwnerCertificate, nameCertClient);
+            dlgActions.setInputValue(nameClient, nameClientTemporary);
+            dlgActions.setInputValue(ownerCertificate, nameCertClient);
             Select.byLabel("тип очереди").set("temporary");
-            clearInput().setValue(nameService);
+            getElementClear.setValue(nameService);
             inputNameService.click();
-            dlgActions.setInputValue(lableMinExpiryDelay, "10001");
-            dlgActions.setInputValue(lableMaxExpiryDelay, "60001");
-            selectAddressFullPolicy.set("FAIL");
-            selectSlowConsumerPolicy.set("NOTIFY");
-            dlgActions.setInputValue(lableSlowConsumerThreshold, "2");
+            dlgActions.setInputValue(minExpiryDelay, "10001");
+            dlgActions.setInputValue(maxExpiryDelay, "60001");
+            addressFullPolicySelect.set("FAIL");
+            slowConsumerPolicySelect.set("NOTIFY");
+            dlgActions.setInputValue(slowConsumerThreshold, "2");
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnClients.click();
@@ -261,8 +261,8 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Создание прав доступа клиента", "Подтвердить", () -> {
-            selectListClient.set(nameClientWithOutService);
-            clearInput(2).setValue(nameService);
+            listClientSelect.set(nameClientWithOutService);
+            getElementClear(2).setValue(nameService);
             fieldNameService.click();
         });
     }
@@ -273,8 +273,8 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Удаление прав доступа клиента", "Подтвердить", () -> {
-            selectListClient.set(nameClientWithOutService);
-            clearInput(2).setValue(nameService);
+            listClientSelect.set(nameClientWithOutService);
+            getElementClear(2).setValue(nameService);
             fieldNameService.click();
         });
     }
@@ -285,7 +285,7 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnService.click();
         runActionWithParameters(BLOCK_SERVICE, "Удаление сервиса", "Подтвердить", () -> {
-            selectNameService.set(nameService);
+            nameServiceSelect.set(nameService);
         });
         btnService.click();
         Assertions.assertFalse(new Table(HEADER_NAME_SERVICE, 1).isColumnValueContains(HEADER_NAME_SERVICE, nameService), "Ошибка удаления сервиса");
@@ -296,7 +296,7 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         btnClients.click();
         runActionWithParameters(BLOCK_CLIENT, "Удаление клиента", "Подтвердить", () -> {
-            selectNameClient.set(nameClientWithOutService);
+            nameClientSelect.set(nameClientWithOutService);
         });
         btnClients.click();
         Assertions.assertFalse(getTableByHeader(HEADER_NAME_CLIENT).isColumnValueContains(HEADER_NAME_CLIENT, nameClientWithOutService), "Ошибка удаления сервиса");
@@ -318,7 +318,7 @@ public class ArtemisPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_CLUSTER, "Вертикальное масштабирование", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Вертикальное масштабирование");
-            selectConfigureCoreRam.set(NewOrderPage.getFlavor(maxFlavor));
+            configureCoreRamSelect.set(NewOrderPage.getFlavor(maxFlavor));
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         }, ActionParameters.builder().timeout(Duration.ofHours(2)).build());
         btnGeneralInfo.click();
@@ -360,12 +360,8 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    public Input clearInput(int index) {
+    public Input getElementClear(int index) {
         return Input.byXpath("(//button[@title='Clear']/ancestor::div/input)[index]");
-    }
-
-    public Input clearInput() {
-        return Input.byXpath("//button[@title='Clear']/ancestor::div/input");
     }
 
     public class VirtualMachineTable extends VirtualMachine {
