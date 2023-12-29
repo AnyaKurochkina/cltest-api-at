@@ -107,7 +107,7 @@ public class T1BillsTests extends Tests {
      * 2) %s - Окончание периода
      * 3) %s - Название организации
      */
-    @Step("Подготовка имени файла в формате: user_bills_from_2023-03-01_till_2023-04-01_for_ift")
+    @Step("[Предусловие] Подготовка имени файла в формате: user_bills_from_2023-03-01_till_2023-04-01_for_ift")
     private static String prepareFileName(LocalDate expectedStartDateCustomPeriod, LocalDate expectedEndDateCustomPeriod, String organizationName) {
         return String.format("user_bills_from_%s_till_%s_for_%s.xlsx", expectedStartDateCustomPeriod, expectedEndDateCustomPeriod, organizationName);
     }
