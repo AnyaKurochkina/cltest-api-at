@@ -314,7 +314,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(24)
+    @Order(25)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_backup")
     void adPgBackup
@@ -325,7 +325,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(25)
+    @Order(26)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_audit")
     void addPgAudit
@@ -336,7 +336,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(26)
+    @Order(27)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Добавить точку монтирования /pg_walarchive")
     void addPgWalarchive
@@ -347,7 +347,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(27)
+    @Order(28)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Обновить ОС")
     void updateOs
@@ -358,7 +358,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(28)
+    @Order(29)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Показать удаленные БД")
     void showDeleteDB() {
@@ -367,7 +367,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(29)
+    @Order(30)
     @TmsLink("1296731")
     @DisplayName("UI PostgreSQLAstra. Мониторинг ОС")
     void monitoringOs() {
@@ -377,7 +377,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(30)
+    @Order(31)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Установить Ключ-Астром")
     void addKeyAstrom() {
@@ -386,7 +386,7 @@ public class UiPostgreSqlAstraLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(31)
+    @Order(32)
     @TmsLink("")
     @DisplayName("UI PostgreSQLAstra. Удалить Ключ-Астром")
     void delKeyAstrom() {

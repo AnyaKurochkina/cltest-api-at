@@ -44,6 +44,10 @@ public class Button implements TypifiedElement {
         return new Button($x("//button[@aria-label='{}']", value));
     }
 
+    public static Button byLabel(String value) {
+        return new Button($x("//button[@label='{}']", value));
+    }
+
     public static Button byId(String id) {
         return new Button($x("//button[@id='{}']", id));
     }

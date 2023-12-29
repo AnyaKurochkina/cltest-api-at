@@ -33,12 +33,17 @@ public class ProductCardSteps extends Steps {
 
     @Step("Создание productCard")
     public static ProductCard createProductCard(JSONObject jsonObject) {
+        return uncheckedCreateProductCard(jsonObject)
+                .assertStatus(201)
+                .extractAs(ProductCard.class);
+    }
+
+    @Step("Создание productCard")
+    public static Response uncheckedCreateProductCard(JSONObject jsonObject) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
-                .post(CARD_URL)
-                .assertStatus(201)
-                .extractAs(ProductCard.class);
+                .post(CARD_URL);
     }
 
     @Step("Удаление productCard по id {id}")
@@ -104,8 +109,8 @@ public class ProductCardSteps extends Steps {
     }
 
     @Step("Применение product cards")
-    public static void applyProductCard(String id) {
-        new Http(productCatalogURL)
+    public static Response applyProductCard(String id) {
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(CARD_URL + id + "/apply/")
                 .assertStatus(200);
@@ -164,5 +169,15 @@ public class ProductCardSteps extends Steps {
                 .objId(objId)
                 .versionArr(convertStringVersionToIntArrayVersion(version))
                 .build();
+    }
+
+    @Step("Получение списка product cards с тегами")
+    public static List<ProductCard> getProductCardListWithTags() {
+        return new Http(productCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get(CARD_URL + "?with_tag_list=true")
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductCard.class);
     }
 }

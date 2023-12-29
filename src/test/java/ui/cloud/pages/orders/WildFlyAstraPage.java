@@ -15,7 +15,7 @@ import java.net.MalformedURLException;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class WildFlyAstraPage extends IProductPage {
+public class WildFlyAstraPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_CERTIFICATE = "Сертификат WildFly";
     private static final String BLOCK_VM = "Виртуальные машины";
@@ -37,6 +37,11 @@ public class WildFlyAstraPage extends IProductPage {
 
     public SelenideElement getRoleNode() {
         return new Table("Роли узла").getRow(0).get();
+    }
+
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
     }
 
     @Override
@@ -217,16 +222,6 @@ public class WildFlyAstraPage extends IProductPage {
         });
         btnGeneralInfo.click();
         Assertions.assertFalse(getTableByHeader(HEADER_LIST_GROUP).isColumnValueContains(HEADER_NAME_GROUP, nameGroup), "Ошибка удаления WildFly");
-    }
-
-    public void addKeyAstrom() {
-        checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Установить Ключ-Астром");
-    }
-
-    public void delKeyAstrom() {
-        checkPowerStatus(WildFlyAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_VM, "Удалить Ключ-Астром");
     }
 
     public void enlargeDisk(String name, String size, SelenideElement node) {
