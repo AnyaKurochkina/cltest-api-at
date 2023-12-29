@@ -65,27 +65,27 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(expectedStatus);
     }
 
-    @Step("Включить")
+    @Step("Включение")
     public void start() {
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_OFF);
         runActionWithoutParameters(BLOCK_CLUSTER, "Включить");
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    @Step("Выключить")
+    @Step("Выключение")
     public void stopSoft() {
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_CLUSTER, "Выключить");
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
-    @Step("Проверить конфигурацию")
+    @Step("Проверка конфигурации")
     public void checkConfiguration() {
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().waitChangeStatus(false).checkLastAction(false).checkPreBilling(false).checkAlert(false).node(new Table(HEADER_NODE_ROLES).getRowByIndex(0)).build());
     }
 
-    @Step("Удалить рекурсивно")
+    @Step("Удаление рекурсивно")
     public void delete() {
         runActionWithParameters(BLOCK_CLUSTER, "Удалить рекурсивно", "Удалить", () ->
         {
@@ -95,14 +95,14 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable("Статус").checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
 
-    @Step("Перезагрузить")
+    @Step("Перегрузка")
     public void restart() {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_CLUSTER, "Перезагрузить");
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    @Step("Выключить принудительно")
+    @Step("Выключение принудительно")
     public void stopHard() {
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithoutParameters(BLOCK_CLUSTER, "Выключить принудительно");
