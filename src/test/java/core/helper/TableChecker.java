@@ -1,6 +1,7 @@
 package core.helper;
 
 import core.utils.AssertUtils;
+import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.elements.Table;
 
@@ -19,6 +20,7 @@ public class TableChecker {
         return this;
     }
 
+    @Step("TableChecker. Проверка значений таблицы")
     public void check(Supplier<Table.Row> row) {
         AssertUtils.assertHeaders(row.get().getTable(), headers);
         for (int i = 0; i < headers.size(); i++) {

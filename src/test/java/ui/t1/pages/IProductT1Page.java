@@ -69,7 +69,7 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
 
     @Override
     public void waitChangeStatus() {
-        waitChangeStatus(Duration.ofSeconds(70));
+        waitChangeStatus(Duration.ofMinutes(3));
     }
 
     @Override

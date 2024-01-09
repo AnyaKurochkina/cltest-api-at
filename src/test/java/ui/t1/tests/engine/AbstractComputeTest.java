@@ -27,6 +27,8 @@ import steps.vpc.SecurityGroupResponse;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
+import ui.t1.pages.cloudEngine.backup.BackupCreate;
+import ui.t1.pages.cloudEngine.backup.BackupsList;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
@@ -250,5 +252,14 @@ public abstract class AbstractComputeTest extends Tests {
         String ip = new IndexPage().goToPublicIps().addIp(region);
         new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_CLASS);
         return ip;
+    });
+
+    protected final EntitySupplier<BackupCreate> backupSup = lazy(() -> {
+        VmCreate vm = randomVm.get();
+        BackupCreate backupCreate = new IndexPage().goToBackups().addBackup().setAvailabilityZone(availabilityZone).setSourceType("Сервер")
+                .setObjectForBackup(vm.getName()).clickOrder();
+        new BackupsList().selectBackup(backupCreate.getObjectForBackup())
+                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        return backupCreate;
     });
 }

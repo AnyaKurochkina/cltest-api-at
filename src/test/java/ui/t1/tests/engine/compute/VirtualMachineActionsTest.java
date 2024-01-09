@@ -1,9 +1,7 @@
 package ui.t1.tests.engine.compute;
 
-import com.codeborne.selenide.Condition;
 import core.helper.StringUtils;
 import core.helper.TableChecker;
-import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,7 +10,6 @@ import models.AbstractEntity;
 import org.json.JSONObject;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
-import org.openqa.selenium.By;
 import ui.cloud.pages.CompareType;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.Alert;
@@ -25,10 +22,6 @@ import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.tests.engine.AbstractComputeTest;
 import ui.t1.tests.engine.EntitySupplier;
 
-import java.time.Duration;
-
-import static com.codeborne.selenide.Selenide.switchTo;
-import static core.helper.StringUtils.$x;
 import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -90,7 +83,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .add("Платформа", e -> e.length() > 5)
                 .add("CPU", e -> StringUtils.isMatch("^\\d+$", e))
                 .add("RAM", e -> StringUtils.isMatch("^\\d+ ГБ$", e))
-                .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
+                .add(Column.AVAILABILITY_ZONE, e -> e.equals(vm.getAvailabilityZone()))
                 .add("Внутренний IP", e -> StringUtils.isMatch("^((25[0-5]|(2[0-4]|1\\d|[1-9]|)\\d)\\.?\\b){4}$", e))
                 .add("Внешние IP-адреса", e -> e.equals("—"))
                 .add(Column.CREATED_DATE, e -> e.length() > 5)
@@ -108,7 +101,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         new TableChecker()
                 .add("", String::isEmpty)
                 .add(Column.NAME, e -> e.contains(vm.getName()))
-                .add("Зона доступности", e -> e.equals(vm.getAvailabilityZone()))
+                .add(Column.AVAILABILITY_ZONE, e -> e.equals(vm.getAvailabilityZone()))
                 .add("Размер, ГБ", e -> e.equals(vm.getBootSize().toString()))
                 .add("Виртуальная машина", e -> e.equals(vm.getName()))
                 .add("Тип", e -> e.length() > 1)
@@ -180,17 +173,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Виртуальные машины. Консоль")
     void getConsoleLink() {
         VmCreate vm = vmSup.get();
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName());
-        Button console = Button.byText("Консоль");
-        console.click();
-        Button.byText("Развернуть на полный экран").click();
-        Button.byText("Выйти из полноэкранного режима").click();
-        console.getButton().should(Condition.visible);
-        Waiting.find(() -> {
-            switchTo().defaultContent();
-            String status = switchTo().frame($x("//*[@title='Консоль']")).findElement(By.id("noVNC_status")).getText();
-            return status.contains("Connected (encrypted)");
-        }, Duration.ofSeconds(30));
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).checkConsole();
     }
 
     @Test
