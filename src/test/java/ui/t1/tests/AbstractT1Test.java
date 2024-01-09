@@ -14,7 +14,9 @@ import ui.t1.pages.T1LoginPage;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractT1Test extends Tests {
 
-    protected final Project project = Project.builder().isForOrders(true).build().createObject();
+    protected Project getProject() {
+        return Project.builder().isForOrders(true).build().createObject();
+    }
 
     /**
      * Данный метод авторизуется на портале с заданной ролью
@@ -27,11 +29,11 @@ public abstract class AbstractT1Test extends Tests {
         if (info.getTestMethod().get().isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get()
                     .getAnnotation(WithAuthorization.class).role();
-            new T1LoginPage(project.getId()).signIn(role);
+            new T1LoginPage(getProject().getId()).signIn(role);
         } else if (info.getTestMethod().get().getDeclaringClass().isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get().getDeclaringClass()
                     .getAnnotation(WithAuthorization.class).role();
-            new T1LoginPage(project.getId()).signIn(role);
+            new T1LoginPage(getProject().getId()).signIn(role);
         }
     }
 }
