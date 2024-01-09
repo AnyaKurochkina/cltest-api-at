@@ -12,7 +12,6 @@ import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
 import java.net.MalformedURLException;
-import java.util.Objects;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
@@ -80,13 +79,10 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     public void openPointConnect() throws MalformedURLException, InterruptedException {
-        String url = Objects.requireNonNull(new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a")
-                .shouldHave(Condition.attribute("href").because("Элемент Точка подключения должен иметь ссылку"))
-                .getAttribute("href"), "Не удалось создать url");
-
+        String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url);
         signIn(Configure.getAppProp("dev.user2"), Configure.getAppProp("dev.password"));
-        Selenide.$x("//a[text()='Overview']").shouldBe(Condition.visible.because("Кнопка такая то должна отображаться"));
+        Selenide.$x("//a[text()='Overview']").shouldBe(Condition.visible);
     }
 
 

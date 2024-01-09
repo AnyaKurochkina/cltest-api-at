@@ -8,17 +8,17 @@ import org.apache.poi.ss.usermodel.Row;
 
 import java.util.Map;
 
-public class RowToBillConverter extends AbstractRowToObjectConverter<BillExcel> {
+public class RowToBillConverter extends AbstractRowToObjectConverter<BillExcelItem> {
 
     private int rowNum;
 
-    public RowToBillConverter(Map<Integer, ExcelField<BillExcel>> fieldsMapping) {
+    public RowToBillConverter(Map<Integer, ExcelField<BillExcelItem>> fieldsMapping) {
         super(fieldsMapping);
     }
 
     @Override
-    public BillExcel convert(Row row) {
-        return BillExcel.builder().rowNum(rowNum++)
+    public BillExcelItem convert(Row row) {
+        return BillExcelItem.builder().rowNum(rowNum++)
                 .project(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.PROJECT)))
                 .service(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.SERVICE)))
                 .tariffClassOfService(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.TARIFF_CLASS_OF_SERVICE)))

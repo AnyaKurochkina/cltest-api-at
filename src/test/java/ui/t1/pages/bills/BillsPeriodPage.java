@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import ui.elements.Input;
 import ui.elements.Select;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -25,15 +24,14 @@ public class BillsPeriodPage extends AbstractBillsPeriodPage {
     }
 
     /**
-     * example: setPeriod(LocalDate.of(2023, Month.APRIL, 3), LocalDate.of(2023, Month.MARCH, 3));
+     * example: setPeriod(new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1)));
      *
-     * @param from от какой даты
-     * @param to   до какой даты
+     * @param datePeriod период дат
      */
     @Step("Установка периода")
-    public BillsPeriodPage setPeriod(LocalDate from, LocalDate to) {
-        startDate.setValue(LocalDateTime.of(from, LocalTime.now()).format(dateFormat));
-        endDate.setValue(LocalDateTime.of(to, LocalTime.now()).format(dateFormat));
+    public BillsPeriodPage setPeriod(DatePeriod datePeriod) {
+        startDate.setValue(LocalDateTime.of(datePeriod.getStartDate(), LocalTime.now()).format(dateFormat));
+        endDate.setValue(LocalDateTime.of(datePeriod.getEndDate(), LocalTime.now()).format(dateFormat));
         return this;
     }
 }

@@ -61,6 +61,8 @@ public class IndexPage {
     private final Button linkBills = Button.byXpath("//a[.='Счета']");
     private final SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
     private final SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
+    private final Button linkBackups = Button.byXpath("//a[.='Резервные копии']");
+
 
     @Step("Переход на главную страницу")
     public static void go() {
