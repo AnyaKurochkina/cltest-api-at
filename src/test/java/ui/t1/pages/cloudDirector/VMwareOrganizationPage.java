@@ -3,7 +3,6 @@ package ui.t1.pages.cloudDirector;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.orders.OrderStatus;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -13,8 +12,8 @@ import ui.models.cloudDirector.Vdc;
 import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static core.helper.StringUtils.format;
+import static org.junit.jupiter.api.Assertions.*;
 import static ui.cloud.tests.productCatalog.TestUtils.scrollToTheTop;
 
 public class VMwareOrganizationPage {
@@ -87,8 +86,15 @@ public class VMwareOrganizationPage {
     }
 
     @Step("Проверка существования дата центра в таблице с именем {name}")
-    public boolean isDataCentreExist(String name) {
-        return new DataCentreTable().isColumnValueEquals("Название", name);
+    public void checkDataCentreExist(String name) {
+        assertTrue(new DataCentreTable().isColumnValueEquals("Название", name),
+                format("Дата центр с именем {} не найден в таблице", name));
+    }
+
+    @Step("Проверка отсутствия дата центра в таблице с именем {name}")
+    public void checkDataCentreNotExist(String name) {
+        assertFalse(new DataCentreTable().isColumnValueEquals("Название", name),
+                format("Дата центр с именем {} найден в таблице", name));
     }
 
     @Step("Показывать удаленные дата центры {isDisplay}")
@@ -136,7 +142,7 @@ public class VMwareOrganizationPage {
         Dialog.byTitle("Подтверждение удаления").clickButton("Удалить");
         Alert.green("Пользователь {} удален", userName);
         TestUtils.wait(2000);
-        Assertions.assertFalse(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, userName), "Пользователь найден");
+        assertFalse(new UsersTable().isColumnValueEquals(UsersTable.COLUMN_NAME, userName), "Пользователь найден");
     }
 
     public void compareUserFields(String login, String fio, String email, String role) {

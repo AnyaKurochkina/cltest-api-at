@@ -14,8 +14,6 @@ import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 @BlockTests
 @ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -32,14 +30,15 @@ public class VdcWithOutEdgeActionTest extends AbstractCloudDirectorTest {
     public void createDataCentreWithOutEdge() {
         testVdc.setRootRouterBandwidth(null);
 
-        assertTrue(new IndexPage().goToCloudDirector()
+        new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentre(testVdc)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
                 .checkCreate(false)
                 .goToVMwareOrgPage()
-                .isDataCentreExist(dataCentreName));
+                .checkDataCentreExist(dataCentreName);
+
         new VMwareOrganizationPage()
                 .selectDataCentre(testVdc.getName())
                 .checkVdcParams(testVdc);
