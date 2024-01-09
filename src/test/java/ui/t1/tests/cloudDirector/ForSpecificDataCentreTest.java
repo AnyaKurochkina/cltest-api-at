@@ -17,8 +17,6 @@ import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 /*
 Данный класс предназначен для теста с предварительно созданной организацией и вдц. Данные нужно указать в поле класса.
@@ -121,11 +119,11 @@ public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
                 .goToOrganization(orgName)
                 .selectDataCentre(vdcName);
         dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
-        assertFalse(dataCentrePage
+        dataCentrePage
                 .goToVMwareOrgPage()
-                .isDataCentreExist(dataCentreName));
-        assertTrue(new VMwareOrganizationPage()
+                .checkDataCentreNotExist(dataCentreName);
+        new VMwareOrganizationPage()
                 .showDeletedDataCentres(true)
-                .isDataCentreExist(dataCentreName));
+                .checkDataCentreExist(dataCentreName);
     }
 }
