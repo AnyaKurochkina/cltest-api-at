@@ -2,6 +2,7 @@ package ui.t1.tests;
 
 import api.Tests;
 import core.enums.Role;
+import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
@@ -13,15 +14,12 @@ import ui.t1.pages.T1LoginPage;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractT1Test extends Tests {
 
-    /**
-     * В наследнике необходимо реализовать получение айдишника для проекта
-     * Пример можно посмотреть в классе T1BillsTests.java
-     */
-    public abstract String getProjectId();
+    protected final Project project = Project.builder().isForOrders(true).build().createObject();
 
     /**
      * Данный метод авторизуется на портале с заданной ролью
-     * для авторизации необходимо в наследнике пометить тест аннотацией @WithAuthorization
+     * для авторизации необходимо в наследнике пометить тест аннотацией @WithAuthorization,
+     * либо повесить аннотацию на весь класс применив авторизацию ко всем тестам
      * Например: @WithAuthorization(role = Role.SUPERADMIN)
      */
     @BeforeEach
@@ -29,7 +27,11 @@ public abstract class AbstractT1Test extends Tests {
         if (info.getTestMethod().get().isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get()
                     .getAnnotation(WithAuthorization.class).role();
-            new T1LoginPage(getProjectId()).signIn(role);
+            new T1LoginPage(project.getId()).signIn(role);
+        } else if (info.getTestMethod().get().getDeclaringClass().isAnnotationPresent(WithAuthorization.class)) {
+            Role role = info.getTestMethod().get().getDeclaringClass()
+                    .getAnnotation(WithAuthorization.class).role();
+            new T1LoginPage(project.getId()).signIn(role);
         }
     }
 }

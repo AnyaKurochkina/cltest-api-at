@@ -9,7 +9,6 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
-import models.cloud.authorizer.Project;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
@@ -27,6 +26,7 @@ import java.util.Locale;
 
 import static core.utils.DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH;
 
+@WithAuthorization(role = Role.SUPERADMIN)
 @Tags({@Tag("bills"), @Tag("t1")})
 @Epic("Счета")
 @Feature("Счета")
@@ -36,17 +36,10 @@ public class T1BillsTests extends AbstractT1Test {
     private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
     private final DatePeriod expectedNovemberPeriod = new DatePeriod(LocalDate.of(2023, Month.NOVEMBER, 1), LocalDate.of(2023, Month.NOVEMBER, 30));
-    private final Project project = Project.builder().isForOrders(true).build().createObject();
-
-    @Override
-    public String getProjectId() {
-        return project.getId();
-    }
 
     //На dev почемуто отсутствуют креды Role.SUPERADMIN
     @EnabledIfEnv("t1ift")
     @Test
-    @WithAuthorization(role = Role.SUPERADMIN)
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
@@ -61,7 +54,6 @@ public class T1BillsTests extends AbstractT1Test {
 
     @EnabledIfEnv("t1ift")
     @Test
-    @WithAuthorization(role = Role.SUPERADMIN)
     @TmsLink("SOUL-3392")
     @DisplayName("Счета. Скачать данные за квартал")
     void downloadBillExcelForQuarterTest() {
@@ -78,7 +70,6 @@ public class T1BillsTests extends AbstractT1Test {
 
     @EnabledIfEnv("t1ift")
     @Test
-    @WithAuthorization(role = Role.SUPERADMIN)
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
     void downloadBillExcelCustomPeriodTest() {
