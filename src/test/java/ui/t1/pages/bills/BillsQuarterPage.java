@@ -1,19 +1,11 @@
 package ui.t1.pages.bills;
 
-import com.codeborne.selenide.Selenide;
 import io.qameta.allure.Step;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import ui.elements.Select;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BillsQuarterPage extends AbstractBillsPeriodPage {
 
     private final Select quarterSelect = Select.byLabel("Квартал");
-
-    public static BillsQuarterPage init() {
-        return Selenide.page(BillsQuarterPage.class);
-    }
 
     @Step("Выбор квартала")
     public BillsQuarterPage chooseQuarter(Quarter2023 quarter2023) {

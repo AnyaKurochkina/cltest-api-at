@@ -12,18 +12,18 @@ public class BillsPage {
     @Step("Переход к счетам за месяц")
     public BillsMonthPage goToMonthPeriod() {
         byMonthButton.click();
-        return BillsMonthPage.init();
+        return new BillsMonthPage();
     }
 
     @Step("Переход к счетам за квартал")
     public BillsQuarterPage goToQuarterPeriod() {
         byQuarterButton.click();
-        return BillsQuarterPage.init();
+        return new BillsQuarterPage();
     }
 
     @Step("Переход к счетам за выбранный период")
     public BillsPeriodPage goToCustomPeriod() {
         byPeriodButton.click();
-        return BillsPeriodPage.init();
+        return new BillsPeriodPage();
     }
 }
