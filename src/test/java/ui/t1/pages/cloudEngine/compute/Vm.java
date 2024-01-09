@@ -4,12 +4,15 @@ import com.codeborne.selenide.Condition;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
-import ui.elements.MuiGridItem;
+import org.openqa.selenium.By;
+import ui.elements.*;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
-import ui.elements.Dialog;
-import ui.elements.Select;
-import ui.elements.Table;
+
+import java.time.Duration;
+
+import static com.codeborne.selenide.Selenide.switchTo;
+import static core.helper.StringUtils.$x;
 
 @Getter
 public class Vm extends IProductT1Page<Vm> {
@@ -49,6 +52,20 @@ public class Vm extends IProductT1Page<Vm> {
     public void resize(String flavorName) {
         runActionWithParameters(BLOCK_PARAMETERS, "Изменить конфигурацию", "Подтвердить",
                 () -> new VmCreate().setFlavorName(flavorName));
+    }
+
+    @Step("Проверка подключения к консоли")
+    public void checkConsole() {
+        Button console = Button.byText("Консоль");
+        console.click();
+        Button.byText("Развернуть на полный экран").click();
+        Button.byText("Выйти из полноэкранного режима").click();
+        console.getButton().should(Condition.visible);
+        Waiting.find(() -> {
+            switchTo().defaultContent();
+            String status = switchTo().frame($x("//*[@title='Консоль']")).findElement(By.id("noVNC_status")).getText();
+            return status.contains("Connected (encrypted)");
+        }, Duration.ofSeconds(30));
     }
 
     public NetworkInterface selectNetworkInterface() {

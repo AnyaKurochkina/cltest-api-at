@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.tests.engine.AbstractComputeTest;
 
@@ -22,7 +23,7 @@ public class ImagesTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Образы")
     void snapshotList() {
         new IndexPage().goToImages();
-        assertHeaders(new ImageList.ImageTable(),"", "Имя", "Зона доступности", "Формат диска", "Размер, МБ", "Дата создания", "");
+        assertHeaders(new ImageList.ImageTable(),"", "Имя", Column.AVAILABILITY_ZONE, "Формат диска", "Размер, МБ", "Дата создания", "");
     }
 
     @Test
