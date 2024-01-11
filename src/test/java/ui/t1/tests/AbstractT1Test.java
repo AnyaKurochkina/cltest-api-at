@@ -30,11 +30,11 @@ public abstract class AbstractT1Test extends Tests {
         if (info.getTestMethod().orElseThrow(NotFoundElementException::new).isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get()
                     .getAnnotation(WithAuthorization.class).value();
-            new T1LoginPage(getProject().getId()).signIn(role);
+            new T1LoginPage(getProject()).signIn(role);
         } else if (info.getTestMethod().get().getDeclaringClass().isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get().getDeclaringClass()
                     .getAnnotation(WithAuthorization.class).value();
-            new T1LoginPage(getProject().getId()).signIn(role);
+            new T1LoginPage(getProject()).signIn(role);
         }
     }
 }
