@@ -160,6 +160,18 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @NoArgsConstructor
+    public static class PlacementEntity extends InstanceEntity {
+        public PlacementEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+
+        @Override
+        protected int getPriority() {
+            return 2;
+        }
+    }
+
+    @NoArgsConstructor
     public static class SnapshotEntity extends InstanceEntity {
         public SnapshotEntity(String projectId, String id) {
             super(projectId, id);

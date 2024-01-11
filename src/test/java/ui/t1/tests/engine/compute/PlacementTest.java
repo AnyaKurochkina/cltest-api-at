@@ -31,7 +31,7 @@ public class PlacementTest extends AbstractComputeTest {
                 .setAvailabilityZone(availabilityZone)
                 .setType(PlacementCreate.Type.SOFT_AFFINITY)
                 .clickOrder();
-        new PlacementList().selectPlacement(placementCreate.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate();
+        new PlacementList().selectPlacement(placementCreate.getName()).markForDeletion(new PlacementEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate();
         return placementCreate;
     });
 
