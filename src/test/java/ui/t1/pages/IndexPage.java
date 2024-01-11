@@ -171,10 +171,10 @@ public class IndexPage {
     }
 
     @Step("Переход на страницу 'Политики размещения'")
-    public PlacementList goToPlacementPolicy() {
+    public PlacementPolicyList goToPlacementPolicy() {
         linkCloudEngine.click();
         linkPlacementPolicy.click();
-        return new PlacementList();
+        return new PlacementPolicyList();
     }
 
     @Step("Переход на страницу Сетевые интерфейсы")

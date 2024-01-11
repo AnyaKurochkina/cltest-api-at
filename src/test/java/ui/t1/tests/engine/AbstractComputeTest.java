@@ -14,7 +14,9 @@ import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
 import models.cloud.authorizer.Folder;
 import org.json.JSONObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
 import steps.orderService.OrderServiceSteps;
 import steps.resourceManager.ResourceManagerSteps;
@@ -79,10 +81,8 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @Override
-    @BeforeEach
-    public void auth(TestInfo info) {
-        new T1LoginPage(getProjectId())
-                .signIn(Role.CLOUD_ADMIN);
+    protected String getProject() {
+        return getProjectId();
     }
 
     protected static String getProjectId() {

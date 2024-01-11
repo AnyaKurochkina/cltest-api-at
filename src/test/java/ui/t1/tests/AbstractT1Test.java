@@ -15,8 +15,8 @@ import ui.t1.pages.T1LoginPage;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractT1Test extends Tests {
 
-    protected Project getProject() {
-        return Project.builder().isForOrders(true).build().createObject();
+    protected String getProject() {
+        return ((Project) Project.builder().isForOrders(true).build().createObject()).getId();
     }
 
     /**

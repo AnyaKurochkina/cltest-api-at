@@ -10,7 +10,7 @@ import ui.t1.pages.cloudEngine.Column;
 import java.time.Duration;
 
 @Getter
-public class Placement extends IProductT1Page<Placement> {
+public class PlacementPolicy extends IProductT1Page<PlacementPolicy> {
     public static final String ACTION_DELETE = "Удалить политику размещения";
     private final MuiGridItem id = MuiGridItem.byText("ID");
     private final MuiGridItem name = MuiGridItem.byText(Column.NAME);

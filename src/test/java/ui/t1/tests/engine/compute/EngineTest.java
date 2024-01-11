@@ -1,7 +1,6 @@
 package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
-import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,7 +11,6 @@ import steps.authorizer.AuthorizerSteps;
 import ui.elements.TypifiedElement;
 import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.T1LoginPage;
 import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.time.Duration;
@@ -24,25 +22,20 @@ import java.time.Duration;
 @Feature("Cloud Engine")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EngineTest extends AbstractComputeTest {
-    Project project;
-
-    public EngineTest() {
+    @Override
+    protected String getProject() {
         Project projectOrders = Project.builder().isForOrders(true).build().createObject();
         String parentFolder = AuthorizerSteps.getParentProject(projectOrders.getId());
-        project = Project.builder().projectName("Проект для EngineTest").folderName(parentFolder).build().createObjectPrivateAccess();
-    }
+        return ((Project) Project.builder().projectName("Проект для EngineTest").folderName(parentFolder).build()
+                .createObjectPrivateAccess()).getId();
 
-    @Override
-    @BeforeEach
-    public void auth(TestInfo info) {
-        new T1LoginPage(project.getId())
-                .signIn(Role.CLOUD_ADMIN);
     }
 
     @BeforeAll
-    public static void beforeAll() {}
+    public static void beforeAll() {
+    }
 
-    private void checkElementsEngine(Condition condition){
+    private void checkElementsEngine(Condition condition) {
         TypifiedElement.refreshPage();
         IndexPage indexPage = new IndexPage();
         indexPage.goToCloudEngine();

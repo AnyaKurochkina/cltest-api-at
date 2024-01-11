@@ -11,7 +11,7 @@ import ui.t1.pages.cloudEngine.Column;
 import java.time.Duration;
 
 @Getter
-public class PlacementCreate {
+public class PlacementPolicyCreate {
     private String name;
     private String availabilityZone;
     private Type type;
@@ -31,28 +31,28 @@ public class PlacementCreate {
         }
     }
 
-    public PlacementCreate setName(String name) {
+    public PlacementPolicyCreate setName(String name) {
         Input.byLabel("Имя политики размещения").setValue(name);
         this.name = name;
         return this;
     }
 
-    public PlacementCreate setAvailabilityZone(String availabilityZone) {
+    public PlacementPolicyCreate setAvailabilityZone(String availabilityZone) {
         this.availabilityZone = Select.byLabel("Зона доступности").set(availabilityZone);
         return this;
     }
 
-    public PlacementCreate setType(Type type) {
+    public PlacementPolicyCreate setType(Type type) {
         Select.byLabel("Тип политики").set(type.toString());
         this.type = type;
         return this;
     }
 
     @Step("Создание политики размещения")
-    public PlacementCreate clickOrder() {
+    public PlacementPolicyCreate clickOrder() {
         OrderUtils.clickOrder();
-        OrderUtils.waitCreate(() -> Waiting.find(() -> new PlacementList.PlacementTable()
-                .isColumnValueEquals(Column.NAME, name), Duration.ofMinutes(1)));
+        OrderUtils.waitCreate(() -> Waiting.find(() -> new PlacementPolicyList.PlacementTable()
+                .isColumnValueEquals(Column.NAME, name), Duration.ofMinutes(1), "Политика безопасности создана с ошибкой"));
         return this;
     }
 }
