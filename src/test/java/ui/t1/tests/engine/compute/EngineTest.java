@@ -2,7 +2,6 @@ package ui.t1.tests.engine.compute;
 
 import com.codeborne.selenide.Condition;
 import core.enums.Role;
-import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -35,10 +34,9 @@ public class EngineTest extends AbstractComputeTest {
 
     @Override
     @BeforeEach
-    public void beforeEach() {
+    public void auth(TestInfo info) {
         new T1LoginPage(project.getId())
                 .signIn(Role.CLOUD_ADMIN);
-        Waiting.sleep(3000);
     }
 
     @BeforeAll

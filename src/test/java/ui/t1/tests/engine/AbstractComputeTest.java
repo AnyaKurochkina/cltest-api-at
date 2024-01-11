@@ -1,6 +1,5 @@
 package ui.t1.tests.engine;
 
-import api.Tests;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import com.mifmif.common.regex.Generex;
@@ -15,12 +14,8 @@ import lombok.extern.log4j.Log4j2;
 import models.AbstractEntity;
 import models.cloud.authorizer.Folder;
 import org.json.JSONObject;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
 import steps.resourceManager.ResourceManagerSteps;
 import steps.vpc.SecurityGroupResponse;
@@ -33,6 +28,8 @@ import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
+import ui.t1.tests.AbstractT1Test;
+import ui.t1.tests.WithAuthorization;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -46,8 +43,9 @@ import static ui.t1.pages.cloudEngine.compute.SshKeyList.SSH_USER;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
+@WithAuthorization(Role.CLOUD_ADMIN)
 @Tags({@Tag("t1_ui_cloud_compute"), @Tag("t1")})
-public abstract class AbstractComputeTest extends Tests {
+public abstract class AbstractComputeTest extends AbstractT1Test {
     protected String availabilityZone = "ru-central1-a";
     protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
@@ -80,7 +78,14 @@ public abstract class AbstractComputeTest extends Tests {
         });
     }
 
-    public static String getProjectId() {
+    @Override
+    @BeforeEach
+    public void auth(TestInfo info) {
+        new T1LoginPage(getProjectId())
+                .signIn(Role.CLOUD_ADMIN);
+    }
+
+    protected static String getProjectId() {
         String id = project.get();
         if (Objects.isNull(id)) {
             synchronized (AbstractComputeTest.class) {
@@ -90,14 +95,6 @@ public abstract class AbstractComputeTest extends Tests {
             }
         }
         return id;
-    }
-
-    @BeforeEach
-    @Title("Авторизация на портале")
-    public void beforeEach() {
-        new T1LoginPage(getProjectId())
-                .signIn(Role.CLOUD_ADMIN);
-        Tests.getPostLoadPage().run();
     }
 
     @BeforeAll

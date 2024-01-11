@@ -62,14 +62,14 @@ public class IndexPage {
     private final SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
     private final SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
     private final Button linkBackups = Button.byXpath("//a[.='Резервные копии']");
-
+    private final Button linkPlacementPolicy = Button.byXpath("//a[.='Политики размещения']");
 
     @Step("Переход на главную страницу")
     public static void go() {
         $x("//*[@title = 'Главная']").shouldBe(Condition.visible).click();
     }
 
-    public Profile goToProfile(){
+    public Profile goToProfile() {
         linkProfile.shouldBe(Condition.visible).click();
         return new Profile();
     }
@@ -163,11 +163,18 @@ public class IndexPage {
         return new NetworkList();
     }
 
-    @Step("Переход на страницу Сетевые интерфейсы")
+    @Step("Переход на страницу Резервные копии")
     public BackupsList goToBackups() {
         linkCloudEngine.click();
         linkBackups.click();
         return new BackupsList();
+    }
+
+    @Step("Переход на страницу 'Политики размещения'")
+    public PlacementList goToPlacementPolicy() {
+        linkCloudEngine.click();
+        linkPlacementPolicy.click();
+        return new PlacementList();
     }
 
     @Step("Переход на страницу Сетевые интерфейсы")
@@ -222,14 +229,14 @@ public class IndexPage {
     }
 
     @Step("Переход в Центр уведомлений на страницу Мои уведомления")
-    public NotificationsPage goToNotificationCenter(){
+    public NotificationsPage goToNotificationCenter() {
         linkSupportCenter.click();
         linkNotifications.click();
         return new NotificationsPage();
     }
 
     @Step("Переход в Центр уведомлений на страницу Мои подписки")
-    public MySubscriptionsPage goToMySubscriptions(){
+    public MySubscriptionsPage goToMySubscriptions() {
         linkSupportCenter.click();
         linkNotifications.click();
         linkMySubscriptions.click();
@@ -238,21 +245,22 @@ public class IndexPage {
     }
 
     @Step("Переходим в Центр уведомлений на страницу Подписки пользователей организации")
-    public SubscribeUsersPage goToUsersSubscriptions(){
+    public SubscribeUsersPage goToUsersSubscriptions() {
         linkSupportCenter.click();
         linkNotifications.click();
         linkSubscriptionsByAdmin.click();
 
         return new SubscribeUsersPage();
     }
+
     @Step("Переход в модальное окно изменения контекста")
-    public ContextDialog goToContextDialog(){
+    public ContextDialog goToContextDialog() {
         changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
         return new ContextDialog();
     }
 
     @Step("Проверка отображения имени {contextName} контекста")
-    public boolean isContextNameDisplayed(String contextName){
+    public boolean isContextNameDisplayed(String contextName) {
         return $x("//div[text() = '{}']", contextName).isDisplayed();
     }
 
