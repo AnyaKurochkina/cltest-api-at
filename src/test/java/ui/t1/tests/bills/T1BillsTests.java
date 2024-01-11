@@ -40,6 +40,7 @@ public class T1BillsTests extends AbstractT1Test {
     //На dev почемуто отсутствуют креды Role.SUPERADMIN
     @EnabledIfEnv("t1ift")
     @Test
+    @Tag("morozov_ilya")
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
@@ -54,6 +55,7 @@ public class T1BillsTests extends AbstractT1Test {
 
     @EnabledIfEnv("t1ift")
     @Test
+    @Tag("morozov_ilya")
     @TmsLink("SOUL-3392")
     @DisplayName("Счета. Скачать данные за квартал")
     void downloadBillExcelForQuarterTest() {
@@ -70,6 +72,7 @@ public class T1BillsTests extends AbstractT1Test {
 
     @EnabledIfEnv("t1ift")
     @Test
+    @Tag("morozov_ilya")
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
     void downloadBillExcelCustomPeriodTest() {
