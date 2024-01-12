@@ -20,18 +20,23 @@ import java.time.Duration;
 @Feature("Cloud Engine")
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EngineTest extends AbstractComputeTest {
+    private final String projectId;
 
     private final EntitySupplier<Void> engineSup = lazy(() -> {
         new IndexPage().goToCloudEngine().connectCloudCompute();
         return null;
     });
 
-    @Override
-    protected String getProject() {
+    public EngineTest() {
         Project projectOrders = Project.builder().isForOrders(true).build().createObject();
         String parentFolder = AuthorizerSteps.getParentProject(projectOrders.getId());
-        return ((Project) Project.builder().projectName("Проект для EngineTest").folderName(parentFolder).build()
+        projectId = ((Project) Project.builder().projectName("Проект для EngineTest").folderName(parentFolder).build()
                 .createObjectPrivateAccess()).getId();
+    }
+
+    @Override
+    protected String getProject() {
+        return projectId;
     }
 
     @BeforeAll

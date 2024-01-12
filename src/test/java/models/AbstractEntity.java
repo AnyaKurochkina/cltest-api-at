@@ -41,6 +41,8 @@ public abstract class AbstractEntity {
     }
 
     private static void deleteEntity(AbstractEntity e) {
+        if (e.deleted)
+            return;
         try {
             e.delete();
             e.deleted = true;

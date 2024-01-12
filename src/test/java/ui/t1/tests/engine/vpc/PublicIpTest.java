@@ -6,6 +6,7 @@ import org.junit.jupiter.api.*;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
@@ -35,7 +36,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Публичные IP-адреса")
     void publicIpList() {
         new IndexPage().goToPublicIps();
-        assertHeaders(new PublicIpList.IpTable(), "", "IP-адрес", "Регион", "Сетевой интерфейс", "Дата создания", "");
+        assertHeaders(new PublicIpList.IpTable(), "", Column.NAME, "Регион", "Сетевой интерфейс", "Дата создания", "");
     }
 
     @Test
