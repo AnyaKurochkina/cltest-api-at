@@ -15,6 +15,7 @@ public abstract class AbstractEntity {
     @SuppressWarnings("unchecked")
     private static final Map<Long, Set<AbstractEntity>>[] entities = new ConcurrentHashMap[10];
     private Mode mode = AFTER_TEST;
+    private boolean deleted;
 
     @SuppressWarnings("unchecked")
     public <T extends AbstractEntity> T deleteMode(Mode mode) {
@@ -42,6 +43,7 @@ public abstract class AbstractEntity {
     private static void deleteEntity(AbstractEntity e) {
         try {
             e.delete();
+            e.deleted = true;
         } catch (Throwable ex) {
             ex.printStackTrace();
         }
@@ -55,7 +57,7 @@ public abstract class AbstractEntity {
             Iterator<AbstractEntity> iterator = map.getOrDefault(Thread.currentThread().getId(), new HashSet<>()).iterator();
             while (iterator.hasNext()) {
                 AbstractEntity entity = iterator.next();
-                if (entity.mode != mode)
+                if (mode != AFTER_RUN && entity.mode != mode)
                     continue;
                 threadPool.submit(() -> deleteEntity(entity));
                 iterator.remove();
@@ -64,9 +66,6 @@ public abstract class AbstractEntity {
         }
     }
 
-    /**
-     * Только для SAME_THREAD классов
-     */
     public static void deleteCurrentClassEntities() {
         deleteCurrentThreadEntities(AFTER_CLASS);
     }
@@ -83,6 +82,9 @@ public abstract class AbstractEntity {
         entities[e.getPriority()].computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(e);
     }
 
+    /**
+     * AFTER_CLASS Только для SAME_THREAD классов
+     */
     public enum Mode {
         AFTER_TEST,
         AFTER_CLASS,

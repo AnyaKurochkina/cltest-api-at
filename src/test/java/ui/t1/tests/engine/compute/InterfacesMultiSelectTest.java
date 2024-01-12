@@ -51,9 +51,4 @@ public class InterfacesMultiSelectTest extends AbstractComputeTest {
             networkInterfaceListPage.checkLastAction(action);
         }
     }
-
-    @AfterAll
-    void afterClass() {
-        AbstractEntity.deleteCurrentClassEntities();
-    }
 }

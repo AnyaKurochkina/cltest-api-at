@@ -55,7 +55,7 @@ public class DeleteAllOrders extends Tests {
                     "proj-ytwcbh7rlr", "proj-6sq3n30eh0", "proj-fnxokdmi0b", "proj-i6ul07p131", "proj-pr0n40cx1e", "proj-0c0ki636z5", "proj-p9b5mtehhq");
         }
         for (String projectId : projects) {
-            OrderServiceSteps.getProductsWithStatus(projectId, "changing", "damaged", "failure", "pending","creation_error","locked", "deprovisioned_error")
+            OrderServiceSteps.getProductsWithStatus(projectId, "changing", "damaged", "failure", "pending", "creation_error", "locked", "deprovisioned_error", "warning")
                     .forEach(e -> orders.add(new Order(e, projectId, CalcCostSteps.getCostByUid(e, projectId))));
         }
         System.out.println("Битые заказы:");

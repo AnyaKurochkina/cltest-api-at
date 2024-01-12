@@ -195,9 +195,4 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         VmCreate vm = vmSup.get();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).delete();
     }
-
-    @AfterAll
-    void afterClass() {
-        AbstractEntity.deleteCurrentClassEntities();
-    }
 }

@@ -1,17 +1,10 @@
 package ui.t1.tests.engine.vpc;
 
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
+import io.qameta.allure.*;
 import models.AbstractEntity;
-import org.junit.BlockTests;
-import org.junit.IgnoreInterceptTestExtension;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
-import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
@@ -19,22 +12,25 @@ import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.tests.engine.AbstractComputeTest;
+import ui.t1.tests.engine.EntitySupplier;
 
 import java.util.Objects;
 
 import static core.utils.AssertUtils.assertHeaders;
 
-@BlockTests
-@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Публичные IP")
 @Epic("Cloud Compute")
 public class PublicIpTest extends AbstractComputeTest {
-    String ip;
+
+    EntitySupplier<String> ipSup = lazy(() -> {
+        String ip = new IndexPage().goToPublicIps().addIp(region);
+        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        return ip;
+    });
 
     @Test
-    @IgnoreInterceptTestExtension
     @TmsLink("1249436")
     @DisplayName("Cloud VPC. Публичные IP-адреса")
     void publicIpList() {
@@ -49,7 +45,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @TmsLinks({@TmsLink("1249437"), @TmsLink("1249598")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")
     void addIp() {
-        ip = new IndexPage().goToPublicIps().addIp(region);
+        String ip = openIp();
         PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         String orderId = ipPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
@@ -64,6 +60,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @TmsLinks({@TmsLink("1249438"), @TmsLink("1249439"), @TmsLink("1248950")})
     @DisplayName("Cloud VPC. Публичные IP-адреса. Подключить к виртуальной машине/Отвязать от сетевого интерфейса")
     void attachIp() {
+        String ip = openIp();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .seNetwork(defaultNetwork)
@@ -106,13 +103,16 @@ public class PublicIpTest extends AbstractComputeTest {
     @Order(100)
     @DisplayName("Cloud VPC. Публичные IP-адреса. Освободить")
     void deleteIp() {
-        PublicIp ipPage = new IndexPage().goToPublicIps().selectIp(ip);
+        String ip = openIp();
+        PublicIp ipPage = new PublicIp();
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip)));
     }
 
-    @AfterAll
-    void afterClass() {
-        AbstractEntity.deleteCurrentClassEntities();
+    @Step("Открыть страницу IP")
+    private String openIp() {
+        String ip = ipSup.get();
+        new IndexPage().goToPublicIps().selectIp(ip);
+        return ip;
     }
 }

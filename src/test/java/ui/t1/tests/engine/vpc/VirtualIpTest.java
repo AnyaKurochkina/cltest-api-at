@@ -176,9 +176,4 @@ public class VirtualIpTest extends AbstractComputeTest {
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip.getIp())));
     }
-
-    @AfterAll
-    void afterClass() {
-        AbstractEntity.deleteCurrentClassEntities();
-    }
 }
