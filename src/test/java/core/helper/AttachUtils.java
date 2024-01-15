@@ -45,8 +45,8 @@ public class AttachUtils {
             final int endIndex = message.indexOf(")", startIndex);
             because = message.substring(startIndex + 9, endIndex);
             message = message.substring(0, startIndex) + message.substring(endIndex);
+            setThrowableDetailMessage(throwable, StringUtils.format("{}\n{}", because, message));
         }
-        setThrowableDetailMessage(throwable, StringUtils.format("{}\n{}", because, message));
     }
 
     public static Throwable UImodifyThrowable(Throwable throwable) {
