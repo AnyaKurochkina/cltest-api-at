@@ -47,7 +47,8 @@ public class PublicIpTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Публичные IP-адреса. Создать IP-адрес")
     void addIp() {
         String ip = openIp();
-        PublicIp ipPage = new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        PublicIp ipPage = new IndexPage().goToPublicIps().selectIp(ip)
+                .markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         String orderId = ipPage.getOrderId();
         Assertions.assertEquals(1, StateServiceSteps.getItems(getProjectId()).stream()
                 .filter(e -> e.getOrderId().equals(orderId))
