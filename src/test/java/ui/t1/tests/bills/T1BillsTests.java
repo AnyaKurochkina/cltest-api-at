@@ -37,10 +37,24 @@ public class T1BillsTests extends AbstractT1Test {
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
     private final DatePeriod expectedNovemberPeriod = new DatePeriod(LocalDate.of(2023, Month.NOVEMBER, 1), LocalDate.of(2023, Month.NOVEMBER, 30));
 
-    //На dev почемуто отсутствуют креды Role.SUPERADMIN
     @EnabledIfEnv("t1ift")
     @Test
-    @Tag("morozov_ilya")
+    @TmsLink("SOUL-3390")
+    @DisplayName("Счета. Скачать счет. Организация")
+    void downloadBillExcelForOneMonthAndCertainOrganizationTest() {
+        String organization = "ИФТ";
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, "ift");
+        new IndexPage().goToBillsPage()
+                .goToMonthPeriod()
+                .chooseOrganization(organization)
+                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .clickExport();
+
+        checkOrganizationInExcelFile(organization, expectedFileNameWithNovemberPeriod);
+    }
+
+    @EnabledIfEnv("t1ift")
+    @Test
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
@@ -55,7 +69,6 @@ public class T1BillsTests extends AbstractT1Test {
 
     @EnabledIfEnv("t1ift")
     @Test
-    @Tag("morozov_ilya")
     @TmsLink("SOUL-3392")
     @DisplayName("Счета. Скачать данные за квартал")
     void downloadBillExcelForQuarterTest() {
@@ -72,7 +85,6 @@ public class T1BillsTests extends AbstractT1Test {
 
     @EnabledIfEnv("t1ift")
     @Test
-    @Tag("morozov_ilya")
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
     void downloadBillExcelCustomPeriodTest() {
@@ -83,6 +95,21 @@ public class T1BillsTests extends AbstractT1Test {
                 .clickExport();
 
         checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString(), expectedFileNameWithCustomPeriod);
+    }
+
+    @EnabledIfEnv("t1ift")
+    @Test
+    @TmsLink("SOUL-7270")
+    @DisplayName("Счета. Скачать счет. Выгрузка нулевых значений")
+    void downloadBillExcelForOneMonthWithCheckboxTest() {
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, "ift");
+        new IndexPage().goToBillsPage()
+                .goToMonthPeriod()
+                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .clickExportZeroPriceValuesCheckBox()
+                .clickExport();
+
+        checkExcelFileContainsBillWithZeroSumValue(expectedFileNameWithNovemberPeriod);
     }
 
     @Step("[Проверка] Период счета в файле excel соответсвует периоду выбранному при выгрузке отчета")
@@ -96,6 +123,25 @@ public class T1BillsTests extends AbstractT1Test {
         String actualPeriod = createPeriod(randomBill);
         Assertions.assertEquals(expectedPeriod, actualPeriod,
                 "Период счета в файле excel должен соответсвовать периоду выбранному при выгрузке отчета");
+
+    }
+
+    @Step("[Проверка] При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel присутствовуют счета с нулевыми значениями стоимости")
+    private void checkExcelFileContainsBillWithZeroSumValue(String fileName) {
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
+        getBillExcel(fileName).getRows().stream()
+                .filter(bill -> bill.getSumWithoutTax().equals("0.0"))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel должны присутствовать счета с нулевыми значениями стоимости"));
+    }
+
+    @Step("[Проверка] Организация в excel файле соответствует выбранной: {0}")
+    private void checkOrganizationInExcelFile(String organizationName, String fileName) {
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
+        String organization = getBillExcel(fileName).getOrganization();
+
+        Assertions.assertEquals(organizationName, organization,
+                String.format("Организация в excel файле должна соответствовать выбранной: %s", organizationName));
 
     }
 
