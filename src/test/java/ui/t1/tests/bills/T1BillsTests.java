@@ -26,7 +26,7 @@ import java.util.Locale;
 
 import static core.utils.DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH;
 
-@WithAuthorization(role = Role.SUPERADMIN)
+@WithAuthorization(Role.SUPERADMIN)
 @Tags({@Tag("bills"), @Tag("t1")})
 @Epic("Счета")
 @Feature("Счета")

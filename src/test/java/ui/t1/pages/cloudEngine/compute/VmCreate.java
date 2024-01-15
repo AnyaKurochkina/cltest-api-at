@@ -32,6 +32,7 @@ public class VmCreate {
     private String publicIp;
     private List<String> securityGroups;
     private String sshKey;
+    private String placement;
 
     private Duration createTimeout = Duration.ofMinutes(3);
 
@@ -161,12 +162,18 @@ public class VmCreate {
         return this;
     }
 
+    public VmCreate setPlacementPolicy(String placement) {
+        Switch.byText("Добавить политику размещения").setEnabled(true);
+        this.placement = Select.byLabel("Политика размещения").setStart(placement);
+        return this;
+    }
+
     public VmCreate clickOrder() {
         OrderUtils.clickOrder();
         OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.STATUS)
-                .contains("Включено"), createTimeout));
+                .contains("Включено"), createTimeout, "Машина не развернулась"));
         return this;
     }
 }
