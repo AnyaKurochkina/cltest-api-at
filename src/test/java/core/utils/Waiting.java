@@ -7,7 +7,6 @@ import ui.elements.TypifiedElement;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Supplier;
 
 
@@ -54,7 +53,7 @@ public class Waiting {
             } catch (StaleElementReferenceException ignore) {}
             Waiting.sleep(300);
         }
-        throw new TimeoutException(message + ", duration: " + duration);
+        throw new AssertionError(message + ", duration: " + duration);
     }
 
     @SneakyThrows
@@ -65,7 +64,7 @@ public class Waiting {
             TypifiedElement.refreshPage();
             if (b.get()) return;
         }
-        throw new TimeoutException("Return false, duration: " + duration);
+        throw new AssertionError("Return false, duration: " + duration);
     }
 
     @SneakyThrows
@@ -76,6 +75,6 @@ public class Waiting {
             Waiting.sleep(500);
             action.run();
         }
-        throw new TimeoutException("Return false, duration: " + duration);
+        throw new AssertionError("Return false, duration: " + duration);
     }
 }
