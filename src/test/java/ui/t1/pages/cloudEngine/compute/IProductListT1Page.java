@@ -28,6 +28,11 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     }
 
     @Override
+    public double getOrderCost() {
+        return 0;
+    }
+
+    @Override
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         synchronized (historyMutex.get(getCurrentProjectId())) {
             super.runActionWithParameters(button, action, textButton, executable, params);
