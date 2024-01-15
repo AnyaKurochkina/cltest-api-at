@@ -108,9 +108,9 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             e.printStackTrace();
         }
         if (testDescriptor instanceof MethodBasedTestDescriptor) {
-            if(!((MethodBasedTestDescriptor) testDescriptor).getTestMethod().isAnnotationPresent(Disabled.class) &&
+            if (!((MethodBasedTestDescriptor) testDescriptor).getTestMethod().isAnnotationPresent(Disabled.class) &&
                     !((MethodBasedTestDescriptor) testDescriptor).getTestClass().isAnnotationPresent(Disabled.class))
-            mapTests.put(testDescriptor.getUniqueId().toString(), testDescriptor);
+                mapTests.put(testDescriptor.getUniqueId().toString(), testDescriptor);
         }
     }
 
@@ -164,11 +164,11 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 Iterator it = testDescriptor.getChildren().iterator();
                 while (it.hasNext()) {
                     TestDescriptor t = (TestDescriptor) it.next();
-                    if(skipTests.contains(t))
+                    if (skipTests.contains(t))
                         continue;
                     try {
                         boolean b = removeTestClass((JupiterTestDescriptor) t);
-                        if(b)
+                        if (b)
                             return true;
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -224,7 +224,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 field.setAccessible(true);
                 JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
 
-                if(skipTests.contains(testDescriptor))
+                if (skipTests.contains(testDescriptor))
                     it.remove();
 
             } catch (Exception e) {
@@ -240,13 +240,12 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 field = testTask.getClass().getDeclaredField("testDescriptor");
                 field.setAccessible(true);
                 JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
-                if(!removeTestClass(testDescriptor))
+                if (!removeTestClass(testDescriptor))
                     it.remove();
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
 
 
 //
@@ -525,10 +524,10 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     }
 
                     throw var5;
-                }
-                finally {
-                    Field field = null;
+                } finally {
                     try {
+                        Field field = null;
+
                         field = testTask.getClass().getDeclaredField("testDescriptor");
                         field.setAccessible(true);
                         AbstractTestDescriptor testDescriptor = (AbstractTestDescriptor) field.get(testTask);
@@ -537,35 +536,34 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                             mapTests.remove(testDescriptor.getUniqueId().toString());
                         }
 
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-
-                    if (mapTests.isEmpty() && !del.get()) {
-                        del.set(true);
-                        ObjectPoolService.deleteAllResources();
-                        invokeAllRef(invokeDeleteTest());
-                    }
-
-                    if (!mapTests.isEmpty()){
-                        Set<Class<?>> currentClassListArgument = new HashSet<>();
-                        for(JupiterTestDescriptor descriptor : mapTests.values()){
-                            if(!(descriptor instanceof MethodBasedTestDescriptor))
-                                continue;
-                            MethodBasedTestDescriptor methodBasedTestDescriptor = ((MethodBasedTestDescriptor) descriptor);
-                            MarkDelete deleted = methodBasedTestDescriptor.getTestMethod().getAnnotation(MarkDelete.class);
-                            if (deleted != null)
-                                continue;
-                            currentClassListArgument.addAll(Arrays.asList(((MethodBasedTestDescriptor) descriptor).getTestMethod().getParameterTypes()));
+                        if (mapTests.isEmpty() && !del.get()) {
+                            del.set(true);
+                            ObjectPoolService.deleteAllResources();
+                            invokeAllRef(invokeDeleteTest());
                         }
-                        ObjectPoolService.removeProducts(currentClassListArgument);
+
+                        if (!mapTests.isEmpty()) {
+                            Set<Class<?>> currentClassListArgument = new HashSet<>();
+                            for (JupiterTestDescriptor descriptor : mapTests.values()) {
+                                if (!(descriptor instanceof MethodBasedTestDescriptor))
+                                    continue;
+                                MethodBasedTestDescriptor methodBasedTestDescriptor = ((MethodBasedTestDescriptor) descriptor);
+                                MarkDelete deleted = methodBasedTestDescriptor.getTestMethod().getAnnotation(MarkDelete.class);
+                                if (deleted != null)
+                                    continue;
+                                currentClassListArgument.addAll(Arrays.asList(((MethodBasedTestDescriptor) descriptor).getTestMethod().getParameterTypes()));
+                            }
+                            ObjectPoolService.removeProducts(currentClassListArgument);
+                        }
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    } finally {
+                        if (lock != null) {
+                            lock.close();
+                        }
                     }
-                }
 
-                if (lock != null) {
-                    lock.close();
                 }
-
 
             } catch (InterruptedException var6) {
                 ExceptionUtils.throwAsUncheckedException(var6);
