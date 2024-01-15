@@ -2,11 +2,9 @@ package ui.t1.pages.cloudEngine.compute;
 
 import core.utils.Waiting;
 import lombok.Getter;
-import lombok.Setter;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
 import ui.t1.pages.cloudEngine.Column;
-import ui.t1.pages.cloudEngine.vpc.VirtualIpCreate;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -34,6 +32,7 @@ public class VmCreate {
     private String publicIp;
     private List<String> securityGroups;
     private String sshKey;
+    private String placement;
 
     private Duration createTimeout = Duration.ofMinutes(3);
 
@@ -108,7 +107,7 @@ public class VmCreate {
 
     public VmCreate setDeleteOnTermination(boolean deleteOnTermination) {
         this.deleteOnTermination = deleteOnTermination;
-        CheckBox.byLabel("Удалять вместе с сервером").setChecked(deleteOnTermination);
+        CheckBox.byXpath("//input[contains(@id, 'delete_on_termination')]").setChecked(deleteOnTermination);
         return this;
     }
 
@@ -163,12 +162,18 @@ public class VmCreate {
         return this;
     }
 
+    public VmCreate setPlacementPolicy(String placement) {
+        Switch.byText("Добавить политику размещения").setEnabled(true);
+        this.placement = Select.byLabel("Политика размещения").setStart(placement);
+        return this;
+    }
+
     public VmCreate clickOrder() {
         OrderUtils.clickOrder();
         OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.STATUS)
-                .contains("Включено"), createTimeout));
+                .contains("Включено"), createTimeout, "Машина не развернулась"));
         return this;
     }
 }

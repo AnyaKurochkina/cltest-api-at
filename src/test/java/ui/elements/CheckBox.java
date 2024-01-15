@@ -33,6 +33,7 @@ public class CheckBox implements TypifiedElement {
     public static CheckBox byId(String id) {
         return new CheckBox($x("//*[@id = '{}']", id));
     }
+
     public static CheckBox byXpath(@Language("XPath") String xPath) {
         return new CheckBox($x(xPath));
     }
@@ -47,6 +48,6 @@ public class CheckBox implements TypifiedElement {
         if (getChecked() != checked) {
             element.parent().shouldBe(clickableCnd).click();
         }
-        Assertions.assertEquals(checked, getChecked());
+        Assertions.assertEquals(checked, getChecked(), String.format("Значение чекбокса не изменилось на: %s", checked));
     }
 }

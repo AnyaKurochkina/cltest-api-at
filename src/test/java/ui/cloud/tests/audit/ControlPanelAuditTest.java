@@ -17,6 +17,7 @@ import ui.cloud.pages.ControlPanelLoginPage;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.extesions.ConfigExtension;
+import ui.t1.tests.audit.AuditPeriod;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -63,7 +64,7 @@ public class ControlPanelAuditTest extends Tests {
         page.getEndDateInput().getInput().shouldBe(Condition.disabled);
         page.checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), createType,
                 graphsObject, createdCode, createdStatus);
-        page.selectPeriod("последние 6 часов")
+        page.selectPeriod(AuditPeriod.LAST_6_HOURS)
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), createType,
                         graphsObject, createdCode, createdStatus)
                 .setFilterByDate(LocalDateTime.now().minusDays(1).format(formatter),

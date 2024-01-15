@@ -14,7 +14,7 @@ import steps.feedService.FeedServiceSteps;
 
 import java.util.List;
 
-import static core.helper.Configure.FeedServiceURL;
+import static core.helper.Configure.feedServiceURL;
 
 @Log4j2
 @Getter
@@ -100,7 +100,7 @@ public class Event extends Entity {
         if (event != null) {
             FeedServiceSteps.deleteEvent(event.getId());
         }
-        id = new Http(FeedServiceURL)
+        id = new Http(feedServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(toJson())
                 .post(feedService)
@@ -111,7 +111,7 @@ public class Event extends Entity {
 
     @Override
     protected void delete() {
-        new Http(FeedServiceURL)
+        new Http(feedServiceURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(feedService + id + "/")
                 .assertStatus(204);

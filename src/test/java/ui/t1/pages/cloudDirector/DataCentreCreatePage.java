@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import ui.elements.*;
 import ui.models.cloudDirector.StorageProfile;
+import ui.models.cloudDirector.Vdc;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$x;
@@ -41,8 +42,12 @@ public class DataCentreCreatePage {
         return this;
     }
 
-    public DataCentreCreatePage setRouterBandwidth(String mbs) {
-        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(mbs);
+    public DataCentreCreatePage setRouterBandwidth(Vdc vdc) {
+        if (vdc.getRootRouterBandwidth() == null) {
+            return this;
+        }
+        CheckBox.byId("root_configure_router").setChecked(true);
+        Select.byLabel("Лимит пропускной способности канала, Мбит/сек").set(vdc.getRootRouterBandwidth());
         return this;
     }
 

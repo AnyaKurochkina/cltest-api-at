@@ -73,7 +73,6 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
     void backendEmptyModeCheckFall(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_fall").servers(serversTcp)
-                .advancedCheck(true)
                 .advCheck("tcp-check")
                 .checkPort(1000)
                 .checkRise(3)
@@ -89,7 +88,6 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
     void backendEmptyModeCheckRise(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_rise").servers(serversTcp)
-                .advancedCheck(true)
                 .advCheck("tcp-check")
                 .checkPort(1000)
                 .checkFall(3)
@@ -105,7 +103,6 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
     void backendEmptyModeCheckInterval(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_interval").servers(serversTcp)
-                .advancedCheck(true)
                 .advCheck("tcp-check")
                 .checkPort(1000)
                 .checkFall(5)
@@ -121,7 +118,6 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
     void backendEmptyAdvCheck(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_adv_check").servers(serversTcp)
-                .advancedCheck(true)
                 .checkPort(1000)
                 .checkInterval(300)
                 .checkFall(7)
@@ -137,7 +133,6 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
     void backendEmptyCheckMethod(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_method").servers(serversTcp)
-                .advancedCheck(true)
                 .checkInterval(300)
                 .checkFall(7)
                 .checkRise(7)
@@ -154,7 +149,6 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
     void backendEmptyCheckUri(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_uri").servers(serversTcp)
-                .advancedCheck(true)
                 .checkInterval(300)
                 .checkFall(7)
                 .checkRise(7)

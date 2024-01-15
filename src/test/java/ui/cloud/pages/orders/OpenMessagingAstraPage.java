@@ -11,8 +11,8 @@ public class OpenMessagingAstraPage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String STATUS = "Статус";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public OpenMessagingAstraPage(OpenMessagingAstra product) {
         super(product);

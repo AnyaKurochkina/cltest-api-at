@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Assumptions;
 import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.Button;
 import ui.elements.Table;
+import ui.t1.pages.cloudEngine.Column;
 
 import java.util.Arrays;
 
@@ -29,7 +30,7 @@ public class ImagesListPage extends EntityListPage {
     public ImagesListPage checkImagesListHeaders() {
         Table imagesTable = new Table(imageNameColumn);
         assertEquals(Arrays.asList("Имя", "ID Marketplace", "ID платформы", "Дата создания", "Дата изменения",
-                        "Дистрибутив", "Версия", "Архитектура", "Зона доступности", "Статус", "Теги", "Информация"),
+                        "Дистрибутив", "Версия", "Архитектура", Column.AVAILABILITY_ZONE, "Статус", "Теги", "Информация"),
                 imagesTable.getNotEmptyHeaders());
         return this;
     }

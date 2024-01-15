@@ -30,6 +30,8 @@ public class OpenMessagingAstra extends IProduct {
     public Entity init() {
         jsonTemplate = "/orders/open_messaging_astra.json";
         productName = "OpenMessaging Astra";
+        if (env.equalsIgnoreCase("LT"))
+            productName = "OpenMessaging LT Astra";
         initProduct();
         if (osVersion == null)
             osVersion = getRandomOsVersion();
@@ -79,6 +81,17 @@ public class OpenMessagingAstra extends IProduct {
     }
 
     public void upgradeSetup() {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("open-messaging_upgrade_setup").product(this).build());
+        String name = "open-messaging_upgrade_setup_release";
+        if (env.equalsIgnoreCase("LT"))
+            name = "openmessaging_lt_upgrade_setup_release";
+        OrderServiceSteps.runAction(ActionParameters.builder().name(name).product(this).build());
+    }
+
+    public void updateOS() {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("openmessaging_lt_update_os_release").product(this).build());
+    }
+
+    public void updateCerts() {
+        updateCerts("openmessaging_lt_update_certificates_release");
     }
 }

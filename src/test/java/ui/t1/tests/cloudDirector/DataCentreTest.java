@@ -20,8 +20,6 @@ import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 
 @BlockTests
@@ -35,14 +33,14 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @Order(1)
     @DisplayName("VMware. Создание VDC.")
     public void createDataCentre() {
-        assertTrue(new IndexPage().goToCloudDirector()
+        new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentre(testVdc)
                 .waitChangeStatus()
                 .selectDataCentre(dataCentreName)
-                .checkCreate(false)
+                .checkCreate(true)
                 .goToVMwareOrgPage()
-                .isDataCentreExist(dataCentreName));
+                .checkDataCentreExist(dataCentreName);
         new VMwareOrganizationPage()
                 .selectDataCentre(testVdc.getName())
                 .checkVdcParams(testVdc);
@@ -54,15 +52,15 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
     @DisplayName("VMware. Создание второго VDC  в одной организации")
     public void createSecondDataCentreTest() {
         String secondDataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
-        Vdc secondVdc = new Vdc(secondDataCentreName, "2", "4", new StorageProfile("High", "10"));
-        assertTrue(new IndexPage().goToCloudDirector()
+        Vdc secondVdc = new Vdc(secondDataCentreName, "2", "4", new StorageProfile("High", "10"), "200");
+        new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .addDataCentre(secondVdc)
                 .waitChangeStatus()
                 .selectDataCentre(secondDataCentreName)
                 .checkCreate(true)
                 .goToVMwareOrgPage()
-                .isDataCentreExist(secondDataCentreName));
+                .checkDataCentreExist(secondDataCentreName);
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(secondDataCentreName);
@@ -140,7 +138,7 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
         Waiting.sleep(10000);
         dataCentrePage.switchProtectOrder(true);
         try {
-            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить", "Удалить", () -> {
+            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить VDC", "Удалить", () -> {
                 Dialog dlgActions = Dialog.byTitle("Удаление");
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
@@ -161,11 +159,12 @@ public class DataCentreTest extends AbstractCloudDirectorTest {
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
         dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
-        assertFalse(dataCentrePage
+        dataCentrePage
                 .goToVMwareOrgPage()
-                .isDataCentreExist(dataCentreName));
-        assertTrue(new VMwareOrganizationPage()
+                .checkDataCentreNotExist(dataCentreName);
+
+        new VMwareOrganizationPage()
                 .showDeletedDataCentres(true)
-                .isDataCentreExist(dataCentreName));
+                .checkDataCentreExist(dataCentreName);
     }
 }

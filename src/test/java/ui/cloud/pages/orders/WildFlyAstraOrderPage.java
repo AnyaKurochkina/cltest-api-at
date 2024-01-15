@@ -7,7 +7,7 @@ import ui.elements.Select;
 @Getter
 public class WildFlyAstraOrderPage extends NewOrderPage {
 
-    Select groupWildFly = Select.byLabel("Группа управления WildFly");
+    private final Select groupWildFly = Select.byLabel("Группа управления WildFly");
 
     public WildFlyAstraOrderPage() {
         labelInput.setValue(labelValue);

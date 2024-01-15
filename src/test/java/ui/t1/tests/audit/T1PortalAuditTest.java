@@ -1,8 +1,8 @@
 package ui.t1.tests.audit;
 
 import api.Tests;
-import com.codeborne.selenide.Condition;
 import core.enums.Role;
+import core.utils.DownloadingFilesUtil;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
@@ -12,7 +12,6 @@ import models.cloud.authorizer.GlobalUser;
 import models.cloud.authorizer.Project;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -72,13 +71,11 @@ public class T1PortalAuditTest extends Tests {
     @TmsLink("SOUL-4129")
     @DisplayName("Просмотр аудита за период")
     public void checkFilterByDate() {
-        AuditPage page = new IndexPage().goToPortalAuditPage();
-        Assertions.assertEquals("последний 1 час", page.getPeriodSelect().getValue());
-        page.getBeginDateInput().getInput().shouldBe(Condition.disabled);
-        page.getEndDateInput().getInput().shouldBe(Condition.disabled);
-        page.checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), modifyType,
-                projectsObject, okCode, okStatus);
-        page.selectPeriod("последние 12 часов")
+        new IndexPage().goToPortalAuditPage()
+                .checkPeriodFieldsAreDisabledForDefaultSortingLastHour()
+                .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), modifyType,
+                        projectsObject, okCode, okStatus)
+                .selectPeriod(AuditPeriod.LAST_12_HOURS)
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), modifyType,
                         projectsObject, okCode, okStatus)
                 .setFilterByDate(LocalDateTime.now().minusDays(1).format(formatter),
@@ -149,5 +146,19 @@ public class T1PortalAuditTest extends Tests {
         page.checkRecordDetailsByResponse(project.getId(), projectsObject, requestValue, graph.getGraphId())
                 .checkCopyToClipboard(graph.getGraphId(), project.getId())
                 .checkResponseFullViewContains(graph.getName(), project.getId());
+    }
+
+    @Test
+    @TmsLink("SOUL-4130")
+    @DisplayName("Аудит. Экспортировать CSV")
+    public void auditExportingCsv() {
+        new IndexPage().goToPortalAuditPage()
+                .checkPeriodFieldsAreDisabledForDefaultSortingLastHour()
+                .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), modifyType,
+                        projectsObject, okCode, okStatus)
+                .selectPeriod(AuditPeriod.WEEK)
+                .exportCsv();
+
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory("Audit_Logs_Table.csv");
     }
 }

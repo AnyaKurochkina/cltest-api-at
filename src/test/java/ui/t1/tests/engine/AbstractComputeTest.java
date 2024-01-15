@@ -1,6 +1,5 @@
 package ui.t1.tests.engine;
 
-import api.Tests;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.WebDriverRunner;
 import com.mifmif.common.regex.Generex;
@@ -16,21 +15,23 @@ import models.AbstractEntity;
 import models.cloud.authorizer.Folder;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ru.testit.annotations.Title;
 import steps.orderService.OrderServiceSteps;
 import steps.resourceManager.ResourceManagerSteps;
 import steps.vpc.SecurityGroupResponse;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.T1LoginPage;
+import ui.t1.pages.cloudEngine.backup.BackupCreate;
+import ui.t1.pages.cloudEngine.backup.BackupsList;
 import ui.t1.pages.cloudEngine.compute.SelectBox;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
+import ui.t1.tests.AbstractT1Test;
+import ui.t1.tests.WithAuthorization;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,8 +45,9 @@ import static ui.t1.pages.cloudEngine.compute.SshKeyList.SSH_USER;
 
 @Log4j2
 @ExtendWith(ConfigExtension.class)
+@WithAuthorization(Role.CLOUD_ADMIN)
 @Tags({@Tag("t1_ui_cloud_compute"), @Tag("t1")})
-public abstract class AbstractComputeTest extends Tests {
+public abstract class AbstractComputeTest extends AbstractT1Test {
     protected String availabilityZone = "ru-central1-a";
     protected String region = "ru-central1";
     protected SelectBox.Image image = new SelectBox.Image("Ubuntu", "20.04");
@@ -78,7 +80,12 @@ public abstract class AbstractComputeTest extends Tests {
         });
     }
 
-    public static String getProjectId() {
+    @Override
+    protected String getProject() {
+        return getProjectId();
+    }
+
+    protected static String getProjectId() {
         String id = project.get();
         if (Objects.isNull(id)) {
             synchronized (AbstractComputeTest.class) {
@@ -88,14 +95,6 @@ public abstract class AbstractComputeTest extends Tests {
             }
         }
         return id;
-    }
-
-    @BeforeEach
-    @Title("Авторизация на портале")
-    public void beforeEach() {
-        new T1LoginPage(getProjectId())
-                .signIn(Role.CLOUD_ADMIN);
-        Tests.getPostLoadPage().run();
     }
 
     @BeforeAll
@@ -151,6 +150,18 @@ public abstract class AbstractComputeTest extends Tests {
     @NoArgsConstructor
     public static class VolumeEntity extends InstanceEntity {
         public VolumeEntity(String projectId, String id) {
+            super(projectId, id);
+        }
+
+        @Override
+        protected int getPriority() {
+            return 2;
+        }
+    }
+
+    @NoArgsConstructor
+    public static class PlacementEntity extends InstanceEntity {
+        public PlacementEntity(String projectId, String id) {
             super(projectId, id);
         }
 
@@ -250,5 +261,14 @@ public abstract class AbstractComputeTest extends Tests {
         String ip = new IndexPage().goToPublicIps().addIp(region);
         new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_CLASS);
         return ip;
+    });
+
+    protected final EntitySupplier<BackupCreate> backupSup = lazy(() -> {
+        VmCreate vm = randomVm.get();
+        BackupCreate backupCreate = new IndexPage().goToBackups().addBackup().setAvailabilityZone(availabilityZone).setSourceType("Сервер")
+                .setObjectForBackup(vm.getName()).clickOrder();
+        new BackupsList().selectBackup(backupCreate.getObjectForBackup())
+                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        return backupCreate;
     });
 }

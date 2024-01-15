@@ -11,9 +11,9 @@ import java.util.UUID;
 @Getter
 public class S3CephTenantOrderPage extends NewOrderPage {
 
-    Select redisVersion = Select.byLabel("Версия Redis");
-    SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
-    String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
+    private final Select redisVersion = Select.byLabel("Версия Redis");
+    private final SelenideElement generatePassButton = StringUtils.$x("//button[@aria-label='generate']");
+    private final String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     public S3CephTenantOrderPage() {
         labelInput.setValue(labelValue);

@@ -17,8 +17,6 @@ import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudDirector.DataCentrePage;
 import ui.t1.pages.cloudDirector.VMwareOrganizationPage;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 /*
 Данный класс предназначен для теста с предварительно созданной организацией и вдц. Данные нужно указать в поле класса.
@@ -27,8 +25,8 @@ import static ui.t1.pages.cloudDirector.DataCentrePage.INFO_DATA_CENTRE;
 @Feature("VMWare организация. Виртуальный дата-центр.")
 
 public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
-    private String orgName = "org-745ms323e2-317c5fe8577-at-ui";
-    private String vdcName = "ddcjrvqmvz-at-ui";
+    private String orgName = "org-745ms323e2-36191634f6e-at-ui";
+    private String vdcName = "kqgvzoqlcb-at-ui";
 
     @Test
     @Order(4)
@@ -97,10 +95,10 @@ public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(orgName)
                 .selectDataCentre(vdcName);
-        Waiting.sleep(10000);
+        Waiting.sleep(5000);
         dataCentrePage.switchProtectOrder(true);
         try {
-            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить", "Удалить", () -> {
+            new DataCentrePage().runActionWithParameters(INFO_DATA_CENTRE, "Удалить VDC", "Удалить", () -> {
                 Dialog dlgActions = Dialog.byTitle("Удаление");
                 dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             }, ActionParameters.builder().checkLastAction(false).checkPreBilling(false).checkAlert(false).waitChangeStatus(false).build());
@@ -121,11 +119,11 @@ public class ForSpecificDataCentreTest extends AbstractCloudDirectorTest {
                 .goToOrganization(orgName)
                 .selectDataCentre(vdcName);
         dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
-        assertFalse(dataCentrePage
+        dataCentrePage
                 .goToVMwareOrgPage()
-                .isDataCentreExist(dataCentreName));
-        assertTrue(new VMwareOrganizationPage()
+                .checkDataCentreNotExist(dataCentreName);
+        new VMwareOrganizationPage()
                 .showDeletedDataCentres(true)
-                .isDataCentreExist(dataCentreName));
+                .checkDataCentreExist(dataCentreName);
     }
 }

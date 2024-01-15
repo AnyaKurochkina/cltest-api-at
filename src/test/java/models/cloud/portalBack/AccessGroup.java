@@ -3,8 +3,8 @@ package models.cloud.portalBack;
 import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import core.helper.Configure;
-import core.helper.http.Http;
 import core.helper.JsonHelper;
+import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.Builder;
 import lombok.Getter;
@@ -74,7 +74,7 @@ public class AccessGroup extends Entity {
     @Override
     @Step("Создание группы доступа")
     protected void create() {
-        prefixName = new Http(Configure.PortalBackURL)
+        prefixName = new Http(Configure.portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .body(toJson())
                 .post("/v1/projects/{}/access_groups", projectName)
@@ -85,7 +85,7 @@ public class AccessGroup extends Entity {
 
     @Step("Редактирование группы доступа")
     public void editGroup(String newDescription) {
-        description = new Http(Configure.PortalBackURL)
+        description = new Http(Configure.portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .body(String.format("{\"access_group\":{\"description\":\"%s\"}}", newDescription))
                 .patch("/v1/projects/{}/access_groups/{}", projectName, prefixName)
@@ -98,7 +98,7 @@ public class AccessGroup extends Entity {
     @Override
     @Step("Удаление группы доступа")
     protected void delete() {
-        new Http(Configure.PortalBackURL)
+        new Http(Configure.portalBackURL)
                 .setRole(Role.ACCESS_GROUP_ADMIN)
                 .delete(String.format("/v1/projects/%s/access_groups/%s", projectName, prefixName))
                 .assertStatus(204)

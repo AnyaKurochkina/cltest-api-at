@@ -8,10 +8,8 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Ubuntu;
 import org.junit.DisabledIfEnv;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
@@ -31,11 +29,11 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_ubuntu_linux")})
 public class UiUbuntuLinuxTest extends UiProductTest {
 
-    Ubuntu product; //= Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/bed207dc-ccbc-49fb-92fa-d889fc22e2c3/main?context=proj-pkvckn08w9&type=project&org=vtb");
+    private Ubuntu product; //= Ubuntu.builder().build().buildFromLink("https://ift2-portal-front.apps.sk5-soul01.corp.dev.vtb/compute/orders/bed207dc-ccbc-49fb-92fa-d889fc22e2c3/main?context=proj-pkvckn08w9&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -102,7 +100,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(5)
+    @Order(4)
     @TmsLink("378050")
     @DisplayName("UI UbuntuLinux. Расширить точку монтирования")
     void expandDisk() {
@@ -113,7 +111,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(6)
+    @Order(5)
     @TmsLink("1295829")
     @DisplayName("UI UbuntuLinux. Проверить конфигурацию")
     void vmActCheckConfig() {
@@ -123,7 +121,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(8)
+    @Order(6)
     @TmsLinks({@TmsLink("1090952"), @TmsLink("1090957")})
     @DisplayName("UI UbuntuLinux. Удалить и добавить группу доступа")
     void addGroup() {
@@ -134,7 +132,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(9)
+    @Order(7)
     @TmsLink("1090987")
     @DisplayName("UI UbuntuLinux. Изменить состав группы")
     void changeGroup() {
@@ -145,7 +143,7 @@ public class UiUbuntuLinuxTest extends UiProductTest {
 
     @Test
     @Disabled("Проверяется у Astra Linux")
-    @Order(11)
+    @Order(8)
     @TmsLink("378040")
     @DisplayName("UI UbuntuLinux. Изменить конфигурацию")
     void changeConfiguration() {
@@ -154,12 +152,30 @@ public class UiUbuntuLinuxTest extends UiProductTest {
     }
 
     @Test
-    @Order(12)
+    @Order(9)
     @TmsLink("1296749")
     @DisplayName("UI UbuntuLinux. Мониторинг ОС")
     void checkMonitoringOs() {
         UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
         ubuntuLinuxPage.checkMonitoringOs();
+    }
+
+    @Test
+    @Order(10)
+    @TmsLink("")
+    @DisplayName("UI UbuntuLinux. Установить Ключ-Астром")
+    void addKeyAstrom() {
+        UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
+        ubuntuLinuxPage.runActionWithCheckCost(CompareType.MORE, ubuntuLinuxPage::addKeyAstrom);
+    }
+
+    @Test
+    @Order(11)
+    @TmsLink("")
+    @DisplayName("UI UbuntuLinux. Удалить Ключ-Астром")
+    void delKeyAstrom() {
+        UbuntuLinuxPage ubuntuLinuxPage = new UbuntuLinuxPage(product);
+        ubuntuLinuxPage.runActionWithCheckCost(CompareType.LESS, ubuntuLinuxPage::delKeyAstrom);
     }
 
     @Test

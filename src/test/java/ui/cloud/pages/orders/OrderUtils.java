@@ -19,7 +19,6 @@ import ui.elements.TypifiedElement;
 
 import java.time.Duration;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -62,11 +61,11 @@ public class OrderUtils {
     public static Double getCostValue(SelenideElement element) {
         element.shouldBe(Condition.visible);
         final String text = TypifiedElement.findNotEmptyText(element, Duration.ofSeconds(5));
-        if(text.equals("без изменений"))
-            return null;
         log.debug("Стоимость '{}'", text);
-        return Double.parseDouble(Objects.requireNonNull(StringUtils.findByRegex("([-]?[\\d\\s]{1,},\\d{2})", text))
-                .replace(',', '.').replaceAll(" ", ""));
+        String cost = StringUtils.findByRegex("(-?[\\d\\s]+,\\d{2})", text);
+        if (cost == null)
+            return null;
+        return Double.parseDouble(cost.replace(',', '.').replaceAll(" ", ""));
     }
 
     @Step("Ожидание выполнения действия с продуктом")
@@ -74,7 +73,7 @@ public class OrderUtils {
         table.getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")
                 .shouldBe(CollectionCondition.sizeNotEqual(0))
                 .shouldBe(CollectionCondition.allMatch("Ожидание отображение статусов", WebElement::isDisplayed))
-                .shouldBe(CollectionCondition.noneMatch("Ожидание заверешения действия", e ->
+                .shouldBe(CollectionCondition.noneMatch("Ожидание завершения действия", e ->
                         new OrderStatus(e).isNeedWaiting()), duration);
         Waiting.sleep(1000);
         List<String> titles = table.update().getValueByColumnInFirstRow("Статус").scrollIntoView(TypifiedElement.scrollCenter).$$x("descendant::*[name()='svg']")

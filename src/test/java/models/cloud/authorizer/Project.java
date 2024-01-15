@@ -77,7 +77,7 @@ public class Project extends Entity {
     }
 
     public void edit() {
-        String projectNameNew = new Http(Configure.ResourceManagerURL)
+        String projectNameNew = new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body("{\"project\":{\"title\":\"" + projectName + "\"}}")
                 .patch(String.format("/v1/projects/%s", id))
@@ -94,7 +94,7 @@ public class Project extends Entity {
         if (Objects.nonNull(isForOrders))
             if (isForOrders)
                 Assertions.fail("Попытка создать isForOrders проект");
-        id = new Http(Configure.ResourceManagerURL)
+        id = new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post(String.format("/v1/folders/%s/projects", folderName))
@@ -106,7 +106,7 @@ public class Project extends Entity {
     @Override
     @Step("Удаление проекта")
     protected void delete() {
-        new Http(Configure.ResourceManagerURL)
+        new Http(Configure.resourceManagerURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .delete("/v1/projects/" + id)
                 .assertStatus(204);

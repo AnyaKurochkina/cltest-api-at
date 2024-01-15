@@ -7,7 +7,7 @@ import ui.elements.Select;
 @Getter
 public class ScyllaDbClusterOrderPage extends NewOrderPage {
 
-    Select scyllaDbVersionSelect = Select.byLabel("Версия ScyllaDB");
+    private final Select scyllaDbVersionSelect = Select.byLabel("Версия ScyllaDB");
 
     public ScyllaDbClusterOrderPage() {
         labelInput.setValue(labelValue);

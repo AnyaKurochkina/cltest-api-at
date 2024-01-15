@@ -12,7 +12,9 @@ import ui.t1.pages.IAM.OrgStructurePage;
 import ui.t1.pages.IAM.serviceAccounts.ServiceAccountsListPage;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
+import ui.t1.pages.bills.BillsPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
+import ui.t1.pages.cloudEngine.backup.BackupsList;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.*;
 import ui.t1.pages.supportCenter.MySubscriptionsPage;
@@ -28,43 +30,46 @@ import static ui.cloud.pages.orders.IProductPage.getActionsMenuButton;
 
 @Getter
 public class IndexPage {
-    Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектное хранилище S3']");
-    Button linkOldCloudStorageS3 = Button.byXpath("//a[@href='/buckets']");
-    Button linkNewCloudStorageS3 = Button.byXpath("//a[@href='/new-buckets']");
-    Button linkResources = Button.byXpath("//a[.='Ресурсы']");
-    Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
-    Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
-    Button linkMySubscriptions = Button.byXpath("//a[.='Мои подписки']");
-    Button linkSubscriptionsByAdmin = Button.byXpath("//a[.='Подписки пользователей организации']");
-    Button linkCloudEngine = Button.byXpath("//a[.='Cloud Engine']");
-    Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
-    Button linkDisks = Button.byXpath("//a[.='Диски']");
-    Button linkSshKeys = Button.byXpath("//a[.='SSH-ключи']");
-    Button linkSnapshots = Button.byXpath("//a[.='Снимки']");
-    Button linkVirtualMachines = Button.byXpath("//a[.='Серверы']");
-    Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
-    Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
-    Button linkVirtualIps = Button.byXpath("//a[.='Виртуальные IP-адреса']");
-    Button linkRouters = Button.byXpath("//a[.='Маршрутизаторы']");
-    Button linkImages = Button.byXpath("//a[.='Образы']");
-    Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
-    Button linkHistory = Button.byXpath("//a[.='История действий']");
-    Button linkNetworks = Button.byXpath("//a[.='Сети']");
-    Button linkTools = Button.byXpath("//a[.='Инструменты']");
-    Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
-    Button linkUsers = Button.byXpath("//a[.='Пользователи']");
-    Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
-    Button linkServiceAccounts = Button.byXpath("//a[.='Сервисные аккаунты']");
-    Button linkAudit = Button.byXpath("//a[.='Аудит']");
-    SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
-    SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
+    private final Button linkCloudStorageS3 = Button.byXpath("//a[.='Объектные хранилища']");
+    private final Button linkOldCloudStorageS3 = Button.byXpath("//a[@href='/buckets']");
+    private final Button linkNewCloudStorageS3 = Button.byXpath("//a[@href='/new-buckets']");
+    private final Button linkResources = Button.byXpath("//a[.='Ресурсы']");
+    private final Button linkSupportCenter = Button.byXpath("//a[.='Центр поддержки']");
+    private final Button linkNotifications = Button.byXpath("//a[.='Уведомления']");
+    private final Button linkMySubscriptions = Button.byXpath("//a[.='Мои подписки']");
+    private final Button linkSubscriptionsByAdmin = Button.byXpath("//a[.='Подписки пользователей организации']");
+    private final Button linkCloudEngine = Button.byXpath("//a[.='Cloud Engine']");
+    private final Button linkCloudDirector = Button.byXpath("//a[.='Cloud Director']");
+    private final Button linkDisks = Button.byXpath("//a[.='Диски']");
+    private final Button linkSshKeys = Button.byXpath("//a[.='SSH-ключи']");
+    private final Button linkSnapshots = Button.byXpath("//a[.='Снимки']");
+    private final Button linkVirtualMachines = Button.byXpath("//a[.='Серверы']");
+    private final Button linkSecurityGroups = Button.byXpath("//a[.='Группы безопасности']");
+    private final Button linkPublicIps = Button.byXpath("//a[.='Публичные IP-адреса']");
+    private final Button linkVirtualIps = Button.byXpath("//a[.='Виртуальные IP-адреса']");
+    private final Button linkRouters = Button.byXpath("//a[.='Маршрутизаторы']");
+    private final Button linkImages = Button.byXpath("//a[.='Образы']");
+    private final Button linkNetworkInterfaces = Button.byXpath("//a[.='Сетевые интерфейсы']");
+    private final Button linkHistory = Button.byXpath("//a[.='История действий']");
+    private final Button linkNetworks = Button.byXpath("//a[.='Сети']");
+    private final Button linkTools = Button.byXpath("//a[.='Инструменты']");
+    private final Button linkIAM = Button.byXpath("//a[.='IAM и Управление']");
+    private final Button linkUsers = Button.byXpath("//a[.='Пользователи']");
+    private final Button linkOrgStructure = Button.byXpath("//a[.='Орг. структура']");
+    private final Button linkServiceAccounts = Button.byXpath("//a[.='Сервисные аккаунты']");
+    private final Button linkAudit = Button.byXpath("//a[.='Аудит']");
+    private final Button linkBills = Button.byXpath("//a[.='Счета']");
+    private final SelenideElement linkProfile = $x("//span/button[@data-dimension ='m']");
+    private final SelenideElement changeContext = $x("//*[name() = 'path' and @d = 'M5.226 8.56c0-.18.07-.35.21-.48.27-.24.68-.22.92.04l5.74 6.37 5.55-6.41a.65.65 0 01.92-.04c.26.24.28.65.04.92l-5.99 6.9c-.28.31-.76.31-1.04 0L5.396 9a.627.627 0 01-.17-.44z']/parent::*/parent::*");
+    private final Button linkBackups = Button.byXpath("//a[.='Резервные копии']");
+    private final Button linkPlacementPolicy = Button.byXpath("//a[.='Политики размещения']");
 
     @Step("Переход на главную страницу")
     public static void go() {
         $x("//*[@title = 'Главная']").shouldBe(Condition.visible).click();
     }
 
-    public Profile goToProfile(){
+    public Profile goToProfile() {
         linkProfile.shouldBe(Condition.visible).click();
         return new Profile();
     }
@@ -158,6 +163,20 @@ public class IndexPage {
         return new NetworkList();
     }
 
+    @Step("Переход на страницу Резервные копии")
+    public BackupsList goToBackups() {
+        linkCloudEngine.click();
+        linkBackups.click();
+        return new BackupsList();
+    }
+
+    @Step("Переход на страницу 'Политики размещения'")
+    public PlacementPolicyList goToPlacementPolicy() {
+        linkCloudEngine.click();
+        linkPlacementPolicy.click();
+        return new PlacementPolicyList();
+    }
+
     @Step("Переход на страницу Сетевые интерфейсы")
     public NetworkInterfaceList goToNetworkInterfaces() {
         linkCloudEngine.click();
@@ -210,14 +229,14 @@ public class IndexPage {
     }
 
     @Step("Переход в Центр уведомлений на страницу Мои уведомления")
-    public NotificationsPage goToNotificationCenter(){
+    public NotificationsPage goToNotificationCenter() {
         linkSupportCenter.click();
         linkNotifications.click();
         return new NotificationsPage();
     }
 
     @Step("Переход в Центр уведомлений на страницу Мои подписки")
-    public MySubscriptionsPage goToMySubscriptions(){
+    public MySubscriptionsPage goToMySubscriptions() {
         linkSupportCenter.click();
         linkNotifications.click();
         linkMySubscriptions.click();
@@ -226,21 +245,22 @@ public class IndexPage {
     }
 
     @Step("Переходим в Центр уведомлений на страницу Подписки пользователей организации")
-    public SubscribeUsersPage goToUsersSubscriptions(){
+    public SubscribeUsersPage goToUsersSubscriptions() {
         linkSupportCenter.click();
         linkNotifications.click();
         linkSubscriptionsByAdmin.click();
 
         return new SubscribeUsersPage();
     }
+
     @Step("Переход в модальное окно изменения контекста")
-    public ContextDialog goToContextDialog(){
+    public ContextDialog goToContextDialog() {
         changeContext.shouldBe(activeCnd).shouldBe(clickableCnd).click();
         return new ContextDialog();
     }
 
     @Step("Проверка отображения имени {contextName} контекста")
-    public boolean isContextNameDisplayed(String contextName){
+    public boolean isContextNameDisplayed(String contextName) {
         return $x("//div[text() = '{}']", contextName).isDisplayed();
     }
 
@@ -250,5 +270,12 @@ public class IndexPage {
         Waiting.sleep(1000); //чтобы подгрузились последние изменения
         linkAudit.click();
         return new AuditPage();
+    }
+
+    @Step("Переход на страницу Инструменты.Счета")
+    public BillsPage goToBillsPage() {
+        linkTools.click();
+        linkBills.click();
+        return new BillsPage();
     }
 }

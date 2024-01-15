@@ -44,7 +44,12 @@ public interface TypifiedElement {
      * @return искомый element
      */
     static SelenideElement getNearElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement) {
-        return $x(String.format("(//%s/ancestor-or-self::*[count(.//%s) = 1])[last()]//%s", xpathNearElement, xpathSearchElement, xpathSearchElement));
+        return getNearElement(xpathSearchElement, xpathNearElement, -1);
+    }
+
+    static SelenideElement getNearElement(@Language("XPath") String xpathSearchElement, @Language("XPath") String xpathNearElement, int index) {
+        return $x(String.format("(//%s/ancestor-or-self::*[count(.//%s) = 1])[%s]//%s", xpathNearElement, xpathSearchElement,
+                TypifiedElement.getIndex(index), xpathSearchElement));
     }
 
     /**

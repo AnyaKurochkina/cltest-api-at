@@ -43,5 +43,6 @@
   "skip_item_change": false,
   "ignore_restriction_service": false,
   "is_for_items": true,
+  "is_only_for_api": true,
   "tag_list": []
 }

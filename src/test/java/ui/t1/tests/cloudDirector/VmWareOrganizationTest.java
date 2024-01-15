@@ -80,8 +80,8 @@ public class VmWareOrganizationTest extends AbstractCloudDirectorTest {
     @TmsLink("202041")
     @DisplayName("VMware. Удаление организации с Виртуальным дата-центром")
     void deleteVMwareOrganizationWithVDCTest() {
-        String dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "-at-ui";
-        Vdc vdc = new Vdc(dataCentreName, "2", "4", new StorageProfile("High", "12"));
+        String dataCentreName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "-at-ui";
+        Vdc vdc = new Vdc(dataCentreName, "2", "4", new StorageProfile("High", "12"), "500");
         String orgName = new IndexPage()
                 .goToCloudDirector()
                 .create(UUID.randomUUID().toString().substring(25) + "-at-ui");

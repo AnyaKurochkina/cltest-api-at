@@ -11,9 +11,9 @@ import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 
+
 @Getter
 public class Button implements TypifiedElement {
-    @Getter
     private final SelenideElement button;
 
     public Button(SelenideElement button) {
@@ -42,6 +42,10 @@ public class Button implements TypifiedElement {
 
     public static Button byAriaLabel(String value) {
         return new Button($x("//button[@aria-label='{}']", value));
+    }
+
+    public static Button byLabel(String value) {
+        return new Button($x("//button[@label='{}']", value));
     }
 
     public static Button byId(String id) {

@@ -1,15 +1,12 @@
 package ui.cloud.tests.orders.clickHouse;
 
 import com.codeborne.selenide.Condition;
-import com.mifmif.common.regex.Generex;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouse;
-import models.cloud.portalBack.AccessGroup;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import steps.portalBack.PortalBackSteps;
@@ -32,15 +29,15 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 public class UiClickHouseTest extends UiProductTest {
 
-    ClickHouse product; // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f96d603-1454-47fb-90f3-94d3073a1037/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private ClickHouse product; // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f96d603-1454-47fb-90f3-94d3073a1037/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
-    String nameAD = "at_ad_user";
-
-    String nameLocalAD = "at_local_user";
+    private final String nameAD = "at_ad_user";
+    private final String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
+    private final String nameLocalAD = "at_local_user";
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -58,19 +55,18 @@ public class UiClickHouseTest extends UiProductTest {
                     .selectProduct(product.getProductName());
             ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
             orderPage.getOsVersionSelect().set(product.getOsVersion());
-            if(product.isDev())
-                orderPage.getNameUser().setValue("at_user");
-            orderPage.getGeneratePassButton1().shouldBe(Condition.enabled).click();
-            Alert.green("Значение скопировано");
-            if(product.isDev())
+            if (product.isDev())
+                orderPage.getNameUser().setValue(nameAD);
+            orderPage.getGeneratePassButton1().setValue(userPasswordFullRight);
+            if (product.isDev())
                 orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-                Alert.green("Значение скопировано");
+            Alert.green("Значение скопировано");
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
             orderPage.getGroup().set(accessGroup);
             orderPage.getGroup2().set(accessGroup);
-            if(product.isDev()) {
+            if (product.isDev()) {
                 orderPage.getGroup3().set(accessGroup);
                 orderPage.getGroup4().set(accessGroup);
             }
@@ -138,7 +134,6 @@ public class UiClickHouseTest extends UiProductTest {
     @Test
     @Order(6)
     @TmsLink("1162627")
-    @Disabled
     @DisplayName("UI ClickHouse. Сбросить пароль владельца БД")
     void resetPasswordDb() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
@@ -151,7 +146,7 @@ public class UiClickHouseTest extends UiProductTest {
     @DisplayName("UI ClickHouse . Cбросить пароль ТУЗ с полными правами")
     void resetPasswordFullRights() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.resetPasswordFullRights("at_user"));
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.resetPasswordFullRights(nameAD));
     }
 
     @Test
@@ -268,6 +263,15 @@ public class UiClickHouseTest extends UiProductTest {
     void updateCertificate() {
         ClickHousePage clickHousePage = new ClickHousePage(product);
         clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::updateCertificate);
+    }
+
+    @Test
+    @Order(20)
+    @TmsLink("")
+    @DisplayName("UI ClickHouse Cluster. Проверка доступа к Web интерфейсу управления через AD")
+    void openAdminConsole() {
+        ClickHousePage clickHousePage = new ClickHousePage(product);
+        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::openPointConnect);
     }
 
     @Test
