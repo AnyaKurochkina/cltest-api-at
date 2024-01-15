@@ -111,6 +111,7 @@ public class PythonTemplateTest extends Tests {
         JSONObject json = PythonTemplate.builder()
                 .name(name)
                 .build()
+                .init()
                 .toJson();
         PythonTemplate pythonTemplate = createPythonTemplate(json);
         deletePythonTemplate(pythonTemplate.getId());

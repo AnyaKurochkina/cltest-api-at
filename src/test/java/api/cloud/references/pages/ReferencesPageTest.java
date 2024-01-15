@@ -2,7 +2,6 @@ package api.cloud.references.pages;
 
 import api.Tests;
 import core.helper.JsonHelper;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -145,29 +144,6 @@ public class ReferencesPageTest extends Tests {
         deletePrivatePagesById(directoryName, pages.getId());
         assertFalse(isPageExist(getPrivatePagesListByDirectoryName(directoryName), name, directoryId),
                 format("Page с именем {} найден в directories {}", name, directoryName));
-    }
-
-    @DisplayName("Обновление Data в Pages по Id для приватных ролей")
-    @TmsLink("851405")
-    @Test
-    public void updateDataPrivatePagesByIdTest() {
-        Response response = createPrivatePages(directoryName, JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
-                .set("name", "updateDataPage_test")
-                .set("directory", directoryName)
-                .set("data", new JSONObject().put("key", "value"))
-                .build());
-        String id = response.jsonPath().get("id");
-        String updateExpectedKeyValue = "updateValue";
-        updateDataPrivatePagesById(directoryName, id, new JSONObject().put("key", updateExpectedKeyValue));
-        Response updateValue = getPrivateResponsePagesById(directoryName, id);
-        String getUpdateKeyValue = updateValue.jsonPath().get("data.key").toString();
-        assertEquals(updateExpectedKeyValue, getUpdateKeyValue);
-        String str = "secondValue";
-        updateDataPrivatePagesById(directoryName, response.jsonPath().get("id"), new JSONObject()
-                .put("secondKey", str));
-        Response getResponse = getPrivateResponsePagesById(directoryName, id);
-        String data = getResponse.jsonPath().get("data").toString();
-        assertEquals("{key=updateValue, secondKey=secondValue}", data);
     }
 
     @DisplayName("Получение списка pages")

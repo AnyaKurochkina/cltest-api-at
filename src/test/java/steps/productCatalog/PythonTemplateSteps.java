@@ -32,6 +32,7 @@ public class PythonTemplateSteps {
     public static PythonTemplate createPythonTemplateByName(String name) {
         PythonTemplate pythonTemplate = JsonHelper.deserialize(getStringFromFile("productCatalog/pythonTemplate/createPythonTemplate.json"), PythonTemplate.class);
         pythonTemplate.setName(name);
+        pythonTemplate.init();
         return  pythonTemplate.createObject();
     }
 

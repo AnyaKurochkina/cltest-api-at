@@ -5,6 +5,12 @@
     "id": {
       "type": "string"
     },
+    "description": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
     "created_at": {
       "type": "string"
     },
@@ -61,6 +67,9 @@
       "items": {}
     },
     "is_blocking": {
+      "type": "boolean"
+    },
+    "incident": {
       "type": "boolean"
     },
     "is_deleted": {
