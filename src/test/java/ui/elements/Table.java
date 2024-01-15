@@ -34,18 +34,19 @@ public class Table implements TypifiedElement {
     @Language("XPath")
     private final String xpath;
 
-    protected void open() {}
+    protected void open() {
+    }
 
     public Table(String columnName) {
         open();
         xpath = format(tableXpath, columnName, columnName);
-        init($x(xpath).shouldBe(Condition.visible));
+        init($x(xpath).shouldBe(Condition.visible.because(format("Не найдена таблица по колонке '{}'", columnName))));
     }
 
     public Table(String columnName, int index) {
         open();
-        xpath = format( "(" + tableXpath + ")" + TypifiedElement.postfix, columnName, columnName, TypifiedElement.getIndex(index));
-        init($x(xpath).shouldBe(Condition.visible));
+        xpath = format("(" + tableXpath + ")" + TypifiedElement.postfix, columnName, columnName, TypifiedElement.getIndex(index));
+        init($x(xpath).shouldBe(Condition.visible.because(format("Не найдена таблица по колонке '{}' и индексу {}", columnName, index))));
     }
 
     public Table(SelenideElement table) {
@@ -179,6 +180,7 @@ public class Table implements TypifiedElement {
 
     /**
      * Возвращает индекс заголовка таблицы
+     *
      * @return int
      */
     public int getHeaderIndex(String column) {

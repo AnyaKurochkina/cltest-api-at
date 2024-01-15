@@ -38,7 +38,8 @@ public class SecurityGroupList {
 
     public void deleteGroup(String name) {
         getSecurityGroup(name).get().$("button").click();
-        Waiting.findWithRefresh(() -> !new SecurityGroupsTable().isColumnValueEquals(Column.NOMINATION, name), Duration.ofMinutes(1));
+        Waiting.findWithRefresh(() -> !new SecurityGroupsTable().isColumnValueEquals(Column.NOMINATION, name), Duration.ofMinutes(1),
+                "Группа {} не удалена", name);
     }
 
     public SecurityGroup selectGroup(String name) {

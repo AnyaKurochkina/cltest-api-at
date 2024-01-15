@@ -40,10 +40,12 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
         new IndexPage().goToHistory();
         OrderUtils.waitCreate(() ->
                 Waiting.findWithRefresh(() -> !ComputeHistory.getLastActionStatus().getText().equals("В процессе"), Duration.ofMinutes(1)));
+        TypifiedElement.openPage(productLink);
     }
 
     @Override
     public void checkLastAction(String action) {
+        new IndexPage().goToHistory();
         checkActionByIndex(0, action);
         TypifiedElement.openPage(productLink);
     }

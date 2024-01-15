@@ -36,7 +36,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Публичные IP-адреса")
     void publicIpList() {
         new IndexPage().goToPublicIps();
-        assertHeaders(new PublicIpList.IpTable(), "", Column.NAME, "Регион", "Сетевой интерфейс", "Дата создания", "");
+        assertHeaders(new PublicIpList.IpTable(), "", Column.IP_ADDRESS, "Регион", "Сетевой интерфейс", "Дата создания", "");
     }
 
     @Test

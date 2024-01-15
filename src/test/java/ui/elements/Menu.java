@@ -21,7 +21,7 @@ public class Menu implements TypifiedElement {
     SelenideElement element;
 
     public Menu(SelenideElement element) {
-        this.element = element.shouldBe(activeCnd);
+        this.element = element.shouldBe(activeCnd.because("Menu. Кнопка раскрытия меню не найдена"));
     }
 
     public static Menu byElement(SelenideElement element) {

@@ -31,8 +31,10 @@ import java.util.function.Supplier;
 @ExtendWith(JUnit5EventListener.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
-    public final static Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
-    public final static Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
+    public final static Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled)
+            .because("Элемент не активный");
+    public final static Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"))
+            .because("Элемент не кликабельный");
 
     public static Runnable getPostLoadPage() {
         if (Configure.isT1())

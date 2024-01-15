@@ -383,7 +383,8 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getOrderCost() {
-        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(5)));
+        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible
+                .because("Не отображается стоимость заказа"), Duration.ofMinutes(5)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }
