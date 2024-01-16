@@ -553,6 +553,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                                     continue;
                                 currentClassListArgument.addAll(Arrays.asList(((MethodBasedTestDescriptor) descriptor).getTestMethod().getParameterTypes()));
                             }
+                            log.debug("MAP_TEST: {}\nCLASS: {}", mapTests.keySet(), currentClassListArgument);
                             ObjectPoolService.removeProducts(currentClassListArgument);
                         }
                     } catch (Throwable e) {
