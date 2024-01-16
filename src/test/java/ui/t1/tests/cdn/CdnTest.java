@@ -1,21 +1,22 @@
 package ui.t1.tests.cdn;
 
-import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import lombok.extern.log4j.Log4j2;
-import models.cloud.authorizer.Project;
 import models.t1.cdn.Resource;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import ru.testit.annotations.Title;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.T1LoginPage;
 import ui.t1.pages.cdn.CdnPage;
+import ui.t1.tests.AbstractT1Test;
+import ui.t1.tests.WithAuthorization;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,16 +31,9 @@ import static steps.t1.CdnSteps.deleteSourceGroup;
 @Feature("Действия с проектом")
 @Tags({@Tag("ui_cloud_folder_actions")})
 @Log4j2
+@WithAuthorization(Role.CLOUD_ADMIN)
 @ExtendWith(ConfigExtension.class)
-public class CdnTest extends Tests {
-    Project project = Project.builder().isForOrders(true).build().createObject();
-
-    @BeforeEach
-    @Title("Авторизация на портале")
-    public void beforeEach() {
-        new T1LoginPage(project.getId())
-                .signIn(Role.CLOUD_ADMIN);
-    }
+public class CdnTest extends AbstractT1Test {
 
     @Test
     @DisplayName("CDN. Создание/Удаление ресурса. Удаление группы ресурсов.")
@@ -62,7 +56,7 @@ public class CdnTest extends Tests {
         List<String> hostNames = new ArrayList<>();
         hostNames.add(resourceName);
         Resource resource = new Resource("mirror.yandex.ru", hostNames);
-        createResource(project.getId(), resource.toJson());
+        createResource(getProjectId(), resource.toJson());
         new IndexPage()
                 .goToCdn()
                 .waitChangeStatus(resourceName);
@@ -87,6 +81,6 @@ public class CdnTest extends Tests {
                 .goToCdn()
                 .createSourceGroup(name, "t1.ru");
         assertTrue(new CdnPage().isEntityExist(name));
-        deleteSourceGroup(project.getId(), name);
+        deleteSourceGroup(getProjectId(), name);
     }
 }

@@ -12,6 +12,8 @@ import ui.t1.pages.IAM.OrgStructurePage;
 import ui.t1.pages.IAM.serviceAccounts.ServiceAccountsListPage;
 import ui.t1.pages.IAM.users.UsersPage;
 import ui.t1.pages.S3Storage.CloudStorageS3;
+import ui.t1.pages.bills.BillsPage;
+import ui.t1.pages.cdn.CdnPage;
 import ui.t1.pages.cloudDirector.CloudDirectorPage;
 import ui.t1.pages.cloudEngine.backup.BackupsList;
 import ui.t1.pages.cloudEngine.compute.*;

@@ -63,7 +63,7 @@ public class Configure {
     public static String vcloudConnector;
     public static String s3StorageOld;
     public static String s3StorageNew;
-    public static String сdnProxy;
+    public static String cdnProxy;
 
     static {
         try {
@@ -132,7 +132,7 @@ public class Configure {
             s3StorageOld = KONG_URL + "storage";
             s3StorageNew = KONG_URL + "storage-new";
             powerDns = getAppProp("url.powerdns");
-            сdnProxy = KONG_URL + "cdn-proxy";
+            cdnProxy = KONG_URL + "cdn-proxy";
 
 
             initApiRoutes();

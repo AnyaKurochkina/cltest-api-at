@@ -81,7 +81,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @Override
-    protected String getProject() {
+    protected String getProjectId() {
         return getProjectId();
     }
 
