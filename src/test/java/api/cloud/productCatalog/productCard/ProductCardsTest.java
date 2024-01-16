@@ -272,7 +272,7 @@ public class ProductCardsTest {
                     .init()
                     .toJson();
             String errorMessage = uncheckedCreateProductCard(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-            assertEquals("There are no unique elements in card_items", errorMessage, "Сообщение об ошибке при создании" +
+            assertEquals("There are no unique elements in card_items", errorMessage, "Сообщение об ошибке при создании " +
                     "product card с не уникальными элементами не соответсвует формату");
         } catch (Exception e) {
             e.printStackTrace();
