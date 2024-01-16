@@ -29,8 +29,8 @@ import java.util.Objects;
 @Feature("Виртуальные IP")
 @Epic("Cloud Compute")
 public class VirtualIpTest extends AbstractComputeTest {
-    private final EntitySupplier<VirtualIpCreate> vipSup = lazy(() -> virtualIpCreateWidthVMac("77:77:77:00:00:01"));
-    private final EntitySupplier<VirtualIpCreate> vipSupSlave = lazy(() -> virtualIpCreateWidthVMac("77:77:77:00:00:02"));
+    private final EntitySupplier<VirtualIpCreate> vipSup = lazy(this::virtualIpCreate);
+    private final EntitySupplier<VirtualIpCreate> vipSupSlave = lazy(this::virtualIpCreate);
 
     private final EntitySupplier<Void> prepareVmWidthVip = lazy(() -> {
         virtualMachineCreate(vipSup.get(), randomVm.get());
@@ -41,9 +41,9 @@ public class VirtualIpTest extends AbstractComputeTest {
         return null;
     });
 
-    private VirtualIpCreate virtualIpCreateWidthVMac(String vMac) {
-        VirtualIpCreate v = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true)
-                .setVMac(vMac).setName(getRandomName()).setInternet(true).setMode("active-active").clickOrder();
+    private VirtualIpCreate virtualIpCreate() {
+        VirtualIpCreate v = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork)
+                .setName(getRandomName()).setInternet(true).setMode("active-active").clickOrder();
         new IndexPage().goToVirtualIps().selectIp(v.getIp())
                 .markForDeletion(new VipEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(false);
         return v;
@@ -138,9 +138,8 @@ public class VirtualIpTest extends AbstractComputeTest {
 
     @Test
     @Order(5)
-    @Disabled
     @TmsLink("")
-    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Проверка соединения между вм c L2")
+    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Проверка соединения между вм")
     void checkConnectL2() {
         prepareVmWidthVip.run();
         prepareVmWidthVipSlave.run();

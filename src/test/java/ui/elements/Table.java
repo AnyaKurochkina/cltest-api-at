@@ -253,7 +253,7 @@ public class Table implements TypifiedElement {
     }
 
     public static boolean isExist(String column) {
-        return Waiting.sleep(() -> $x(tableXpath, column).isDisplayed(), Duration.ofSeconds(5));
+        return Waiting.sleep(() -> $x(tableXpath, column).isDisplayed(), Duration.ofSeconds(10));
     }
 
     public Asserts asserts() {

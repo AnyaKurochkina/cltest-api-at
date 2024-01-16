@@ -3,7 +3,6 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.util.StdDateFormat;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import core.enums.ObjectStatus;
 import core.helper.JsonTemplate;
@@ -94,6 +93,10 @@ public abstract class Entity implements AutoCloseable {
             objectPoolEntity.setError(e);
             objectPoolEntity.setStatus(ObjectStatus.FAILED_DELETE);
         }
+    }
+
+    public boolean isDeletedEntity() {
+        return ObjectPoolService.getObjectPoolEntity(this).getStatus() == ObjectStatus.DELETED;
     }
 
     @SneakyThrows
