@@ -6,8 +6,8 @@ import io.qameta.allure.Step;
 import models.t1.imageService.ImageGroup;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.*;
 
 import java.util.Arrays;
