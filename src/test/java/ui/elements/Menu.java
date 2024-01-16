@@ -45,8 +45,7 @@ public class Menu implements TypifiedElement {
 
     private SelenideElement getItem(String item) {
         SelenideElement element = $$x("//li[.='{}']", item)
-                .shouldBe(CollectionCondition.anyMatch("Поиск элемента", WebElement::isDisplayed)
-                        .because("Не найден пункт меню: " + item))
+                .shouldBe(CollectionCondition.anyMatch("Не найден пункт меню: " + item, WebElement::isDisplayed))
                 .filter(Condition.visible)
                 .first();
         String disabled = element.getAttribute("aria-disabled");
