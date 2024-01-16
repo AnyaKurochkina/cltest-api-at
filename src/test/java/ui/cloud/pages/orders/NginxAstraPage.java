@@ -2,16 +2,13 @@ package ui.cloud.pages.orders;
 
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import models.cloud.orderService.products.Astra;
 import models.cloud.orderService.products.Nginx;
-import models.cloud.orderService.products.PostgreSQL;
 import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
-import steps.references.ReferencesStep;
-import ui.elements.*;
-
-
-import java.util.List;
+import ui.elements.CheckBox;
+import ui.elements.Dialog;
+import ui.elements.Select;
+import ui.elements.Table;
 
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
@@ -23,8 +20,8 @@ public class NginxAstraPage extends IProductPage {
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private static final String STATUS = "Статус";
 
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
 
     public NginxAstraPage(Nginx product) {
         super(product);

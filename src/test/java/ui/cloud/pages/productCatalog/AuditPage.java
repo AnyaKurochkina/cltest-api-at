@@ -1,5 +1,6 @@
 package ui.cloud.pages.productCatalog;
 
+import api.Tests;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
@@ -11,6 +12,7 @@ import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
+import ui.t1.tests.audit.AuditPeriod;
 
 import java.time.format.DateTimeFormatter;
 
@@ -48,9 +50,18 @@ public class AuditPage extends EntityPage {
     private final Input statusCodeInput = Input.byLabelV2("Код статуса");
     private final Input objectTypeFilterInput = Input.byLabelV2("Тип объекта");
     private final Input objectIdFilterInput = Input.byLabelV2("ID объекта");
+    private final Button exportCsvButton = Button.byLabel("Экспорт в CSV");
 
     public AuditPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();
+    }
+
+    @Step("[Проверка] Поля начало и окончание периода отключены для дефолтного значения последний 1 час")
+    public AuditPage checkPeriodFieldsAreDisabledForDefaultSortingLastHour() {
+        Assertions.assertEquals(AuditPeriod.LAST_HOUR.getUiValue(), periodSelect.getValue(), "По дефолту выбран период последний 1 час");
+        beginDateInput.getInput().shouldBe(Condition.disabled.because("Поле Дата начала периода должно быть отключено"));
+        endDateInput.getInput().shouldBe(Condition.disabled.because("Поле Дата окончания периода должно быть отключено"));
+        return this;
     }
 
     @Step("Проверка содержания записи в таблице аудита")
@@ -202,7 +213,7 @@ public class AuditPage extends EntityPage {
     private void checkAuditIsLoaded() {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
-            TypifiedElement.refreshPage();
+            Selenide.refresh();
             if (Tab.byText("История изменений").getElement().exists()) new EntityPage().goToAuditTab();
         }
     }
@@ -279,19 +290,17 @@ public class AuditPage extends EntityPage {
         TestUtils.scrollToTheTop();
         periodSelect.set("задать период");
         beginDateInput.setValue(beginDate);
-        beginTimeSelect.getElement().$x(".//*[name()='svg']").click();
         beginTimeSelect.set("00:00");
         endDateInput.setValue(endDate);
-        endTimeSelect.getElement().$x(".//*[name()='svg']").click();
         endTimeSelect.set("23:30");
         applyFiltersByDateButton.click();
         return this;
     }
 
     @Step("Выбор периода времени")
-    public AuditPage selectPeriod(String periodName) {
+    public AuditPage selectPeriod(AuditPeriod periodName) {
         TestUtils.scrollToTheTop();
-        periodSelect.set(periodName);
+        periodSelect.set(periodName.getUiValue());
         return this;
     }
 
@@ -306,6 +315,14 @@ public class AuditPage extends EntityPage {
     @Step("Проверка сортировки по дате и времени")
     public AuditPage checkSortingByDate() {
         EntityListPage.checkSortingByDateField("Дата и время", DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm"));
+        return this;
+    }
+
+    @Step("Клик по кнопке Экспортировать csv")
+    public AuditPage exportCsv() {
+        exportCsvButton.getButton()
+                .shouldBe(Tests.activeCnd.because("Кнопка экспортировать csv должна быть видима и кликабельна"))
+                .click();
         return this;
     }
 

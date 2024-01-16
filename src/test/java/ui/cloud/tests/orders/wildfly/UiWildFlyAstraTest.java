@@ -7,14 +7,12 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.WildFly;
-import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.*;
-import ui.elements.Alert;
 import ui.elements.Graph;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
@@ -29,13 +27,13 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Feature("WildFlyAstra")
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
-    String versionWildFly = "23.0.2.Final";
-    String versionJava = "11";
-    WildFly product; // = WildFly.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/e8b85b2a-ae30-486f-8f65-a3a55534c22e/main?context=proj-gxsz4e3shy&type=project&org=vtb");
+    private final String versionWildFly = "23.0.2.Final";
+    private final String versionJava = "11";
+    private WildFly product; // = WildFly.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/e8b85b2a-ae30-486f-8f65-a3a55534c22e/main?context=proj-gxsz4e3shy&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
@@ -54,7 +52,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
             WildFlyAstraOrderPage orderPage = new WildFlyAstraOrderPage();
             orderPage.getVersionWildfly().set(product.getWildFlyVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getVersionJava().set(product.getJavaVersion());
+            orderPage.getVersionJava().set(versionJava);
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
@@ -215,7 +213,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Заменить Java Wildfly")
     void changeJavaWildFly() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly,versionJava));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly, versionJava));
     }
 
     @Test

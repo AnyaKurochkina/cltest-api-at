@@ -13,6 +13,7 @@ import ui.t1.pages.IAM.AddUserDialog;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 import static api.Tests.activeCnd;
 import static com.codeborne.selenide.Selenide.$x;
@@ -29,6 +30,7 @@ public class UsersPage {
     private static final Button confirmSearchBtn = Button.byText("Применить");
     private static final Input searchUser = Input.byPlaceholder("Введите данные пользователя");
     private static final Button clearFilters = Button.byText("Сбросить фильтры");
+    private static final SelenideElement filtersMenu = $x("//div[@aria-expanded]");
 
     public UsersPage() {
         SelenideElement selenideElement = $x("//*[text() = 'Пользователи']");
@@ -100,6 +102,7 @@ public class UsersPage {
 
     @Step("Проверка существования пользователя в таблице")
     public static boolean isUserAdded(IamUser user) {
+        openFilters();
         if (clearFilters.getButton().isDisplayed()) {
             clearFilters.click();
         }
@@ -117,6 +120,7 @@ public class UsersPage {
 
     @Step("Проверка существования пользователя в таблице только по email")
     public static boolean isUserAddedByEmail(String email) {
+        openFilters();
         if (clearFilters.getButton().isDisplayed()) {
             clearFilters.click();
         }
@@ -136,6 +140,13 @@ public class UsersPage {
     private void editUserAction(String email) {
         openActionMenu("Пользователь", email);
         $x("//*[text()= 'Редактировать']").click();
+    }
+
+    private static void openFilters() {
+        String value = filtersMenu.getAttribute("aria-expanded");
+        if (Objects.equals(value, "false")) {
+            filtersMenu.click();
+        }
     }
 
     private static boolean isRolesEquals(List<String> roles, List<String> userRoles) {

@@ -93,7 +93,7 @@ public class GraphImportTest extends Tests {
         importGraph(filePath);
         ImportObject importObject = importGraph(filePath);
         assertEquals("error", importObject.getStatus());
-        assertEquals(String.format("Error loading dump: Версия \"%s\" %s:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
+        assertEquals(String.format("Error loading dump: Версия \"%s\" %s:%s уже существует, но с другим наполнением. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
                         graph.getVersion(), importObject.getModelName(), importObject.getObjectName()),
                 importObject.getMessages().get(0));
         assertTrue(isGraphExists(graphName), "Граф не существует");

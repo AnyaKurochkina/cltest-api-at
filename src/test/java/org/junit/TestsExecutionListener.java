@@ -9,6 +9,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.helper.http.Path;
+import core.utils.DownloadingFilesUtil;
 import core.utils.Encrypt;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -25,7 +26,6 @@ import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -56,12 +56,14 @@ public class TestsExecutionListener implements TestExecutionListener {
             Configuration.startMaximized = true;
         else
             Configuration.startMaximized = Boolean.parseBoolean(Configure.getAppProp("webdriver.maximized", "false"));
-        Configuration.pageLoadTimeout = 60000;
+        Configuration.pageLoadTimeout = 90000;
         Configuration.timeout = 50000;
         Configuration.driverManagerEnabled = false;
         Configuration.browser = "chrome";
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.content_settings.exceptions.clipboard", getClipBoardSettingsMap());
+        // путь к папке загрузки файлов
+        prefs.put("download.default_directory", new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH).getAbsolutePath());
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-notifications");

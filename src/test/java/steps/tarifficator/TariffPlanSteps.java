@@ -15,7 +15,7 @@ import steps.Steps;
 import java.util.ArrayList;
 import java.util.List;
 
-import static core.helper.Configure.TarifficatorURL;
+import static core.helper.Configure.tarifficatorURL;
 
 @Log4j2
 public class TariffPlanSteps extends Steps {
@@ -28,7 +28,7 @@ public class TariffPlanSteps extends Steps {
      */
     @Step("Создание тарифного плана {tariffPlan}")
     public static TariffPlan createTariffPlan(TariffPlan tariffPlan) {
-        String object = new Http(TarifficatorURL)
+        String object = new Http(tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(tariffPlan.toJson())
                 .post("/v1/tariff_plans")
@@ -51,7 +51,7 @@ public class TariffPlanSteps extends Steps {
         List<Object> responseList;
         int i = 1;
         do {
-            responseList = new Http(TarifficatorURL)
+            responseList = new Http(tarifficatorURL)
                     .setRole(Role.TARIFFICATOR_ADMIN)
                     .get("/v1/tariff_plans?page={}&per_page=100&{}", i, urlParameters)
                     .assertStatus(200)
@@ -71,7 +71,7 @@ public class TariffPlanSteps extends Steps {
      */
     @Step("Получение тарифного плана {tariffPlanId}")
     public static TariffPlan getTariffPlan(String tariffPlanId) {
-        String object = new Http(TarifficatorURL)
+        String object = new Http(tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .get("/v1/tariff_plans/{}?include=tariff_classes", tariffPlanId)
                 .assertStatus(200)
@@ -87,7 +87,7 @@ public class TariffPlanSteps extends Steps {
      */
     @Step("Редактирование тарифного плана {tariffPlan}")
     public static TariffPlan editTariffPlan(TariffPlan tariffPlan) {
-        String object = new Http(TarifficatorURL)
+        String object = new Http(tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(tariffPlan.toJson())
                 .patch("/v1/tariff_plans/{}", tariffPlan.getId())
@@ -100,7 +100,7 @@ public class TariffPlanSteps extends Steps {
     @SneakyThrows
     @Step("Редактирование тарифного класса {tariffClass}")
     public static TariffClass editTariffClass(TariffClass tariffClass, TariffPlan tariffPlan) {
-        String object = new Http(TarifficatorURL)
+        String object = new Http(tarifficatorURL)
                 .setRole(Role.TARIFFICATOR_ADMIN)
                 .body(tariffClass.toJson())
                 .patch("/v1/tariff_plans/{}/tariff_classes/{}", tariffPlan.getId(), tariffClass.getId())

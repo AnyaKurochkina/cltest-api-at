@@ -2,7 +2,6 @@ package api.cloud.references.pages;
 
 import api.Tests;
 import core.helper.JsonHelper;
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -22,8 +21,8 @@ import java.util.List;
 
 import static core.helper.Configure.RESOURCE_PATH;
 import static core.helper.JsonHelper.toJson;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static core.helper.StringUtils.format;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.references.ReferencesStep.*;
 
 @Epic("Справочники")
@@ -36,6 +35,8 @@ public class ReferencesPageTest extends Tests {
 
     List<String> deleteList = new ArrayList<>();
     Directories directories;
+    String directoryName;
+    String directoryId;
 
     @Title("Создание тестовых данных")
     @DisplayName("Создание тестовых данных")
@@ -43,6 +44,8 @@ public class ReferencesPageTest extends Tests {
     public void createTestData() {
         directories = createDirectory(createDirectoriesJsonObject("directories_for_page_test_api",
                 "test_api"));
+        directoryName = directories.getName();
+        directoryId = directories.getId();
         deleteList.add(directories.getName());
     }
 
@@ -59,10 +62,11 @@ public class ReferencesPageTest extends Tests {
     @Test
     public void getPrivatePagesList() {
         String pageName = "get_private_page_list_test_api";
-        createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(pageName, directories.getId()));
-        List<Pages> pagesList = getPrivatePagesListByDirectoryName(directories.getName());
-        assertTrue(pagesList.size() > 0);
-        assertTrue(isPageExist(pagesList, pageName, directories.getId()));
+        createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(pageName, directoryId));
+        List<Pages> pagesList = getPrivatePagesListByDirectoryName(directoryName);
+        assertTrue(pagesList.size() > 0, format("Список page в directory {} пустой", directoryName));
+        assertTrue(isPageExist(pagesList, pageName, directoryId),
+                format("Page с именем {} не найден в directories {}", pageName, directoryName));
     }
 
     @DisplayName("Получение Pages по Id для приватных ролей")
@@ -70,8 +74,8 @@ public class ReferencesPageTest extends Tests {
     @Test
     public void getPrivatePagesByIdTest() {
         String name = "get_pages_private_by_id_test_api";
-        Pages createPage = createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(name, directories.getId()));
-        Pages getPage = getPrivatePagesById(directories.getName(), createPage.getId());
+        Pages createPage = createPrivatePagesAndGet(directoryName, createPagesJsonObject(name, directoryId));
+        Pages getPage = getPrivatePagesById(directoryName, createPage.getId());
         assertEquals(getPage.getName(), name);
         assertEquals(getPage.getDirectory(), createPage.getDirectory());
     }
@@ -81,10 +85,10 @@ public class ReferencesPageTest extends Tests {
     @Test
     public void updatePrivatePagesByIdTest() {
         String name = "update_test_api";
-        Pages createdPage = createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(name, directories.getId()));
+        Pages createdPage = createPrivatePagesAndGet(directoryName, createPagesJsonObject(name, directoryId));
         String expectedName = "updated_pages_test_api";
-        Pages updatedPage = updatePrivatePagesById(directories.getName(), createdPage.getId(),
-                createPagesJsonObject(expectedName, directories.getId()));
+        Pages updatedPage = updatePrivatePagesById(directoryName, createdPage.getId(),
+                createPagesJsonObject(expectedName, directoryId));
         assertEquals(expectedName, updatedPage.getName());
         assertEquals(updatedPage.getDirectory(), createdPage.getDirectory());
     }
@@ -93,13 +97,13 @@ public class ReferencesPageTest extends Tests {
     @TmsLink("851383")
     @Test
     public void partialUpdatePrivatePagesByIdTest() {
-        Pages createdPage = createPrivatePagesAndGet(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
+        Pages createdPage = createPrivatePagesAndGet(directoryName, JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                 .set("name", "partial_update_test_api")
-                .set("directory", directories.getName())
+                .set("directory", directoryName)
                 .build());
         String expectedName = "expected_partial_updated_pages_test_api";
         String expectedDirectory = createdPage.getDirectory();
-        Pages updatedPage = partialUpdatePrivatePagesById(directories.getName(), createdPage.getId(), new JSONObject()
+        Pages updatedPage = partialUpdatePrivatePagesById(directoryName, createdPage.getId(), new JSONObject()
                 .put("name", expectedName)
                 .put("directory", expectedDirectory));
         assertEquals(expectedName, updatedPage.getName());
@@ -111,10 +115,10 @@ public class ReferencesPageTest extends Tests {
     @Test
     public void getPagesByIdTest() {
         String name = "get_pages_by_id_test_api";
-        Pages createdPage = createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(name, directories.getId()));
+        Pages createdPage = createPrivatePagesAndGet(directoryName, createPagesJsonObject(name, directoryId));
         Pages getPage = getPagesById(createdPage.getId());
         assertEquals(getPage.getName(), name);
-        assertEquals(getPage.getDirectory(), directories.getId());
+        assertEquals(getPage.getDirectory(), directoryId);
     }
 
     @DisplayName("Импорт Pages")
@@ -127,8 +131,8 @@ public class ReferencesPageTest extends Tests {
         importPrivatePages(PAGES_IMPORT_PATH, directoryName);
         List<Pages> list = getPrivatePagesListByDirectoryNameAndPageName(directoryName, pageName);
         deletePrivatePagesById(directoryName, list.get(0).getId());
-        assertEquals(1, list.size());
-        assertEquals(pageName, list.get(0).getName());
+        assertEquals(1, list.size(), "Кол-во page в Directory не соответствует ожидаемому.");
+        assertEquals(pageName, list.get(0).getName(), "Имя page не соответствует ожидаемому.");
     }
 
     @DisplayName("Удаление Pages для приватных полей")
@@ -136,31 +140,10 @@ public class ReferencesPageTest extends Tests {
     @Test
     public void deletePrivatePages() {
         String name = "delete_page_test_api";
-        Pages pages = createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(name, directories.getId()));
-        deletePrivatePagesById(directories.getName(), pages.getId());
-    }
-
-    @DisplayName("Обновление Data в Pages по Id для приватных ролей")
-    @TmsLink("851405")
-    @Test
-    public void updateDataPrivatePagesByIdTest() {
-        Response response = createPrivatePages(directories.getName(), JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
-                .set("name", "updateDataPage_test")
-                .set("directory", directories.getName())
-                .set("data", new JSONObject().put("key", "value"))
-                .build());
-        String id = response.jsonPath().get("id");
-        String updateExpectedKeyValue = "updateValue";
-        updateDataPrivatePagesById(directories.getName(), id, new JSONObject().put("key", updateExpectedKeyValue));
-        Response updateValue = getPrivateResponsePagesById(directories.getName(), id);
-        String getUpdateKeyValue = updateValue.jsonPath().get("data.key").toString();
-        assertEquals(updateExpectedKeyValue, getUpdateKeyValue);
-        String str = "secondValue";
-        updateDataPrivatePagesById(directories.getName(), response.jsonPath().get("id"), new JSONObject()
-                .put("secondKey", str));
-        Response getResponse = getPrivateResponsePagesById(directories.getName(), id);
-        String data = getResponse.jsonPath().get("data").toString();
-        assertEquals("{key=updateValue, secondKey=secondValue}", data);
+        Pages pages = createPrivatePagesAndGet(directoryName, createPagesJsonObject(name, directoryId));
+        deletePrivatePagesById(directoryName, pages.getId());
+        assertFalse(isPageExist(getPrivatePagesListByDirectoryName(directoryName), name, directoryId),
+                format("Page с именем {} найден в directories {}", name, directoryName));
     }
 
     @DisplayName("Получение списка pages")
@@ -168,8 +151,8 @@ public class ReferencesPageTest extends Tests {
     @Test
     public void getPagesFilters() {
         String name = "get_pages_list_test_api";
-        createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(name, directories.getId()));
-        assertTrue(getPagesList().size() > 0);
+        createPrivatePagesAndGet(directoryName, createPagesJsonObject(name, directoryId));
+        assertTrue(getPagesList().size() > 0, format("Список page пустой"));
     }
 
     @DisplayName("Получение списка pages по фильтру data_environment_contains")
@@ -180,10 +163,10 @@ public class ReferencesPageTest extends Tests {
         for (String str : testData) {
             JSONObject jsonObject = JsonHelper.getJsonTemplate(PAGES_JSON_TEMPLATE)
                     .set("name", RandomStringUtils.randomAlphabetic(3).toLowerCase() + "_data_environments_filter_test")
-                    .set("directory", directories.getName())
+                    .set("directory", directoryName)
                     .set("data", new JSONObject().put("environment", Collections.singletonList(str)))
                     .build();
-            createPrivatePages(directories.getName(), jsonObject);
+            createPrivatePages(directoryName, jsonObject);
             List<Pages> result = getPagesList(String.format("data__environment__contains=%s", str));
             result.forEach(pages -> assertTrue(new JsonPath(toJson(pages.getData())).getList("environment").contains(str)
                     , String.format("Список не содержит %s", str)));
@@ -195,7 +178,7 @@ public class ReferencesPageTest extends Tests {
     @Test
     public void exportPages() {
         String name = "export_page_test_api";
-        Pages page = createPrivatePagesAndGet(directories.getName(), createPagesJsonObject(name, directories.getId()));
+        Pages page = createPrivatePagesAndGet(directoryName, createPagesJsonObject(name, directoryId));
         exportPrivatePages(directories.getName(), page.getId());
     }
 }

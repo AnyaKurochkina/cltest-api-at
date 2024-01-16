@@ -24,7 +24,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Objects;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static steps.keyCloak.KeyCloakSteps.getNewUserToken;
@@ -43,7 +43,7 @@ public class ProductCatalogSteps {
     @Step("Импорт нескольких {entityName}")
     public static io.restassured.response.Response importObjects(String entityName, String pathName, String pathName2) {
         return given().log().all()
-                .baseUri(ProductCatalogURL)
+                .baseUri(productCatalogURL)
                 .config(RestAssured.config().sslConfig(Http.sslConfig))
                 .header("authorization", "bearer " + getNewUserToken(Role.PRODUCT_CATALOG_ADMIN))
                 .multiPart(new File(pathName))
@@ -60,7 +60,7 @@ public class ProductCatalogSteps {
 
     @Step("Экспорт нескольких {entityName} по Id")
     public static Response exportObjectsById(String entityName, JSONObject json) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(json)
                 .post("/api/v1/{}/objects_export/", entityName)
@@ -69,7 +69,7 @@ public class ProductCatalogSteps {
 
     @Step("Экспорт {entityName} по Id c tag_list")
     public static Response exportObjectByIdWithTags(String entityName, String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/{}/{}/obj_export/?as_file=true&with_tags=true", entityName, objectId)
                 .assertStatus(200);
@@ -77,7 +77,7 @@ public class ProductCatalogSteps {
 
     @Step("Импорт {entityName} продуктового каталога с tag_list")
     public static ImportObject importObjectWithTagList(String entityName, String pathName) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(StringUtils.format("/api/v1/{}/obj_import/?with_tags=true", entityName), "file", new File(pathName))
                 .jsonPath()
@@ -87,7 +87,7 @@ public class ProductCatalogSteps {
 
     @Step("Проверка item restrictions")
     public static Response checkItemRestrictions(JSONObject jsonObject) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post("/api/v1/check_item_restrictions/");
@@ -95,7 +95,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение списка audit для {entityName} с id {id}")
     public static List<ProductAudit> getObjectAuditList(String entityName, String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/{}/{}/audit/", entityName, id)
                 .assertStatus(200)
@@ -103,9 +103,19 @@ public class ProductCatalogSteps {
                 .getList("list", ProductAudit.class);
     }
 
+    @Step("Получение списка audit для {entityName} с id {id} и фитром {filter}")
+    public static List<ProductAudit> getObjectAuditListWithFilter(String entityName, String id, String filter) {
+        return new Http(productCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/{}/{}/audit/?{}", entityName, id, filter)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductAudit.class);
+    }
+
     @Step("Получение деталей audit {entityName} с audit_id {auditId}")
     public static Response getObjectAudit(String entityName, String auditId) {
-         return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/{}/audit_details/?audit_id={}", entityName, auditId)
                 .assertStatus(200);
@@ -113,7 +123,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение списка уникальных obj_keys для аудита {entityName}")
     public static void getUniqueObjectKeysListAudit(String entityName) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/{}/audit_object_keys/", entityName)
                 .assertStatus(200);
@@ -121,7 +131,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение списка аудита {entityName} для obj_keys")
     public static List<ProductAudit> getAuditListForObjKeys(String entityName, String keyValue) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
                 .post("/api/v1/{}/audit_by_object_keys/", entityName)
@@ -132,7 +142,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение версии продуктового каталога")
     public static Response getProductCatalogVersion() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/version/")
                 .assertStatus(200);
@@ -140,7 +150,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение статуса health")
     public static String getHealthStatusProductCatalog() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("/api/v1/health")
                 .assertStatus(200)
@@ -150,7 +160,7 @@ public class ProductCatalogSteps {
 
     @Step("Загрузка объекта в Gitlab")
     public Response dumpToBitbucket(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(resourcePath + id + "/dump_to_bitbucket/")
                 .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
@@ -159,7 +169,7 @@ public class ProductCatalogSteps {
 
     @Step("Выгрузка объекта из Gitlab")
     public Response loadFromBitbucket(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(resourcePath + "load_from_bitbucket/")
@@ -168,7 +178,7 @@ public class ProductCatalogSteps {
 
     @Step("Создание объекта продуктового каталога")
     public Response createProductObject(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(resourcePath);
@@ -176,14 +186,14 @@ public class ProductCatalogSteps {
 
     @Step("Получение объекта продуктового каталога по Id без токена")
     public void getByIdWithOutToken(String objectId) {
-        new Http(ProductCatalogURL).setWithoutToken()
+        new Http(productCatalogURL).setWithoutToken()
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(resourcePath + objectId + "/").assertStatus(401);
     }
 
     @Step("Копирование объекта продуктового каталога по Id без ключа")
     public void copyByIdWithOutToken(String objectId) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .setWithoutToken()
                 .post(resourcePath + objectId + "/copy/")
@@ -192,7 +202,7 @@ public class ProductCatalogSteps {
 
     @Step("Удаление объекта продуктового каталога по Id без токена")
     public void deleteObjectByIdWithOutToken(String id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setWithoutToken()
                 .delete(resourcePath + id + "/")
                 .assertStatus(401);
@@ -203,7 +213,7 @@ public class ProductCatalogSteps {
     public String getProductIdByTitleIgnoreCaseWithMultiSearchAndParameters(String title, String parameters) {
 //        String productNameWithEncode = title.replaceAll("Разработка", "%D0%A0%D0%B0%D0%B7%D1%80%D0%B0%D0%B1%D0%BE%D1%82%D0%BA%D0%B0");
         String productNameWithEncode = URLEncoder.encode(title, StandardCharsets.UTF_8.name());
-        return Objects.requireNonNull(new Http(ProductCatalogURL)
+        return Objects.requireNonNull(new Http(productCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get("{}?multisearch={}&{}", resourcePath, productNameWithEncode, parameters)
                 .assertStatus(200)
@@ -221,7 +231,7 @@ public class ProductCatalogSteps {
 
     @Step("Частичное обновление продукта")
     public Response partialUpdateObject(String id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(resourcePath + id + "/");
@@ -229,7 +239,7 @@ public class ProductCatalogSteps {
 
     @Step("Частичное обновление продукта без токена")
     public void partialUpdateObjectWithOutToken(String id, JSONObject object) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setWithoutToken()
                 .body(object)
                 .patch(resourcePath + id + "/")
@@ -237,13 +247,13 @@ public class ProductCatalogSteps {
     }
 
     public Response getDeleteObjectResponse(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(resourcePath + id + "/");
     }
 
     public JsonPath getJsonPath(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(resourcePath + id + "/")
                 .assertStatus(200).jsonPath();
@@ -251,14 +261,14 @@ public class ProductCatalogSteps {
 
     @Step("Получение объекта продуктового каталога по имени с публичным токеном")
     public Response getObjectByNameWithPublicToken(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .get(resourcePath + "?name=" + name);
     }
 
     @Step("Создание объекта продуктового каталога с публичным токеном")
     public Response createProductObjectWithPublicToken(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .body(body)
                 .post(resourcePath);
@@ -266,7 +276,7 @@ public class ProductCatalogSteps {
 
     @Step("Обновление объекта продуктового каталога с публичным токеном")
     public Response partialUpdateObjectWithPublicToken(String id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .body(object)
                 .patch(resourcePath + id + "/");
@@ -274,14 +284,14 @@ public class ProductCatalogSteps {
 
     @Step("Удаление объекта продуктового каталога с публичным токеном")
     public Response deleteObjectWithPublicToken(String id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .delete(resourcePath + id + "/");
     }
 
     @Step("Обновление всего объекта продуктового каталога по Id с публичным токеном")
     public Response putObjectByIdWithPublicToken(String objectId, JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_VIEWER)
                 .body(body)
                 .put(resourcePath + objectId + "/");
@@ -315,7 +325,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение списка доступных категорий по id проекта")
     public List<String> getAvailableCategoriesByContextProject(String projectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/projects/{}/products/categories/", projectId)
                 .assertStatus(200)
@@ -324,7 +334,7 @@ public class ProductCatalogSteps {
 
     @Step("Получение доступных категорий")
     public List<String> getAvailableCategories() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/products/categories/")
                 .assertStatus(200)

@@ -1,10 +1,13 @@
 package api.cloud.productCatalog.productCard;
 
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.SneakyThrows;
+import models.cloud.productCatalog.ErrorMessage;
+import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
@@ -25,6 +28,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import static core.helper.StringUtils.convertStringVersionToIntArrayVersion;
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
@@ -48,7 +53,6 @@ public class ProductCardsTest {
                 .name("create_product_card_with_out_test_api")
                 .title("create_product_card_with_out_test_api")
                 .description("test_api")
-                .number(1)
                 .cardItems(Collections.emptyList())
                 .build()
                 .createObject();
@@ -79,7 +83,6 @@ public class ProductCardsTest {
                 .name("create_product_card_with_card_items_test_api")
                 .title("create_product_card_with_card_items_title_test_api")
                 .description("test_api")
-                .number(1)
                 .cardItems(cardItemsList)
                 .build()
                 .createObject();
@@ -128,7 +131,7 @@ public class ProductCardsTest {
         assertEquals(productCard.getName() + "-clone", copiedProductCard.getName());
     }
 
-    @DisplayName("Применение продуктовой карты")
+    @DisplayName("Применение продуктовой карты.")
     @Test
     @TmsLink("SOUL-7693")
     public void applyProductCardTest() {
@@ -167,7 +170,6 @@ public class ProductCardsTest {
                 .name("apply_product_card_test_api")
                 .title("apply_product_card_title_test_api")
                 .description("test_api")
-                .number(1)
                 .cardItems(cardItemsList)
                 .build()
                 .createObject();
@@ -183,6 +185,102 @@ public class ProductCardsTest {
         deleteProductByName(product.getName());
         deleteActionByName(action.getName());
     }
+
+    @DisplayName("Применение продуктовой карты объектов версии которых не совпадают.")
+    @Test
+    @TmsLink("SOUL-8693")
+    public void applyProductCardObjectVersionsNotEqualsTest() {
+        String actionName = "action_for_apply_card_items_not_equals_objects_test_api";
+        String actionVersion = "1.0.2";
+        try {
+            Graph graphForAction = createGraph();
+            JSONObject actionJson = Action.builder()
+                    .name(actionName)
+                    .graphId(graphForAction.getGraphId())
+                    .version(actionVersion)
+                    .build()
+                    .init()
+                    .toJson();
+            Action action = createAction(actionJson).assertStatus(201).extractAs(Action.class);
+            CardItems actionCard = CardItems.builder().objType("Action")
+                    .objId(action.getActionId())
+                    .versionArr(convertStringVersionToIntArrayVersion(actionVersion))
+                    .build();
+
+            ProductCard productCard = ProductCard.builder()
+                    .name("apply_product_card_test_api")
+                    .title("apply_product_card_title_test_api")
+                    .description("test_api")
+                    .cardItems(Collections.singletonList(actionCard))
+                    .build()
+                    .createObject();
+            partialUpdateAction(action.getActionId(), new JSONObject().put("type", "on"));
+
+            ImportObject object = applyProductCard(productCard.getId()).jsonPath().getList("imported_objects", ImportObject.class)
+                    .stream()
+                    .findFirst()
+                    .orElseThrow(() -> new AssertionError("Список Imported objects пустой."));
+            assertAll(
+                    () -> assertEquals(actionName, object.getObjectName(), "Имя объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
+                    () -> assertEquals(action.getActionId(), object.getObjectId(), "Id объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
+                    () -> assertEquals(format("Error loading dump: Версия \"{}\" Action:{} уже существует, но с другим наполнением. Измените значение версии (\"version_arr: {}\") у импортируемого объекта и попробуйте снова.", actionVersion, actionName, convertStringVersionToIntArrayVersion(actionVersion))
+                            , object.getMessages().get(0))
+            );
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            deleteActionByName(actionName);
+        }
+    }
+
+    @DisplayName("Добавление в карту продукта версионный объект, который уже есть в карте, но с другой версией.")
+    @Test
+    @TmsLink("SOUL-8690")
+    public void addAlreadyExistObjectToProductCardWithOtherVersionTest() {
+        String productName = StringUtils.getRandomStringApi(7);
+        try {
+            List<CardItems> cardItemsList = new ArrayList<>();
+            Graph graphForProduct = createGraph();
+            JSONObject productJson = Product.builder()
+                    .name(productName)
+                    .graphId(graphForProduct.getGraphId())
+                    .version("2.0.0")
+                    .build()
+                    .init()
+                    .toJson();
+            Product product = createProduct(productJson);
+            CardItems productCardItem = CardItems.builder().objType("Product")
+                    .objId(product.getProductId())
+                    .versionArr(Arrays.asList(2, 0, 0))
+                    .build();
+
+            partialUpdateProduct(product.getProductId(), new JSONObject().put("max_count", 9));
+            CardItems productCardItem2 = CardItems.builder().objType("Product")
+                    .objId(product.getProductId())
+                    .versionArr(Arrays.asList(2, 0, 1))
+                    .build();
+
+            cardItemsList.add(productCardItem);
+            cardItemsList.add(productCardItem2);
+
+            JSONObject json = ProductCard.builder()
+                    .name("apply_product_card_test_api")
+                    .title("apply_product_card_title_test_api")
+                    .description("test_api")
+                    .cardItems(cardItemsList)
+                    .build()
+                    .init()
+                    .toJson();
+            String errorMessage = uncheckedCreateProductCard(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
+            assertEquals("There are no unique elements in card_items", errorMessage, "Сообщение об ошибке при создании " +
+                    "product card с не уникальными элементами не соответсвует формату");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            deleteProductByName(productName);
+        }
+    }
+
 
     @DisplayName("Обновление продуктовой карты")
     @Test

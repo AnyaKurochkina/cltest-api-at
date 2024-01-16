@@ -36,4 +36,7 @@ public class ActionStateService {
     private String orderId;
 
     private String status;
+
+    @JsonProperty("execution_log")
+    private Object executionLog;
 }

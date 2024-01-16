@@ -4,7 +4,6 @@ import api.Tests;
 import core.enums.Role;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
-import models.cloud.orderService.products.Redis;
 import models.cloud.orderService.products.RedisSentinel;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,7 +11,6 @@ import ru.testit.annotations.Title;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.NewOrderPage;
-import ui.cloud.pages.orders.RedisAstraOrderPage;
 import ui.cloud.pages.orders.RedisSentinelAstraOrderPage;
 import ui.extesions.ConfigExtension;
 import ui.extesions.ProductInjector;
@@ -26,12 +24,12 @@ import static ui.cloud.pages.orders.RedisAstraOrderPage.userNameRedisSentinel;
 @Tags({@Tag("ui_redis_sentinel_astra")})
 class UiRedisSentinelAstraCheckUntilOrderTest extends Tests {
 
-    RedisSentinel product;
+   private RedisSentinel product;
     // =Redis.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/db/orders/eb4e1177-30c7-4bdc-94e0-a5d65d5de1ae/main?context=proj-1oob0zjo5h&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         product.setProductName("Redis Sentinel Astra (Redis с репликацией)");
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);

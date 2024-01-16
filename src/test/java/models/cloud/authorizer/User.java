@@ -10,7 +10,10 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import steps.authorizer.AuthorizerSteps;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Builder
 @Data
@@ -40,7 +43,7 @@ public class User extends Entity {
 
     @Override
     protected void create() {
-        new Http(Configure.IamURL)
+        new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post("/v1/projects/{}/policy/add-members", projectName)
@@ -75,7 +78,7 @@ public class User extends Entity {
 
     @Override
     protected void delete() {
-        new Http(Configure.IamURL)
+        new Http(Configure.iamURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .body(toJson())
                 .post("/v1/projects/{}/policy/remove-members", projectName)

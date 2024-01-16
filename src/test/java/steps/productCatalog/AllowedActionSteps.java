@@ -14,7 +14,7 @@ import steps.Steps;
 import java.io.File;
 import java.util.List;
 
-import static core.helper.Configure.ProductCatalogURL;
+import static core.helper.Configure.productCatalogURL;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.isTypeProviderContains;
@@ -24,7 +24,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Проверка существования разрешенного действия по имени {name}")
     public static boolean isAllowedActionExists(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl + "exists/?name=" + name)
                 .assertStatus(200).jsonPath().get("exists");
@@ -32,7 +32,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Получение разрешенного действия по имени {name}")
     public static AllowedAction getAllowedActionByName(String name) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl + "?name={}", name)
                 .assertStatus(200)
@@ -42,7 +42,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Получение разрешенного действия по фильтру {filter}")
     public static AllowedAction getAllowedActionByFilter(Integer id, String filter) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl + "{}/?{}", id, filter)
                 .assertStatus(200)
@@ -51,7 +51,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Получение разрешенного действия по id {id}")
     public static AllowedAction getAllowedActionById(Integer id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl + "{}/", id)
                 .assertStatus(200)
@@ -60,7 +60,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Копирование разрешенного действия по id {id}")
     public static AllowedAction copyAllowedActionById(Integer id, JSONObject jsonObject) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post(allowedUrl + "{}/copy/", id)
@@ -70,7 +70,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Удаление разрешенного действия по id {id}")
     public static void deleteAllowedActionById(Integer id) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(allowedUrl + "{}/", id)
                 .assertStatus(204);
@@ -79,7 +79,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Удаление разрешенного действия по name {name}")
     public static void deleteAllowedActionByName(String name) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .delete(allowedUrl + "{}/", getAllowedActionByName(name).getId())
                 .assertStatus(204);
@@ -88,7 +88,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Создание разрешенного действия")
     public static Response createAllowedAction(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(allowedUrl);
@@ -105,7 +105,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Получение списка разрешенных действий")
     public static List<AllowedAction> getAllowedActionList() {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl)
                 .assertStatus(200)
@@ -116,7 +116,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Проверка доступности у allowedAction event_type {} и event_provider {}")
     public static void checkAllowedActionEvents(Integer actionId, String eventType, String eventProvider) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl + "check_action/?action={}&event_type={}&event_provider={}", actionId, eventType, eventProvider)
                 .assertStatus(200);
@@ -124,7 +124,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Частичное обновление разрешенного действия")
     public static AllowedAction partialUpdateAllowedAction(Integer id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch(allowedUrl + id + "/")
@@ -134,7 +134,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Обновление разрешенного действия")
     public static AllowedAction updateAllowedAction(Integer id, JSONObject object) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .put(allowedUrl + id + "/")
@@ -144,7 +144,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Загрузка разрешенного действия в Gitlab")
     public static Response dumpAllowedActionToGit(Integer id) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(allowedUrl + id + "/dump_to_bitbucket/")
                 .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
@@ -153,7 +153,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Выгрузка разрешенного действия из Gitlab")
     public static void loadAllowedActionFromGit(JSONObject body) {
-        new Http(ProductCatalogURL)
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .post(allowedUrl + "load_from_bitbucket/")
@@ -162,7 +162,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Получение списка действий по списку type_provider")
     public static List<AllowedAction> getAllowedActionListByTypeProvider(JSONObject body) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(body)
                 .get(allowedUrl)
@@ -173,7 +173,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Импорт разрешенного действия")
     public static ImportObject importAllowedAction(String pathName) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .multiPart(allowedUrl + "obj_import/", "file", new File(pathName))
                 .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
@@ -184,7 +184,7 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Экспорт разрешенного действия по Id")
     public static Response exportAllowedActionById(String objectId) {
-        return new Http(ProductCatalogURL)
+        return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(allowedUrl + objectId + "/obj_export/?as_file=true")
                 .assertStatus(200);

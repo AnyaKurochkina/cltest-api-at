@@ -19,7 +19,7 @@ import static core.helper.StringUtils.$$x;
  * находит в ней элемент соответствующий тексту label и делает по нему клик
  **/
 public class Breadcrumb implements TypifiedElement {
-    private final ElementsCollection breadcrumbItems = $$x("//a[contains(@class, 'BreadcrumbLabel')]");
+    private final ElementsCollection breadcrumbItems = $$x("//*[@role = 'link' or contains(@class, 'BreadcrumbLabel')]");
 
     public static void click(String label) {
         Button.byElement(new Breadcrumb().getItem(label)).click();

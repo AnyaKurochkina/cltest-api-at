@@ -7,7 +7,8 @@ import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.GitLab;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import ui.cloud.pages.*;
+import ui.cloud.pages.CloudLoginPage;
+import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.orders.GitlabOrderPage;
 import ui.cloud.pages.orders.GitlabPage;
 import ui.cloud.pages.orders.OrdersPage;
@@ -18,11 +19,11 @@ import java.time.Duration;
 @Tags({@Tag("ui_gitlab")})
 @Log4j2
 public class UiGitlabTest extends UiProductTest {
-    GitLab product;
+    private GitLab product;
 
     @BeforeEach
     @Title("Авторизация на портале")
-    void beforeEach() {
+    public void beforeEach() {
         new CloudLoginPage(product.getProjectId())
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }

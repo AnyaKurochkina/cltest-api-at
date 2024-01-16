@@ -25,7 +25,7 @@ public class ForbiddenActionsListTest extends ForbiddenActionBaseTest {
         new ControlPanelIndexPage()
                 .goToForbiddenActionsListPage();
         assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Тип", "Провайдер", "Описание", "", "");
+                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Тип", "Провайдер", "Описание", "", "");
         ForbiddenActionsListPage page = new ForbiddenActionsListPage();
         page.checkSorting().checkPagination();
     }

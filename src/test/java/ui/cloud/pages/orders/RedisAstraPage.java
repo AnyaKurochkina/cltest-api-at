@@ -17,7 +17,7 @@ import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
 import static ui.elements.TypifiedElement.scrollCenter;
 
-public class RedisAstraPage extends IProductPage {
+public class RedisAstraPage extends AbstractAstraPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
     private static final String BLOCK_DB = "Базы данных";
@@ -34,15 +34,19 @@ public class RedisAstraPage extends IProductPage {
     private static final String HEADER_COMMENTS = "Комментарий";
 
 
+    private final SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
+    private final SelenideElement btnUsers = $x("//button[.='Пользователи']");
+    private final SelenideElement cpu = $x("(//h5)[1]");
+    private final SelenideElement ram = $x("(//h5)[2]");
+    private final SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
+    private final SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
+    private final SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
 
-    SelenideElement btnDb = $x("//button[.='БД и Владельцы']");
-    SelenideElement btnUsers = $x("//button[.='Пользователи']");
-    SelenideElement cpu = $x("(//h5)[1]");
-    SelenideElement ram = $x("(//h5)[2]");
-    SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
-    SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
-    SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
 
+    @Override
+    public String getVirtualTableName() {
+        return BLOCK_VM;
+    }
 
     public RedisAstraPage(Redis product) {
         super(product);
@@ -72,30 +76,23 @@ public class RedisAstraPage extends IProductPage {
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию", ActionParameters.builder().node(new Table("Роли узла").getRowByIndex(0)).build());
     }
 
-    public void resetPassword(String name) {
-        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль (удалить)", "Подтвердить", () ->
+    public void resetPassword(String name, String nameAction) {
+        runActionWithParameters(getActionsMenuButton(name, 2), "Сбросить пароль (удалить)", "Подтвердить", () ->
         {
-            Dialog dlgActions = Dialog.byTitle("Сбросить пароль (удалить)");
-            generatePassButton.shouldBe(Condition.enabled).click();
-            Alert.green("Значение скопировано");
-        });
-    }
-    public void resetPasswordUser(String name) {
-        runActionWithParameters(getActionsMenuButton(name,2), "Сбросить пароль пользователя", "Подтвердить", () ->
-        {
-            Dialog dlgActions = Dialog.byTitle("Сбросить пароль пользователя");
+            Dialog dlgActions = Dialog.byTitle(nameAction);
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");
         });
     }
 
-    public void deleteUser(String name){
-        runActionWithParameters(getActionsMenuButton(name,2), "Удалить пользователя", "Подтвердить", () -> {
+    public void deleteUser(String name) {
+        runActionWithParameters(getActionsMenuButton(name, 2), "Удалить пользователя", "Подтвердить", () -> {
         });
         btnGeneralInfo.click();
-        Assertions.assertFalse(getActionsMenuButton(name,2).exists(), "Ошибка удаления пользователя БД");
+        Assertions.assertFalse(getActionsMenuButton(name, 2).exists(), "Ошибка удаления пользователя БД");
     }
-    public void createUser (String nameUser){
+
+    public void createUser(String nameUser) {
         runActionWithParameters(BLOCK_DB_USERS, "Создать пользователя", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Создать пользователя");
             dlg.setInputValue("Пользователь", nameUser);
@@ -105,6 +102,7 @@ public class RedisAstraPage extends IProductPage {
         btnGeneralInfo.click();
         Assertions.assertTrue(getActionsMenuButton(nameUser).exists(), "Пользователь не существует");
     }
+
     public void delete() {
         runActionWithParameters(BLOCK_APP, "Удалить рекурсивно", "Удалить", () ->
         {
@@ -113,9 +111,10 @@ public class RedisAstraPage extends IProductPage {
         });
         new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
     }
+
     public void updateOs() {
         runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
-        new RedisAstraPage.VirtualMachineTable("Статус").checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_DELETED);
+        new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     public void restart() {
@@ -170,6 +169,7 @@ public class RedisAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
+
     public void changeConfigurationSentinel() {
         new RedisAstraPage.VirtualMachineTable().checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         getRoleNode().scrollIntoView(scrollCenter).click();
@@ -183,8 +183,8 @@ public class RedisAstraPage extends IProductPage {
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
-    public  void changeParamNotify(String param)
-    {
+
+    public void changeParamNotify(String param) {
         new RedisAstraPage.VirtualMachineTable(STATUS).checkPowerStatus(RedisAstraPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
             Select.byLabel("Параметр notify-keyspace-events").set(param);

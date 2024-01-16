@@ -33,9 +33,9 @@ public class MonitoringOsPage {
         }
     };
     private final SelenideElement noData = $x("//*[.='Нет данных для графика']");
-    SelenideElement btnResetFilter = $x("//button[.='Сбросить фильтры']");
-    Select period = Select.byLabel("Период");
-    SelenideElement btnApply = $x("//button[.='Применить']");
+    private final SelenideElement btnResetFilter = $x("//button[.='Сбросить фильтры']");
+    private final Select period = Select.byLabel("Период");
+    private final SelenideElement btnApply = $x("//button[.='Применить']");
 
     public MonitoringOsPage(IProduct product) {
         if (product instanceof Windows)

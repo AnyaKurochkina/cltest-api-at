@@ -14,4 +14,6 @@ public class Column {
     public static final String DIRECTION = "Направление связи";
     public static final String MAC = "MAC-адрес";
     public static final String NETWORK = "Сеть";
+    public static final String AVAILABILITY_ZONE = "Зона доступности";
+    public static final String OBJECT_NAME = "Имя объекта";
 }

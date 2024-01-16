@@ -10,4 +10,5 @@ public class Vdc {
     private String cpu;
     private String ram;
     private StorageProfile storageProfile;
+    private String rootRouterBandwidth;
 }

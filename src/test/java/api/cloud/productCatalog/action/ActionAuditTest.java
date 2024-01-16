@@ -1,10 +1,12 @@
 package api.cloud.productCatalog.action;
 
 import api.Tests;
+import core.enums.Role;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import models.cloud.keyCloak.UserInfo;
 import models.cloud.productCatalog.ProductAudit;
 import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -16,8 +18,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.keyCloak.KeyCloakSteps.getUserInfo;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.ProductCatalogSteps.*;
 
@@ -79,5 +83,48 @@ public class ActionAuditTest extends Tests {
         List<ProductAudit> auditListForObjKeys = getAuditListForObjKeys(ENTITY_TYPE, testAction.getName());
         auditListForObjKeys.forEach(x -> assertEquals(x.getObjKeys().get("name"), testAction.getName()));
         deleteActionByName(testAction.getName());
+    }
+
+    @DisplayName("Получение информации о пользователе в списке Аудита.")
+    @TmsLink("SOUL-8457")
+    @Test
+    public void getAuditUserInfoWhoDidChangesTest() {
+        Action action = createAction();
+        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
+        UserInfo userInfo = getUserInfo(Role.PRODUCT_CATALOG_ADMIN);
+        ProductAudit productAudit = objectAuditList.get(0);
+        assertEquals(userInfo.getEmail(), productAudit.getUserEmail());
+        assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName());
+        assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName());
+    }
+
+    @DisplayName("Получение списка audit по фильтру user__icontains")
+    @TmsLink("SOUL-8458")
+    @Test
+    public void getObjectAuditWithFilterByUserEmailTest() {
+        String name = RandomStringUtils.randomAlphabetic(6).toLowerCase();
+        Action action = createAction();
+
+        partialUpdateActionWithAnotherRole(action.getActionId(), new JSONObject().put("name", name), Role.CLOUD_ADMIN);
+        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
+        assertEquals(2, objectAuditList.size());
+
+        UserInfo userProductCatalogAdmin = getUserInfo(Role.PRODUCT_CATALOG_ADMIN);
+        UserInfo userCloudAdmin = getUserInfo(Role.CLOUD_ADMIN);
+
+        List<ProductAudit> objectAuditListWithFilteredByFirstName = getObjectAuditListWithFilter(ENTITY_TYPE, action.getActionId(), format("user__icontains={}", userProductCatalogAdmin.getGivenName()));
+        assertEquals(1, objectAuditListWithFilteredByFirstName.size());
+        ProductAudit productAudit = objectAuditListWithFilteredByFirstName.get(0);
+        assertEquals(productAudit.getUserFirstName(), userProductCatalogAdmin.getGivenName());
+
+        List<ProductAudit> objectAuditListWithFilteredByEmail = getObjectAuditListWithFilter(ENTITY_TYPE, action.getActionId(), format("user__icontains={}", userCloudAdmin.getEmail()));
+        assertEquals(1, objectAuditListWithFilteredByEmail.size());
+        ProductAudit productAuditEmail = objectAuditListWithFilteredByEmail.get(0);
+        assertEquals(productAuditEmail.getUserEmail(), userCloudAdmin.getEmail());
+
+        List<ProductAudit> objectAuditListWithFilteredByLastName = getObjectAuditListWithFilter(ENTITY_TYPE, action.getActionId(), format("user__icontains={}", userCloudAdmin.getFamilyName()));
+        assertEquals(1, objectAuditListWithFilteredByLastName.size());
+        ProductAudit productAuditLastName = objectAuditListWithFilteredByLastName.get(0);
+        assertEquals(productAuditLastName.getUserLastName(), userCloudAdmin.getFamilyName());
     }
 }

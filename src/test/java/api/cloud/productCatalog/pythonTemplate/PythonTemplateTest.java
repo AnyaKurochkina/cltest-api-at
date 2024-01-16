@@ -43,7 +43,7 @@ public class PythonTemplateTest extends Tests {
     @TmsLink("SOUL-7706")
     @Test
     public void checkPythonTemplateExists() {
-        String name = "create_python_template_api_test";
+        String name = "is_python_template_exist_api_test";
         PythonTemplate pythonTemplate = createPythonTemplateByName(name);
         assertTrue(isPythonTemplateExists(name), "Python_template не существует");
         pythonTemplate.deleteObject();
@@ -111,6 +111,7 @@ public class PythonTemplateTest extends Tests {
         JSONObject json = PythonTemplate.builder()
                 .name(name)
                 .build()
+                .init()
                 .toJson();
         PythonTemplate pythonTemplate = createPythonTemplate(json);
         deletePythonTemplate(pythonTemplate.getId());
