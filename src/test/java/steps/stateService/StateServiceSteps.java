@@ -338,7 +338,7 @@ public class StateServiceSteps extends Steps {
                 .withServiceToken()
                 .body(new JSONObject().put("order_id", orderId))
                 .post("/api/v1/projects/{}/items/order_items_publication/", projectId)
-                .assertStatus(201);
+                .assertStatus(200);
     }
 
     @Step("Получение последней ошибки в проекте по контексту")
@@ -358,7 +358,6 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200)
                 .extractAs(GetItemList.class)
                 .getList();
-//        JSONObject jsonObject = new JSONObject();
         List<ShortItem> listOrders = new ArrayList<>();
         list.forEach(item -> {
             ShortItem itemData = new ShortItem();
