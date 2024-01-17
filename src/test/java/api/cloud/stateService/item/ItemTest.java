@@ -153,4 +153,12 @@ public class ItemTest extends Tests {
         Item itemById = getItemById(item.getItemId());
         assertEquals(status, itemById.getData().get("state"), "Items state не соответствует ожидаемому");
     }
+
+    @DisplayName("Отправка на тарификацию все айтемы ордера")
+    @TmsLink("SOUL-")
+    @Test
+    public void orderItemsPublicationTest() {
+        Item item = createItem(project);
+        orderItemsPublication(project.getId(), item.getOrderId());
+    }
 }

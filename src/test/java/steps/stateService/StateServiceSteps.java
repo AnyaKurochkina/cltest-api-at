@@ -332,6 +332,15 @@ public class StateServiceSteps extends Steps {
                 .assertStatus(200);
     }
 
+    @Step("Отправка на тарификацию всех items ордера")
+    public static Response orderItemsPublication(String projectId, String orderId) {
+        return new Http(stateServiceURL)
+                .withServiceToken()
+                .body(new JSONObject().put("order_id", orderId))
+                .post("/api/v1/projects/{}/items/order_items_publication/", projectId)
+                .assertStatus(201);
+    }
+
     @Step("Получение последней ошибки в проекте по контексту")
     public static String getLastErrorByProjectId(String projectId) {
         return new Http(stateServiceURL)
