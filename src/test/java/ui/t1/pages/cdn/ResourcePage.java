@@ -1,31 +1,47 @@
 package ui.t1.pages.cdn;
 
 import com.codeborne.selenide.Condition;
-import models.t1.cdn.Resource;
+import com.codeborne.selenide.Selenide;
+import io.qameta.allure.Step;
+import ui.elements.Alert;
 import ui.elements.Button;
 import ui.elements.Dialog;
+import ui.elements.Table;
 
-import static core.helper.StringUtils.*;
+import java.util.List;
+import java.util.stream.IntStream;
+
+import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.format;
 
 public class ResourcePage {
 
-    Button editButton = Button.byText("Редактировать");
+    private final Button editButton = Button.byText("Редактировать");
+    private final Button saveButton = Button.byText("Сохранить");
+    private final Table contentTable = new Table(Selenide.$x("//span[text()='Контент']/following-sibling::div/div/table"));
+    private final Dialog editDialog = Dialog.byTitle("Редактировать ресурс");
 
     public ResourcePage(String resourceName) {
         $x("//span[text() = '{}']", resourceName).shouldBe(Condition.visible);
     }
 
-    public void editResource(Resource resource) {
+    @Step("Редактирование доменных имен ресурса")
+    public ResourcePage editResourceHostNames(List<String> hostnames) {
         editButton.click();
-        Dialog editDialog = Dialog.byTitle("Редактировать ресурс");
-        int hostNameSize = resource.getHostnames().size();
-        int size = $$x("//label[text() = 'Доменное имя']").size();
-        int difference = hostNameSize - size;
-        if (difference > 0) {
-            for (int i = size; i < hostNameSize; i++) {
-                editDialog.clickButton("Добавить");
-                editDialog.setInputByName(format("hostnames-{}", i), resource.getHostnames().get(i));
-            }
-        }
+        int hostNameSize = hostnames.size();
+        IntStream.range(0, hostNameSize).forEach(i -> {
+            editDialog.clickButton("Добавить");
+            editDialog.setInputByName(format("hostnames-{}", i + 1), hostnames.get(i));
+        });
+        saveButton.click();
+        Alert.green("Ресурс изменён");
+        return this;
+    }
+
+    @Step("[Проверка] Колонка 'Дополнительные доменные имена' содержит доменные имена: {0}")
+    public ResourcePage checkDomainsColumnHasNames(List<String> domainName) {
+        domainName.forEach(domain -> contentTable.getRowByColumnIndex(0, "Дополнительные доменные имена")
+                .asserts().checkLastValueOfRowContains(domain));
+        return this;
     }
 }

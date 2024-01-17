@@ -34,7 +34,8 @@ public class Table implements TypifiedElement {
     @Language("XPath")
     private final String xpath;
 
-    protected void open() {}
+    protected void open() {
+    }
 
     public Table(String columnName) {
         open();
@@ -44,7 +45,7 @@ public class Table implements TypifiedElement {
 
     public Table(String columnName, int index) {
         open();
-        xpath = format( "(" + tableXpath + ")" + TypifiedElement.postfix, columnName, columnName, TypifiedElement.getIndex(index));
+        xpath = format("(" + tableXpath + ")" + TypifiedElement.postfix, columnName, columnName, TypifiedElement.getIndex(index));
         init($x(xpath).shouldBe(Condition.visible));
     }
 
@@ -220,6 +221,20 @@ public class Table implements TypifiedElement {
                 throw new NotFoundException("Нет колонки с индексом " + column);
             }
             return element;
+        }
+
+        public Asserts asserts() {
+            return new Asserts();
+        }
+
+        public class Asserts {
+            @Step("[Проверка] Последнее значение в строке содержит значение: {0}")
+            public void checkLastValueOfRowContains(String value) {
+                String errorMessage;
+                String lastValue = getElementLastColumn().getText();
+                errorMessage = String.format("Последнее значение в строке: %s, должно содержать значение: %s", lastValue, value);
+                Assertions.assertTrue(lastValue.contains(value), errorMessage);
+            }
         }
     }
 

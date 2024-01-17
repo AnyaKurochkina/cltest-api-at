@@ -33,11 +33,11 @@ public class CdnPage {
     }
 
     @Step("Удаление ресурса CDN")
-    public boolean deleteResource(String resourceName) {
+    public CdnPage deleteResource(String resourceName) {
         resourcesTab.switchTo();
         deleteEntity(resourceName);
         Dialog.byTitle("Удаление ресурса CDN").clickButton("Удалить");
-        return isEntityExist(resourceName);
+        return this;
     }
 
     @Step("Создание группы источника CDN")
@@ -59,45 +59,44 @@ public class CdnPage {
         Dialog.byTitle("Удаление группы источников").clickButton("Удалить");
         Alert.green("Группа источников успешно удалена");
         Waiting.sleep(1000);
-        return new ResourcesTable().isColumnValueContains("Название", name);
+        return new DataTable("Источники").isColumnValueContains("Название", name);
     }
 
     @Step("Проверка существования ресурса")
-    public boolean isEntityExist(String name) {
-        Waiting.sleep(2000);
-        return new ResourcesTable().isColumnValueEquals("Название", name);
+    public CdnPage checkCdnResourceExistByName(String resourceName) {
+        new DataTable("Источники").asserts().checkColumnContainsValue("Название", resourceName);
+        return this;
+    }
+
+    @Step("Проверка отсутствия ресурса")
+    public CdnPage checkThatCdnResourceDoesNotExist(String resourceName) {
+        new DataTable("Источники").asserts().checkColumnNotContainsValue("Название", resourceName);
+        return this;
     }
 
     @Step("Ожидание смены статуса ресурсной записи на Активный")
-    public void waitChangeStatus(String resourceName) {
-        Waiting.findWithRefresh(() -> !new ResourcesTable().getRowByColumnValue("Название", resourceName)
+    public CdnPage waitChangeStatus(String resourceName) {
+        Waiting.findWithRefresh(() -> !new DataTable("Источники").getRowByColumnValue("Название", resourceName)
                 .getValueByColumn("Статус")
                 .equals("Разворачивается"), Duration.ofMinutes(15));
-        String status = new ResourcesTable().getRowByColumnValue("Название", resourceName)
+        String status = new DataTable("Источники").getRowByColumnValue("Название", resourceName)
                 .getValueByColumn("Статус");
         assertEquals("Активный", status);
+        return this;
     }
 
     @Step("Переход на страницу ресурса с именем {resourceName}")
     public ResourcePage goToResourcePage(String resourceName) {
-        new ResourcesTable().getRowByColumnValue("Название", resourceName).getElementByColumnIndex(5).click();
+        new DataTable("Источники").getRowByColumnValue("Название", resourceName).getElementByColumnIndex(5).click();
         return new ResourcePage(resourceName);
     }
 
     private void deleteEntity(String name) {
-        ResourcesTable table = new ResourcesTable();
+        DataTable table = new DataTable("Источники");
         Menu.byElement(table.searchAllPages(t -> table.isColumnValueContains("Название", name))
                         .getRowByColumnValueContains("Название", name)
                         .get()
                         .$x(".//button[@id = 'actions-menu-button']"))
                 .select("Удалить");
     }
-
-    public static class ResourcesTable extends DataTable {
-
-        public ResourcesTable() {
-            super("Источники");
-        }
-    }
-
 }
