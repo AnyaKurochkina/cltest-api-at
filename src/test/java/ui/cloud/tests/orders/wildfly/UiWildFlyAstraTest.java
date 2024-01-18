@@ -28,8 +28,9 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("ui_wildfly_astra")})
 public class UiWildFlyAstraTest extends UiProductTest {
     private final String versionWildFly = "23.0.2.Final";
-    private final String versionJava = "11";
-    private WildFly product; // = WildFly.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://ift2-portal-front.oslb-dev01.corp.dev.vtb/all/orders/e8b85b2a-ae30-486f-8f65-a3a55534c22e/main?context=proj-gxsz4e3shy&type=project&org=vtb");
+    private final String versionJava = "8";
+    private final String newVersionJava = "11";
+    private WildFly product;// = WildFly.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/eec5608c-3e7e-4262-b6fe-8947cb2ffd4c/main?context=proj-iv550odo9a&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -108,7 +109,6 @@ public class UiWildFlyAstraTest extends UiProductTest {
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateGlobal);
         wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, wildFlyPage::updateCertificateF5);
     }
-
 
     @Test
     @Order(5)
@@ -213,7 +213,7 @@ public class UiWildFlyAstraTest extends UiProductTest {
     @DisplayName("UI WildFlyAstra. Заменить Java Wildfly")
     void changeJavaWildFly() {
         WildFlyAstraPage wildFlyPage = new WildFlyAstraPage(product);
-        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly, versionJava));
+        wildFlyPage.runActionWithCheckCost(CompareType.EQUALS, () -> wildFlyPage.changeJavaWildFly(versionWildFly, newVersionJava));
     }
 
     @Test

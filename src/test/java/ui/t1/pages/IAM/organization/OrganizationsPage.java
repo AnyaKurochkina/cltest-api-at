@@ -34,8 +34,7 @@ public class OrganizationsPage {
     @Step("Удаление организации")
     public OrganizationsPage deleteOrganization(Organization org) {
         String orgName = org.getName();
-        OrganizationTable table = new OrganizationTable();
-        Menu.byElement(table.searchAllPages(t -> table.isColumnValueEquals(OrganizationTable.COLUMN_NAME, orgName))
+        Menu.byElement(new OrganizationTable().searchAllPages(t -> new OrganizationTable().isColumnValueEquals(OrganizationTable.COLUMN_NAME, orgName))
                         .getRowByColumnValue(OrganizationTable.COLUMN_NAME, orgName)
                         .getElementByColumnIndex(4)
                         .$("button"))

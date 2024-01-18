@@ -2,12 +2,13 @@ package ui.t1.pages.productCatalog.image;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.t1.imageService.ImageGroup;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
+import ui.cloud.pages.productCatalog.EntityListPage;
 import ui.elements.*;
 
 import java.util.Arrays;
@@ -119,6 +120,7 @@ public class ImageGroupsListPage extends EntityListPage {
     @Step("Проверка аттрибутов группы '{imageGroup.name}'")
     public ImageGroupsListPage checkAttributes(ImageGroup imageGroup) {
         openEditDialog(imageGroup);
+        Waiting.sleep(1000);
         Assertions.assertEquals(imageGroup.getName(), nameInput.getValue());
         Assertions.assertEquals(imageGroup.getTitle(), titleInput.getValue());
         Assertions.assertEquals(imageGroup.getDistro(), distroInput.getValue());
