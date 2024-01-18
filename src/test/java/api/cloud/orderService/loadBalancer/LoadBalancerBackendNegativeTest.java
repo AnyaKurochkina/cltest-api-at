@@ -20,8 +20,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 import java.util.Collections;
 import java.util.List;
 
-import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversHttp;
-
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
@@ -32,7 +30,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Backend. Невалидный mode {0}")
     void notValidBackendMode(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).mode("not_valid").backendName("not_valid_backend_mode").build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().mode("not_valid").build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("mode");
         }
     }
@@ -42,7 +40,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Backend. Невалидный backendName {0}")
     void notValidBackendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_name=").build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().backendName("not_valid_backend_name=").build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("backend_name");
         }
     }
@@ -52,10 +50,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Backend. Невалидный check_uri {0}")
     void notValidBackendCheckUri(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_httpchk_check_uri")
-                    .advCheck("httpchk")
-                    .checkUri("0")
-                    .build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().checkUri("0").build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("check_uri");
         }
     }
@@ -65,26 +60,17 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Backend. Невалидный balancing_algorithm {0}")
     void notValidBackendBalancingAlgorithm(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_balancing_algorithm")
-                    .balancingAlgorithm("not_valid").build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().balancingAlgorithm("not_valid").build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("balancing_algorithm");
         }
     }
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный check_port {0}")
-    void notValidBackendCheckPort(LoadBalancer product) {
+    @ParameterizedTest(name = "Создание Backend. Невалидный httpReuse {0}")
+    void notValidBackendHttpReuse(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_port")
-                    .advCheck("tcp-check")
-                    .checkPort(65535)
-                    .checkSsl("disabled")
-                    .match("string")
-                    .checkFall(3)
-                    .checkRise(3)
-                    .checkInterval(5000)
-                    .build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().httpReuse("not_valid").build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422);
         }
     }
@@ -94,15 +80,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Backend. Невалидный adv_check {0}")
     void notValidBackendAdvCheck(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_adv_check")
-                    .advCheck("not_valid")
-                    .checkPort(65533)
-                    .checkSsl("disabled")
-                    .match("string")
-                    .checkFall(3)
-                    .checkRise(3)
-                    .checkInterval(5000)
-                    .build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().advCheck("not_valid").build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("adv_check");
         }
     }
@@ -112,34 +90,18 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Backend. Невалидный check_fall {0}")
     void notValidBackendCheckFall(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_fall")
-                    .advCheck("tcp-check")
-                    .checkPort(65532)
-                    .checkSsl("disabled")
-                    .match("string")
-                    .checkFall(101)
-                    .checkRise(3)
-                    .checkInterval(5000)
-                    .build();
-            AssertResponse.run(() -> balancer.addBackend(backend)).status(422);
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().checkFall(101).build();
+            AssertResponse.run(() -> balancer.addBackend(backend)).responseContains("check_fall").status(422);
         }
     }
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный check_ssl {0}")
-    void notValidBackendCheckSsl(LoadBalancer product) {
+    @ParameterizedTest(name = "Создание Backend. Невалидный stringVersion {0}")
+    void notValidBackendStringVersion(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_ssl")
-                    .advCheck("tcp-check")
-                    .checkPort(65532)
-                    .checkSsl("not_valid")
-                    .match("string")
-                    .checkFall(5)
-                    .checkRise(3)
-                    .checkInterval(5000)
-                    .build();
-            AssertResponse.run(() -> balancer.addBackend(backend)).status(422);
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().stringVersion("0").build();
+            AssertResponse.run(() -> balancer.addBackend(backend)).responseContains("string_version").status(422);
         }
     }
 
@@ -148,52 +110,18 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     @ParameterizedTest(name = "Создание Backend. Невалидный match {0}")
     void notValidBackendMatch(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_match")
-                    .advCheck("tcp-check")
-                    .checkPort(65532)
-                    .checkSsl("disabled")
-                    .match("not_valid")
-                    .checkFall(5)
-                    .checkRise(3)
-                    .checkInterval(5000)
-                    .build();
-            AssertResponse.run(() -> balancer.addBackend(backend)).status(422);
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().stringMatch("0").build();
+            AssertResponse.run(() -> balancer.addBackend(backend)).responseContains("string_match").status(422);
         }
     }
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный check_method {0}")
-    void notValidBackendCheckMethod(LoadBalancer product) {
+    @ParameterizedTest(name = "Создание Backend. Невалидный string_value {0}")
+    void notValidBackendStringValue(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_check_method")
-                    .advCheck("tcp-check")
-                    .checkPort(65532)
-                    .checkSsl("disabled")
-                    .checkMethod("not_valid")
-                    .build();
-            AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("check_method");
-        }
-    }
-
-    @TmsLink("")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный version_and_headers {0}")
-    void notValidBackendVersionAndHeaders(LoadBalancer product) {
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_version_and_headers")
-                    .mode("http")
-                    .advCheck("httpchk")
-                    .checkPort(65531)
-                    .checkSsl("disabled")
-                    .checkMethod("GET")
-                    .checkFall(5)
-                    .checkRise(3)
-                    .checkInterval(5000)
-                    .checkUri("/")
-                    .versionAndHeaders("not_valid")
-                    .build();
-            AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("version_and_headers");
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().stringValue(new Generex("[a-z]{256}").random()).build();
+            AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("string_value");
         }
     }
 
@@ -203,7 +131,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendServerAddress(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().name("name").address("10.226.48.260").port(80).build());
-            Backend backend = Backend.builder().backendName("not_valid_servers_address").servers(servers).build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().servers(servers).build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("servers.0.address");
         }
     }
@@ -214,7 +142,7 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendServerPort(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().name("name").address("10.226.48.10").port(0).build());
-            Backend backend = Backend.builder().backendName("not_valid_servers_port").cookieStatus(false).servers(servers).build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().servers(servers).build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("servers.0.port");
         }
     }
@@ -225,25 +153,17 @@ public class LoadBalancerBackendNegativeTest extends Tests {
     void notValidBackendServerName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             List<Server> servers = Collections.singletonList(Server.builder().name("").address("10.226.48.10").port(0).build());
-            Backend backend = Backend.builder().backendName("not_valid_servers_name").servers(servers).build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().servers(servers).build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422).responseContains("servers.0.name");
         }
     }
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Создание Backend. Невалидный pattern {0}")
-    void notValidBackendPattern(LoadBalancer product) {
+    @ParameterizedTest(name = "Создание Backend. Невалидный stringHostHdr {0}")
+    void notValidBackendStringHostHdr(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversHttp).backendName("not_valid_backend_pattern")
-                    .advCheck("tcp-check")
-                    .checkPort(65532)
-                    .checkSsl("disabled")
-                    .checkFall(5)
-                    .checkRise(3)
-                    .pattern(new Generex("[a-z]{256}").random())
-                    .checkInterval(5000)
-                    .build();
+            Backend backend = Backend.simpleHttpBackendWidthHttpCheck().stringHostHdr(new Generex("[a-z]{256}").random()).build();
             AssertResponse.run(() -> balancer.addBackend(backend)).status(422);
         }
     }

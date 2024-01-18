@@ -19,7 +19,6 @@ import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
 
@@ -68,16 +67,16 @@ public class LoadBalancerPositiveNameTest extends Tests {
         Backend backend = Backend.builder()
                 .servers(serversTcp)
                 .backendName(backendName)
-                .checkPort(new Random().nextInt(35678) + 10000)
+//                .checkPort(new Random().nextInt(35678) + 10000)
                 .advCheck("tcp-check")
                 .checkFall(3)
-                .checkSsl("disabled")
-                .match("string")
+//                .checkSsl("disabled")
+//                .match("string")
                 .checkRise(3)
                 .checkInterval(5000)
                 .cookieStatus(false)
-                .pattern(pattern)
-                .data(pattern)
+//                .pattern(pattern)
+//                .data(pattern)
                 .build();
         balancer.addBackend(backend);
         return backend;

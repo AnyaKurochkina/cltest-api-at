@@ -3,7 +3,10 @@ package models.cloud.subModels.loadBalancer;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.mifmif.common.regex.Generex;
 import lombok.*;
+
+import java.util.Random;
 
 @Builder
 @Data
@@ -13,14 +16,41 @@ import lombok.*;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Frontend {
-    @Builder.Default
-    String mode = "tcp";
-    @Builder.Default
-    Integer frontendPort = 443;
+    String mode;
+    Integer frontendPort;
     @EqualsAndHashCode.Include
     String frontendName;
-    String defaultBackendNameTcp;
+
+    Boolean keepAliveTcp;
+    Integer keepCntTcp;
+    Integer keepTimerTcp;
+
+    // only http/https
+    Boolean keepAliveHttp;
+    Integer keepTimerHttp;
     String defaultBackendNameHttp;
 
-    String defaultBackendName;
+    // only tcp
+    String defaultBackendNameTcp;
+
+
+    public static FrontendBuilder simpleTcpFrontend(String backendName) {
+        return Frontend.builder()
+                .mode("tcp")
+                .defaultBackendNameTcp(backendName)
+                .frontendName(new Generex("at-frontend-[a-z]{4}").toString())
+                .frontendPort(12000 + new Random().nextInt(1001))
+                .keepAliveTcp(false);
+    }
+
+    public static FrontendBuilder simpleHttpFrontend(String backendName) {
+        return Frontend.builder()
+                .mode("http")
+                .defaultBackendNameHttp(backendName)
+                .frontendName(new Generex("at-frontend-[a-z]{4}").toString())
+                .frontendPort(12000 + new Random().nextInt(1001))
+                .keepAliveTcp(false)
+                .keepAliveHttp(true)
+                .keepTimerHttp(20000);
+    }
 }

@@ -22,7 +22,6 @@ import steps.references.ReferencesStep;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
@@ -130,13 +129,13 @@ public class LoadBalancer extends IProduct {
     }
 
     public void addBackend(Backend backend) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_backend").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_develop_create_backend").product(this)
                 .data(new JSONObject(JsonHelper.toJson(backend))).build());
         Assertions.assertTrue(isExistBackend(backend.getBackendName()), "Backend не создался");
     }
 
     public void addFrontend(Frontend frontend) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_create_frontend").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_develop_create_frontend").product(this)
                 .data(new JSONObject(JsonHelper.toJson(frontend))).build());
         Assertions.assertTrue(isExistFrontend(frontend.getFrontendName()), "Frontend не создался");
     }
@@ -209,9 +208,19 @@ public class LoadBalancer extends IProduct {
             Assertions.assertFalse(isStateContains(backend.getBackendName()));
     }
 
-    public void editBackend(String backendName, String action, List<Server> servers) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_edit_backend").product(this)
-                .data(new JSONObject().put("backend_name", backendName).put("action", action).put("servers", servers)).build());
+    public void deleteBackends(Backend... backends) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_develop_delete_backends").product(this)
+                .data(new JSONObject().put("selected", serializeList(backends))).build());
+        for (Backend backend : backends) {
+            Assertions.assertFalse(isExistBackend(backend.getBackendName()), "Backend не удален");
+//            if (isDev())
+//                Assertions.assertFalse(isStateContains(backend.getBackendName()));
+        }
+    }
+
+    public void editBackend(Backend backend) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_develop_edit_backend").product(this)
+                .data(serialize(backend)).build());
     }
 
     public void createHealthCheck(HealthCheck healthCheck) {
@@ -237,6 +246,13 @@ public class LoadBalancer extends IProduct {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_frontends").product(this)
                 .data(new JSONObject().put("frontends", serializeList(frontends))).build());
         frontends.forEach(e -> Assertions.assertFalse(isExistFrontend(e.getFrontendName()), "Frontend не удален"));
+    }
+
+    public void deleteFrontends(Frontend... frontends) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_develop_delete_frontends").product(this)
+                .data(new JSONObject().put("selected", serializeList(frontends))).build());
+        for (Frontend frontend : frontends)
+            Assertions.assertFalse(isExistFrontend(frontend.getFrontendName()), "Frontend не удален");
     }
 
     public void deleteGslb(Gslb gslb) {
@@ -354,5 +370,9 @@ public class LoadBalancer extends IProduct {
     public void complexCreate(ComplexCreate complex) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_complex_create").product(this)
                 .data(serialize(complex)).build());
+    }
+
+    public void editBackend(String backendName, String notValid, List<Server> servers) {
+
     }
 }

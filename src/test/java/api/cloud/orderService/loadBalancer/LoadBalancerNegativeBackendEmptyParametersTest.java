@@ -74,7 +74,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_fall").servers(serversTcp)
                 .advCheck("tcp-check")
-                .checkPort(1000)
+//                .checkPort(1000)
                 .checkRise(3)
                 .checkInterval(5000)
                 .build();
@@ -89,7 +89,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_rise").servers(serversTcp)
                 .advCheck("tcp-check")
-                .checkPort(1000)
+//                .checkPort(1000)
                 .checkFall(3)
                 .checkInterval(5000)
                 .build();
@@ -104,7 +104,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_check_interval").servers(serversTcp)
                 .advCheck("tcp-check")
-                .checkPort(1000)
+//                .checkPort(1000)
                 .checkFall(5)
                 .checkRise(5)
                 .build();
@@ -118,7 +118,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
     void backendEmptyAdvCheck(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
         Backend backend = Backend.builder().backendName("backend_empty_adv_check").servers(serversTcp)
-                .checkPort(1000)
+//                .checkPort(1000)
                 .checkInterval(300)
                 .checkFall(7)
                 .checkRise(7)
@@ -153,7 +153,7 @@ public class LoadBalancerNegativeBackendEmptyParametersTest extends Tests {
                 .checkFall(7)
                 .checkRise(7)
                 .advCheck("httpchk")
-                .checkMethod("PUT")
+//                .checkMethod("PUT")
                 .build();
         AssertResponse.run(() -> balancer.addBackend(backend)).status(422);
         }

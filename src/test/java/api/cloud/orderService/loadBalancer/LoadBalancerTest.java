@@ -153,7 +153,7 @@ public class LoadBalancerTest extends Tests {
                 .mode("http")
                 .balancingAlgorithm("roundrobin")
                 .cookieStatus(false)
-                .keepLive(false)
+//                .keepLive(false)
                 .checkInterval(5000)
                 .checkFall(3)
                 .checkRise(3)
@@ -312,7 +312,7 @@ public class LoadBalancerTest extends Tests {
     void editFrontend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             Frontend frontend = addHttpSimple(balancer);
-            frontend.setDefaultBackendName(frontend.getDefaultBackendNameHttp());
+//            frontend.setDefaultBackendName(frontend.getDefaultBackendNameHttp());
             frontend.setDefaultBackendNameHttp(null);
             balancer.editFrontEnd(frontend, false, frontend.getDefaultBackendNameHttp(), 999);
         }

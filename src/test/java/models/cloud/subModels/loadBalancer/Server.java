@@ -18,14 +18,10 @@ public class Server {
     Integer port;
     String name;
     String address;
-    @Builder.Default
-    String sendProxy = "disabled";
+    String sendProxy;
+    Integer slowstart;
     String backup;
-    Integer fall;
-    Integer rise;
-    Integer inter;
-    String useSsl;
-    Integer slowStart;
 
-    String ssl;
+    //default only http "disabled"
+    String useSsl;
 }
