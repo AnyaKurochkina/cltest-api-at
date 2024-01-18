@@ -243,7 +243,7 @@ public class GraphNodesPage extends GraphPage {
         //Сериализация, чтобы подтянулись значения из JSON шаблона
         node = JsonHelper.deserialize(node.toJson().toString(), GraphItem.class);
         if (Objects.isNull(node.getNumber())) node.setNumber(1);
-        if (StringUtils.isNullOrEmpty(node.getSourceVersion())) node.setSourceVersion("Последняя");
+        if (StringUtils.isNullOrEmpty(node.getSourceVersion())) node.setSourceVersion(CALCULATED_VERSION_TITLE);
         selectNodeInGraph(node);
         editNodeButton.click();
         Waiting.sleep(1000);
@@ -282,8 +282,8 @@ public class GraphNodesPage extends GraphPage {
         return this;
     }
 
-    @Step("Проверка, что узел '{node.name}' найден при поиске '{text}'")
-    public GraphNodesPage findNode(String param, GraphItem node) {
+    @Step("Проверка, что узел '{node.name}' найден при поиске по параметру '{param}'")
+    public GraphNodesPage findNodeByParam(String param, GraphItem node) {
         if (Objects.isNull(node.getNumber())) {
             node.setNumber(1);
         }
@@ -291,7 +291,17 @@ public class GraphNodesPage extends GraphPage {
         Waiting.sleep(500);
         $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
                 .shouldBe(Condition.visible);
-        $x("//span[text()='\"{}\"']", param).shouldBe(Condition.visible);
+        $x("//span[text()='\"{}\"']", param.toLowerCase()).shouldBe(Condition.visible);
+        return this;
+    }
+
+    @Step("Проверка, что узел '{node.name}' найден при поиске по '{value}'")
+    public GraphNodesPage findNode(String value, GraphItem node) {
+        if (Objects.isNull(node.getNumber())) node.setNumber(1);
+        searchNodesInput.setValue(value);
+        Waiting.sleep(500);
+        $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
+                .shouldBe(Condition.visible);
         return this;
     }
 

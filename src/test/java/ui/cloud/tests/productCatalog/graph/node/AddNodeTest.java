@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
+import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.graph.GraphNodesPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 import ui.elements.Tooltip;
@@ -22,9 +23,11 @@ import java.time.Duration;
 import java.util.HashMap;
 
 import static com.codeborne.selenide.Selenide.$x;
+import static com.codeborne.selenide.Selenide.Wait;
 import static models.cloud.productCatalog.graph.SourceType.SUBGRAPH;
 import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static ui.cloud.pages.productCatalog.EntityPage.CALCULATED_VERSION_TITLE;
 
 @Feature("Добавление узла графа")
 public class AddNodeTest extends GraphBaseTest {
@@ -64,7 +67,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .description(nodeDescription)
                 .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-                .sourceVersion("Последняя")
+                .sourceVersion(CALCULATED_VERSION_TITLE)
                 .number(1)
                 .build();
         new ControlPanelIndexPage().goToGraphsPage()
@@ -82,7 +85,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .description(nodeDescription)
                 .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-                .sourceVersion("Последняя")
+                .sourceVersion(CALCULATED_VERSION_TITLE)
                 .input(new HashMap<String, String>() {{
                     put("input_param", "test_value_1");
                 }})
@@ -142,7 +145,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .description(nodeDescription)
                 .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-                .sourceVersion("Последняя")
+                .sourceVersion(CALCULATED_VERSION_TITLE)
                 .number(0)
                 .timeout(0)
                 .build();
@@ -159,7 +162,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .description(nodeDescription)
                 .sourceType(SUBGRAPH.getValue())
                 .sourceId(subgraph.getGraphId())
-                .sourceVersion("Последняя")
+                .sourceVersion(CALCULATED_VERSION_TITLE)
                 .build();
         new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
@@ -177,7 +180,7 @@ public class AddNodeTest extends GraphBaseTest {
                 .description(nodeDescription)
                 .sourceId(String.valueOf(template.getId()))
                 .sourceType(TEMPLATE.getValue())
-                .sourceVersion("Последняя")
+                .sourceVersion(CALCULATED_VERSION_TITLE)
                 .timeout(100)
                 .number(1)
                 .build();
@@ -249,6 +252,7 @@ public class AddNodeTest extends GraphBaseTest {
         page.getNodeDescription().setValue(node.getDescription());
         page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
+        Waiting.sleep(1000);
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         page.getLogLevelTooltipIcon().hover();

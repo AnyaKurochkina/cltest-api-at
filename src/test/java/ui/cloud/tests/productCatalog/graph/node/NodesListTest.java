@@ -106,9 +106,9 @@ public class NodesListTest extends GraphBaseTest {
                 .goToNodesTab()
                 .findNode(node.getName().toUpperCase(), node)
                 .findNode(node.getDescription(), node)
-                .findNode(node.getInput().keySet().toArray()[0].toString(), node)
-                .findNode(node.getOutput().keySet().toArray()[0].toString().toUpperCase(), node)
-                .findNode(node.getOutput().get("output_param").toString(), node)
+                .findNodeByParam(node.getInput().keySet().toArray()[0].toString(), node)
+                .findNodeByParam(node.getOutput().keySet().toArray()[0].toString().toUpperCase(), node)
+                .findNodeByParam(node.getOutput().get("output_param").toString(), node)
                 .checkNodeNotFound("incorrect_param", node);
     }
 }
