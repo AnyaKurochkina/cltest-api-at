@@ -252,7 +252,8 @@ public class AddNodeTest extends GraphBaseTest {
         page.getNodeDescription().setValue(node.getDescription());
         page.getSourceTypeSelect().set(TEMPLATE.getDisplayName());
         page.getSourceSelect().setContains(TEMPLATE_NAME);
-        Waiting.sleep(1000);
+        Waiting.find(() -> !$x("//button[text()='Дополнительное']/div[@role='alert']").isDisplayed(),
+                Duration.ofSeconds(3));
         page.getAdditionalTab().click();
         page.getLogLevelSelect().getElement().$x(".//select").shouldBe(Condition.disabled);
         page.getLogLevelTooltipIcon().hover();

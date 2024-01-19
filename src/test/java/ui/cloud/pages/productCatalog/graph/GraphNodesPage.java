@@ -26,7 +26,6 @@ import static core.helper.StringUtils.$x;
 import static models.cloud.productCatalog.graph.SourceType.SUBGRAPH;
 import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Getter
@@ -284,14 +283,11 @@ public class GraphNodesPage extends GraphPage {
 
     @Step("Проверка, что узел '{node.name}' найден при поиске по параметру '{param}'")
     public GraphNodesPage findNodeByParam(String param, GraphItem node) {
-        if (Objects.isNull(node.getNumber())) {
-            node.setNumber(1);
-        }
-        searchNodesInput.setValue(param);
-        Waiting.sleep(500);
-        $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
-                .shouldBe(Condition.visible);
-        $x("//span[text()='\"{}\"']", param.toLowerCase()).shouldBe(Condition.visible);
+        findNode(param, node);
+        Waiting.find(
+                () -> $x("//span[text()='\"{}\"']", param.toLowerCase()).isDisplayed()
+                , Duration.ofSeconds(3),
+                "Параметр " + param + " не найден");
         return this;
     }
 
@@ -299,9 +295,11 @@ public class GraphNodesPage extends GraphPage {
     public GraphNodesPage findNode(String value, GraphItem node) {
         if (Objects.isNull(node.getNumber())) node.setNumber(1);
         searchNodesInput.setValue(value);
-        Waiting.sleep(500);
-        $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(), node.getDescription(), node.getName())
-                .shouldBe(Condition.visible);
+        Waiting.find(
+                () -> $x("//div[text()='{}. {} ({})']/..//*[name()='svg' and @class]", node.getNumber(),
+                        node.getDescription(), node.getName()).isDisplayed()
+                , Duration.ofSeconds(3),
+                "Узел " + node.getName() + " не найден");
         return this;
     }
 
