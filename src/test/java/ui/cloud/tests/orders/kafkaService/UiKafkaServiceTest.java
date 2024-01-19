@@ -20,6 +20,7 @@ import ui.extesions.UiProductTest;
 
 import java.time.Duration;
 
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 
 @Epic("UI Продукты")
@@ -27,8 +28,8 @@ import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 @Tags({@Tag("ui"), @Tag("KafkaService")})
 public class UiKafkaServiceTest extends UiProductTest {
 
-    private final String name = "acl";
-    private KafkaService product;// = KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/1e521f86-97f9-4bef-bea4-136aa41d5053/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private final String name = "acl_" + randomAlphanumeric(8).toLowerCase();
+    private KafkaService product;//= KafkaService.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/saas/orders/a543c812-99e2-4b31-89ea-e8d7724d4722/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")

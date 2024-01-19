@@ -19,6 +19,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ProductSteps.partialUpdateProductByName;
 import static steps.productCatalog.TagSteps.deleteTagByName;
+import static ui.cloud.pages.productCatalog.EntityPage.CALCULATED_VERSION_TITLE;
 
 @Feature("Редактирование продукта")
 public class EditProductTest extends ProductBaseTest {
@@ -115,7 +116,7 @@ public class EditProductTest extends ProductBaseTest {
     @DisplayName("Редактирование продукта")
     public void editProductTest() {
         product.setDescription("New description");
-        product.setGraphVersion("Последняя");
+        product.setGraphVersion(CALCULATED_VERSION_TITLE);
         product.setIsOpen(true);
         new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(product.getName())
@@ -132,7 +133,7 @@ public class EditProductTest extends ProductBaseTest {
         String currentServiceVersion = "1.0.1";
         new ControlPanelIndexPage().goToProductsListPage()
                 .findAndOpenProductPage(NAME)
-                .setGraphVersion("Последняя")
+                .setGraphVersion(CALCULATED_VERSION_TITLE)
                 .saveWithPatchVersion()
                 .setGraphVersion("1.0.0")
                 .checkSaveWithInvalidVersion("1.0.0", currentServiceVersion)
