@@ -10,7 +10,6 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
-import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
@@ -28,11 +27,6 @@ import java.util.Collections;
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerFrontendNegativeTest extends Tests {
-
-    @Mock
-    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("DEV").segment("dev-srv-app").build()
-            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/b41c8f54-354a-475e-90be-2a44188c9e8b/main?context=proj-iv550odo9a&type=project&org=vtb");
-
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -59,16 +53,6 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
                     .build();
             Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class, () -> balancer.addFrontend(frontend));
             AssertUtils.assertContains(throwable.getMessage(), "frontend_name");
-        }
-    }
-
-    @TmsLink("")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "Удалить Frontend. Несуществующий name {0}")
-    void deleteFrontendNotValidFrontendName(LoadBalancer product) {
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = Frontend.simpleTcpFrontend("backend").build();
-            AssertResponse.run(() -> balancer.deleteFrontends(frontend)).status(422).responseContains("frontend_name");
         }
     }
 

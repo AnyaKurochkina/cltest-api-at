@@ -7,19 +7,28 @@ import io.qameta.allure.TmsLink;
 import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.CheckString;
 import models.cloud.subModels.loadBalancer.HealthCheck;
+import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.Collections;
 
+@Execution(ExecutionMode.SAME_THREAD)
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
 public class LoadBalancerNegativeActionsEmptyParametersTest extends Tests {
+
+    @Mock
+    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("DEV").segment("dev-srv-app").build()
+            .buildFromLink("https://console.blue.cloud.vtb.ru/network/orders/b41c8f54-354a-475e-90be-2a44188c9e8b/main?context=proj-iv550odo9a&type=project&org=vtb");
+
 
     @TmsLink("")
     @Disabled
