@@ -120,12 +120,12 @@ public class UiKafkaServiceTest extends UiProductTest {
         servicePage.runActionWithCheckCost(CompareType.EQUALS, servicePage::deleteGroupAcl);
     }
 
-    /*@Test
+    @Test
     @Order(100)
     @TmsLink("")
     @DisplayName("UI KafkaService. Удаление продукта")
     void delete() {
         KafkaServicePage servicePage = new KafkaServicePage(product);
         servicePage.runActionWithCheckCost(CompareType.ZERO, servicePage::delete);
-    }*/
+    }
 }

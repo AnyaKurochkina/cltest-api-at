@@ -59,7 +59,7 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     @Override
     public Entity init() {
         if (templateId == null) {
-            Template template = getTemplateByName("jinja2_template");
+            Template template = createTemplateByName(getRandomStringApi(6));
             templateId = template.getId();
             templateVersion = "";
             templateVersionPattern = "";

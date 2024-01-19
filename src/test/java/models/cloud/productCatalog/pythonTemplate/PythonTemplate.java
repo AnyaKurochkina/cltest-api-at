@@ -66,7 +66,7 @@ public class PythonTemplate extends Entity {
 	@Override
 	public Entity init() {
 		if (templateId == null) {
-			Template template = getTemplateByName("python_template");
+			Template template = createTemplateByName(getRandomStringApi(6));
 			templateId = template.getId();
 			templateVersion = "";
 			templateVersionPattern = "";
