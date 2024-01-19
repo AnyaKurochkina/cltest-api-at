@@ -27,12 +27,12 @@
       "ad_integration": true,
       "etcd_extra_mounts": [
         {
-          "path": "/app/etcd/data",
-          "size": 15,
+          "path": "/app/etcd/",
+          "size": 30,
           "file_system": "xfs"
         },
         {
-          "path": "/app/etcd/logs",
+          "path": "/app/logs/",
           "size": 10,
           "file_system": "xfs"
         }
