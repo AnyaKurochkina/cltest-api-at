@@ -14,7 +14,6 @@ import java.util.List;
 import static core.helper.StringUtils.getRandomStringApi;
 import static steps.productCatalog.PythonTemplateSteps.*;
 import static steps.productCatalog.TemplateSteps.createTemplateByName;
-import static steps.productCatalog.TemplateSteps.getTemplateByName;
 
 @Log4j2
 @Builder
