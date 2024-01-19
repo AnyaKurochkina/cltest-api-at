@@ -18,6 +18,7 @@ public class GenericArangoDB extends Astra {
 
     @Override
     public Entity init() {
+        jsonTemplate = "/orders/generic_arango_db.json";
         productName = "Generic ArangoDB";
         super.init();
         return this;

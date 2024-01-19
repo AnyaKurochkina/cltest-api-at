@@ -1,0 +1,52 @@
+{
+  "order": {
+    "project_name": "proj-ln4zg69jek",
+    "product_id": "6a69f244-b5f6-4323-89cc-6548729913e9",
+    "attrs": {
+      "domain": "corp.dev.vtb",
+      "flavor": {
+        "cpus": 2,
+        "name": "c2m4",
+        "uuid": "3dfab004-286c-4f39-9932-baf865756a23",
+        "memory": 4
+      },
+      "platform": "OpenStack",
+      "extra_nics": [],
+      "on_support": false,
+      "os_version": "1.7",
+      "default_nic": {
+        "net_segment": "dev-srv-app"
+      },
+      "extra_mounts": [
+        {
+          "path": "/app/arango/data",
+          "size": 160,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/arango/backup",
+          "size": 120,
+          "file_system": "xfs"
+        },
+        {
+          "path": "/app/arango/logs",
+          "size": 20,
+          "file_system": "xfs"
+        }
+      ],
+      "ad_integration": true,
+      "availability_zone": "msk-north",
+      "ad_logon_grants": [
+        {
+          "role": "user",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ]
+    },
+    "count": 1,
+    "label": "Generic ArangoDB",
+    "lifetime": "172800"
+  }
+}
