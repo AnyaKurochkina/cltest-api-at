@@ -54,7 +54,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         this.forkJoinPool = this.createForkJoinPool(configuration);
         parallelism.set(this.forkJoinPool.getParallelism());
         LoggerFactory.getLogger(this.getClass()).config(() -> "Using ForkJoinPool with parallelism of " + parallelism.get());
-        log.info("SET PARALLELISM = {}", ForkJoinPoolHierarchicalTestExecutorService.parallelism.get());
+        System.out.printf("Parallelism = %d%n", ForkJoinPoolHierarchicalTestExecutorService.parallelism.get());
+        System.out.printf("HeapSize = %.2fGB%n", Runtime.getRuntime().totalMemory() / (1024 * 1024 * 1024.0));
     }
 
     private static ParallelExecutionConfiguration createConfiguration(ConfigurationParameters configurationParameters) {
