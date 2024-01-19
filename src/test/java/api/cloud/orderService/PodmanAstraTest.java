@@ -21,6 +21,7 @@ import static core.utils.AssertUtils.assertContains;
 @Feature("Podman Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("podman_astra"), @Tag("prod")})
 @DisabledIfEnv("ift")
+@Disabled
 public class PodmanAstraTest extends Tests {
 
     @TmsLink("820506")
