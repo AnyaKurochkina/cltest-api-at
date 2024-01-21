@@ -228,12 +228,18 @@ public class Table implements TypifiedElement {
         }
 
         public class Asserts {
-            @Step("[Проверка] Последнее значение в строке содержит значение: {0}")
+            @Step("[Проверка] Последнее значение в строке содержит: {0}")
             public void checkLastValueOfRowContains(String value) {
-                String errorMessage;
                 String lastValue = getElementLastColumn().getText();
-                errorMessage = String.format("Последнее значение в строке: %s, должно содержать значение: %s", lastValue, value);
+                String errorMessage = String.format("Последнее значение в строке: %s, должно содержать: %s", lastValue, value);
                 Assertions.assertTrue(lastValue.contains(value), errorMessage);
+            }
+
+            @Step("[Проверка] Колонка с именем: %s: {0}, содержит значение: {1}")
+            public void checkValueInColumnWithName(String columnName, String value) {
+                String valueByColumnName = getValueByColumn(columnName);
+                String errorMessage = String.format("В колонке с именем: %s, значение: %s, должно содержать: %s", columnName, valueByColumnName, value);
+                Assertions.assertTrue(valueByColumnName.contains(value), errorMessage);
             }
         }
     }

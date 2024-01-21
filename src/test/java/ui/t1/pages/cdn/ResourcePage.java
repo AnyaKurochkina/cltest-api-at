@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static core.helper.StringUtils.$x;
-import static core.helper.StringUtils.format;
 
 public class ResourcePage {
 
@@ -31,7 +30,7 @@ public class ResourcePage {
         int hostNameSize = hostnames.size();
         IntStream.range(0, hostNameSize).forEach(i -> {
             editDialog.clickButton("Добавить");
-            editDialog.setInputByName(format("hostnames-{}", i + 1), hostnames.get(i));
+            editDialog.setInputByName(String.format("hostnames-%s", i + 1), hostnames.get(i));
         });
         saveButton.click();
         Alert.green("Ресурс изменён");
