@@ -1,9 +1,12 @@
 package ui.t1.pages.cdn;
 
+import ui.elements.Button;
 import ui.elements.DataTable;
 import ui.elements.Menu;
 
 public abstract class AbstractCdnTab {
+
+    protected final Button addButton = Button.byLabel("Добавить");
 
     protected void chooseActionFromMenu(String name, String actionName) {
         DataTable table = new DataTable("Источники");

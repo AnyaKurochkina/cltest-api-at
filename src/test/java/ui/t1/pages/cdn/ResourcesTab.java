@@ -14,6 +14,7 @@ public class ResourcesTab extends AbstractCdnTab {
 
     @Step("Создание ресурса CDN")
     public ResourcesTab createResource(Resource resource) {
+        addButton.click();
         Dialog addResourceDialog = Dialog.byTitle("Добавить ресурс");
         addResourceDialog.setInputByName("domainName", resource.getDomainName());
         addResourceDialog.setInputByName("hostnames-0", resource.getHostnames().get(0));

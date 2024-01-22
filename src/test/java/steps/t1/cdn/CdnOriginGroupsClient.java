@@ -15,7 +15,7 @@ public class CdnOriginGroupsClient extends AbstractCdnClient {
         String id = getListSourceGroup(projectId).stream()
                 .filter(x -> x.getName().equals(name))
                 .findFirst()
-                .orElseThrow(() -> new AssertionError(String.format("Не найдено ниодной группы источника с именем: %s", name)))
+                .orElseThrow(() -> new AssertionError(String.format("Не найдено ни одной группы источника с именем: %s", name)))
                 .getId();
         deleteSourceGroup(projectId, id);
     }

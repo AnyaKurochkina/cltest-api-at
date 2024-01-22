@@ -30,7 +30,7 @@ public class CdnResourceTests extends AbstractT1Test {
 
     private final EntitySupplier<Resource> cdnResource = lazy(() -> {
         Resource resource = new Resource(getProjectId(), "mirror.yandex.ru",
-                Collections.singletonList(RandomStringUtils.randomAlphabetic(4) + ".autotest.com"))
+                Collections.singletonList("editresource.ya.ru"))
                 .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
         new IndexPage().goToCdn()
                 .switchToResourceTab()

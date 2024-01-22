@@ -9,7 +9,6 @@ import ui.elements.Dialog;
 
 public class SourceGroupsTab extends AbstractCdnTab {
 
-    private final Button addButton = Button.byText("Добавить");
     private final Button saveButton = Button.byText("Сохранить");
     private final Dialog editDialog = new Dialog("Редактировать группу источников");
     private final DataTable sourceGroupTable = new DataTable("Источники");
