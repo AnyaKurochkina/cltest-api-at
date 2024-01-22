@@ -155,10 +155,20 @@ public class ItemTest extends Tests {
     }
 
     @DisplayName("Отправка на тарификацию все айтемы ордера")
-    @TmsLink("SOUL-")
+    @TmsLink("SOUL-8891")
     @Test
     public void orderItemsPublicationTest() {
         Item item = createItem(project);
-        orderItemsPublication(project.getId(), item.getOrderId());
+        uncheckedOrderItemsPublication(project.getId(), item.getOrderId())
+                .assertStatus(200);
+    }
+
+    @DisplayName("Отправка на тарификацию все айтемы ордера")
+    @TmsLink("SOUL-")
+    @Test
+    public void orderItemsPublicatiodnTest() {
+        //todo завел задачу, доделать тест, когда реализуют валидацию на не валдиный ордер ид
+        uncheckedOrderItemsPublication(project.getId(), "sdf")
+                .assertStatus(401);
     }
 }
