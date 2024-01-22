@@ -23,4 +23,9 @@ public class GenericArangoDB extends Astra {
         super.init();
         return this;
     }
+
+    @Override
+    public void expandMountPoint() {
+        expandMountPoint("expand_mount_point_new", "/app/arango/data", 10);
+    }
 }

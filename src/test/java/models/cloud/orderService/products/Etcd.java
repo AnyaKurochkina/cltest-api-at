@@ -67,6 +67,9 @@ public class Etcd extends IProduct {
     @Override
     public JSONObject toJson() {
         Project project = Project.builder().id(projectId).build().createObject();
+        JSONObject backupMountPoint = null;
+        if (!isDev())
+            backupMountPoint = new JSONObject().put("file_system", "xfs").put("path", "/app/backup/").put("size", 10);
         return JsonHelper.getJsonTemplate(jsonTemplate)
                 .set("$.order.product_id", productId)
                 .set("$.order.attrs.domain", getDomain())
@@ -81,13 +84,14 @@ public class Etcd extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .set("$.order.attrs.on_support", getSupport())
+                .add("$.order.attrs.etcd_extra_mounts", backupMountPoint)
 //                .set("$.order.attrs.tarantool_version", getTarantoolVersion())
 //                .set("$.order.attrs.layout", getIdGeoDistribution("rps-2000"))
                 .build();
     }
 
     public void expandMountPoint(String mountPoint) {
-        expandMountPoint("expand_mount_point_new", "/app/etcd/data", 10);
+        expandMountPoint("expand_mount_point_new", mountPoint, 10);
     }
 
     //Проверить конфигурацию

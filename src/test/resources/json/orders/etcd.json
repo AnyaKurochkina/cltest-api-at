@@ -35,11 +35,6 @@
           "path": "/app/logs/",
           "size": 10,
           "file_system": "xfs"
-        },
-        {
-          "file_system": "xfs",
-          "path": "/app/backup/",
-          "size": 10
         }
       ],
       "ad_logon_grants": [
