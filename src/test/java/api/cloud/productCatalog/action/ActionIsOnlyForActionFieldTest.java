@@ -21,7 +21,7 @@ import static steps.productCatalog.ActionSteps.partialUpdateAction;
 public class ActionIsOnlyForActionFieldTest extends Tests {
 
     @DisplayName("Проверка дефолтного значения поля is_only_for_api")
-    @TmsLink("")
+    @TmsLink("SOUL-8823")
     @Test
     public void checkIsOnlyForApiFieldByDefaultTest() {
         String actionName = "action_is_only_for_api_default_value_test_api";
@@ -34,7 +34,7 @@ public class ActionIsOnlyForActionFieldTest extends Tests {
     }
 
     @DisplayName("Проверка значения поля is_only_for_api")
-    @TmsLink("")
+    @TmsLink("SOUL-8824")
     @Test
     public void checkIsOnlyForApiFieldTest() {
         String actionName = "action_is_only_for_api_test_api";
@@ -48,7 +48,7 @@ public class ActionIsOnlyForActionFieldTest extends Tests {
     }
 
     @DisplayName("Проверка не версионности поля is_only_for_api")
-    @TmsLink("")
+    @TmsLink("SOUL-8825")
     @Test
     public void updateIsOnlyForApiFieldTest() {
         String version = "1.0.0";

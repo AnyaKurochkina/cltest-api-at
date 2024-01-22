@@ -89,6 +89,9 @@
             "is_safe": {
               "type": "boolean"
             },
+            "is_only_for_api": {
+              "type": "boolean"
+            },
             "is_for_items": {
               "type": "boolean"
             },
@@ -124,6 +127,7 @@
             "allowed_developers",
             "restricted_developers",
             "is_for_items",
+            "is_only_for_api",
             "icon_url",
             "is_safe",
             "is_delayable",

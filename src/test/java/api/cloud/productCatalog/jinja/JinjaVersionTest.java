@@ -1,5 +1,6 @@
 package api.cloud.productCatalog.jinja;
 
+import core.helper.StringUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -21,7 +22,7 @@ import static steps.productCatalog.Jinja2Steps.*;
 public class JinjaVersionTest {
 
     @DisplayName("Проверка версионности поля jinja2_template")
-    @TmsLink("")
+    @TmsLink("SOUL-6773")
     @Test
     public void checkVersionWhenJinjaTemplateUpdateTest() {
         String jinjaName = "check_version_when_jinja_template_update_test_api";
@@ -33,7 +34,7 @@ public class JinjaVersionTest {
     }
 
     @DisplayName("Проверка версионности поля jinja2_data")
-    @TmsLink("")
+    @TmsLink("SOUL-6774")
     @Test
     public void checkVersionWhenJinjaDataUpdateTest() {
         String jinjaName = "check_version_when_jinja_data_update_test_api";
@@ -46,7 +47,7 @@ public class JinjaVersionTest {
     }
 
     @DisplayName("Обновление jinja с указанием версии в граничных значениях")
-    @TmsLink("")
+    @TmsLink("SOUL-6775")
     @Test
     public void updateJinjaAndGetVersion() {
         Jinja2Template jinja2 = Jinja2Template.builder()
@@ -74,23 +75,23 @@ public class JinjaVersionTest {
     }
 
     @DisplayName("Проверка неверсионных полей jinja2")
-    @TmsLink("")
+    @TmsLink("SOUL-6776")
     @Test
-    public void updateJinjaById() {
-        String updateName = "update_name";
-        String updateTitle = "update_title";
-        String updateDescription = "update_desc";
+    public void updateNotVersionFieldsJinjaByIdAndCheckVersion() {
+        String updateName = "check_not_version_jinja2_fields_update_name_test_api";
+        String updateTitle = StringUtils.getRandomStringApi(6);
+        String updateDescription = StringUtils.getRandomStringApi(6);
         if (isJinja2Exists(updateName)) {
             deleteJinjaByName(updateName);
         }
         Jinja2Template jinjaObject = createJinja("test_object_not_versioned_fields_test_api");
-        putJinja2ById(jinjaObject.getId(), Jinja2Template.builder()
-                .name(updateName)
-                .title(updateTitle)
-                .description(updateDescription)
-                .build()
+        jinjaObject.setName(updateName);
+        jinjaObject.setTitle(updateTitle);
+        jinjaObject.setDescription(updateDescription);
+        jinjaObject.setVersion(null);
+        putJinja2ById(jinjaObject.getId(), jinjaObject
                 .toJson());
         Jinja2Template updatedJinja = getJinja2ById(jinjaObject.getId());
-        assertEquals(jinjaObject.getVersion(), updatedJinja.getVersion());
+        assertEquals("1.0.0", updatedJinja.getVersion());
     }
 }

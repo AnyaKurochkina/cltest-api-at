@@ -123,7 +123,7 @@ public class ProductImportTest extends Tests {
         ImportObject importObject = importProduct(filePath);
         DataFileHelper.delete(filePath);
         assertEquals("error", importObject.getStatus());
-        assertEquals( String.format("Error loading dump: Версия \"%s\" Product:%s уже существует. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
+        assertEquals(String.format("Error loading dump: Версия \"%s\" Product:%s уже существует, но с другим наполнением. Измените значение версии (\"version_arr: [1, 0, 0]\") у импортируемого объекта и попробуйте снова.",
                         product.getVersion(), product.getName()),
                 importObject.getMessages().get(0));
     }

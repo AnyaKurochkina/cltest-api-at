@@ -35,6 +35,8 @@ public class ProductOrderRestriction {
     private List<String> informSystemIds;
     @JsonProperty("product_name")
     private String productName;
+    @JsonProperty("product_id")
+    private String productId;
     private List<String> platforms;
     @JsonProperty("data_centers")
     private List<String> dataCenters;
@@ -42,13 +44,13 @@ public class ProductOrderRestriction {
     private Boolean isDeleted;
     @JsonProperty("updated_at")
     private String updatedAt;
-    @JsonProperty("product_id")
-    private String productId;
     private String organization;
     @JsonProperty("is_blocking")
     private Boolean isBlocking;
+    private Boolean incident;
     private Integer weight;
     private String id;
+    private String description;
 
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/products/createProductRestriction.json")
@@ -56,6 +58,9 @@ public class ProductOrderRestriction {
                 .set("order_restriction.weight", weight)
                 .set("order_restriction.platforms", platforms)
                 .set("order_restriction.environments", environments)
+                .set("order_restriction.net_segments", netSegments)
+                .set("order_restriction.domains", domains)
+                .set("order_restriction.data_centers", dataCenters)
                 .build();
     }
 }

@@ -330,15 +330,6 @@ public class ReferencesStep extends Steps {
                 .extractAs(Pages.class);
     }
 
-    @Step("Обновление Data в Pages по Id для приватных ролей")
-    public static void updateDataPrivatePagesById(String directoryName, String pageId, JSONObject object) {
-        new Http(referencesURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(object)
-                .post(API_V_1_PRIVATE_DIRECTORIES + directoryName + "/pages/" + pageId + "/update_data")
-                .assertStatus(200);
-    }
-
     @Step("Частичное обновление Pages по Id для приватных ролей")
     public static Pages partialUpdatePrivatePagesById(String directoryName, String pageId, JSONObject object) {
         return new Http(referencesURL)
