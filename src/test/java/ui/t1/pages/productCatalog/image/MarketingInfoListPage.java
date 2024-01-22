@@ -25,7 +25,7 @@ public class MarketingInfoListPage extends EntityListPage {
     @Step("Проверка заголовков списка маркетинговой информации")
     public MarketingInfoListPage checkHeaders() {
         Table table = new Table(nameColumn);
-        assertEquals(Arrays.asList("Имя", "Идентификатор", "На поддержке"),
+        assertEquals(Arrays.asList("Имя", "Идентификатор", "Образы"),
                 table.getNotEmptyHeaders());
         return this;
     }
@@ -41,8 +41,7 @@ public class MarketingInfoListPage extends EntityListPage {
     @Step("Просмотр маркетинговой информации, содержащей в имени '{name}'")
     public MarketingInfoListPage view(String name) {
         Table table = new Table(nameColumn);
-        SelenideElement row = table.getRowByColumnValueContains(nameColumn, name).get();
-        row.$x(".//a[contains(@href,'/marketing/')]").click();
+        table.getRowByColumnValueContains(nameColumn, name).get().click();
         return this;
     }
 
