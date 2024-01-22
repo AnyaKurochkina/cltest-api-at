@@ -31,6 +31,7 @@ import static core.utils.DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH;
 @Tags({@Tag("bills"), @Tag("t1")})
 @Epic("Счета")
 @Feature("Счета")
+@Tag("morozov_ilya")
 public class T1BillsTests extends AbstractT1Test {
 
     // DateTimeFormatter с учетом русского языка и шаблона 03-мар-2023

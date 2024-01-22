@@ -26,6 +26,7 @@ import java.util.stream.Stream;
 @Tags({@Tag("cdn")})
 @WithAuthorization(Role.CLOUD_ADMIN)
 @ExtendWith(ConfigExtension.class)
+@Tag("morozov_ilya")
 public class CdnResourceTests extends AbstractT1Test {
 
     private final EntitySupplier<Resource> cdnResource = lazy(() -> {
