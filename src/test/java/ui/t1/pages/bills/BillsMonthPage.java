@@ -2,7 +2,7 @@ package ui.t1.pages.bills;
 
 import ui.elements.Select;
 
-public class BillsMonthPage extends AbstractBillsPeriodPage {
+public class BillsMonthPage extends AbstractBillsPeriodPage<BillsMonthPage> {
 
     private final Select monthSelect = Select.byLabel("Месяц");
 
