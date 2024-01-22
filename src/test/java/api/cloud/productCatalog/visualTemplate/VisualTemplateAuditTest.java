@@ -11,6 +11,7 @@ import models.cloud.productCatalog.ProductAudit;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -39,10 +40,12 @@ public class VisualTemplateAuditTest extends Tests {
         partialUpdateVisualTemplate(visualTemplate.getId(), new JSONObject().put("title", StringUtils.getRandomStringApi(7)));
         List<ProductAudit> objectAuditList = getObjectAuditList("item_visual_templates", visualTemplate.getId());
         UserInfo userInfo = getUserInfo(Role.PRODUCT_CATALOG_ADMIN);
-        for (ProductAudit productAudit : objectAuditList) {
-            assertEquals(userInfo.getEmail(), productAudit.getUserEmail());
-            assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName());
-            assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName());
-        }
+        String errorMessageTemplate = "%s из информации пользователя не совпадает с %s из аудита";
+        objectAuditList.forEach(productAudit ->
+                Assertions.assertAll("[Проверка] полей аудита",
+                        () -> assertEquals(userInfo.getEmail(), productAudit.getUserEmail(), String.format(errorMessageTemplate, "Email")),
+                        () -> assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName(), String.format(errorMessageTemplate, "FirstName")),
+                        () -> assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName(), String.format(errorMessageTemplate, "LastName"))
+                ));
     }
 }
