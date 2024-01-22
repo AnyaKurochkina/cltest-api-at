@@ -9,6 +9,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import models.cloud.authorizer.Organization;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
@@ -36,21 +37,21 @@ public class T1BillsTests extends AbstractT1Test {
     private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
     private final DatePeriod expectedNovemberPeriod = new DatePeriod(LocalDate.of(2023, Month.NOVEMBER, 1), LocalDate.of(2023, Month.NOVEMBER, 30));
+    private final Organization organization = Organization.builder().type("default").build().createObject();
 
     @EnabledIfEnv("t1ift")
     @Test
     @TmsLink("SOUL-3390")
     @DisplayName("Счета. Скачать счет. Организация")
     void downloadBillExcelForOneMonthAndCertainOrganizationTest() {
-        String organization = "ИФТ";
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, "ift");
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
-                .chooseOrganization(organization)
+                .chooseOrganization(organization.getTitle())
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
                 .clickExport();
 
-        checkOrganizationInExcelFile(organization, expectedFileNameWithNovemberPeriod);
+        checkOrganizationInExcelFile(organization.getTitle(), expectedFileNameWithNovemberPeriod);
     }
 
     @EnabledIfEnv("t1ift")
@@ -58,7 +59,7 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, "ift");
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
@@ -74,7 +75,7 @@ public class T1BillsTests extends AbstractT1Test {
     void downloadBillExcelForQuarterTest() {
         String expectedPeriod = new DatePeriod(Quarter2023.FIRST_QUARTER)
                 .makePeriodString();
-        String expectedFileNameWithFirstQuarterPeriod = prepareFileName(Quarter2023.FIRST_QUARTER, "ift");
+        String expectedFileNameWithFirstQuarterPeriod = prepareFileName(Quarter2023.FIRST_QUARTER, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToQuarterPeriod()
                 .chooseQuarter(Quarter2023.FIRST_QUARTER)
@@ -88,7 +89,7 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
     void downloadBillExcelCustomPeriodTest() {
-        String expectedFileNameWithCustomPeriod = prepareFileName(expectedCustomPeriod, "ift");
+        String expectedFileNameWithCustomPeriod = prepareFileName(expectedCustomPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToCustomPeriod()
                 .setPeriod(expectedCustomPeriod)
@@ -102,7 +103,7 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-7270")
     @DisplayName("Счета. Скачать счет. Выгрузка нулевых значений")
     void downloadBillExcelForOneMonthWithCheckboxTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, "ift");
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
