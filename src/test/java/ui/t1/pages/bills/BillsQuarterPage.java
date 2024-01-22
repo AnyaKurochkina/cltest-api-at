@@ -3,7 +3,7 @@ package ui.t1.pages.bills;
 import io.qameta.allure.Step;
 import ui.elements.Select;
 
-public class BillsQuarterPage extends AbstractBillsPeriodPage {
+public class BillsQuarterPage extends AbstractBillsPeriodPage<BillsQuarterPage> {
 
     private final Select quarterSelect = Select.byLabel("Квартал");
 
