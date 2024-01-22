@@ -35,6 +35,12 @@ public class Resource extends AbstractEntity {
     private String projectId;
     private String domainName;
 
+    public Resource(String projectId, String domainName, List<String> hostnames) {
+        this.projectId = projectId;
+        this.domainName = domainName;
+        this.hostnames = hostnames;
+    }
+
     public String getName() {
         return hostnames.get(0);
     }
@@ -42,12 +48,6 @@ public class Resource extends AbstractEntity {
     @Override
     public void delete() {
         CdnResourceClient.deleteResourceByOneOfDomainName(projectId, getName());
-    }
-
-    public Resource(String projectId, String domainName, List<String> hostnames) {
-        this.projectId = projectId;
-        this.domainName = domainName;
-        this.hostnames = hostnames;
     }
 
     public JSONObject toJson() {

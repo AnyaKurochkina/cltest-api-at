@@ -24,7 +24,7 @@ public class ResourcesTab extends AbstractCdnTab {
 
     @Step("Удаление ресурса CDN")
     public ResourcesTab deleteResource(String resourceName) {
-        deleteCdnEntity(resourceName);
+        chooseActionFromMenu(resourceName, "Удалить");
         Dialog.byTitle("Удаление ресурса CDN").clickButton("Удалить");
         return this;
     }

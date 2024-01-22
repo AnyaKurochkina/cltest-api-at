@@ -1,18 +1,14 @@
 package steps.t1.cdn;
 
-import core.enums.Role;
-import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.t1.cdn.SourceGroup;
 
 import java.util.List;
 
-import static core.helper.Configure.cdnProxy;
-
 public class CdnOriginGroupsClient extends AbstractCdnClient {
 
-    private static final String BASE_PATH = apiUrl + "origin-groups";
+    private static final String BASE_PATH = API_URL + "origin-groups";
 
     @Step("Удаление группы источника")
     public static void deleteSourceGroupByName(String projectId, String name) {
@@ -26,8 +22,7 @@ public class CdnOriginGroupsClient extends AbstractCdnClient {
 
     @Step("Получения списка групп источника")
     public static List<SourceGroup> getListSourceGroup(String projectId) {
-        return new Http(cdnProxy)
-                .setRole(Role.CLOUD_ADMIN)
+        return getRequestSpec()
                 .get(BASE_PATH, projectId)
                 .assertStatus(200)
                 .jsonPath()

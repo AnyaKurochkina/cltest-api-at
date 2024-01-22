@@ -2,7 +2,10 @@ package ui.t1.pages.cdn;
 
 import io.qameta.allure.Step;
 import models.t1.cdn.SourceGroup;
-import ui.elements.*;
+import ui.elements.Alert;
+import ui.elements.Button;
+import ui.elements.DataTable;
+import ui.elements.Dialog;
 
 public class SourceGroupsTab extends AbstractCdnTab {
 
@@ -42,11 +45,7 @@ public class SourceGroupsTab extends AbstractCdnTab {
 
     @Step("Редактирование доменного имени группы источника")
     public SourceGroupsTab editSourceGroupDomainName(String sourceGroupName, String newDomainName) {
-        Menu.byElement(sourceGroupTable.searchAllPages(t -> sourceGroupTable.isColumnValueContains("Название", sourceGroupName))
-                        .getRowByColumnValueContains("Название", sourceGroupName)
-                        .get()
-                        .$x(".//button[@id = 'actions-menu-button']"))
-                .select("Редактировать");
+        chooseActionFromMenu(sourceGroupName, "Редактировать");
         editDialog.setInputValueV2("Доменное имя источника", newDomainName);
         saveButton.click();
         Alert.green("Группа источников успешно отредактирована");
@@ -55,7 +54,7 @@ public class SourceGroupsTab extends AbstractCdnTab {
 
     @Step("Удаление группы источника")
     public SourceGroupsTab deleteSourceGroup(String name) {
-        deleteCdnEntity(name);
+        chooseActionFromMenu(name, "Удалить");
         Dialog.byTitle("Удаление группы источников").clickButton("Удалить");
         Alert.green("Группа источников успешно удалена");
         return this;

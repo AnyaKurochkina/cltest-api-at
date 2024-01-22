@@ -5,12 +5,12 @@ import ui.elements.Menu;
 
 public abstract class AbstractCdnTab {
 
-    protected void deleteCdnEntity(String name) {
+    protected void chooseActionFromMenu(String name, String actionName) {
         DataTable table = new DataTable("Источники");
         Menu.byElement(table.searchAllPages(t -> table.isColumnValueContains("Название", name))
                         .getRowByColumnValueContains("Название", name)
                         .get()
                         .$x(".//button[@id = 'actions-menu-button']"))
-                .select("Удалить");
+                .select(actionName);
     }
 }
