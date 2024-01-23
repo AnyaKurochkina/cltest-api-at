@@ -131,6 +131,7 @@ public class ObjectsTest extends AbstractStorageTest {
     @Test
     @Order(7)
     @TmsLink("520411")
+    @Tag("morozov_ilya")
     @DisplayName("Скачать объект")
     void downloadObject() {
         String bucketName = s3Bucket.get().getName();
@@ -147,6 +148,7 @@ public class ObjectsTest extends AbstractStorageTest {
     @Test
     @Order(8)
     @TmsLink("994567")
+    @Tag("morozov_ilya")
     @DisplayName("Удалить несколько объектов")
     void deleteObject() {
         String bucketName = s3Bucket.get().getName();

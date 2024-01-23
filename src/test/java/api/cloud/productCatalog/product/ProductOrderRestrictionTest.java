@@ -35,11 +35,11 @@ public class ProductOrderRestrictionTest extends Tests {
         Product product = ProductSteps.createProduct("create_product_order_restriction_test_api");
         ProductOrderRestriction orderRestriction = ProductOrderRestriction.builder()
                 .productName(product.getName())
-                .domains(Collections.emptyList())
-                .dataCenters(Collections.emptyList())
                 .isDeleted(false)
+                .netSegments(Collections.singletonList("dev-srv-app"))
+                .domains(Collections.singletonList("corp.dev.vtb"))
+                .dataCenters(Collections.singletonList("5"))
                 .informSystemIds(Collections.emptyList())
-                .netSegments(Collections.emptyList())
                 .organization("vtb")
                 .isBlocking(false)
                 .environments(Collections.emptyList())
@@ -72,6 +72,7 @@ public class ProductOrderRestrictionTest extends Tests {
     @TmsLinks({@TmsLink("1536999"), @TmsLink("1537001"), @TmsLink("1537004"), @TmsLink("1537008")})
     @Test
     public void productOrderRestrictionByNameTest() {
+        //TODO добавят валидацию при создании
         Product product = ProductSteps.createProduct("create_product_order_restriction_by_name_test_api");
         String productName = product.getName();
         ProductOrderRestriction orderRestriction = ProductOrderRestriction.builder()
@@ -99,6 +100,9 @@ public class ProductOrderRestrictionTest extends Tests {
         assertEquals(createdOrderRestriction, list.get(0));
         createdOrderRestriction.setEnvironments(Arrays.asList("DEV", "LT"));
         createdOrderRestriction.setWeight(48);
+        createdOrderRestriction.setDomains(Collections.singletonList("corp.dev.vtb"));
+        createdOrderRestriction.setNetSegments(Collections.singletonList("dev-srv-app"));
+        createdOrderRestriction.setDataCenters(Collections.singletonList("5"));
         ProductOrderRestriction updatedRestriction = updateProductOrderRestrictionByName(productName, createdOrderRestriction.getId(),
                 createdOrderRestriction.toJson());
         assertEquals(createdOrderRestriction, updatedRestriction);

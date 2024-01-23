@@ -131,6 +131,7 @@ public class ObjectsTest extends AbstractStorageTest {
     }
 
     @Test
+    @Tag("morozov_ilya")
     @Order(7)
     @TmsLink("520411")
     @DisplayName("Объекты. Скачать объект")
@@ -147,6 +148,7 @@ public class ObjectsTest extends AbstractStorageTest {
     }
 
     @Test
+    @Tag("morozov_ilya")
     @Order(8)
     @TmsLink("994567")
     @DisplayName("Объекты. Удалить несколько объектов")

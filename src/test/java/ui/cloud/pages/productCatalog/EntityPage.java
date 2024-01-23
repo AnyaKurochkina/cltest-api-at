@@ -2,13 +2,10 @@ package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.interactions.Actions;
 import ui.elements.*;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -17,6 +14,7 @@ import static com.codeborne.selenide.Selenide.switchTo;
 @Getter
 public class EntityPage {
 
+    public static final String CALCULATED_VERSION_TITLE = "Вычисляемая";
     protected final Select versionSelect = Select.byLabel("Выберите версию");
     protected final SelenideElement selectedVersion =
             $x("//label[text()='Выберите версию']/..//div[@id='selectValueWrapper']/div");
@@ -36,6 +34,7 @@ public class EntityPage {
     protected final Input titleInput = Input.byName("title");
     protected final SelenideElement mainPage = $x("//a[@href='/meccano/home']");
     protected final String unsavedChangesAlertText = "Внесенные изменения не сохранятся. Покинуть страницу?";
+    protected final SelenideElement objectInfoEditor = $x("//div[@class='jodit-wysiwyg']");
     private final Button addTagButton = Button.byText("Добавить");
     private final Tab versionComparisonTab = Tab.byText("Сравнение");
     private final Tab restrictionsTab = Tab.byText("Ограничения");
@@ -45,7 +44,6 @@ public class EntityPage {
             .$x("following::div[text()='Формат файла не поддерживается. Поддерживаемые форматы: png, jpeg, svg']");
     private final SelenideElement iconTooLargeHint = iconInput.getInput()
             .$x("following::div[text()='Размер не должен превышать 100 КБ']");
-    protected final SelenideElement objectInfoEditor = $x("//div[@class='jodit-wysiwyg']");
 
     @Step("Сохранение объекта без изменения версии")
     public EntityPage saveWithoutPatchVersion(String alertText) {

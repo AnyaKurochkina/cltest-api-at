@@ -17,6 +17,7 @@ import java.io.File;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ServiceSteps.*;
+import static ui.cloud.pages.productCatalog.EntityPage.CALCULATED_VERSION_TITLE;
 import static ui.elements.TypifiedElement.refreshPage;
 
 @Feature("Редактирование сервиса")
@@ -27,7 +28,7 @@ public class EditServiceTest extends ServiceBaseTest {
     @DisplayName("Редактирование сервиса")
     public void editServiceTest() {
         service.setDescription("new description");
-        service.setGraphVersion("Последняя");
+        service.setGraphVersion(CALCULATED_VERSION_TITLE);
         service.setIsPublished(true);
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(service.getName())
@@ -45,7 +46,7 @@ public class EditServiceTest extends ServiceBaseTest {
         String currentServiceVersion = "1.0.1";
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
-                .setGraphVersion("Последняя")
+                .setGraphVersion(CALCULATED_VERSION_TITLE)
                 .saveWithPatchVersion()
                 .setGraphVersion("1.0.0")
                 .checkSaveWithInvalidVersion("1.0.0", currentServiceVersion)

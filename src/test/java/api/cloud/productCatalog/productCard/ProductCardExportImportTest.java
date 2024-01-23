@@ -55,4 +55,6 @@ public class ProductCardExportImportTest {
         assertTrue(isProductCardExists(productCard.getName()), "Product card не существует");
         deleteProductCardByName(productCard.getName());
     }
+    //todo тест на создание продуктовой карты с сущностью с которой нельзя создать.
+    //todo тест на импорт уже существ продуктовой карты.
 }

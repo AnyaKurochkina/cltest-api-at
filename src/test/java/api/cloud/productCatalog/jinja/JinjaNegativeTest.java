@@ -80,6 +80,7 @@ public class JinjaNegativeTest extends Tests {
         JSONObject jsonObject = Jinja2Template.builder()
                 .name(name)
                 .build()
+                .init()
                 .toJson();
         String errorMessage = createJinjaResponse(jsonObject)
                 .assertStatus(400)

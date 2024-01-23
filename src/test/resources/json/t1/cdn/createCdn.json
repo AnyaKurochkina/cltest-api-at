@@ -1,0 +1,18 @@
+{
+  "website": "",
+  "domainName": "asdasd.ru",
+  "sourceType": "server",
+  "originGroup": null,
+  "sslData": null,
+  "redirect_http_to_https": false,
+  "redirect_https_to_http": false,
+  "active": true,
+  "certType": "not_used",
+  "hostnames": [
+    "asdasd.ru"
+  ],
+  "hostType": "main",
+  "originProtocol": "HTTP",
+  "hostHeader": "",
+  "request_id": ""
+}
