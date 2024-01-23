@@ -1,5 +1,7 @@
 package models;
 
+import lombok.extern.log4j.Log4j2;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,6 +13,7 @@ import java.util.concurrent.Executors;
 import static models.AbstractEntity.Mode.*;
 import static models.ObjectPoolService.awaitTerminationAfterShutdown;
 
+@Log4j2
 public abstract class AbstractEntity {
     @SuppressWarnings("unchecked")
     private static final Map<Long, Set<AbstractEntity>>[] entities = new ConcurrentHashMap[10];
@@ -47,6 +50,7 @@ public abstract class AbstractEntity {
             e.delete();
             e.deleted = true;
         } catch (Throwable ex) {
+            log.debug("Ошибка при удалении сущности {}", e.toString());
             ex.printStackTrace();
         }
     }
