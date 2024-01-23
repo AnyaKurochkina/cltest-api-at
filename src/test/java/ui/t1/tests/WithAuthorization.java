@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(value = {ElementType.METHOD, ElementType.TYPE})
 public @interface WithAuthorization {
 
-    Role value();
+    Role value() default Role.SUPERADMIN;
 }

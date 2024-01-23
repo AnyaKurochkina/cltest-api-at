@@ -64,6 +64,7 @@ public class Configure {
     public static String s3StorageOld;
     public static String s3StorageNew;
     public static String orchestratorURL;
+    public static String cdnProxy;
 
     static {
         try {
@@ -133,6 +134,8 @@ public class Configure {
             s3StorageOld = KONG_URL + "storage";
             s3StorageNew = KONG_URL + "storage-new";
             powerDns = getAppProp("url.powerdns");
+            cdnProxy = KONG_URL + "cdn-proxy";
+
 
             initApiRoutes();
             String fileSecret = Configure.getAppProp("data.folder") + "/shareFolder/" + ((System.getProperty("share") != null) ? System.getProperty("share") : "shareData") + ".json";

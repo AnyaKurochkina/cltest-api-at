@@ -15,7 +15,7 @@ import ui.t1.pages.T1LoginPage;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractT1Test extends Tests {
 
-    protected String getProject() {
+    protected String getProjectId() {
         return ((Project) Project.builder().isForOrders(true).build().createObject()).getId();
     }
 
@@ -30,11 +30,11 @@ public abstract class AbstractT1Test extends Tests {
         if (info.getTestMethod().orElseThrow(NotFoundElementException::new).isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get()
                     .getAnnotation(WithAuthorization.class).value();
-            new T1LoginPage(getProject()).signIn(role);
+            new T1LoginPage(getProjectId()).signIn(role);
         } else if (info.getTestMethod().get().getDeclaringClass().isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get().getDeclaringClass()
                     .getAnnotation(WithAuthorization.class).value();
-            new T1LoginPage(getProject()).signIn(role);
+            new T1LoginPage(getProjectId()).signIn(role);
         }
     }
 }

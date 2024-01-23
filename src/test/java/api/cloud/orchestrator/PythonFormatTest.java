@@ -40,7 +40,7 @@ public class PythonFormatTest extends Tests {
     @TmsLink("SOUL-8893")
     @Test
     public void checkOneLinePythonTemplateTest() {
-        PythonTemplate pythonTemplate = createPythonTemplateByName("check_python_template_api_test");
+        PythonTemplate pythonTemplate = createPythonTemplateByName("check_one_line_python_template_api_test");
         pythonTemplate.setPythonCode("config['value_1'] + config['value_2']");
         pythonTemplate.setPythonData(new JSONObject("{\"config\":{\"value_1\":10,\"value_2\":30}}"));
 
@@ -52,7 +52,7 @@ public class PythonFormatTest extends Tests {
     @TmsLink("SOUL-8894")
     @Test
     public void checkPythonTemplateWithNotDefinedArgsTest() {
-        PythonTemplate pythonTemplate = createPythonTemplateByName("check_python_template_api_test");
+        PythonTemplate pythonTemplate = createPythonTemplateByName("check_python_template_with_not_defined_api_test");
         pythonTemplate.setPythonCode("config1['value_1'] + config['value_2']");
         pythonTemplate.setPythonData(new JSONObject("{\"config\":{\"value_1\":10,\"value_2\":30}}"));
 

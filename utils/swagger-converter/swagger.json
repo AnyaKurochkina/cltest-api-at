@@ -1,0 +1,5842 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "title": "Storage service",
+    "version": "874df8c1-82"
+  },
+  "paths": {
+    "/api/v1/projects/{project_name}/info": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "summary": "Get information about the project",
+        "operationId": "get_project_info_api_v1_projects__project_name__info_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets": {
+      "get": {
+        "tags": [
+          "Buckets"
+        ],
+        "summary": "Get buckets list for the project",
+        "operationId": "list_buckets_api_v1_projects__project_name__buckets_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "description": "Page number",
+            "required": false,
+            "schema": {
+              "title": "Page",
+              "minimum": 1.0,
+              "type": "integer",
+              "description": "Page number",
+              "default": 1
+            },
+            "name": "page",
+            "in": "query"
+          },
+          {
+            "description": "Buckets per page",
+            "required": false,
+            "schema": {
+              "title": "Per Page",
+              "minimum": 1.0,
+              "type": "integer",
+              "description": "Buckets per page",
+              "default": 10
+            },
+            "name": "per_page",
+            "in": "query"
+          },
+          {
+            "description": "Case-insensitive filter by bucket name",
+            "required": false,
+            "schema": {
+              "title": "Name Filter",
+              "minLength": 1,
+              "type": "string",
+              "description": "Case-insensitive filter by bucket name"
+            },
+            "name": "name_filter",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Website Enabled",
+              "type": "boolean"
+            },
+            "name": "website_enabled",
+            "in": "query"
+          },
+          {
+            "description": "Comma-separated list of optional response fields, supported values: \"website\"",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string",
+              "description": "Comma-separated list of optional response fields, supported values: \"website\"",
+              "default": ""
+            },
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketsList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Buckets"
+        ],
+        "summary": "Create new bucket for the project",
+        "operationId": "create_bucket_api_v1_projects__project_name__buckets_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateBucket"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The bucket with the same name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}": {
+      "get": {
+        "tags": [
+          "Buckets"
+        ],
+        "summary": "Get information about the bucket of the project",
+        "operationId": "get_bucket_info_api_v1_projects__project_name__buckets__bucket_name__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "description": "Comma-separated list of optional response fields, supported values: \"website\"",
+            "required": false,
+            "schema": {
+              "title": "Include",
+              "type": "string",
+              "description": "Comma-separated list of optional response fields, supported values: \"website\"",
+              "default": ""
+            },
+            "name": "include",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Buckets"
+        ],
+        "summary": "Delete the bucket of the project",
+        "operationId": "delete_bucket_api_v1_projects__project_name__buckets__bucket_name__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/acl": {
+      "get": {
+        "tags": [
+          "Buckets ACL"
+        ],
+        "summary": "Get the bucket ACL of the project",
+        "operationId": "get_bucket_acl_api_v1_projects__project_name__buckets__bucket_name__acl_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Buckets ACL"
+        ],
+        "summary": "Update bucket ACL item",
+        "operationId": "update_item_api_v1_projects__project_name__buckets__bucket_name__acl_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessListItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Buckets ACL"
+        ],
+        "summary": "Add bucket ACL item",
+        "operationId": "create_item_api_v1_projects__project_name__buckets__bucket_name__acl_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessListItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Buckets ACL"
+        ],
+        "summary": "Delete bucket ACL item",
+        "operationId": "delete_item_api_v1_projects__project_name__buckets__bucket_name__acl_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAccessListItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/cors": {
+      "get": {
+        "tags": [
+          "Buckets",
+          "CORS"
+        ],
+        "summary": "Retrieve a bucket CORS configuration",
+        "operationId": "get_bucket_cors_view_api_v1_projects__project_name__buckets__bucket_name__cors_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CORSRules"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Buckets",
+          "CORS"
+        ],
+        "summary": "Set a bucket CORS configuration",
+        "operationId": "put_bucket_cors_view_api_v1_projects__project_name__buckets__bucket_name__cors_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CORSRules"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CORSRules"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/lifecycle_rules": {
+      "get": {
+        "tags": [
+          "Buckets lifecycle rules"
+        ],
+        "summary": "Get the bucket lifecycle rules",
+        "operationId": "get_rules_api_v1_projects__project_name__buckets__bucket_name__lifecycle_rules_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketLifecycleRulesResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Buckets lifecycle rules"
+        ],
+        "summary": "Update bucket lifecycle rule",
+        "operationId": "update_rule_api_v1_projects__project_name__buckets__bucket_name__lifecycle_rules_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BucketLifecycleRule"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketLifecycleRule"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The rule not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Buckets lifecycle rules"
+        ],
+        "summary": "Create new bucket lifecycle rule",
+        "operationId": "create_rule_api_v1_projects__project_name__buckets__bucket_name__lifecycle_rules_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BucketLifecycleRule"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketLifecycleRule"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The rule with the same name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/lifecycle_rules/{rule_name}": {
+      "get": {
+        "tags": [
+          "Buckets lifecycle rules"
+        ],
+        "summary": "Get the bucket lifecycle rule",
+        "operationId": "get_rule_api_v1_projects__project_name__buckets__bucket_name__lifecycle_rules__rule_name__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Rule Name",
+              "type": "string"
+            },
+            "name": "rule_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketLifecycleRule"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The rule not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Buckets lifecycle rules"
+        ],
+        "summary": "Delete bucket lifecycle rule",
+        "operationId": "delete_rule_api_v1_projects__project_name__buckets__bucket_name__lifecycle_rules__rule_name__delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Rule Name",
+              "type": "string"
+            },
+            "name": "rule_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The rule not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/versioning": {
+      "get": {
+        "tags": [
+          "Buckets versioning"
+        ],
+        "summary": "Get info about the bucket versioning of the project",
+        "operationId": "get_bucket_versioning_api_v1_projects__project_name__buckets__bucket_name__versioning_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketVersioning"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Buckets versioning"
+        ],
+        "summary": "Update the bucket versioning of the project",
+        "operationId": "update_bucket_versioning_api_v1_projects__project_name__buckets__bucket_name__versioning_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetBucketVersioning"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SetBucketVersioning"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/website": {
+      "get": {
+        "tags": [
+          "Buckets website"
+        ],
+        "summary": "Get the bucket website configuration of the project",
+        "operationId": "get_config_api_v1_projects__project_name__buckets__bucket_name__website_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketWebsiteConfig"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Buckets website"
+        ],
+        "summary": "Update the bucket website configuration of the project",
+        "operationId": "update_config_api_v1_projects__project_name__buckets__bucket_name__website_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetBucketWebsiteConfig"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BucketWebsiteConfig"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/website/certificates": {
+      "put": {
+        "tags": [
+          "Buckets website"
+        ],
+        "summary": "Import the certificate and private key as bundle",
+        "operationId": "upload_certificate_api_v1_projects__project_name__buckets__bucket_name__website_certificates_put",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_certificate_api_v1_projects__project_name__buckets__bucket_name__website_certificates_put"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error occurred due (de)serialization certificate and/or private key, or Cert Service is unhealthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects": {
+      "get": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "List objects in the bucket",
+        "operationId": "index_api_v1_projects__project_name__buckets__bucket_name__objects_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Folder Key",
+              "type": "string",
+              "default": ""
+            },
+            "name": "folder_key",
+            "in": "query"
+          },
+          {
+            "required": false,
+            "schema": {
+              "title": "Include Deleted",
+              "type": "boolean",
+              "default": false
+            },
+            "name": "include_deleted",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectsList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/upload-request": {
+      "post": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Create and pre-sign file upload request",
+        "operationId": "create_upload_request_api_v1_projects__project_name__buckets__bucket_name__objects_upload_request_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadRequest"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/file-url": {
+      "post": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Create file download URL",
+        "operationId": "create_file_url_api_v1_projects__project_name__buckets__bucket_name__objects_file_url_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFileURL"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FileURL"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/object": {
+      "get": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Get Object",
+        "operationId": "get_object_api_v1_projects__project_name__buckets__bucket_name__objects_object_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Update file",
+        "operationId": "update_file_api_v1_projects__project_name__buckets__bucket_name__objects_object_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "pattern": "^.*[^/]$",
+              "type": "string"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFile"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Object with the same name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects:delete": {
+      "post": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Delete objects",
+        "operationId": "delete_api_v1_projects__project_name__buckets__bucket_name__objects_delete_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteObjects"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteObjectsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects:grant-public-read": {
+      "post": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Grant read access to all users for objects",
+        "operationId": "grant_public_read_api_v1_projects__project_name__buckets__bucket_name__objects_grant_public_read_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GrantPublicRead"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GrantPublicReadResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects:restore": {
+      "post": {
+        "tags": [
+          "Objects"
+        ],
+        "summary": "Restore deleted objects",
+        "operationId": "restore_api_v1_projects__project_name__buckets__bucket_name__objects_restore_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RestoreObjects"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestoreObjectsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/acl": {
+      "get": {
+        "tags": [
+          "Objects ACL"
+        ],
+        "summary": "Get object ACL",
+        "operationId": "get_api_v1_projects__project_name__buckets__bucket_name__objects_acl_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "Objects ACL"
+        ],
+        "summary": "Update object ACL item",
+        "operationId": "update_item_api_v1_projects__project_name__buckets__bucket_name__objects_acl_put",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessListItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Objects ACL"
+        ],
+        "summary": "Add object ACL item",
+        "operationId": "create_item_api_v1_projects__project_name__buckets__bucket_name__objects_acl_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AccessListItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Objects ACL"
+        ],
+        "summary": "Delete object ACL item",
+        "operationId": "delete_item_api_v1_projects__project_name__buckets__bucket_name__objects_acl_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAccessListItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccessList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/metadata": {
+      "get": {
+        "tags": [
+          "Objects metadata"
+        ],
+        "summary": "Get object metadata",
+        "operationId": "get_api_v1_projects__project_name__buckets__bucket_name__objects_metadata_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "description": "Object key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string",
+              "description": "Object key"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectMetadata"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Objects metadata"
+        ],
+        "summary": "Add object metadata",
+        "operationId": "create_api_v1_projects__project_name__buckets__bucket_name__objects_metadata_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "description": "Object key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string",
+              "description": "Object key"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjectMetadataItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectMetadata"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Metadata key is already used",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "Objects metadata"
+        ],
+        "summary": "Edit object metadata",
+        "operationId": "update_api_v1_projects__project_name__buckets__bucket_name__objects_metadata_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "description": "Object key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string",
+              "description": "Object key"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ObjectMetadataItem"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectMetadata"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/metadata:delete": {
+      "post": {
+        "tags": [
+          "Objects metadata"
+        ],
+        "summary": "Delete object metadata",
+        "operationId": "delete_api_v1_projects__project_name__buckets__bucket_name__objects_metadata_delete_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "description": "Object key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string",
+              "description": "Object key"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteObjectMetadata"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectMetadata"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/versions": {
+      "get": {
+        "tags": [
+          "Objects versions"
+        ],
+        "summary": "Get object versions",
+        "operationId": "get_api_v1_projects__project_name__buckets__bucket_name__objects_versions_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "description": "Object key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string",
+              "description": "Object key"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectVersions"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/objects/versions:delete": {
+      "post": {
+        "tags": [
+          "Objects versions"
+        ],
+        "summary": "Delete object versions",
+        "operationId": "delete_api_v1_projects__project_name__buckets__bucket_name__objects_versions_delete_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "description": "Object key",
+            "required": true,
+            "schema": {
+              "title": "Key",
+              "minLength": 1,
+              "type": "string",
+              "description": "Object key"
+            },
+            "name": "key",
+            "in": "query"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteObjectVersions"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteObjectVersionsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/folders": {
+      "post": {
+        "tags": [
+          "Folders"
+        ],
+        "summary": "Create folder in the bucket",
+        "operationId": "create_api_v1_projects__project_name__buckets__bucket_name__folders_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateFolder"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Object"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Folder already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/multipart-uploads": {
+      "get": {
+        "tags": [
+          "Multipart uploads"
+        ],
+        "summary": "List multipart uploads",
+        "operationId": "list_multipart_uploads_api_v1_projects__project_name__buckets__bucket_name__multipart_uploads_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipartUploadsList"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Multipart uploads"
+        ],
+        "summary": "Create multipart upload",
+        "operationId": "create_multipart_upload_api_v1_projects__project_name__buckets__bucket_name__multipart_uploads_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateMultipartUpload"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipartUploadInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/multipart-uploads/{upload_id}/part-upload-request": {
+      "post": {
+        "tags": [
+          "Multipart uploads"
+        ],
+        "summary": "Create pre-signed request to upload part",
+        "operationId": "create_part_upload_request_api_v1_projects__project_name__buckets__bucket_name__multipart_uploads__upload_id__part_upload_request_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Upload Id",
+              "type": "string"
+            },
+            "name": "upload_id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePartUploadRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PartUploadRequest"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/multipart-uploads/{upload_id}:complete": {
+      "post": {
+        "tags": [
+          "Multipart uploads"
+        ],
+        "summary": "Complete multipart upload",
+        "operationId": "complete_multipart_upload_api_v1_projects__project_name__buckets__bucket_name__multipart_uploads__upload_id__complete_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Upload Id",
+              "type": "string"
+            },
+            "name": "upload_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Object Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "object_key",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ObjectInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/multipart-uploads/{upload_id}:abort": {
+      "post": {
+        "tags": [
+          "Multipart uploads"
+        ],
+        "summary": "Abort multipart upload",
+        "operationId": "abort_multipart_upload_api_v1_projects__project_name__buckets__bucket_name__multipart_uploads__upload_id__abort_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Upload Id",
+              "type": "string"
+            },
+            "name": "upload_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Object Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "object_key",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/buckets/{bucket_name}/multipart-uploads/{upload_id}": {
+      "get": {
+        "tags": [
+          "Multipart uploads"
+        ],
+        "summary": "Get multipart upload info",
+        "operationId": "get_multipart_upload_api_v1_projects__project_name__buckets__bucket_name__multipart_uploads__upload_id__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Upload Id",
+              "type": "string"
+            },
+            "name": "upload_id",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Bucket Name",
+              "type": "string"
+            },
+            "name": "bucket_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          },
+          {
+            "required": true,
+            "schema": {
+              "title": "Object Key",
+              "minLength": 1,
+              "type": "string"
+            },
+            "name": "object_key",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MultipartUploadInfo"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/projects/{project_name}/orders": {
+      "get": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Get storage order",
+        "operationId": "get_order_api_v1_projects__project_name__orders_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestAPIEntitiesOrder"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Create storage order",
+        "operationId": "create_order_api_v1_projects__project_name__orders_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RestAPIEntitiesOrder"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Orders"
+        ],
+        "summary": "Delete storage order",
+        "operationId": "delete_order_api_v1_projects__project_name__orders_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "title": "Project Name",
+              "type": "string"
+            },
+            "name": "project_name",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    },
+    "/api/v1/health": {
+      "get": {
+        "tags": [
+          "Healthchecks"
+        ],
+        "summary": "Health probe",
+        "operationId": "handle_request_api_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthcheckReport"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity is not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Request validation failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AccessList": {
+        "title": "AccessList",
+        "required": [
+          "acl"
+        ],
+        "type": "object",
+        "properties": {
+          "acl": {
+            "title": "Acl",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccessListItem"
+            }
+          }
+        }
+      },
+      "AccessListGrantee": {
+        "title": "AccessListGrantee",
+        "required": [
+          "id",
+          "type"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "minLength": 1,
+            "type": "string",
+            "description": "User ID or group URI"
+          },
+          "type": {
+            "$ref": "#/components/schemas/GranteeType"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
+        }
+      },
+      "AccessListItem": {
+        "title": "AccessListItem",
+        "required": [
+          "grantee",
+          "permissions"
+        ],
+        "type": "object",
+        "properties": {
+          "grantee": {
+            "$ref": "#/components/schemas/AccessListGrantee"
+          },
+          "permissions": {
+            "title": "Permissions",
+            "type": "array",
+            "items": {
+              "enum": [
+                "FULL_CONTROL",
+                "READ",
+                "READ_ACP",
+                "WRITE",
+                "WRITE_ACP"
+              ],
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ActionAbortIncompleteMultipartUpload": {
+        "title": "ActionAbortIncompleteMultipartUpload",
+        "required": [
+          "days_after_initiation"
+        ],
+        "type": "object",
+        "properties": {
+          "days_after_initiation": {
+            "title": "Days After Initiation",
+            "minimum": 1.0,
+            "type": "integer",
+            "description": "The number of days after which an incomplete multipart upload is aborted"
+          }
+        }
+      },
+      "ActionExpiration": {
+        "title": "ActionExpiration",
+        "type": "object",
+        "properties": {
+          "date": {
+            "title": "Date",
+            "type": "string",
+            "description": "Indicates at what date the object is to be moved or deleted",
+            "format": "date"
+          },
+          "days": {
+            "title": "Days",
+            "minimum": 1.0,
+            "type": "integer",
+            "description": "Indicates the lifetime, in days, of the objects"
+          },
+          "expired_object_delete_marker": {
+            "title": "Expired Object Delete Marker",
+            "type": "boolean",
+            "description": "Indicates whether S3 will remove a delete marker with no noncurrent versions"
+          }
+        }
+      },
+      "ActionNoncurrentVersionExpiration": {
+        "title": "ActionNoncurrentVersionExpiration",
+        "required": [
+          "noncurrent_days"
+        ],
+        "type": "object",
+        "properties": {
+          "noncurrent_days": {
+            "title": "Noncurrent Days",
+            "minimum": 1.0,
+            "type": "integer",
+            "description": "The number of days an object version is noncurrent before deletion"
+          },
+          "newer_noncurrent_versions": {
+            "title": "Newer Noncurrent Versions",
+            "minimum": 0.0,
+            "type": "integer",
+            "description": "NOT SUPPORTED! How many noncurrent versions will be retain"
+          }
+        }
+      },
+      "Body_upload_certificate_api_v1_projects__project_name__buckets__bucket_name__website_certificates_put": {
+        "title": "Body_upload_certificate_api_v1_projects__project_name__buckets__bucket_name__website_certificates_put",
+        "required": [
+          "domain",
+          "certificate",
+          "private_key"
+        ],
+        "type": "object",
+        "properties": {
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          },
+          "certificate": {
+            "title": "Certificate",
+            "type": "string",
+            "format": "binary"
+          },
+          "private_key": {
+            "title": "Private Key",
+            "type": "string",
+            "format": "binary"
+          }
+        }
+      },
+      "BucketInfo": {
+        "title": "BucketInfo",
+        "required": [
+          "name",
+          "created_at",
+          "total_objects",
+          "total_size",
+          "owner_id"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string",
+            "format": "date-time"
+          },
+          "total_objects": {
+            "title": "Total Objects",
+            "type": "integer"
+          },
+          "total_size": {
+            "title": "Total Size",
+            "type": "integer",
+            "description": "The bucket size in bytes"
+          },
+          "owner_id": {
+            "title": "Owner Id",
+            "type": "string"
+          },
+          "website": {
+            "$ref": "#/components/schemas/BucketWebsiteConfig"
+          }
+        }
+      },
+      "BucketLifecycleRule": {
+        "title": "BucketLifecycleRule",
+        "required": [
+          "name",
+          "status",
+          "filter"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "maxLength": 255,
+            "minLength": 1,
+            "type": "string",
+            "description": "Unique rule name"
+          },
+          "status": {
+            "title": "Status",
+            "enum": [
+              "Enabled",
+              "Disabled"
+            ],
+            "type": "string",
+            "description": "If 'Enabled' the rule is applied, if 'Disabled' - not"
+          },
+          "filter": {
+            "$ref": "#/components/schemas/BucketLifecycleRuleFilter"
+          },
+          "expiration": {
+            "$ref": "#/components/schemas/ActionExpiration"
+          },
+          "noncurrent_version_expiration": {
+            "$ref": "#/components/schemas/ActionNoncurrentVersionExpiration"
+          },
+          "abort_incomplete_multipart_upload": {
+            "$ref": "#/components/schemas/ActionAbortIncompleteMultipartUpload"
+          }
+        }
+      },
+      "BucketLifecycleRuleFilter": {
+        "title": "BucketLifecycleRuleFilter",
+        "type": "object",
+        "properties": {
+          "prefix": {
+            "title": "Prefix",
+            "minLength": 1,
+            "type": "string",
+            "description": "Prefix identifying one or more objects"
+          },
+          "tags": {
+            "title": "Tags",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectTag"
+            },
+            "description": "List of object tags"
+          },
+          "object_size_greater_than": {
+            "title": "Object Size Greater Than",
+            "minimum": 0.0,
+            "type": "integer",
+            "description": "NOT SUPPORTED! Minimum object size in bytes"
+          },
+          "object_size_less_than": {
+            "title": "Object Size Less Than",
+            "minimum": 0.0,
+            "type": "integer",
+            "description": "NOT SUPPORTED! Maximum object size in bytes"
+          }
+        }
+      },
+      "BucketLifecycleRulesResponse": {
+        "title": "BucketLifecycleRulesResponse",
+        "required": [
+          "rules"
+        ],
+        "type": "object",
+        "properties": {
+          "rules": {
+            "title": "Rules",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BucketLifecycleRule"
+            }
+          }
+        }
+      },
+      "BucketVersioning": {
+        "title": "BucketVersioning",
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/VersioningStatus"
+          }
+        }
+      },
+      "BucketWebsiteConfig": {
+        "title": "BucketWebsiteConfig",
+        "required": [
+          "is_enabled",
+          "url",
+          "domain"
+        ],
+        "type": "object",
+        "properties": {
+          "is_enabled": {
+            "title": "Is Enabled",
+            "type": "boolean"
+          },
+          "index_page": {
+            "title": "Index Page",
+            "minLength": 1,
+            "type": "string",
+            "description": "The object name of the index page for the website. For example, index.html.",
+            "default": "index.html"
+          },
+          "error_page": {
+            "title": "Error Page",
+            "minLength": 1,
+            "type": "string",
+            "description": "The object name of the website error page to use for 4XX class errors. For example, error.html.",
+            "default": "error.html"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          },
+          "domain": {
+            "title": "Domain",
+            "type": "string"
+          }
+        }
+      },
+      "BucketsList": {
+        "title": "BucketsList",
+        "required": [
+          "buckets",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "buckets": {
+            "title": "Buckets",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BucketInfo"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/storage_core_service__models__bucket__ListMeta"
+          }
+        }
+      },
+      "CORS": {
+        "title": "CORS",
+        "required": [
+          "methods",
+          "origins"
+        ],
+        "type": "object",
+        "properties": {
+          "methods": {
+            "title": "Methods",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "enum": [
+                "GET",
+                "PUT",
+                "HEAD",
+                "POST",
+                "DELETE"
+              ],
+              "type": "string"
+            }
+          },
+          "origins": {
+            "title": "Origins",
+            "minItems": 1,
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "headers": {
+            "title": "Headers",
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "expose_headers": {
+            "title": "Expose Headers",
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "max_age_seconds": {
+            "title": "Max Age Seconds",
+            "minimum": 0.0,
+            "type": "integer"
+          }
+        }
+      },
+      "CORSRules": {
+        "title": "CORSRules",
+        "type": "object",
+        "properties": {
+          "rules": {
+            "title": "Rules",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CORS"
+            }
+          }
+        }
+      },
+      "CheckResult": {
+        "title": "CheckResult",
+        "required": [
+          "name",
+          "passed"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "passed": {
+            "title": "Passed",
+            "type": "boolean"
+          },
+          "details": {
+            "title": "Details",
+            "type": "string"
+          }
+        }
+      },
+      "CreateBucket": {
+        "title": "CreateBucket",
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "maxLength": 63,
+            "minLength": 3,
+            "pattern": "(?!^(\\d{1,3}\\.){3}\\d{1,3}$)(^([a-z0-9][a-z0-9\\-]*[a-z0-9]\\.)*([a-z0-9][a-z0-9\\-]*[a-z0-9])$)",
+            "type": "string"
+          }
+        }
+      },
+      "CreateFileURL": {
+        "title": "CreateFileURL",
+        "required": [
+          "file_key"
+        ],
+        "type": "object",
+        "properties": {
+          "file_key": {
+            "title": "File Key",
+            "minLength": 1,
+            "type": "string"
+          },
+          "expires_in": {
+            "title": "Expires In",
+            "exclusiveMinimum": 0.0,
+            "type": "integer",
+            "default": 86400
+          },
+          "version": {
+            "title": "Version",
+            "type": "string"
+          }
+        }
+      },
+      "CreateFolder": {
+        "title": "CreateFolder",
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "minLength": 1,
+            "type": "string"
+          }
+        }
+      },
+      "CreateMultipartUpload": {
+        "title": "CreateMultipartUpload",
+        "required": [
+          "object_key",
+          "acl"
+        ],
+        "type": "object",
+        "properties": {
+          "object_key": {
+            "title": "Object Key",
+            "minLength": 1,
+            "type": "string"
+          },
+          "acl": {
+            "title": "Acl",
+            "enum": [
+              "authenticated-read",
+              "private",
+              "public-read",
+              "public-read-write"
+            ],
+            "type": "string"
+          },
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          }
+        }
+      },
+      "CreatePartUploadRequest": {
+        "title": "CreatePartUploadRequest",
+        "required": [
+          "object_key",
+          "part_number"
+        ],
+        "type": "object",
+        "properties": {
+          "object_key": {
+            "title": "Object Key",
+            "minLength": 1,
+            "type": "string"
+          },
+          "part_number": {
+            "title": "Part Number",
+            "maximum": 10000.0,
+            "minimum": 1.0,
+            "type": "integer"
+          },
+          "expires_in": {
+            "title": "Expires In",
+            "minimum": 1.0,
+            "type": "integer",
+            "description": "The number of seconds the pre-signed url is valid for",
+            "default": 3600
+          }
+        }
+      },
+      "CreateUploadRequest": {
+        "title": "CreateUploadRequest",
+        "required": [
+          "folder_key",
+          "acl"
+        ],
+        "type": "object",
+        "properties": {
+          "folder_key": {
+            "title": "Folder Key",
+            "type": "string"
+          },
+          "acl": {
+            "title": "Acl",
+            "enum": [
+              "authenticated-read",
+              "private",
+              "public-read",
+              "public-read-write"
+            ],
+            "type": "string"
+          }
+        }
+      },
+      "DeleteAccessListItem": {
+        "title": "DeleteAccessListItem",
+        "required": [
+          "grantee"
+        ],
+        "type": "object",
+        "properties": {
+          "grantee": {
+            "$ref": "#/components/schemas/AccessListGrantee"
+          }
+        }
+      },
+      "DeleteObjectMetadata": {
+        "title": "DeleteObjectMetadata",
+        "required": [
+          "keys"
+        ],
+        "type": "object",
+        "properties": {
+          "keys": {
+            "title": "Keys",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DeleteObjectRequest": {
+        "title": "DeleteObjectRequest",
+        "required": [
+          "key"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "purge": {
+            "title": "Purge",
+            "type": "boolean",
+            "default": false
+          }
+        }
+      },
+      "DeleteObjectResult": {
+        "title": "DeleteObjectResult",
+        "required": [
+          "key",
+          "is_deleted"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "is_deleted": {
+            "title": "Is Deleted",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        }
+      },
+      "DeleteObjectVersionResult": {
+        "title": "DeleteObjectVersionResult",
+        "required": [
+          "version",
+          "is_deleted"
+        ],
+        "type": "object",
+        "properties": {
+          "version": {
+            "title": "Version",
+            "type": "string"
+          },
+          "is_deleted": {
+            "title": "Is Deleted",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        }
+      },
+      "DeleteObjectVersions": {
+        "title": "DeleteObjectVersions",
+        "required": [
+          "versions"
+        ],
+        "type": "object",
+        "properties": {
+          "versions": {
+            "title": "Versions",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DeleteObjectVersionsResponse": {
+        "title": "DeleteObjectVersionsResponse",
+        "required": [
+          "results"
+        ],
+        "type": "object",
+        "properties": {
+          "results": {
+            "title": "Results",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteObjectVersionResult"
+            }
+          }
+        }
+      },
+      "DeleteObjects": {
+        "title": "DeleteObjects",
+        "required": [
+          "objects"
+        ],
+        "type": "object",
+        "properties": {
+          "objects": {
+            "title": "Objects",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteObjectRequest"
+            }
+          }
+        }
+      },
+      "DeleteObjectsResponse": {
+        "title": "DeleteObjectsResponse",
+        "required": [
+          "results"
+        ],
+        "type": "object",
+        "properties": {
+          "results": {
+            "title": "Results",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DeleteObjectResult"
+            }
+          }
+        }
+      },
+      "ErrorInfo": {
+        "title": "ErrorInfo",
+        "required": [
+          "code",
+          "message"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "title": "Code",
+            "type": "string"
+          },
+          "message": {
+            "title": "Message",
+            "type": "string"
+          },
+          "details": {
+            "title": "Details"
+          }
+        }
+      },
+      "ErrorResponse": {
+        "title": "ErrorResponse",
+        "required": [
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ErrorInfo"
+          }
+        }
+      },
+      "FileURL": {
+        "title": "FileURL",
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        }
+      },
+      "GrantPublicRead": {
+        "title": "GrantPublicRead",
+        "required": [
+          "keys"
+        ],
+        "type": "object",
+        "properties": {
+          "keys": {
+            "title": "Keys",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "GrantPublicReadResponse": {
+        "title": "GrantPublicReadResponse",
+        "required": [
+          "results"
+        ],
+        "type": "object",
+        "properties": {
+          "results": {
+            "title": "Results",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/GrantPublicReadResult"
+            }
+          }
+        }
+      },
+      "GrantPublicReadResult": {
+        "title": "GrantPublicReadResult",
+        "required": [
+          "key",
+          "is_granted"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "is_granted": {
+            "title": "Is Granted",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        }
+      },
+      "GranteeType": {
+        "title": "GranteeType",
+        "enum": [
+          "user",
+          "group"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "HealthcheckReport": {
+        "title": "HealthcheckReport",
+        "required": [
+          "healthy",
+          "checks"
+        ],
+        "type": "object",
+        "properties": {
+          "healthy": {
+            "title": "Healthy",
+            "type": "boolean"
+          },
+          "checks": {
+            "title": "Checks",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CheckResult"
+            }
+          }
+        }
+      },
+      "MultipartUploadInfo": {
+        "title": "MultipartUploadInfo",
+        "required": [
+          "id",
+          "object_key",
+          "initiated_at",
+          "initiator_id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "object_key": {
+            "title": "Object Key",
+            "type": "string"
+          },
+          "initiated_at": {
+            "title": "Initiated At",
+            "type": "string",
+            "format": "date-time"
+          },
+          "initiator_id": {
+            "title": "Initiator Id",
+            "type": "string"
+          }
+        }
+      },
+      "MultipartUploadsList": {
+        "title": "MultipartUploadsList",
+        "required": [
+          "multipart_uploads",
+          "meta"
+        ],
+        "type": "object",
+        "properties": {
+          "multipart_uploads": {
+            "title": "Multipart Uploads",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/MultipartUploadInfo"
+            }
+          },
+          "meta": {
+            "$ref": "#/components/schemas/storage_core_service__models__multipart_upload__ListMeta"
+          }
+        }
+      },
+      "Object": {
+        "title": "Object",
+        "required": [
+          "key",
+          "name",
+          "type",
+          "is_deleted"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ObjectType"
+          },
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string",
+            "format": "date-time"
+          },
+          "is_deleted": {
+            "title": "Is Deleted",
+            "type": "boolean"
+          }
+        }
+      },
+      "ObjectInfo": {
+        "title": "ObjectInfo",
+        "required": [
+          "key",
+          "updated_at",
+          "size",
+          "e_tag"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string",
+            "format": "date-time"
+          },
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          },
+          "content_type": {
+            "title": "Content Type",
+            "type": "string"
+          },
+          "version_id": {
+            "title": "Version Id",
+            "type": "string"
+          },
+          "e_tag": {
+            "title": "E Tag",
+            "type": "string"
+          }
+        }
+      },
+      "ObjectMetadata": {
+        "title": "ObjectMetadata",
+        "required": [
+          "metadata"
+        ],
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "title": "Metadata",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectMetadataItem"
+            }
+          }
+        }
+      },
+      "ObjectMetadataItem": {
+        "title": "ObjectMetadataItem",
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "minLength": 1,
+            "pattern": "^[a-z0-9\\-]+$",
+            "type": "string"
+          },
+          "value": {
+            "title": "Value",
+            "pattern": "^[\\x00-\\x7F]*$",
+            "type": "string"
+          }
+        }
+      },
+      "ObjectTag": {
+        "title": "ObjectTag",
+        "required": [
+          "key",
+          "value"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "minLength": 1,
+            "type": "string",
+            "description": "Key of the tag"
+          },
+          "value": {
+            "title": "Value",
+            "minLength": 1,
+            "type": "string",
+            "description": "Value of the tag"
+          }
+        }
+      },
+      "ObjectType": {
+        "title": "ObjectType",
+        "enum": [
+          "file",
+          "folder"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "ObjectVersion": {
+        "title": "ObjectVersion",
+        "required": [
+          "version_id",
+          "is_latest"
+        ],
+        "type": "object",
+        "properties": {
+          "version_id": {
+            "title": "Version Id",
+            "type": "string"
+          },
+          "is_latest": {
+            "title": "Is Latest",
+            "type": "boolean"
+          },
+          "size": {
+            "title": "Size",
+            "type": "integer"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ObjectVersions": {
+        "title": "ObjectVersions",
+        "required": [
+          "versions"
+        ],
+        "type": "object",
+        "properties": {
+          "versions": {
+            "title": "Versions",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ObjectVersion"
+            }
+          }
+        }
+      },
+      "ObjectsList": {
+        "title": "ObjectsList",
+        "required": [
+          "objects"
+        ],
+        "type": "object",
+        "properties": {
+          "objects": {
+            "title": "Objects",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Object"
+            }
+          }
+        }
+      },
+      "PartUploadRequest": {
+        "title": "PartUploadRequest",
+        "required": [
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        }
+      },
+      "ProjectInfo": {
+        "title": "ProjectInfo",
+        "required": [
+          "name",
+          "tenant_name",
+          "total_buckets",
+          "total_objects",
+          "total_size",
+          "s3_url"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "tenant_name": {
+            "title": "Tenant Name",
+            "type": "string"
+          },
+          "total_buckets": {
+            "title": "Total Buckets",
+            "type": "integer"
+          },
+          "total_objects": {
+            "title": "Total Objects",
+            "type": "integer"
+          },
+          "total_size": {
+            "title": "Total Size",
+            "type": "integer",
+            "description": "The project size in bytes"
+          },
+          "s3_url": {
+            "title": "S3 Url",
+            "type": "string"
+          }
+        }
+      },
+      "RestAPIEntitiesDataCenter": {
+        "title": "RestAPIEntitiesDataCenter",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Идентификатор",
+            "format": "uuid"
+          },
+          "site": {
+            "title": "Site",
+            "type": "string",
+            "description": "Площадка"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string",
+            "description": "Код"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string",
+            "description": "Обозначение латиницей"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "integer",
+            "description": "Вес"
+          },
+          "description": {
+            "title": "Description",
+            "type": "string",
+            "description": "Описание"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string",
+            "description": "Русскоязычное именование ЦОД"
+          },
+          "is_deleted": {
+            "title": "Is Deleted",
+            "type": "boolean",
+            "description": "Удален?"
+          }
+        }
+      },
+      "RestAPIEntitiesNetSegment": {
+        "title": "RestAPIEntitiesNetSegment",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Идентификатор",
+            "format": "uuid"
+          },
+          "code": {
+            "title": "Code",
+            "type": "string",
+            "description": "Код",
+            "format": "uuid"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string",
+            "description": "Название"
+          },
+          "weight": {
+            "title": "Weight",
+            "type": "integer",
+            "description": "Вес"
+          },
+          "is_deleted": {
+            "title": "Is Deleted",
+            "type": "boolean",
+            "description": "Удален?"
+          }
+        }
+      },
+      "RestAPIEntitiesOrder": {
+        "title": "RestAPIEntitiesOrder",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Идентификатор",
+            "format": "uuid"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string",
+            "description": "Дата создания в формате iso8601"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string",
+            "description": "Дата обновления в формате iso8601"
+          },
+          "attrs": {
+            "title": "Attrs",
+            "description": "Данные о заказе"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string",
+            "description": "Статус"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string",
+            "description": "Название"
+          },
+          "category": {
+            "title": "Category",
+            "type": "string",
+            "description": "Категория продукта"
+          },
+          "category_v2": {
+            "title": "Category V2",
+            "type": "string",
+            "description": "Категория v2 продукта"
+          },
+          "deletable": {
+            "title": "Deletable",
+            "type": "boolean",
+            "description": "Защищен от удаления?"
+          },
+          "power_status": {
+            "title": "Power Status",
+            "description": "Состояние"
+          },
+          "product_data": {
+            "title": "Product Data",
+            "description": "Информация о продукте"
+          },
+          "project_name": {
+            "title": "Project Name",
+            "type": "string",
+            "description": "Кодовое название проекта"
+          },
+          "product_id": {
+            "title": "Product Id",
+            "type": "string",
+            "description": "Идентификатор продукта"
+          },
+          "product_name": {
+            "title": "Product Name",
+            "type": "string",
+            "description": "Кодовое название продукта"
+          },
+          "data": {
+            "title": "Data",
+            "description": "Состав заказа"
+          },
+          "data_center": {
+            "title": "Data Center",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RestAPIEntitiesDataCenter"
+              }
+            ],
+            "description": "Дата-центр"
+          },
+          "net_segment": {
+            "title": "Net Segment",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RestAPIEntitiesNetSegment"
+              }
+            ],
+            "description": "Сегмент сети"
+          },
+          "action_id": {
+            "title": "Action Id",
+            "type": "string",
+            "description": "Актуальный идентификатор изменения заказа"
+          },
+          "last_action": {
+            "title": "Last Action",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RestAPIEntitiesOrderAction"
+              }
+            ],
+            "description": "Информация о последнем действии с заказом"
+          }
+        }
+      },
+      "RestAPIEntitiesOrderAction": {
+        "title": "RestAPIEntitiesOrderAction",
+        "type": "object",
+        "properties": {
+          "id": {
+            "title": "Id",
+            "type": "string",
+            "description": "Идентификатор",
+            "format": "uuid"
+          },
+          "created_at": {
+            "title": "Created At",
+            "type": "string",
+            "description": "Дата создания в формате iso8601"
+          },
+          "updated_at": {
+            "title": "Updated At",
+            "type": "string",
+            "description": "Дата обновления в формате iso8601"
+          },
+          "operation_id": {
+            "title": "Operation Id",
+            "type": "string",
+            "description": "Идентификатор операции"
+          },
+          "order_id": {
+            "title": "Order Id",
+            "type": "string",
+            "description": "Идентификатор заказа"
+          },
+          "status": {
+            "title": "Status",
+            "type": "string",
+            "description": "Статус"
+          },
+          "attrs": {
+            "title": "Attrs",
+            "description": "Параметры создания"
+          },
+          "request_params": {
+            "title": "Request Params",
+            "description": "Параметры сообщения для оркестратора"
+          },
+          "action_errors": {
+            "title": "Action Errors",
+            "description": "Ошибки при выполнении действия"
+          },
+          "label": {
+            "title": "Label",
+            "type": "string",
+            "description": "Название действия"
+          },
+          "item_id": {
+            "title": "Item Id",
+            "type": "string",
+            "description": "Item id"
+          },
+          "start_time": {
+            "title": "Start Time",
+            "type": "string",
+            "description": "Дата и время запуска"
+          },
+          "has_printable_output": {
+            "title": "Has Printable Output",
+            "type": "boolean",
+            "description": "Параметры сообщения для оркестратора"
+          }
+        }
+      },
+      "RestoreObjectResult": {
+        "title": "RestoreObjectResult",
+        "required": [
+          "key",
+          "is_restored"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "type": "string"
+          },
+          "is_restored": {
+            "title": "Is Restored",
+            "type": "boolean"
+          },
+          "detail": {
+            "title": "Detail",
+            "type": "string"
+          }
+        }
+      },
+      "RestoreObjects": {
+        "title": "RestoreObjects",
+        "required": [
+          "keys"
+        ],
+        "type": "object",
+        "properties": {
+          "keys": {
+            "title": "Keys",
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RestoreObjectsResponse": {
+        "title": "RestoreObjectsResponse",
+        "required": [
+          "results"
+        ],
+        "type": "object",
+        "properties": {
+          "results": {
+            "title": "Results",
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RestoreObjectResult"
+            }
+          }
+        }
+      },
+      "SetBucketVersioning": {
+        "title": "SetBucketVersioning",
+        "required": [
+          "status"
+        ],
+        "type": "object",
+        "properties": {
+          "status": {
+            "$ref": "#/components/schemas/VersioningStatus"
+          }
+        }
+      },
+      "SetBucketWebsiteConfig": {
+        "title": "SetBucketWebsiteConfig",
+        "required": [
+          "is_enabled"
+        ],
+        "type": "object",
+        "properties": {
+          "is_enabled": {
+            "title": "Is Enabled",
+            "type": "boolean"
+          },
+          "index_page": {
+            "title": "Index Page",
+            "minLength": 1,
+            "type": "string",
+            "description": "The object name of the index page for the website. For example, index.html.",
+            "default": "index.html"
+          },
+          "error_page": {
+            "title": "Error Page",
+            "minLength": 1,
+            "type": "string",
+            "description": "The object name of the website error page to use for 4XX class errors. For example, error.html.",
+            "default": "error.html"
+          }
+        }
+      },
+      "UpdateFile": {
+        "title": "UpdateFile",
+        "required": [
+          "key"
+        ],
+        "type": "object",
+        "properties": {
+          "key": {
+            "title": "Key",
+            "minLength": 1,
+            "pattern": "^.*[^/]$",
+            "type": "string"
+          }
+        }
+      },
+      "UploadRequest": {
+        "title": "UploadRequest",
+        "required": [
+          "fields",
+          "url"
+        ],
+        "type": "object",
+        "properties": {
+          "fields": {
+            "title": "Fields",
+            "type": "object"
+          },
+          "url": {
+            "title": "Url",
+            "type": "string"
+          }
+        }
+      },
+      "VersioningStatus": {
+        "title": "VersioningStatus",
+        "enum": [
+          "Enabled",
+          "Suspended",
+          "Unversioned"
+        ],
+        "type": "string",
+        "description": "An enumeration."
+      },
+      "storage_core_service__models__bucket__ListMeta": {
+        "title": "ListMeta",
+        "required": [
+          "total_count"
+        ],
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        }
+      },
+      "storage_core_service__models__multipart_upload__ListMeta": {
+        "title": "ListMeta",
+        "required": [
+          "total_count"
+        ],
+        "type": "object",
+        "properties": {
+          "total_count": {
+            "title": "Total Count",
+            "type": "integer"
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}
