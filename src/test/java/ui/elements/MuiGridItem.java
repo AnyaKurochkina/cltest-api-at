@@ -15,7 +15,7 @@ public class MuiGridItem {
     }
 
     public static MuiGridItem byText(String text){
-        return new MuiGridItem($x(xpath, text));
+        return new MuiGridItem($x(xpath, text, text));
     }
 
     public SelenideElement nextItem(){
