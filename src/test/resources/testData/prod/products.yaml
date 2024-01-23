@@ -128,7 +128,7 @@ Redis:
 
 KafkaService:
   - options:
-      - { env: "DEV" }
+        - { env: "DEV" , dataCentre: "5" }
 
 ApacheKafkaCluster:
   - options:
