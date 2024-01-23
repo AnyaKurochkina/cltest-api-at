@@ -5,6 +5,7 @@ import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
+import core.exception.NotFoundElementException;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
@@ -76,7 +77,7 @@ public class Table implements TypifiedElement {
             if (e.$$x("td").get(getHeaderIndex(column)).hover().getText().equals(value))
                 return e;
         }
-        throw new AssertionError("Не найдена строка по колонке " + column + " и значению " + value);
+        throw new NotFoundElementException("Не найдена строка по колонке " + column + " и значению " + value);
     }
 
     public static Table getTableByColumnNameContains(String columnName) {
@@ -88,8 +89,8 @@ public class Table implements TypifiedElement {
         Row row;
         try {
             row = getRowByColumnIndex(getHeaderIndex(column), value);
-        } catch (AssertionError e) {
-            throw new AssertionError("Не найдена строка по колонке " + column + " и значению " + value);
+        } catch (NotFoundElementException e) {
+            throw new NotFoundElementException("Не найдена строка по колонке " + column + " и значению " + value);
         }
         return row;
     }
@@ -99,7 +100,7 @@ public class Table implements TypifiedElement {
             if (rows.get(i).$$x("td").get(index).hover().getText().equals(value))
                 return new Row(i);
         }
-        throw new AssertionError();
+        throw new NotFoundElementException();
     }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
@@ -107,8 +108,8 @@ public class Table implements TypifiedElement {
         Row row;
         try {
             row = getRowByColumnIndexInputValue(getHeaderIndex(column), value);
-        } catch (AssertionError e) {
-            throw new AssertionError("Не найдена строка по колонке " + column + " и значению " + value);
+        } catch (NotFoundElementException e) {
+            throw new NotFoundElementException("Не найдена строка по колонке " + column + " и значению " + value);
         }
         return row;
     }
@@ -118,7 +119,7 @@ public class Table implements TypifiedElement {
             if (Objects.equals(rows.get(i).$$x("td").get(index).hover().getValue(), value))
                 return new Row(i);
         }
-        throw new AssertionError();
+        throw new NotFoundElementException();
     }
 
     @Step("Получение строки по колонке '{column}' и значению в колонке '{value}'")
@@ -127,7 +128,7 @@ public class Table implements TypifiedElement {
             if (rows.get(i).$$x("td").get(getHeaderIndex(column)).hover().getText().contains(value))
                 return new Row(i);
         }
-        throw new AssertionError("Не найдена строка по колонке " + column + " и значению " + value);
+        throw new NotFoundElementException("Не найдена строка по колонке " + column + " и значению " + value);
     }
 
     @Step("Проверка, что в колонке '{column}' есть значение, равное '{value}'")
@@ -218,7 +219,7 @@ public class Table implements TypifiedElement {
             try {
                 element = get().$$x("td").get(column);
             } catch (ArrayIndexOutOfBoundsException e) {
-                throw new AssertionError("Нет колонки с индексом " + column);
+                throw new NotFoundElementException("Нет колонки с индексом " + column);
             }
             return element;
         }
@@ -255,7 +256,7 @@ public class Table implements TypifiedElement {
         try {
             element = row.$$x("td").get(getHeaderIndex(column));
         } catch (ArrayIndexOutOfBoundsException e) {
-            throw new AssertionError(String.format("Нет колонки с индексом %d. Всего колонок %d", getHeaderIndex(column), row.$$x("td").size()), e);
+            throw new NotFoundElementException(String.format("Нет колонки с индексом %d. Всего колонок %d", getHeaderIndex(column), row.$$x("td").size()), e);
         }
         return element.shouldBe(Condition.visible);
     }

@@ -37,7 +37,7 @@ public class BackupCreate {
         Button.byText("Заказать").click();
         Alert.green("Заказ успешно создан");
         OrderUtils.waitCreate(() -> Waiting.find(() -> new BackupsList.BackupTable()
-                        .isColumnValueEquals("Имя объекта", objectForBackup), Duration.ofMinutes(8),
+                        .isColumnValueEquals("Имя объекта", objectForBackup), Duration.ofMinutes(6),
                 "Произошла ошибка при создании резервной копии"));
         return this;
     }
