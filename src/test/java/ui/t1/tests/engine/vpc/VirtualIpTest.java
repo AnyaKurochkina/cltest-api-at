@@ -102,7 +102,7 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("Регион", e -> e.equals(ip.getRegion()))
                 .add("Сеть", e -> e.equals(ip.getNetwork()))
                 .add("Подсеть", e -> e.length() > 5)
-                .add("Поддержка L2", e -> e.equals("Да"))
+                .add("Поддержка L2", e -> e.equals("Нет"))
                 .add("Режим", e -> e.equals(ip.getMode()))
                 .add("Дата создания", e -> e.length() > 4)
                 .add("", String::isEmpty)
