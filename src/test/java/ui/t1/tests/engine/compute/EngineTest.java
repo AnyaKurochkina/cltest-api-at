@@ -23,7 +23,7 @@ import java.time.Duration;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class EngineTest extends AbstractComputeTest {
     @Override
-    protected String getProject() {
+    protected String getProjectId() {
         Project projectOrders = Project.builder().isForOrders(true).build().createObject();
         String parentFolder = AuthorizerSteps.getParentProject(projectOrders.getId());
         return ((Project) Project.builder().projectName("Проект для EngineTest").folderName(parentFolder).build()
