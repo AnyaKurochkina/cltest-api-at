@@ -23,9 +23,9 @@ public class PublicIpList {
         OrderUtils.waitCreate(() -> {
             if (!isEmpty) {
                 String oldIp = ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
-                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofMinutes(2));
+                Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofMinutes(2), "IP не был создан");
             } else {
-                Waiting.find(() -> !ipTable.update().isEmpty(), Duration.ofMinutes(2));
+                Waiting.find(() -> !ipTable.update().isEmpty(), Duration.ofMinutes(2), "IP не был создан");
                 Waiting.find(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).equals("—"), Duration.ofMinutes(2));
             }
         });
