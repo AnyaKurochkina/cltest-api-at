@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class BillsPeriodPage extends AbstractBillsPeriodPage {
+public class BillsPeriodPage extends AbstractBillsPeriodPage<BillsPeriodPage> {
 
     private final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     private final Select organiztionSelect = Select.byLabel("Период");

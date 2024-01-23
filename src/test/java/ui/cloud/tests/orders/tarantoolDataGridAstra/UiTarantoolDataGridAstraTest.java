@@ -51,6 +51,7 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelectCluster().set("tdg:rps-2000:storage-6GB");
+            orderPage.getVersionSelect().set("2.6.8.0");
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroupSelectTarantool().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
@@ -85,7 +86,6 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
 
     @Test
     @Order(3)
-    @Disabled
     @TmsLink("")
     @DisplayName("UI TarantoolDataGrid. Обновить версию приложения Tarantool Data Grid")
     void updateVersionApp() {

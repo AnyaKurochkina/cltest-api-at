@@ -4,6 +4,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
+import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -11,9 +12,13 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 
 import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
+import static steps.productCatalog.GraphSteps.partialUpdateGraph;
+import static steps.productCatalog.TemplateSteps.partialUpdateTemplate;
 
 @Feature("Добавление узла графа")
 public class NodesListTest extends GraphBaseTest {
@@ -38,13 +43,15 @@ public class NodesListTest extends GraphBaseTest {
 
     @Test
     @TmsLink("802404")
-    @DisplayName("Просмотр входных и выходных параметров узлов")
+    @DisplayName("Просмотр входных и выходных параметров узлов, поиск в узлах графа")
     public void viewNodeParamsTest() {
-        GraphItem node = GraphItem.builder()
-                .name(TEMPLATE_NAME)
+        partialUpdateTemplate(template.getId(), new JSONObject().put("additional_input", true)
+                .put("additional_output", true));
+        GraphItem node1 = GraphItem.builder()
+                .name("node_1")
                 .sourceType(TEMPLATE.getValue())
                 .sourceId(String.valueOf(template.getId()))
-                .description("Тестовый узел")
+                .description("node_1")
                 .input(new HashMap<String, String>() {{
                     put("input_param", "{}");
                 }})
@@ -53,12 +60,26 @@ public class NodesListTest extends GraphBaseTest {
                 }})
                 .timeout(1)
                 .build();
-        patchGraphWithGraphItem(graph, node);
+        GraphItem node2 = GraphItem.builder()
+                .name("node_2")
+                .sourceType(TEMPLATE.getValue())
+                .sourceId(String.valueOf(template.getId()))
+                .description("node_2")
+                .input(new HashMap<String, String>() {{
+                    put("input_param_2", "{}");
+                }})
+                .output(new HashMap<String, Object>() {{
+                    put("output_param_2", "{}");
+                }})
+                .timeout(1)
+                .build();
+        JSONObject graphItemsJSON = new JSONObject().put("graph", Arrays.asList(node1.toJson(), node2.toJson()));
+        partialUpdateGraph(graph.getGraphId(), graphItemsJSON);
         new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToNodesTab()
-                .findNode(node.getInput().keySet().toArray()[0].toString(), node)
-                .findNode(node.getOutput().keySet().toArray()[0].toString(), node);
+                .findNode(node2.getInput().keySet().toArray()[0].toString(), node2)
+                .findNode(node2.getOutput().keySet().toArray()[0].toString(), node2);
     }
 
     @Test
@@ -85,9 +106,9 @@ public class NodesListTest extends GraphBaseTest {
                 .goToNodesTab()
                 .findNode(node.getName().toUpperCase(), node)
                 .findNode(node.getDescription(), node)
-                .findNode(node.getInput().keySet().toArray()[0].toString(), node)
-                .findNode(node.getOutput().keySet().toArray()[0].toString().toUpperCase(), node)
-                .findNode(node.getOutput().get("output_param").toString(), node)
+                .findNodeByParam(node.getInput().keySet().toArray()[0].toString(), node)
+                .findNodeByParam(node.getOutput().keySet().toArray()[0].toString().toUpperCase(), node)
+                .findNodeByParam(node.getOutput().get("output_param").toString(), node)
                 .checkNodeNotFound("incorrect_param", node);
     }
 }

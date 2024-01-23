@@ -13,6 +13,7 @@ import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityPage;
 import ui.elements.Button;
+import ui.elements.SearchSelect;
 import ui.elements.Tab;
 import ui.elements.TextArea;
 
@@ -48,6 +49,8 @@ public class Jinja2TemplatePage extends EntityPage {
     private final Button clearResultButton = Button.byText("Очистить поле");
     private final Tab mainTab = Tab.byText("Основное");
     private final Tab paramsTab = Tab.byText("Параметры данных");
+    private final Tab templateTab = Tab.byText("Шаблон узлов");
+    private final SearchSelect templateSelect = SearchSelect.byLabel("Шаблон узлов");
 
     public Jinja2TemplatePage() {
         templatesListLink.shouldBe(Condition.visible);
@@ -113,10 +116,12 @@ public class Jinja2TemplatePage extends EntityPage {
     @Step("Заполнение атрибутов шаблона Jinja2 '{jinja2Template.name}'")
     public Jinja2TemplatePage setAttributes(Jinja2Template jinja2Template) {
         mainTab.switchTo();
+        descriptionTextArea.setValue(jinja2Template.getDescription());
         nameInput.setValue(jinja2Template.getName());
         nameRequiredFieldHint.shouldNotBe(Condition.visible);
         titleInput.setValue(jinja2Template.getTitle());
-        descriptionTextArea.setValue(jinja2Template.getDescription());
+        templateTab.switchTo();
+        Waiting.find(() -> templateSelect.getValue().contains("jinja2_template"), Duration.ofSeconds(10));
         paramsTab.switchTo();
         templateTextArea.setValue(jinja2Template.getJinja2Template());
         templateRequiredFieldHint.shouldNotBe(Condition.visible);

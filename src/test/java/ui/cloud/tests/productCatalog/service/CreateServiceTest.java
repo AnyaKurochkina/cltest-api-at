@@ -11,6 +11,7 @@ import ui.cloud.pages.ControlPanelIndexPage;
 import java.util.UUID;
 
 import static steps.productCatalog.ServiceSteps.deleteServiceByName;
+import static ui.cloud.pages.productCatalog.EntityPage.CALCULATED_VERSION_TITLE;
 
 @Feature("Создание сервиса")
 public class CreateServiceTest extends ServiceBaseTest {
@@ -59,7 +60,7 @@ public class CreateServiceTest extends ServiceBaseTest {
     @DisplayName("Создание сервиса c графом")
     public void createServiceWithGraphTest() {
         service.setName(UUID.randomUUID().toString());
-        service.setGraphVersion("Последняя");
+        service.setGraphVersion(CALCULATED_VERSION_TITLE);
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .createService(service)
                 .checkAttributes(service);
