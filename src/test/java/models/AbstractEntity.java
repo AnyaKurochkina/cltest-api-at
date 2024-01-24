@@ -43,15 +43,14 @@ public abstract class AbstractEntity {
         }));
     }
 
-    private static void deleteEntity(AbstractEntity e) {
-        if (e.deleted)
+    private static void deleteEntity(AbstractEntity entity) {
+        if (entity.deleted)
             return;
         try {
-            e.delete();
-            e.deleted = true;
-        } catch (Throwable ex) {
-            log.debug("Ошибка при удалении сущности {}", e.toString());
-            ex.printStackTrace();
+            entity.delete();
+            entity.deleted = true;
+        } catch (Throwable e) {
+            log.error("Ошибка при удалении сущности " + entity, e);
         }
     }
 
