@@ -5,7 +5,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
-import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -51,7 +50,7 @@ public class Menu implements TypifiedElement {
         String disabled = element.getAttribute("aria-disabled");
         if (Objects.nonNull(disabled))
             if (disabled.equals("true"))
-                throw new ElementClickInterceptedException(String.format("Элемент '%s' disabled", item));
+                throw new AssertionError(String.format("Элемент '%s' disabled", item));
         return element;
     }
 
