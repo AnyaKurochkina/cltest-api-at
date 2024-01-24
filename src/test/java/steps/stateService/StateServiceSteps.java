@@ -333,12 +333,11 @@ public class StateServiceSteps extends Steps {
     }
 
     @Step("Отправка на тарификацию всех items ордера")
-    public static Response orderItemsPublication(String projectId, String orderId) {
+    public static Response uncheckedOrderItemsPublication(String projectId, String orderId) {
         return new Http(stateServiceURL)
                 .withServiceToken()
                 .body(new JSONObject().put("order_id", orderId))
-                .post("/api/v1/projects/{}/items/order_items_publication/", projectId)
-                .assertStatus(200);
+                .post("/api/v1/projects/{}/items/order_items_publication/", projectId);
     }
 
     @Step("Получение последней ошибки в проекте по контексту")
