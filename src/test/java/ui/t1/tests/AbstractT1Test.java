@@ -6,13 +6,11 @@ import core.exception.NotFoundElementException;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.T1LoginPage;
 
 @ExtendWith(ConfigExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractT1Test extends Tests {
 
     protected String getProjectId() {

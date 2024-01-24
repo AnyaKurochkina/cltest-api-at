@@ -24,7 +24,7 @@ public class DownloadingFilesUtil {
      * Пример использования: checkFileExistsInDownloadsDirectoryWithTimeout("Audit_Logs_Table.csv", 2);
      */
     @Step("[Проверка] Файл присутствует в папке src/test/resources/downloads с именем: {0}")
-    public static void checkFileExistsInDownloadsDirectoryWithTimeout(String fileName, int seconds) {
+    public static void checkFileExistsInDownloadsDirectory(String fileName, int seconds) {
         checkFileExistsWithTimeout(new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH + fileName), seconds);
     }
 

@@ -38,9 +38,11 @@ public class T1BillsTests extends AbstractT1Test {
     private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
     private final DatePeriod expectedNovemberPeriod = new DatePeriod(LocalDate.of(2023, Month.NOVEMBER, 1), LocalDate.of(2023, Month.NOVEMBER, 30));
-    private final Organization organization = Organization.builder().type("default").build().createObject();
+    private final DatePeriod expectedDecemberPeriod = new DatePeriod(LocalDate.of(2023, Month.DECEMBER, 1), LocalDate.of(2023, Month.DECEMBER, 31));
+    private final DatePeriod expectedOctoberPeriod = new DatePeriod(LocalDate.of(2023, Month.OCTOBER, 1), LocalDate.of(2023, Month.OCTOBER, 31));
+    private final Organization organization = Organization.builder().type("not_default").build().createObject();
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3390")
     @DisplayName("Счета. Скачать счет. Организация")
@@ -55,21 +57,21 @@ public class T1BillsTests extends AbstractT1Test {
         checkOrganizationInExcelFile(organization.getTitle(), expectedFileNameWithNovemberPeriod);
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
+        String expectedFileNameWithOctoberPeriod = prepareFileName(expectedOctoberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
-                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .chooseMontWithYear(RuMonth.OCTOBER, "2023")
                 .clickExport();
 
-        checkPeriodInExcelFile(expectedNovemberPeriod.makePeriodString(), expectedFileNameWithNovemberPeriod);
+        checkPeriodInExcelFile(expectedOctoberPeriod.makePeriodString(), expectedFileNameWithOctoberPeriod);
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3392")
     @DisplayName("Счета. Скачать данные за квартал")
@@ -85,7 +87,7 @@ public class T1BillsTests extends AbstractT1Test {
         checkPeriodInExcelFile(expectedPeriod, expectedFileNameWithFirstQuarterPeriod);
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
@@ -99,19 +101,19 @@ public class T1BillsTests extends AbstractT1Test {
         checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString(), expectedFileNameWithCustomPeriod);
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-7270")
     @DisplayName("Счета. Скачать счет. Выгрузка нулевых значений")
     void downloadBillExcelForOneMonthWithCheckboxTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
+        String expectedFileNameWithDecemberPeriod = prepareFileName(expectedDecemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
-                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .chooseMontWithYear(RuMonth.DECEMBER, "2023")
                 .clickExportZeroPriceValuesCheckBox()
                 .clickExport();
 
-        checkExcelFileContainsBillWithZeroSumValue(expectedFileNameWithNovemberPeriod);
+        checkExcelFileContainsBillWithZeroSumValue(expectedFileNameWithDecemberPeriod);
     }
 
     @Step("[Проверка] Период счета в файле excel соответсвует периоду выбранному при выгрузке отчета")
@@ -139,7 +141,7 @@ public class T1BillsTests extends AbstractT1Test {
 
     @Step("[Проверка] Организация в excel файле соответствует выбранной: {0}")
     private void checkOrganizationInExcelFile(String organizationName, String fileName) {
-        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName, 30);
         String organization = getBillExcel(fileName).getOrganization();
 
         Assertions.assertEquals(organizationName, organization,
