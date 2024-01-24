@@ -17,7 +17,7 @@ import static com.codeborne.selenide.Selenide.closeWebDriver;
 import static core.helper.AttachUtils.UImodifyThrowable;
 import static org.junit.TestsExecutionListener.initDriver;
 
-public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, BeforeAllCallback, InvocationInterceptor {
+public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, BeforeAllCallback, InvocationInterceptor, AfterAllCallback {
 
     static {
         LoggingPreferences logs = new LoggingPreferences();
@@ -31,9 +31,13 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
     }
 
     @Override
+    public void afterAll(ExtensionContext extensionContext) throws Exception {
+        FileUtils.deleteDirectory(new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH));
+    }
+
+    @Override
     @SneakyThrows
     public void afterEach(ExtensionContext extensionContext) {
-        FileUtils.deleteDirectory(new File(DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH));
         closeWebDriver();
     }
 
@@ -59,6 +63,4 @@ public class ConfigExtension implements AfterEachCallback, BeforeEachCallback, B
 //            }
 //        }
     }
-
-
 }

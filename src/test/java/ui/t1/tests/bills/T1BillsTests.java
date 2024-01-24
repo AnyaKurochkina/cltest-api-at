@@ -37,8 +37,6 @@ public class T1BillsTests extends AbstractT1Test {
     // DateTimeFormatter с учетом русского языка и шаблона 03-мар-2023
     private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
-    private final DatePeriod expectedNovemberPeriod = new DatePeriod(LocalDate.of(2023, Month.NOVEMBER, 1), LocalDate.of(2023, Month.NOVEMBER, 30));
-    private final DatePeriod expectedDecemberPeriod = new DatePeriod(LocalDate.of(2023, Month.DECEMBER, 1), LocalDate.of(2023, Month.DECEMBER, 31));
     private final DatePeriod expectedOctoberPeriod = new DatePeriod(LocalDate.of(2023, Month.OCTOBER, 1), LocalDate.of(2023, Month.OCTOBER, 31));
     private final Organization organization = Organization.builder().type("not_default").build().createObject();
 
@@ -47,15 +45,15 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-3390")
     @DisplayName("Счета. Скачать счет. Организация")
     void downloadBillExcelForOneMonthAndCertainOrganizationTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
                 .chooseOrganization(organization.getTitle())
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
                 .clickExport();
-        DownloadingFilesUtil.getLastDownloadedFilename();
-        System.out.println();
-        checkOrganizationInExcelFile(organization.getTitle(), expectedFileNameWithNovemberPeriod);
+
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+
+        checkOrganizationInExcelFile(organization.getTitle(), expectedFileName);
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -63,13 +61,14 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
-        String expectedFileNameWithOctoberPeriod = prepareFileName(expectedOctoberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
                 .chooseMontWithYear(RuMonth.OCTOBER, "2023")
                 .clickExport();
 
-        checkPeriodInExcelFile(expectedOctoberPeriod.makePeriodString(), expectedFileNameWithOctoberPeriod);
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+
+        checkPeriodInExcelFile(expectedOctoberPeriod.makePeriodString(), expectedFileName);
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -79,13 +78,14 @@ public class T1BillsTests extends AbstractT1Test {
     void downloadBillExcelForQuarterTest() {
         String expectedPeriod = new DatePeriod(Quarter2023.FIRST_QUARTER)
                 .makePeriodString();
-        String expectedFileNameWithFirstQuarterPeriod = prepareFileName(Quarter2023.FIRST_QUARTER, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToQuarterPeriod()
                 .chooseQuarter(Quarter2023.FIRST_QUARTER)
                 .clickExport();
 
-        checkPeriodInExcelFile(expectedPeriod, expectedFileNameWithFirstQuarterPeriod);
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+
+        checkPeriodInExcelFile(expectedPeriod, expectedFileName);
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -93,13 +93,14 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
     void downloadBillExcelCustomPeriodTest() {
-        String expectedFileNameWithCustomPeriod = prepareFileName(expectedCustomPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToCustomPeriod()
                 .setPeriod(expectedCustomPeriod)
                 .clickExport();
 
-        checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString(), expectedFileNameWithCustomPeriod);
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+
+        checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString(), expectedFileName);
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -107,14 +108,15 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-7270")
     @DisplayName("Счета. Скачать счет. Выгрузка нулевых значений")
     void downloadBillExcelForOneMonthWithCheckboxTest() {
-        String expectedFileNameWithDecemberPeriod = prepareFileName(expectedDecemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
                 .chooseMontWithYear(RuMonth.DECEMBER, "2023")
                 .clickExportZeroPriceValuesCheckBox()
                 .clickExport();
 
-        checkExcelFileContainsBillWithZeroSumValue(expectedFileNameWithDecemberPeriod);
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+
+        checkExcelFileContainsBillWithZeroSumValue(expectedFileName);
     }
 
     @Step("[Проверка] Период счета в файле excel соответсвует периоду выбранному при выгрузке отчета")
@@ -156,27 +158,9 @@ public class T1BillsTests extends AbstractT1Test {
     }
 
     @Step("Получение excel документа 'Счета'")
-    private static BillExcel getBillExcel(String expectedFileName) {
-        return new BillExcelReader(new File(DOWNLOADS_DIRECTORY_PATH + expectedFileName))
+    private static BillExcel getBillExcel(String expectedFileNameName) {
+        return new BillExcelReader(new File(DOWNLOADS_DIRECTORY_PATH + expectedFileNameName))
                 .readWithOrganization();
-    }
-
-    /**
-     * Имя файла необходимо параметризировать чтобы получился формат: "user_bills_from_2023-03-01_till_2023-04-01_for_ift.xlsx"
-     * где:
-     * 1) %s - Начало периода
-     * 2) %s - Окончание периода
-     * 3) %s - Название организации
-     */
-    @Step("[Предусловие] Подготовка имени файла в формате: user_bills_from_2023-03-01_till_2023-04-01_for_ift")
-    private static String prepareFileName(DatePeriod datePeriod, String organizationName) {
-        return String.format("user_bills_from_%s_till_%s_for_%s.xlsx", datePeriod.getStartDate(), datePeriod.getEndDate(), organizationName);
-    }
-
-    @Step("[Предусловие] Подготовка имени файла в формате: user_bills_from_2023-03-01_till_2023-04-01_for_ift")
-    private static String prepareFileName(Quarter2023 quarter2023, String organizationName) {
-        return String.format("user_bills_from_%s_till_%s_for_%s.xlsx", quarter2023.getDateValue().getStartDate(),
-                quarter2023.getDateValue().getEndDate(), organizationName);
     }
 
     public static LocalDate convertIntoLocalDate(String stringDate) {
