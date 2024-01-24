@@ -147,7 +147,7 @@ public class VirtualIpTest extends AbstractComputeTest {
         SshClient ssh = SshClient.builder().host(publicIp).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
         ssh.writeTextFile("key", DataFileHelper.read(SshKeyList.PRIVATE_KEY));
         ssh.execute("chmod 600 key");
-        final String os = ssh.execute("ssh -o \"StrictHostKeyChecking no\" -i key root@{} 'uname'", vipSupSlave.get().getIp());
+        final String os = ssh.execute("ssh -o \"StrictHostKeyChecking no\" -o \"UserKnownHostsFile /dev/null\" -i key root@{} 'uname'", vipSupSlave.get().getIp());
         Assertions.assertEquals("Linux", os, "Неудачная проверка соединения между вм");
     }
 
