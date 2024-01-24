@@ -53,7 +53,8 @@ public class T1BillsTests extends AbstractT1Test {
                 .chooseOrganization(organization.getTitle())
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
                 .clickExport();
-
+        DownloadingFilesUtil.getLastDownloadedFilename();
+        System.out.println();
         checkOrganizationInExcelFile(organization.getTitle(), expectedFileNameWithNovemberPeriod);
     }
 
