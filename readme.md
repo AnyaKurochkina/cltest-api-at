@@ -28,4 +28,3 @@ webdriver.remote.url=http://d1-cloud-sel01.service.t1-cloud.ru:4444/wd/hub
 Ключ -DtestItCreateAutotest=true мокает выполнение тестов (может быть полезен при создании и линковке автотестов с ручными тестами)
 
 Почта для автотестов - autotest240124@gmail.com password 123Ion123
-у этой почты есть права суперадмин на проде креды autotest240124@gmail.com 123!On123
