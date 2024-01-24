@@ -63,6 +63,7 @@ public class Configure {
     public static String vcloudConnector;
     public static String s3StorageOld;
     public static String s3StorageNew;
+    public static String orchestratorURL;
     public static String cdnProxy;
 
     static {
@@ -100,6 +101,7 @@ public class Configure {
             calculatorURL = KONG_URL + "calculator";
             productCatalogURL = KONG_URL + "product-catalog";
             orderServiceURL = KONG_URL + "order-service/api";
+            orchestratorURL = KONG_URL + "orchestrator";
             orderServiceAdminURL = KONG_URL + "order-service/admin/api";
             stateServiceURL = KONG_URL + "state-service";
             referencesURL = KONG_URL + "references";
