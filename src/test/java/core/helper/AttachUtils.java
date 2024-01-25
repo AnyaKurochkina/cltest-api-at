@@ -71,9 +71,8 @@ public class AttachUtils {
     private static String getVideoUrl() {
         String videoUrl = "";
         if (Boolean.parseBoolean(getAppProp("webdriver.capabilities.enableVideo", "false"))) {
-            String sessionId = ((RemoteWebDriver) WebDriverRunner.getWebDriver()).getSessionId().toString();
             String host = getAppProp("webdriver.remote.url");
-            videoUrl = String.format("%s/video/%s.mp4", host.substring(0, host.length() - 7), sessionId);
+            videoUrl = String.format("%s/video/%s.mp4", host.substring(0, host.length() - 7), getSessionId());
             Allure.issue("Video recording", videoUrl);
             StepNode stepNode = StepsAspects.getCurrentStep().get();
             if (stepNode != null) {
@@ -81,6 +80,15 @@ public class AttachUtils {
             }
         }
         return videoUrl;
+    }
+
+    private static String getSessionId() {
+        return ((RemoteWebDriver) WebDriverRunner.getWebDriver()).getSessionId().toString();
+    }
+
+    public static String getUrlToDownloadedFileFromSelenoid(String fileName) {
+        String host = getAppProp("webdriver.remote.url").substring(0, getAppProp("webdriver.remote.url").length() - 7);
+        return String.format("%s/download/%s/%s", host, getSessionId(), fileName);
     }
 
     private static String[] splitMessage(String message) {

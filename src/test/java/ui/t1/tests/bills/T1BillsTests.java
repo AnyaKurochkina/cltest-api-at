@@ -51,9 +51,7 @@ public class T1BillsTests extends AbstractT1Test {
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
                 .clickExport();
 
-        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
-
-        checkOrganizationInExcelFile(organization.getTitle(), expectedFileName);
+        checkOrganizationInExcelFile(organization.getTitle());
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -66,9 +64,7 @@ public class T1BillsTests extends AbstractT1Test {
                 .chooseMontWithYear(RuMonth.OCTOBER, "2023")
                 .clickExport();
 
-        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
-
-        checkPeriodInExcelFile(expectedOctoberPeriod.makePeriodString(), expectedFileName);
+        checkPeriodInExcelFile(expectedOctoberPeriod.makePeriodString());
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -83,9 +79,7 @@ public class T1BillsTests extends AbstractT1Test {
                 .chooseQuarter(Quarter2023.FIRST_QUARTER)
                 .clickExport();
 
-        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
-
-        checkPeriodInExcelFile(expectedPeriod, expectedFileName);
+        checkPeriodInExcelFile(expectedPeriod);
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -98,9 +92,7 @@ public class T1BillsTests extends AbstractT1Test {
                 .setPeriod(expectedCustomPeriod)
                 .clickExport();
 
-        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
-
-        checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString(), expectedFileName);
+        checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString());
     }
 
     @EnabledIfEnv({"t1ift", "t1prod"})
@@ -114,13 +106,12 @@ public class T1BillsTests extends AbstractT1Test {
                 .clickExportZeroPriceValuesCheckBox()
                 .clickExport();
 
-        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
-
-        checkExcelFileContainsBillWithZeroSumValue(expectedFileName);
+        checkExcelFileContainsBillWithZeroSumValue();
     }
 
     @Step("[Проверка] Период счета в файле excel соответсвует периоду выбранному при выгрузке отчета")
-    private void checkPeriodInExcelFile(String expectedPeriod, String fileName) {
+    private void checkPeriodInExcelFile(String expectedPeriod) {
+        String fileName = DownloadingFilesUtil.getLastDownloadedFilename();
         DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
         BillExcelItem randomBill = getBillExcel(fileName).getRows()
                 .stream()
@@ -134,16 +125,18 @@ public class T1BillsTests extends AbstractT1Test {
     }
 
     @Step("[Проверка] При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel присутствовуют счета с нулевыми значениями стоимости")
-    private void checkExcelFileContainsBillWithZeroSumValue(String fileName) {
-        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
-        getBillExcel(fileName).getRows().stream()
+    private void checkExcelFileContainsBillWithZeroSumValue() {
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(expectedFileName);
+        getBillExcel(expectedFileName).getRows().stream()
                 .filter(bill -> bill.getSumWithoutTax().equals("0.0"))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel должны присутствовать счета с нулевыми значениями стоимости"));
     }
 
     @Step("[Проверка] Организация в excel файле соответствует выбранной: {0}")
-    private void checkOrganizationInExcelFile(String organizationName, String fileName) {
+    private void checkOrganizationInExcelFile(String organizationName) {
+        String fileName = DownloadingFilesUtil.getLastDownloadedFilename();
         DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName, 30);
         String organization = getBillExcel(fileName).getOrganization();
 
