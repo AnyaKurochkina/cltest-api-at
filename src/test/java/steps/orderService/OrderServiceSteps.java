@@ -450,6 +450,7 @@ public class OrderServiceSteps extends Steps {
         Object s;
         log.info("getFiledProduct path: " + path);
         JsonPath jsonPath = new Http(orderServiceURL)
+                .disableAttachmentLog()
                 .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
                 .assertStatus(200)

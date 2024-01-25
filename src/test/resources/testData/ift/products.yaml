@@ -106,7 +106,7 @@ S3Ceph:
   - options:
 KafkaService:
   - options:
-Podman:
+PodmanAstra:
   - options:
 RedisSentinel:
   - options:

@@ -5,7 +5,6 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
-import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
@@ -21,7 +20,7 @@ public class Menu implements TypifiedElement {
     SelenideElement element;
 
     public Menu(SelenideElement element) {
-        this.element = element.shouldBe(activeCnd);
+        this.element = element.shouldBe(activeCnd.because("Menu. Кнопка раскрытия меню не найдена"));
     }
 
     public static Menu byElement(SelenideElement element) {
@@ -45,13 +44,13 @@ public class Menu implements TypifiedElement {
 
     private SelenideElement getItem(String item) {
         SelenideElement element = $$x("//li[.='{}']", item)
-                .shouldBe(CollectionCondition.anyMatch("Поиск элемента меню: " + item, WebElement::isDisplayed))
+                .shouldBe(CollectionCondition.anyMatch("Не найден пункт меню: " + item, WebElement::isDisplayed))
                 .filter(Condition.visible)
                 .first();
         String disabled = element.getAttribute("aria-disabled");
         if (Objects.nonNull(disabled))
             if (disabled.equals("true"))
-                throw new ElementClickInterceptedException(String.format("Элемент '%s' disabled", item));
+                throw new AssertionError(String.format("Элемент '%s' disabled", item));
         return element;
     }
 

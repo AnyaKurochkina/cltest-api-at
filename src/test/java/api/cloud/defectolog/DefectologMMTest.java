@@ -14,7 +14,10 @@ import models.Entity;
 import models.cloud.tagService.Inventory;
 import models.cloud.tagService.v2.InventoryTagsV2;
 import org.json.JSONObject;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.parallel.Isolated;
 
 import java.time.ZonedDateTime;
@@ -186,7 +189,6 @@ public class DefectologMMTest extends AbstractDefectologTest {
     }
 
     @Test
-    @Disabled
     @DisplayName("Тег sys_item_maintenance_mode_extra_data. Некорректный upd_at")
     void sysItemMaintenanceModeIncorrectUpdAt() {
         Inventory inventory = generateInventories(1, context).get(0);
@@ -195,7 +197,7 @@ public class DefectologMMTest extends AbstractDefectologTest {
         inventoryTagsV2(context, inventory.getId(), null, Arrays.asList(
                 new InventoryTagsV2.Tag(SYS_ITEM_MAINTENANCE_MODE, "true"),
                 new InventoryTagsV2.Tag(SYS_ITEM_MAINTENANCE_MODE_EXTRA_DATA,
-                        Entity.serialize(extraData).put("upd_at", dateFrom.toLocalDate().toString()).toString())));
+                        Entity.serialize(extraData).put("upd_at", "0").toString())));
         startTaskWidthGroups(INV_MM_ATTRS);
 
         int defectId = findDefectIdByInternalName(INV_MM_ATTRS, dateFrom);
