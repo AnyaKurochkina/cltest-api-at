@@ -52,8 +52,8 @@ public class VdcWithOutEdgeActionTest extends AbstractCloudDirectorTest {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.EQUALS, () -> dataCentrePage.addEdge("500"));
-        dataCentrePage.runActionWithCheckCost(CompareType.EQUALS, dataCentrePage::deleteEdge);
+        dataCentrePage.runActionWithCheckCost(CompareType.MORE, () -> dataCentrePage.addEdge("500"));
+        dataCentrePage.runActionWithCheckCost(CompareType.LESS, dataCentrePage::deleteEdge);
     }
 
     @Test
@@ -63,6 +63,6 @@ public class VdcWithOutEdgeActionTest extends AbstractCloudDirectorTest {
         DataCentrePage dataCentrePage = new IndexPage().goToCloudDirector()
                 .goToOrganization(vmWareOrganization.getName())
                 .selectDataCentre(dataCentreName);
-        dataCentrePage.runActionWithCheckCost(CompareType.NOT_CHECK, dataCentrePage::delete);
+        dataCentrePage.runActionWithCheckCost(CompareType.ZERO, dataCentrePage::delete);
     }
 }

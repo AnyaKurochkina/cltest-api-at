@@ -5,6 +5,7 @@ import io.qameta.allure.Step;
 import models.t1.cdn.Resource;
 import ui.elements.DataTable;
 import ui.elements.Dialog;
+import ui.elements.TypifiedElement;
 
 import java.time.Duration;
 
@@ -38,6 +39,7 @@ public class ResourcesTab extends AbstractCdnTab {
 
     @Step("[Проверка] отсутствия ресурса")
     public ResourcesTab checkThatCdnResourceDoesNotExist(String resourceName) {
+        TypifiedElement.refreshPage();
         new DataTable("Источники").asserts().checkColumnNotContainsValue("Название", resourceName);
         return this;
     }

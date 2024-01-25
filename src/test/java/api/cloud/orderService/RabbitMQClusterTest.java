@@ -12,10 +12,7 @@ import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Tags;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.Arrays;
@@ -195,6 +192,7 @@ public class RabbitMQClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить операционную систему {0}")
     void updateOs(RabbitMQClusterAstra product, Integer num) {
+        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.updateOs();
         }

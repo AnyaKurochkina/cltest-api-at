@@ -288,7 +288,7 @@ public class PostgreSQLTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Назначить/Убрать предел подключений {0}")
     void setConnLimit(PostgreSQL product, Integer num) {
-//        Assumptions.assumeTrue("LT".equalsIgnoreCase(product.getEnv()), "Тест включен только для среды LT");
+        Assumptions.assumeFalse(product.isProd(), "Тест отключен для среды PROD");
         try (PostgreSQL postgreSQL = product.createObjectExclusiveAccess()) {
             postgreSQL.createDb(dbName);
             postgreSQL.setConnLimit(dbName, 20);

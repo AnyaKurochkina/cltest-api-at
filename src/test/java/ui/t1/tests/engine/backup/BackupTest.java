@@ -28,7 +28,7 @@ public class BackupTest extends AbstractComputeTest {
         String lastFullCopyName = backup.getLastFullCopyName();
         backup.selectFullCopy(lastFullCopyName).restore(vmName, sshKey, securityGroup);
         new IndexPage().goToVirtualMachine().selectCompute(vmName)
-                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkConsole();
+                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
     }
 
     @Test
@@ -43,7 +43,7 @@ public class BackupTest extends AbstractComputeTest {
         backup.selectFullCopy(lastFullCopyName).selectIncrementalCopy(incrementalCopyName)
                 .restore(vmName, sshKey, securityGroup);
         new IndexPage().goToVirtualMachine().selectCompute(vmName)
-                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkConsole();
+                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
     }
 
     @Test

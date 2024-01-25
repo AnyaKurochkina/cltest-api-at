@@ -71,7 +71,7 @@ public class Redis extends IProduct {
                 .set("$.order.product_id", productId);
         if (envType().contains("prod")) {
             template.put("$.order.attrs", "geo_distribution", true)
-                    .put("$.order.attrs", "layout", getIdGeoDistribution("2-single-node-servers", "redis"));
+                    .put("$.order.attrs", "layout", getIdGeoDistribution("2-single-node-servers", "redis", platform, segment));
         }
         return template.set("$.order.attrs.domain", getDomain())
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))

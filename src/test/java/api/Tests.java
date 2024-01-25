@@ -10,6 +10,7 @@ import models.AbstractEntity;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayNameGeneration;
@@ -30,8 +31,10 @@ import java.util.function.Supplier;
 @ExtendWith(JUnit5EventListener.class)
 @DisplayNameGeneration(CustomDisplayNameGenerator.class)
 public class Tests {
-    public final static Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled);
-    public final static Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"));
+    public final static Condition activeCnd = Condition.and("visible and enabled", Condition.visible, Condition.enabled)
+            .because("Элемент не активный");
+    public final static Condition clickableCnd = Condition.not(Condition.cssValue("cursor", "default"))
+            .because("Элемент не кликабельный");
 
     public static Runnable getPostLoadPage() {
         if (Configure.isT1())
@@ -41,6 +44,11 @@ public class Tests {
                 }
             };
         return () -> Waiting.sleep(() -> new IndexPage().getLinkProfile().isDisplayed(), Duration.ofSeconds(10));
+    }
+
+    @AfterAll
+    static void afterAll() {
+        AbstractEntity.deleteCurrentClassEntities();
     }
 
     @BeforeEach

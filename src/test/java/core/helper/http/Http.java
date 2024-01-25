@@ -54,7 +54,7 @@ public class Http {
     Role role;
     String contentType = "application/json";
     private boolean isUsedToken = true;
-    private static final Semaphore SEMAPHORE = new Semaphore(2, true);
+    private static final Semaphore SEMAPHORE = new Semaphore(1, true);
     private String fileName;
     private byte[] bytes;
     private static final String boundary = "-83lmsz7nREiFUSFOC3d5RyOivB-NiG6_JoSkts";

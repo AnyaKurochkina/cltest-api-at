@@ -3,28 +3,29 @@ package ui.t1.tests.engine.compute;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import org.junit.BlockTests;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
-import ui.extesions.InterceptTestExtension;
 import ui.t1.pages.IndexPage;
 import ui.t1.tests.engine.AbstractComputeTest;
+import ui.t1.tests.engine.EntitySupplier;
 
-@BlockTests
-@ExtendWith(InterceptTestExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Feature("Публичные SSH ключи")
 @Epic("Cloud Compute")
 public class PublicSshKeysTest extends AbstractComputeTest {
-    String name = getRandomName();
+
+    private final EntitySupplier<String> publicKey = lazy(() -> {
+        String name = getRandomName();
+        new IndexPage().goToSshKeys().addKey(name, "user");
+        return name;
+    });
 
     @Test
     @TmsLink("1249435")
     @Order(1)
     @DisplayName("Cloud Compute. Добавление SSH-ключа (публичный)")
     void addKey() {
-        new IndexPage().goToSshKeys().addKey(name, "user");
+        publicKey.run();
     }
 
     @Test
@@ -32,9 +33,10 @@ public class PublicSshKeysTest extends AbstractComputeTest {
     @Order(2)
     @DisplayName("Cloud Compute. Редактирование SSH-ключа (публичный)")
     void editKey() {
+        String key = publicKey.get();
         String newName = getRandomName();
-        new IndexPage().goToSshKeys().editKey(name, newName);
-        name = newName;
+        new IndexPage().goToSshKeys().editKey(key, newName);
+        publicKey.set(newName);
     }
 
     @Test
@@ -42,6 +44,7 @@ public class PublicSshKeysTest extends AbstractComputeTest {
     @Order(3)
     @DisplayName("Cloud Compute. Удаление SSH-ключа (публичный)")
     void deleteKey() {
-        new IndexPage().goToSshKeys().deleteKey(name);
+        String key = publicKey.get();
+        new IndexPage().goToSshKeys().deleteKey(key);
     }
 }

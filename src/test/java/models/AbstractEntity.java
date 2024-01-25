@@ -1,5 +1,7 @@
 package models;
 
+import lombok.extern.log4j.Log4j2;
+
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
@@ -11,10 +13,12 @@ import java.util.concurrent.Executors;
 import static models.AbstractEntity.Mode.*;
 import static models.ObjectPoolService.awaitTerminationAfterShutdown;
 
+@Log4j2
 public abstract class AbstractEntity {
     @SuppressWarnings("unchecked")
     private static final Map<Long, Set<AbstractEntity>>[] entities = new ConcurrentHashMap[10];
     private Mode mode = AFTER_TEST;
+    private boolean deleted;
 
     @SuppressWarnings("unchecked")
     public <T extends AbstractEntity> T deleteMode(Mode mode) {
@@ -39,11 +43,14 @@ public abstract class AbstractEntity {
         }));
     }
 
-    private static void deleteEntity(AbstractEntity e) {
+    private static void deleteEntity(AbstractEntity entity) {
+        if (entity.deleted)
+            return;
         try {
-            e.delete();
-        } catch (Throwable ex) {
-            ex.printStackTrace();
+            entity.delete();
+            entity.deleted = true;
+        } catch (Throwable e) {
+            log.error("Ошибка при удалении сущности " + entity, e);
         }
     }
 
@@ -55,7 +62,7 @@ public abstract class AbstractEntity {
             Iterator<AbstractEntity> iterator = map.getOrDefault(Thread.currentThread().getId(), new HashSet<>()).iterator();
             while (iterator.hasNext()) {
                 AbstractEntity entity = iterator.next();
-                if (entity.mode != mode)
+                if (mode != AFTER_RUN && entity.mode != mode)
                     continue;
                 threadPool.submit(() -> deleteEntity(entity));
                 iterator.remove();
@@ -64,9 +71,6 @@ public abstract class AbstractEntity {
         }
     }
 
-    /**
-     * Только для SAME_THREAD классов
-     */
     public static void deleteCurrentClassEntities() {
         deleteCurrentThreadEntities(AFTER_CLASS);
     }
@@ -83,6 +87,9 @@ public abstract class AbstractEntity {
         entities[e.getPriority()].computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(e);
     }
 
+    /**
+     * AFTER_CLASS Только для SAME_THREAD классов
+     */
     public enum Mode {
         AFTER_TEST,
         AFTER_CLASS,

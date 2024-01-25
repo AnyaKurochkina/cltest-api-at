@@ -38,6 +38,14 @@ public final class StringUtils {
         return str;
     }
 
+    public static String format(Object... args) {
+        String str = args[0].toString();
+        for (int i = 1; i < args.length; i++) {
+            str = format(str, args[i].toString());
+        }
+        return str;
+    }
+
     public static String doubleToString(double d) {
         return String.format(Locale.US, "%,.2f", d).replace(',', ' ').replace('.', ',');
     }

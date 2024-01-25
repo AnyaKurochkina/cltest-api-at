@@ -77,7 +77,7 @@ Moon:
   - options:
 GitLab:
   - options:
-Podman:
+PodmanAstra:
   - options:
 RedisSentinel:
   - options:
