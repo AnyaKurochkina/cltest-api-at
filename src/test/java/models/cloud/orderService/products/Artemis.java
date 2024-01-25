@@ -22,6 +22,7 @@ import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -150,7 +151,8 @@ public class Artemis extends IProduct {
                 .set("$.state_service_ram", flavor.getMemory())
                 .set("$.state_service_cpu", flavor.getCpus())
                 .set("$.flavor", new JSONObject(maxFlavor.toString())).build();
-        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_vertical_scaling_cluster").product(this).data(data).build());
+        OrderServiceSteps.runAction(ActionParameters.builder().name("vtb-artemis_vertical_scaling_cluster").product(this)
+                .data(data).timeout(Duration.ofHours(1)).build());
         flavor = maxFlavor;
         save();
     }

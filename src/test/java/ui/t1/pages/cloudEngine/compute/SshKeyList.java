@@ -53,7 +53,8 @@ public class SshKeyList {
         Dialog.byTitle("Изменить SSH-ключ");
         inputName.setValue(newNameKey);
         Button.byText("Изменить").click();
-        Assertions.assertTrue(new KeysTable().isColumnValueEquals(Column.TITLE, newNameKey));
+        Assertions.assertTrue(new KeysTable().isColumnValueEquals(Column.TITLE, newNameKey),
+                StringUtils.format("Имя '{}' не было изменено на '{}'", nameKey, newNameKey));
     }
 
     public List<String> getSshKeysList() {

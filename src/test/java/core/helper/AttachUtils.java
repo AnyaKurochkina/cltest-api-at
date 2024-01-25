@@ -37,20 +37,19 @@ public class AttachUtils {
         }
     }
 
-    public static void UiModifyThrowableBecause(Throwable throwable) {
+    public static void uiModifyThrowableBecause(Throwable throwable) {
         String message = throwable.getMessage();
-        String because = null;
         final int startIndex = message.indexOf("(because ");
         if (startIndex > -1) {
             final int endIndex = message.indexOf(")", startIndex);
-            because = message.substring(startIndex + 9, endIndex);
+            String because = message.substring(startIndex + 9, endIndex);
             message = message.substring(0, startIndex) + message.substring(endIndex);
             setThrowableDetailMessage(throwable, StringUtils.format("{}\n{}", because, message));
         }
     }
 
     public static Throwable UImodifyThrowable(Throwable throwable) {
-        UiModifyThrowableBecause(throwable);
+        uiModifyThrowableBecause(throwable);
         try {
             attachRequests();
             String videoUrl = getVideoUrl();

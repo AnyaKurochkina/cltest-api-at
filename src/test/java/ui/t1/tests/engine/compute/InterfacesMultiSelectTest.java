@@ -37,6 +37,7 @@ public class InterfacesMultiSelectTest extends AbstractComputeTest {
             Waiting.find(() -> NetworkInterfaceList.NetworkInterfaceTable.getSecurityGroups(vm.getName()).contains(group.getName())
                     && NetworkInterfaceList.NetworkInterfaceTable.getSecurityGroups(vmSecond.getName()).contains(group.getName()), Duration.ofMinutes(1));
             networkInterfaceListPage.waitChangeStatus();
+            new IndexPage().goToHistory();
             final String action = "Изменить группы безопасности";
             networkInterfaceListPage.checkActionByIndex(1, action);
             networkInterfaceListPage.checkLastAction(action);
@@ -46,6 +47,7 @@ public class InterfacesMultiSelectTest extends AbstractComputeTest {
             Waiting.find(() -> NetworkInterfaceList.NetworkInterfaceTable.getSecurityGroups(vm.getName()).contains(group.getName())
                     && NetworkInterfaceList.NetworkInterfaceTable.getSecurityGroups(vmSecond.getName()).contains(group.getName()), Duration.ofMinutes(1));
             networkInterfaceListPage.waitChangeStatus();
+            new IndexPage().goToHistory();
             final String action = "Изменить группы безопасности";
             networkInterfaceListPage.checkActionByIndex(1, action);
             networkInterfaceListPage.checkLastAction(action);

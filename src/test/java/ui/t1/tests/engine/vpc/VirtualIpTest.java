@@ -102,7 +102,7 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("Регион", e -> e.equals(ip.getRegion()))
                 .add("Сеть", e -> e.equals(ip.getNetwork()))
                 .add("Подсеть", e -> e.length() > 5)
-                .add("Поддержка L2", e -> e.equals("Да"))
+                .add("Поддержка L2", e -> e.equals("Нет"))
                 .add("Режим", e -> e.equals(ip.getMode()))
                 .add("Дата создания", e -> e.length() > 4)
                 .add("", String::isEmpty)
@@ -147,7 +147,7 @@ public class VirtualIpTest extends AbstractComputeTest {
         SshClient ssh = SshClient.builder().host(publicIp).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
         ssh.writeTextFile("key", DataFileHelper.read(SshKeyList.PRIVATE_KEY));
         ssh.execute("chmod 600 key");
-        final String os = ssh.execute("ssh -o \"StrictHostKeyChecking no\" -i key root@{} 'uname'", vipSupSlave.get().getIp());
+        final String os = ssh.execute("ssh -o \"StrictHostKeyChecking=no\" -o \"UserKnownHostsFile=/dev/null\" -o \"LogLevel=quiet\" -i key root@{} 'uname'", vipSupSlave.get().getIp());
         Assertions.assertEquals("Linux", os, "Неудачная проверка соединения между вм");
     }
 

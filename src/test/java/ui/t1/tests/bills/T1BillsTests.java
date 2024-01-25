@@ -9,6 +9,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.Step;
 import io.qameta.allure.TmsLink;
+import models.cloud.authorizer.Organization;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.*;
 import ui.t1.pages.IndexPage;
@@ -30,20 +31,36 @@ import static core.utils.DownloadingFilesUtil.DOWNLOADS_DIRECTORY_PATH;
 @Tags({@Tag("bills"), @Tag("t1")})
 @Epic("Счета")
 @Feature("Счета")
+@Tag("morozov_ilya")
 public class T1BillsTests extends AbstractT1Test {
 
     // DateTimeFormatter с учетом русского языка и шаблона 03-мар-2023
     private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
     private final DatePeriod expectedNovemberPeriod = new DatePeriod(LocalDate.of(2023, Month.NOVEMBER, 1), LocalDate.of(2023, Month.NOVEMBER, 30));
+    private final Organization organization = Organization.builder().type("default").build().createObject();
 
-    //На dev почемуто отсутствуют креды Role.SUPERADMIN
+    @EnabledIfEnv("t1ift")
+    @Test
+    @TmsLink("SOUL-3390")
+    @DisplayName("Счета. Скачать счет. Организация")
+    void downloadBillExcelForOneMonthAndCertainOrganizationTest() {
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
+        new IndexPage().goToBillsPage()
+                .goToMonthPeriod()
+                .chooseOrganization(organization.getTitle())
+                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .clickExport();
+
+        checkOrganizationInExcelFile(organization.getTitle(), expectedFileNameWithNovemberPeriod);
+    }
+
     @EnabledIfEnv("t1ift")
     @Test
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, "ift");
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
@@ -59,7 +76,7 @@ public class T1BillsTests extends AbstractT1Test {
     void downloadBillExcelForQuarterTest() {
         String expectedPeriod = new DatePeriod(Quarter2023.FIRST_QUARTER)
                 .makePeriodString();
-        String expectedFileNameWithFirstQuarterPeriod = prepareFileName(Quarter2023.FIRST_QUARTER, "ift");
+        String expectedFileNameWithFirstQuarterPeriod = prepareFileName(Quarter2023.FIRST_QUARTER, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToQuarterPeriod()
                 .chooseQuarter(Quarter2023.FIRST_QUARTER)
@@ -73,13 +90,28 @@ public class T1BillsTests extends AbstractT1Test {
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
     void downloadBillExcelCustomPeriodTest() {
-        String expectedFileNameWithCustomPeriod = prepareFileName(expectedCustomPeriod, "ift");
+        String expectedFileNameWithCustomPeriod = prepareFileName(expectedCustomPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToCustomPeriod()
                 .setPeriod(expectedCustomPeriod)
                 .clickExport();
 
         checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString(), expectedFileNameWithCustomPeriod);
+    }
+
+    @EnabledIfEnv("t1ift")
+    @Test
+    @TmsLink("SOUL-7270")
+    @DisplayName("Счета. Скачать счет. Выгрузка нулевых значений")
+    void downloadBillExcelForOneMonthWithCheckboxTest() {
+        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
+        new IndexPage().goToBillsPage()
+                .goToMonthPeriod()
+                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .clickExportZeroPriceValuesCheckBox()
+                .clickExport();
+
+        checkExcelFileContainsBillWithZeroSumValue(expectedFileNameWithNovemberPeriod);
     }
 
     @Step("[Проверка] Период счета в файле excel соответсвует периоду выбранному при выгрузке отчета")
@@ -93,6 +125,25 @@ public class T1BillsTests extends AbstractT1Test {
         String actualPeriod = createPeriod(randomBill);
         Assertions.assertEquals(expectedPeriod, actualPeriod,
                 "Период счета в файле excel должен соответсвовать периоду выбранному при выгрузке отчета");
+
+    }
+
+    @Step("[Проверка] При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel присутствовуют счета с нулевыми значениями стоимости")
+    private void checkExcelFileContainsBillWithZeroSumValue(String fileName) {
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
+        getBillExcel(fileName).getRows().stream()
+                .filter(bill -> bill.getSumWithoutTax().equals("0.0"))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError("При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel должны присутствовать счета с нулевыми значениями стоимости"));
+    }
+
+    @Step("[Проверка] Организация в excel файле соответствует выбранной: {0}")
+    private void checkOrganizationInExcelFile(String organizationName, String fileName) {
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
+        String organization = getBillExcel(fileName).getOrganization();
+
+        Assertions.assertEquals(organizationName, organization,
+                String.format("Организация в excel файле должна соответствовать выбранной: %s", organizationName));
 
     }
 

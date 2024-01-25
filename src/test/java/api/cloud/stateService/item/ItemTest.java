@@ -153,4 +153,22 @@ public class ItemTest extends Tests {
         Item itemById = getItemById(item.getItemId());
         assertEquals(status, itemById.getData().get("state"), "Items state не соответствует ожидаемому");
     }
+
+    @DisplayName("Отправка на тарификацию все айтемы ордера")
+    @TmsLink("SOUL-8891")
+    @Test
+    public void orderItemsPublicationTest() {
+        Item item = createItem(project);
+        uncheckedOrderItemsPublication(project.getId(), item.getOrderId())
+                .assertStatus(200);
+    }
+
+    @DisplayName("Отправка на тарификацию все айтемы ордера")
+    @TmsLink("SOUL-")
+    @Test
+    public void orderItemsPublicatiodnTest() {
+        //todo завел задачу, доделать тест, когда реализуют валидацию на не валдиный ордер ид
+        uncheckedOrderItemsPublication(project.getId(), "sdf")
+                .assertStatus(401);
+    }
 }

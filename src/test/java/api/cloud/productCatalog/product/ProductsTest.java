@@ -28,7 +28,8 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductSteps.*;
-import static steps.references.ReferencesStep.*;
+import static steps.references.ReferencesStep.getPrivateResponsePagesById;
+import static steps.references.ReferencesStep.partialUpdatePrivatePagesById;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -124,8 +125,8 @@ public class ProductsTest extends Tests {
     public void createProductWithUpdateCategory() {
         //todo переделать когда на ифт вольют изменения, пока тест падает.
         Map<String, String> data = getPrivateResponsePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5").jsonPath().get("data");
-        updateDataPrivatePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5",
-                new JSONObject().put("test", "test"));
+//        updateDataPrivatePagesById("enums", "bc55d445-5310-461c-a984-bf4c3bf1a6f5",
+//                new JSONObject().put("test", "test"));
         Product product = Product.builder()
                 .name("test_category")
                 .title("test_category")

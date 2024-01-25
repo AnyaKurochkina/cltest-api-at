@@ -18,8 +18,14 @@ public class GenericArangoDB extends Astra {
 
     @Override
     public Entity init() {
+        jsonTemplate = "/orders/generic_arango_db.json";
         productName = "Generic ArangoDB";
         super.init();
         return this;
+    }
+
+    @Override
+    public void expandMountPoint() {
+        expandMountPoint("expand_mount_point_new", "/app/arango/data", 10);
     }
 }

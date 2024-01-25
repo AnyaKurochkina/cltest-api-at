@@ -81,11 +81,11 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @Override
-    protected String getProject() {
-        return getProjectId();
+    protected String getProjectId() {
+        return getComputeProjectId();
     }
 
-    protected static String getProjectId() {
+    private static String getComputeProjectId() {
         String id = project.get();
         if (Objects.isNull(id)) {
             synchronized (AbstractComputeTest.class) {
@@ -99,7 +99,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
 
     @BeforeAll
     public static synchronized void beforeAll() {
-        new T1LoginPage(getProjectId())
+        new T1LoginPage(getComputeProjectId())
                 .signIn(Role.CLOUD_ADMIN);
         new IndexPage().goToSshKeys().addKey(sshKey, SSH_USER);
         Selenide.closeWebDriver();

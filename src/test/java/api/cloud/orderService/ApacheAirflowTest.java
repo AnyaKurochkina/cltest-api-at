@@ -13,6 +13,7 @@ import models.cloud.subModels.DbUser;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -36,7 +37,7 @@ public class ApacheAirflowTest extends Tests {
             abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
         abstractPostgreSQL.setSkip(product.isSkip());
         postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess();
-        if (abstractPostgreSQL.deletedEntity()) {
+        if (postgreSQL.deletedEntity()) {
             postgreSQL.close();
             return;
         }
@@ -128,6 +129,7 @@ public class ApacheAirflowTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Обновить ОС {0}")
     void updateOs(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
+        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
             apacheAirflow.updateOs();

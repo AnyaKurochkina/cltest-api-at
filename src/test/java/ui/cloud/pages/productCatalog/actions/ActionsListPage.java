@@ -109,7 +109,8 @@ public class ActionsListPage extends EntityListPage {
     @Step("Проверка заголовков списка действий")
     public ActionsListPage checkHeaders() {
         AssertUtils.assertHeaders(new Table(NAME_COLUMN),
-                "Наименование", NAME_COLUMN, "Дата создания", "Дата изменения", "Тип", "Провайдер", "Теги", "", "");
+                "Наименование", NAME_COLUMN, "Дата создания", "Дата изменения", "Тип", "Провайдер", "Теги",
+                "Открыто/Закрыто", "", "");
         return this;
     }
 

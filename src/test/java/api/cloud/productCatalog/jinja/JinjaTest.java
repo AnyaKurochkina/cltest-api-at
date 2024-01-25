@@ -142,6 +142,7 @@ public class JinjaTest extends Tests {
                 .title(updateTitle)
                 .description(updateDescription)
                 .build()
+                .init()
                 .toJson());
         Jinja2Template updatedJinja = getJinja2ById(jinjaObject.getId());
         assertAll(
@@ -162,6 +163,7 @@ public class JinjaTest extends Tests {
         JSONObject jsonObject = Jinja2Template.builder()
                 .name(name)
                 .build()
+                .init()
                 .toJson();
         Jinja2Template jinja2 = createJinja(jsonObject);
         deleteJinjaById(jinja2.getId());

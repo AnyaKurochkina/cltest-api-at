@@ -9,5 +9,5 @@ import java.lang.annotation.*;
 @Inherited
 public @interface WithAuthorization {
 
-    Role value();
+    Role value() default Role.SUPERADMIN;
 }

@@ -186,6 +186,53 @@ public class ProductCardsTest {
         deleteActionByName(action.getName());
     }
 
+    @DisplayName("Применение продуктовой карты с объектом, который уже существует, с такой версией, но разным наполнением")
+    @Test
+    @TmsLink("SOUL-8835")
+    public void applyProductCardWithExistObjectAndSameVersionButAnotherContentTest() {
+        String actionName = StringUtils.getRandomStringApi(7);
+        Graph graphForAction = createGraph();
+        JSONObject actionJson = Action.builder()
+                .name(actionName)
+                .graphId(graphForAction.getGraphId())
+                .version("1.0.2")
+                .build()
+                .init()
+                .toJson();
+        Action action = createAction(actionJson).assertStatus(201).extractAs(Action.class);
+        CardItems actionCard = CardItems.builder().objType("Action")
+                .objId(action.getActionId())
+                .versionArr(Arrays.asList(1, 0, 2))
+                .build();
+
+        List<CardItems> cardItemsList = new ArrayList<>();
+        cardItemsList.add(actionCard);
+
+        ProductCard productCard = ProductCard.builder()
+                .name(StringUtils.getRandomStringApi(7))
+                .title("apply_product_card_title_test_api")
+                .description("test_api")
+                .cardItems(cardItemsList)
+                .build()
+                .createObject();
+
+        deleteActionById(action.getActionId());
+
+        JSONObject json = Action.builder()
+                .name(actionName)
+                .graphId(createGraph().getGraphId())
+                .version("1.0.2")
+                .build()
+                .init()
+                .toJson();
+        createAction(json).assertStatus(201);
+
+        String errorMessage = applyProductCard(productCard.getId()).jsonPath().getList("imported_objects", ImportObject.class).get(0).getMessages().get(0);
+        assertEquals(String.format("Error loading dump: Версия \"%s\" Action:%s уже существует, но с другим наполнением. Измените значение версии (\"version_arr: [1, 0, 2]\") у импортируемого объекта и попробуйте снова.",
+                action.getVersion(), action.getName()), errorMessage, "Сообщение об ошибке не соответствует формату");
+        deleteActionByName(actionName);
+    }
+
     @DisplayName("Применение продуктовой карты объектов версии которых не совпадают.")
     @Test
     @TmsLink("SOUL-8693")
@@ -272,7 +319,7 @@ public class ProductCardsTest {
                     .init()
                     .toJson();
             String errorMessage = uncheckedCreateProductCard(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-            assertEquals("There are no unique elements in card_items", errorMessage, "Сообщение об ошибке при создании" +
+            assertEquals("There are no unique elements in card_items", errorMessage, "Сообщение об ошибке при создании " +
                     "product card с не уникальными элементами не соответсвует формату");
         } catch (Exception e) {
             e.printStackTrace();

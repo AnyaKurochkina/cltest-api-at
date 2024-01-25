@@ -4,13 +4,10 @@ import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.elements.DataTable;
-import ui.elements.Dialog;
 import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.IProductListT1Page;
 
 import java.util.List;
-
-import static ui.t1.pages.cloudEngine.vpc.VirtualIpList.IpTable.getMenuElement;
 
 public class VirtualIpList extends IProductListT1Page {
     public VirtualIpCreate addIp() {
@@ -18,6 +15,7 @@ public class VirtualIpList extends IProductListT1Page {
         return new VirtualIpCreate();
     }
 
+    @Step("Открытие ip '{ip}'")
     public VirtualIp selectIp(String ip) {
         new IpTable().getRowByColumnValue(Column.IP_ADDRESS, ip).getElementByColumn(Column.IP_ADDRESS).shouldBe(Condition.visible).click();
         return new VirtualIp();
