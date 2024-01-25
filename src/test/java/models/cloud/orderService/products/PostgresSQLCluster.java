@@ -11,7 +11,6 @@ import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.authorizer.Project;
-import models.cloud.subModels.Db;
 import models.cloud.subModels.Flavor;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -65,23 +64,6 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         if (flavor == null)
             flavor = getMinFlavor();
         return this;
-    }
-
-    @Override
-    public void createDb(String dbName) {
-        if (getEnv().equalsIgnoreCase("LT") || isProd()) {
-            if (database.contains(new Db(dbName)))
-                return;
-            JSONObject data = new JSONObject().put("db_name", dbName).put("db_admin_pass", adminPassword).put("conn_limit", 11);
-            OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_create_db_lt_prod").product(this).data(data).build());
-            Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
-                    "База данных не создалась c именем " + dbName);
-            database.add(new Db(dbName));
-            log.info("database = " + database);
-            save();
-            return;
-        }
-        super.createDb(dbName);
     }
 
     @Override

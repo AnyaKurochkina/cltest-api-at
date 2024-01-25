@@ -4,18 +4,13 @@ import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.orderService.products.Artemis;
 import models.cloud.orderService.products.Etcd;
-import models.cloud.orderService.products.TarantoolDataGrid;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-
-import java.util.Arrays;
-import java.util.List;
 
 @Epic("Продукты")
 @Feature("Etcd")
@@ -49,7 +44,7 @@ public class EtcdTest extends Tests {
     @ParameterizedTest(name = "[{1}] Расширить точку монтирования {0}")
     void expandMountPoint(Etcd product, Integer num) {
         try (Etcd etcd = product.createObjectExclusiveAccess()) {
-            etcd.expandMountPoint("/app/etcd/data");
+            etcd.expandMountPoint("/app/etcd");
         }
     }
 

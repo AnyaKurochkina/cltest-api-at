@@ -7,7 +7,7 @@ import static core.helper.StringUtils.$x;
 
 public class MuiGridItem {
     @Language("XPath")
-    static String xpath = "//div[contains(@class, 'MuiGrid-item') and .= '{}']";
+    static String xpath = "//div[(contains(@class, 'MuiBox-root') and text()= '{}') or contains(@class, 'MuiGrid-item') and .= '{}']";
     SelenideElement element;
 
     private MuiGridItem(SelenideElement element) {
@@ -15,7 +15,7 @@ public class MuiGridItem {
     }
 
     public static MuiGridItem byText(String text){
-        return new MuiGridItem($x(xpath, text));
+        return new MuiGridItem($x(xpath, text, text));
     }
 
     public SelenideElement nextItem(){

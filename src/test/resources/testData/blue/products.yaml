@@ -199,7 +199,7 @@ GitLab:
   - options:
       - { env: "DEV" }
 
-Podman:
+PodmanAstra:
   - options:
       - { platform: "OpenStack", env: "DEV" }
       - { platform: "OpenStack", env: "LT" }

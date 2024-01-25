@@ -2,7 +2,10 @@ package models.cloud.orderService.products;
 
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.interfaces.IProduct;
@@ -44,8 +47,13 @@ public abstract class AbstractPostgreSQL extends IProduct {
     public void createDb(String dbName) {
         if (database.contains(new Db(dbName)))
             return;
-        JSONObject data = new JSONObject().put("db_name", dbName).put("db_admin_pass", adminPassword).put("conn_limit", -1);
-        OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_create_db").product(this).data(data).build());
+        if (getEnv().equalsIgnoreCase("LT") || isProd()) {
+            JSONObject data = new JSONObject().put("db_name", dbName).put("db_admin_pass", adminPassword).put("conn_limit", 11);
+            OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_create_db_lt_prod").product(this).data(data).build());
+        } else {
+            JSONObject data = new JSONObject().put("db_name", dbName).put("db_admin_pass", adminPassword).put("conn_limit", -1);
+            OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_create_db").product(this).data(data).build());
+        }
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)),
                 "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
@@ -193,7 +201,7 @@ public abstract class AbstractPostgreSQL extends IProduct {
     //Удалить пользователя
     public void removeDbmsUser(String action, String username, String dbName) {
         OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
-                .data(new JSONObject().put("user_name",  String.format("%s_%s", dbName, username))).build());
+                .data(new JSONObject().put("user_name", String.format("%s_%s", dbName, username))).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                         this, String.format(DB_USERNAME_PATH, String.format("%s_%s", dbName, username))),
                 String.format("Пользователь: %s не удалился из базы данных: %s", String.format("%s_%s", dbName, username), dbName));

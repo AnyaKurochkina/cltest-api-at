@@ -85,7 +85,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         return getComputeProjectId();
     }
 
-    protected static String getComputeProjectId() {
+    private static String getComputeProjectId() {
         String id = project.get();
         if (Objects.isNull(id)) {
             synchronized (AbstractComputeTest.class) {

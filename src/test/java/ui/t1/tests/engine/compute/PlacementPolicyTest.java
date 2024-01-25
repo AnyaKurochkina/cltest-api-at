@@ -76,7 +76,7 @@ public class PlacementPolicyTest extends AbstractComputeTest {
                 .check(() -> new PlacementPolicy().getTopInfo().getRow(0));
         final PlacementPolicy placement = new PlacementPolicy();
         Assertions.assertAll("Несоответствие полей блока 'Основные параметры'",
-                () -> Assertions.assertEquals(placement.getOrderId(), placement.getId().nextItem().getText(), "Поле 'ID'"),
+                () -> Assertions.assertEquals(PlacementPolicy.getItemId(), placement.getId().nextItem().getText(), "Поле 'ID'"),
                 () -> Assertions.assertEquals(placementCreate.getName(), placement.getName().nextItem().getText(), "Поле 'Имя'"),
                 () -> Assertions.assertEquals(placementCreate.getType().toString(), placement.getType().nextItem().getText(), "Поле 'Тип'"),
                 () -> Assertions.assertTrue(placement.getStatus().nextItem().$x(".//*[@data-testid='status-on']").isDisplayed(), "Поле 'Статус'")

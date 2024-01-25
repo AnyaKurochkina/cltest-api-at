@@ -170,6 +170,9 @@ public class OrderServiceApi implements Api {
     @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/volumes", status = 200)
     public static Path getV1ProjectsProjectNameComputeVolumes;
 
+    @Route(method = Method.GET, path = "/v1/projects/{project_name}/compute/placement_policies", status = 200)
+    public static Path getV1ProjectsProjectNamePlacementPolicies;
+
     @Route(method = Method.GET, path = "/v1/availability_zones", status = 200)
     public static Path getV1AvailabilityZones;
 
