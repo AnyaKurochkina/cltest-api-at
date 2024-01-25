@@ -37,7 +37,7 @@ public class SourceGroupsTab extends AbstractCdnTab {
 
     @Step("[Проверка] у группы источника с именем: {0}, доменное имя содержит: {1}")
     public SourceGroupsTab checkCdnSourceGroupContainsDomainName(String sourceGroupName, String domainName) {
-        sourceGroupTable.getRowByColumnIndex(0, sourceGroupName)
+        sourceGroupTable.update().getRowByColumnIndex(0, sourceGroupName)
                 .asserts().checkValueInColumnWithName("Источники", domainName);
         return this;
     }
