@@ -39,7 +39,7 @@ public class ResourcePage {
 
     @Step("[Проверка] Колонка 'Дополнительные доменные имена' содержит доменные имена: {0}")
     public ResourcePage checkDomainsColumnHasNames(List<String> domainName) {
-        domainName.forEach(domain -> contentTable.getRowByColumnIndex(0, "Дополнительные доменные имена")
+        domainName.forEach(domain -> contentTable.update().getRowByColumnIndex(0, "Дополнительные доменные имена")
                 .asserts().checkLastValueOfRowContains(domain));
         return this;
     }

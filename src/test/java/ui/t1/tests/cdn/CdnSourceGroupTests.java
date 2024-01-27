@@ -23,6 +23,8 @@ import ui.t1.tests.engine.EntitySupplier;
 @WithAuthorization(Role.CLOUD_ADMIN)
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@Tag("morozov_ilya")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CdnSourceGroupTests extends AbstractT1Test {
 
     private final EntitySupplier<SourceGroup> cdnSourceGroup = lazy(() -> {

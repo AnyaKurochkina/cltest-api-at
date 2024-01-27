@@ -6,13 +6,11 @@ import core.exception.NotFoundElementException;
 import models.cloud.authorizer.Project;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
-import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.T1LoginPage;
 
 @ExtendWith(ConfigExtension.class)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractT1Test extends Tests {
 
     protected String getProjectId() {
@@ -31,7 +29,7 @@ public abstract class AbstractT1Test extends Tests {
             Role role = info.getTestMethod().get()
                     .getAnnotation(WithAuthorization.class).value();
             new T1LoginPage(getProjectId()).signIn(role);
-        } else if (info.getTestMethod().get().getDeclaringClass().isAnnotationPresent(WithAuthorization.class)) {
+        } else if (info.getTestClass().orElseThrow(NotFoundElementException::new).isAnnotationPresent(WithAuthorization.class)) {
             Role role = info.getTestMethod().get().getDeclaringClass()
                     .getAnnotation(WithAuthorization.class).value();
             new T1LoginPage(getProjectId()).signIn(role);

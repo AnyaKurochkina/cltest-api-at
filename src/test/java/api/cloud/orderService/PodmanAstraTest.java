@@ -98,7 +98,7 @@ public class PodmanAstraTest extends Tests {
         try (PodmanAstra podman = product.createObjectExclusiveAccess()) {
             podman.checkCertsBySsh();
             assertContains(podman.executeSsh("podman ps -a"),
-                    "CONTAINER ID IMAGE COMMAND CREATED STATUS PORTS NAMES");
+                    "CONTAINER ID", "IMAGE", "COMMAND", "CREATED", "STATUS", "PORTS", "NAMES");
         }
     }
 

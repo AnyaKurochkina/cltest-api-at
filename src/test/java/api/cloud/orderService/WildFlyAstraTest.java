@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
@@ -128,6 +129,7 @@ public class WildFlyAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить ОС сервера {0}")
     void updateOs(WildFly product, Integer num) {
+        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
             wildFly.updateOs();
         }

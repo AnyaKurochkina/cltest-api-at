@@ -26,17 +26,4 @@ webdriver.remote.url=http://d1-cloud-sel01.service.t1-cloud.ru:4444/wd/hub
 
 Ключ -DtestItCreateAutotest=true мокает выполнение тестов (может быть полезен при создании и линковке автотестов с ручными тестами)
 
-####Для синхронизации битбакет с gitlab выполнить команду в папке с проектом:
-`py -m sync_git_repos`
-
-Перед этим:
-1. Установить модуль `pip install sync-git-repos`
-2. Добавить публичный ssh ключ в gitlab. Если нужно создать новый:
-
-`eval 'ssh-agent -s'`
-
-`ssh-keygen -t rsa -b 4096 -C "git"`
-
-`ssh-add ~/.ssh/id_rsa`
-
-Публичный ключ в`~/.ssh/id_rsa.pub` 
+Почта для автотестов - autotest240124@gmail.com password 123Ion123

@@ -29,6 +29,14 @@
         }
       ],
       "ad_integration": true,
+      "ad_logon_grants": [
+        {
+          "role": "user",
+          "groups": [
+            "cloud-zorg-dev-group"
+          ]
+        }
+      ],
       "artemis_version": "2.19.1",
       "title_protocols": {},
       "geo_distribution": true,

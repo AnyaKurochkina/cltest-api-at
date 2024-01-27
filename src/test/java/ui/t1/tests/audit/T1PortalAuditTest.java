@@ -14,6 +14,7 @@ import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.cloud.pages.ContextPage;
@@ -151,6 +152,7 @@ public class T1PortalAuditTest extends Tests {
     @Test
     @TmsLink("SOUL-4130")
     @DisplayName("Аудит. Экспортировать CSV")
+    @Tag("morozov_ilya")
     public void auditExportingCsv() {
         new IndexPage().goToPortalAuditPage()
                 .checkPeriodFieldsAreDisabledForDefaultSortingLastHour()
@@ -159,6 +161,8 @@ public class T1PortalAuditTest extends Tests {
                 .selectPeriod(AuditPeriod.WEEK)
                 .exportCsv();
 
-        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory("Audit_Logs_Table.csv");
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(expectedFileName);
     }
 }

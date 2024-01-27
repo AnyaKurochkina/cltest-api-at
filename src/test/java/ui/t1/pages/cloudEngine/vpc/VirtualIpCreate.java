@@ -74,15 +74,14 @@ public class VirtualIpCreate {
         Button.byText("Заказать").click();
         Alert.green("Заказ успешно создан");
         VirtualIpList.IpTable ipTable = new VirtualIpList.IpTable();
-        boolean isEmpty = ipTable.isEmpty();
         OrderUtils.waitCreate(() -> {
-            if(!isEmpty) {
+            if (!ipTable.isEmpty()) {
                 String oldIp = ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
-                Waiting.find(()-> ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).contains(oldIp), Duration.ofSeconds(80));
+                Waiting.sleep(() -> !ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS).equals(oldIp), Duration.ofMinutes(2));
             }
             else
-                Waiting.find(()-> !ipTable.update().isEmpty(), Duration.ofMinutes(2));
-            Waiting.find(()-> !ipTable.update().getFirstValueByColumn("Сеть").equals("—"), Duration.ofMinutes(1));
+                Waiting.sleep(() -> !ipTable.update().isEmpty(), Duration.ofMinutes(2));
+            Waiting.sleep(() -> !ipTable.update().getFirstValueByColumn("Сеть").equals("—"), Duration.ofMinutes(1));
         });
         ip = ipTable.update().getFirstValueByColumn(Column.IP_ADDRESS);
         return this;

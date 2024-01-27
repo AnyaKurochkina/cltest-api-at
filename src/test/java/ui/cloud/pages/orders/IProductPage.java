@@ -79,7 +79,7 @@ public abstract class IProductPage {
     }
 
     public static SelenideElement getActionsMenuButton(String header, int index) {
-        return TypifiedElement.getNearElement("button[@id='actions-menu-button']", String.format("*[.='%s']", header));
+        return TypifiedElement.getNearElement("button[@id='actions-menu-button']", String.format("*[.='%s']", header), index);
     }
 
     @Step("Получение таблицы по заголовку")
@@ -383,7 +383,8 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getOrderCost() {
-        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(5)));
+        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible
+                .because("Не отображается стоимость заказа"), Duration.ofMinutes(5)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }

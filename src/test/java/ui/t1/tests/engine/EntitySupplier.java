@@ -23,6 +23,10 @@ public class EntitySupplier<T> {
         get();
     }
 
+    public void set(T entity) {
+        this.entity = entity;
+    }
+
     @SneakyThrows
     public T get() {
         if (Objects.nonNull(error))

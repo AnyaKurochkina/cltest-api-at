@@ -61,7 +61,7 @@ public class BackupCrudTest extends AbstractComputeTest {
             return bc;
         });
         new TableChecker()
-                .add(Column.NAME, e -> e.length() > 30)
+                .add(Column.NAME, e -> e.equals(backupCreate.getObjectForBackup()))
                 .add("Тип", e -> e.equals("Резервная копия"))
                 .add(Column.STATUS, String::isEmpty)
                 .add("Дата последней копии", e -> e.length() > 4)

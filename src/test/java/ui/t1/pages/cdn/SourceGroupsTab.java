@@ -2,11 +2,13 @@ package ui.t1.pages.cdn;
 
 import io.qameta.allure.Step;
 import models.t1.cdn.SourceGroup;
-import ui.elements.*;
+import ui.elements.Alert;
+import ui.elements.Button;
+import ui.elements.DataTable;
+import ui.elements.Dialog;
 
 public class SourceGroupsTab extends AbstractCdnTab {
 
-    private final Button addButton = Button.byText("Добавить");
     private final Button saveButton = Button.byText("Сохранить");
     private final Dialog editDialog = new Dialog("Редактировать группу источников");
     private final DataTable sourceGroupTable = new DataTable("Источники");
@@ -35,18 +37,14 @@ public class SourceGroupsTab extends AbstractCdnTab {
 
     @Step("[Проверка] у группы источника с именем: {0}, доменное имя содержит: {1}")
     public SourceGroupsTab checkCdnSourceGroupContainsDomainName(String sourceGroupName, String domainName) {
-        sourceGroupTable.getRowByColumnIndex(0, sourceGroupName)
+        sourceGroupTable.update().getRowByColumnIndex(0, sourceGroupName)
                 .asserts().checkValueInColumnWithName("Источники", domainName);
         return this;
     }
 
     @Step("Редактирование доменного имени группы источника")
     public SourceGroupsTab editSourceGroupDomainName(String sourceGroupName, String newDomainName) {
-        Menu.byElement(sourceGroupTable.searchAllPages(t -> sourceGroupTable.isColumnValueContains("Название", sourceGroupName))
-                        .getRowByColumnValueContains("Название", sourceGroupName)
-                        .get()
-                        .$x(".//button[@id = 'actions-menu-button']"))
-                .select("Редактировать");
+        chooseActionFromMenu(sourceGroupName, "Редактировать");
         editDialog.setInputValueV2("Доменное имя источника", newDomainName);
         saveButton.click();
         Alert.green("Группа источников успешно отредактирована");
@@ -55,7 +53,7 @@ public class SourceGroupsTab extends AbstractCdnTab {
 
     @Step("Удаление группы источника")
     public SourceGroupsTab deleteSourceGroup(String name) {
-        deleteCdnEntity(name);
+        chooseActionFromMenu(name, "Удалить");
         Dialog.byTitle("Удаление группы источников").clickButton("Удалить");
         Alert.green("Группа источников успешно удалена");
         return this;

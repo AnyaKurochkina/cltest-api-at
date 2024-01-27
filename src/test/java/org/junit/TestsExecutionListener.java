@@ -51,7 +51,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
 
         baseUrl = URL;
-        isRemote();
+        configureSelenoidIfRemote();
         if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true")))
             Configuration.startMaximized = true;
         else
@@ -111,8 +111,8 @@ public class TestsExecutionListener implements TestExecutionListener {
         ObjectPoolService.loadEntities(Encrypt.Aes256Decode(Base64.getDecoder().decode(DataFileHelper.read(file)), secret));
     }
 
-    public static void isRemote() {
-        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
+    public static void configureSelenoidIfRemote() {
+        if (isRemote()) {
             Assertions.assertNotNull(getAppProp("webdriver.remote.url"), "Не указан webdriver.remote.url");
             log.info("Ui Тесты стартовали на selenoid сервере");
             Configuration.remote = getAppProp("webdriver.remote.url");
@@ -131,6 +131,10 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
     }
 
+    public static Boolean isRemote() {
+        return Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"));
+    }
+
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
         AbstractEntity.deleteTestRunEntities();
@@ -146,7 +150,7 @@ public class TestsExecutionListener implements TestExecutionListener {
     }
 
     @SneakyThrows
-    public static void initApiRoutes(){
+    public static void initApiRoutes() {
         List<Class<? extends Api>> classes = getSubclasses(Api.class);
         for (Class<? extends Api> clazz : classes) {
             Api api = clazz.newInstance();
@@ -174,7 +178,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         java.net.URL url = ClassLoader.getSystemClassLoader().getResource(path);
         File dir = new File(url.getFile());
         for (File file : dir.listFiles()) {
-            if(file.isDirectory())
+            if (file.isDirectory())
                 continue;
             String className = file.getName().substring(0, file.getName().length() - 6);
             Class<?> clazz = Class.forName(packageName + "." + className);

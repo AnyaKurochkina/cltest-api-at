@@ -65,6 +65,7 @@ public class BucketTest extends AbstractStorageTest {
     }
 
     @Test
+    @Tag("morozov_ilya")
     @Order(4)
     @TmsLink("SOUL-118")
     @DisplayName("Бакет. ЖЦ. Незавершенные загрузки")

@@ -8,6 +8,7 @@ import models.cloud.orderService.products.OpenMessagingAstra;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,8 +30,9 @@ public class OpenMessagingAstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Обновление установки {0}")
+    @ParameterizedTest(name = "[{1}] Обновление установки LT {0}")
     void expandMountPoint(OpenMessagingAstra product, Integer num) {
+        Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
             astra.upgradeSetup();
         }
@@ -39,8 +41,9 @@ public class OpenMessagingAstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Обновить операционную систему {0}")
+    @ParameterizedTest(name = "[{1}] Обновить операционную систему LT {0}")
     void updateOS(OpenMessagingAstra product, Integer num) {
+        Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
             astra.updateOS();
         }
@@ -49,8 +52,9 @@ public class OpenMessagingAstraTest extends Tests {
     @TmsLink("")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Обновление сертификатов {0}")
+    @ParameterizedTest(name = "[{1}] Обновление сертификатов LT {0}")
     void updateCerts(OpenMessagingAstra product, Integer num) {
+        Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
             astra.updateCerts();
         }

@@ -6,7 +6,6 @@ import io.qameta.allure.Step;
 import ui.elements.*;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.S3Storage.AbstractLayerS3;
-import ui.t1.pages.S3Storage.CloudStorageS3;
 import ui.t1.pages.T1LoginPage;
 
 import java.util.Arrays;
@@ -28,7 +27,7 @@ public class ObjectsModal extends AbstractLayerS3<ObjectsModal> {
         Select.byLabel("Доступ").set(access.getValue());
         new FileImportDialog(path).importFile();
         Button.byText("Загрузить").click();
-        Selenide.closeWebDriver();
+        Selenide.closeWindow();
         new T1LoginPage(projectId)
                 .signIn(Role.CLOUD_ADMIN);
         return new IndexPage();

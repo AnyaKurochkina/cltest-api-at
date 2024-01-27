@@ -65,9 +65,4 @@ public class VirtualIpActionsTest extends AbstractComputeTest {
         ipPage.delete();
         new IndexPage().goToVirtualMachine().selectCompute(randomVm.get().getName()).delete();
     }
-
-    @AfterAll
-    void afterClass() {
-        AbstractEntity.deleteCurrentClassEntities();
-    }
 }

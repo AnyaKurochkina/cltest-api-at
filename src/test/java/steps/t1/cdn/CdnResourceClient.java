@@ -11,7 +11,7 @@ import java.util.Objects;
 
 public class CdnResourceClient extends AbstractCdnClient {
 
-    private static final String BASE_PATH = apiUrl + "resources";
+    private static final String BASE_PATH = API_URL + "resources";
 
     @Step("Создание ресурса")
     public static Resource createResource(String projectId, JSONObject resource) {

@@ -7,7 +7,7 @@ import static core.helper.Configure.cdnProxy;
 
 public abstract class AbstractCdnClient {
 
-    protected static final String apiUrl = "/api/v1/projects/{}/";
+    protected static final String API_URL = "/api/v1/projects/{}/";
 
     protected static Http getRequestSpec() {
         return new Http(cdnProxy)

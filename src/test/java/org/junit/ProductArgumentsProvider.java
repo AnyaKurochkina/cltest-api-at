@@ -31,8 +31,6 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static ru.testit.properties.AppProperties.TEST_IT_TOKEN;
-
 @Log4j2
 public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationConsumer<Source> {
     public final static int PRODUCTS = 0;
@@ -115,7 +113,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
             int counter = 0;
             for (Entity entity : orders) {
                 Class<?> c = entity.getClass();
-                if (finalClazz.isInstance(entity)) {
+                if (finalClazz == entity.getClass()) {
                     final String key = className + "#" + methodName;
                     counter++;
                     if(filter.containsKey(key)) {
