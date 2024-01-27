@@ -1,46 +1,39 @@
 package ui.t1.pages.cdn;
 
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.Selenide;
+import com.codeborne.selenide.SelenideElement;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.t1.cdn.Resource;
 import ui.elements.DataTable;
 import ui.elements.Dialog;
-import ui.elements.TypifiedElement;
 
 import java.time.Duration;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class ResourcesTab extends AbstractCdnTab {
+public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
 
+    private final SelenideElement loader = Selenide.$x("//*[text()='Идет обработка данных']");
+
+    @Override
     @Step("Создание ресурса CDN")
-    public ResourcesTab createResource(Resource resource) {
+    public void create(Resource resource) {
         addButton.click();
         Dialog addResourceDialog = Dialog.byTitle("Добавить ресурс");
         addResourceDialog.setInputByName("domainName", resource.getDomainName());
         addResourceDialog.setInputByName("hostnames-0", resource.getHostnames().get(0));
         addResourceDialog.clickButton("Создать");
         waitChangeStatus(resource.getHostnames().get(0));
-        return this;
     }
 
+    @Override
     @Step("Удаление ресурса CDN")
-    public ResourcesTab deleteResource(String resourceName) {
+    public ResourcesTab delete(String resourceName) {
         chooseActionFromMenu(resourceName, "Удалить");
         Dialog.byTitle("Удаление ресурса CDN").clickButton("Удалить");
-        return this;
-    }
-
-    @Step("[Проверка] существования ресурса")
-    public ResourcesTab checkCdnResourceExistByName(String resourceName) {
-        new DataTable("Источники").asserts().checkColumnContainsValue("Название", resourceName);
-        return this;
-    }
-
-    @Step("[Проверка] отсутствия ресурса")
-    public ResourcesTab checkThatCdnResourceDoesNotExist(String resourceName) {
-        TypifiedElement.refreshPage();
-        new DataTable("Источники").asserts().checkColumnNotContainsValue("Название", resourceName);
+        waitUntilLoaderDisappear();
         return this;
     }
 
@@ -59,5 +52,11 @@ public class ResourcesTab extends AbstractCdnTab {
                 .getValueByColumn("Статус");
         assertEquals("Активный", status);
         return this;
+    }
+
+    @Step("Ожидание исчезновения лоадера")
+    private void waitUntilLoaderDisappear() {
+        loader.shouldBe(Condition.visible.because("Лоадер должен появиться"));
+        loader.shouldNotBe(Condition.visible.because("Лоадер должен исчезнуть"));
     }
 }
