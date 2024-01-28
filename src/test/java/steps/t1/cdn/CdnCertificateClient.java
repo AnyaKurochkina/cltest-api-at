@@ -1,6 +1,6 @@
 package steps.t1.cdn;
 
-import core.helper.http.Response;
+import api.routes.cdn.CdnCertificateApi;
 import io.qameta.allure.Step;
 import models.t1.cdn.CertificateListItem;
 
@@ -9,19 +9,15 @@ import java.util.Objects;
 
 public class CdnCertificateClient extends AbstractCdnClient {
 
-    private static final String BASE_PATH = API_URL + "certificates";
-
     @Step("Получение всех сертификатов для проекта с id: {0}")
     public static List<CertificateListItem> getCertificate(String projectId) {
-        return getRequestSpec()
-                .get(BASE_PATH, projectId)
-                .assertStatus(200)
+        return getRequestSpec().api(CdnCertificateApi.getCertificates, projectId)
                 .jsonPath()
                 .getList("list", CertificateListItem.class);
     }
 
-    @Step("Удаление сертификата в проекте: {0}, имени: {1}")
-    public static Response deleteCertificateByName(String projectId, String certificateName) {
+    @Step("Удаление сертификата в проекте: {0}, по имени: {1}")
+    public static void deleteCertificateByName(String projectId, String certificateName) {
         String certificateId = getCertificate(projectId).stream()
                 .filter(certificate -> Objects.equals(certificate.getName(), certificateName))
                 .findFirst()
@@ -29,12 +25,11 @@ public class CdnCertificateClient extends AbstractCdnClient {
                         String.format("Не найден ни один сертификат с именем %s:", certificateName)))
                 .getId();
 
-        return deleteCertificate(projectId, certificateId);
+        deleteCertificate(projectId, certificateId);
     }
 
     @Step("Удаление сертификата в проекте: {0}, и с id: {1}")
-    private static Response deleteCertificate(String projectId, String certificateId) {
-        return getRequestSpec()
-                .delete(BASE_PATH + "/" + certificateId, projectId);
+    private static void deleteCertificate(String projectId, String certificateId) {
+        getRequestSpec().api(CdnCertificateApi.deleteCertificateById, projectId, certificateId);
     }
 }
