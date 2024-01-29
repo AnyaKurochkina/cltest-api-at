@@ -1,13 +1,13 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
+import core.helper.StringUtils;
+import core.helper.http.QueryBuilder;
 import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.action.Action;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
@@ -18,28 +18,30 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static core.helper.StringUtils.format;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionsTagTest extends Tests {
+public class ActionsTagTest extends ActionBaseTest {
 
     @DisplayName("Добавление/Удаление списка Тегов в действиях")
     @TmsLinks({@TmsLink("1700365"), @TmsLink("1700417")})
     @Test
     public void addTagActionTest() {
         List<String> tagList = Arrays.asList("test_api", "test_api2");
-        Action action1 = createAction("add_tag1_test_api");
-        Action action2 = createAction("add_tag2_test_api");
-        addTagListToAction(tagList, action1.getName(), action2.getName());
-        assertEquals(tagList, getActionById(action1.getActionId()).getTagList());
-        assertEquals(tagList, getActionById(action2.getActionId()).getTagList());
-        removeTagListToAction(tagList, action1.getName(), action2.getName());
-        assertTrue(getActionById(action1.getActionId()).getTagList().isEmpty());
-        assertTrue(getActionById(action2.getActionId()).getTagList().isEmpty());
+        Action action1 = createAction(createActionModel("add_tag1_test_api"));
+        Action action2 = createAction(createActionModel("add_tag2_test_api"));
+        addTagListToAction(tagList, new QueryBuilder().add("name__in", format("{},{}", action1.getName(), action2.getName())));
+        assertEquals(tagList, getActionById(action1.getId()).getTagList());
+        assertEquals(tagList, getActionById(action2.getId()).getTagList());
+        removeTagListToAction(tagList, new QueryBuilder().add("name__in", format("{},{}", action1.getName(), action2.getName())));
+        assertTrue(getActionById(action1.getId()).getTagList().isEmpty());
+        assertTrue(getActionById(action2.getId()).getTagList().isEmpty());
     }
 
     @DisplayName("Проверка значения поля tag_list в действиях")
@@ -47,18 +49,14 @@ public class ActionsTagTest extends Tests {
     @Test
     public void checkActionTagListValueTest() {
         List<String> tagList = Arrays.asList("action_tag_test_value", "action_tag_test_value2");
-        Action action = Action.builder()
-                .name("at_api_check_tag_list_value")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(tagList)
-                .build()
-                .createObject();
+        Action actionModel = createActionModel("at_api_check_tag_list_value");
+        actionModel.setTagList(tagList);
+        Action action = createAction(actionModel);
         List<String> actionTagList = action.getTagList();
-        assertTrue(tagList.size() == actionTagList.size() && tagList.containsAll(actionTagList) && actionTagList.containsAll(tagList));
+        AssertUtils.assertEqualsList(tagList, actionTagList);
         tagList = Collections.singletonList("action_tag_test_value3");
-        partialUpdateAction(action.getActionId(), new JSONObject().put("tag_list", tagList));
-        Action createdAction = getActionById(action.getActionId());
+        partialUpdateAction(action.getId(), new JSONObject().put("tag_list", tagList));
+        Action createdAction = getActionById(action.getId());
         AssertUtils.assertEqualsList(tagList, createdAction.getTagList());
     }
 
@@ -67,16 +65,12 @@ public class ActionsTagTest extends Tests {
     @Test
     public void checkActionTagListVersioning() {
         List<String> tagList = Arrays.asList("test_api", "test_api2");
-        Action action = Action.builder()
-                .name("at_api_action_check_tag_list_versioning")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(tagList)
-                .build()
-                .createObject();
+        Action actionModel = createActionModel("at_api_action_check_tag_list_versioning");
+        actionModel.setTagList(tagList);
+        Action action = createAction(actionModel);
         tagList = Collections.singletonList("test_api3");
-        partialUpdateAction(action.getActionId(), new JSONObject().put("tag_list", tagList));
-        Action updatedAction = getActionById(action.getActionId());
+        partialUpdateAction(action.getId(), new JSONObject().put("tag_list", tagList));
+        Action updatedAction = getActionById(action.getId());
         assertEquals("1.0.0", updatedAction.getVersion());
     }
 
@@ -85,12 +79,9 @@ public class ActionsTagTest extends Tests {
     @Test
     public void createActionWithSameTagsTest() {
         List<String> tagList = Arrays.asList("same_tag", "same_tag");
-        Action action = Action.builder()
-                .name(RandomStringUtils.randomAlphabetic(10).toLowerCase() + "action_at_api")
-                .title("AT API Product")
-                .tagList(tagList)
-                .build()
-                .createObject();
+        Action actionModel = createActionModel(StringUtils.getRandomStringApi(7));
+        actionModel.setTagList(tagList);
+        Action action = createAction(actionModel);
         List<String> actionTagList = action.getTagList();
         assertEquals(1, actionTagList.size());
         assertEquals("same_tag", actionTagList.get(0));

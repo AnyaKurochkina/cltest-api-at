@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.AllowedActionSteps.createAllowedAction;
 import static steps.productCatalog.AllowedActionSteps.partialUpdateAllowedAction;
 
@@ -28,18 +29,15 @@ public class AllowedActionNegativeTest extends Tests {
     @TmsLink("1328332")
     @Test
     public void createAllowedActionWithNotUniqActionIdTest() {
-        Action action = Action.builder()
-                .name("action_for_allowed_action_test_api")
-                .build()
-                .createObject();
+        Action action = createAction("action_for_allowed_action_test_api");
         AllowedAction.builder()
                 .title("create_allowed_action_with_not_unig_action_id_test_api")
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .build()
                 .createObject();
         JSONObject json = AllowedAction.builder()
                 .title("create2_allowed_action_with_not_unig_action_id_test_api")
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .build()
                 .init()
                 .toJson();

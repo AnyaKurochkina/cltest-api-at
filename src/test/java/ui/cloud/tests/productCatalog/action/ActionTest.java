@@ -34,6 +34,7 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.GraphSteps.createGraph;
 
 public class ActionTest extends ActionBaseTest {
 
@@ -41,12 +42,11 @@ public class ActionTest extends ActionBaseTest {
     @TmsLink("505750")
     @DisplayName("Создание действия")
     public void createAction() {
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("graph_for_ui_test")
                 .title("graph_for_ui_test")
                 .type("action")
-                .build()
-                .createObject();
+                .build());
         String name = "create_action_test_ui";
         Action action = Action.builder()
                 .name(name)
@@ -82,12 +82,11 @@ public class ActionTest extends ActionBaseTest {
     public void copyAction() {
         String name = "copy_action_test_ui";
         String cloneName = name + "-clone";
-        Action.builder()
+        ActionSteps.createAction(Action.builder()
                 .name(name)
                 .title(name)
                 .number(0)
-                .build()
-                .createObject();
+                .build());
         assertTrue(new ControlPanelIndexPage().goToActionsListPage()
                 .copyAction(name)
                 .backToActionsList()
@@ -108,7 +107,7 @@ public class ActionTest extends ActionBaseTest {
                 .title(name)
                 .number(0)
                 .build()
-                .init().toJson();
+                .toJson();
         ActionSteps.createAction(json);
         new ControlPanelIndexPage().goToActionsListPage()
                 .openActionPage(name)
@@ -130,7 +129,7 @@ public class ActionTest extends ActionBaseTest {
                 .title(name)
                 .number(0)
                 .build()
-                .init().toJson();
+                .toJson();
         ActionSteps.createAction(json);
         new ControlPanelIndexPage().goToActionsListPage()
                 .deleteAction(name)
@@ -143,7 +142,7 @@ public class ActionTest extends ActionBaseTest {
     @DisplayName("Проверка сохранения версии")
     public void checkActionVersions() {
         String name = "check_action_versions_test_ui";
-        Action action = Action.builder()
+        Action action = ActionSteps.createAction(Action.builder()
                 .name(name)
                 .title(name)
                 .number(0)
@@ -151,10 +150,9 @@ public class ActionTest extends ActionBaseTest {
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
-                .build()
-                .createObject();
-        partialUpdateAction(action.getActionId(), new JSONObject().put("priority", 1));
-        String version = getActionById(action.getActionId()).getVersion();
+                .build());
+        partialUpdateAction(action.getId(), new JSONObject().put("priority", 1));
+        String version = getActionById(action.getId()).getVersion();
         new ControlPanelIndexPage().goToActionsListPage()
                 .openActionPage(name)
                 .setPriority(2)
@@ -170,7 +168,7 @@ public class ActionTest extends ActionBaseTest {
     @DisplayName("Редактировать действие")
     public void editAction() {
         String name = "edit_action_test_ui";
-        Action.builder()
+        ActionSteps.createAction(Action.builder()
                 .name(name)
                 .title(name)
                 .number(0)
@@ -178,8 +176,7 @@ public class ActionTest extends ActionBaseTest {
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
-                .build()
-                .createObject();
+                .build());
         new ControlPanelIndexPage().goToActionsListPage()
                 .openActionPage(name)
                 .changeGraphVersion("1.0.0")
@@ -197,7 +194,7 @@ public class ActionTest extends ActionBaseTest {
                 .build()
                 .createObject();
         String name = "delete_icon_action_test_ui";
-        Action.builder()
+        ActionSteps.createAction(Action.builder()
                 .name(name)
                 .title(name)
                 .number(0)
@@ -206,8 +203,7 @@ public class ActionTest extends ActionBaseTest {
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
                 .iconStoreId(icon.getId())
-                .build()
-                .createObject();
+                .build());
         assertFalse(new ControlPanelIndexPage().goToActionsListPage()
                 .openActionPage(name)
                 .deleteIcon()
@@ -344,7 +340,7 @@ public class ActionTest extends ActionBaseTest {
         Action action = createActionByApi(name);
         new ControlPanelIndexPage().goToActionsListPage()
                 .openActionPage(name)
-                .checkJSONcontains(action.getActionId());
+                .checkJSONcontains(action.getId());
     }
 
     @Test
@@ -367,22 +363,20 @@ public class ActionTest extends ActionBaseTest {
     public void checkGraphTypeFilterTest() {
         String actionName = UUID.randomUUID().toString();
         createActionByApi(actionName);
-        Graph creatingGraph = Graph.builder()
+        Graph creatingGraph = createGraph(Graph.builder()
                 .name(UUID.randomUUID().toString())
                 .title("AT UI Graph")
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .author("AT UI")
-                .build()
-                .createObject();
-        Graph actionGraph = Graph.builder()
+                .build());
+        Graph actionGraph = createGraph(Graph.builder()
                 .name(UUID.randomUUID().toString())
                 .title("AT UI Graph")
                 .version("1.0.0")
                 .type(GraphType.ACTION.getValue())
                 .author("AT UI")
-                .build()
-                .createObject();
+                .build());
         new ControlPanelIndexPage().goToActionsListPage()
                 .openActionPage(actionName)
                 .setGraph(actionGraph.getName())

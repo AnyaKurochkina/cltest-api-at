@@ -15,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.ForbiddenActionSteps.createForbiddenAction;
 import static steps.productCatalog.ForbiddenActionSteps.partialUpdateForbiddenAction;
 
@@ -28,20 +29,17 @@ public class ForbiddenActionNegativeTest extends Tests {
     @TmsLink("1328275")
     @Test
     public void createForbiddenActionWithNotUnigActionDirectionTest() {
-        Action action = Action.builder()
-                .name("action_for_non_unique_action_direction_test_api")
-                .build()
-                .createObject();
+        Action action = createAction("action_for_non_unique_action_direction_test_api");
         ForbiddenAction.builder()
                 .title("create_forbidden_action_with_not_unig_action_direction_test_api")
                 .direction("parent_to_child")
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .build()
                 .createObject();
         JSONObject json = ForbiddenAction.builder()
                 .title("create_second_forbidden_action_with_not_unig_action_direction_test_api")
                 .direction("parent_to_child")
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .build()
                 .init()
                 .toJson();

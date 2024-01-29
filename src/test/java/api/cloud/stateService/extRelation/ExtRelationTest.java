@@ -104,7 +104,7 @@ public class ExtRelationTest extends Tests {
         JSONObject eventJson = JsonHelper.getJsonTemplate("stateService/createEvent.json")
                 .set("$.order_id", primaryItem.getOrderId())
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .set("$.item_id", primaryItem.getItemId())
                 .set("$.type", primaryItem.getType())
                 .set("$.subtype", "state")

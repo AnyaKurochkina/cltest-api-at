@@ -1,6 +1,5 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -10,7 +9,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -18,11 +16,10 @@ import static steps.productCatalog.ActionPrivateSteps.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionPrivateTest extends Tests {
+public class ActionPrivateTest extends ActionBaseTest {
 
     @DisplayName("Создание/Получение/Удаление действия в продуктовом каталоге c сервисным токеном")
     @TmsLinks({@TmsLink("1420274"), @TmsLink("1420277"), @TmsLink("1420278")})
@@ -38,7 +35,7 @@ public class ActionPrivateTest extends Tests {
                 .build()
                 .toJson();
         Action action = createActionPrivate(jsonObject);
-        String actionId = action.getActionId();
+        String actionId = action.getId();
         Action actualAction = getActionPrivateById(actionId);
         assertEquals(action, actualAction);
         deleteActionPrivateById(actionId);
@@ -48,10 +45,9 @@ public class ActionPrivateTest extends Tests {
     @TmsLink("1420279")
     @Test
     public void updateActionPrivateTest() {
-        String actionName = "action_update_private_test_api";
-        Action action = createAction(actionName);
-        partialUpdatePrivateAction(action.getActionId(), new JSONObject().put("priority", 1));
-        Action updatedAction = getActionById(action.getActionId());
+        Action action = createAction(createActionModel("action_update_private_test_api"));
+        partialUpdatePrivateAction(action.getId(), new JSONObject().put("priority", 1));
+        Action updatedAction = getActionById(action.getId());
         assertEquals("1.0.1", updatedAction.getVersion(), "Версии не совпадают");
         assertEquals(1, updatedAction.getPriority());
     }
@@ -80,7 +76,7 @@ public class ActionPrivateTest extends Tests {
     @Test
     public void updateActionPrivateByNameTest() {
         String actionName = "action_update_private_by_name_test_api";
-        createAction(actionName);
+        createAction(createActionModel(actionName));
         partialUpdateActionPrivateByName(actionName, new JSONObject().put("priority", 1));
         Action updatedAction = getActionPrivateByName(actionName);
         assertEquals("1.0.1", updatedAction.getVersion(), "Версии не совпадают");

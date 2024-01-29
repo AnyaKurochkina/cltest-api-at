@@ -28,7 +28,7 @@ public class SecurityGroupResponse extends AbstractEntity {
     }
 
     @Override
-    protected int getPriority() {
+    protected int getPrioritise() {
         return 2;
     }
 }

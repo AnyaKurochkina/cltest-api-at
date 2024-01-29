@@ -15,8 +15,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static steps.productCatalog.ActionSteps.deleteActionByName;
-import static steps.productCatalog.ActionSteps.isActionExists;
+import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.AllowedActionSteps.*;
 
 @Log4j2
@@ -53,11 +52,8 @@ public class AllowedAction extends Entity {
         if (actionId == null) {
             String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_allowed_action_api_test";
             deleteActionIfExist(actionName);
-            Action action = Action.builder()
-                    .name(actionName)
-                    .build()
-                    .createObject();
-            actionId = action.getActionId();
+            Action action = createAction(actionName);
+            actionId = action.getId();
         }
         return this;
     }

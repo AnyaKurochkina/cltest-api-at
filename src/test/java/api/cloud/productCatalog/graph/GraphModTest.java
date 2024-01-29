@@ -57,7 +57,7 @@ public class GraphModTest extends Tests {
                 .data(uiData)
                 .build();
         String expectedTitle = "default";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_with_out_context_test_api")
                 .version("1.0.0")
                 .modifications(Arrays.asList(jsonSchema, uiSchema))
@@ -67,8 +67,7 @@ public class GraphModTest extends Tests {
                 .uiSchema(new LinkedHashMap<String, Object>() {{
                     put("title", expectedTitle);
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphById(graph.getGraphId());
         assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
         assertEquals(expectedTitle, createdGraph.getUiSchema().get("title"));
@@ -89,15 +88,14 @@ public class GraphModTest extends Tests {
                 .data(jsonData)
                 .build();
         String expectedTitle = "default";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_by_env_type_not_equals_mod_env_type_test_api")
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .jsonSchema(new LinkedHashMap<String, Object>() {{
                     put("title", expectedTitle);
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=dev");
         assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
     }
@@ -117,15 +115,14 @@ public class GraphModTest extends Tests {
                 .data(jsonData)
                 .build();
         String expectedTitle = "default";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_by_env_equals_mod_env_test_api")
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .jsonSchema(new LinkedHashMap<String, Object>() {{
                     put("title", expectedTitle);
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env_name=dso");
         assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
     }
@@ -155,7 +152,7 @@ public class GraphModTest extends Tests {
                 .data(uiData)
                 .build();
         String expectedTitle = "default";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_by_env_type_equals_mod_env_type_and_env_not_equals_mod_env")
                 .version("1.0.0")
                 .modifications(Arrays.asList(jsonSchema, uiSchema))
@@ -165,8 +162,7 @@ public class GraphModTest extends Tests {
                 .uiSchema(new LinkedHashMap<String, Object>() {{
                     put("title", expectedTitle);
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=test&env_name=migr");
         assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
         assertEquals(uiData, createdGraph.getUiSchema().get("title"));
@@ -197,7 +193,7 @@ public class GraphModTest extends Tests {
                 .data(uiData)
                 .build();
         String expectedTitle = "default";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_by_env_type_and_type_equals_mod_env_type_and_env")
                 .version("1.0.0")
                 .modifications(Arrays.asList(jsonSchema, uiSchema))
@@ -207,8 +203,7 @@ public class GraphModTest extends Tests {
                 .uiSchema(new LinkedHashMap<String, Object>() {{
                     put("title", expectedTitle);
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=test&env_name=lt");
         assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
         assertEquals(uiData, createdGraph.getUiSchema().get("title"));
@@ -232,12 +227,11 @@ public class GraphModTest extends Tests {
                 .updateType(UpdateType.REPLACE)
                 .data(jsonData)
                 .build();
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_with_out_context_test_api")
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
-                .build()
-                .createObject();
+                .build());
         String errorMsg = getResponseGraphByIdContext(project.getId(), graph.getGraphId()).extractAs(ErrorMessage.class).getMessage();
         assertEquals(format("No {} key in {} dictionary for schema (json_schema)", key), errorMsg);
     }

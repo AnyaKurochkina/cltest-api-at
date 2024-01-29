@@ -36,7 +36,6 @@
   "is_safe": null,
   "is_delayable": false,
   "available_with_cost_reduction": false,
-  "default_item": {},
   "skip_request_resource_pools": false,
   "skip_reservation": false,
   "skip_validate_checker": false,

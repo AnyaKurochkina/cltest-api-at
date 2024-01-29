@@ -25,9 +25,9 @@ public class InputQueueResponse extends AbstractEntity {
 	private Object params;
 
 	@Override
-	protected int getPriority() {
-		return 1;
-	}
+    protected int getPrioritise() {
+        return 1;
+    }
 
 	@Override
 	public void delete() {

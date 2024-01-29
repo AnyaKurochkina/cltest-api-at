@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
+import steps.productCatalog.GraphSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.ProductCatalogUITest;
@@ -50,15 +51,14 @@ public class GraphBaseTest extends ProductCatalogUITest {
     }
 
     public Graph createGraph(String name, String title) {
-        graph = Graph.builder()
+        graph = GraphSteps.createGraph(Graph.builder()
                 .name(name)
                 .title(title)
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description(DESCRIPTION)
                 .author(AUTHOR)
-                .build()
-                .createObject();
+                .build());
         return graph;
     }
 

@@ -28,8 +28,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
-import static steps.productCatalog.GraphSteps.deleteGraphByIdInContext;
-import static steps.productCatalog.GraphSteps.partialUpdateGraphInContext;
+import static steps.productCatalog.GraphSteps.*;
 import static steps.resourceManager.ResourceManagerSteps.getFolderById;
 import static steps.resourceManager.ResourceManagerSteps.getProjectJsonPath;
 import static ui.cloud.pages.productCatalog.AuditPage.NO_VALUE;
@@ -50,14 +49,13 @@ public class T1PortalAuditTest extends Tests {
 
     @BeforeEach
     public void setUp() {
-        graph = Graph.builder()
+        graph = createGraph(Graph.builder()
                 .name(UUID.randomUUID().toString())
                 .title("AT UI Graph")
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .author("AT UI")
-                .build()
-                .createObject();
+                .build());
 
         partialUpdateGraphInContext(graph.getGraphId(),
                 new JSONObject().put("id", graph.getGraphId()).put("name", graph.getName()).put("description", "audit test")

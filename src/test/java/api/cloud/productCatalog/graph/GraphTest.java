@@ -1,6 +1,5 @@
 package api.cloud.productCatalog.graph;
 
-import api.Tests;
 import core.helper.StringUtils;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
@@ -16,10 +15,12 @@ import models.cloud.productCatalog.graph.UpdateType;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import models.cloud.references.Pages;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.openqa.selenium.NotFoundException;
 
 import java.time.ZonedDateTime;
@@ -27,16 +28,15 @@ import java.util.*;
 
 import static core.helper.JsonHelper.toJson;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.references.ReferencesStep.getPrivatePagesListByDirectoryName;
 import static steps.references.ReferencesStep.partialUpdatePrivatePagesById;
 
-@Tag("product_catalog")
-@Tag("Graphs")
 @Epic("Продуктовый каталог")
 @Feature("Графы")
 @DisabledIfEnv("prod")
-public class GraphTest extends Tests {
+public class GraphTest extends GraphBaseTest {
 
     @DisplayName("Создание графа")
     @TmsLink("642536")
@@ -78,11 +78,9 @@ public class GraphTest extends Tests {
     @TmsLink("1022491")
     @Test
     public void getLockOrderOnErrorAndUpdate() {
-        Graph graph = Graph.builder()
-                .name("get_lock_order_on_error")
-                .lockOrderOnError(false)
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("get_lock_order_on_error");
+        graphModel.setLockOrderOnError(false);
+        Graph graph = createGraph(graphModel);
         String id = graph.getGraphId();
         Graph getGraph = getGraphById(id);
         assertFalse(getGraph.getLockOrderOnError());
@@ -123,10 +121,7 @@ public class GraphTest extends Tests {
     @TmsLink("740085")
     @Test
     public void checkAccessWithPublicToken() {
-        Graph graph = Graph.builder()
-                .name("graph_get_by_name_with_public_token_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("graph_get_by_name_with_public_token_test_api");
         getGraphByNameWithPublicToken(graph.getName());
         JSONObject jsonObject = Graph.builder()
                 .name("create_object_with_public_token_api")
@@ -159,13 +154,9 @@ public class GraphTest extends Tests {
     @TmsLink("SOUL-7004")
     @Test
     public void copyGraphAndCheckTagListTest() {
-        String graphName = "clone_graph_test_api";
-        Graph graph = Graph.builder()
-                .name(graphName)
-                .title(graphName)
-                .tagList(Arrays.asList("api_test", "test"))
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("clone_graph_with_tag_list_test_api");
+        graphModel.setTagList(Arrays.asList("api_test", "test"));
+        Graph graph = createGraph(graphModel);
         Graph cloneGraph = copyGraphById(graph.getGraphId());
         deleteGraphById(cloneGraph.getGraphId());
         assertEquals(graph.getTagList(), cloneGraph.getTagList());
@@ -175,12 +166,10 @@ public class GraphTest extends Tests {
     @TmsLink("642650")
     @Test
     public void partialUpdateGraphTest() {
-        Graph graph = Graph.builder()
-                .name("partial_update_graph_test_api")
-                .version("1.0.0")
-                .damageOrderOnError(false)
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("partial_update_graph_test_api");
+        graphModel.setDamageOrderOnError(false);
+        graphModel.setVersion("1.0.0");
+        Graph graph = createGraph(graphModel);
         String oldGraphVersion = graph.getVersion();
         partialUpdateGraph(graph.getGraphId(), new JSONObject()
                 .put("damage_order_on_error", true)).assertStatus(200);
@@ -196,11 +185,10 @@ public class GraphTest extends Tests {
     @TmsLink("642680")
     @Test
     public void updateGraphAndGetVersion() {
-        Graph graphTest = Graph.builder()
-                .name("update_graph_check_version_test_api")
-                .version("1.0.999")
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("update_graph_check_version_test_api");
+        graphModel.setVersion("1.0.999");
+        Graph graphTest = createGraph(graphModel);
+
         partialUpdateGraph(graphTest.getGraphId(), new JSONObject().put("damage_order_on_error", true));
         String currentVersion = getGraphById(graphTest.getGraphId()).getVersion();
         assertEquals("1.1.0", currentVersion);
@@ -237,10 +225,10 @@ public class GraphTest extends Tests {
                 .graphId(mainGraphId)
                 .build().createObject();
 
-        Action action = Action.builder()
+        Action action = createAction(Action.builder()
                 .name("action_for_graph_test_api")
                 .graphId(mainGraphId)
-                .build().createObject();
+                .build());
 
         String deleteResponse = getDeleteResponse(mainGraphId).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         String version = StringUtils.findByRegex("version: ([0-9.]+)\\)", deleteResponse);
@@ -262,14 +250,10 @@ public class GraphTest extends Tests {
     @DisplayName("Загрузка Graph в GitLab")
     @TmsLink("821972")
     public void dumpToGitlabGraph() {
-        String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
-        Graph graph = Graph.builder()
-                .name(graphName)
-                .title(graphName)
-                .version("1.0.0")
-                .build()
-                .createObject();
-        String tag = "graph_" + graphName + "_" + graph.getVersion();
+        Graph graphModel = createGraphModel(StringUtils.getRandomStringApi(7));
+        graphModel.setVersion("1.0.0");
+        Graph graph = createGraph(graphModel);
+        String tag = "graph_" + graph.getName() + "_" + graph.getVersion();
         Response response = dumpGraphToBitbucket(graph.getGraphId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         assertEquals(tag, response.jsonPath().get("tag"));
@@ -280,13 +264,8 @@ public class GraphTest extends Tests {
     @DisplayName("Выгрузка Graph из GitLab")
     @TmsLink("1028898")
     public void loadFromGitlabGraph() {
-        String graphName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        Graph graph = Graph.builder()
-                .name(graphName)
-                .title(graphName)
-                .version("1.0.0")
-                .build()
-                .createObject();
+        Graph graph = createGraph(StringUtils.getRandomStringApi(8));
+        String graphName = graph.getName();
         Response response = dumpGraphToBitbucket(graph.getGraphId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
         deleteGraphById(graph.getGraphId());
@@ -302,11 +281,10 @@ public class GraphTest extends Tests {
     @Test
     public void getAllowedDevelopers() {
         List<String> allowedDevelopersList = Arrays.asList("allowed_developer1", "allowed_developer2");
-        Graph graph = Graph.builder()
-                .name("graph_get_allowed_developers_test_api")
-                .allowedDevelopers(allowedDevelopersList)
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("graph_get_allowed_developers_test_api");
+        graphModel.setAllowedDevelopers(allowedDevelopersList);
+        Graph graph = createGraph(graphModel);
+
         Graph createdGraph = getGraphById(graph.getGraphId());
         assertEquals(allowedDevelopersList, createdGraph.getAllowedDevelopers());
     }
@@ -316,11 +294,10 @@ public class GraphTest extends Tests {
     @Test
     public void getRestrictedDevelopers() {
         List<String> restrictedDevelopersList = Arrays.asList("restricted_developer1", "restricted_developer2");
-        Graph graph = Graph.builder()
-                .name("graph_get_restricted_developers_test_api")
-                .restrictedDevelopers(restrictedDevelopersList)
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("graph_get_restricted_developers_test_api");
+        graphModel.setRestrictedDevelopers(restrictedDevelopersList);
+        Graph graph = createGraph(graphModel);
+
         Graph createdGraph = getGraphById(graph.getGraphId());
         assertEquals(restrictedDevelopersList, createdGraph.getRestrictedDevelopers());
     }
@@ -340,11 +317,11 @@ public class GraphTest extends Tests {
                 .updateType(UpdateType.DELETE)
                 .rootPath(RootPath.UI_SCHEMA)
                 .build();
-        Graph graph = Graph.builder()
-                .name("create_graph_with_update_type_delete")
-                .modifications(Collections.singletonList(mod))
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("create_graph_with_update_type_delete");
+        graphModel.setModifications(Collections.singletonList(mod));
+        Graph graph = createGraph(graphModel);
+
+
         Graph actualGraph = getGraphById(graph.getGraphId());
         assertEquals(UpdateType.DELETE, actualGraph.getModifications().get(0).getUpdateType());
     }
@@ -366,11 +343,10 @@ public class GraphTest extends Tests {
                 .rootPath(RootPath.UI_SCHEMA)
                 .build();
         String name = "copy_graph_with_modification";
-        Graph graph = Graph.builder()
-                .name("copy_graph_with_modification")
-                .modifications(Collections.singletonList(mod))
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel(name);
+        graphModel.setModifications(Collections.singletonList(mod));
+        Graph graph = createGraph(graphModel);
+
         copyGraphById(graph.getGraphId());
         String copyGraphId = getGraphByNameFilter(name + "-clone").getGraphId();
         Graph copyGraph = getGraphById(copyGraphId);
@@ -398,11 +374,10 @@ public class GraphTest extends Tests {
                 .updateType(UpdateType.DELETE)
                 .rootPath(RootPath.UI_SCHEMA)
                 .build();
-        Graph graph = Graph.builder()
-                .name("create_graph_with_mod_in_test_env")
-                .modifications(Collections.singletonList(mod))
-                .build()
-                .createObject();
+        Graph graphModel = createGraphModel("create_graph_with_mod_in_test_env");
+        graphModel.setModifications(Collections.singletonList(mod));
+        Graph graph = createGraph(graphModel);
+
         Graph actualGraph = getGraphById(graph.getGraphId());
         assertEquals(Env.TEST_LT, actualGraph.getModifications().get(0).getEnvs().get(0));
     }
@@ -411,10 +386,8 @@ public class GraphTest extends Tests {
     @TmsLink("1509589")
     @Test
     public void createGraphWithDefaultItemTest() {
-        Graph graph = Graph.builder()
-                .name("create_graph_with_default_item_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("create_graph_with_default_item_test_api");
+
         String expectedVersion = graph.getVersion();
         assertTrue(Objects.nonNull(graph.getDefaultItem()));
         partialUpdateGraph(graph.getGraphId(), new JSONObject().put("default_item", new JSONObject().put("test", "api")));

@@ -1,23 +1,27 @@
 package steps.productCatalog;
 
 import core.enums.Role;
+import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.graph.GetGraphList;
 import models.cloud.productCatalog.graph.Graph;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import steps.Steps;
 
 import java.io.File;
 import java.util.List;
 
+import static api.routes.GraphProductCatalogApi.apiV1GraphsCreate;
+import static api.routes.GraphProductCatalogApi.apiV1GraphsRead;
 import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
 
 public class GraphSteps extends Steps {
 
@@ -108,39 +112,38 @@ public class GraphSteps extends Steps {
 
     @Step("Создание графа")
     public static Response createGraph(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .post(graphUrl);
+                .api(apiV1GraphsCreate);
     }
 
-    @Step("Создание графа c именем {name}")
     public static Graph createGraph(String name) {
-        return Graph.builder()
+        Graph graph = Graph.builder()
                 .name(name)
-                .build()
-                .createObject();
+                .build();
+        return createGraph(graph);
     }
 
-    @Step("Создание графа")
-    public static Graph createGraph(String name, String title) {
-        return Graph.builder()
-                .name(name)
-                .title(title)
-                .build()
-                .createObject();
-    }
-
-    @Step("Создание графа")
     public static Graph createGraph() {
-        return Graph.builder()
-                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
-                .build()
-                .createObject();
+        Graph graph = Graph.builder()
+                .name(StringUtils.getRandomStringApi(7))
+                .build();
+        return createGraph(graph);
     }
 
-    public static Graph getGraphById(String objectId) {
-        return getGraphByIdResponse(objectId)
+    @Step("Создание графа c именем {graph.name}")
+    public static Graph createGraph(Graph graph) {
+        return getProductCatalogAdmin()
+                .body(graph.toJson())
+                .api(apiV1GraphsCreate)
+                .extractAs(Graph.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
+    }
+
+    @Step("Получение графа по Id {graphId}")
+    public static Graph getGraphById(String graphId) {
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsRead, graphId)
                 .assertStatus(200)
                 .extractAs(Graph.class);
     }

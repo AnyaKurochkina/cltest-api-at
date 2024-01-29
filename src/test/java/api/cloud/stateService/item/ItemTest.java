@@ -168,7 +168,7 @@ public class ItemTest extends Tests {
     @Test
     public void orderItemsPublicatiodnTest() {
         //todo завел задачу, доделать тест, когда реализуют валидацию на не валдиный ордер ид
-        uncheckedOrderItemsPublication(project.getId(), "sdf")
+        uncheckedOrderItemsPublication(project.getId(), "sdfsdf")
                 .assertStatus(401);
     }
 }

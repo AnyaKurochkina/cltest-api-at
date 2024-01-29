@@ -1,6 +1,5 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -23,18 +22,14 @@ import static steps.productCatalog.ActionSteps.*;
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionByNameTest extends Tests {
+public class ActionByNameTest extends ActionBaseTest {
 
     @DisplayName("Получение действия по имени")
     @TmsLink("1358558")
     @Test
     public void getActionByNameTest() {
         String actionName = "get_action_by_name_example_test_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .build()
-                .createObject();
+        Action action = createAction(actionName);
         Action getAction = getActionByName(actionName);
         assertEquals(action, getAction);
     }
@@ -44,14 +39,9 @@ public class ActionByNameTest extends Tests {
     @Test
     public void patchTest() {
         String actionName = "action_patch_by_name_test_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .priority(0)
-                .build()
-                .createObject();
+        Action action = createAction(actionName);
         partialUpdateActionByName(actionName, new JSONObject().put("priority", 1));
-        assertEquals("1.0.1", getActionById(action.getActionId()).getVersion(), "Версии не совпадают");
+        assertEquals("1.0.1", getActionById(action.getId()).getVersion(), "Версии не совпадают");
     }
 
     @Test
@@ -63,9 +53,8 @@ public class ActionByNameTest extends Tests {
                 .name(actionName)
                 .title(actionName)
                 .build()
-                .init()
                 .toJson();
-        createAction(jsonObject).assertStatus(201);
+        createAction(jsonObject);
         deleteActionByName(actionName);
         assertFalse(isActionExists(actionName));
     }
@@ -75,11 +64,7 @@ public class ActionByNameTest extends Tests {
     @Test
     public void copyActionByNameTest() {
         String actionName = "clone_action_by_name_test_api";
-        Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .build()
-                .createObject();
+        createAction(actionName);
         Action cloneAction = copyActionByName(actionName);
         String cloneName = cloneAction.getName();
         assertTrue(isActionExists(cloneName), "Действие не существует");
@@ -92,14 +77,11 @@ public class ActionByNameTest extends Tests {
     @Test
     public void copyActionAndCheckTagListV2Test() {
         String actionName = "clone_action_v2_test_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .tagList(Arrays.asList("api_test", "test"))
-                .build()
-                .createObject();
+        Action actionModel = createActionModel(actionName);
+        actionModel.setTagList(Arrays.asList("api_test", "test"));
+        Action action = createAction(actionModel);
         Action cloneAction = copyActionByName(actionName);
-        deleteActionById(cloneAction.getActionId());
+        deleteActionById(cloneAction.getId());
         assertEquals(action.getTagList(), cloneAction.getTagList());
     }
 
@@ -109,12 +91,7 @@ public class ActionByNameTest extends Tests {
     @TmsLink("1358565")
     public void dumpToGitlabActionByNameTest() {
         String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .version("1.0.0")
-                .build()
-                .createObject();
+        Action action = createAction(actionName);
         String tag = "action_" + actionName + "_" + action.getVersion();
         Response response = dumpActionToGitByName(actionName);
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
@@ -126,11 +103,7 @@ public class ActionByNameTest extends Tests {
     @Test
     public void exportActionByNameTest() {
         String actionName = "action_export_by_name_test_api";
-        Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .build()
-                .createObject();
+        createAction(actionName);
         exportActionByName(actionName);
     }
 }

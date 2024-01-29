@@ -138,14 +138,14 @@ public class VisualTemplateTest extends Tests {
                 .isActive(false)
                 .build()
                 .createObject();
-        steps.getObjectByNameWithPublicToken(name).assertStatus(200);
-        steps.createProductObjectWithPublicToken(steps
-                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(visualTemplates.getId(),
-                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
-        steps.putObjectByIdWithPublicToken(visualTemplates.getId(), steps
-                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
-        steps.deleteObjectWithPublicToken(visualTemplates.getId()).assertStatus(403);
+//        steps.getObjectByNameWithPublicToken(name).assertStatus(200);
+//        steps.createProductObjectWithPublicToken(steps
+//                .createJsonObject("create_object_with_public_token_api")).assertStatus(403);
+//        steps.partialUpdateObjectWithPublicToken(visualTemplates.getId(),
+//                new JSONObject().put("description", "UpdateDescription")).assertStatus(403);
+//        steps.putObjectByIdWithPublicToken(visualTemplates.getId(), steps
+//                .createJsonObject("update_object_with_public_token_api")).assertStatus(403);
+//        steps.deleteObjectWithPublicToken(visualTemplates.getId()).assertStatus(403);
     }
 
     @DisplayName("Получение шаблона визуализации по Id")

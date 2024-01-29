@@ -43,7 +43,7 @@ public class ImportForbiddenActionTest extends ForbiddenActionBaseTest {
                         .name(name)
                         .title(json.getString("ForbiddenAction.title"))
                         .description(json.getString("ForbiddenAction.description"))
-                        .actionId(getActionByName(actionName).getActionId())
+                        .actionId(getActionByName(actionName).getId())
                         .eventTypeProvider(json.getList("ForbiddenAction.event_type_provider", EventTypeProvider.class))
                         .direction(json.getString("ForbiddenAction.direction"))
                         .build());

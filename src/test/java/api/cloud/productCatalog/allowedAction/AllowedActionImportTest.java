@@ -3,6 +3,7 @@ package api.cloud.productCatalog.allowedAction;
 import api.Tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
+import core.helper.StringUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -35,7 +36,7 @@ public class AllowedActionImportTest extends Tests {
     public void importAllowedActionTest() {
         JSONObject jsonObject = AllowedAction.builder()
                 .title("import_allowed_action_test_api")
-                .actionId(createAction().getActionId())
+                .actionId(createAction(StringUtils.getRandomStringApi(7)).getId())
                 .build()
                 .toJson();
         AllowedAction allowedAction = createAllowedAction(jsonObject).assertStatus(201).extractAs(AllowedAction.class);
@@ -82,7 +83,7 @@ public class AllowedActionImportTest extends Tests {
         DataFileHelper.write(filePath, exportAllowedActionById(String.valueOf(allowedAction.getId())).toString());
         JSONObject json = AllowedAction.builder()
                 .name(allowedActionName)
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .build()
                 .init()
                 .toJson();

@@ -23,7 +23,7 @@ public class ExchangeResponse extends AbstractEntity {
     private String queue_list;
 
     @Override
-    protected int getPriority() {
+    protected int getPrioritise() {
         return 2;
     }
 

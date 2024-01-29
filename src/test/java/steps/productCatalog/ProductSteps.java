@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
@@ -17,8 +18,10 @@ import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import static api.routes.ProductProductCatalogApi.apiV1ProductsCreate;
 import static core.helper.Configure.productCatalogURL;
 import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
 
 public class ProductSteps extends Steps {
     private static final String productUrl = "/api/v1/products/";
@@ -112,6 +115,15 @@ public class ProductSteps extends Steps {
                 .post(productUrl)
                 .assertStatus(201)
                 .extractAs(Product.class);
+    }
+
+    @Step("Создание продукта")
+    public static Product createProduct(Product product) {
+        return getProductCatalogAdmin()
+                .body(product.toJson())
+                .api(apiV1ProductsCreate)
+                .extractAs(Product.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Создание продукта")

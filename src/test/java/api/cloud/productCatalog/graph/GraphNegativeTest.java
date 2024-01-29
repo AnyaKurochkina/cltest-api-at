@@ -112,7 +112,6 @@ public class GraphNegativeTest extends Tests {
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .build()
-                .init()
                 .toJson();
         String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
         assertEquals(format("Field values (envs) non-unique: ({})", env.getValue()), error);
@@ -137,7 +136,6 @@ public class GraphNegativeTest extends Tests {
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .build()
-                .init()
                 .toJson();
         String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
         assertEquals(format("Environment type is not in the directory"), error);
@@ -161,7 +159,6 @@ public class GraphNegativeTest extends Tests {
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .build()
-                .init()
                 .toJson();
         String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
         assertEquals("\"name\": Это поле не может быть пустым.", error);

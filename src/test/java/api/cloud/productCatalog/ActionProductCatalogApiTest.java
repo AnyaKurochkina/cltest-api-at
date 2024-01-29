@@ -21,7 +21,7 @@ import static steps.stateService.StateServiceSteps.createItem;
 @Feature("Product Catalog API")
 @Tag("product_catalog")
 @DisabledIfEnv("prod")
-public class ProductCatalogApiTest extends Tests {
+public class ActionProductCatalogApiTest extends Tests {
 
     @DisplayName("Получение версии сервиса продуктовый каталог")
     @TmsLink("1080851")

@@ -171,6 +171,14 @@ public class ProductCardSteps extends Steps {
                 .build();
     }
 
+    @Step("Создание CardItem c типом {objType}")
+    public static CardItems createCardItem(String objType, String objId) {
+        return CardItems.builder()
+                .objType(objType)
+                .objId(objId)
+                .build();
+    }
+
     @Step("Получение списка product cards с тегами")
     public static List<ProductCard> getProductCardListWithTags() {
         return new Http(productCatalogURL)

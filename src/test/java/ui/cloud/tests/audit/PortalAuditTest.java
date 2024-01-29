@@ -53,15 +53,14 @@ public class PortalAuditTest extends Tests {
     @BeforeEach
     public void setUp() {
         graphName = UUID.randomUUID().toString();
-        graph = Graph.builder()
+        graph = createGraph(Graph.builder()
                 .name(graphName)
                 .title("AT UI Graph")
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description("for audit test")
                 .author("AT UI")
-                .build()
-                .createObject();
+                .build());
 
         copyGraphByIdInContext(graph.getGraphId(), project.getId());
         graphCopy = getGraphByNameFilter(graph.getName() + "-clone");

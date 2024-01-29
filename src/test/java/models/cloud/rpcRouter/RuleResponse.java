@@ -28,7 +28,7 @@ public class RuleResponse extends AbstractEntity {
     private Date update_dt;
 
     @Override
-    protected int getPriority() {
+    protected int getPrioritise() {
         return 2;
     }
 
