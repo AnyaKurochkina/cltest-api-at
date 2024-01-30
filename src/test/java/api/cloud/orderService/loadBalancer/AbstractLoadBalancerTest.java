@@ -12,9 +12,6 @@ import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.orderService.OrderServiceSteps;
 
-import java.util.Collections;
-import java.util.List;
-
 @Execution(ExecutionMode.SAME_THREAD)
 public class AbstractLoadBalancerTest extends Tests {
 //    @Mock
@@ -61,14 +58,14 @@ public class AbstractLoadBalancerTest extends Tests {
 
     @Step("Создание простого TCP GSLB")
     protected static Gslb createSimpleTcpGslb(LoadBalancer balancer) {
-        Gslb gslb = Gslb.simpleGslb(createSimpleTcpFrontend(balancer).getFrontendName()).globalname("tcp-" + SIMPLE_GSLB_NAME).build();
+        Gslb gslb = Gslb.builder().frontend(createSimpleTcpFrontend(balancer).getFrontendName()).globalname("tcp-" + SIMPLE_GSLB_NAME).build();
         balancer.addGslbUseCache(gslb);
         return gslb;
     }
 
     @Step("Создание простого HTTP GSLB")
     protected static Gslb createSimpleHttpGslb(LoadBalancer balancer) {
-        Gslb gslb = Gslb.simpleGslb(createSimpleHttpFrontend(balancer).getFrontendName()).globalname("http-" + SIMPLE_GSLB_NAME).build();
+        Gslb gslb = Gslb.builder().frontend(createSimpleHttpFrontend(balancer).getFrontendName()).globalname("http-" + SIMPLE_GSLB_NAME).build();
         balancer.addGslbUseCache(gslb);
         return gslb;
     }
@@ -86,13 +83,5 @@ public class AbstractLoadBalancerTest extends Tests {
     protected static String globalNameFull(LoadBalancer balancer, String globalName) {
         return OrderServiceSteps.getObjectClass(balancer,
                 String.format("data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}.globalname", globalName), String.class);
-    }
-
-
-    @Deprecated
-    protected static RouteSni addRoute(LoadBalancer balancer, String backendName, String globalName, boolean valid) {
-        String globalNameFull = globalNameFull(balancer, globalName);
-        List<RouteSni.Route> routes = Collections.singletonList(new RouteSni.Route(backendName, new Generex(valid ? "snitcp[0-9]{10}" : "[a-z0-9]{256}").random()));
-        return RouteSni.builder().routes(routes).globalname(globalNameFull).build();
     }
 }

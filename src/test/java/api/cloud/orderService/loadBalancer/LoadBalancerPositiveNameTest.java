@@ -39,7 +39,7 @@ public class LoadBalancerPositiveNameTest extends AbstractLoadBalancerTest {
             balancer.addBackend(backend);
             Frontend frontend = Frontend.simpleTcpFrontend(backend.getBackendName()).frontendName((MAX_FRONTEND_NAME)).build();
             balancer.addFrontend(frontend);
-            Gslb gslb = Gslb.simpleGslb(frontend.getFrontendName()).globalname(MAX_GSLB_NAME).build();
+            Gslb gslb = Gslb.builder().frontend(frontend.getFrontendName()).globalname(MAX_GSLB_NAME).build();
             balancer.addGslb(gslb);
             RouteSni.Route route = new RouteSni.Route(backend.getBackendName(), MAX_ROUTE_NAME);
             balancer.addRoute(gslb.getGlobalname(), route);
@@ -55,7 +55,7 @@ public class LoadBalancerPositiveNameTest extends AbstractLoadBalancerTest {
             balancer.addBackend(backend);
             Frontend frontend = Frontend.simpleTcpFrontend(backend.getBackendName()).frontendName((MIN_FRONTEND_NAME)).build();
             balancer.addFrontend(frontend);
-            Gslb gslb = Gslb.simpleGslb(frontend.getFrontendName()).globalname(MIN_GSLB_NAME).build();
+            Gslb gslb = Gslb.builder().frontend(frontend.getFrontendName()).globalname(MIN_GSLB_NAME).build();
             balancer.addGslb(gslb);
             RouteSni.Route route = new RouteSni.Route(backend.getBackendName(), MIN_ROUTE_NAME);
             balancer.addRoute(gslb.getGlobalname(), route);

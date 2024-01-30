@@ -353,21 +353,21 @@ public class LoadBalancerTest extends AbstractLoadBalancerTest {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Комплексное создание {0}")
     void complexCreate(LoadBalancer product, Integer num) {
-//        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-//            Backend backend = Backend.builder().servers(serversTcp).backendName("complex_backend3").build();
-//            Frontend frontend = Frontend.builder().frontendName("complex_frontend3").frontendPort(80)
-//                    .defaultBackendNameTcp(backend.getBackendName()).build();
-//            HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
-//                    .checkStrings(Collections.singletonList(CheckString.builder()
-//                            .stringType("connect").stringAddress("10.0.0.1").stringPort(10).stringUseSsl("disabled")
-//                            .stringSendProxy("disabled").build())).build();
-//            RouteSni routeSni = RouteSni.builder()
-//                    .routes(Collections.singletonList(new RouteSni.Route(backend.getBackendName(), "complex_sni"))).build();
-//
-//            ComplexCreate complex = ComplexCreate.builder()/*.healthCheck(healthCheck).sniRoute(routeSni)*/
-//                    .backend(backend)/*.frontend(frontend)*/.build();
-//            balancer.complexCreate(complex);
-//        }
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            Backend backend = Backend.builder().backendName("complex_backend3").build();
+            Frontend frontend = Frontend.builder().frontendName("complex_frontend3").frontendPort(80)
+                    .defaultBackendNameTcp(backend.getBackendName()).build();
+            HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
+                    .checkStrings(Collections.singletonList(CheckString.builder()
+                            .stringAddress("10.0.0.1").stringPort(10).stringUseSsl("disabled")
+                            .stringSendProxy("disabled").build())).build();
+            RouteSni routeSni = RouteSni.builder()
+                    .routes(Collections.singletonList(new RouteSni.Route(backend.getBackendName(), "complex_sni"))).build();
+
+            ComplexCreate complex = ComplexCreate.builder()/*.healthCheck(healthCheck).sniRoute(routeSni)*/
+                    .backend(backend)/*.frontend(frontend)*/.build();
+            balancer.complexCreate(complex);
+        }
     }
 
     @TmsLink("1286267")

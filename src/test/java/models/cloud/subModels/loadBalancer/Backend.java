@@ -51,7 +51,6 @@ public class Backend {
                 .servers(servers)
                 .balancingAlgorithm("leastconn")
                 .backendName(new Generex("at-backend-[a-z]{5}").random())
-//                .backendName("at-backend-pbcsr")
                 .checkInterval(5000)
                 .checkFall(3)
                 .checkRise(3)
