@@ -1,6 +1,6 @@
 package steps.t1.cdn;
 
-import core.helper.http.Response;
+import api.routes.cdn.CdnOriginGroupsApi;
 import io.qameta.allure.Step;
 import models.t1.cdn.SourceGroup;
 
@@ -8,7 +8,12 @@ import java.util.List;
 
 public class CdnOriginGroupsClient extends AbstractCdnClient {
 
-    private static final String BASE_PATH = API_URL + "origin-groups";
+    @Step("Получения списка групп источника")
+    public static List<SourceGroup> getListSourceGroup(String projectId) {
+        return getRequestSpec().api(CdnOriginGroupsApi.getSourceGroups, projectId)
+                .jsonPath()
+                .getList("list", SourceGroup.class);
+    }
 
     @Step("Удаление группы источника")
     public static void deleteSourceGroupByName(String projectId, String name) {
@@ -17,21 +22,12 @@ public class CdnOriginGroupsClient extends AbstractCdnClient {
                 .findFirst()
                 .orElseThrow(() -> new AssertionError(String.format("Не найдено ни одной группы источника с именем: %s", name)))
                 .getId();
+
         deleteSourceGroup(projectId, id);
     }
 
-    @Step("Получения списка групп источника")
-    public static List<SourceGroup> getListSourceGroup(String projectId) {
-        return getRequestSpec()
-                .get(BASE_PATH, projectId)
-                .assertStatus(200)
-                .jsonPath()
-                .getList("list", SourceGroup.class);
-    }
-
     @Step("Удаление группы источника")
-    private static Response deleteSourceGroup(String projectId, String id) {
-        return getRequestSpec()
-                .delete(BASE_PATH + "/" + id, projectId);
+    private static void deleteSourceGroup(String projectId, String id) {
+        getRequestSpec().api(CdnOriginGroupsApi.deleteSourceGroupById, projectId, id);
     }
 }

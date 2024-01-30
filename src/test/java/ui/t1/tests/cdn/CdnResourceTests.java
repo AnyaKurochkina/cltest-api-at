@@ -32,11 +32,11 @@ public class CdnResourceTests extends AbstractT1Test {
 
     private final EntitySupplier<Resource> cdnResource = lazy(() -> {
         Resource resource = new Resource(getProjectId(), "mirror.yandex.ru",
-                Collections.singletonList("editresource.ya.ru"))
+                Collections.singletonList(RandomStringUtils.randomAlphabetic(8).toLowerCase() + ".ya.ru"))
                 .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
         new IndexPage().goToCdn()
                 .switchToResourceTab()
-                .createResource(resource);
+                .create(resource);
         return resource;
     });
 
@@ -48,7 +48,7 @@ public class CdnResourceTests extends AbstractT1Test {
         String hostName = cdnResource.get().getName();
         new IndexPage().goToCdn()
                 .switchToResourceTab()
-                .checkCdnResourceExistByName(hostName);
+                .checkCdnEntityExistByName(hostName);
     }
 
     @Test
@@ -76,7 +76,7 @@ public class CdnResourceTests extends AbstractT1Test {
         String name = cdnResource.get().getName();
         new IndexPage().goToCdn()
                 .switchToResourceTab()
-                .deleteResource(name)
-                .checkThatCdnResourceDoesNotExist(name);
+                .delete(name)
+                .checkThatCdnEntityDoesNotExist(name);
     }
 }

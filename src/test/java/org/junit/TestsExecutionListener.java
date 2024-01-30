@@ -26,10 +26,16 @@ import ru.testit.junit5.RunningHandler;
 
 import java.io.File;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Field;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.FileVisitOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.codeborne.selenide.Configuration.baseUrl;
 import static core.helper.Configure.*;
@@ -171,20 +177,43 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
     }
 
-    public static List<Class<? extends Api>> getSubclasses(Class<? extends Api> superClass) throws ClassNotFoundException {
-        List<Class<? extends Api>> classes = new ArrayList<>();
+    @SneakyThrows
+    @SuppressWarnings("unchecked")
+    public static List<Class<? extends Api>> getSubclasses(Class<? extends Api> superClass) {
+        List<Class<? extends Api>> classes;
         String packageName = superClass.getPackage().getName();
-        String path = packageName.replace('.', '/');
-        java.net.URL url = ClassLoader.getSystemClassLoader().getResource(path);
-        File dir = new File(url.getFile());
-        for (File file : dir.listFiles()) {
-            if (file.isDirectory())
-                continue;
-            String className = file.getName().substring(0, file.getName().length() - 6);
-            Class<?> clazz = Class.forName(packageName + "." + className);
-            if (superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
-                classes.add((Class<? extends Api>) clazz);
+        String basePath = packageName.replace('.', '/');
+        URL url = ClassLoader.getSystemClassLoader().getResource(basePath);
+        if (url == null) throw new IOException("Базовый путь не найден: " + basePath);
+
+        try {
+            java.nio.file.Path baseFolderPath = Paths.get(url.toURI());
+            try (Stream<java.nio.file.Path> paths = Files.walk(baseFolderPath, FileVisitOption.FOLLOW_LINKS)) {
+                List<java.nio.file.Path> files = paths.filter(path -> Files.isRegularFile(path) && path.toString().endsWith(".class"))
+                        .collect(Collectors.toList());
+
+                classes = files.stream()
+                        .map(path -> {
+                            try {
+                                String correctPath = path.toString().replaceAll("\\\\", "/");
+                                String parentExp = path.getParent().toAbsolutePath().toString()
+                                        .replaceAll("\\\\", "/");
+                                String className = correctPath.replaceAll(parentExp + "/", "")
+                                        .replaceAll("\\.class$", "")
+                                        .replace(File.separator, ".");
+                                String correctClassPath = parentExp.replaceAll(".+(api/.+)", "$1").replaceAll("/", ".");
+                                return (Class<? extends Api>) Class.forName(correctClassPath + "." + className);
+                            } catch (ClassNotFoundException e) {
+                                e.printStackTrace();
+                                return null;
+                            }
+                        })
+                        .filter(Objects::nonNull)
+                        .filter(clazz -> superClass.isAssignableFrom(clazz) && !superClass.equals(clazz))
+                        .collect(Collectors.toList());
             }
+        } catch (URISyntaxException e) {
+            throw new IOException("Ошибка конвертации URL в URI: " + e.getMessage());
         }
         return classes;
     }

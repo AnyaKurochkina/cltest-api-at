@@ -7,32 +7,19 @@ import ui.elements.Button;
 import ui.elements.DataTable;
 import ui.elements.Dialog;
 
-public class SourceGroupsTab extends AbstractCdnTab {
+public class SourceGroupsTab extends AbstractCdnTab<SourceGroupsTab, SourceGroup> {
 
     private final Button saveButton = Button.byText("Сохранить");
     private final Dialog editDialog = new Dialog("Редактировать группу источников");
     private final DataTable sourceGroupTable = new DataTable("Источники");
 
     @Step("Создание группы источника CDN")
-    public SourceGroupsTab createSourceGroup(SourceGroup sourceGroup) {
+    public void create(SourceGroup sourceGroup) {
         addButton.click();
         Dialog addSourceGroupDialog = Dialog.byTitle("Добавить группу источников");
         addSourceGroupDialog.setInputByName("name", sourceGroup.getName());
         addSourceGroupDialog.setInputValueV2("Доменное имя источника", sourceGroup.getDomainName());
         addSourceGroupDialog.clickButtonByType("submit");
-        return this;
-    }
-
-    @Step("[Проверка] группа источника с именем: {0} - существует")
-    public SourceGroupsTab checkCdnSourceGroupExistByName(String sourceGroupName) {
-        new DataTable("Источники").asserts().checkColumnContainsValue("Название", sourceGroupName);
-        return this;
-    }
-
-    @Step("[Проверка] группа источника с именем: {0} - не существует")
-    public SourceGroupsTab checkCdnSourceGroupDoesNotExistByName(String sourceGroupName) {
-        sourceGroupTable.asserts().checkColumnNotContainsValue("Название", sourceGroupName);
-        return this;
     }
 
     @Step("[Проверка] у группы источника с именем: {0}, доменное имя содержит: {1}")
@@ -51,8 +38,9 @@ public class SourceGroupsTab extends AbstractCdnTab {
         return this;
     }
 
+    @Override
     @Step("Удаление группы источника")
-    public SourceGroupsTab deleteSourceGroup(String name) {
+    public SourceGroupsTab delete(String name) {
         chooseActionFromMenu(name, "Удалить");
         Dialog.byTitle("Удаление группы источников").clickButton("Удалить");
         Alert.green("Группа источников успешно удалена");
