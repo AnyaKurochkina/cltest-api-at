@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.mifmif.common.regex.Generex;
 import lombok.*;
 
+import java.util.List;
 import java.util.Random;
 
 @Builder
@@ -32,6 +33,11 @@ public class Frontend {
 
     // only tcp
     String defaultBackendNameTcp;
+
+    //only deserialize
+    List<Object> aliases;
+    String sslCertificate;
+    String defaultBackendName;
 
 
     public static FrontendBuilder simpleTcpFrontend(String backendName) {

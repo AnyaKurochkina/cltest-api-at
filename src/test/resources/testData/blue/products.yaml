@@ -4,7 +4,7 @@ S3Ceph:
       - { env: "IFT" }
       - { env: "HOTFIX" }
       - { env: "LT" }
-      - { env: "PROD", dataCentre: "5" }
+      - { env: "PROD" }
 
 OpenShiftProject:
   - options:

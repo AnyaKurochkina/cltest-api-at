@@ -1,6 +1,5 @@
 package api.cloud.orderService.loadBalancer;
 
-import api.Tests;
 import com.mifmif.common.regex.Generex;
 import core.helper.http.AssertResponse;
 import core.utils.AssertUtils;
@@ -15,18 +14,14 @@ import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.opentest4j.MultipleFailuresError;
 
-import java.util.Collections;
 
-@Execution(ExecutionMode.SAME_THREAD)
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
-public class LoadBalancerFrontendNegativeTest extends Tests {
+public class LoadBalancerFrontendNegativeTest extends AbstractLoadBalancerTest {
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -61,10 +56,12 @@ public class LoadBalancerFrontendNegativeTest extends Tests {
     @ParameterizedTest(name = "Массовое Удаление. Несуществующий name {0}")
     void deleteFrontendsNotValidFrontendName(LoadBalancer product) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = Frontend.builder()
+            Backend backend = Backend.simpleTcpBackendWidthTcpCheck().build();
+            balancer.addBackendUseCache(backend);
+            Frontend frontend = Frontend.simpleTcpFrontend(backend.getBackendName())
                     .frontendName("not_valid_name")
                     .build();
-            AssertResponse.run(() -> balancer.deleteFrontends(Collections.singletonList(frontend))).status(422).responseContains("frontends.0");
+            AssertResponse.run(() -> balancer.deleteFrontends(frontend)).status(422).responseContains("selected.0.frontend_name");
         }
     }
 

@@ -45,20 +45,13 @@ public class Backend {
     Integer keepTimer;
 
     public static BackendBuilder simpleTcpBackendWidthTcpCheck() {
-        List<Server> servers = Collections.singletonList(Server.builder()
-                .name("d5soul-ngc004lk.corp.dev.vtb")
-                .port(80)
-                .address("10.226.48.194")
-                .sendProxy("disabled")
-                .slowstart(0)
-                .backup("disabled")
-                .build());
+        List<Server> servers = Collections.singletonList(Server.simpleTcpServer().build());
         return Backend.builder()
                 .mode("tcp")
                 .servers(servers)
                 .balancingAlgorithm("leastconn")
-//                .backendName(new Generex("at-backend-[a-z]{5}").random())
-                .backendName("load_balancer_negative_test-0757")
+                .backendName(new Generex("at-backend-[a-z]{5}").random())
+//                .backendName("at-backend-pbcsr")
                 .checkInterval(5000)
                 .checkFall(3)
                 .checkRise(3)
@@ -66,15 +59,7 @@ public class Backend {
     }
 
     public static BackendBuilder simpleHttpBackendWidthHttpCheck() {
-        List<Server> servers = Collections.singletonList(Server.builder()
-                .name("d5soul-ngc004lk.corp.dev.vtb")
-                .port(443)
-                .address("10.226.48.194")
-                .sendProxy("disabled")
-                .useSsl("disabled")
-                .slowstart(0)
-                .backup("disabled")
-                .build());
+        List<Server> servers = Collections.singletonList(Server.simpleHttpServer().build());
         return Backend.builder()
                 .mode("http")
                 .servers(servers)
