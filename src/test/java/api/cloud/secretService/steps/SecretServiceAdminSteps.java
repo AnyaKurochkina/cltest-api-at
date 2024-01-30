@@ -8,8 +8,8 @@ import io.qameta.allure.Step;
 import models.AbstractEntity;
 import org.json.JSONObject;
 
-import static api.routes.SecretServiceAdminAPI.*;
 import static models.Entity.serialize;
+import static tests.routes.SecretServiceAdminAPI.*;
 
 public class SecretServiceAdminSteps {
 

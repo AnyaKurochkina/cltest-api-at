@@ -1,8 +1,8 @@
 package steps.t1.cdn;
 
-import api.routes.cdn.CdnCertificateApi;
 import io.qameta.allure.Step;
 import models.t1.cdn.CertificateListItem;
+import tests.routes.cdn.CdnCertificateApi;
 
 import java.util.List;
 import java.util.Objects;

@@ -1,7 +1,7 @@
-package api.routes.cdn;
+package tests.routes.cdn;
 
-import api.routes.Api;
 import core.helper.http.Path;
+import tests.routes.Api;
 
 import static core.helper.Configure.cdnProxy;
 

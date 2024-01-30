@@ -13,8 +13,8 @@ import org.json.JSONObject;
 import java.util.Objects;
 import java.util.Optional;
 
-import static api.routes.TagServiceAPI.v1TagsCreate;
-import static api.routes.TagServiceAPI.v1TagsDelete;
+import static tests.routes.TagServiceAPI.v1TagsCreate;
+import static tests.routes.TagServiceAPI.v1TagsDelete;
 
 @Builder @Data
 @EqualsAndHashCode(callSuper = false, onlyExplicitlyIncluded = true)

@@ -1,8 +1,8 @@
 package steps.t1.cdn;
 
-import api.routes.cdn.CdnResourceApi;
 import io.qameta.allure.Step;
 import models.t1.cdn.ResourceListItem;
+import tests.routes.cdn.CdnResourceApi;
 
 import java.util.List;
 import java.util.Objects;
