@@ -1,4 +1,4 @@
-package api.routes;
+package tests.routes;
 
 import core.helper.http.Path;
 

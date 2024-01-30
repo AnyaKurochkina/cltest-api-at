@@ -1,8 +1,8 @@
 package steps.t1.cdn;
 
-import api.routes.cdn.CdnOriginGroupsApi;
 import io.qameta.allure.Step;
 import models.t1.cdn.SourceGroup;
+import tests.routes.cdn.CdnOriginGroupsApi;
 
 import java.util.List;
 

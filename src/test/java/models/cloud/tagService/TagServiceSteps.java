@@ -1,7 +1,6 @@
 package models.cloud.tagService;
 
 import core.enums.Role;
-import core.helper.Configure;
 import core.helper.http.Http;
 import core.helper.http.QueryBuilder;
 import models.cloud.tagService.v1.*;
@@ -13,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static models.Entity.serialize;
-import static api.routes.TagServiceAPI.*;
+import static tests.routes.TagServiceAPI.*;
 
 
 public class TagServiceSteps {

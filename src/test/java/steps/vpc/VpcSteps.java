@@ -7,8 +7,8 @@ import core.helper.http.Http;
 
 import java.util.List;
 
-import static api.routes.VpcApi.*;
 import static models.Entity.serialize;
+import static tests.routes.VpcApi.*;
 
 public class VpcSteps {
 

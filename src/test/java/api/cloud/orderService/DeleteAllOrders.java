@@ -22,9 +22,9 @@ import ui.t1.tests.engine.AbstractComputeTest;
 
 import java.util.*;
 
-import static api.routes.OrderServiceApi.*;
-import static api.routes.VpcApi.getNetworksApiV1ProjectsProjectNameNetworksGet;
-import static api.routes.VpcApi.getSecurityGroupsApiV1ProjectsProjectNameSecurityGroupsGet;
+import static tests.routes.OrderServiceApi.*;
+import static tests.routes.VpcApi.getNetworksApiV1ProjectsProjectNameNetworksGet;
+import static tests.routes.VpcApi.getSecurityGroupsApiV1ProjectsProjectNameSecurityGroupsGet;
 
 @DisplayName("Тестовый набор по удалению всех заказов из проекта")
 @Execution(ExecutionMode.CONCURRENT)
