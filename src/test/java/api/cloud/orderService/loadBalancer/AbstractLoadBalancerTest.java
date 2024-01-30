@@ -10,7 +10,6 @@ import models.cloud.subModels.loadBalancer.Gslb;
 import models.cloud.subModels.loadBalancer.RouteSni;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
-import steps.orderService.OrderServiceSteps;
 
 @Execution(ExecutionMode.SAME_THREAD)
 public class AbstractLoadBalancerTest extends Tests {
@@ -76,12 +75,5 @@ public class AbstractLoadBalancerTest extends Tests {
         Gslb gslb = createSimpleTcpGslb(balancer);
         balancer.addRouteUseCache(gslb.getGlobalname(), route);
         return route;
-    }
-
-    @Deprecated
-    @Step("Получение globalNameFull по globalName '{globalName}'")
-    protected static String globalNameFull(LoadBalancer balancer, String globalName) {
-        return OrderServiceSteps.getObjectClass(balancer,
-                String.format("data.find{it.type=='cluster'}.data.config.polaris_config.find{it.globalname.contains('%s')}.globalname", globalName), String.class);
     }
 }
