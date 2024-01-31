@@ -200,14 +200,6 @@ public class LoadBalancer extends IProduct {
             AssertUtils.assertContainsList(routeAliases, alias);
     }
 
-    public void deleteBackend(Backend backend) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_backend").product(this)
-                .data(new JSONObject().put("backend_name", backend.getBackendName())).build());
-        Assertions.assertFalse(isExistBackend(backend.getBackendName()), "Backend не удален");
-        if (isDev())
-            Assertions.assertFalse(isStateContains(backend.getBackendName()));
-    }
-
     public void deleteBackends(Backend... backends) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_backends").product(this)
                 .data(new JSONObject().put("selected", serializeList(backends))).build());

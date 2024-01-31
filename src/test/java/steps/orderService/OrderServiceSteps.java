@@ -72,14 +72,23 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public static String getStatus(String orderId, String projectId) {
+    public static String getStatusOrder(String orderId, String projectId) {
         return new Http(orderServiceURL)
-//                .disableAttachmentLog()
+                .disableAttachmentLog()
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("status");
+    }
+
+    public static String getStatusAction(String orderId, String actionId, String projectId) {
+        return new Http(orderServiceURL)
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}/actions/history/{}", projectId, orderId, actionId)
+                .assertStatus(200)
+                .jsonPath()
+                .get("status");
     }
 
     /**
@@ -214,7 +223,9 @@ public class OrderServiceSteps extends Steps {
                 () -> {
                     actionId.set(sendAction(action).assertStatus(200).jsonPath().get("action_id"));
                     waitStatus(action.getTimeout(), action.getOrderId(), action.getProjectId());
+                    waitStatusAction(Duration.ofMinutes(1), action.getOrderId(), actionId.get(), action.getProjectId());
                     checkActionStatusMethod(action.getOrderId(), action.getProjectId(), actionId.get());
+
                     if (Objects.nonNull(action.getStatus()))
                         action.getProduct().setStatus(action.getStatus());
                 });
@@ -238,13 +249,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Ожидание успешного выполнения action")
     private static void checkActionStatusMethod(String orderId, String projectId, String actionId) {
-        String actionStatus = new Http(orderServiceURL)
-                .disableAttachmentLog()
-                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
-                .get("/v1/projects/{}/orders/{}/actions/history/{}", projectId, orderId, actionId)
-                .assertStatus(200)
-                .jsonPath()
-                .get("status");
+        String actionStatus = getStatusAction(orderId, actionId, projectId);
 
         if (actionStatus.equalsIgnoreCase("warning")) {
             String messages = getActionHistoryOutput(orderId, projectId, actionId);
@@ -258,15 +263,28 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    @Step("Ожидание финального статуса по orderId = {orderId}")
     private static void waitStatus(Duration timeout, String orderId, String projectId) {
         Instant startTime = Instant.now();
         String status;
         do {
             Waiting.sleep(20000);
-            status = getStatus(orderId, projectId);
+            status = getStatusOrder(orderId, projectId);
         } while ((status.equals("pending") || status.equals("changing")|| status.equals("removing") || status.isEmpty())
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
-        log.info("Ожидание заказа. Финальный статус {}", status);
+        log.info("Финальный статус {}", status);
+    }
+
+    @Step("Ожидание warning по orderId = {orderId}")
+    private static void waitStatusAction(Duration timeout, String orderId, String actionId, String projectId) {
+        Instant startTime = Instant.now();
+        String status;
+        do {
+            Waiting.sleep(20000);
+            status = getStatusAction(orderId, actionId, projectId);
+        } while ((status.equals("pending") || status.isEmpty())
+                && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+        log.info("Финальный статус {}", status);
     }
 
     @Step("Получение warning по orderId = {orderId}")

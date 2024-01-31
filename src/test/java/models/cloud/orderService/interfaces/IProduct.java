@@ -300,7 +300,7 @@ public abstract class IProduct extends Entity {
             close();
             throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
         }
-        String status = OrderServiceSteps.getStatus(getOrderId(), getProjectId());
+        String status = OrderServiceSteps.getStatusOrder(getOrderId(), getProjectId());
         if (status.equals("changing") || status.equals("pending")) {
             close();
             throw new CreateEntityException(String.format("Статус продукта %s не соответствует исходному", status));
