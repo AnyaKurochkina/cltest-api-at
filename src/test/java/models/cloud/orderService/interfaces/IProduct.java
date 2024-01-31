@@ -175,6 +175,7 @@ public abstract class IProduct extends Entity {
         return Objects.requireNonNull(str)
                 .replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
                 .replace("${context::formData.platform}", getPlatform())
+                .replace("${context::formData.os_vendor.ifNil(astra)}", "astra")
                 .replace("${context::projectInfo.organization}", ((Organization) Organization.builder().build().createObject()).getName())
                 .replace("${context::formData.default_nic.net_segment}", getSegment());
     }
