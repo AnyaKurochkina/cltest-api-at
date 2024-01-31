@@ -408,8 +408,8 @@ public abstract class IProduct extends Entity {
     protected String getRandomOsVersion() {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
-        String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
-                .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
+        String urlAttrs = replaceGraphParams(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
+                .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')"));
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(urlAttrs)
                 .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
     }
