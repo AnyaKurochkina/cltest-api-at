@@ -23,7 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class MeccanoAuditPage extends EntityPage {
 
     private final Select periodSelect = Select.byLabel("Период");
-    private final SearchSelect operationTypeSelect = SearchSelect.byLabel("Тип операции");
     private final Input beginDateInput = Input.byLabelV2("Начало");
     private final Input endDateInput = Input.byLabelV2("Окончание");
     private final Select beginTimeSelect = Select.byXpath("(//input[@placeholder='Время']/parent::div)[1]");
@@ -82,9 +81,8 @@ public class MeccanoAuditPage extends EntityPage {
         Table table = new Table("Пользователь");
         SelenideElement expandRowButton = table.getRow(0).get().$x(".//button");
         expandRowButton.click();
-        $x(format("//div[text()='{}']/..//*[name()='svg']", value)).click();
+        $x("//div[text()='{}']/..//*[name()='svg']", value).click();
         assertEquals(getClipBoardText(), value, "Значение скопировано в буфер обмена");
-        table.getRow(0).get().$x(".//button").click();
         expandRowButton.click();
         return this;
     }
