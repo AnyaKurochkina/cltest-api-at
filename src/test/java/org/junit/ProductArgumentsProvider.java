@@ -65,7 +65,7 @@ public class ProductArgumentsProvider implements ArgumentsProvider, AnnotationCo
         String methodName = context.getRequiredTestMethod().getName();
         Class<?> argument = Arrays.stream(parameterTypes)
                 .filter(m -> Entity.class.isAssignableFrom((Class<?>) m)).findFirst().orElseThrow(Exception::new);
-        Field mockField = Arrays.stream(context.getRequiredTestClass().getDeclaredFields())
+        Field mockField = Arrays.stream(context.getRequiredTestClass().getFields())
                 .filter(method -> method.isAnnotationPresent(Mock.class))
                 .filter(method -> argument.isAssignableFrom((Class<?>) method.getType()))
                 .findFirst()
