@@ -1,7 +1,7 @@
 package core.helper.http;
 
-import api.routes.Api;
 import lombok.AllArgsConstructor;
+import tests.routes.Api;
 
 @AllArgsConstructor
 public class Path {

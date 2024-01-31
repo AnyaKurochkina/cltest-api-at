@@ -24,7 +24,6 @@ import models.cloud.keyCloak.UserToken;
 import models.cloud.orderService.interfaces.IProduct;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.Mock;
 import org.junit.platform.engine.support.hierarchical.ForkJoinPoolHierarchicalTestExecutorService;
 import org.opentest4j.TestAbortedException;
 import ru.testit.junit5.StepsAspects;
@@ -36,7 +35,6 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.ReentrantLock;
 
 import static io.qameta.allure.Allure.getLifecycle;
 

@@ -118,7 +118,8 @@ public class Select implements TypifiedElement {
         if (value.equals(RANDOM_VALUE)) {
             setItem(getRandomIndex());
         } else
-            getOptions().filter(Condition.matchText(value)).first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
+            getOptions().filter(Condition.matchText(value).because("Не найден option " + value))
+                    .first().shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
         return value;
     }
 

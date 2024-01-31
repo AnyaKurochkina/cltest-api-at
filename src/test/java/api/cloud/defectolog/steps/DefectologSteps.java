@@ -4,12 +4,12 @@ import api.cloud.defectolog.models.Defect;
 import api.cloud.defectolog.models.DefectPage;
 import api.cloud.defectolog.models.DefectsList;
 import api.cloud.defectolog.models.StartTask;
-import api.routes.DefectologApi;
 import core.enums.Role;
 import core.helper.http.Http;
 import core.helper.http.QueryBuilder;
 import io.qameta.allure.Step;
 import models.Entity;
+import tests.routes.DefectologApi;
 
 public class DefectologSteps {
 

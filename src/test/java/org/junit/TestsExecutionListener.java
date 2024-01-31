@@ -1,7 +1,6 @@
 package org.junit;
 
 
-import api.routes.Api;
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.WebDriverRunner;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,7 +21,9 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.reflections.Reflections;
 import ru.testit.junit5.RunningHandler;
+import tests.routes.Api;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -51,7 +52,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
 
         baseUrl = URL;
-        isRemote();
+        configureSelenoidIfRemote();
         if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true")))
             Configuration.startMaximized = true;
         else
@@ -111,8 +112,8 @@ public class TestsExecutionListener implements TestExecutionListener {
         ObjectPoolService.loadEntities(Encrypt.Aes256Decode(Base64.getDecoder().decode(DataFileHelper.read(file)), secret));
     }
 
-    public static void isRemote() {
-        if (Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"))) {
+    public static void configureSelenoidIfRemote() {
+        if (isRemote()) {
             Assertions.assertNotNull(getAppProp("webdriver.remote.url"), "Не указан webdriver.remote.url");
             log.info("Ui Тесты стартовали на selenoid сервере");
             Configuration.remote = getAppProp("webdriver.remote.url");
@@ -131,6 +132,10 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
     }
 
+    public static Boolean isRemote() {
+        return Boolean.parseBoolean(getAppProp("webdriver.is.remote", "true"));
+    }
+
     @SneakyThrows
     public void testPlanExecutionFinished(TestPlan testPlan) {
         AbstractEntity.deleteTestRunEntities();
@@ -146,7 +151,7 @@ public class TestsExecutionListener implements TestExecutionListener {
     }
 
     @SneakyThrows
-    public static void initApiRoutes(){
+    public static void initApiRoutes() {
         List<Class<? extends Api>> classes = getSubclasses(Api.class);
         for (Class<? extends Api> clazz : classes) {
             Api api = clazz.newInstance();
@@ -167,23 +172,10 @@ public class TestsExecutionListener implements TestExecutionListener {
         }
     }
 
-    public static List<Class<? extends Api>> getSubclasses(Class<? extends Api> superClass) throws ClassNotFoundException {
-        List<Class<? extends Api>> classes = new ArrayList<>();
-        String packageName = superClass.getPackage().getName();
-        String path = packageName.replace('.', '/');
-        java.net.URL url = ClassLoader.getSystemClassLoader().getResource(path);
-        File dir = new File(url.getFile());
-        for (File file : dir.listFiles()) {
-            if(file.isDirectory())
-                continue;
-            String className = file.getName().substring(0, file.getName().length() - 6);
-            Class<?> clazz = Class.forName(packageName + "." + className);
-            if (superClass.isAssignableFrom(clazz) && !superClass.equals(clazz)) {
-                classes.add((Class<? extends Api>) clazz);
-            }
-        }
-        return classes;
+    public static List<Class<? extends Api>> getSubclasses(Class<? extends Api> superClass) {
+        String packageName = "tests";
+        Reflections reflections = new Reflections(packageName);
+        Set<Class<? extends Api>> apiSubtypes = reflections.getSubTypesOf(Api.class);
+        return new ArrayList<>(apiSubtypes);
     }
-
-
 }

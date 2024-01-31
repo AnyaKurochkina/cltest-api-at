@@ -2,7 +2,9 @@ package ui.t1.pages;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import com.codeborne.selenide.WebDriverRunner;
 import com.codeborne.selenide.ex.ElementNotFound;
+import core.helper.StringUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.extern.log4j.Log4j2;
@@ -106,9 +108,14 @@ public class IProductT1Page<C extends IProductPage> extends IProductPage {
     @Step("Получить ID продукта")
     public String getOrderId() {
         btnGeneralInfo.getButton().shouldBe(Condition.visible);
-        Menu.byElement(getActionsMenuButton("Действия")).select("Скопировать ID");
+        Menu.byElement(Button.byId("actions-menu-button").getButton()).select("Скопировать ID");
         Alert.green("ID скопирован");
         return getClipBoardText();
+    }
+
+    @Step("Получить ItemId продукта")
+    public static String getItemId() {
+        return StringUtils.findByRegex("items/([^/]*)/", WebDriverRunner.getWebDriver().getCurrentUrl());
     }
 
     @Override

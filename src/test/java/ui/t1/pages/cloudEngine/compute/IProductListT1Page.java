@@ -28,6 +28,11 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
     }
 
     @Override
+    public double getOrderCost() {
+        return 0;
+    }
+
+    @Override
     protected void runActionWithParameters(SelenideElement button, String action, String textButton, Executable executable, ActionParameters params) {
         synchronized (historyMutex.get(getCurrentProjectId())) {
             super.runActionWithParameters(button, action, textButton, executable, params);
@@ -40,10 +45,12 @@ public class IProductListT1Page extends IProductT1Page<IProductListT1Page> {
         new IndexPage().goToHistory();
         OrderUtils.waitCreate(() ->
                 Waiting.findWithRefresh(() -> !ComputeHistory.getLastActionStatus().getText().equals("В процессе"), Duration.ofMinutes(1)));
+        TypifiedElement.openPage(productLink);
     }
 
     @Override
     public void checkLastAction(String action) {
+        new IndexPage().goToHistory();
         checkActionByIndex(0, action);
         TypifiedElement.openPage(productLink);
     }

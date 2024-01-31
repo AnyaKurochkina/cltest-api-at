@@ -37,7 +37,19 @@ public class AttachUtils {
         }
     }
 
+    public static void uiModifyThrowableBecause(Throwable throwable) {
+        String message = throwable.getMessage();
+        final int startIndex = message.indexOf("(because ");
+        if (startIndex > -1) {
+            final int endIndex = message.indexOf(")", startIndex);
+            String because = message.substring(startIndex + 9, endIndex);
+            message = message.substring(0, startIndex) + message.substring(endIndex);
+            setThrowableDetailMessage(throwable, StringUtils.format("{}\n{}", because, message));
+        }
+    }
+
     public static Throwable UImodifyThrowable(Throwable throwable) {
+        uiModifyThrowableBecause(throwable);
         try {
             attachRequests();
             String videoUrl = getVideoUrl();
@@ -71,9 +83,8 @@ public class AttachUtils {
     private static String getVideoUrl() {
         String videoUrl = "";
         if (Boolean.parseBoolean(getAppProp("webdriver.capabilities.enableVideo", "false"))) {
-            String sessionId = ((RemoteWebDriver) WebDriverRunner.getWebDriver()).getSessionId().toString();
             String host = getAppProp("webdriver.remote.url");
-            videoUrl = String.format("%s/video/%s.mp4", host.substring(0, host.length() - 7), sessionId);
+            videoUrl = String.format("%s/video/%s.mp4", host.substring(0, host.length() - 7), getSessionId());
             Allure.issue("Video recording", videoUrl);
             StepNode stepNode = StepsAspects.getCurrentStep().get();
             if (stepNode != null) {
@@ -81,6 +92,15 @@ public class AttachUtils {
             }
         }
         return videoUrl;
+    }
+
+    private static String getSessionId() {
+        return ((RemoteWebDriver) WebDriverRunner.getWebDriver()).getSessionId().toString();
+    }
+
+    public static String getUrlToDownloadedFileFromSelenoid(String fileName) {
+        String host = getAppProp("webdriver.remote.url").substring(0, getAppProp("webdriver.remote.url").length() - 7);
+        return String.format("%s/download/%s/%s", host, getSessionId(), fileName);
     }
 
     private static String[] splitMessage(String message) {
@@ -106,7 +126,8 @@ public class AttachUtils {
         newMessage.append(screenshot.summary());
     }
 
-    private static void setThrowableDetailMessage(Throwable throwable, String newMessage) throws NoSuchFieldException, IllegalAccessException {
+    @SneakyThrows
+    private static void setThrowableDetailMessage(Throwable throwable, String newMessage) {
         Field detailMessageField = Throwable.class.getDeclaredField("detailMessage");
         detailMessageField.setAccessible(true);
         detailMessageField.set(throwable, newMessage);

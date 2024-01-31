@@ -5,8 +5,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
-import java.util.List;
-
 @Builder
 @Data
 @NoArgsConstructor
@@ -15,17 +13,18 @@ import java.util.List;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class CheckString {
-    String stringAddress;
-    String stringBody;
-    String stringData;
+    String stringSendProxy;
+    String stringUseSsl;
+
+    //only for http
     String stringHostHdr;
     String stringMatch;
     String stringMethod;
-    String stringSendProxy;
-    String stringType;
     String stringUri;
-    String stringUseSsl;
     String stringValue;
     String stringVersion;
+
+    //only for tcp
+    String stringAddress;
     Integer stringPort;
 }

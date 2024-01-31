@@ -167,9 +167,4 @@ public class RouterTest extends AbstractComputeTest {
         Router routerPage = new IndexPage().goToRouters().selectRouter(router.getName());
         routerPage.runActionWithCheckCost(CompareType.ZERO, routerPage::delete);
     }
-
-    @AfterAll
-    void afterClass() {
-        AbstractEntity.deleteCurrentClassEntities();
-    }
 }

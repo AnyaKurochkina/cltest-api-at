@@ -38,9 +38,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static api.routes.OrderServiceApi.deleteV1ProjectsProjectNameOrdersId;
-import static api.routes.OrderServiceApi.getV1ProjectsProjectNameOrdersId;
-import static api.routes.VpcApi.deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete;
+import static tests.routes.OrderServiceApi.deleteV1ProjectsProjectNameOrdersId;
+import static tests.routes.OrderServiceApi.getV1ProjectsProjectNameOrdersId;
+import static tests.routes.VpcApi.deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete;
 import static ui.t1.pages.cloudEngine.compute.SshKeyList.SSH_USER;
 
 @Log4j2
@@ -81,11 +81,11 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @Override
-    protected String getProject() {
-        return getProjectId();
+    protected String getProjectId() {
+        return getComputeProjectId();
     }
 
-    protected static String getProjectId() {
+    private static String getComputeProjectId() {
         String id = project.get();
         if (Objects.isNull(id)) {
             synchronized (AbstractComputeTest.class) {
@@ -99,7 +99,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
 
     @BeforeAll
     public static synchronized void beforeAll() {
-        new T1LoginPage(getProjectId())
+        new T1LoginPage(getComputeProjectId())
                 .signIn(Role.CLOUD_ADMIN);
         new IndexPage().goToSshKeys().addKey(sshKey, SSH_USER);
         Selenide.closeWebDriver();

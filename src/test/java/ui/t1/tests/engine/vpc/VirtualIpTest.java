@@ -29,8 +29,8 @@ import java.util.Objects;
 @Feature("Виртуальные IP")
 @Epic("Cloud Compute")
 public class VirtualIpTest extends AbstractComputeTest {
-    private final EntitySupplier<VirtualIpCreate> vipSup = lazy(() -> virtualIpCreateWidthVMac("77:77:77:00:00:01"));
-    private final EntitySupplier<VirtualIpCreate> vipSupSlave = lazy(() -> virtualIpCreateWidthVMac("77:77:77:00:00:02"));
+    private final EntitySupplier<VirtualIpCreate> vipSup = lazy(this::virtualIpCreate);
+    private final EntitySupplier<VirtualIpCreate> vipSupSlave = lazy(this::virtualIpCreate);
 
     private final EntitySupplier<Void> prepareVmWidthVip = lazy(() -> {
         virtualMachineCreate(vipSup.get(), randomVm.get());
@@ -41,9 +41,9 @@ public class VirtualIpTest extends AbstractComputeTest {
         return null;
     });
 
-    private VirtualIpCreate virtualIpCreateWidthVMac(String vMac) {
-        VirtualIpCreate v = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork).setL2(true)
-                .setVMac(vMac).setName(getRandomName()).setInternet(true).setMode("active-active").clickOrder();
+    private VirtualIpCreate virtualIpCreate() {
+        VirtualIpCreate v = new IndexPage().goToVirtualIps().addIp().setRegion(region).setNetwork(defaultNetwork)
+                .setName(getRandomName()).setInternet(true).setMode("active-active").clickOrder();
         new IndexPage().goToVirtualIps().selectIp(v.getIp())
                 .markForDeletion(new VipEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(false);
         return v;
@@ -102,7 +102,7 @@ public class VirtualIpTest extends AbstractComputeTest {
                 .add("Регион", e -> e.equals(ip.getRegion()))
                 .add("Сеть", e -> e.equals(ip.getNetwork()))
                 .add("Подсеть", e -> e.length() > 5)
-                .add("Поддержка L2", e -> e.equals("Да"))
+                .add("Поддержка L2", e -> e.equals("Нет"))
                 .add("Режим", e -> e.equals(ip.getMode()))
                 .add("Дата создания", e -> e.length() > 4)
                 .add("", String::isEmpty)
@@ -138,16 +138,17 @@ public class VirtualIpTest extends AbstractComputeTest {
 
     @Test
     @Order(5)
-    @Disabled
     @TmsLink("")
-    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Проверка соединения между вм c L2")
+    @DisplayName("Cloud VPC. Виртуальные IP-адреса. Проверка соединения между вм")
     void checkConnectL2() {
         prepareVmWidthVip.run();
         prepareVmWidthVipSlave.run();
         String publicIp = new IndexPage().goToVirtualIps().selectIp(vipSup.get().getIp()).getPublicIpElement().nextItem().getText();
         SshClient ssh = SshClient.builder().host(publicIp).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
         ssh.writeTextFile("key", DataFileHelper.read(SshKeyList.PRIVATE_KEY));
-        ssh.execute("ssh {}", vipSupSlave.get().getIp());
+        ssh.execute("chmod 600 key");
+        final String os = ssh.execute("ssh -o \"StrictHostKeyChecking=no\" -o \"UserKnownHostsFile=/dev/null\" -o \"LogLevel=quiet\" -i key root@{} 'uname'", vipSupSlave.get().getIp());
+        Assertions.assertEquals("Linux", os, "Неудачная проверка соединения между вм");
     }
 
     @Test
@@ -175,10 +176,5 @@ public class VirtualIpTest extends AbstractComputeTest {
         VirtualIp ipPage = new IndexPage().goToVirtualIps().selectIp(ip.getIp());
         ipPage.runActionWithCheckCost(CompareType.ZERO, ipPage::delete);
         Assertions.assertTrue(StateServiceSteps.getItems(getProjectId()).stream().noneMatch(e -> Objects.equals(e.getFloatingIpAddress(), ip.getIp())));
-    }
-
-    @AfterAll
-    void afterClass() {
-        AbstractEntity.deleteCurrentClassEntities();
     }
 }
