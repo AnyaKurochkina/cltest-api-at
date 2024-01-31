@@ -16,7 +16,7 @@ public class CheckString {
     String stringSendProxy;
     String stringUseSsl;
 
-    //for only http
+    //only for http
     String stringHostHdr;
     String stringMatch;
     String stringMethod;
@@ -24,7 +24,7 @@ public class CheckString {
     String stringValue;
     String stringVersion;
 
-    //for only tcp
+    //only for tcp
     String stringAddress;
     Integer stringPort;
 }
