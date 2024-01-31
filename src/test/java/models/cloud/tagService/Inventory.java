@@ -35,6 +35,9 @@ public class Inventory extends Entity {
     String contextPath;
     @JsonIgnore
     Context context;
+    List<String> dataSources;
+    List<String> securityPrincipals;
+    List<String> managers;
 
     @Override
     public Entity init() {

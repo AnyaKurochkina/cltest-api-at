@@ -10,6 +10,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.tagService.*;
 import models.cloud.tagService.v1.FilterResultV1;
 import models.cloud.tagService.v1.InventoryTagsV1;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.InventoryTagListV2Page;
 import models.cloud.tagService.v2.InventoryV2Page;
 import models.cloud.tagService.v2.PutInventoryRequest;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.authorizer.AuthorizerSteps;
+import steps.keyCloak.KeyCloakSteps;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -53,6 +55,40 @@ public class InventoryV2Test extends AbstractTagServiceTest {
         Assertions.assertTrue(inventoriesWithoutDeleted.getMeta().getTotalCount() <
                 inventoriesWithDeleted.getMeta().getTotalCount(), "Неверное кол-во inventories");
     }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Создание с dataSources")
+    void createWidthDataSources() {
+        Inventory.builder().context(context).dataSources(Collections.singletonList("state_service")).build().createObjectPrivateAccess();
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Создание с securityPrincipals")
+    void createWidthSecurityPrincipals() {
+        checkImpersonateFilterTest(Collections.singletonList("cloud_day2_roles:test-admin1"), Collections.singletonList("cloud_day2_roles:incorrect"));
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Создание с managers")
+    void createWidthSecurityManagers() {
+        checkImpersonateFilterTest(Collections.singletonList("qa-admin1"), Collections.singletonList("incorrect"));
+    }
+
+    private void checkImpersonateFilterTest(List<String> correctPrincipals, List<String> incorrectPrincipals) {
+        Inventory inventory = Inventory.builder().context(context).securityPrincipals(correctPrincipals).build().createObjectPrivateAccess();
+        Inventory inventoryIncorrect = Inventory.builder().context(context).securityPrincipals(incorrectPrincipals).build().createObjectPrivateAccess();
+
+        Filter filter = Filter.builder().impersonate(KeyCloakSteps.getUserInfo(Role.CLOUD_ADMIN))
+                .inventoryPks(Arrays.asList(inventory.getId(), inventoryIncorrect.getId())).build();
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+
+        Assertions.assertEquals(1, filterResult.getList().size(), "Неверное кол-во inventories");
+        Assertions.assertEquals(inventory.getId(), filterResult.getList().get(0).getInventory(), "Неверный inventory");
+    }
+
 
     @Test
     @TmsLink("1664955")
