@@ -7,18 +7,12 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
-import models.cloud.productCatalog.enums.EventProvider;
-import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
 import org.junit.jupiter.api.Assertions;
-import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.SaveDialog;
-import ui.cloud.pages.productCatalog.enums.action.ActionType;
-import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
-import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -67,7 +61,7 @@ public class ActionPage extends EntityPage {
         Waiting.find(() -> graphSelect.getValue().contains(graph.getName()), Duration.ofSeconds(5));
         Assertions.assertEquals(action.getGraphVersion(), graphVersionSelect.getValue());
         objectInfoTab.switchTo();
-        assertEquals(action.getObject_info(),objectInfoEditor.getText());
+        assertEquals(action.getObject_info(), objectInfoEditor.getText());
         return this;
     }
 
