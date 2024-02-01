@@ -1,6 +1,7 @@
 package models.cloud.productCatalog.visualTeamplate;
 
 import api.cloud.productCatalog.IProductCatalog;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.enums.Role;
 import core.helper.JsonHelper;
@@ -26,6 +27,7 @@ import static steps.productCatalog.VisualTemplateSteps.*;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
 public class ItemVisualTemplate extends Entity implements IProductCatalog {
 

@@ -316,7 +316,7 @@ public class GraphSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(graphUrl + objectId + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Graph.class);
     }
 
@@ -325,7 +325,7 @@ public class GraphSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(graphUrl2 + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Graph.class);
     }
 
@@ -436,7 +436,7 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(graphUrl + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов графов")
@@ -446,7 +446,7 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(graphUrl + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 
     @Step("Получение списка графов по фильтру")

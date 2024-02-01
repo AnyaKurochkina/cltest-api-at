@@ -1,7 +1,7 @@
 {
   "model_name": "AllowedAction",
   "AllowedAction": {
-    "id": 1183,
+    "id": 1228,
     "context_restrictions": [],
     "event_type_provider": [
       {
@@ -9,19 +9,19 @@
         "event_provider": "s3"
       }
     ],
-    "name": "uhwnmv__parent_to_child",
+    "name": "fwqifn__parent_to_child",
     "title": "import_allowed_action_test_api",
     "description": "api_at_test",
     "item_restriction": "",
     "object_info": "",
-    "action_id": "56903619-3414-4abe-ba48-f2d672aec7a8",
-    "action": "56903619-3414-4abe-ba48-f2d672aec7a8"
+    "action_id": "32eb9376-d285-49ae-b2d1-e82eceb3f0ee",
+    "action": "32eb9376-d285-49ae-b2d1-e82eceb3f0ee"
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
-        "graph_id": "4c24435a-99db-4884-8245-175751d06377",
+        "graph_id": "82e647f4-cefc-45ed-9831-08107bcb1236",
         "multiple": false,
         "priority": 0,
         "extra_data": {},
@@ -50,7 +50,7 @@
             "event_provider": "s3"
           }
         ],
-        "name": "uhwnmv",
+        "name": "fwqifn",
         "title": "AT API Action",
         "description": "desc",
         "number": 50,
@@ -118,25 +118,25 @@
           "graph_version": "LAST",
           "last_version_str": "1.0.0",
           "model_name": "Action",
-          "name": "uhwnmv",
+          "name": "fwqifn",
           "version": "1.0.0"
         }
       ]
     },
     "Action": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"uhwnmv\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"fwqifn\", \"version\": \"1.0.0\"}": [
         {
           "action_version": "LAST",
           "model_name": "AllowedAction",
-          "name": "uhwnmv__parent_to_child"
+          "name": "fwqifn__parent_to_child"
         }
       ]
     },
     "AllowedAction": {
-      "{\"name\": \"uhwnmv__parent_to_child\"}": []
+      "{\"name\": \"fwqifn__parent_to_child\"}": []
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2024-01-10 12:37:45",
+  "dump_date": "2024-01-31 15:24:30",
   "is_pinned_versions": false
 }
