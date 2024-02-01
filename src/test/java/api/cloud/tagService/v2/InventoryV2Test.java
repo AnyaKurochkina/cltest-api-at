@@ -1,6 +1,7 @@
 package api.cloud.tagService.v2;
 
 import api.cloud.tagService.AbstractTagServiceTest;
+import core.enums.Role;
 import core.helper.http.AssertResponse;
 import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
