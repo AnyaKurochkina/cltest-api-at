@@ -66,10 +66,10 @@ public class Windows extends IProduct {
         if (role == null) {
             role = (String) roles.keySet().toArray()[(int) (Math.random() * roles.size())];
         }
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)

@@ -48,12 +48,12 @@ public class PostgreSQL extends AbstractPostgreSQL {
         if (adminPassword == null)
             adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

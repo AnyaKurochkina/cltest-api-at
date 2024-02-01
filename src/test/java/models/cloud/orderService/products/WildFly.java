@@ -44,8 +44,6 @@ public class WildFly extends IProduct {
             productName = "WildFly Astra";
         }
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (wildFlyVersion == null)
 //            wildFlyVersion = getRandomProductVersionByPathEnum("wildfly_version.enum");
             wildFlyVersion = "23.0.2.Final";
@@ -53,6 +51,8 @@ public class WildFly extends IProduct {
             javaVersion = "8";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)

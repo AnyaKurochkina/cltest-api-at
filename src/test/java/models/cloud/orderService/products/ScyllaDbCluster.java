@@ -54,8 +54,6 @@ public class ScyllaDbCluster extends IProduct {
         if("LT".equalsIgnoreCase(getEnv()))
             productName = "ScyllaDB Cluster Astra LT";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (version == null)
             version = getRandomProductVersionByPathEnum("scylladb_version.enum");
         if (dc1 == null)
@@ -66,6 +64,8 @@ public class ScyllaDbCluster extends IProduct {
             dc3 = 0;
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)

@@ -44,9 +44,6 @@ public class Redis extends IProduct {
         if (appUser == null)
             appUser = "appuser";
         initProduct();
-        if (osVersion == null) {
-            osVersion = getRandomOsVersion();
-        }
         if (appUserPassword == null) {
             appUserPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
         }
@@ -54,6 +51,8 @@ public class Redis extends IProduct {
             redisVersion = getRandomProductVersionByPathEnum("redis_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

@@ -50,12 +50,12 @@ public class ApacheAirflow extends IProduct {
         productName = "Apache Airflow Astra";
         deployRoleGroup = "airflow_deploy";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (airflowVersion == null)
             airflowVersion = getRandomProductVersionByPathEnum("airflow_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

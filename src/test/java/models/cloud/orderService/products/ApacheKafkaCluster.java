@@ -61,13 +61,13 @@ public class ApacheKafkaCluster extends IProduct {
             productName = "Apache Kafka Cluster Astra";
         }
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (kafkaVersion == null)
 //            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
             kafkaVersion = "2.13-2.4.1";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

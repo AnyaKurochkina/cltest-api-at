@@ -58,12 +58,12 @@ public class Artemis extends IProduct {
         if (productName == null)
             productName = "VTB Artemis";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (artemisVersion == null)
             artemisVersion = getRandomProductVersionByPathEnum("artemis_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

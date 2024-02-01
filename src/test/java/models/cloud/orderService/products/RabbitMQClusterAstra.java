@@ -49,10 +49,10 @@ public class RabbitMQClusterAstra extends IProduct {
         productName = "RabbitMQ Cluster Astra";
         role = "manager";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

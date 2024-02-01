@@ -69,8 +69,6 @@ public class ClickHouse extends IProduct {
         jsonTemplate = "/orders/clickhouse.json";
         productName = "ClickHouse";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (clickhouseUser == null)
             clickhouseUser = "clickhouse_user";
         if (clickhousePassword == null)
@@ -83,6 +81,8 @@ public class ClickHouse extends IProduct {
             chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

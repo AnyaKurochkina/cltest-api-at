@@ -35,10 +35,10 @@ public class OpenMessagingAstra extends IProduct {
         if (env.equalsIgnoreCase("LT"))
             productName = "OpenMessaging LT Astra";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (flavor == null)
             flavor = getMinFlavor();
         if (availabilityZone == null)
