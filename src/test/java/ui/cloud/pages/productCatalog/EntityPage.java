@@ -2,11 +2,14 @@ package ui.cloud.pages.productCatalog;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.Keys;
 import ui.elements.*;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Selenide.$x;
 import static com.codeborne.selenide.Selenide.switchTo;
@@ -101,9 +104,10 @@ public class EntityPage {
     }
 
     @Step("Переход на вкладку 'История изменений'")
-    public AuditPage goToAuditTab() {
+    public MeccanoAuditPage goToAuditTab() {
         goToTab("История изменений");
-        return new AuditPage();
+        Waiting.find(() -> !$x("//div[@role='progressbar']").isDisplayed(), Duration.ofSeconds(3));
+        return new MeccanoAuditPage();
     }
 
     @Step("Проверка, что открыта вкладка '{title}'")

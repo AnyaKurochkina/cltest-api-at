@@ -11,7 +11,6 @@ import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.pages.productCatalog.SaveDialog;
@@ -67,7 +66,7 @@ public class GraphPage extends EntityPage {
         descriptionTextArea.getElement().shouldHave(Condition.exactText(graph.getDescription()));
         authorInput.getInput().shouldHave(Condition.exactValue(graph.getAuthor()));
         objectInfoTab.switchTo();
-        assertEquals(graph.getObject_info(),objectInfoEditor.getText());
+        assertEquals(graph.getObject_info(), objectInfoEditor.getText());
         return new GraphPage();
     }
 
@@ -154,12 +153,6 @@ public class GraphPage extends EntityPage {
     public GraphPage goToUsageTab() {
         goToTab("Использование");
         return this;
-    }
-
-    @Step("Переход на вкладку 'История изменений'")
-    public AuditPage goToAuditTab() {
-        goToTab("История изменений");
-        return new AuditPage();
     }
 
     @Step("Открытие диалога удаления графа")

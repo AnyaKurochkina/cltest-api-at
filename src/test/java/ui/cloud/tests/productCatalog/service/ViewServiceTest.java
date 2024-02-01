@@ -48,7 +48,7 @@ public class ViewServiceTest extends ServiceBaseTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
         new ControlPanelIndexPage().goToServicesListPagePC()
                 .findAndOpenServicePage(NAME)
-                .goToAuditTab()
+                .goToServiceAuditTab()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", "services", "201", "создан");
     }
 }
