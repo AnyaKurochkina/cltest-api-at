@@ -354,4 +354,9 @@ public class LoadBalancer extends IProduct {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_complex_create").product(this)
                 .data(serialize(complex)).build());
     }
+
+    public void updateCluster(boolean requiredUpdateCerts) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_cluster").product(this)
+                .data(new JSONObject().put("required_update_certs", requiredUpdateCerts).put("accept", true)).build());
+    }
 }
