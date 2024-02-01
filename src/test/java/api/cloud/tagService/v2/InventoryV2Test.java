@@ -68,21 +68,26 @@ public class InventoryV2Test extends AbstractTagServiceTest {
     @TmsLink("")
     @DisplayName("Inventory V2. Создание с securityPrincipals")
     void createWidthSecurityPrincipals() {
-        checkImpersonateFilterTest(Collections.singletonList("cloud_day2_roles:test-admin1"), Collections.singletonList("cloud_day2_roles:incorrect"));
+        Inventory inventory = Inventory.builder().context(context)
+                .securityPrincipals(Collections.singletonList("cloud_day2_roles:test-admin1")).build().createObjectPrivateAccess();
+        Inventory inventoryIncorrect = Inventory.builder().context(context)
+                .securityPrincipals(Collections.singletonList("cloud_day2_roles:incorrect")).build().createObjectPrivateAccess();
+        checkImpersonateFilterTest(inventory, inventoryIncorrect);
     }
 
     @Test
     @TmsLink("")
     @DisplayName("Inventory V2. Создание с managers")
     void createWidthSecurityManagers() {
-        checkImpersonateFilterTest(Collections.singletonList("qa-admin1"), Collections.singletonList("incorrect"));
+        Inventory inventory = Inventory.builder().context(context)
+                .managers(Collections.singletonList("qa-admin1")).build().createObjectPrivateAccess();
+        Inventory inventoryIncorrect = Inventory.builder()
+                .context(context).managers(Collections.singletonList("incorrect")).build().createObjectPrivateAccess();
+        checkImpersonateFilterTest(inventory, inventoryIncorrect);
     }
 
-    private void checkImpersonateFilterTest(List<String> correctPrincipals, List<String> incorrectPrincipals) {
-        Inventory inventory = Inventory.builder().context(context).securityPrincipals(correctPrincipals).build().createObjectPrivateAccess();
-        Inventory inventoryIncorrect = Inventory.builder().context(context).securityPrincipals(incorrectPrincipals).build().createObjectPrivateAccess();
-
-        Filter filter = Filter.builder().impersonate(KeyCloakSteps.getUserInfo(Role.CLOUD_ADMIN))
+    private void checkImpersonateFilterTest(Inventory inventory, Inventory inventoryIncorrect) {
+        Filter filter = Filter.builder().allowEmptyTagFilter(true).impersonate(KeyCloakSteps.getUserInfo(Role.CLOUD_ADMIN))
                 .inventoryPks(Arrays.asList(inventory.getId(), inventoryIncorrect.getId())).build();
         FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
 
