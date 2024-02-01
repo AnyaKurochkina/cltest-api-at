@@ -61,6 +61,16 @@ public class OpenMessagingAstraTest extends Tests {
     }
 
     @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Вертикальное масштабирование {0}")
+    void verticalScaling(OpenMessagingAstra product, Integer num) {
+        try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            astra.verticalScaling();
+        }
+    }
+
+    @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Удалить {0}")
     @MarkDelete
