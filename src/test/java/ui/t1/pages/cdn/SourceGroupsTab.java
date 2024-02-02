@@ -2,10 +2,7 @@ package ui.t1.pages.cdn;
 
 import io.qameta.allure.Step;
 import models.t1.cdn.SourceGroup;
-import ui.elements.Alert;
-import ui.elements.Button;
-import ui.elements.DataTable;
-import ui.elements.Dialog;
+import ui.elements.*;
 
 public class SourceGroupsTab extends AbstractCdnTab<SourceGroupsTab, SourceGroup> {
 
@@ -19,6 +16,9 @@ public class SourceGroupsTab extends AbstractCdnTab<SourceGroupsTab, SourceGroup
         Dialog addSourceGroupDialog = Dialog.byTitle("Добавить группу источников");
         addSourceGroupDialog.setInputByName("name", sourceGroup.getName());
         addSourceGroupDialog.setInputValueV2("Доменное имя источника", sourceGroup.getDomainName());
+        if (sourceGroup.getIsReserved()) {
+            addSourceGroupDialog.setRadio(Radio.byValue("Резервный"));
+        }
         addSourceGroupDialog.clickButtonByType("submit");
     }
 
@@ -43,7 +43,6 @@ public class SourceGroupsTab extends AbstractCdnTab<SourceGroupsTab, SourceGroup
     public SourceGroupsTab delete(String name) {
         chooseActionFromMenu(name, "Удалить");
         Dialog.byTitle("Удаление группы источников").clickButton("Удалить");
-        Alert.green("Группа источников успешно удалена");
         return this;
     }
 }

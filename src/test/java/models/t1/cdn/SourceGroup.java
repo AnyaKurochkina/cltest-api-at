@@ -31,12 +31,7 @@ public class SourceGroup extends AbstractEntity {
     private Object hasRelatedResources;
     private String projectId;
     private String domainName;
-
-    public SourceGroup(String projectId, String domainName, String name) {
-        this.projectId = projectId;
-        this.domainName = domainName;
-        this.name = name;
-    }
+    private Boolean isReserved;
 
     @Override
     public void delete() {
