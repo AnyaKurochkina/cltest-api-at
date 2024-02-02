@@ -10,10 +10,12 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.productCatalog.service.ServicePage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.t1.tests.audit.AuditPeriod;
 
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -214,7 +216,8 @@ public class AuditPage extends EntityPage {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
             Selenide.refresh();
-            if (Tab.byText("История изменений").getElement().exists()) new EntityPage().goToAuditTab();
+            if (Waiting.sleep(() -> Tab.byText("История изменений").getElement().exists(), Duration.ofSeconds(3)))
+                new ServicePage().goToServiceAuditTab();
         }
     }
 
