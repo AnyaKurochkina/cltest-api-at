@@ -296,16 +296,6 @@ public class LoadBalancerTest extends AbstractLoadBalancerTest {
         }
     }
 
-    @TmsLink("SOUL-8008")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Обновление сертификатов {0}")
-    void updateCertificates(LoadBalancer product, Integer num) {
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.updateCertificates("all");
-        }
-    }
-
     @TmsLink("SOUL-8007")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)

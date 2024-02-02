@@ -21,7 +21,7 @@ public class AbstractLoadBalancerTest extends Tests {
     protected final static String SIMPLE_HTTP_BACKEND_NAME = "simple_http_backend";
     protected final static String SIMPLE_HTTP_FRONTEND_NAME = "simple_http_frontend";
     protected final static String SIMPLE_ROUTE_NAME = "simple-route-at";
-    protected final static String SIMPLE_GSLB_NAME = "simple-gslb_" + UNIQUE_POSTFIX;
+    protected final static String SIMPLE_GSLB_NAME = "simple-gslb-" + UNIQUE_POSTFIX;
 
     @Step("Создание простого TCP Frontend")
     protected static Frontend createSimpleTcpFrontend(LoadBalancer balancer) {

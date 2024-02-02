@@ -109,10 +109,6 @@ public class LoadBalancer extends IProduct {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_sync_info").product(this).build());
     }
 
-    public void gslbSync() {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_gslb_release_sync_info").product(this).build());
-    }
-
     public void revertConfig(Backend backend) {
         String backup = OrderServiceSteps.getObjectClass(this, BACKUP_LAST_PATH, String.class);
         JSONObject data = new JSONObject().put("backup", backup);
@@ -331,13 +327,8 @@ public class LoadBalancer extends IProduct {
                 .data(new JSONObject().put("accept", true)).build());
     }
 
-    public void updateCertificates(String method) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_certificates").timeout(Duration.ofMinutes(50)).product(this)
-                .data(new JSONObject().put("method", method)).build());
-    }
-
     public void resizeClusterVms(Flavor flavor) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofMinutes(70))
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofHours(2))
                 .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
@@ -356,7 +347,7 @@ public class LoadBalancer extends IProduct {
     }
 
     public void updateCluster(boolean requiredUpdateCerts) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_cluster").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_cluster").timeout(Duration.ofHours(2)).product(this)
                 .data(new JSONObject().put("required_update_certs", requiredUpdateCerts).put("accept", true)).build());
     }
 }
