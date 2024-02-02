@@ -10,10 +10,7 @@ import models.AbstractEntity;
 import org.junit.CustomDisplayNameGenerator;
 import org.junit.EnvironmentCondition;
 import org.junit.TmsLinkExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayNameGeneration;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ru.testit.annotations.Title;
 import ru.testit.junit5.JUnit5EventListener;
@@ -54,7 +51,8 @@ public class Tests {
     @BeforeEach
     @SneakyThrows
     @Title("Инициализация логирования")
-    public void beforeScenarios() {
+    public void beforeScenarios(TestInfo info) {
+        System.out.println("Start test: " + info.getDisplayName());
         UniqueTest.clearStepLog();
     }
 

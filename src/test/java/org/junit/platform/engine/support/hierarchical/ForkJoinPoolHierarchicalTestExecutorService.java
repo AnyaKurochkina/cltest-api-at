@@ -92,7 +92,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     private static final ConcurrentHashMap<TestTask, String> deleteTests = new ConcurrentHashMap<>();
     //    private static final List<TestTask> deleteTests = Collections.synchronizedList(new ArrayList<>());
     final AtomicBoolean del = new AtomicBoolean(false);
-    final AtomicInteger inc = new AtomicInteger(0);
 
     public static void addNode(JupiterTestDescriptor testDescriptor) {
         try {
@@ -193,6 +192,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 
     public void invokeAllRef(List<? extends TestTask> tasks2) {
+        log.debug("Запуск тестов @MarkDeleted");
         invokeAll(tasks2);
     }
 
@@ -292,7 +292,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 }
             }
         }
-        if (mapTests.isEmpty() && deleteTests.size() > 0) {
+        if (mapTests.isEmpty() && !deleteTests.isEmpty()) {
             ObjectPoolService.deleteAllResources();
             tasks.addAll(invokeDeleteTest());
         }
