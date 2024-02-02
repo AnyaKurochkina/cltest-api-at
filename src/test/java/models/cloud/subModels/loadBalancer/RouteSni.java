@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Builder
 @Data
@@ -20,6 +19,7 @@ public class RouteSni {
     private List<Route> routes;
 
     @Data
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
     @AllArgsConstructor
     public static class Route {
         String backendName;

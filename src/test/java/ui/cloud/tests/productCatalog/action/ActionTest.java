@@ -7,6 +7,7 @@ import io.restassured.path.json.JsonPath;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.enums.AuditChangeType;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
 import models.cloud.productCatalog.graph.Graph;
@@ -354,11 +355,10 @@ public class ActionTest extends ActionBaseTest {
         String name = UUID.randomUUID().toString();
         createActionByApi(name);
         GlobalUser user = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.uuuu");
         new ControlPanelIndexPage().goToActionsListPage()
                 .openActionPage(name)
                 .goToAuditTab()
-                .checkFirstRecord(LocalDateTime.now().format(formatter), user.getUsername(), "create", "actions", "201", "создан");
+                .checkFirstRecord(user.getEmail(), AuditChangeType.CREATE, "1.0.0");
     }
 
     @Test
