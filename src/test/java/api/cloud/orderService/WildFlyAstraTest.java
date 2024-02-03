@@ -129,8 +129,8 @@ public class WildFlyAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить ОС сервера {0}")
     void updateOs(WildFly product, Integer num) {
-        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         try (WildFly wildFly = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
             wildFly.updateOs();
         }
     }

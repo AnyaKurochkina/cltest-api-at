@@ -41,9 +41,9 @@ public class PostgresSQLClusterAstraTest extends Tests {
     @EnabledIfEnv({"prod", "blue"})
     @ParameterizedTest(name = "[{1}] Заказ на быстрых дисках {0}")
     void checkDiskVm(PostgresSQLCluster product, Integer num) {
-        List<String> envs = Arrays.asList("LT", "PROD");
-        Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
         try (PostgresSQLCluster postgres = product.createObjectExclusiveAccess()) {
+            List<String> envs = Arrays.asList("LT", "PROD");
+            Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
             String type = (postgres.getEnv().equals("PROD")) ? "nvme" : "ssd";
             postgres.checkVmDisk(new HashMap<String, String>() {{
                 put("postgresql", type);

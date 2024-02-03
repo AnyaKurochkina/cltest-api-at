@@ -192,8 +192,8 @@ public class RabbitMQClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить операционную систему {0}")
     void updateOs(RabbitMQClusterAstra product, Integer num) {
-        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
             rabbit.updateOs();
         }
     }

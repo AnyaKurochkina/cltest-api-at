@@ -31,9 +31,11 @@ public class ApacheAirflowTest extends Tests {
 
     private static void createPostgres(ApacheAirflow product) {
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
-        if ("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
-            abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
         abstractPostgreSQL.setSkip(product.isSkip());
+        if (!product.isSkip()) {
+            if ("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
+                abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
+        }
         try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
             if (postgreSQL.deletedEntity()) {
                 postgreSQL.close();
@@ -124,9 +126,9 @@ public class ApacheAirflowTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Обновить ОС {0}")
     void updateOs(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
-        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
             apacheAirflow.updateOs();
         }
     }
