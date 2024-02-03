@@ -47,7 +47,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
         if (productName == null)
             productName = "PostgreSQL Cluster Astra Linux";
         if (adminPassword == null)
-            adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+            adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHqKZnFpbEUKZnFpbEUd6xkJHocD6OR";
         initProduct();
         if (postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");

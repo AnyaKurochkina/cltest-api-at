@@ -58,7 +58,8 @@ public class Tests {
 
     @AfterEach
     @Title("Удаление сущностей")
-    public void afterEach() {
+    public void afterEach(TestInfo info) {
+        System.out.println("Finish test: " + info.getDisplayName());
         if (Objects.nonNull(UniqueTest.getStepLog()))
             Allure.getLifecycle().addAttachment("log-test", "text/html", "log", UniqueTest.getStepLog().getBytes(StandardCharsets.UTF_8));
         AbstractEntity.deleteCurrentTestEntities();

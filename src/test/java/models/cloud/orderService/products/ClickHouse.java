@@ -156,7 +156,7 @@ public class ClickHouse extends IProduct {
         if (database.contains(new Db(dbName)))
             return;
         OrderServiceSteps.runAction(ActionParameters.builder().name(CLICKHOUSE_CREATE_DB).product(this)
-                .data(new JSONObject().put("db_name", dbName).put("db_admin_pass", "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq")).build());
+                .data(new JSONObject().put("db_name", dbName).put("db_admin_pass", "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHqKZnFpbEUKZnFpbEUd6xkJHocD6OR")).build());
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(DB_NAME_PATH, dbName)), "База данных не создалась c именем " + dbName);
         database.add(new Db(dbName));
         log.info("database = " + database);
