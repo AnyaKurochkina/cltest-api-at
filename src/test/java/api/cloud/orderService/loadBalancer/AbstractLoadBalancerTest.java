@@ -69,7 +69,9 @@ public class AbstractLoadBalancerTest extends Tests {
 
     @Step("Создание простого Route")
     protected static RouteSni.Route createSimpleRoute(LoadBalancer balancer) {
-        RouteSni.Route route = new RouteSni.Route(SIMPLE_TCP_BACKEND_NAME, SIMPLE_ROUTE_NAME);
+        Backend backend = Backend.simpleHttpBackendWidthHttpCheck().backendName(SIMPLE_ROUTE_NAME).build();
+        balancer.addBackendUseCache(backend);
+        RouteSni.Route route = new RouteSni.Route(backend.getBackendName(), SIMPLE_ROUTE_NAME);
         Gslb gslb = createSimpleTcpGslb(balancer);
         balancer.addRouteUseCache(gslb.getGlobalname(), route);
         return route;

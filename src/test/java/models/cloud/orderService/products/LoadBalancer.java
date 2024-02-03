@@ -260,7 +260,7 @@ public class LoadBalancer extends IProduct {
     }
 
     public void editRouteSni(RouteSni.Route route, String backendName) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_edit_route_sni").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_edit_sni_route").product(this)
                 .data(new JSONObject().put("backend_name", backendName).put("sni_route", routeByName(route.getName()).getRouteName())).build());
         Assertions.assertEquals(backendName, routeByName(route.getName()).getBackendName(), "BackendName не изменен");
     }
