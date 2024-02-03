@@ -192,7 +192,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
 
     public void invokeAllRef(List<? extends TestTask> tasks2) {
-        log.debug("Запуск тестов @MarkDeleted");
+        log.debug("Запуск тестов @MarkDeleted {}шт", tasks2.size());
         invokeAll(tasks2);
     }
 
@@ -210,6 +210,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                 field.setAccessible(true);
                 JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
                 removeTests(testDescriptor);
+                log.debug("Тест на запуск #1 - {}", testDescriptor.getUniqueId().toString());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -349,6 +350,20 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 //        if(tasks.size() == 0)
 //            return;
 
+        log.debug("Запуск тестов #2 @MarkDeleted {}шт", tasks.size());
+        Iterator it5 = tasks.iterator();
+        while (it5.hasNext()) {
+            TestTask testTask = (TestTask) it5.next();
+            Field field = null;
+            try {
+                field = testTask.getClass().getDeclaredField("testDescriptor");
+                field.setAccessible(true);
+                JupiterTestDescriptor testDescriptor = (JupiterTestDescriptor) field.get(testTask);
+                log.debug("Тест на запуск #2 - {}", testDescriptor.getUniqueId().toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
 
         if (tasks.size() == 1) {
             (new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask((TestTask) tasks.get(0))).compute();
