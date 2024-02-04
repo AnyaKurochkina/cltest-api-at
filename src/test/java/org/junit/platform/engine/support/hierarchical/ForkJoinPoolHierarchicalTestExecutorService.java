@@ -88,12 +88,12 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     }
 
 
-    private static final ConcurrentHashMap<String, JupiterTestDescriptor> allTestMap = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<String, AbstractTestDescriptor> allTestMap = new ConcurrentHashMap<>();
     private static final ConcurrentHashMap<TestTask, String> deleteTests = new ConcurrentHashMap<>();
     final AtomicBoolean del = new AtomicBoolean(false);
 
 
-    public static void addNode(JupiterTestDescriptor testDescriptor) {
+    public static void addNode(AbstractTestDescriptor testDescriptor) {
         if (!testDescriptor.getChildren().isEmpty()) {
             testDescriptor.getChildren().forEach(t -> addNode((JupiterTestDescriptor) t));
         }
@@ -104,7 +104,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         }
     }
 
-
     public List<TestTask> invokeDeleteTest() {
         List<TestTask> list = new ArrayList<>();
         if (!deleteTests.isEmpty()) {
@@ -114,7 +113,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         return list;
     }
 
-
     public void invokeAllRef(List<? extends TestTask> tasks2) {
         log.debug("Запуск тестов @MarkDeleted {}шт", tasks2.size());
         invokeAll(tasks2);
@@ -123,10 +121,10 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     final AtomicBoolean first = new AtomicBoolean(true);
 
     @SneakyThrows
-    private JupiterTestDescriptor getTestDescriptorFromTestTask(TestTask task) {
+    private AbstractTestDescriptor getTestDescriptorFromTestTask(TestTask task) {
         Field field = task.getClass().getDeclaredField("testDescriptor");
         field.setAccessible(true);
-        return (JupiterTestDescriptor) field.get(task);
+        return (AbstractTestDescriptor) field.get(task);
     }
 
     public void invokeAll(List<? extends TestTask> tasks2) {
@@ -138,7 +136,8 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
             while (var1.hasNext()) {
                 TestTask testTask = (TestTask) var1.next();
                 try {
-                    JupiterTestDescriptor testDescriptor = getTestDescriptorFromTestTask(testTask);
+                    AbstractTestDescriptor testDescriptor = getTestDescriptorFromTestTask(testTask);
+
                     if (first.get()) {
                         first.set(false);
                         addNode(testDescriptor);
@@ -274,7 +273,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
 
                         if (!allTestMap.isEmpty()) {
                             Set<Class<?>> currentClassListArgument = new HashSet<>();
-                            for (JupiterTestDescriptor descriptor : allTestMap.values()) {
+                            for (AbstractTestDescriptor descriptor : allTestMap.values()) {
                                 if (!(descriptor instanceof MethodBasedTestDescriptor))
                                     continue;
                                 MethodBasedTestDescriptor methodBasedTestDescriptor = ((MethodBasedTestDescriptor) descriptor);
