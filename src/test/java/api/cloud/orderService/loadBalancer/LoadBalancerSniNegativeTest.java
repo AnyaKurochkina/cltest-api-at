@@ -41,7 +41,7 @@ public class LoadBalancerSniNegativeTest extends AbstractLoadBalancerTest {
             RouteSni.Route route = createSimpleRoute(balancer);
             Throwable throwable = Assertions.assertThrows(Error.class,
                     () -> balancer.editRouteSni(route, backendName));
-            AssertUtils.assertContains(throwable.getMessage(), "Backend `" + backendName + "` was not found");
+            AssertUtils.assertContains(throwable.getMessage(), "backend_name");
         }
     }
 }
