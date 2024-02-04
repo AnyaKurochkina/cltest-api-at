@@ -37,10 +37,8 @@ public class ApacheAirflowTest extends Tests {
                 abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
         }
         try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
-            if (postgreSQL.deletedEntity()) {
-                postgreSQL.close();
+            if (postgreSQL.deletedEntity())
                 return;
-            }
             String dbName = "airflow";
             postgreSQL.createDb(dbName);
             product.setPgAdminPassword(postgreSQL.getAdminPassword());
