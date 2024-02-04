@@ -560,7 +560,7 @@ public class OrderServiceSteps extends Steps {
         if (Configure.ENV.equalsIgnoreCase("IFT")) {
             orders = new Http(orderServiceURL)
                     .setRole(Role.CLOUD_ADMIN)
-                    .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)
+                    .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=locked&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending&f[status][]=error", project.id)
                     .assertStatus(200)
                     .jsonPath()
                     .get("list.findAll{!(it.status == 'success' && it.deletable == true)}.id");
