@@ -52,12 +52,12 @@ public class PostgreSQL extends AbstractPostgreSQL {
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         if (flavor == null)
