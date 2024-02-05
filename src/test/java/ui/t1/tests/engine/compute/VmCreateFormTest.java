@@ -66,13 +66,12 @@ public class VmCreateFormTest extends AbstractComputeTest {
                 .setSubnet(subnet.getName())
                 .setImage(image)
                 .setNetworkInterface(ip)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
         String localIp = new VmList().selectCompute(vmCreate.getName())
-                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).getLocalIp();
+                .markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).getLocalIp();
         Assertions.assertEquals(ip, localIp, "IP машины не соответствует ожидаемому");
         new IndexPage().goToVirtualMachine().addVm()
                 .setRegion(region)

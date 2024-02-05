@@ -54,7 +54,6 @@ public class VirtualMachineTest extends AbstractComputeTest {
         vmPage.setSshKey(sshKey);
         button.should(activeCnd);
         vmPage.setDescription(new Generex("[a-zA-Z0-9-_]{3,10}").random())
-                .setDeleteOnTermination(false)
                 .setFlavor(Select.RANDOM_VALUE)
                 .setFlavorName(flavorName);
         new IndexPage().goToVirtualMachine();
@@ -71,16 +70,17 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(false)
                 .setBootSize(6)
-                .addDisk(name, 2, hddTypeFirst, true)
+                .addDisk(name, 2, hddTypeFirst)
                 .setName(name)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(false),
+                AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderId = vmPage.getOrderId();
+        new IndexPage().goToDisks().selectDisk(name).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST);
 
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(getProjectId());
         Assertions.assertEquals(3, items.stream().filter(e -> e.getOrderId().equals(orderId))
@@ -116,12 +116,11 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
 
         String ip = new IndexPage().goToPublicIps().addIp(region);

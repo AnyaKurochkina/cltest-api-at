@@ -16,6 +16,7 @@ import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
 import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.SshKeyList;
+import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
 import ui.t1.pages.cloudEngine.vpc.*;
@@ -34,7 +35,7 @@ import static ui.t1.pages.IProductT1Page.BLOCK_PARAMETERS;
 public class RouterTest extends AbstractComputeTest {
     protected final EntitySupplier<RouterCreate> randomRouter = lazy(() -> {
         RouterCreate r = new IndexPage().goToRouters().addRouter().setName(getRandomName()).setRegion(region).setDesc("desc").addNetwork(defaultNetwork).clickOrder();
-        new RouterList().selectRouter(r.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        new RouterList().selectRouter(r.getName()).markForDeletion(new ComputeEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return r;
     });
 
@@ -45,7 +46,7 @@ public class RouterTest extends AbstractComputeTest {
     @DisplayName("Cloud VPC. Маршрутизаторы. Создать маршрутизатор")
     void addRouter() {
         RouterCreate router = randomRouter.get();
-        new RouterList().selectRouter(router.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        new RouterList().selectRouter(router.getName()).markForDeletion(new ComputeEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
     }
 
     @Test
@@ -110,15 +111,15 @@ public class RouterTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setPublicIp(ip)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
-
-        String localIpVmTest = new VmList().selectCompute(vmWidthIp.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).getLocalIp();
+        Vm vmPage = new VmList().selectCompute(vmWidthIp.getName())
+                .markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST)
+                .checkCreate(true);
+        String localIpVmTest = vmPage.getLocalIp();
 
         SshClient.SshClientBuilder ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER);
         String checkConnectCmd = ssh.privateKey(SshKeyList.PRIVATE_KEY).build()

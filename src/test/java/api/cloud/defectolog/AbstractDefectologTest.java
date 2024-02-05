@@ -5,6 +5,7 @@ import api.cloud.defectolog.models.StartTask;
 import api.cloud.defectolog.steps.DefectologSteps;
 import api.cloud.tagService.AbstractTagServiceTest;
 import core.exception.NotFoundElementException;
+import core.utils.Waiting;
 import io.qameta.allure.Step;
 import models.cloud.tagService.Context;
 import models.cloud.tagService.Filter;
@@ -51,6 +52,7 @@ public class AbstractDefectologTest extends AbstractTagServiceTest {
     }
 
     protected DefectPage readDefectPage(int defectId) {
+        Waiting.sleep(10000);
         int pageId = DefectologSteps.defectsRead(defectId).getDefectPages().get(0).getId();
         return DefectologSteps.defectPagesRead(pageId);
     }

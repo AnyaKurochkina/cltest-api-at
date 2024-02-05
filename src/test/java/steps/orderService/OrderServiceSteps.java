@@ -485,21 +485,32 @@ public class OrderServiceSteps extends Steps {
     }
 
     private static JsonPath getObjectClass(IProduct product){
+        return getObjectClass(Objects.requireNonNull(product).getProjectId(), product.getOrderId());
+    }
+
+    @Step("Получение объекта класса по пути {path}")
+    private static JsonPath getObjectClass(String projectId, String orderId) {
         return new Http(orderServiceURL)
-                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
-                .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
                 .jsonPath();
     }
 
-    @Step("Получение объекта класса по пути {path}")
     public static <T> T getObjectClass(IProduct product, String path, TypeRef<T> valueTypeRef) {
         return getObjectClass(product).getObject(path, valueTypeRef);
     }
 
-    @Step("Получение поля по пути {path}")
     public static <T> T getObjectClass(IProduct product, String path, Class<T> clazz) {
         return getObjectClass(product).getObject(path, clazz);
+    }
+
+    public static <T> T getObjectClass(String projectId, String orderId, String path, TypeRef<T> valueTypeRef) {
+        return getObjectClass(projectId, orderId).getObject(path, valueTypeRef);
+    }
+
+    public static <T> T getObjectClass(String projectId, String orderId, String path, Class<T> clazz) {
+        return getObjectClass(projectId, orderId).getObject(path, clazz);
     }
 
     @Step("Получение сетевого сегмента для продукта {product}")

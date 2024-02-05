@@ -95,13 +95,12 @@ public class PlacementPolicyTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .setPlacementPolicy(placementCreate.getName())
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         new Vm().getGeneralInfoTab().switchTo();
         Assertions.assertFalse(Menu.byElement(getActionsMenuButton(BLOCK_PARAMETERS)).isItemDisplayed(ACTION_DELETE),
                 "Доступно действие " + ACTION_DELETE);

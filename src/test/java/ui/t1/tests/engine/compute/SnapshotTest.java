@@ -36,10 +36,10 @@ public class SnapshotTest extends AbstractComputeTest {
     @DisplayName("Подключение диска из снимка на базе подключенного диска")
     void createSnapshotFromAttachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
-                .setDeleteOnTermination(true).setName(getRandomName()).addSecurityGroups(securityGroup).setSshKey(sshKey).clickOrder();
+                .setName(getRandomName()).addSecurityGroups(securityGroup).setSshKey(sshKey).clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
-        Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Disk diskPage = vmPage.selectDisk(vmPage.getSystemDiskName());
         diskPage.runActionWithCheckCost(CompareType.MORE, () -> diskPage.createSnapshot(vm.getName()));
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         snapshot.createDisk(vm.getName());
