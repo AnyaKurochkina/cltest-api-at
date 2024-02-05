@@ -1,5 +1,6 @@
 package api.cloud.tarifficator;
 
+import api.Tests;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -22,7 +23,6 @@ import steps.authorizer.AuthorizerSteps;
 import steps.calculator.CalculatorSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
-import api.Tests;
 
 import java.util.Objects;
 
@@ -59,8 +59,8 @@ public class CalculatorTest extends Tests {
             AccountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             try {
                 Float cost = CostSteps.getPreBillingTotalCost(product);
-                while (cost < 0.01f)
-                    cost += cost;
+//                while (cost < 0.01f)
+//                    cost += cost;
                 Waiting.sleep(60000);
                 OrderServiceSteps.changeProjectForOrder(product, projectTarget);
                 Float spent = null;
