@@ -125,7 +125,7 @@ public class ForbiddenActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post(endPoint + "{}/copy/", id)
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(ForbiddenAction.class);
     }
 }

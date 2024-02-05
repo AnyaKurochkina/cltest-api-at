@@ -43,9 +43,9 @@ public class VisualTemplateAuditTest extends Tests {
         String errorMessageTemplate = "%s из информации пользователя не совпадает с %s из аудита";
         objectAuditList.forEach(productAudit ->
                 Assertions.assertAll("[Проверка] полей аудита",
-                        () -> assertEquals(userInfo.getEmail(), productAudit.getUserEmail(), String.format(errorMessageTemplate, "Email")),
-                        () -> assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName(), String.format(errorMessageTemplate, "FirstName")),
-                        () -> assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName(), String.format(errorMessageTemplate, "LastName"))
+                        () -> assertEquals(userInfo.getEmail(), productAudit.getUserEmail(), String.format(errorMessageTemplate, "Email", "Email")),
+                        () -> assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName(), String.format(errorMessageTemplate, "FirstName", "FirstName")),
+                        () -> assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName(), String.format(errorMessageTemplate, "LastName", "LastName"))
                 ));
     }
 }

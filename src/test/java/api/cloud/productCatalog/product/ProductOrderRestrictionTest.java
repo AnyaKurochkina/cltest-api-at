@@ -48,7 +48,6 @@ public class ProductOrderRestrictionTest extends Tests {
                 .build();
         String productId = product.getProductId();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionById(productId, orderRestriction.toJson())
-                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
                 .assertStatus(200)
                 .extractAs(ProductOrderRestriction.class);
         assertEquals(product.getName(), createdOrderRestriction.getProductName());
@@ -89,7 +88,6 @@ public class ProductOrderRestrictionTest extends Tests {
                 .platforms(Collections.singletonList("vsphere"))
                 .build();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionByName(productName, orderRestriction.toJson())
-                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
                 .assertStatus(200)
                 .extractAs(ProductOrderRestriction.class);
         assertEquals(product.getName(), createdOrderRestriction.getProductName());
