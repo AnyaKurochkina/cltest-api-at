@@ -106,7 +106,9 @@ public class AddModifierTest extends GraphBaseTest {
     @DisplayName("Добавление модификатора с некорректными параметрами")
     public void createModifierWithIncorrectParameters() {
         GraphModifier modifier = new GraphModifier("test-modifier");
-        new ControlPanelIndexPage().goToGraphsPage()
+        modifier.setModifierData("{}");
+        new ControlPanelIndexPage()
+                .goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .goToModifiersTab()
                 .addModifierAndSave(modifier);

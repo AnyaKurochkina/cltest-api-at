@@ -1,7 +1,7 @@
 {
   "model_name": "ForbiddenAction",
   "ForbiddenAction": {
-    "id": 1239,
+    "id": 1283,
     "context_restrictions": [],
     "event_type_provider": [
       {
@@ -9,20 +9,20 @@
         "event_provider": "s3"
       }
     ],
-    "name": "atrybu__parent_to_child",
+    "name": "wxubsr__parent_to_child",
     "title": "import_forbidden_action_test_api",
     "description": "Description",
     "item_restriction": "string",
     "object_info": "",
     "direction": "parent_to_child",
-    "action_id": "a8db63f7-5ca6-4dfe-b3b6-e92a2939dc85",
-    "action": "a8db63f7-5ca6-4dfe-b3b6-e92a2939dc85"
+    "action_id": "07ac33a8-2660-4ec7-aeea-f1e99a50afa2",
+    "action": "07ac33a8-2660-4ec7-aeea-f1e99a50afa2"
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
-        "graph_id": "4c24435a-99db-4884-8245-175751d06377",
+        "graph_id": "82e647f4-cefc-45ed-9831-08107bcb1236",
         "multiple": false,
         "priority": 0,
         "extra_data": {},
@@ -51,7 +51,7 @@
             "event_provider": "s3"
           }
         ],
-        "name": "atrybu",
+        "name": "wxubsr",
         "title": "AT API Action",
         "description": "desc",
         "number": 50,
@@ -119,25 +119,25 @@
           "graph_version": "LAST",
           "last_version_str": "1.0.0",
           "model_name": "Action",
-          "name": "atrybu",
+          "name": "wxubsr",
           "version": "1.0.0"
         }
       ]
     },
     "Action": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"atrybu\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"wxubsr\", \"version\": \"1.0.0\"}": [
         {
           "action_version": "LAST",
           "model_name": "ForbiddenAction",
-          "name": "atrybu__parent_to_child"
+          "name": "wxubsr__parent_to_child"
         }
       ]
     },
     "ForbiddenAction": {
-      "{\"name\": \"atrybu__parent_to_child\"}": []
+      "{\"name\": \"wxubsr__parent_to_child\"}": []
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2024-01-10 12:37:45",
+  "dump_date": "2024-01-31 15:24:54",
   "is_pinned_versions": false
 }

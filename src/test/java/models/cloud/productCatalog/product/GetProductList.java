@@ -1,23 +1,6 @@
 package models.cloud.productCatalog.product;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import models.cloud.productCatalog.Meta;
+import core.helper.Page;
 
-import java.util.List;
-
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class GetProductList {
-
-	@JsonProperty("meta")
-	private Meta meta;
-
-	@JsonProperty("list")
-	private List<Product> list;
+public class GetProductList extends Page<Product> {
 }

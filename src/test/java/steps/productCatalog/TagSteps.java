@@ -94,7 +94,7 @@ public class TagSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(tagUrl + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Tag.class);
     }
 
