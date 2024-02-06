@@ -1,11 +1,11 @@
 package steps.productCatalog;
 
 import core.enums.Role;
+import core.helper.Page;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.ImportObject;
-import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.product.ProductOrderRestriction;
@@ -36,7 +36,7 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Получение Meta списка Продуктов")
-    public static Meta getMetaProductList() {
+    public static Page.Meta getMetaProductList() {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/products/")
@@ -64,7 +64,7 @@ public class ProductSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get(productUrl + "?{}", filter)
-                .extractAs(GetProductList.class).getList();
+                .extractAllPages(GetProductList.class).getList();
     }
 
     @Step("Получение списка продуктов по фильтрам")
@@ -427,7 +427,7 @@ public class ProductSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(productUrl + objectId + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Product.class);
     }
 
@@ -436,7 +436,7 @@ public class ProductSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(productUrlV2 + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Product.class);
     }
 
@@ -535,7 +535,7 @@ public class ProductSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(productUrl + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов продуктов")
@@ -545,7 +545,7 @@ public class ProductSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(productUrl + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 
     public static Response getProductByContextProject(String projectId, String productId) {

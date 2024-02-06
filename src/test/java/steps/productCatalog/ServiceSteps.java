@@ -159,7 +159,7 @@ public class ServiceSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(serviceUrlV2 + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Service.class);
     }
 
@@ -168,7 +168,7 @@ public class ServiceSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(serviceUrl + id + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Service.class);
     }
 
