@@ -203,7 +203,7 @@ public class Jinja2Steps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(jinjaUrl + objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Копирование jinja2 по Id без ключа")

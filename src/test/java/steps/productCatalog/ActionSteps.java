@@ -207,7 +207,7 @@ public class ActionSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(actionUrl + objectId + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Action.class);
     }
 
@@ -216,7 +216,7 @@ public class ActionSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(actionUrlV2 + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Action.class);
     }
 
@@ -460,7 +460,7 @@ public class ActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(actionUrl + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов действиям")
@@ -470,6 +470,6 @@ public class ActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(actionUrl + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 }

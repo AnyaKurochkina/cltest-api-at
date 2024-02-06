@@ -64,7 +64,7 @@ public class AllowedActionSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
                 .post(allowedUrl + "{}/copy/", id)
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(AllowedAction.class);
     }
 

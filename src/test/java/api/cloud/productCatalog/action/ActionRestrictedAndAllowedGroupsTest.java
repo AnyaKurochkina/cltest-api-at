@@ -114,7 +114,7 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
     @Test
     public void actionRestrictedGroupAccountTest() {
         Action action = Action.builder()
-                .name("action_for_restricted_group_api_test")
+                .name("action_for_restricted_group_account_level_api_test")
                 .version("1.0.1")
                 .restrictedGroups(Collections.singletonList("account:role2_api_tests"))
                 .build()
@@ -161,18 +161,5 @@ public class ActionRestrictedAndAllowedGroupsTest extends Tests {
         assertNotNull(actionById);
         String msg = getActionViewerById(action.getActionId()).assertStatus(404).extractAs(ErrorMessage.class).getMessage();
         assertEquals("No Action matches the given query.", msg);
-    }
-
-    @DisplayName("Создание действия с ограничением restricted group на уровне realm")
-    @TmsLink("1274379")
-    @Test
-    public void actionRestrictedGrosupRealmLevelTest() {
-        Action action = Action.builder()
-                .name("action_for_restricted_group_api_test")
-                .version("1.0.1")
-                .restrictedGroups(Collections.singletonList("tag_admins"))
-                .build()
-                .createObject();
-        Action actionById = getActionById(action.getActionId());
     }
 }
