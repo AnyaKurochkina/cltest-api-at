@@ -162,6 +162,7 @@ public class VmCreate {
 
     public VmCreate clickOrder() {
         OrderUtils.clickOrder();
+        TypifiedElement.refreshPage();
         OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.STATUS)

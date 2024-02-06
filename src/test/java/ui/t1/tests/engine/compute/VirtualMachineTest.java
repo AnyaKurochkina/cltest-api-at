@@ -56,7 +56,6 @@ public class VirtualMachineTest extends AbstractComputeTest {
         vmPage.setDescription(new Generex("[a-zA-Z0-9-_]{3,10}").random())
                 .setFlavor(Select.RANDOM_VALUE)
                 .setFlavorName(flavorName);
-        new IndexPage().goToVirtualMachine();
     }
 
     @Test
