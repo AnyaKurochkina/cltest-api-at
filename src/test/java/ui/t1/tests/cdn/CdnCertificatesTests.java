@@ -19,6 +19,7 @@ import ui.t1.tests.engine.EntitySupplier;
 @Epic("CDN")
 @Feature("Действия с ертификатами")
 @Tags({@Tag("cdn")})
+@Tag("morozov_ilya")
 @WithAuthorization(Role.CLOUD_ADMIN)
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
