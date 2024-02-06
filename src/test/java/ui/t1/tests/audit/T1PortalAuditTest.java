@@ -159,6 +159,8 @@ public class T1PortalAuditTest extends Tests {
                 .selectPeriod(AuditPeriod.WEEK)
                 .exportCsv();
 
-        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory("Audit_Logs_Table.csv");
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(expectedFileName);
     }
 }

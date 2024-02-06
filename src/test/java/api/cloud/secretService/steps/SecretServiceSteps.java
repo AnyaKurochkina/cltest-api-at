@@ -8,7 +8,7 @@ import org.json.JSONObject;
 
 import java.util.Objects;
 
-import static api.routes.SecretServiceAPI.*;
+import static tests.routes.SecretServiceAPI.*;
 
 public class SecretServiceSteps {
 

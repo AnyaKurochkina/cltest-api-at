@@ -1,4 +1,4 @@
-package api.routes;
+package tests.routes;
 
 import static core.helper.Configure.KONG_URL;
 

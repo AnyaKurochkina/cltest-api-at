@@ -1,4 +1,4 @@
-package api.routes;
+package tests.routes;
 
 import core.helper.http.Path;
 
@@ -12,7 +12,7 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     public static Path apiV1ActionsCreate;
 
     //Actions Add tag list
-    @Route(method = Method.POST, path = "/api/v1/actions/add_tag_list/", status = 200)
+    @Route(method = Method.POST, path = "/api/v1/actions/add_tag_list/", status = 201)
     public static Path apiV1ActionsAddTagList;
 
     //Actions Audit by object keys
@@ -48,7 +48,7 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     public static Path apiV1ActionsObjectsExport;
 
     //Actions Remove tag list
-    @Route(method = Method.POST, path = "/api/v1/actions/remove_tag_list/", status = 200)
+    @Route(method = Method.POST, path = "/api/v1/actions/remove_tag_list/", status = 204)
     public static Path apiV1ActionsRemoveTagList;
 
     //Actions Read
@@ -72,7 +72,7 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     public static Path apiV1ActionsAudit;
 
     //Actions Copy
-    @Route(method = Method.POST, path = "/api/v1/actions/{id}/copy/", status = 200)
+    @Route(method = Method.POST, path = "/api/v1/actions/{id}/copy/", status = 201)
     public static Path apiV1ActionsCopy;
 
     //Actions Dump to bitbucket

@@ -12,8 +12,8 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,13 +24,11 @@ import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.GraphSteps.deleteGraphById;
 import static steps.productCatalog.ProductSteps.importProduct;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ActionImportTest extends ActionBaseTest {
 
     @DisplayName("Импорт действия")
@@ -161,17 +159,25 @@ public class ActionImportTest extends ActionBaseTest {
     public void importActionWithIcon() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importActionWithIcon.json");
         String actionName = new JsonPath(data).get("Action.name");
+        String graphId = "";
         if (isActionExists(actionName)) {
             deleteActionByName(actionName);
         }
-        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
-        String id = getActionByName(actionName).getId();
-        Action action = getActionById(id);
-        assertFalse(action.getIconStoreId().isEmpty());
-        assertFalse(action.getIconUrl().isEmpty());
-        assertTrue(isActionExists(actionName), "Действие не существует");
-        deleteActionByName(actionName);
-        assertFalse(isActionExists(actionName), "Действие существует");
+        try {
+            importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
+            String id = getActionByName(actionName).getId();
+            Action action = getActionById(id);
+            graphId = action.getGraphId();
+            assertFalse(action.getIconStoreId().isEmpty());
+            assertFalse(action.getIconUrl().isEmpty());
+            assertTrue(isActionExists(actionName), "Действие не существует");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            deleteActionByName(actionName);
+            deleteGraphById(graphId);
+            assertFalse(isActionExists(actionName), "Действие существует");
+        }
     }
 
     @Test

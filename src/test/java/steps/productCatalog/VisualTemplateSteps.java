@@ -1,11 +1,11 @@
 package steps.productCatalog;
 
 import core.enums.Role;
+import core.helper.Page;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import models.cloud.productCatalog.ImportObject;
-import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.json.JSONObject;
 import steps.Steps;
@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.ItemVisualTemplateProductCatalogApi.apiV1ItemVisualTemplatesDelete;
 
 public class VisualTemplateSteps extends Steps {
 
@@ -24,7 +26,6 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение списка шаблонов отображения")
     public static List<ItemVisualTemplate> getVisualTemplateList() {
-        //todo сравнение с jsonshema
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl)
@@ -42,9 +43,8 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Удаление шаблона отображения по Id")
     public static Response deleteVisualTemplateById(String id) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(visualTemplateUrl + id + "/");
+        return getProductCatalogAdmin()
+                .api(apiV1ItemVisualTemplatesDelete, id);
     }
 
     @Step("Получение списка шаблонов отображения отсортированного по дате создания")
@@ -92,7 +92,7 @@ public class VisualTemplateSteps extends Steps {
     }
 
     @Step("Получение Meta данных списка шаблонов визуализаций")
-    public static Meta getMetaVisualTemplateList() {
+    public static Page.Meta getMetaVisualTemplateList() {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl)
@@ -125,7 +125,7 @@ public class VisualTemplateSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(visualTemplateUrl + objectId + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(ItemVisualTemplate.class);
     }
 
@@ -134,7 +134,7 @@ public class VisualTemplateSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(visualTemplateUrl2 + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(ItemVisualTemplate.class);
     }
 
@@ -189,7 +189,7 @@ public class VisualTemplateSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(visualTemplateUrl + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов шаблона визуализации")
@@ -199,7 +199,7 @@ public class VisualTemplateSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(visualTemplateUrl + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 
     @Step("Получение списка шаблонов визуализиций по фильтру")

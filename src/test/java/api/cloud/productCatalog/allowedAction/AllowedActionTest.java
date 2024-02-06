@@ -76,7 +76,7 @@ public class AllowedActionTest extends Tests {
         JSONObject jsonObject = AllowedAction.builder()
                 .title("new_update_allowed_action_test_api")
                 .build()
-                .init().toJson();
+                .toJson();
         String updatedName = getActionById(jsonObject.get("action").toString()).getName() + "__parent_to_child";
         AllowedAction updatedAction = updateAllowedAction(action.getId(), jsonObject);
         assertEquals(updatedTitle, updatedAction.getTitle());

@@ -106,7 +106,7 @@ public class PythonTemplateSteps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(pythonTemplateV1 + objectId + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(PythonTemplate.class);
     }
 

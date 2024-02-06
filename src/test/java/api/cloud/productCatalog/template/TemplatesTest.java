@@ -255,7 +255,7 @@ public class TemplatesTest extends Tests {
                 .title(templateName)
                 .version("1.0.0")
                 .build()
-                .init().toJson();
+                .toJson();
         Template template = createTemplate(jsonObject).assertStatus(201).extractAs(Template.class);
         Response response = dumpTemplateToBitbucket(template.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));

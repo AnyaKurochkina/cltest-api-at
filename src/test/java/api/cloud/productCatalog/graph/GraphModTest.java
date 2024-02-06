@@ -58,7 +58,7 @@ public class GraphModTest extends Tests {
                 .build();
         String expectedTitle = "default";
         Graph graph = createGraph(Graph.builder()
-                .name("get_graph_with_out_context_test_api")
+                .name("get_graph_with_mod_with_out_query_param__test_api")
                 .version("1.0.0")
                 .modifications(Arrays.asList(jsonSchema, uiSchema))
                 .jsonSchema(new LinkedHashMap<String, Object>() {{
@@ -228,7 +228,7 @@ public class GraphModTest extends Tests {
                 .data(jsonData)
                 .build();
         Graph graph = createGraph(Graph.builder()
-                .name("get_graph_with_out_context_test_api")
+                .name("get_graph_with_not_exist_key_in_mod_test_api")
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .build());

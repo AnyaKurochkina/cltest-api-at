@@ -3,20 +3,18 @@ package models.cloud.productCatalog.template;
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static steps.productCatalog.GraphSteps.deleteGraphById;
-import static steps.productCatalog.TemplateSteps.*;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static steps.productCatalog.TemplateSteps.deleteTemplateById;
+import static tests.routes.TemplateProductCatalogApi.apiV1TemplatesCreate;
 
 @Log4j2
 @Builder
@@ -26,7 +24,7 @@ import static steps.productCatalog.TemplateSteps.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 
-public class Template extends Entity implements IProductCatalog {
+public class Template extends AbstractEntity implements IProductCatalog {
 
     @JsonProperty("additional_input")
     private Boolean additionalInput;
@@ -93,12 +91,6 @@ public class Template extends Entity implements IProductCatalog {
     @JsonProperty("tag_list")
     private List<String> tagList;
 
-    @Override
-    public Entity init() {
-        return this;
-    }
-
-    @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/templates/createTemplate.json")
                 .set("$.name", name)
@@ -124,25 +116,22 @@ public class Template extends Entity implements IProductCatalog {
                 .build();
     }
 
-    @Override
     @Step("Создание шаблона")
-    protected void create() {
-        if (isTemplateExists(name)) {
-            Template template = getTemplateByName(name);
-            List<GetUsedTemplateList> list = getNodeListUsedTemplate(template.getId()).jsonPath().getList("", GetUsedTemplateList.class);
-            if (!list.isEmpty()) {
-                list.forEach(x -> deleteGraphById(x.getId()));
-            }
-            deleteTemplateById(getTemplateByName(name).getId());
-        }
-        Template createTemplate = createTemplate(toJson()).assertStatus(201).extractAs(Template.class);
-        StringUtils.copyAvailableFields(createTemplate, this);
-        Assertions.assertNotNull(id, "Шаблон с именем: " + name + ", не создался");
+    public Template createObject() {
+        return getProductCatalogAdmin()
+                .body(this.toJson())
+                .api(apiV1TemplatesCreate)
+                .extractAs(Template.class)
+                .deleteMode(Mode.AFTER_TEST);
     }
 
     @Override
-    protected void delete() {
+    public void delete() {
         deleteTemplateById(id);
-        assertFalse(isTemplateExists(name));
+    }
+
+    @Override
+    protected int getPrioritise() {
+        return 5;
     }
 }

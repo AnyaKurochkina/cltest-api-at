@@ -1,12 +1,11 @@
 package steps.productCatalog;
 
 import core.enums.Role;
+import core.helper.Page;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
-import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.product.GetProductList;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.product.ProductOrderRestriction;
@@ -18,10 +17,11 @@ import java.io.File;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import static api.routes.ProductProductCatalogApi.apiV1ProductsCreate;
 import static core.helper.Configure.productCatalogURL;
 import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
 import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsOrderRestrictionsCreate;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsRead;
 
 public class ProductSteps extends Steps {
     private static final String productUrl = "/api/v1/products/";
@@ -39,7 +39,7 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Получение Meta списка Продуктов")
-    public static Meta getMetaProductList() {
+    public static Page.Meta getMetaProductList() {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/products/")
@@ -118,15 +118,6 @@ public class ProductSteps extends Steps {
     }
 
     @Step("Создание продукта")
-    public static Product createProduct(Product product) {
-        return getProductCatalogAdmin()
-                .body(product.toJson())
-                .api(apiV1ProductsCreate)
-                .extractAs(Product.class)
-                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
-    }
-
-    @Step("Создание продукта")
     public static Product createProduct(String name) {
         return Product.builder()
                 .name(name)
@@ -175,9 +166,8 @@ public class ProductSteps extends Steps {
 
     @Step("Получение продукта по Id")
     public static Product getProductById(String objectId) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productUrl + objectId + "/")
+        return getProductCatalogAdmin()
+                .api(apiV1ProductsRead, objectId)
                 .extractAs(Product.class);
     }
 
@@ -202,10 +192,9 @@ public class ProductSteps extends Steps {
 
     @Step("Создание order_restrictions продукта по Id")
     public static Response createProductOrderRestrictionById(String objectId, JSONObject jsonObject) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(jsonObject)
-                .post(productUrl + objectId + "/order_restrictions/");
+                .api(apiV1ProductsOrderRestrictionsCreate, objectId);
     }
 
     @Step("Удаление order_restrictions продукта по Id")
@@ -439,7 +428,7 @@ public class ProductSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(productUrl + objectId + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Product.class);
     }
 
@@ -448,7 +437,7 @@ public class ProductSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(productUrlV2 + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Product.class);
     }
 
@@ -547,7 +536,7 @@ public class ProductSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(productUrl + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов продуктов")
@@ -557,7 +546,7 @@ public class ProductSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(productUrl + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 
     public static Response getProductByContextProject(String projectId, String productId) {

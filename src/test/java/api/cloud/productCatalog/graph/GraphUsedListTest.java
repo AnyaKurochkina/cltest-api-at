@@ -139,7 +139,7 @@ public class GraphUsedListTest extends Tests {
                 .createObject();
 
         createAction(Action.builder()
-                .name("action_for_last_object_used_graph_test_api")
+                .name("action2_for_last_object_used_graph_test_api")
                 .graphId(usedGraphId)
                 .build());
 
@@ -171,7 +171,7 @@ public class GraphUsedListTest extends Tests {
         String productVersion = getProductById(product.getProductId()).getVersion();
 
         Service service = Service.builder()
-                .name("service_for_last_object_used_graph_test_api")
+                .name("service2_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
                 .graphId(usedGraphId)
@@ -229,7 +229,7 @@ public class GraphUsedListTest extends Tests {
         assertEquals(3, getObjectArrayUsedGraph(usedGraphId).getList("").size());
         deleteActionById(createActionResponse.getId());
         createProductResponse.delete();
-        createServiceResponse.deleteObject();
+        createServiceResponse.delete();
 
         assertEquals(0, getObjectArrayUsedGraph(usedGraphId).getList("").size());
     }

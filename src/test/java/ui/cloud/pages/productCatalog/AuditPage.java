@@ -14,6 +14,7 @@ import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 import ui.t1.tests.audit.AuditPeriod;
 
+import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 import static com.codeborne.selenide.Selenide.$x;
@@ -51,6 +52,7 @@ public class AuditPage extends EntityPage {
     private final Input objectTypeFilterInput = Input.byLabelV2("Тип объекта");
     private final Input objectIdFilterInput = Input.byLabelV2("ID объекта");
     private final Button exportCsvButton = Button.byLabel("Экспорт в CSV");
+    private final Tab auditTab = Tab.byText("История изменений");
 
     public AuditPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();
@@ -214,7 +216,8 @@ public class AuditPage extends EntityPage {
         if ($x("//div[text()='Дата и время']/ancestor::table//td[text()='Нет данных для отображения']").exists()) {
             Waiting.sleep(2000);
             Selenide.refresh();
-            if (Tab.byText("История изменений").getElement().exists()) new EntityPage().goToAuditTab();
+            if (Waiting.sleep(() -> auditTab.getElement().exists(), Duration.ofSeconds(3)))
+                auditTab.switchTo();
         }
     }
 

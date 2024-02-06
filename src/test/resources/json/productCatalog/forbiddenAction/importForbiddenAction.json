@@ -1,7 +1,7 @@
 {
   "model_name": "ForbiddenAction",
   "ForbiddenAction": {
-    "id": 1239,
+    "id": 1030,
     "context_restrictions": [],
     "event_type_provider": [
       {
@@ -9,20 +9,20 @@
         "event_provider": "s3"
       }
     ],
-    "name": "atrybu__parent_to_child",
+    "name": "xjctcs_api_test__parent_to_child",
     "title": "import_forbidden_action_test_api",
     "description": "Description",
     "item_restriction": "string",
     "object_info": "",
     "direction": "parent_to_child",
-    "action_id": "a8db63f7-5ca6-4dfe-b3b6-e92a2939dc85",
-    "action": "a8db63f7-5ca6-4dfe-b3b6-e92a2939dc85"
+    "action_id": "286eaf99-d463-45e2-913e-43cb4b4501bf",
+    "action": "286eaf99-d463-45e2-913e-43cb4b4501bf"
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
-        "graph_id": "4c24435a-99db-4884-8245-175751d06377",
+        "graph_id": "4aae300a-7000-484d-a6ce-1215909beb12",
         "multiple": false,
         "priority": 0,
         "extra_data": {},
@@ -51,11 +51,11 @@
             "event_provider": "s3"
           }
         ],
-        "name": "atrybu",
+        "name": "xjctcs_api_test",
         "title": "AT API Action",
         "description": "desc",
         "number": 50,
-        "is_safe": false,
+        "is_safe": true,
         "is_delayable": false,
         "skip_item_with_secondary_rel": false,
         "is_for_items": true,
@@ -90,7 +90,7 @@
             "printed_output": {},
             "lock_order_on_error": false,
             "damage_order_on_error": false,
-            "name": "graph_for_action_api_test",
+            "name": "mkuvfp_api_test",
             "title": "AT API Graph",
             "description": "for at tests",
             "type": "action",
@@ -114,30 +114,30 @@
   },
   "exported_objects": {
     "Graph": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"graph_for_action_api_test\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"mkuvfp_api_test\", \"version\": \"1.0.0\"}": [
         {
           "graph_version": "LAST",
           "last_version_str": "1.0.0",
           "model_name": "Action",
-          "name": "atrybu",
+          "name": "xjctcs_api_test",
           "version": "1.0.0"
         }
       ]
     },
     "Action": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"atrybu\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"xjctcs_api_test\", \"version\": \"1.0.0\"}": [
         {
           "action_version": "LAST",
           "model_name": "ForbiddenAction",
-          "name": "atrybu__parent_to_child"
+          "name": "xjctcs_api_test__parent_to_child"
         }
       ]
     },
     "ForbiddenAction": {
-      "{\"name\": \"atrybu__parent_to_child\"}": []
+      "{\"name\": \"xjctcs_api_test__parent_to_child\"}": []
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2024-01-10 12:37:45",
+  "dump_date": "2024-02-07 19:14:32",
   "is_pinned_versions": false
 }

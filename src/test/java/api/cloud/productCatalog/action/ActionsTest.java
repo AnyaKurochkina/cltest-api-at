@@ -22,10 +22,10 @@ import org.junit.jupiter.api.Test;
 import java.time.ZonedDateTime;
 import java.util.*;
 
-import static api.routes.ActionProductCatalogApi.*;
 import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
+import static tests.routes.ActionProductCatalogApi.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Действия")

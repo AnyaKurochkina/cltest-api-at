@@ -85,7 +85,6 @@ public class AllowedActionImportTest extends Tests {
                 .name(allowedActionName)
                 .actionId(action.getId())
                 .build()
-                .init()
                 .toJson();
         updateAllowedAction(allowedAction.getId(), json);
         ImportObject importObject = importAllowedAction(filePath);

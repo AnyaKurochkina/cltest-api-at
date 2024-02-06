@@ -20,9 +20,13 @@ public class AssertResponse {
             return new AssertResponse(e);
         }
         catch (MultipleFailuresError e) {
-            for (Throwable throwable : e.getSuppressed())
-                if(throwable instanceof StatusResponseException)
+            Throwable[] suppressed = e.getSuppressed();
+            for (int i = suppressed.length - 1; i >= 0; i--) {
+                Throwable throwable = suppressed[i];
+                if (throwable instanceof StatusResponseException) {
                     return new AssertResponse((StatusResponseException) throwable);
+                }
+            }
         }
         throw new AssertionFailedError("Исключение StatusResponseException не было выброшено");
     }

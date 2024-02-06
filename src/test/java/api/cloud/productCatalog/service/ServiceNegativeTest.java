@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.service;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -11,9 +12,16 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ProductCatalogSteps;
 
+import java.util.stream.Stream;
+
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ServiceSteps.createService;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -81,29 +89,39 @@ public class ServiceNegativeTest extends Tests {
 
     @DisplayName("Негативный тест на создание сервиса с недопустимыми символами в имени")
     @TmsLink("643518")
-    @Test
-    public void createServiceWithInvalidCharacters() {
-        Service.builder().name("NameWithUppercase").build().negativeCreateRequest(400);
-        Service.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(400);
-        Service.builder().name("имя").build().negativeCreateRequest(400);
-        Service.builder().name("Имя").build().negativeCreateRequest(400);
-        Service.builder().name("a&b&c").build().negativeCreateRequest(400);
-        Service.builder().name("").build().negativeCreateRequest(400);
-        Service.builder().name(" ").build().negativeCreateRequest(400);
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void createServiceWithInvalidCharacters(String name, String message) {
+        AssertResponse.run(() -> createService(name)).status(400)
+                .responseContains(format(message, name));
+    }
+
+    static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase", "Cannot instantiate (Service) named ({})"),
+                Arguments.of("nameWithUppercaseInMiddle", "Cannot instantiate (Service) named ({})"),
+                Arguments.of("Имя", "Cannot instantiate (Service) named ({})"),
+                Arguments.of("имя", "Cannot instantiate (Service) named ({})"),
+                Arguments.of("a&b&c", "Cannot instantiate (Service) named ({})"),
+                Arguments.of("", "Это поле не может быть пустым."),
+                Arguments.of(" ", "Это поле не может быть пустым.")
+        );
     }
 
     @DisplayName("Негативный тест на создание сервиса с недопустимыми graph_id")
     @TmsLink("643522")
     @Test
     public void createServiceWithInvalidGraphId() {
-        Service.builder().name("create_service_with_not_exist_graph_id")
+        Service serviceModel = Service.builder()
+                .name("create_service_with_not_exist_graph_id")
                 .graphId("dgdh-4565-dfgdf")
-                .build()
-                .negativeCreateRequest(400);
-        Service.builder().name("create_service_with_not_exist_graph_id")
+                .build();
+        AssertResponse.run(() -> createService(serviceModel.toJson())).status(400);
+        Service serviceModel2 = Service.builder().name("create_service_with_not_exist_graph_id")
                 .graphId("create_service2_with_not_exist_graph_id")
-                .build()
-                .negativeCreateRequest(400);
+                .build();
+        AssertResponse.run(() -> createService(serviceModel2.toJson())).status(400);
+
     }
 
     @DisplayName("Негативный тест на удаление сервиса без токена")
@@ -144,7 +162,7 @@ public class ServiceNegativeTest extends Tests {
                 .title("title_service_test_api")
                 .description("ServiceForAT")
                 .startBtnLabel("")
-                .build().init().toJson();
+                .build().toJson();
         String str = steps.createProductObject(json)
                 .assertStatus(400)
                 .extractAs(ErrorMessage.class).getMessage();

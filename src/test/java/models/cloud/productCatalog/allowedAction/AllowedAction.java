@@ -2,10 +2,9 @@ package models.cloud.productCatalog.allowedAction;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -13,10 +12,9 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static steps.productCatalog.ActionSteps.*;
-import static steps.productCatalog.AllowedActionSteps.*;
+import static steps.productCatalog.AllowedActionSteps.deleteAllowedActionById;
+import static tests.routes.AllowedActionProductCatalogApi.apiV1AllowedActionsCreate;
 
 @Log4j2
 @Builder
@@ -26,7 +24,7 @@ import static steps.productCatalog.AllowedActionSteps.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, exclude = {"updateDt"})
 @ToString
-public class AllowedAction extends Entity {
+public class AllowedAction extends AbstractEntity {
     private String description;
     @JsonProperty("item_restriction")
     private Object itemRestriction;
@@ -46,20 +44,13 @@ public class AllowedAction extends Entity {
     @JsonProperty("id")
     private Integer id;
 
-
-    @Override
-    public Entity init() {
+    public JSONObject toJson() {
         if (actionId == null) {
             String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_allowed_action_api_test";
             deleteActionIfExist(actionName);
             Action action = createAction(actionName);
             actionId = action.getId();
         }
-        return this;
-    }
-
-    @Override
-    public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/allowedAction/createAllowedAction.json")
                 .set("$.title", title)
                 .set("$.description", description)
@@ -71,20 +62,17 @@ public class AllowedAction extends Entity {
                 .build();
     }
 
-    @Override
-    protected void create() {
-        AllowedAction createAllowedAction = createAllowedAction(toJson())
-                .assertStatus(201)
-                .compareWithJsonSchema("jsonSchema/allowedAction/postAllowedAction.json")
-                .extractAs(AllowedAction.class);
-        StringUtils.copyAvailableFields(createAllowedAction, this);
-        assertNotNull(actionId, "Действие с именем: " + name + ", не создался");
+    public AllowedAction createObject() {
+        return getProductCatalogAdmin()
+                .body(this.toJson())
+                .api(apiV1AllowedActionsCreate)
+                .extractAs(AllowedAction.class)
+                .deleteMode(Mode.AFTER_TEST);
     }
 
     @Override
-    protected void delete() {
+    public void delete() {
         deleteAllowedActionById(id);
-        assertFalse(isAllowedActionExists(name));
     }
 
     private void deleteActionIfExist(String actionName) {

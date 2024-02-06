@@ -8,6 +8,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
+import models.cloud.productCatalog.template.Template;
 import org.openqa.selenium.Keys;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
@@ -22,6 +23,7 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.back;
 import static com.codeborne.selenide.Selenide.switchTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.TemplateSteps.getTemplateById;
 
 @Getter
 public class Jinja2TemplatePage extends EntityPage {
@@ -121,7 +123,8 @@ public class Jinja2TemplatePage extends EntityPage {
         nameRequiredFieldHint.shouldNotBe(Condition.visible);
         titleInput.setValue(jinja2Template.getTitle());
         templateTab.switchTo();
-        Waiting.find(() -> templateSelect.getValue().contains("jinja2_template"), Duration.ofSeconds(10));
+        Template template = getTemplateById(jinja2Template.getTemplateId());
+        Waiting.find(() -> templateSelect.getValue().contains(template.getName()), Duration.ofSeconds(10));
         paramsTab.switchTo();
         templateTextArea.setValue(jinja2Template.getJinja2Template());
         templateRequiredFieldHint.shouldNotBe(Condition.visible);

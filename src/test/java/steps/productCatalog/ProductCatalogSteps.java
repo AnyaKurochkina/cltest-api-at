@@ -30,6 +30,7 @@ import static core.helper.Configure.productCatalogURL;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static steps.keyCloak.KeyCloakSteps.getNewUserToken;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsCategories;
 
 @Data
 @AllArgsConstructor
@@ -369,10 +370,8 @@ public class ProductCatalogSteps {
 
     @Step("Получение доступных категорий")
     public List<String> getAvailableCategories() {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/products/categories/")
-                .assertStatus(200)
+        return getProductCatalogAdmin()
+                .api(apiV1ProductsCategories)
                 .jsonPath().getList("");
     }
 }

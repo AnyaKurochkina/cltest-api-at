@@ -155,6 +155,6 @@ public class Action extends AbstractEntity {
 
     @Override
     public int getPrioritise() {
-        return 0;
+        return 1;
     }
 }

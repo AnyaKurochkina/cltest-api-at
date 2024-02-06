@@ -24,6 +24,7 @@ import ui.t1.tests.engine.EntitySupplier;
 @ExtendWith(ConfigExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tag("morozov_ilya")
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CdnSourceGroupTests extends AbstractT1Test {
 
     private final EntitySupplier<SourceGroup> cdnSourceGroup = lazy(() -> {
@@ -32,7 +33,7 @@ public class CdnSourceGroupTests extends AbstractT1Test {
                 .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
         new IndexPage().goToCdn()
                 .switchToSourceGroupTab()
-                .createSourceGroup(sourceGroup);
+                .create(sourceGroup);
         Alert.green("Группа источников успешно добавлена");
         return sourceGroup;
     });
@@ -45,7 +46,7 @@ public class CdnSourceGroupTests extends AbstractT1Test {
         String name = cdnSourceGroup.get().getName();
         new IndexPage().goToCdn()
                 .switchToSourceGroupTab()
-                .checkCdnSourceGroupExistByName(name);
+                .checkCdnEntityExistByName(name);
     }
 
     @Test
@@ -69,7 +70,7 @@ public class CdnSourceGroupTests extends AbstractT1Test {
         SourceGroup sourceGroup = cdnSourceGroup.get();
         new IndexPage().goToCdn()
                 .switchToSourceGroupTab()
-                .createSourceGroup(sourceGroup);
+                .create(sourceGroup);
         Report.checkStep("Отображается нотификация с текстом - Origin Group name should be unique", () -> {
             Alert.red("Origin Group name should be unique");
         });
@@ -83,7 +84,7 @@ public class CdnSourceGroupTests extends AbstractT1Test {
         String name = cdnSourceGroup.get().getName();
         new IndexPage().goToCdn()
                 .switchToSourceGroupTab()
-                .deleteSourceGroup(name)
-                .checkCdnSourceGroupDoesNotExistByName(name);
+                .delete(name)
+                .checkThatCdnEntityDoesNotExist(name);
     }
 }

@@ -13,10 +13,10 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
 
-import static api.routes.ActionProductCatalogApi.apiV1ActionsRead;
 import static core.enums.Role.PRODUCT_CATALOG_VIEWER;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static steps.productCatalog.ActionSteps.*;
+import static tests.routes.ActionProductCatalogApi.apiV1ActionsRead;
 
 @Epic("Продуктовый каталог")
 @Feature("Действия")

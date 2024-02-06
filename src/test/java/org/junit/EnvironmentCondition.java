@@ -7,6 +7,7 @@ import org.junit.jupiter.api.extension.ExecutionCondition;
 import org.junit.jupiter.api.extension.ExtensionContext;
 
 import java.lang.reflect.Method;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -27,10 +28,8 @@ public class EnvironmentCondition implements ExecutionCondition {
             env = method.getAnnotation(EnabledIfEnv.class).value();
         }
         if (Objects.nonNull(env)) {
-            for (String s : env) {
-                if (!Configure.ENV.equals(s.toLowerCase()))
-                    return ConditionEvaluationResult.disabled("Тест отключен на стенде " + Configure.ENV);
-            }
+            if (Arrays.stream(env).noneMatch(stand -> Configure.ENV.equals(stand.toLowerCase())))
+                return ConditionEvaluationResult.disabled("Тест отключен на стенде " + Configure.ENV);
         }
         env = null;
         if (clazz.isAnnotationPresent(DisabledIfEnv.class)) {

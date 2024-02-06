@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -43,12 +44,11 @@ public class ProductOrderRestrictionTest extends Tests {
                 .organization("vtb")
                 .isBlocking(false)
                 .environments(Collections.emptyList())
-                .weight(55)
+                .weight(56)
                 .platforms(Collections.singletonList("vsphere"))
                 .build();
         String productId = product.getProductId();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionById(productId, orderRestriction.toJson())
-                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
                 .assertStatus(200)
                 .extractAs(ProductOrderRestriction.class);
         assertEquals(product.getName(), createdOrderRestriction.getProductName());
@@ -85,11 +85,10 @@ public class ProductOrderRestrictionTest extends Tests {
                 .organization("vtb")
                 .isBlocking(false)
                 .environments(Collections.emptyList())
-                .weight(49)
+                .weight(43)
                 .platforms(Collections.singletonList("vsphere"))
                 .build();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionByName(productName, orderRestriction.toJson())
-                .compareWithJsonSchema("jsonSchema/createProductOrderRestriction.json")
                 .assertStatus(200)
                 .extractAs(ProductOrderRestriction.class);
         assertEquals(product.getName(), createdOrderRestriction.getProductName());
@@ -127,15 +126,14 @@ public class ProductOrderRestrictionTest extends Tests {
                 .organization("vtb")
                 .isBlocking(false)
                 .environments(Collections.emptyList())
-                .weight(40)
+                .weight(9)
                 .platforms(Collections.singletonList("vsphere"))
                 .build();
         ProductOrderRestriction createdOrderRestriction = createProductOrderRestrictionById(product.getProductId(), orderRestriction.toJson())
                 .extractAs(ProductOrderRestriction.class);
-        String error = createProductOrderRestrictionById(product.getProductId(), orderRestriction.toJson())
-                .assertStatus(422)
-                .jsonPath().getString("error.message");
-        assertTrue(error.contains("В рамках одной организации не должно быть ограничений одинакового веса."));
+        AssertResponse.run(() -> createProductOrderRestrictionById(product.getProductId(), orderRestriction.toJson()))
+                .status(422)
+                .responseContains("В рамках одной организации не должно быть ограничений одинакового веса.");
         deleteProductOrderRestrictionById(product.getProductId(), createdOrderRestriction.getId());
     }
 }

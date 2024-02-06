@@ -18,14 +18,31 @@ public class Server {
     Integer port;
     String name;
     String address;
-    @Builder.Default
-    String sendProxy = "disabled";
+    String sendProxy;
+    Integer slowstart;
     String backup;
-    Integer fall;
-    Integer rise;
-    Integer inter;
-    String useSsl;
-    Integer slowStart;
 
-    String ssl;
+    //default only http "disabled"
+    String useSsl;
+
+    public static ServerBuilder simpleTcpServer() {
+        return Server.builder()
+                .name("d5soul-ngc004lk.corp.dev.vtb")
+                .port(80)
+                .address("10.226.48.194")
+                .sendProxy("disabled")
+                .slowstart(0)
+                .backup("disabled");
+    }
+
+    public static ServerBuilder simpleHttpServer() {
+        return Server.builder()
+                .name("d5soul-ngc004lk.corp.dev.vtb")
+                .port(443)
+                .address("10.226.48.194")
+                .sendProxy("disabled")
+                .useSsl("disabled")
+                .slowstart(0)
+                .backup("disabled");
+    }
 }

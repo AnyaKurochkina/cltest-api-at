@@ -1,4 +1,4 @@
-package api.routes;
+package tests.routes;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

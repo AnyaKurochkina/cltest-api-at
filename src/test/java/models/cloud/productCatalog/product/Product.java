@@ -14,7 +14,9 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
 import static steps.productCatalog.ProductSteps.*;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsCreate;
 
 @Log4j2
 @Builder
@@ -160,7 +162,11 @@ public class Product extends AbstractEntity {
     }
 
     public Product createObject() {
-        return createProduct(this);
+        return getProductCatalogAdmin()
+                .body(this.toJson())
+                .api(apiV1ProductsCreate)
+                .extractAs(Product.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Override

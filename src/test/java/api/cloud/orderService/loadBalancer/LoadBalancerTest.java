@@ -1,13 +1,11 @@
 package api.cloud.orderService.loadBalancer;
 
-import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.restassured.common.mapper.TypeRef;
 import models.cloud.orderService.products.LoadBalancer;
 import models.cloud.subModels.loadBalancer.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
@@ -21,20 +19,11 @@ import steps.orderService.OrderServiceSteps;
 import java.util.Collections;
 import java.util.List;
 
-import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversHttp;
-import static api.cloud.orderService.loadBalancer.LoadBalancerBackendChangeNegativeTest.serversTcp;
-
-//@Execution(ExecutionMode.SAME_THREAD)
 @Epic("Продукты")
 @Feature("Load Balancer")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("load_balancer"), @Tag("prod")})
-public class LoadBalancerTest extends Tests {
+public class LoadBalancerTest extends AbstractLoadBalancerTest {
 
-//    @Mock
-//    static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("IFT").segment("test-srv-synt").build()
-//            .buildFromLink("https://console.blue.cloud.vtb.ru/all/orders/ef286138-92e8-4fc8-9ece-a37a8ddd0b73/main?context=proj-csyn7gq5se&type=project&org=vtb");
-
-    private static final String randomPrefix = RandomStringUtils.randomNumeric(4);
 
     @TmsLink("1286242")
     @Tag("actions")
@@ -95,22 +84,8 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] TCP публикация с простой проверкой доступности {0}")
     void tcpSimple(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            addTcpSimple(balancer);
+            createSimpleTcpFrontend(balancer);
         }
-    }
-
-    Frontend addTcpSimple(LoadBalancer balancer) {
-        Backend backend = Backend.builder()
-                .servers(serversTcp)
-                .backendName("backend_tcp_simple")
-                .build();
-        balancer.addBackendUseCache(backend);
-        Frontend frontend = Frontend.builder()
-                .frontendName("frontend_tcp_simple")
-                .defaultBackendNameTcp(backend.getBackendName())
-                .build();
-        balancer.addFrontendUseCache(frontend);
-        return frontend;
     }
 
     @TmsLink("1286253")
@@ -119,18 +94,10 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] TCP публикация с проверкой доступности по http ссылке {0}")
     void tcp(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder()
-                    .servers(serversTcp)
-                    .backendName("backend_tcp_width_check")
-                    .build();
-            balancer.addBackendUseCache(backend);
+            Backend backend = createSimpleTcpBackend(balancer);
             if (balancer.isDev())
                 Assertions.assertTrue(balancer.isStateContains(backend.getBackendName()));
-            final Frontend frontendTcpWidthCheck = Frontend.builder()
-                    .frontendName("frontend_tcp_width_check")
-                    .defaultBackendNameTcp(backend.getBackendName())
-                    .build();
-            balancer.addFrontendUseCache(frontendTcpWidthCheck);
+            Frontend frontendTcpWidthCheck = createSimpleTcpFrontend(balancer);
             if (balancer.isDev())
                 Assertions.assertTrue(balancer.isStateContains(frontendTcpWidthCheck.getFrontendName()));
         }
@@ -142,33 +109,8 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] HTTP публикация с простой проверкой доступности {0}")
     void httpSimple(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            addHttpSimple(balancer);
+            createSimpleTcpFrontend(balancer);
         }
-    }
-
-    Frontend addHttpSimple(LoadBalancer balancer) {
-        Backend backend = Backend.builder()
-                .servers(serversHttp)
-                .backendName("backend_http_simple")
-                .mode("http")
-                .balancingAlgorithm("roundrobin")
-                .cookieStatus(false)
-                .keepLive(false)
-                .checkInterval(5000)
-                .checkFall(3)
-                .checkRise(3)
-                .checkUri("/")
-                .advCheck("httpchk")
-                .build();
-        balancer.addBackendUseCache(backend);
-        Frontend frontend = Frontend.builder()
-                .frontendName("frontend_http_simple")
-                .mode("http")
-                .frontendPort(80)
-                .defaultBackendNameHttp(backend.getBackendName())
-                .build();
-        balancer.addFrontendUseCache(frontend);
-        return frontend;
     }
 
     @TmsLink("1286256")
@@ -177,18 +119,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] HTTP публикация с проверкой доступности по http ссылке {0}")
     void http(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder()
-                    .servers(serversHttp)
-                    .mode("http")
-                    .backendName("backend_http_width_check")
-                    .build();
-            balancer.addBackendUseCache(backend);
-            balancer.addFrontendUseCache(Frontend.builder()
-                    .frontendName("frontend_http_width_check")
-                    .mode("http")
-                    .frontendPort(80)
-                    .defaultBackendNameHttp(backend.getBackendName())
-                    .build());
+            createSimpleHttpBackend(balancer);
         }
     }
 
@@ -198,11 +129,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Глобальная TCP публикация {0}")
     void addTcpGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = addTcpSimple(balancer);
-            balancer.addGslbUseCache(Gslb.builder()
-                    .globalname(randomPrefix + "glb-tcp-public-" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend.getFrontendName())
-                    .build());
+            createSimpleTcpGslb(balancer);
         }
     }
 
@@ -212,11 +139,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Глобальная HTTP публикация {0}")
     void addHttpGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = addHttpSimple(balancer);
-            balancer.addGslbUseCache(Gslb.builder()
-                    .globalname(randomPrefix + "glb-http-public-" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend.getFrontendName())
-                    .build());
+            createSimpleHttpGslb(balancer);
         }
     }
 
@@ -226,13 +149,9 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Удаление бэкенда {0}")
     void deleteBackend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder()
-                    .servers(serversTcp)
-                    .backendName("backend_for_remove")
-                    .cookieStatus(false)
-                    .build();
+            Backend backend = Backend.simpleTcpBackendWidthTcpCheck().backendName("delete_backend").build();
             balancer.addBackendUseCache(backend);
-            balancer.deleteBackend(backend);
+            balancer.deleteBackends(backend);
         }
     }
 
@@ -242,8 +161,8 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Удаление фронтенда {0}")
     void deleteFrontend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = addHttpSimple(balancer);
-            balancer.deleteFrontend(frontend);
+            Frontend frontend = createSimpleHttpFrontend(balancer);
+            balancer.deleteFrontends(frontend);
         }
     }
 
@@ -253,12 +172,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Удаление GSLB публикации {0}")
     void deleteGsbl(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = addTcpSimple(balancer);
-            Gslb gslb = Gslb.builder()
-                    .globalname(randomPrefix + "glb-tcp-public" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend.getFrontendName())
-                    .build();
-            balancer.addGslbUseCache(gslb);
+            Gslb gslb = createSimpleHttpGslb(balancer);
             balancer.deleteGslb(gslb);
         }
     }
@@ -279,11 +193,7 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Удаление всех GSLB публикаций в заказе {0}")
     void deleteAllGslb(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = addTcpSimple(balancer);
-            Gslb gslb = Gslb.builder()
-                    .globalname(randomPrefix + "glb-tcp-public-delete-all" + balancer.getEnv().toLowerCase())
-                    .frontend(frontend.getFrontendName())
-                    .build();
+            Gslb gslb = createSimpleTcpGslb(balancer);
             balancer.addGslbUseCache(gslb);
             balancer.deleteAllGslb();
         }
@@ -295,13 +205,9 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Откат конфигурации {0}")
     void revertConfig(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder()
-                    .servers(serversTcp)
-                    .backendName("revert_config")
-                    .checkUri("/status")
-                    .build();
+            Backend backend = Backend.simpleTcpBackendWidthTcpCheck().backendName("backend_revert_" + UNIQUE_POSTFIX).build();
+            balancer.addBackend(backend);
             balancer.revertConfig(backend);
-
         }
     }
 
@@ -311,10 +217,11 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Изменение фронтенда {0}")
     void editFrontend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Frontend frontend = addHttpSimple(balancer);
-            frontend.setDefaultBackendName(frontend.getDefaultBackendNameHttp());
-            frontend.setDefaultBackendNameHttp(null);
-            balancer.editFrontEnd(frontend, false, frontend.getDefaultBackendNameHttp(), 999);
+            Frontend frontend = createSimpleTcpFrontend(balancer);
+            frontend.setKeepAliveTcp(true);
+            frontend.setKeepCntTcp(3);
+            frontend.setKeepTimerTcp(3);
+            balancer.editFrontEnd(frontend);
         }
     }
 
@@ -323,39 +230,22 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Изменение бэкенда {0}")
     void editBackend(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder()
-                    .servers(serversTcp)
-                    .backendName("backend_for_edit9")
-                    .cookieStatus(false)
-                    .build();
+            Backend backend = createSimpleTcpBackend(balancer);
             balancer.addBackendUseCache(backend);
-            balancer.editBackend(backend.getBackendName(), "delete", serversTcp);
+            backend.setBalancingAlgorithm("source");
+            balancer.editBackend(backend);
         }
     }
 
     @TmsLink("SOUL-8013")
     @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Создание проверки доступности. httpchk {0}")
+    @ParameterizedTest(name = "[{1}] Изменение проверки доступности. {0}")
     void createHeathCheck(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder()
-                    .servers(serversTcp)
-                    .backendName("backend_for_heath")
-                    .build();
-            balancer.addBackendUseCache(backend);
-            HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
-                    .protocol("httpchk")
-                    .checkStrings(Collections.singletonList(CheckString.builder()
-                            .stringType("connect")
-                            .stringAddress("10.0.0.1")
-                            .stringPort(10)
-                            .stringUseSsl("disabled")
-                            .stringSendProxy("disabled")
-                            .build()))
-                    .checkMethod("GET")
-                    .checkUri("/")
-                    .build();
-            balancer.createHealthCheck(healthCheck);
+            Backend backend = createSimpleTcpBackend(balancer);
+            String healthCheckName = balancer.healthCheckByBackendName(backend.getBackendName());
+            HealthCheck healthCheck = HealthCheck.simpleHttpHealthCheck(healthCheckName, backend.getBackendName()).build();
+            balancer.editHealthCheck(healthCheck);
         }
     }
 
@@ -464,12 +354,12 @@ public class LoadBalancerTest extends Tests {
     @ParameterizedTest(name = "[{1}] Комплексное создание {0}")
     void complexCreate(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            Backend backend = Backend.builder().servers(serversTcp).backendName("complex_backend3").build();
+            Backend backend = Backend.builder().backendName("complex_backend3").build();
             Frontend frontend = Frontend.builder().frontendName("complex_frontend3").frontendPort(80)
                     .defaultBackendNameTcp(backend.getBackendName()).build();
             HealthCheck healthCheck = HealthCheck.builder().backendName(backend.getBackendName())
                     .checkStrings(Collections.singletonList(CheckString.builder()
-                            .stringType("connect").stringAddress("10.0.0.1").stringPort(10).stringUseSsl("disabled")
+                            .stringAddress("10.0.0.1").stringPort(10).stringUseSsl("disabled")
                             .stringSendProxy("disabled").build())).build();
             RouteSni routeSni = RouteSni.builder()
                     .routes(Collections.singletonList(new RouteSni.Route(backend.getBackendName(), "complex_sni"))).build();

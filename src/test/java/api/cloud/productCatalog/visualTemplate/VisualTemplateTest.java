@@ -1,11 +1,11 @@
 package api.cloud.productCatalog.visualTemplate;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.apache.commons.lang.RandomStringUtils;
 import org.json.JSONObject;
@@ -63,10 +63,8 @@ public class VisualTemplateTest extends Tests {
     @TmsLink("742485")
     @Test
     public void deleteIsActiveTemplate() {
-        String errorText = "Deletion not allowed (is_active=True)";
-        String name = "delete_with_active_true_item_visual_template_test_api";
         ItemVisualTemplate visualTemplates = ItemVisualTemplate.builder()
-                .name(name)
+                .name("delete_with_active_true_item_visual_template_test_api")
                 .eventProvider(Collections.singletonList("gitlab"))
                 .eventType(Collections.singletonList("vm"))
                 .compactTemplate(compactTemplate)
@@ -74,10 +72,9 @@ public class VisualTemplateTest extends Tests {
                 .isActive(true)
                 .build()
                 .createObject();
-        String errorMessage = deleteVisualTemplateById(visualTemplates.getId())
-                .assertStatus(403).extractAs(ErrorMessage.class).getMessage();
+        AssertResponse.run(() -> deleteVisualTemplateById(visualTemplates.getId())).status(403)
+                .responseContains("Deletion not allowed (is_active=True)");
         partialUpdateVisualTemplate(visualTemplates.getId(), new JSONObject().put("is_active", false));
-        assertEquals(errorText, errorMessage);
     }
 
     @DisplayName("Проверка существования шаблона визуализации по имени")
@@ -292,7 +289,7 @@ public class VisualTemplateTest extends Tests {
                 .defaultItem(defaultItem)
                 .isActive(false)
                 .build()
-                .init().toJson();
+                .toJson();
         partialUpdateVisualTemplate(visualTemplates.getId(), json);
         ItemVisualTemplate getResponse = getVisualTemplateById(visualTemplates.getId());
         assertEquals(defaultItem, getResponse.getDefaultItem());

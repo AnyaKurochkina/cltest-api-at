@@ -7,7 +7,6 @@ import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.action.Action;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +17,6 @@ import static steps.productCatalog.GraphSteps.createGraph;
 
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
 public class ActionPrivateTest extends ActionBaseTest {
 
     @DisplayName("Создание/Получение/Удаление действия в продуктовом каталоге c сервисным токеном")

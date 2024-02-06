@@ -146,7 +146,7 @@ public class OrgDirectionSteps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(orgDirUrl + objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Сортировка направлений по дате создания")

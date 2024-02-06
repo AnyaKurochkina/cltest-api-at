@@ -5,19 +5,15 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.action.Action;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.ActionSteps.partialUpdateAction;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
 public class ActionIsDelayableTest extends ActionBaseTest {
 
     @DisplayName("Проверка дефолтного значения поля is_delayable")

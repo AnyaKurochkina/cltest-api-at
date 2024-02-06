@@ -3,13 +3,12 @@ package models.cloud.tagService;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import core.enums.Role;
-import core.helper.Configure;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import lombok.*;
 import models.Entity;
-import models.cloud.tagService.v1.FilterResultV1Item;
 import models.cloud.tagService.v1.FilterResultV1;
+import models.cloud.tagService.v1.FilterResultV1Item;
 import models.cloud.tagService.v2.FilterResultV2;
 import models.cloud.tagService.v2.FilterResultV2Page;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
@@ -20,7 +19,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
-import static api.routes.TagServiceAPI.*;
+import static tests.routes.TagServiceAPI.*;
 
 @Builder @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)

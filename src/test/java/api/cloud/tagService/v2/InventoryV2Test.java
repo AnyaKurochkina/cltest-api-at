@@ -1,9 +1,7 @@
 package api.cloud.tagService.v2;
 
 import api.cloud.tagService.AbstractTagServiceTest;
-import core.enums.Role;
 import core.helper.http.AssertResponse;
-import core.helper.http.Http;
 import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -23,7 +21,6 @@ import steps.authorizer.AuthorizerSteps;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static api.routes.TagServiceAPI.v2InventoriesCreate;
 import static models.cloud.tagService.TagServiceSteps.inventoryTagsV1;
 
 @Epic("Сервис тегов")

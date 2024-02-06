@@ -124,15 +124,15 @@ public class TemplateImportTest extends Tests {
     @Test
     public void checkCurrentVersionWhenAlreadyExistTemplateImportTest() {
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/templates/checkCurrentVersion.json";
-        Template template = Template.builder()
+        Template templateModel = Template.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
                 .version("1.0.1")
-                .build()
-                .createObject();
+                .build();
+        Template template = createTemplate(templateModel.toJson()).extractAs(Template.class);
         DataFileHelper.write(filePath, exportTemplateById(template.getId()).toString());
-        template.deleteObject();
+        deleteTemplateById(template.getId());
         Template createdTemplate = Template.builder()
-                .name(template.getName())
+                .name(templateModel.getName())
                 .version("1.0.0")
                 .build()
                 .createObject();

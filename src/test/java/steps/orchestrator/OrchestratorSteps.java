@@ -24,4 +24,11 @@ public class OrchestratorSteps extends Steps {
                 .body(pythonTemplate)
                 .post("/python_format");
     }
+
+    public static Response checkJinja2Template(JSONObject jinjaTemplate) {
+        return new Http(orchestratorURL)
+                .setRole(Role.CLOUD_ADMIN)
+                .body(jinjaTemplate)
+                .post("/jinja2_format");
+    }
 }

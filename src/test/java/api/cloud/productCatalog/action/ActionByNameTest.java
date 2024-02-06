@@ -67,21 +67,19 @@ public class ActionByNameTest extends ActionBaseTest {
         createAction(actionName);
         Action cloneAction = copyActionByName(actionName);
         String cloneName = cloneAction.getName();
+        assertEquals(actionName + "-clone", cloneName);
         assertTrue(isActionExists(cloneName), "Действие не существует");
-        deleteActionByName(cloneName);
-        assertFalse(isActionExists(cloneName), "Действие существует");
     }
 
     @DisplayName("Проверка tag_list при копировании действия v2")
     @TmsLink("SOUL-7001")
     @Test
     public void copyActionAndCheckTagListV2Test() {
-        String actionName = "clone_action_v2_test_api";
+        String actionName = "clone_action_v2_with_tags_test_api";
         Action actionModel = createActionModel(actionName);
         actionModel.setTagList(Arrays.asList("api_test", "test"));
         Action action = createAction(actionModel);
         Action cloneAction = copyActionByName(actionName);
-        deleteActionById(cloneAction.getId());
         assertEquals(action.getTagList(), cloneAction.getTagList());
     }
 

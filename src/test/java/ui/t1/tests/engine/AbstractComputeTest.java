@@ -38,9 +38,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
-import static api.routes.OrderServiceApi.deleteV1ProjectsProjectNameOrdersId;
-import static api.routes.OrderServiceApi.getV1ProjectsProjectNameOrdersId;
-import static api.routes.VpcApi.deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete;
+import static tests.routes.OrderServiceApi.deleteV1ProjectsProjectNameOrdersId;
+import static tests.routes.OrderServiceApi.getV1ProjectsProjectNameOrdersId;
+import static tests.routes.VpcApi.deleteNetworkApiV1ProjectsProjectNameNetworksNetworkIdDelete;
 import static ui.t1.pages.cloudEngine.compute.SshKeyList.SSH_USER;
 
 @Log4j2

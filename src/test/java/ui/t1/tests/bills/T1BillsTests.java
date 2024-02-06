@@ -37,85 +37,81 @@ public class T1BillsTests extends AbstractT1Test {
     // DateTimeFormatter с учетом русского языка и шаблона 03-мар-2023
     private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
-    private final DatePeriod expectedNovemberPeriod = new DatePeriod(LocalDate.of(2023, Month.NOVEMBER, 1), LocalDate.of(2023, Month.NOVEMBER, 30));
-    private final Organization organization = Organization.builder().type("default").build().createObject();
+    private final DatePeriod expectedOctoberPeriod = new DatePeriod(LocalDate.of(2023, Month.OCTOBER, 1), LocalDate.of(2023, Month.OCTOBER, 31));
+    private final Organization organization = Organization.builder().type("not_default").build().createObject();
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3390")
     @DisplayName("Счета. Скачать счет. Организация")
     void downloadBillExcelForOneMonthAndCertainOrganizationTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
                 .chooseOrganization(organization.getTitle())
                 .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
                 .clickExport();
 
-        checkOrganizationInExcelFile(organization.getTitle(), expectedFileNameWithNovemberPeriod);
+        checkOrganizationInExcelFile(organization.getTitle());
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3391")
     @DisplayName("Счета. Скачать данные за месяц")
     void downloadBillExcelForOneMonthTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
-                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .chooseMontWithYear(RuMonth.OCTOBER, "2023")
                 .clickExport();
 
-        checkPeriodInExcelFile(expectedNovemberPeriod.makePeriodString(), expectedFileNameWithNovemberPeriod);
+        checkPeriodInExcelFile(expectedOctoberPeriod.makePeriodString());
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3392")
     @DisplayName("Счета. Скачать данные за квартал")
     void downloadBillExcelForQuarterTest() {
         String expectedPeriod = new DatePeriod(Quarter2023.FIRST_QUARTER)
                 .makePeriodString();
-        String expectedFileNameWithFirstQuarterPeriod = prepareFileName(Quarter2023.FIRST_QUARTER, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToQuarterPeriod()
                 .chooseQuarter(Quarter2023.FIRST_QUARTER)
                 .clickExport();
 
-        checkPeriodInExcelFile(expectedPeriod, expectedFileNameWithFirstQuarterPeriod);
+        checkPeriodInExcelFile(expectedPeriod);
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-3393")
     @DisplayName("Счета. Скачать данные. Интервал")
     void downloadBillExcelCustomPeriodTest() {
-        String expectedFileNameWithCustomPeriod = prepareFileName(expectedCustomPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToCustomPeriod()
                 .setPeriod(expectedCustomPeriod)
                 .clickExport();
 
-        checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString(), expectedFileNameWithCustomPeriod);
+        checkPeriodInExcelFile(expectedCustomPeriod.makePeriodString());
     }
 
-    @EnabledIfEnv("t1ift")
+    @EnabledIfEnv({"t1ift", "t1prod"})
     @Test
     @TmsLink("SOUL-7270")
     @DisplayName("Счета. Скачать счет. Выгрузка нулевых значений")
     void downloadBillExcelForOneMonthWithCheckboxTest() {
-        String expectedFileNameWithNovemberPeriod = prepareFileName(expectedNovemberPeriod, organization.getName());
         new IndexPage().goToBillsPage()
                 .goToMonthPeriod()
-                .chooseMontWithYear(RuMonth.NOVEMBER, "2023")
+                .chooseMontWithYear(RuMonth.DECEMBER, "2023")
                 .clickExportZeroPriceValuesCheckBox()
                 .clickExport();
 
-        checkExcelFileContainsBillWithZeroSumValue(expectedFileNameWithNovemberPeriod);
+        checkExcelFileContainsBillWithZeroSumValue();
     }
 
     @Step("[Проверка] Период счета в файле excel соответсвует периоду выбранному при выгрузке отчета")
-    private void checkPeriodInExcelFile(String expectedPeriod, String fileName) {
+    private void checkPeriodInExcelFile(String expectedPeriod) {
+        String fileName = DownloadingFilesUtil.getLastDownloadedFilename();
         DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
         BillExcelItem randomBill = getBillExcel(fileName).getRows()
                 .stream()
@@ -129,17 +125,19 @@ public class T1BillsTests extends AbstractT1Test {
     }
 
     @Step("[Проверка] При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel присутствовуют счета с нулевыми значениями стоимости")
-    private void checkExcelFileContainsBillWithZeroSumValue(String fileName) {
-        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
-        getBillExcel(fileName).getRows().stream()
+    private void checkExcelFileContainsBillWithZeroSumValue() {
+        String expectedFileName = DownloadingFilesUtil.getLastDownloadedFilename();
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(expectedFileName);
+        getBillExcel(expectedFileName).getRows().stream()
                 .filter(bill -> bill.getSumWithoutTax().equals("0.0"))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError("При выбранном чекбоксе 'Выгружать нулевые значения стоимости', в файле excel должны присутствовать счета с нулевыми значениями стоимости"));
     }
 
     @Step("[Проверка] Организация в excel файле соответствует выбранной: {0}")
-    private void checkOrganizationInExcelFile(String organizationName, String fileName) {
-        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName);
+    private void checkOrganizationInExcelFile(String organizationName) {
+        String fileName = DownloadingFilesUtil.getLastDownloadedFilename();
+        DownloadingFilesUtil.checkFileExistsInDownloadsDirectory(fileName, 30);
         String organization = getBillExcel(fileName).getOrganization();
 
         Assertions.assertEquals(organizationName, organization,
@@ -153,27 +151,9 @@ public class T1BillsTests extends AbstractT1Test {
     }
 
     @Step("Получение excel документа 'Счета'")
-    private static BillExcel getBillExcel(String expectedFileName) {
-        return new BillExcelReader(new File(DOWNLOADS_DIRECTORY_PATH + expectedFileName))
+    private static BillExcel getBillExcel(String expectedFileNameName) {
+        return new BillExcelReader(new File(DOWNLOADS_DIRECTORY_PATH + expectedFileNameName))
                 .readWithOrganization();
-    }
-
-    /**
-     * Имя файла необходимо параметризировать чтобы получился формат: "user_bills_from_2023-03-01_till_2023-04-01_for_ift.xlsx"
-     * где:
-     * 1) %s - Начало периода
-     * 2) %s - Окончание периода
-     * 3) %s - Название организации
-     */
-    @Step("[Предусловие] Подготовка имени файла в формате: user_bills_from_2023-03-01_till_2023-04-01_for_ift")
-    private static String prepareFileName(DatePeriod datePeriod, String organizationName) {
-        return String.format("user_bills_from_%s_till_%s_for_%s.xlsx", datePeriod.getStartDate(), datePeriod.getEndDate(), organizationName);
-    }
-
-    @Step("[Предусловие] Подготовка имени файла в формате: user_bills_from_2023-03-01_till_2023-04-01_for_ift")
-    private static String prepareFileName(Quarter2023 quarter2023, String organizationName) {
-        return String.format("user_bills_from_%s_till_%s_for_%s.xlsx", quarter2023.getDateValue().getStartDate(),
-                quarter2023.getDateValue().getEndDate(), organizationName);
     }
 
     public static LocalDate convertIntoLocalDate(String stringDate) {

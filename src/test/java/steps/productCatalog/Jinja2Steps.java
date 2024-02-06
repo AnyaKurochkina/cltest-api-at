@@ -16,6 +16,9 @@ import java.io.File;
 import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.Jinja2ProductCatalogApi.apiV1Jinja2TemplatesCreate;
+import static tests.routes.Jinja2ProductCatalogApi.apiV1Jinja2TemplatesDelete;
 
 public class Jinja2Steps extends Steps {
     private static final String jinjaUrl = "/api/v1/jinja2_templates/";
@@ -76,10 +79,8 @@ public class Jinja2Steps extends Steps {
 
     @Step("Удаление jinja2 по id {id}")
     public static void deleteJinjaById(String id) {
-        new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(jinjaUrl + id + "/")
-                .assertStatus(204);
+        getProductCatalogAdmin()
+                .api(apiV1Jinja2TemplatesDelete, id);
     }
 
     @Step("Создание шаблона Jinja2")
@@ -92,11 +93,9 @@ public class Jinja2Steps extends Steps {
 
     @Step("Создание шаблона Jinja2")
     public static Jinja2Template createJinja(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .post(jinjaUrl)
-                .assertStatus(201)
+                .api(apiV1Jinja2TemplatesCreate)
                 .extractAs(Jinja2Template.class);
     }
 
@@ -203,7 +202,7 @@ public class Jinja2Steps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(jinjaUrl + objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Копирование jinja2 по Id без ключа")

@@ -16,6 +16,8 @@ import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.TemplateProductCatalogApi.apiV1TemplatesCreate;
 
 public class TemplateSteps extends Steps {
 
@@ -24,10 +26,9 @@ public class TemplateSteps extends Steps {
 
     @Step("Создание шаблона")
     public static Response createTemplate(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .post(templateUrl);
+                .api(apiV1TemplatesCreate);
     }
 
     @Step("Копирование направления по Id")
@@ -35,7 +36,7 @@ public class TemplateSteps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(templateUrl + objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Создание шаблона по имени {name}")
@@ -149,7 +150,7 @@ public class TemplateSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(templateUrl + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов шаблонов")
@@ -159,7 +160,7 @@ public class TemplateSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(templateUrl + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 
     @Step("Частичное обновление шаблона")

@@ -8,6 +8,7 @@ import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.Project;
 import models.cloud.stateService.Item;
 import models.cloud.stateService.extRelations.ExtRelation;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
@@ -15,6 +16,7 @@ import org.junit.jupiter.api.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.stateService.ExtRelationsStep.createExtRelation;
@@ -163,12 +165,15 @@ public class ItemTest extends Tests {
                 .assertStatus(200);
     }
 
-    @DisplayName("Отправка на тарификацию все айтемы ордера")
-    @TmsLink("SOUL-")
+    @DisplayName("Отправка на тарификацию все айтемы неверного ордера")
+    @TmsLink("SOUL-9061")
     @Test
-    public void orderItemsPublicatiodnTest() {
-        //todo завел задачу, доделать тест, когда реализуют валидацию на не валдиный ордер ид
-        uncheckedOrderItemsPublication(project.getId(), "sdfsdf")
-                .assertStatus(401);
+    public void orderItemsPublicationWithWrongOrderIdTest() {
+        String orderId = RandomStringUtils.randomAlphabetic(5).toLowerCase();
+        String errorMessage = uncheckedOrderItemsPublication(project.getId(), orderId)
+                .assertStatus(400)
+                .jsonPath()
+                .getString("error");
+        assertEquals(format("order_id={} is wrong UUID", orderId), errorMessage, "Сообщение об ошибке не соответствует ожидаемому формату");
     }
 }

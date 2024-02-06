@@ -58,7 +58,7 @@ public class AllowedActionExportTest extends Tests {
     }
 
     @DisplayName("Проверка поля ExportedObjects при экспорте разрешенного действия")
-    @TmsLink("SOUL-")
+    @TmsLink("SOUL-7079")
     @Test
     public void checkExportedObjectsFieldAllowedAction() {
         AllowedAction allowedAction = createAllowedAction("allowed_action_exported_objects_test_api");

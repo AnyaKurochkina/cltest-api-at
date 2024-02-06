@@ -1,4 +1,4 @@
-package api.routes;
+package tests.routes;
 
 import core.helper.http.Path;
 
@@ -96,7 +96,7 @@ public class ProductProductCatalogApi extends ProductCatalogApi {
     public static Path apiV1ProductsOrderRestrictionsRead;
 
     //Products Order restrictions Create
-    @Route(method = Method.POST, path = "/api/v1/products/{id}/order_restrictions/", status = 201)
+    @Route(method = Method.POST, path = "/api/v1/products/{id}/order_restrictions/", status = 200)
     public static Path apiV1ProductsOrderRestrictionsCreate;
 
     //Products Order restrictions Partial update

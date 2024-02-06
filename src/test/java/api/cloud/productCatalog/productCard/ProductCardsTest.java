@@ -252,7 +252,7 @@ public class ProductCardsTest {
                     .build();
 
             ProductCard productCard = ProductCard.builder()
-                    .name("apply_product_card_test_api")
+                    .name("apply_product_card3_test_api")
                     .title("apply_product_card_title_test_api")
                     .description("test_api")
                     .cardItems(Collections.singletonList(actionCard))
@@ -307,7 +307,7 @@ public class ProductCardsTest {
             cardItemsList.add(productCardItem2);
 
             JSONObject json = ProductCard.builder()
-                    .name("apply_product_card_test_api")
+                    .name("apply_product_card2_test_api")
                     .title("apply_product_card_title_test_api")
                     .description("test_api")
                     .cardItems(cardItemsList)
@@ -460,7 +460,7 @@ public class ProductCardsTest {
     public void addToProductCardNotVersionedObjectTest() {
         ItemVisualTemplate visualTemplate = createVisualTemplate(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
         CardItems cardItem = createCardItem("ItemVisualisationTemplate", visualTemplate.getId());
-        ProductCard productCard = createProductCard("is_object_exist_false_test_api", cardItem);
+        ProductCard productCard = createProductCard("is_object2_exist_false_test_api", cardItem);
         CardItems getCardItems = getProductCard(productCard.getId()).getCardItems().get(0);
         assertTrue(getCardItems.getIsObjVersionExists(), "Поле is_obj_version_exist у неверсионных объектов должно быть всегда true");
         assertTrue(getCardItems.getIsObjEqual(), "Объект должен существовать и совпадать");

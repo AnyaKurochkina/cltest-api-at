@@ -5,9 +5,7 @@ import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.action.Action;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -20,10 +18,8 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.*;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
 public class ActionMassChangeTest extends ActionBaseTest {
 
     @DisplayName("Массовое изменение параметра is_for_items у действий")

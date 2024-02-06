@@ -1,6 +1,5 @@
 package steps.productCatalog;
 
-import api.routes.ActionProductCatalogApi;
 import core.enums.Role;
 import core.helper.StringUtils;
 import core.helper.http.Attachment;
@@ -17,14 +16,15 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.action.GetActionList;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import tests.routes.ActionProductCatalogApi;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.util.List;
 
-import static api.routes.ActionProductCatalogApi.*;
 import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static tests.routes.ActionProductCatalogApi.*;
 
 public class ActionSteps extends ProductCatalogSteps {
 
@@ -200,9 +200,9 @@ public class ActionSteps extends ProductCatalogSteps {
     @Step("Копирование действия по имени {name}")
     public static Action copyActionByName(String name) {
         return getProductCatalogAdmin()
-                .post(ACTION_URL_V_2 + name + "/copy/")
-                .assertStatus(200)
-                .extractAs(ACTION);
+                .api(apiV2ActionsCopy, name)
+                .extractAs(ACTION)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Частичное обновление действия")

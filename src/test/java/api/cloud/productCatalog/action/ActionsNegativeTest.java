@@ -16,10 +16,10 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.stream.Stream;
 
-import static api.routes.ActionProductCatalogApi.*;
 import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.*;
+import static tests.routes.ActionProductCatalogApi.*;
 
 @Epic("Продуктовый каталог")
 @Feature("Действия")
