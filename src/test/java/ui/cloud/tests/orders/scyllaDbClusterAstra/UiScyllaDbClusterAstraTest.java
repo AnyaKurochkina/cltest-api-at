@@ -217,6 +217,15 @@ public class UiScyllaDbClusterAstraTest extends UiProductTest {
     }
 
     @Test
+    @TmsLink("")
+    @Order(27)
+    @DisplayName("UI Scylla_db_cluster_astra. Обновить ОС")
+    void updateOs() {
+        ScyllaDbClusterPage scyllaPage = new ScyllaDbClusterPage(product);
+        scyllaPage.runActionWithCheckCost(CompareType.EQUALS, scyllaPage::updateOs);
+    }
+
+    @Test
     @Order(100)
     @TmsLink("1335480")
     @DisplayName("UI Scylla_db_cluster_astra. Удаление продукта")

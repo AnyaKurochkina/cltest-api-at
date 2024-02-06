@@ -10,6 +10,7 @@ import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
+import java.time.Duration;
 import java.util.List;
 
 import static api.Tests.activeCnd;
@@ -162,7 +163,7 @@ public class RedisAstraPage extends AbstractAstraPage {
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
-        });
+        }, ActionParameters.builder().timeout(Duration.ofHours(2)).build());
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();

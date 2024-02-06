@@ -8,10 +8,7 @@ import models.cloud.subModels.Flavor;
 import org.junit.jupiter.api.Assertions;
 import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.Dialog;
-import ui.elements.DropDown;
-import ui.elements.Select;
-import ui.elements.Table;
+import ui.elements.*;
 
 import java.util.List;
 
@@ -159,7 +156,10 @@ public class PodmanAstraPage extends AbstractAstraPage {
                 value));
     }
     public void updateOs() {
-        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
+        runActionWithParameters(BLOCK_APP, "Обновить ОС", "Подтвердить", () -> {
+            CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю, что понимаю что делаю.").setChecked(true);
+        });
+
     }
 
     @Override

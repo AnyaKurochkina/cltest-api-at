@@ -140,7 +140,6 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.createVirtualHosts(nameHost));
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, () -> rabbitMqClusterAstraPage.checkUniquenessСreateVirtualHosts(nameHost));
-        rabbitMqClusterAstraPage.getBtnGeneralInfo().click();
         rabbitMqClusterAstraPage.checkHeadersHistory();
         rabbitMqClusterAstraPage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
         new Graph().notContainsStatus(Graph.ERROR);
@@ -257,6 +256,16 @@ public class UiRabbitMqClusterAstraTest extends UiProductTest {
         RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
         rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::updateOs);
     }
+
+    @Test
+    @Order(21)
+    @TmsLink("")
+    @DisplayName("UI RabbitMqClusterAstra. Перенос кворумной ноды в OpenStack")
+    void transferNode() {
+        RabbitMqClusterAstraPage rabbitMqClusterAstraPage = new RabbitMqClusterAstraPage(product);
+        rabbitMqClusterAstraPage.runActionWithCheckCost(CompareType.EQUALS, rabbitMqClusterAstraPage::transferNode);
+    }
+
 
     @Test
     @Order(100)

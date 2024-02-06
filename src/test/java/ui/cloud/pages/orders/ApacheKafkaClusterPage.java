@@ -103,7 +103,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         runActionWithParameters(BLOCK_CLUSTER, "Вертикальное масштабирование", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю свое действие").setChecked(true);
             DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)); //,ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build()
-        });
+        }, ActionParameters.builder().timeout(Duration.ofMinutes(25)).build());
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();

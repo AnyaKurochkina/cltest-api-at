@@ -39,15 +39,19 @@ public class ArtemisPage extends IProductPage {
     private final SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
     private final SelenideElement reissueCertificate = Selenide.$x("//div[text()='Будет перевыпущен кластерный сертификат ВТБ-Артемис']");
     private final SelenideElement checkText = Selenide.$x("//span[text()='Обновление происходит без недоступности ВТБ-Артемис.']");
-    private final SelenideElement checkUpdateVersion = Selenide.$x("//div[text()='Будет произведено обновление версии инсталяции ВТБ-Артемис.']");
+    private final SelenideElement updateInformationCluster = Selenide.$x("//span[text()='Будет произведена синхронизация данных кластера ВТБ-Артемис, операция производится без недоступности.']");
+    private final SelenideElement sendMassage = Selenide.$x("//span[text()='Будет произведен экспорт конфигурации и отправка на e-mail запустившего действие.']");
+    private final SelenideElement resetCluster = Selenide.$x("//span[text()='Будет произведена перезагрузка ВМ в составе кластера ВТБ-Артемис, операция производится с недоступностью.']");
+    private final SelenideElement onOfProtokol = Selenide.$x("//span[text()='Будет произведено переключение протоколов кластера. В процессе переключения протоколов будет выполнен перезапуск служб.']");
     private final SelenideElement checkTextUpdate = Selenide.$x("//span[text()='Обновление происходит с недоступностью ВТБ-Артемис.']");
     private final Button addButton = Button.byXpath("//button[contains(@class, 'array-item-add')]");
     private final String nameClient = "Имя клиента";
     private final String ownerCertificate = "subject(owner) сертификата клиента";
+    private final String ownerCertificateService = "subject(owner) сертификата сервиса";
     private final String minExpiryDelay = "min_expiry_delay";
     private final String maxExpiryDelay = "max_expiry_delay";
     private final Select addressFullPolicySelect = Select.byLabel("address full policy");
-    private final Select maxSizeMbtesSelect = Select.byLabel("max size Mbytes");
+    private final Select maxSizeMbtesSelect = Select.byLabel("max size Mbytes ");
     private final Select slowConsumerPolicySelect = Select.byLabel("slow_consumer_policy");
     private final String slowConsumerThreshold = "slow_consumer_threshold";
     private final Select typeQueueSelect = Select.byLabel("тип очереди");
@@ -120,7 +124,10 @@ public class ArtemisPage extends IProductPage {
     @Step("Обновление информации о кластере")
     public void updateInfCluster() {
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_CLUSTER, "Обновление информации о кластере");
+        runActionWithParameters(BLOCK_CLUSTER, "Обновление информации о кластере", "Подтвердить", () -> {
+            updateInformationCluster.shouldBe(Condition.visible);
+            CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+        });
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
@@ -137,14 +144,20 @@ public class ArtemisPage extends IProductPage {
     @Step("Отправить конфигурацию кластера на email")
     public void sendConfiguration() {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_CLUSTER, "Отправить конфигурацию кластера на email");
+        runActionWithParameters(BLOCK_CLUSTER, "Отправить конфигурацию кластера на email", "Подтвердить", () -> {
+            sendMassage.shouldBe(Condition.visible);
+            CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+        });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
     @Step("Перезапуск кластера")
     public void resetCluster() {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithoutParameters(BLOCK_CLUSTER, "Перезапуск кластера");
+        runActionWithParameters(BLOCK_CLUSTER, "Перезапуск кластера", "Подтвердить", () -> {
+            resetCluster.shouldBe(Condition.visible);
+            CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+        });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
@@ -162,11 +175,14 @@ public class ArtemisPage extends IProductPage {
         }, ActionParameters.builder().timeout(Duration.ofHours(2)).build());
     }
 
-    @Step("Включение отключение протоколов")
+    @Step("Включение\\отключение протоколов")
     public void onOffProtokol() {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(BLOCK_CLUSTER, "Включение\\отключение протоколов", "Подтвердить", () -> {
+        // Необходимо 4 слеша  так ка метод stringutils.format не видит обратный слеш
+        runActionWithParameters(BLOCK_CLUSTER, "Включение\\\\отключение протоколов", "Подтвердить", () -> {
             CheckBox.byLabel("AMQP").setChecked(true);
+            onOfProtokol.shouldBe(Condition.visible);
+            //CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
     }
 
@@ -177,7 +193,7 @@ public class ArtemisPage extends IProductPage {
         runActionWithParameters(BLOCK_SERVICE, "Создание сервиса", "Подтвердить", () -> {
             Dialog dlgActions = Dialog.byTitle("Создание сервиса");
             dlgActions.setInputValue("Имя сервиса", nameService);
-            dlgActions.setInputValue(ownerCertificate, nameCertService);
+            dlgActions.setInputValue(ownerCertificateService, nameCertService);
             dlgActions.setInputValue(minExpiryDelay, "10001");
             dlgActions.setInputValue(maxExpiryDelay, "60001");
             addressFullPolicySelect.set("FAIL");
@@ -306,8 +322,8 @@ public class ArtemisPage extends IProductPage {
     public void emergencyUpdateCertificate() {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Аварийное обновление сертификатов", "Подтвердить", () -> {
-            checkUpdateVersion.shouldBe(Condition.visible);
             checkTextUpdate.shouldBe(Condition.visible);
+            //CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }

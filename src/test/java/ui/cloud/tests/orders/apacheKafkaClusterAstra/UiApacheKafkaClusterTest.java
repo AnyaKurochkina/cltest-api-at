@@ -140,7 +140,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
     }
 
     @Test
-    @Order(9)
+    @Order(99)
     @TmsLink("1091895")
     @DisplayName("UI ApacheKafkaCluster. Обновление ядра Kafka до версии 2.8.2")
     void updateKernelVtb() {

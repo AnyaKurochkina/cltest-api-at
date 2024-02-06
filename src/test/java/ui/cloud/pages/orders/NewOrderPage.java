@@ -28,9 +28,11 @@ public class NewOrderPage {
     private final SelenideElement linuxOS = $x("//div[contains(text(),'ОС linux')]");
     protected Input countInput = Input.byLabel("Количество");
     protected Input labelInput = Input.byLabel("Метка");
+    protected Input nameVm = Input.byLabel("Имя ВМ");
     protected Select segmentSelect = Select.byLabel("Сетевой сегмент");
     protected Select platformSelect = Select.byLabel("Платформа");
     protected Select osVersionSelect = Select.byLabel("Версия ОС");
+    protected Select versionKafka = Select.byLabel("Версия Apache Kafka");
     protected Select versionWildfly = Select.byLabel("Версия Wildfly");
     protected Select versionJava = Select.byLabel("Версия java");
     protected Select domain = Select.byLabel("Домен");
@@ -41,6 +43,7 @@ public class NewOrderPage {
     protected Select groupManagerSelect = Select.byLabel("Manager");
     protected Select groupAdministratorSelect = Select.byLabel("Administrator");
     protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
+
 
     //раскрывающийся список
     public static SelenideElement getCalculationDetails() {
