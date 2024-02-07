@@ -334,7 +334,7 @@ public class GraphSteps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post("/api/v1/projects/{}/graphs/{}", projectId, objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Получение графа по Id и контексту")

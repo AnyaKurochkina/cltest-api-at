@@ -54,7 +54,7 @@ public class CreateJinja2TemplateTest extends Jinja2TemplateBaseTest {
                 .checkNameValidation(new String[]{"Test_name", "test name", "тест", "test_name$"});
     }
 
-    @Step("Создание шаблона Jinja2")
+    @Step("Создание и тестирование шаблона Jinja2")
     private void createJinja2Template() {
         jinja2Template.setName(NAME + "_");
         new ControlPanelIndexPage().goToJinja2TemplatesListPage()
