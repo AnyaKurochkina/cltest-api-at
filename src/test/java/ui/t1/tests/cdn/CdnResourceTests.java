@@ -65,6 +65,7 @@ public class CdnResourceTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .goToResourcePage(name)
+                .switchToResourceGeneralTab(name)
                 .editResourceHostNames(domains)
                 .checkDomainsColumnHasNames(domains);
     }
@@ -78,6 +79,7 @@ public class CdnResourceTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .goToResourcePage(name)
+                .switchToResourceGeneralTab(name)
                 .fullResetCache();
         Alert.green("Кэш очищен");
     }
@@ -91,8 +93,25 @@ public class CdnResourceTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .goToResourcePage(name)
+                .switchToResourceGeneralTab(name)
                 .partialResetCache();
         Alert.green("Кэш очищен");
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("CDN. HTTP -заголовки и методы")
+    @TmsLinks(@TmsLink("SOUL-5386"))
+    public void httpsHeadersTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToHttpHeadersTab()
+                .checkTitles()
+                .clickEditButton()
+                .checkEditDialogIsAppear();
     }
 
     @Test
