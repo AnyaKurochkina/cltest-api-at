@@ -35,7 +35,12 @@ public class SnapshotTest extends AbstractComputeTest {
     @TmsLink("1249427")
     @DisplayName("Подключение диска из снимка на базе подключенного диска")
     void createSnapshotFromAttachDisk() {
-        VmCreate vm = new IndexPage().goToVirtualMachine().addVm().setAvailabilityZone(availabilityZone).setImage(image)
+        VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
+                .setRegion(region)
+                .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
+                .setImage(image)
                 .setName(getRandomName()).addSecurityGroups(securityGroup).setSshKey(sshKey).clickOrder();
 
         Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);

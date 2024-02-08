@@ -90,7 +90,8 @@ public class Vm extends IProductT1Page<Vm> {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
             if (disks.length > 0) {
                 CheckBox.byLabel("Выбрать диски для удаления").setChecked(true);
-                MultiSelect.byLabel("Удаление дисков").set(disks);
+                for (String disk : disks)
+                    Select.byLabel("Удаление дисков").set(disk);
             }
             if (deleteOnTerminationIp)
                 CheckBox.byLabel("Удалить публичные IP-адреса").setChecked(true);

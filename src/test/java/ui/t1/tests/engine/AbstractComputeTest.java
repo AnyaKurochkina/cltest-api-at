@@ -132,6 +132,11 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
             this.deleteOnTerminationSystemDisk = deleteOnTerminationSystemDisk;
         }
 
+        public InstanceEntity(String projectId, String id) {
+            super(projectId, id);
+            this.deleteOnTerminationSystemDisk = true;
+        }
+
         @Override
         public void delete() {
             List<String> diskList = new ArrayList<>();
@@ -184,6 +189,9 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
 
     @NoArgsConstructor
     public static class VolumeEntity extends ComputeEntity {
+        public VolumeEntity(String projectId, String id) {
+            super(projectId, id);
+        }
         @Override
         protected int getPriority() {
             return 2;

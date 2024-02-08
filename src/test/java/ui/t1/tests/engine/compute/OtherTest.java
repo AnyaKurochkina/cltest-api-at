@@ -129,7 +129,10 @@ public class OtherTest extends AbstractComputeTest {
     void createSnapshotFromDetachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setName(getRandomName())
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
