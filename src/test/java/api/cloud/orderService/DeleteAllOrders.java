@@ -100,9 +100,7 @@ public class DeleteAllOrders extends Tests {
                 addVpcEntitiesForRemove(entry.getKey(), projectId, entry.getValue());
             }
         }
-        Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
         AbstractEntity.deleteCurrentTestEntities();
-        Http.removeFixedRole();
     }
 
     @SneakyThrows

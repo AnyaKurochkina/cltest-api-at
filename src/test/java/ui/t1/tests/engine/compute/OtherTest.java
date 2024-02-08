@@ -84,7 +84,10 @@ public class OtherTest extends AbstractComputeTest {
         String orderIdIp = ipPage.getOrderId();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setName(getRandomName())
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
                 .setBootSize(2)
                 .addSecurityGroups(securityGroup)
