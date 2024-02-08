@@ -42,7 +42,7 @@ public class ProductCatalogApiTest extends Tests {
     }
 
     @DisplayName("Проверка item restriction")
-    @TmsLink("")
+    @TmsLink("SOUL-9055")
     @Test
     public void checkItemRestriction() {
         Project project = Project.builder().build().onlyGetObject();
@@ -53,5 +53,16 @@ public class ProductCatalogApiTest extends Tests {
         JSONObject json2 = new JSONObject().put("data_item", item.getData()).put("item_restriction", "state == 'off'");
         Response response2 = checkItemRestrictions(json2).assertStatus(200);
         assertFalse(response2.extractAs(Boolean.class));
+    }
+
+    @DisplayName("Проверка не существующего в item restriction параметра")
+    @TmsLink("SOUL-")
+    @Test
+    public void checkNotExistParamInItemRestriction() {
+        //todo завести задачу. доделать, когда реализуют функционал
+        Project project = Project.builder().build().onlyGetObject();
+        Item item = createItem(project);
+        JSONObject json = new JSONObject().put("data_item", item.getData()).put("item_restriction", "notexist == 'on'");
+        Response response = checkItemRestrictions(json).assertStatus(400);
     }
 }

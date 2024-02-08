@@ -18,6 +18,7 @@ import ui.models.Organization;
 import ui.t1.pages.ControlPanelIndexPage;
 import ui.t1.pages.T1LoginPage;
 
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -46,7 +47,7 @@ public class OrganizationActionsTest extends Tests {
         assertFalse(new ControlPanelIndexPage()
                 .goToOrganizationPage()
                 .deleteOrganization(organization)
-                .isOrgExist(organization.getName()));
+                .isOrgExist(organization.getName()), format("Организация с именем {} найдена в таблице", organization.getName()));
     }
 
     @Test
