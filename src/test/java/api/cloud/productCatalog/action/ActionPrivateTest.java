@@ -47,7 +47,7 @@ public class ActionPrivateTest extends ActionBaseTest {
         partialUpdatePrivateAction(action.getId(), new JSONObject().put("priority", 1));
         Action updatedAction = getActionById(action.getId());
         assertEquals("1.0.1", updatedAction.getVersion(), "Версии не совпадают");
-        assertEquals(1, updatedAction.getPriority());
+        assertEquals(1, updatedAction.getPrioritise());
     }
 
     @DisplayName("Создание/Получение/Удаление действия в продуктовом каталоге c сервисным токеном api/v2")
@@ -78,6 +78,6 @@ public class ActionPrivateTest extends ActionBaseTest {
         partialUpdateActionPrivateByName(actionName, new JSONObject().put("priority", 1));
         Action updatedAction = getActionPrivateByName(actionName);
         assertEquals("1.0.1", updatedAction.getVersion(), "Версии не совпадают");
-        assertEquals(1, updatedAction.getPriority());
+        assertEquals(1, updatedAction.getPrioritise());
     }
 }

@@ -30,15 +30,12 @@ public class ActionSteps extends ProductCatalogSteps {
 
     private static final String ACTION_URL = "/api/v1/actions/";
     private static final String ACTION_URL_V_2 = "/api/v2/actions/";
-    private static final Class<Action> ACTION = Action.class;
-    private static final Class<GetActionList> GET_ACTION_LIST = GetActionList.class;
-
 
     @Step("Получение списка действий продуктового каталога")
     public static GetActionList getActionList() {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsList)
-                .extractAs(GET_ACTION_LIST);
+                .extractAs(GetActionList.class);
     }
 
     @Step("Получение списка audit для действий с id {id}")
@@ -160,14 +157,14 @@ public class ActionSteps extends ProductCatalogSteps {
     public static Action getActionById(String actionId) {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsRead, actionId)
-                .extractAs(ACTION);
+                .extractAs(Action.class);
     }
 
     @Step("Получение действия по имени {name}")
     public static Action getActionByName(String name) {
         return getProductCatalogAdmin()
                 .api(apiV2ActionsRead, name)
-                .extractAs(ACTION);
+                .extractAs(Action.class);
     }
 
     @SneakyThrows
@@ -193,7 +190,7 @@ public class ActionSteps extends ProductCatalogSteps {
     public static Action copyActionById(String actionId) {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsCopy, actionId)
-                .extractAs(ACTION)
+                .extractAs(Action.class)
                 .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
@@ -201,7 +198,7 @@ public class ActionSteps extends ProductCatalogSteps {
     public static Action copyActionByName(String name) {
         return getProductCatalogAdmin()
                 .api(apiV2ActionsCopy, name)
-                .extractAs(ACTION)
+                .extractAs(Action.class)
                 .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
@@ -233,7 +230,7 @@ public class ActionSteps extends ProductCatalogSteps {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsList, query)
                 .assertStatus(200)
-                .extractAs(GET_ACTION_LIST)
+                .extractAs(GetActionList.class)
                 .getList();
     }
 
@@ -242,7 +239,7 @@ public class ActionSteps extends ProductCatalogSteps {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsRead, id, query)
                 .assertStatus(200)
-                .extractAs(ACTION);
+                .extractAs(Action.class);
 
     }
 
@@ -277,7 +274,7 @@ public class ActionSteps extends ProductCatalogSteps {
                 .body(body)
                 .get(ACTION_URL)
                 .assertStatus(200)
-                .extractAs(GET_ACTION_LIST)
+                .extractAs(GetActionList.class)
                 .getList();
     }
 

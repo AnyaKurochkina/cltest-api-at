@@ -27,7 +27,7 @@ public abstract class AbstractEntity {
         return (T) this;
     }
 
-    protected int getPrioritise() {
+    protected int getPriority() {
         return 0;
     }
 
@@ -84,7 +84,7 @@ public abstract class AbstractEntity {
     }
 
     private static void addEntity(AbstractEntity e) {
-        entities[e.getPrioritise()].computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(e);
+        entities[e.getPriority()].computeIfAbsent(Thread.currentThread().getId(), k -> new HashSet<>()).add(e);
     }
 
     /**

@@ -170,7 +170,7 @@ public class Product extends AbstractEntity {
     }
 
     @Override
-    public int getPrioritise() {
+    public int getPriority() {
         return 0;
     }
 }

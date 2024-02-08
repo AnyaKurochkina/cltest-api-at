@@ -125,13 +125,17 @@ public class Template extends AbstractEntity implements IProductCatalog {
                 .deleteMode(Mode.AFTER_TEST);
     }
 
+    public Integer getPrioritise() {
+        return priority;
+    }
+
     @Override
     public void delete() {
         deleteTemplateById(id);
     }
 
     @Override
-    protected int getPrioritise() {
+    protected int getPriority() {
         return 5;
     }
 }

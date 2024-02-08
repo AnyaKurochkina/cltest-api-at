@@ -148,7 +148,7 @@ public class Service extends AbstractEntity implements IProductCatalog {
         Assertions.assertFalse(isServiceExists(name));
     }
 
-    protected int getPrioritise() {
+    protected int getPriority() {
         return 0;
     }
 }

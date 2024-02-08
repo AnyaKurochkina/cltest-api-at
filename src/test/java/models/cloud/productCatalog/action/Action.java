@@ -148,13 +148,17 @@ public class Action extends AbstractEntity {
                 .build();
     }
 
+    public Integer getPrioritise() {
+        return priority;
+    }
+
     @Override
     public void delete() {
         deleteActionById(id);
     }
 
     @Override
-    public int getPrioritise() {
+    public int getPriority() {
         return 1;
     }
 }

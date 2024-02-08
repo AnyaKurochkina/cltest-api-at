@@ -110,7 +110,7 @@ public class ActionsListTest extends ActionBaseTest {
     @Test
     public void getActionListForItems() {
         List<Action> productObjectList = getActionListWithQueryParam(new QueryBuilder().add("for_items", true));
-        productObjectList.forEach(x -> assertNotNull(x.getPriority()));
+        productObjectList.forEach(x -> assertNotNull(x.getPrioritise()));
     }
 
     @DisplayName("Получение списка действий по type_provider_list")

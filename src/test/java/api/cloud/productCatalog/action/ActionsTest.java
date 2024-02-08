@@ -334,7 +334,7 @@ public class ActionsTest extends ActionBaseTest {
         partialUpdateAction(actionId, new JSONObject().put("current_version", "1.0.0"));
         Action getAction = getActionById(actionId);
         assertEquals("1.0.0", getAction.getCurrentVersion());
-        assertEquals(action.getPriority(), getAction.getPriority());
+        assertEquals(action.getPrioritise(), getAction.getPrioritise());
     }
 
     @Test

@@ -96,7 +96,7 @@ public class Jinja2Template extends AbstractEntity implements IProductCatalog {
     }
 
     @Override
-    protected int getPrioritise() {
+    protected int getPriority() {
         return 4;
     }
 }

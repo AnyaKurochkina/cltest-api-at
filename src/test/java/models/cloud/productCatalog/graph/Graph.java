@@ -169,7 +169,7 @@ public class Graph extends AbstractEntity implements IProductCatalog {
     }
 
     @Override
-    public int getPrioritise() {
+    public int getPriority() {
         return 3;
     }
 }

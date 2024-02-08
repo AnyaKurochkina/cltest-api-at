@@ -126,7 +126,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         }
 
         @Override
-        protected int getPrioritise() {
+        protected int getPriority() {
             return 1;
         }
 
@@ -154,7 +154,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         }
 
         @Override
-        protected int getPrioritise() {
+        protected int getPriority() {
             return 2;
         }
     }
@@ -166,7 +166,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         }
 
         @Override
-        protected int getPrioritise() {
+        protected int getPriority() {
             return 2;
         }
     }
@@ -195,7 +195,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         }
 
         @Override
-        protected int getPrioritise() {
+        protected int getPriority() {
             return 2;
         }
 
@@ -223,7 +223,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         }
 
         @Override
-        protected int getPrioritise() {
+        protected int getPriority() {
             return 3;
         }
     }
@@ -235,7 +235,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         }
 
         @Override
-        protected int getPrioritise() {
+        protected int getPriority() {
             return 0;
         }
     }
