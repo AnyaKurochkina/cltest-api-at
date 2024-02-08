@@ -1,55 +1,52 @@
 {
 	"order": {
-		"project_name": "proj-tg7jlitmp1",
-		"product_id": "78388428-6548-4417-a18f-f0c4643d93bb",
-		"label": "RabbitMQ Cluster",
 		"attrs": {
-			"geo_distribution": true,
-			"layout": "34eb2a04-4646-4385-817f-4184514b6d2d",
-			"domain": "corp.dev.vtb",
-			"flavor": {
-				"cpus": 2,
-				"name": "c2m4",
-				"uuid": "3dfab004-286c-4f39-9932-baf865756a23",
-				"memory": 4
-			},
-			"platform": "vSphere",
-			"extra_nics": [],
-			"on_support": false,
-			"os_version": "8.4",
-			"availability_zone": "5",
+			"ad_logon_grants": [
+				{
+					"groups": [
+						"cloud-zorg-dev-group"
+					],
+					"role": "superuser"
+				}
+			],
+			"availability_zone": "msk-north",
+			"cluster_name": "rabbitmq-cl-0039",
 			"default_nic": {
 				"net_segment": "dev-srv-app"
 			},
-			"cluster_name": "rabbitmq-testapi",
-			"extra_mounts": [
-				{
-					"path": "/app",
-					"size": 30,
-					"file_system": "xfs"
-				}
+			"domain": "corp.dev.vtb",
+			"extra_nics": [
 			],
-			"ad_integration": true,
+			"file_system": "xfs",
+			"flavor": {
+				"cpus": 2,
+				"memory": 4,
+				"name": "c2m4",
+				"uuid": "3dfab004-286c-4f39-9932-baf865756a23"
+			},
+			"geo_distribution": true,
+			"layout": "24a99a8b-f1ff-4daa-9827-26e4b8ef4e98",
+			"on_support": true,
+			"os_version": "1.7",
+			"path": "/app",
+			"platform": "OpenStack",
 			"rabbitmq_version": "3.8.14",
-			"rabbitmq_node_number": 1,
-			"ad_logon_grants": [
-				{
-					"role": "superuser",
-					"groups": [
-						"cloud-s9crux-denisapi"
-					]
-				}
+			"size": 30,
+			"title_for_mount_point": {
+			},
+			"title_for_web_access_groups": {
+			},
+			"web_administrator_groups": [
+				"cloud-zorg-dev-group"
 			],
-			"web_console_grants": [
-				{
-					"role": "manager",
-					"groups": [
-						"cloud-s9crux-denisapi"
-					]
-				}
+			"web_manager_groups": [
+				"cloud-zorg-dev-group"
 			]
 		},
 		"count": 1,
-		"lifetime": null
+		"label": "RabbitMQ Cluster Astra",
+		"lifetime": "172800",
+		"product_id": "941dbc02-36b1-4120-9614-5ece8dc7690e",
+		"project_name": "proj-ln4zg69jek"
 	}
 }
