@@ -47,7 +47,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private final SelenideElement btnGroups = $x("//button[.='Группы']");
     private final SelenideElement usernameInput = Selenide.$x("//input[@name='username']");
     private final SelenideElement passwordInput = Selenide.$x("//input[@name='password']");
-    private final SelenideElement checkTextTransferNode = Selenide.$x("//span[text()='В рамках переноса кворумной ноды, будет пересоздана кворумная нода кластера RabbitMQ на OpenStack, ВМ на VMWare будет удалена. Сервис RabbitMQ будет перезапущен на каждой ноде кластера.']");
+    private final SelenideElement transferNodeWarning = Selenide.$x("//span[text()='В рамках переноса кворумной ноды, будет пересоздана кворумная нода кластера RabbitMQ на OpenStack, ВМ на VMWare будет удалена. Сервис RabbitMQ будет перезапущен на каждой ноде кластера.']");
     private final SelenideElement checkTextReBalance = Selenide.$x("//span[text()='Будет произведена балансировка очередей между нодами кластера RabbitMQ. Перед выполнением данного действия - необходимо убедиться, что нет накоплений сообщений в очередях.']");
     private final SelenideElement checkTextsynchronizeData = Selenide.$x("//span[text()='Будет произведена синхронизация данных кластера RabbitMQ, операция производится без недоступности RabbitMQ.']");
     private final SelenideElement checkTextVerticalScaling = Selenide.$x("//span[text()='Будет изменена конфигурация ВМ в составе кластера RabbitMQ. Операция производится с недоступностью и перезагрузкой всех ВМ кластера.']");
@@ -163,7 +163,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void transferNode() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Перенос кворумной ноды в OpenStack", "Подтвердить", () -> {
-            checkTextTransferNode.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+            transferNodeWarning.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
             if (product.isProd())
                 CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
