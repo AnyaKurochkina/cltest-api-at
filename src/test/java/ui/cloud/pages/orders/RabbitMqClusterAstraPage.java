@@ -35,8 +35,8 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private static final String HEADER_GROUP_AD = "Группы пользователей AD";
     private static final String HEADER_GROUP_ADMIN = "Группы прикладных администраторов AD";
     private static final String HEADER_DB_USERS = "ch_customer";
-    private static final String setUser = "Выберите пользователя";
-    private static final String userAD = "Manager";
+    private static final String SET_USER = "Выберите пользователя";
+    private static final String USER_AD = "Manager";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
     private final SelenideElement cpu = $x("(//h5)[1]");
@@ -53,7 +53,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     private final SelenideElement checkTextVerticalScaling = Selenide.$x("//span[text()='Будет изменена конфигурация ВМ в составе кластера RabbitMQ. Операция производится с недоступностью и перезагрузкой всех ВМ кластера.']");
     private final SelenideElement checkTextUpdateOs = Selenide.$x("//span[text()='Будет произведено обновление операционной системы на ВМ в составе кластера RabbitMQ. Операция производится с недоступностью и перезагрузкой всех ВМ кластера.']");
     private final SelenideElement checkTextchangeGroupWeb = Selenide.$x("//span[text()='В рамках изменения групп доступа сервис RabbitMQ будет перезапущен на каждой ноде кластера.']");
-    protected Button btnObjectRight = Button.byElement(Selenide.$x("//button[.='Объекты и права']"));
+    protected final Button btnObjectRight = Button.byElement(Selenide.$x("//button[.='Объекты и права']"));
 
     public RabbitMqClusterAstraPage(RabbitMQClusterAstra product) {
         super(product);
@@ -131,7 +131,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void reBalanceQueue() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Произвести балансировку очередей", "Подтвердить", () -> {
-            checkTextReBalance.shouldBe(Condition.visible);
+            checkTextReBalance.shouldBe(Condition.visible.because("Сообщение не отображается"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
             if (product.isProd())
                 CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
@@ -143,7 +143,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void synchronizeData() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Синхронизировать данные кластера", "Подтвердить", () -> {
-            checkTextsynchronizeData.shouldBe(Condition.visible);
+            checkTextsynchronizeData.shouldBe(Condition.visible.because("Сообщение не отображается"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
@@ -153,7 +153,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void updateOs() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить операционную систему", "Подтвердить", () -> {
-            checkTextUpdateOs.shouldBe(Condition.visible);
+            checkTextUpdateOs.shouldBe(Condition.visible.because("Сообщение не отображается"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
@@ -163,7 +163,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void transferNode() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Перенос кворумной ноды в OpenStack", "Подтвердить", () -> {
-            checkTextTransferNode.shouldBe(Condition.visible);
+            checkTextTransferNode.shouldBe(Condition.visible.because("Сообщение не отображается"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
             if (product.isProd())
                 CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
@@ -283,7 +283,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         btnObjectRight.click();
         runActionWithParameters(BLOCK_PERMISSIONS, "Редактировать права на виртуальные хосты", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Редактировать права на виртуальные хосты");
-            dlg.setSelectValue(setUser, nameUser);
+            dlg.setSelectValue(SET_USER, nameUser);
             Select.byLabel("Выберите vhosts с доступом на чтение").set(nameHost);
             Select.byLabel("Выберите vhosts с доступом на запись").set(nameHost);
             Select.byLabel("Выберите vhosts с доступом на конфигурирование").set(nameHost);
@@ -343,7 +343,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_GROUP_AD_WEB, "Редактировать группы доступа", "Подтвердить", () -> {
             if (product.isTest() || product.isProd())
-                Select.byLabel(userAD).set(group);
+                Select.byLabel(USER_AD).set(group);
             if (product.isDev())
                 Select.byLabel(role).set(group);
             checkTextchangeGroupWeb.shouldBe(Condition.visible);
@@ -355,7 +355,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         if (product.isDev())
             Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(role, group), "Ошибка изменения группы");
         if (product.isTest() || product.isProd())
-            Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(userAD, group), "Ошибка изменения группы");
+            Assertions.assertTrue(new Table(HEADER_GROUP).isColumnValueContains(USER_AD, group), "Ошибка изменения группы");
     }
 
     @Step("Добавить роль {role}")

@@ -20,7 +20,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public class ClickHousePage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
-    private static final String HEADER_DB_OWNER = "at_user";
+    private static final String HEADER_DB_OWNER = "at_ad_user";
     private static final String HEADER_DB_USERS = "ch_customer";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";

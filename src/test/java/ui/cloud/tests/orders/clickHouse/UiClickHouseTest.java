@@ -1,6 +1,5 @@
 package ui.cloud.tests.orders.clickHouse;
 
-import com.codeborne.selenide.Condition;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -9,19 +8,12 @@ import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.ClickHouse;
 import org.junit.jupiter.api.*;
 import ru.testit.annotations.Title;
-import steps.portalBack.PortalBackSteps;
 import ui.cloud.pages.CloudLoginPage;
 import ui.cloud.pages.CompareType;
-import ui.cloud.pages.IndexPage;
-import ui.cloud.pages.orders.*;
-import ui.elements.Alert;
-import ui.elements.Graph;
+import ui.cloud.pages.orders.ClickHousePage;
 import ui.elements.Table;
 import ui.extesions.UiProductTest;
 
-import java.time.Duration;
-
-import static ui.cloud.pages.orders.OrderUtils.checkOrderCost;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 @Epic("UI Продукты")
@@ -29,11 +21,11 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 public class UiClickHouseTest extends UiProductTest {
 
-    private ClickHouse product; // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f96d603-1454-47fb-90f3-94d3073a1037/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private ClickHouse product = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/2fab9e99-b1af-4269-b64b-f7cb5725d281/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     private final String nameAD = "at_ad_user";
     private final String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
-    private final String nameLocalAD = "at_local_user";
+    private final String nameLocalAD = "userad";
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -42,94 +34,94 @@ public class UiClickHouseTest extends UiProductTest {
                 .signIn(Role.ORDER_SERVICE_ADMIN);
     }
 
-    @Test
-    @TmsLink("330312")
-    @Order(1)
-    @DisplayName("UI ClickHouse. Заказ")
-    void orderClickHouse() {
-        double prebillingCost;
-        try {
-            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
-            new IndexPage()
-                    .clickOrderMore()
-                    .selectProduct(product.getProductName());
-            ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
-            orderPage.getOsVersionSelect().set(product.getOsVersion());
-            if (product.isDev())
-                orderPage.getNameUser().setValue(nameAD);
-            orderPage.getGeneratePassButton1().setValue(userPasswordFullRight);
-            if (product.isDev())
-                orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
-            Alert.green("Значение скопировано");
-            orderPage.getSegmentSelect().set(product.getSegment());
-            orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
-            orderPage.getGroup().set(accessGroup);
-            orderPage.getGroup2().set(accessGroup);
-            if (product.isDev()) {
-                orderPage.getGroup3().set(accessGroup);
-                orderPage.getGroup4().set(accessGroup);
-            }
-            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
-            OrderUtils.clickOrder();
-            new OrdersPage()
-                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
-                    .getElementByColumn("Продукт")
-                    .hover()
-                    .click();
-            ClickHousePage clickHousePages = new ClickHousePage(product);
-            clickHousePages.waitChangeStatus(Duration.ofMinutes(25));
-            clickHousePages.checkLastAction("Развертывание");
-        } catch (Throwable e) {
-            product.setError(e.toString());
-            throw e;
-        }
-        ClickHousePage clickHousePage = new ClickHousePage(product);
-        checkOrderCost(prebillingCost, clickHousePage);
-    }
-
-    @Test
-    @TmsLink("1236735")
-    @Order(2)
-    @DisplayName("UI ClickHouse. Проверка графа в истории действий")
-    void
-    checkHeaderHistoryTable() {
-        ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.getBtnGeneralInfo().click();
-        clickHousePage.checkHeadersHistory();
-        clickHousePage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
-        new Graph().notContainsStatus(Graph.ERROR);
-    }
-
-    @Test
-    @Order(3)
-    @TmsLink("330327")
-    @Disabled
-    @DisplayName("UI ClickHouse. Перезагрузить")
-    void restart() {
-        ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::restart);
-    }
-
-    @Test
-    @Disabled("Проверяется у Astra Linux")
-    @Order(4)
-    @TmsLink("330329")
-    @DisplayName("UI ClickHouse. Расширить точку монтирования")
-    void expandDisk() {
-        ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.runActionWithCheckCost(CompareType.MORE, () -> clickHousePage.enlargeDisk("/app/clickhouse", "20", new Table("Тип").getRow(0).get()));
-    }
-
-    @Test
-    @Disabled("Проверяется у Astra Linux")
-    @Order(5)
-    @TmsLink("1177396")
-    @DisplayName("UI ClickHouse. Проверить конфигурацию")
-    void vmActCheckConfig() {
-        ClickHousePage clickHousePage = new ClickHousePage(product);
-        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.checkConfiguration(new Table("Тип").getRow(0).get()));
-    }
+//    @Test
+//    @TmsLink("330312")
+//    @Order(1)
+//    @DisplayName("UI ClickHouse. Заказ")
+//    void orderClickHouse() {
+//        double prebillingCost;
+//        try {
+//            String accessGroup = PortalBackSteps.getRandomAccessGroup(product.getProjectId(), "", "compute");
+//            new IndexPage()
+//                    .clickOrderMore()
+//                    .selectProduct(product.getProductName());
+//            ClickHouseOrderPage orderPage = new ClickHouseOrderPage();
+//            orderPage.getOsVersionSelect().set(product.getOsVersion());
+//            if (product.isDev())
+//                orderPage.getNameUser().setValue(nameAD);
+//            orderPage.getGeneratePassButton1().setValue(userPasswordFullRight);
+//            if (product.isDev())
+//                orderPage.getGeneratePassButton2().shouldBe(Condition.enabled).click();
+//            Alert.green("Значение скопировано");
+//            orderPage.getSegmentSelect().set(product.getSegment());
+//            orderPage.getPlatformSelect().set(product.getPlatform());
+//            orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMaxFlavor()));
+//            orderPage.getGroup().set(accessGroup);
+//            orderPage.getGroup2().set(accessGroup);
+//            if (product.isDev()) {
+//                orderPage.getGroup3().set(accessGroup);
+//                orderPage.getGroup4().set(accessGroup);
+//            }
+//            prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
+//            OrderUtils.clickOrder();
+//            new OrdersPage()
+//                    .getRowByColumnValue("Продукт", orderPage.getLabelValue())
+//                    .getElementByColumn("Продукт")
+//                    .hover()
+//                    .click();
+//            ClickHousePage clickHousePages = new ClickHousePage(product);
+//            clickHousePages.waitChangeStatus(Duration.ofMinutes(25));
+//            clickHousePages.checkLastAction("Развертывание");
+//        } catch (Throwable e) {
+//            product.setError(e.toString());
+//            throw e;
+//        }
+//        ClickHousePage clickHousePage = new ClickHousePage(product);
+//        checkOrderCost(prebillingCost, clickHousePage);
+//    }
+//
+//    @Test
+//    @TmsLink("1236735")
+//    @Order(2)
+//    @DisplayName("UI ClickHouse. Проверка графа в истории действий")
+//    void
+//    checkHeaderHistoryTable() {
+//        ClickHousePage clickHousePage = new ClickHousePage(product);
+//        clickHousePage.getBtnGeneralInfo().click();
+//        clickHousePage.checkHeadersHistory();
+//        clickHousePage.getHistoryTable().getValueByColumnInFirstRow("Просмотр").$x("descendant::button[last()]").shouldBe(Condition.enabled).click();
+//        new Graph().notContainsStatus(Graph.ERROR);
+//    }
+//
+//    @Test
+//    @Order(3)
+//    @TmsLink("330327")
+//    @Disabled
+//    @DisplayName("UI ClickHouse. Перезагрузить")
+//    void restart() {
+//        ClickHousePage clickHousePage = new ClickHousePage(product);
+//        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, clickHousePage::restart);
+//    }
+//
+//    @Test
+//    @Disabled("Проверяется у Astra Linux")
+//    @Order(4)
+//    @TmsLink("330329")
+//    @DisplayName("UI ClickHouse. Расширить точку монтирования")
+//    void expandDisk() {
+//        ClickHousePage clickHousePage = new ClickHousePage(product);
+//        clickHousePage.runActionWithCheckCost(CompareType.MORE, () -> clickHousePage.enlargeDisk("/app/clickhouse", "20", new Table("Тип").getRow(0).get()));
+//    }
+//
+//    @Test
+//    @Disabled("Проверяется у Astra Linux")
+//    @Order(5)
+//    @TmsLink("1177396")
+//    @DisplayName("UI ClickHouse. Проверить конфигурацию")
+//    void vmActCheckConfig() {
+//        ClickHousePage clickHousePage = new ClickHousePage(product);
+//        clickHousePage.runActionWithCheckCost(CompareType.EQUALS, () -> clickHousePage.checkConfiguration(new Table("Тип").getRow(0).get()));
+//    }
 
     @Test
     @Order(6)

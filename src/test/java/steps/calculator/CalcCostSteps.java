@@ -22,20 +22,30 @@ public class CalcCostSteps extends Steps {
                 .get("/orders/cost/?folder__startswith={}", path)
                 .assertStatus(200)
                 .jsonPath()
-                .get("cost");
+                .getFloat("cost");
         log.info("Расход для папки/проекта {}: {}", path, cost);
         return cost;
     }
 
+    public static Float returnFloat(Object num) {
+        if (num instanceof Float) {
+            return (Float) num;
+        } else if (num instanceof Integer) {
+            return ((Integer) num).floatValue();
+        } else {
+            return null;
+        }
+    }
+
     @Step("Получение расхода для заказа")
     public static Float getCostByUid(String orderId, String projectId) {
-        Float cost = new Http(calculatorURL)
-                    .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
-                    .get("/api/v1/projects/{}/order/{}/cost/", projectId, orderId)
-                    .assertStatus(200)
-                    .jsonPath()
-                    .get("cost");
+        Object cost = new Http(calculatorURL)
+                .setProjectId(projectId, Role.ORDER_SERVICE_ADMIN)
+                .get("/api/v1/projects/{}/order/{}/cost/", projectId, orderId)
+                .assertStatus(200)
+                .jsonPath()
+                .get("cost");
         log.info("Расход для заказа {}: {}", orderId, cost);
-        return cost;
+        return returnFloat(cost);
     }
 }
