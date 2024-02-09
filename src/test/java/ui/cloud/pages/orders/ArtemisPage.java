@@ -40,7 +40,7 @@ public class ArtemisPage extends IProductPage {
     private final SelenideElement reissueCertificate = Selenide.$x("//div[text()='Будет перевыпущен кластерный сертификат ВТБ-Артемис']");
     private final SelenideElement checkText = Selenide.$x("//span[text()='Обновление происходит без недоступности ВТБ-Артемис.']");
     private final SelenideElement updateInformationCluster = Selenide.$x("//span[text()='Будет произведена синхронизация данных кластера ВТБ-Артемис, операция производится без недоступности.']");
-    private final SelenideElement sendMassage = Selenide.$x("//span[text()='Будет произведен экспорт конфигурации и отправка на e-mail запустившего действие.']");
+    private final SelenideElement sendMessageWarning = Selenide.$x("//span[text()='Будет произведен экспорт конфигурации и отправка на e-mail запустившего действие.']");
     private final SelenideElement resetCluster = Selenide.$x("//span[text()='Будет произведена перезагрузка ВМ в составе кластера ВТБ-Артемис, операция производится с недоступностью.']");
     private final SelenideElement onOfProtokol = Selenide.$x("//span[text()='Будет произведено переключение протоколов кластера. В процессе переключения протоколов будет выполнен перезапуск служб.']");
     private final SelenideElement checkTextUpdate = Selenide.$x("//span[text()='Обновление происходит с недоступностью ВТБ-Артемис.']");
@@ -145,7 +145,7 @@ public class ArtemisPage extends IProductPage {
     public void sendConfiguration() {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Отправить конфигурацию кластера на email", "Подтвердить", () -> {
-            sendMassage.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+            sendMessageWarning.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
