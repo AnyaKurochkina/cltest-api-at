@@ -73,7 +73,7 @@ public class VisualTemplateListTest extends Tests {
         List<ItemVisualTemplate> providerList = getVisualTemplateListByFilter("?event_provider=" + providerFilter);
         assertTrue(providerList.size() > 0);
         for (ItemVisualTemplate impl : providerList) {
-            assertTrue(steps.getJsonPath(impl.getId()).getString("event_provider").contains(providerFilter));
+            assertTrue(impl.getEventProvider().contains(providerFilter));
         }
     }
 
@@ -95,7 +95,7 @@ public class VisualTemplateListTest extends Tests {
         List<ItemVisualTemplate> typeList = getVisualTemplateListByFilter("?event_type=" + typeFilter);
         assertTrue(typeList.size() > 0);
         for (ItemVisualTemplate impl : typeList) {
-            assertTrue(steps.getJsonPath(impl.getId()).getString("event_type").contains(typeFilter));
+            assertTrue(impl.getEventType().contains(typeFilter));
         }
     }
 
@@ -174,8 +174,8 @@ public class VisualTemplateListTest extends Tests {
         List<ItemVisualTemplate> list = getVisualTemplateListByFilter("?event_type=" + typeFilter + "&event_provider=" + providerFilter);
         assertTrue(list.size() > 0);
         for (ItemVisualTemplate impl : list) {
-            assertTrue(steps.getJsonPath(impl.getId()).getString("event_provider").contains(providerFilter));
-            assertTrue(steps.getJsonPath(impl.getId()).getString("event_type").contains(typeFilter));
+            assertTrue(impl.getEventProvider().contains(providerFilter));
+            assertTrue(impl.getEventType().contains(typeFilter));
         }
     }
 
@@ -184,7 +184,7 @@ public class VisualTemplateListTest extends Tests {
     @Test
     public void getVisualTemplateListWithTagListTest() {
         ItemVisualTemplate.builder()
-                .name("visual_template_check_tag_list_value_test_api")
+                .name("visual_template2_check_tag_list_value_test_api")
                 .tagList(Collections.singletonList("api_test"))
                 .eventProvider(Collections.singletonList("docker"))
                 .eventType(Collections.singletonList("app"))

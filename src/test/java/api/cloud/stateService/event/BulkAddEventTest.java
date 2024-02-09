@@ -41,7 +41,7 @@ public class BulkAddEventTest extends Tests {
         JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
                 .set("$.order_id", uuid)
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .set("$.events[0].item_id", uuid)
                 .set("$.events[0].graph_id", uuid)
                 .set("$.events[0].action_id", uuid)
@@ -56,7 +56,7 @@ public class BulkAddEventTest extends Tests {
                 .assertStatus(201)
                 .jsonPath()
                 .getObject("[0]", EventStateService.class);
-        EventStateService actualEvent = getEventListByFilter("action_id", action.getActionId()).get(2);
+        EventStateService actualEvent = getEventListByFilter("action_id", action.getId()).get(2);
         assertEquals(expectedEvent, actualEvent);
     }
 
@@ -72,15 +72,15 @@ public class BulkAddEventTest extends Tests {
         JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
                 .set("$.order_id", uuid)
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .set("$.events[0].item_id", uuid)
                 .set("$.events[0].subtype", subtype)
                 .set("$.events[1].item_id", uuid)
                 .set("$.events[1].graph_id", graph.getGraphId())
-                .set("$.events[1].action_id", action.getActionId())
+                .set("$.events[1].action_id", action.getId())
                 .set("$.events[2].item_id", uuid)
                 .set("$.events[2].graph_id", graph.getGraphId())
-                .set("$.events[2].action_id", action.getActionId())
+                .set("$.events[2].action_id", action.getId())
                 .build();
         String error = createBulkAddEvent(project.getId(), json2)
                 .assertStatus(400)

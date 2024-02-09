@@ -61,7 +61,6 @@ public class ServiceByNameTest extends Tests {
                 .name(service)
                 .title(service)
                 .build()
-                .init()
                 .toJson();
         createService(jsonObject).assertStatus(201);
         deleteServiceByName(service);

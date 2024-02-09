@@ -3,15 +3,13 @@ package models.cloud.productCatalog.graph;
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import models.cloud.productCatalog.product.Product;
 import models.cloud.productCatalog.service.Service;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 import java.util.Map;
@@ -30,7 +28,7 @@ import static steps.productCatalog.ServiceSteps.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class Graph extends Entity implements IProductCatalog {
+public class Graph extends AbstractEntity implements IProductCatalog {
     @JsonProperty("version_list")
     private List<String> versionList;
     @JsonProperty("author")
@@ -91,12 +89,6 @@ public class Graph extends Entity implements IProductCatalog {
     @JsonProperty("tag_list")
     private List<String> tagList;
 
-    @Override
-    public Entity init() {
-        return this;
-    }
-
-    @Override
     @SneakyThrows
     public JSONObject toJson() {
         JSONArray mod = null;
@@ -131,18 +123,8 @@ public class Graph extends Entity implements IProductCatalog {
                 .build();
     }
 
-    @Override
-    protected void create() {
-        deleteIfExist(name);
-        Graph graph = createGraph(toJson()).assertStatus(201).extractAs(Graph.class);
-        StringUtils.copyAvailableFields(graph, this);
-        Assertions.assertNotNull(graphId, "Граф с именем: " + name + ", не создался");
-    }
-
-    @Override
-    protected void delete() {
+    public void delete() {
         deleteGraphById(graphId);
-        Assertions.assertFalse(isGraphExists(name));
     }
 
     private void deleteIfExist(String name) {
@@ -184,5 +166,10 @@ public class Graph extends Entity implements IProductCatalog {
             }
             deleteGraphById(id);
         }
+    }
+
+    @Override
+    public int getPriority() {
+        return 3;
     }
 }

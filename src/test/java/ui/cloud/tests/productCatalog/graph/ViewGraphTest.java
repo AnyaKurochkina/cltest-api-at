@@ -1,5 +1,6 @@
 package ui.cloud.tests.productCatalog.graph;
 
+import core.helper.StringUtils;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.feedService.action.EventTypeProvider;
@@ -24,6 +25,7 @@ import ui.cloud.pages.productCatalog.graph.GraphPage;
 import java.util.Collections;
 import java.util.UUID;
 
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 
 @Feature("Просмотр графа")
@@ -70,7 +72,7 @@ public class ViewGraphTest extends GraphBaseTest {
     @DisplayName("Переход к действию по ссылке в использовании")
     public void goToActionTest() {
         String name = UUID.randomUUID().toString();
-        Action action = Action.builder()
+        Action action = createAction(Action.builder()
                 .name(name)
                 .title("AT UI Action")
                 .version("1.0.0")
@@ -81,8 +83,7 @@ public class ViewGraphTest extends GraphBaseTest {
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
-                .build()
-                .createObject();
+                .build());
         new ControlPanelIndexPage().goToGraphsPage()
                 .findAndOpenGraphPage(NAME)
                 .checkUsageInAction(action)
@@ -122,15 +123,14 @@ public class ViewGraphTest extends GraphBaseTest {
     @DisplayName("Переход к графу по ссылке в использовании")
     public void goToGraphTest() {
         String name = UUID.randomUUID().toString();
-        Graph superGraph = Graph.builder()
+        Graph superGraph = GraphSteps.createGraph(Graph.builder()
                 .name(name)
                 .title(TITLE)
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description(DESCRIPTION)
                 .author(AUTHOR)
-                .build()
-                .createObject();
+                .build());
         JSONObject graphItem = GraphItem.builder()
                 .name("1")
                 .description("1")
@@ -153,8 +153,8 @@ public class ViewGraphTest extends GraphBaseTest {
     @TmsLink("")
     @DisplayName("Пагинация на вкладке 'Использование'")
     public void checkUsedListPagination() {
-        String name = UUID.randomUUID().toString();
-        Graph superGraph = GraphSteps.createGraph(name, TITLE);
+        String name = StringUtils.getRandomStringUi(7);
+        Graph superGraph = GraphSteps.createGraph(Graph.builder().name(name).title(TITLE).build());
         JSONObject graphItem = GraphItem.builder()
                 .name("1")
                 .description("1")

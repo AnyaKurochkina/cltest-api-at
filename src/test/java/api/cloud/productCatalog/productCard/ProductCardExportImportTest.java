@@ -2,6 +2,7 @@ package api.cloud.productCatalog.productCard;
 
 import core.helper.Configure;
 import core.helper.DataFileHelper;
+import core.helper.StringUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -21,7 +22,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.ProductCardSteps.*;
 import static steps.productCatalog.ProductSteps.createProduct;
@@ -38,14 +39,14 @@ public class ProductCardExportImportTest {
     @TmsLinks({@TmsLink("SOUL-7690"), @TmsLink("SOUL-7691")})
     public void exportImportProductCardTest() {
         String fileName = Configure.RESOURCE_PATH + "/json/productCatalog/productCard/importProductCard.json";
-        Graph graph = createGraph();
+        Graph graph = createGraph(StringUtils.getRandomStringApi(7));
         Service service = createService(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
         Product product = createProduct(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
-        Action action = createAction();
+        Action action = createAction(StringUtils.getRandomStringApi(7));
         CardItems graphItem = createCardItem("Graph", graph.getGraphId(), "1.0.0");
         CardItems serviceItem = createCardItem("Service", service.getId(), "1.0.0");
         CardItems productItem = createCardItem("Product", product.getProductId(), "1.0.0");
-        CardItems actionItem = createCardItem("Action", action.getActionId(), "1.0.0");
+        CardItems actionItem = createCardItem("Action", action.getId(), "1.0.0");
         ProductCard productCard = createProductCard("export_product_card_test_api", graphItem, serviceItem, productItem, actionItem);
         DataFileHelper.write(fileName, exportProductCard(productCard.getId()).toString());
         deleteProductCard(productCard.getId());

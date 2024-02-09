@@ -23,6 +23,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
+import static steps.productCatalog.GraphSteps.createGraph;
+
 @Feature("Просмотр аудита в Control panel")
 @ExtendWith(ConfigExtension.class)
 public class ControlPanelAuditTest extends Tests {
@@ -41,15 +43,14 @@ public class ControlPanelAuditTest extends Tests {
     @BeforeEach
     public void setUp() {
         graphName = UUID.randomUUID().toString();
-        graph = Graph.builder()
+        graph = createGraph(Graph.builder()
                 .name(graphName)
                 .title("AT UI Graph")
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description("for audit test")
                 .author("AT UI")
-                .build()
-                .createObject();
+                .build());
 
         new ControlPanelLoginPage().signIn(superviewer.getRole());
     }

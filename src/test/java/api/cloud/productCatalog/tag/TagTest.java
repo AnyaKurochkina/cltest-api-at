@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.tag;
 
 import api.Tests;
+import core.helper.StringUtils;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -14,7 +15,10 @@ import models.cloud.productCatalog.template.Template;
 import models.cloud.productCatalog.visualTeamplate.*;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,7 +86,7 @@ public class TagTest extends Tests {
         String actionName = "action_delete_tag_test_api";
         JSONObject jsonObject = Action.builder()
                 .name(actionName)
-                .graphId(createGraph().getGraphId())
+                .graphId(createGraph(StringUtils.getRandomStringApi(7)).getGraphId())
                 .tagList(Collections.singletonList(tagName))
                 .build()
                 .toJson();
@@ -90,7 +94,7 @@ public class TagTest extends Tests {
             deleteActionByName(actionName);
         }
         Action action = createAction(jsonObject).extractAs(Action.class);
-        deleteActionById(action.getActionId());
+        deleteActionById(action.getId());
         deleteTagByName(tagName);
         assertFalse(isTagExists(tagName));
     }
@@ -113,11 +117,10 @@ public class TagTest extends Tests {
     @Test
     public void getListObjectsUsedTagTest() {
         String tagName = "used_tag_test_api";
-        Action action = Action.builder()
+        Action action = createAction(Action.builder()
                 .name("action_used_tag_test_api")
                 .tagList(Collections.singletonList(tagName))
-                .build()
-                .createObject();
+                .build());
         Product product = Product.builder()
                 .name("product_used_tag_test_api")
                 .title("AtTestApiProduct")
@@ -125,11 +128,10 @@ public class TagTest extends Tests {
                 .version("1.0.0")
                 .build()
                 .createObject();
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("graph_used_tag_test_api")
                 .tagList(Collections.singletonList(tagName))
-                .build()
-                .createObject();
+                .build());
         Template template = Template.builder()
                 .name("template_used_tag_test_api")
                 .tagList(Collections.singletonList(tagName))
@@ -153,7 +155,7 @@ public class TagTest extends Tests {
                 .build()
                 .createObject();
         Response resp = getTagUsedObjectsByName(tagName);
-        assertEquals(action.getActionId(), resp.jsonPath().getString("Action[0].id"));
+        assertEquals(action.getId(), resp.jsonPath().getString("Action[0].id"));
         assertEquals(1, resp.jsonPath().getList("Action").size());
         assertEquals(graph.getGraphId(), resp.jsonPath().getString("Graph[0].id"));
         assertEquals(1, resp.jsonPath().getList("Graph").size());
@@ -173,15 +175,15 @@ public class TagTest extends Tests {
         createTag(tagName);
         JSONObject jsonObject = Action.builder()
                 .name("action_delete_tag_test_api")
-                .graphId(createGraph().getGraphId())
+                .graphId(createGraph(StringUtils.getRandomStringApi(7)).getGraphId())
                 .tagList(Collections.singletonList(tagName))
                 .build()
                 .toJson();
         Action action = createAction(jsonObject).extractAs(Action.class);
         String errorMsg = deleteTagByNameResponse(tagName).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(String.format("Нельзя удалить тег %s. Он используется в {'Action': [{'id': UUID('%s'), 'name': '%s', 'title': '%s'}]}",
-                tagName, action.getActionId(), action.getName(), action.getTitle()), errorMsg);
-        deleteActionById(action.getActionId());
+                tagName, action.getId(), action.getName(), action.getTitle()), errorMsg);
+        deleteActionById(action.getId());
         deleteTagByName(tagName);
         assertFalse(isTagExists(tagName));
     }

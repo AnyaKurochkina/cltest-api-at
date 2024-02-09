@@ -47,13 +47,12 @@ public class GraphTagTest extends Tests {
     @Test
     public void checkGraphTagListValueTest() {
         List<String> tagList = Arrays.asList("graph_tag_test_value", "graph_tag_test_value2");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("at_api_check_graph_tag_list_value")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(tagList)
-                .build()
-                .createObject();
+                .build());
         List<String> graphTagList = graph.getTagList();
         assertTrue(tagList.size() == graphTagList.size() && tagList.containsAll(graphTagList) && graphTagList.containsAll(tagList));
         tagList = Collections.singletonList("graph_tag_test_value3");
@@ -67,13 +66,12 @@ public class GraphTagTest extends Tests {
     @Test
     public void checkGraphTagListVersioning() {
         List<String> tagList = Arrays.asList("graph_tag_test_value", "graph_tag_test_value2");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("at_api_graph_check_tag_list_versioning")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(tagList)
-                .build()
-                .createObject();
+                .build());
         tagList = Collections.singletonList("graph_tag_test_value3");
         partialUpdateGraph(graph.getGraphId(), new JSONObject().put("tag_list", tagList));
         Graph updatedGraph = getGraphById(graph.getGraphId());

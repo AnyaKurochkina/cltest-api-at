@@ -22,6 +22,7 @@ import java.util.List;
 
 import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.PythonTemplateSteps.*;
 
 @Tag("product_catalog")
@@ -129,11 +130,10 @@ public class PythonTemplateTest extends Tests {
                 .sourceType("python")
                 .sourceId(pythonTemplate.getId())
                 .build();
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         String message = deletePythonTemplateResponse(pythonTemplate.getId()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(format("Нельзя удалить PythonTemplate: {}. Он используется:\nGraph: (name: {}, version: {})", name, graph.getName(), graph.getVersion()),
                 message);
@@ -150,11 +150,10 @@ public class PythonTemplateTest extends Tests {
                 .sourceType("python")
                 .sourceId(pythonTemplate.getId())
                 .build();
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         Response response = getObjectListUsedPythonTemplate(pythonTemplate.getId());
         assertEquals(1, response.jsonPath().getList("").size());
         assertEquals(graph.getName(), response.jsonPath().getString("[0].name"));

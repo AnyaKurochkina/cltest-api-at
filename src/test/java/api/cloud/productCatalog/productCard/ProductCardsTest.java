@@ -15,6 +15,7 @@ import models.cloud.productCatalog.productCard.CardItems;
 import models.cloud.productCatalog.productCard.ProductCard;
 import models.cloud.productCatalog.service.Service;
 import models.cloud.productCatalog.template.Template;
+import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -38,6 +39,7 @@ import static steps.productCatalog.ProductCardSteps.*;
 import static steps.productCatalog.ProductSteps.*;
 import static steps.productCatalog.ServiceSteps.createService;
 import static steps.productCatalog.TemplateSteps.createTemplateByName;
+import static steps.productCatalog.VisualTemplateSteps.createVisualTemplate;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -67,7 +69,7 @@ public class ProductCardsTest {
         Action action = createAction();
         Product product = createProduct("product_for_card_items_test_api");
         CardItems actionCard = CardItems.builder().objType("Action")
-                .objId(action.getActionId())
+                .objId(action.getId())
                 .versionArr(Arrays.asList(1, 0, 0))
                 .build();
         CardItems productCardItem = CardItems.builder().objType("Product")
@@ -135,14 +137,13 @@ public class ProductCardsTest {
     @Test
     @TmsLink("SOUL-7693")
     public void applyProductCardTest() {
-        Graph graphForAction = createGraph();
-        Graph graphForProduct = createGraph();
+        Graph graphForAction = createGraph(StringUtils.getRandomStringApi(7));
+        Graph graphForProduct = createGraph(StringUtils.getRandomStringApi(7));
         JSONObject actionJson = Action.builder()
                 .name("action_for_apply_card_items_test_api")
                 .graphId(graphForAction.getGraphId())
                 .version("1.0.2")
                 .build()
-                .init()
                 .toJson();
         Action action = createAction(actionJson).assertStatus(201).extractAs(Action.class);
         JSONObject productJson = Product.builder()
@@ -150,11 +151,10 @@ public class ProductCardsTest {
                 .graphId(graphForProduct.getGraphId())
                 .version("2.0.0")
                 .build()
-                .init()
                 .toJson();
         Product product = createProduct(productJson);
         CardItems actionCard = CardItems.builder().objType("Action")
-                .objId(action.getActionId())
+                .objId(action.getId())
                 .versionArr(Arrays.asList(1, 0, 2))
                 .build();
         CardItems productCardItem = CardItems.builder().objType("Product")
@@ -173,7 +173,7 @@ public class ProductCardsTest {
                 .cardItems(cardItemsList)
                 .build()
                 .createObject();
-        deleteActionById(action.getActionId());
+        deleteActionById(action.getId());
         deleteProductById(product.getProductId());
         applyProductCard(productCard.getId());
         Product productByName = getProductByName(product.getName());
@@ -191,17 +191,16 @@ public class ProductCardsTest {
     @TmsLink("SOUL-8835")
     public void applyProductCardWithExistObjectAndSameVersionButAnotherContentTest() {
         String actionName = StringUtils.getRandomStringApi(7);
-        Graph graphForAction = createGraph();
+        Graph graphForAction = createGraph(StringUtils.getRandomStringApi(7));
         JSONObject actionJson = Action.builder()
                 .name(actionName)
                 .graphId(graphForAction.getGraphId())
                 .version("1.0.2")
                 .build()
-                .init()
                 .toJson();
         Action action = createAction(actionJson).assertStatus(201).extractAs(Action.class);
         CardItems actionCard = CardItems.builder().objType("Action")
-                .objId(action.getActionId())
+                .objId(action.getId())
                 .versionArr(Arrays.asList(1, 0, 2))
                 .build();
 
@@ -216,14 +215,13 @@ public class ProductCardsTest {
                 .build()
                 .createObject();
 
-        deleteActionById(action.getActionId());
+        deleteActionById(action.getId());
 
         JSONObject json = Action.builder()
                 .name(actionName)
-                .graphId(createGraph().getGraphId())
+                .graphId(createGraph(StringUtils.getRandomStringApi(7)).getGraphId())
                 .version("1.0.2")
                 .build()
-                .init()
                 .toJson();
         createAction(json).assertStatus(201);
 
@@ -240,28 +238,27 @@ public class ProductCardsTest {
         String actionName = "action_for_apply_card_items_not_equals_objects_test_api";
         String actionVersion = "1.0.2";
         try {
-            Graph graphForAction = createGraph();
+            Graph graphForAction = createGraph(StringUtils.getRandomStringApi(7));
             JSONObject actionJson = Action.builder()
                     .name(actionName)
                     .graphId(graphForAction.getGraphId())
                     .version(actionVersion)
                     .build()
-                    .init()
                     .toJson();
             Action action = createAction(actionJson).assertStatus(201).extractAs(Action.class);
             CardItems actionCard = CardItems.builder().objType("Action")
-                    .objId(action.getActionId())
+                    .objId(action.getId())
                     .versionArr(convertStringVersionToIntArrayVersion(actionVersion))
                     .build();
 
             ProductCard productCard = ProductCard.builder()
-                    .name("apply_product_card_test_api")
+                    .name("apply_product_card3_test_api")
                     .title("apply_product_card_title_test_api")
                     .description("test_api")
                     .cardItems(Collections.singletonList(actionCard))
                     .build()
                     .createObject();
-            partialUpdateAction(action.getActionId(), new JSONObject().put("type", "on"));
+            partialUpdateAction(action.getId(), new JSONObject().put("type", "on"));
 
             ImportObject object = applyProductCard(productCard.getId()).jsonPath().getList("imported_objects", ImportObject.class)
                     .stream()
@@ -269,7 +266,7 @@ public class ProductCardsTest {
                     .orElseThrow(() -> new AssertionError("Список Imported objects пустой."));
             assertAll(
                     () -> assertEquals(actionName, object.getObjectName(), "Имя объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
-                    () -> assertEquals(action.getActionId(), object.getObjectId(), "Id объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
+                    () -> assertEquals(action.getId(), object.getObjectId(), "Id объекта в ответе после применения продуктовой карты не соответствует ожидаемому"),
                     () -> assertEquals(format("Error loading dump: Версия \"{}\" Action:{} уже существует, но с другим наполнением. Измените значение версии (\"version_arr: {}\") у импортируемого объекта и попробуйте снова.", actionVersion, actionName, convertStringVersionToIntArrayVersion(actionVersion))
                             , object.getMessages().get(0))
             );
@@ -287,13 +284,12 @@ public class ProductCardsTest {
         String productName = StringUtils.getRandomStringApi(7);
         try {
             List<CardItems> cardItemsList = new ArrayList<>();
-            Graph graphForProduct = createGraph();
+            Graph graphForProduct = createGraph(StringUtils.getRandomStringApi(7));
             JSONObject productJson = Product.builder()
                     .name(productName)
                     .graphId(graphForProduct.getGraphId())
                     .version("2.0.0")
                     .build()
-                    .init()
                     .toJson();
             Product product = createProduct(productJson);
             CardItems productCardItem = CardItems.builder().objType("Product")
@@ -311,7 +307,7 @@ public class ProductCardsTest {
             cardItemsList.add(productCardItem2);
 
             JSONObject json = ProductCard.builder()
-                    .name("apply_product_card_test_api")
+                    .name("apply_product_card2_test_api")
                     .title("apply_product_card_title_test_api")
                     .description("test_api")
                     .cardItems(cardItemsList)
@@ -338,7 +334,7 @@ public class ProductCardsTest {
                 .name(productName)
                 .build()
                 .createObject();
-        Graph graph = createGraph();
+        Graph graph = createGraph(StringUtils.getRandomStringApi(7));
         CardItems productCardItem = CardItems.builder().objType("Graph")
                 .objId(graph.getGraphId())
                 .versionArr(Arrays.asList(1, 0, 0))
@@ -360,7 +356,7 @@ public class ProductCardsTest {
     @Test
     @TmsLink("SOUL-7695")
     public void partialUpdateProductCardTest() {
-        Graph graph = createGraph();
+        Graph graph = createGraph(StringUtils.getRandomStringApi(7));
         CardItems productCardGraph = CardItems.builder().objType("Graph")
                 .objId(graph.getGraphId())
                 .versionArr(Arrays.asList(1, 0, 0))
@@ -392,7 +388,6 @@ public class ProductCardsTest {
         JSONObject json = Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
                 .build()
-                .init()
                 .toJson();
         Graph graph = createGraph(json).extractAs(Graph.class);
         CardItems cardItem = createCardItem("Graph", graph.getGraphId(), "1.0.0");
@@ -411,7 +406,6 @@ public class ProductCardsTest {
         JSONObject json = Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
                 .build()
-                .init()
                 .toJson();
         Graph graph = createGraph(json).extractAs(Graph.class);
         CardItems cardItem = createCardItem("Graph", graph.getGraphId(), "1.0.0");
@@ -433,7 +427,6 @@ public class ProductCardsTest {
                 .name(graphName)
                 .version("2.0.0")
                 .build()
-                .init()
                 .toJson();
         Graph graph = createGraph(json).extractAs(Graph.class);
         CardItems cardItem = createCardItem("Graph", graph.getGraphId(), "2.0.0");
@@ -459,5 +452,17 @@ public class ProductCardsTest {
         assertTrue(getCardItems.getIsObjVersionExists() && getCardItems.getIsObjExists(),
                 "Одно из полей is_obj_version_exists, is_obj_equal = false");
         deleteGraphById(createdGraph.getGraphId());
+    }
+
+    @DisplayName("Добавление в карту продукта неверсионный объект")
+    @Test
+    @TmsLink("SOUL-9041")
+    public void addToProductCardNotVersionedObjectTest() {
+        ItemVisualTemplate visualTemplate = createVisualTemplate(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
+        CardItems cardItem = createCardItem("ItemVisualisationTemplate", visualTemplate.getId());
+        ProductCard productCard = createProductCard("is_object2_exist_false_test_api", cardItem);
+        CardItems getCardItems = getProductCard(productCard.getId()).getCardItems().get(0);
+        assertTrue(getCardItems.getIsObjVersionExists(), "Поле is_obj_version_exist у неверсионных объектов должно быть всегда true");
+        assertTrue(getCardItems.getIsObjEqual(), "Объект должен существовать и совпадать");
     }
 }

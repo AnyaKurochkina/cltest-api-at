@@ -13,6 +13,8 @@ import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.UUID;
 
+import static steps.productCatalog.GraphSteps.createGraph;
+
 @Epic("Конструктор.Сервисы")
 @DisabledIfEnv("prod")
 public class ServiceBaseTest extends ProductCatalogUITest {
@@ -33,14 +35,13 @@ public class ServiceBaseTest extends ProductCatalogUITest {
     }
 
     private void createService(String name) {
-        graph = Graph.builder()
+        graph = createGraph(Graph.builder()
                 .name(GRAPH_NAME)
                 .title(GRAPH_TITLE)
                 .version("1.0.0")
                 .type("service")
                 .author("AT UI")
-                .build()
-                .createObject();
+                .build());
 
         orgDirection = OrgDirection.builder()
                 .name(UUID.randomUUID().toString())

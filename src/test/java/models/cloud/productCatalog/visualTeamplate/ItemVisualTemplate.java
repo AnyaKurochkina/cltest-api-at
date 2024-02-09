@@ -3,23 +3,20 @@ package models.cloud.productCatalog.visualTeamplate;
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import core.enums.Role;
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
-import core.helper.http.Http;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 
-import static core.helper.Configure.productCatalogURL;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static steps.productCatalog.VisualTemplateSteps.*;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static steps.productCatalog.VisualTemplateSteps.deleteVisualTemplateById;
+import static steps.productCatalog.VisualTemplateSteps.partialUpdateVisualTemplate;
+import static tests.routes.ItemVisualTemplateProductCatalogApi.apiV1ItemVisualTemplatesCreate;
 
 @Log4j2
 @Builder
@@ -29,7 +26,7 @@ import static steps.productCatalog.VisualTemplateSteps.*;
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
 @EqualsAndHashCode(callSuper = false)
-public class ItemVisualTemplate extends Entity implements IProductCatalog {
+public class ItemVisualTemplate extends AbstractEntity implements IProductCatalog {
 
     @JsonProperty("event_type")
     private List<String> eventType;
@@ -57,12 +54,6 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
     @JsonProperty("tag_list")
     private List<String> tagList;
 
-    @Override
-    public Entity init() {
-        return this;
-    }
-
-    @Override
     public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/itemVisualTemplate/createItemVisual.json")
                 .set("$.name", name)
@@ -80,28 +71,19 @@ public class ItemVisualTemplate extends Entity implements IProductCatalog {
                 .build();
     }
 
-    @Override
     @Step("Создание шаблона визуализации")
-    protected void create() {
-        if (isVisualTemplateExists(name)) {
-            String objectId = getVisualTemplateByName(name).getId();
-            partialUpdateVisualTemplate(objectId, new JSONObject().put("is_active", false));
-            deleteVisualTemplateById(objectId);
-        }
-        ItemVisualTemplate itemVisualTemplate = new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(toJson())
-                .post("/api/v1/item_visual_templates/")
-                .assertStatus(201)
-                .extractAs(ItemVisualTemplate.class);
-        StringUtils.copyAvailableFields(itemVisualTemplate, this);
-        Assertions.assertNotNull(id, "Шаблон визуализации с именем: " + name + ", не создался");
+    public ItemVisualTemplate createObject() {
+        return getProductCatalogAdmin()
+                .body(this.toJson())
+                .api(apiV1ItemVisualTemplatesCreate)
+                .extractAs(ItemVisualTemplate.class)
+                .deleteMode(Mode.AFTER_TEST);
     }
 
     @Override
     @Step("Удаление шаблона визуализации")
-    protected void delete() {
-        deleteVisualTemplateById(id).assertStatus(204);
-        assertFalse(isVisualTemplateExists(name));
+    public void delete() {
+        partialUpdateVisualTemplate(id, new JSONObject().put("is_active", false));
+        deleteVisualTemplateById(id);
     }
 }

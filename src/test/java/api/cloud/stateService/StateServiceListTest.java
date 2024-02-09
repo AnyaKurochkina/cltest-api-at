@@ -116,7 +116,7 @@ public class StateServiceListTest extends Tests {
         Project project = Project.builder().isForOrders(true)
                 .build()
                 .createObject();
-        Action action = Action.builder()
+        Action action = createAction(Action.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
                 .requiredItemStatuses(Arrays.asList("on"))
                 .eventTypeProvider(Collections.singletonList(EventTypeProvider.builder()
@@ -124,8 +124,7 @@ public class StateServiceListTest extends Tests {
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
                 .number(0)
-                .build()
-                .createObject();
+                .build());
         registerAction(action.getName());
         Item item = createItem(project);
         String path = ResourceManagerSteps.getProjectPath("projects", project.getId()) + "/";
@@ -139,7 +138,7 @@ public class StateServiceListTest extends Tests {
         createBulkAddAction(project.getId(), newAction);
         Item getItem = getItemsListByFilter(project.getId(), format("item_id={}&with_actions=true", item.getItemId()))
                 .jsonPath().getList("list", Item.class).get(0);
-        assertTrue(getItem.getActions().stream().anyMatch(x -> x.getActionId().equals(action.getActionId())));
+        assertTrue(getItem.getActions().stream().anyMatch(x -> x.getId().equals(action.getId())));
     }
 
     @Test
@@ -256,7 +255,7 @@ public class StateServiceListTest extends Tests {
         String orderId = UUID.randomUUID().toString();
         String itemId = UUID.randomUUID().toString();
         JSONObject eventJson = Item.builder()
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .graphId(graph.getGraphId())
                 .orderId(orderId)
                 .itemId(itemId)
@@ -267,7 +266,7 @@ public class StateServiceListTest extends Tests {
         createEventStateService(eventJson);
         String itemId3 = UUID.randomUUID().toString();
         JSONObject json1 = Item.builder()
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .graphId(graph.getGraphId())
                 .orderId(orderId)
                 .itemId(itemId3)
@@ -279,7 +278,7 @@ public class StateServiceListTest extends Tests {
         createEventStateService(json1);
         String itemId2 = UUID.randomUUID().toString();
         JSONObject childJson = Item.builder()
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .graphId(graph.getGraphId())
                 .orderId(orderId)
                 .itemId(itemId2)

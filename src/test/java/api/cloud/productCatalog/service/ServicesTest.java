@@ -271,7 +271,6 @@ public class ServicesTest extends Tests {
                 .title("title_service_test_api")
                 .description("at_tests")
                 .build()
-                .init()
                 .toJson();
         Service service = createService(json).assertStatus(201).extractAs(Service.class);
         deleteServiceById(service.getId());
@@ -389,7 +388,7 @@ public class ServicesTest extends Tests {
                 .title(serviceName)
                 .version("1.0.0")
                 .build()
-                .init().toJson();
+                .toJson();
         Service service = createService(jsonObject).assertStatus(201).extractAs(Service.class);
         Response response = dumpServiceToBitbucket(service.getId());
         assertEquals("Committed to bitbucket", response.jsonPath().get("message"));

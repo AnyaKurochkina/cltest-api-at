@@ -20,6 +20,7 @@ import java.util.List;
 
 import static core.helper.Configure.getAppProp;
 import static org.junit.jupiter.api.Assertions.*;
+import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 import static steps.productCatalog.ProductCatalogSteps.isSorted;
 import static steps.productCatalog.TemplateSteps.*;
@@ -65,11 +66,7 @@ public class TemplatesListTest extends Tests {
                 .sourceType("template")
                 .build()
                 .toJson();
-        Graph graph = Graph.builder()
-                .name("create_graph_used_in_graph_test_api")
-                .title("create_graph_used_in_graph_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("create_graph_used_in_graph_test_api");
         List<JSONObject> list = new ArrayList<>();
         list.add(graphItem);
         JSONObject obj = new JSONObject().put("graph", list);

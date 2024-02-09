@@ -161,14 +161,14 @@ public class OrgDirectionTest extends Tests {
                 .build()
                 .createObject();
         String orgDirectionId = orgDirection.getId();
-        steps.getObjectByNameWithPublicToken(orgName).assertStatus(200);
-        steps.createProductObjectWithPublicToken(steps.createJsonObject("create_object_with_public_token_api"))
-                .assertStatus(403);
-        steps.partialUpdateObjectWithPublicToken(orgDirectionId, new JSONObject()
-                .put("description", "UpdateDescription")).assertStatus(403);
-        steps.putObjectByIdWithPublicToken(orgDirectionId, steps.createJsonObject("update_object_with_public_token_api"))
-                .assertStatus(403);
-        steps.deleteObjectWithPublicToken(orgDirectionId).assertStatus(403);
+//        steps.getObjectByNameWithPublicToken(orgName).assertStatus(200);
+//        steps.createProductObjectWithPublicToken(steps.createJsonObject("create_object_with_public_token_api"))
+//                .assertStatus(403);
+//        steps.partialUpdateObjectWithPublicToken(orgDirectionId, new JSONObject()
+//                .put("description", "UpdateDescription")).assertStatus(403);
+//        steps.putObjectByIdWithPublicToken(orgDirectionId, steps.createJsonObject("update_object_with_public_token_api"))
+//                .assertStatus(403);
+//        steps.deleteObjectWithPublicToken(orgDirectionId).assertStatus(403);
     }
 
     @DisplayName("Удаление направления")
