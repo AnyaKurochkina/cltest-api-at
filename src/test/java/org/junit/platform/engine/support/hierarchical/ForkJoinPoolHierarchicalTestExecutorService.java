@@ -139,7 +139,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
                     AbstractTestDescriptor testDescriptor = getTestDescriptorFromTestTask(testTask);
 
                     if (first.get()) {
-                        first.set(false);
                         addNode(testDescriptor);
                     }
                     if (testDescriptor instanceof MethodBasedTestDescriptor) {
@@ -164,7 +163,7 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
         }
 
 
-
+        first.set(false);
 
         if (tasks.size() == 1) {
             (new ForkJoinPoolHierarchicalTestExecutorService.ExclusiveTask((TestTask) tasks.get(0))).compute();
