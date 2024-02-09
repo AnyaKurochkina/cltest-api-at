@@ -131,7 +131,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void reBalanceQueue() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Произвести балансировку очередей", "Подтвердить", () -> {
-            checkTextReBalance.shouldBe(Condition.visible.because("Сообщение не отображается"));
+            checkTextReBalance.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
             if (product.isProd())
                 CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
@@ -143,7 +143,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void synchronizeData() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Синхронизировать данные кластера", "Подтвердить", () -> {
-            checkTextsynchronizeData.shouldBe(Condition.visible.because("Сообщение не отображается"));
+            checkTextsynchronizeData.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
@@ -153,7 +153,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void updateOs() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновить операционную систему", "Подтвердить", () -> {
-            checkTextUpdateOs.shouldBe(Condition.visible.because("Сообщение не отображается"));
+            checkTextUpdateOs.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
@@ -163,7 +163,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void transferNode() {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Перенос кворумной ноды в OpenStack", "Подтвердить", () -> {
-            checkTextTransferNode.shouldBe(Condition.visible.because("Сообщение не отображается"));
+            checkTextTransferNode.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
             if (product.isProd())
                 CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
