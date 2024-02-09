@@ -15,7 +15,7 @@ import java.util.UUID;
 @Feature("Образы.Логотипы")
 public class LogoTest extends ProductCatalogUITest {
 
-    private final String logoUrl = "https://im.wampi.ru/2022/12/15/free-icon-angel-257559.png";
+    private final String logoUrl = "https://ibb.co/n7rGJKm";
     private final String distro = "test";
 
     @Test

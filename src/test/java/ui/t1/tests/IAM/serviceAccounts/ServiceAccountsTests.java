@@ -1,7 +1,6 @@
 package ui.t1.tests.IAM.serviceAccounts;
 
 import api.Tests;
-import com.codeborne.selenide.Selenide;
 import core.enums.Role;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -22,6 +21,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 import static core.helper.StringUtils.format;
+import static core.helper.StringUtils.getClipBoardText;
 import static core.utils.AssertUtils.assertEqualsJson;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -79,6 +79,7 @@ public class ServiceAccountsTests extends Tests {
                 .editServiceAccount(account.getTitle(), updatedAccount)
                 .checkAccountData(updatedAccount)
                 .isServiceAccountExist(updatedAccount.getTitle()), format("Сервисный аккаунт {} не найден", account.getTitle()));
+        updatedAccount.deleteObject();
     }
 
     @Test
@@ -94,7 +95,7 @@ public class ServiceAccountsTests extends Tests {
                 .goToServiceAccounts()
                 .goToServiceAccountPage(account)
                 .createApiKey(account.getTitle());
-        String text = Selenide.clipboard().getText();
+        String text = getClipBoardText();
         assertEqualsJson(jsonObject, new JSONObject(text));
         account.setWithApiKey(true);
         account.save();
@@ -114,7 +115,7 @@ public class ServiceAccountsTests extends Tests {
                 .goToServiceAccounts()
                 .goToServiceAccountPage(account)
                 .createStaticKey(description);
-        String text = Selenide.clipboard().getText();
+        String text = getClipBoardText();
         assertEqualsJson(jsonObject, new JSONObject(text));
         String id = jsonObject.getString("access_id");
         assertTrue(new ServiceAccountPage(account.getTitle())
