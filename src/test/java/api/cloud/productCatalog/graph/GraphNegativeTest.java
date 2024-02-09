@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -72,8 +73,7 @@ public class GraphNegativeTest extends Tests {
     @Test
     public void createGraphWithSameName() {
         Graph graph = createGraph("create_graph_with_exist_name_test_api");
-        String message = createGraph(graph.toJson()).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("\"name\": graph с таким name уже существует.", message);
+        AssertResponse.run(() -> createGraph(graph.toJson())).status(400).responseContains("\\\"name\\\": graph с таким name уже существует.");
     }
 
     @DisplayName("Негативный тест на удаление графа без токена")
@@ -112,10 +112,8 @@ public class GraphNegativeTest extends Tests {
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .build()
-                .init()
                 .toJson();
-        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
-        assertEquals(format("Field values (envs) non-unique: ({})", env.getValue()), error);
+        AssertResponse.run(() -> createGraph(jsonObject)).status(400).responseContains(format("Field values (envs) non-unique: ({})", env.getValue()));
     }
 
     @DisplayName("Негативный тест на создание графа с не валидным значением поля envs в модификациях")
@@ -137,10 +135,8 @@ public class GraphNegativeTest extends Tests {
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .build()
-                .init()
                 .toJson();
-        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
-        assertEquals(format("Environment type is not in the directory"), error);
+        AssertResponse.run(() -> createGraph(jsonObject)).status(400).responseContains("Environment type is not in the directory");
     }
 
     @DisplayName("Негативный тест на создание графа с пустым именем")
@@ -161,9 +157,7 @@ public class GraphNegativeTest extends Tests {
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .build()
-                .init()
                 .toJson();
-        String error = createGraph(jsonObject).assertStatus(400).jsonPath().getString("err_message[0].modifications[0].err_message[0]");
-        assertEquals("\"name\": Это поле не может быть пустым.", error);
+        AssertResponse.run(() -> createGraph(jsonObject)).status(400).responseContains("\\\"name\\\": Это поле не может быть пустым.");
     }
 }

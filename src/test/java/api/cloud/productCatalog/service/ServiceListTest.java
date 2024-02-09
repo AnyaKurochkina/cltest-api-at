@@ -44,7 +44,7 @@ public class ServiceListTest extends Tests {
     public void getMeta() {
         String str = getServicesList().getMeta().getNext();
         String url = getAppProp("url.kong");
-        if (!(str == null)) {
+        if (str != null) {
             assertTrue(str.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }

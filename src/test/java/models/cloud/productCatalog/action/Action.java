@@ -1,12 +1,13 @@
 package models.cloud.productCatalog.action;
 
 import com.fasterxml.jackson.annotation.JsonAlias;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.VersionDiff;
 import models.cloud.productCatalog.graph.Graph;
@@ -15,146 +16,93 @@ import org.json.JSONObject;
 import java.util.List;
 import java.util.Map;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static steps.productCatalog.ActionSteps.*;
+import static steps.productCatalog.ActionSteps.deleteActionById;
+import static steps.productCatalog.GraphSteps.createGraph;
 
 @Log4j2
 @Builder
 @Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode(exclude = {"active", "actionId", "createDt", "updateDt", "versionCreateDt"}, callSuper = false)
+@EqualsAndHashCode(exclude = {"active", "id", "createDt", "updateDt", "versionCreateDt"}, callSuper = false)
 @ToString
-public class Action extends Entity {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+public class Action extends AbstractEntity {
 
-    @JsonProperty("available_without_money")
-    private Boolean availableWithoutMoney;
-    @JsonProperty("version_list")
+    @Builder.Default
+    private Boolean availableWithoutMoney = false;
     private List<String> versionList;
-    @Setter
-    @JsonProperty("current_version")
     private String currentVersion;
     private Integer priority;
     @JsonAlias({"icon_store_id", "icon_store"})
     private String iconStoreId;
-    @JsonProperty("icon_url")
-    private String iconUrl;
-    @JsonProperty("icon_base64")
+    @Builder.Default
+    private String iconUrl = "";
     private String iconBase64;
-    @JsonProperty("location_restriction")
-    private String locationRestriction;
-    @JsonProperty("graph_version")
+    @Builder.Default
+    private String locationRestriction = "";
     private String graphVersion;
     private String description;
-    @JsonProperty("skip_on_prebilling")
     private Boolean skipOnPrebilling;
-    @JsonProperty("item_restriction")
     private Object itemRestriction;
-    @JsonProperty("auto_removing_if_failed")
     private Boolean autoRemovingIfFailed;
     private String title;
     private String type;
-    @JsonProperty("required_item_statuses")
     private List<String> requiredItemStatuses;
-    @JsonProperty("data_config_path")
     private String dataConfigPath;
-    @JsonProperty("restricted_paths")
     private List<Object> restrictedPaths;
-    @JsonProperty("graph_version_pattern")
     private String graphVersionPattern;
-    @JsonProperty("id")
-    private String actionId;
-    @JsonProperty("allowed_paths")
+    private String id;
     private List<Object> allowedPaths;
-    @JsonProperty("restricted_groups")
     private List<String> restrictedGroups;
-    @JsonProperty("graph_id")
     private String graphId;
-    @JsonProperty("version")
     private String version;
     private String object_info;
-    @JsonProperty("last_version")
     private String lastVersion;
-    @JsonProperty("data_config_key")
     private String dataConfigKey;
-    @JsonProperty("name")
     private String name;
-    @JsonProperty("inactive_reason")
     private String inactiveReason;
     private Integer number;
-    @JsonProperty("allowed_groups")
     private List<Object> allowedGroups;
-    @JsonProperty("graph_version_calculated")
     private String graphVersionCalculated;
-    @JsonProperty("data_config_fields")
     private List<Object> dataConfigFields;
-    @JsonProperty("required_order_statuses")
     private List<Object> requiredOrderStatuses;
-    @JsonProperty("version_create_dt")
     private String versionCreateDt;
-    @JsonProperty("version_changed_by_user")
     private String versionChangedByUser;
-    @JsonProperty("multiple")
-    private boolean isMultiple;
-    @JsonProperty("create_dt")
+    private boolean multiple;
     private String createDt;
-    @JsonProperty("update_dt")
     private String updateDt;
-    @JsonProperty("extra_data")
     private Map<String, String> extraData;
-    @JsonProperty("allowed_developers")
     private List<String> allowedDevelopers;
-    @JsonProperty("restricted_developers")
     private List<String> restrictedDevelopers;
-    @JsonProperty("version_diff")
     private VersionDiff versionDiff;
-    @JsonProperty("active")
     private Boolean active;
-    @JsonProperty("event_type_provider")
     private List<EventTypeProvider> eventTypeProvider;
-    @JsonProperty("context_restrictions")
     private Object contextRestrictions;
-    @JsonProperty("is_safe")
-    private Boolean isSafe;
-    @JsonProperty("is_delayable")
-    private Boolean isDelayable;
-    @JsonProperty("available_with_cost_reduction")
+    @Builder.Default
+    private Boolean isSafe = true;
+    @Builder.Default
+    private Boolean isDelayable = false;
     private Boolean availableWithCostReduction;
-    @JsonProperty("version_fields")
     private List<String> versionFields;
-    @JsonProperty("tag_list")
     private List<String> tagList;
-    @JsonProperty("skip_request_resource_pools")
     private Boolean skipRequestResourcePools;
-    @JsonProperty("skip_reservation")
     private Boolean skipReservation;
-    @JsonProperty("skip_validate_checker")
     private Boolean skipValidateChecker;
-    @JsonProperty("ignore_restriction_service")
     private Boolean ignoreRestrictionService;
-    @JsonProperty("skip_restriction_service")
     private Boolean skipRestrictionService;
-    @JsonProperty("skip_item_change")
     private Boolean skipItemChange;
-    @JsonProperty("skip_item_with_secondary_rel")
     private Boolean skipItemWithSecondaryRel;
-    @JsonProperty("is_for_items")
     private Boolean isForItems;
-    @JsonProperty("is_only_for_api")
     private Boolean isOnlyForApi;
 
-    @Override
-    public Entity init() {
-        if (graphId == null) {
-            Graph graph = Graph.builder().name("graph_for_action_api_test").build().createObject();
-            graphId = graph.getGraphId();
-        }
-        return this;
-    }
-
-    @Override
     public JSONObject toJson() {
+        if (graphId == null) {
+            Graph graph = createGraph(StringUtils.getRandomStringApi(6));
+            graphId = graph.getGraphId();
+            graphVersionCalculated = graph.getVersion();
+        }
         return JsonHelper.getJsonTemplate("productCatalog/actions/createAction.json")
                 .set("$.icon_url", iconUrl)
                 .setIfNullRemove("$.icon_store_id", iconStoreId)
@@ -166,6 +114,8 @@ public class Action extends Entity {
                 .set("$.description", description)
                 .set("$.graph_id", graphId)
                 .set("$.graph_version", graphVersion)
+                .set("$.graph_version_calculated", graphVersionCalculated)
+                .set("$.graph_version_pattern", graphVersionPattern)
                 .set("$.version", version)
                 .set("$.create_dt", createDt)
                 .set("$.update_dt", updateDt)
@@ -174,7 +124,7 @@ public class Action extends Entity {
                 .set("$.extra_data", extraData)
                 .set("$.restricted_groups", restrictedGroups)
                 .set("$.allowed_groups", allowedGroups)
-                .set("$.location_restriction", locationRestriction)
+                .setIfNullRemove("$.location_restriction", locationRestriction)
                 .set("$.context_restrictions", contextRestrictions)
                 .set("$.event_type_provider", eventTypeProvider)
                 .set("$.tag_list", tagList)
@@ -198,21 +148,17 @@ public class Action extends Entity {
                 .build();
     }
 
-    @Override
-    protected void create() {
-        if (isActionExists(name)) {
-            deleteActionByName(name);
-        }
-        Action createAction = createAction(toJson())
-                .assertStatus(201)
-                .extractAs(Action.class);
-        StringUtils.copyAvailableFields(createAction, this);
-        assertNotNull(actionId, "Действие с именем: " + name + ", не создался");
+    public Integer getPrioritise() {
+        return priority;
     }
 
     @Override
-    protected void delete() {
-        deleteActionById(actionId);
-        assertFalse(isActionExists(name));
+    public void delete() {
+        deleteActionById(id);
+    }
+
+    @Override
+    public int getPriority() {
+        return 1;
     }
 }

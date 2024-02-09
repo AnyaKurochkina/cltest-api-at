@@ -1,6 +1,5 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
 import core.helper.JsonHelper;
@@ -13,8 +12,8 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -25,15 +24,12 @@ import static core.utils.AssertUtils.assertEqualsList;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
-import static steps.productCatalog.ProductCatalogSteps.*;
+import static steps.productCatalog.GraphSteps.deleteGraphById;
 import static steps.productCatalog.ProductSteps.importProduct;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-public class ActionImportTest extends Tests {
+public class ActionImportTest extends ActionBaseTest {
 
     @DisplayName("Импорт действия")
     @TmsLink("642433")
@@ -63,16 +59,14 @@ public class ActionImportTest extends Tests {
         }
         Graph graph = createGraph("graph_action_import_for_export_with_tags_test");
         List<String> expectedTagList = Arrays.asList("import_test", "test_import");
-        JSONObject jsonObject = Action.builder()
-                .name(actionName)
-                .graphId(graph.getGraphId())
-                .tagList(expectedTagList)
-                .build()
-                .toJson();
-        Action action = createAction(jsonObject).extractAs(Action.class);
-        DataFileHelper.write(filePath, exportObjectByIdWithTags("actions", action.getActionId()).toString());
+        Action actionModel = createActionModel(actionName);
+        actionModel.setTagList(expectedTagList);
+        actionModel.setGraphId(graph.getGraphId());
+        Action action = createAction(actionModel.toJson()).extractAs(Action.class);
+
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("actions", action.getId()).toString());
         deleteActionByName(actionName);
-        importObjectWithTagList("actions", filePath);
+        importActionWithTagList(filePath);
         assertEquals(expectedTagList, getActionByName(actionName).getTagList());
         deleteActionByName(actionName);
     }
@@ -95,7 +89,7 @@ public class ActionImportTest extends Tests {
                 .build()
                 .toJson();
         Action action = createAction(jsonObject).extractAs(Action.class);
-        DataFileHelper.write(filePath, exportObjectByIdWithTags("actions", action.getActionId()).toString());
+        DataFileHelper.write(filePath, exportObjectByIdWithTags("actions", action.getId()).toString());
         String updatedJsonForImport = JsonHelper.getJsonTemplate("/productCatalog/actions/importActionWithNewTags.json")
                 .set("Action.tag_name_list", addTagList)
                 .set("Action.version_arr", Arrays.asList(1, 0, 1))
@@ -123,24 +117,16 @@ public class ActionImportTest extends Tests {
             deleteActionByName(actionName2);
         }
         String graphId = createGraph(RandomStringUtils.randomAlphabetic(10).toLowerCase()).getGraphId();
-        Action action = createAction(Action.builder()
-                .name(actionName)
-                .graphId(graphId)
-                .build()
-                .toJson())
-                .assertStatus(201)
-                .extractAs(Action.class);
-        Action action2 = createAction(Action.builder()
-                .name(actionName2)
-                .graphId(graphId)
-                .build()
-                .toJson())
-                .assertStatus(201)
-                .extractAs(Action.class);
+        Action actionModel = createActionModel(actionName);
+        actionModel.setGraphId(graphId);
+        Action actionModel2 = createActionModel(actionName2);
+        actionModel2.setGraphId(graphId);
+        Action action = createAction(actionModel);
+        Action action2 = createAction(actionModel2);
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/multiImportAction.json";
         String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/actions/multiImportAction2.json";
-        DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
-        DataFileHelper.write(filePath2, exportActionById(action2.getActionId()).toString());
+        DataFileHelper.write(filePath, exportActionById(action.getId()).toString());
+        DataFileHelper.write(filePath2, exportActionById(action2.getId()).toString());
         deleteActionByName(actionName);
         deleteActionByName(actionName2);
         importObjects("actions", filePath, filePath2);
@@ -156,10 +142,9 @@ public class ActionImportTest extends Tests {
     @TmsLink("1319922")
     @Test
     public void importExistActionTest() {
-        String actionName = "import_exist_action_test_api";
-        Action action = createAction(actionName);
+        Action action = createAction(createActionModel("import_exist_action_test_api"));
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/existActionImport.json";
-        DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
+        DataFileHelper.write(filePath, exportActionById(action.getId()).toString());
         ImportObject importObject = importAction(filePath);
         DataFileHelper.delete(filePath);
         assertEquals("error", importObject.getStatus());
@@ -174,17 +159,25 @@ public class ActionImportTest extends Tests {
     public void importActionWithIcon() {
         String data = JsonHelper.getStringFromFile("/productCatalog/actions/importActionWithIcon.json");
         String actionName = new JsonPath(data).get("Action.name");
+        String graphId = "";
         if (isActionExists(actionName)) {
             deleteActionByName(actionName);
         }
-        importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
-        String id = getActionIdByNameWithMultiSearch(actionName);
-        Action action = getActionById(id);
-        assertFalse(action.getIconStoreId().isEmpty());
-        assertFalse(action.getIconUrl().isEmpty());
-        assertTrue(isActionExists(actionName), "Действие не существует");
-        deleteActionByName(actionName);
-        assertFalse(isActionExists(actionName), "Действие существует");
+        try {
+            importAction(Configure.RESOURCE_PATH + "/json/productCatalog/actions/importActionWithIcon.json");
+            String id = getActionByName(actionName).getId();
+            Action action = getActionById(id);
+            graphId = action.getGraphId();
+            assertFalse(action.getIconStoreId().isEmpty());
+            assertFalse(action.getIconUrl().isEmpty());
+            assertTrue(isActionExists(actionName), "Действие не существует");
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            deleteActionByName(actionName);
+            deleteGraphById(graphId);
+            assertFalse(isActionExists(actionName), "Действие существует");
+        }
     }
 
     @Test
@@ -210,11 +203,11 @@ public class ActionImportTest extends Tests {
         String actionName = "check_not_versioned_fields__when_import_exist_action_test_api";
         Action action = createAction(actionName);
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/checkNotVersionedFieldsExistActionImport.json";
-        DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
-        partialUpdateAction(action.getActionId(), new JSONObject().put("description", description));
+        DataFileHelper.write(filePath, exportActionById(action.getId()).toString());
+        partialUpdateAction(action.getId(), new JSONObject().put("description", description));
         importAction(filePath);
         DataFileHelper.delete(filePath);
-        Action actionById = getActionById(action.getActionId());
+        Action actionById = getActionById(action.getId());
         assertEquals(description, actionById.getDescription());
     }
 
@@ -223,26 +216,21 @@ public class ActionImportTest extends Tests {
     @Test
     public void checkCurrentVersionWhenAlreadyExistActionImportTest() {
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/actions/checkCurrentVersion.json";
-        Action action = Action.builder()
+        Action action = createAction(Action.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
                 .version("1.0.1")
-                .build()
-                .createObject();
-        DataFileHelper.write(filePath, exportActionById(action.getActionId()).toString());
-        action.deleteObject();
-        Action createdAction = Action.builder()
-                .name(action.getName())
-                .version("1.0.0")
-                .build()
-                .createObject();
-        partialUpdateAction(createdAction.getActionId(), new JSONObject()
+                .build().toJson()).extractAs(Action.class);
+        DataFileHelper.write(filePath, exportActionById(action.getId()).toString());
+        action.delete();
+        Action createdAction = createAction(action.getName());
+        partialUpdateAction(createdAction.getId(), new JSONObject()
                 .put("priority", 4)
                 .put("version", "1.1.1"));
-        partialUpdateAction(createdAction.getActionId(), new JSONObject()
+        partialUpdateAction(createdAction.getId(), new JSONObject()
                 .put("current_version", "1.1.1"));
         importAction(filePath);
         DataFileHelper.delete(filePath);
-        Action actionById = getActionById(createdAction.getActionId());
+        Action actionById = getActionById(createdAction.getId());
         assertEquals("1.1.1", actionById.getCurrentVersion());
     }
 }

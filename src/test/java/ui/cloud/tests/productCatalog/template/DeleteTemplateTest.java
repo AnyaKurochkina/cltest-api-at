@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.UUID;
 
 import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;
+import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.GraphSteps.partialUpdateGraph;
 import static ui.cloud.pages.productCatalog.template.TemplatesListPage.goToUsageButton;
 import static ui.cloud.pages.productCatalog.template.TemplatesListPage.nameColumn;
@@ -58,15 +59,14 @@ public class DeleteTemplateTest extends TemplateBaseTest {
     public void deleteTemplateUsedInGraph() {
         String alertText = "Нельзя удалить шаблон, который используется другими объектами. " +
                 "Отвяжите шаблон от объектов и повторите попытку";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(UUID.randomUUID().toString())
                 .title("AT UI Graph")
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description("Delete used template test")
                 .author("QA")
-                .build()
-                .createObject();
+                .build());
         JSONObject graphItem = GraphItem.builder()
                 .name("1")
                 .description("1")

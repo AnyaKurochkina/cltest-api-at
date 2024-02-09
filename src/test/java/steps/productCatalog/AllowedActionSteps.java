@@ -18,6 +18,9 @@ import static core.helper.Configure.productCatalogURL;
 import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.isTypeProviderContains;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.AllowedActionProductCatalogApi.apiV1AllowedActionsCreate;
+import static tests.routes.AllowedActionProductCatalogApi.apiV1AllowedActionsDelete;
 
 public class AllowedActionSteps extends Steps {
     private static final String allowedUrl = "/api/v1/allowed_actions/";
@@ -70,10 +73,8 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Удаление разрешенного действия по id {id}")
     public static void deleteAllowedActionById(Integer id) {
-        new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(allowedUrl + "{}/", id)
-                .assertStatus(204);
+        getProductCatalogAdmin()
+                .api(apiV1AllowedActionsDelete, id);
 
     }
 
@@ -88,10 +89,9 @@ public class AllowedActionSteps extends Steps {
 
     @Step("Создание разрешенного действия")
     public static Response createAllowedAction(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .post(allowedUrl);
+                .api(apiV1AllowedActionsCreate);
     }
 
     @Step("Создание разрешенного действия")

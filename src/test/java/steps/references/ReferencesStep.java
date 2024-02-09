@@ -335,7 +335,7 @@ public class ReferencesStep extends Steps {
         return new Http(referencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
-                .patch(API_V_1_PRIVATE_DIRECTORIES + directoryName + "/pages/" + pageId)
+                .patch(API_V_1_PRIVATE_DIRECTORIES + directoryName + "/pages/" + pageId + "/")
                 .assertStatus(200)
                 .extractAs(Pages.class);
     }

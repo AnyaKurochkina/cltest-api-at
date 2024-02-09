@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.pages.productCatalog.graph.GraphsListPage;
@@ -79,15 +80,14 @@ public class DeleteGraphTest extends GraphBaseTest {
     @DisplayName("Удаление графа, используемого в другом графе")
     public void deleteGraphUsedInGraph() {
         String name = UUID.randomUUID().toString();
-        Graph superGraph = Graph.builder()
+        Graph superGraph = GraphSteps.createGraph(Graph.builder()
                 .name(name)
                 .title(TITLE)
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description(DESCRIPTION)
                 .author(AUTHOR)
-                .build()
-                .createObject();
+                .build());
         JSONObject graphItem = GraphItem.builder()
                 .name("1")
                 .description("1")

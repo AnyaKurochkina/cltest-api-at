@@ -22,8 +22,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static steps.productCatalog.GraphSteps.getGraphById;
-import static steps.productCatalog.GraphSteps.getGraphByIdContext;
+import static steps.productCatalog.GraphSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -74,7 +73,7 @@ public class GraphContextTest extends Tests {
                 .updateType(UpdateType.REPLACE)
                 .data(dataStatic)
                 .build();
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_by_context_test_api")
                 .version("1.0.0")
                 .modifications(Arrays.asList(jsonSchema, uiSchema, staticData))
@@ -87,8 +86,7 @@ public class GraphContextTest extends Tests {
                 .staticData(new LinkedHashMap<String, Object>() {{
                     put("title", "default");
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphByIdContext(project.getId(), graph.getGraphId());
         assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
         assertEquals(uiData, createdGraph.getUiSchema().get("title"));
@@ -110,15 +108,14 @@ public class GraphContextTest extends Tests {
                 .data(jsonData)
                 .build();
         String titleValue = "default";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_with_mods_another_env_by_context_test_api")
                 .version("1.0.0")
                 .modifications(Collections.singletonList(jsonSchema))
                 .jsonSchema(new LinkedHashMap<String, Object>() {{
                     put("title", titleValue);
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphByIdContext(project.getId(), graph.getGraphId());
         assertEquals(titleValue, createdGraph.getJsonSchema().get("title"));
     }
@@ -148,7 +145,7 @@ public class GraphContextTest extends Tests {
                 .data(uiData)
                 .build();
         String expectedTitle = "default";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("get_graph_with_out_context_test_api")
                 .version("1.0.0")
                 .modifications(Arrays.asList(jsonSchema, uiSchema))
@@ -161,8 +158,7 @@ public class GraphContextTest extends Tests {
                 .staticData(new LinkedHashMap<String, Object>() {{
                     put("title", expectedTitle);
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphById(graph.getGraphId());
         assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
         assertEquals(expectedTitle, createdGraph.getUiSchema().get("title"));
@@ -197,7 +193,7 @@ public class GraphContextTest extends Tests {
                 .rootPath(RootPath.STATIC_DATA)
                 .updateType(UpdateType.DELETE)
                 .build();
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name("at_api_get_graph_with_delete_modifiers")
                 .version("1.0.0")
                 .modifications(Arrays.asList(jsonSchemaMod, uiSchemaMod, staticDataMod))
@@ -210,8 +206,7 @@ public class GraphContextTest extends Tests {
                 .staticData(new LinkedHashMap<String, Object>() {{
                     put("domain", "default");
                 }})
-                .build()
-                .createObject();
+                .build());
         Graph createdGraph = getGraphByIdContext(project.getId(), graph.getGraphId());
         assertEquals(0, createdGraph.getJsonSchema().size());
         assertEquals(0, createdGraph.getUiSchema().size());

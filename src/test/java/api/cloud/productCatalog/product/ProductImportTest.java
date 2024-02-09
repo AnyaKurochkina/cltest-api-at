@@ -212,7 +212,7 @@ public class ProductImportTest extends Tests {
                 .build()
                 .createObject();
         DataFileHelper.write(filePath, exportProductById(product.getProductId()).toString());
-        product.deleteObject();
+        product.delete();
         Product createdProduct = Product.builder()
                 .name(product.getName())
                 .version("1.0.0")

@@ -1,6 +1,5 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -20,7 +19,7 @@ import static steps.productCatalog.ActionSteps.partialUpdateAction;
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionAvailableWithCostReductionTest extends Tests {
+public class ActionAvailableWithCostReductionTest extends ActionBaseTest {
 
     @DisplayName("Проверка дефолтного значения поля available_with_cost_reduction")
     @TmsLink("1639160")
@@ -34,13 +33,7 @@ public class ActionAvailableWithCostReductionTest extends Tests {
     @TmsLink("1639162")
     @Test
     public void checkAvailableWithCostReductionFieldTest() {
-        String actionName = "action_available_with_cost_reduction_test_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .availableWithCostReduction(true)
-                .version("1.0.0")
-                .build()
-                .createObject();
+        Action action = createAction(createActionModel("action_available_with_cost_reduction_test_api"));
         assertEquals(true, action.getAvailableWithCostReduction());
     }
 
@@ -48,14 +41,8 @@ public class ActionAvailableWithCostReductionTest extends Tests {
     @TmsLink("1639163")
     @Test
     public void updateAvailableWithCostReductionFieldTest() {
-        String actionName = "action_available_with_cost_reduction_update_test_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .availableWithCostReduction(true)
-                .version("1.0.0")
-                .build()
-                .createObject();
-        Action updatedAction = partialUpdateAction(action.getActionId(), new JSONObject().put("available_with_cost_reduction", false))
+        Action action = createAction(createActionModel("action_available_with_cost_reduction_update_test_api"));
+        Action updatedAction = partialUpdateAction(action.getId(), new JSONObject().put("available_with_cost_reduction", false))
                 .extractAs(Action.class);
         assertEquals("1.0.1", updatedAction.getVersion());
         assertEquals(false, updatedAction.getAvailableWithCostReduction());

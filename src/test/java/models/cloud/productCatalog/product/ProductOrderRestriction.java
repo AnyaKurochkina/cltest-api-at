@@ -38,6 +38,8 @@ public class ProductOrderRestriction {
     @JsonProperty("product_id")
     private String productId;
     private List<String> platforms;
+    @JsonProperty("availability_zones")
+    private List<String> availabilityZones;
     @JsonProperty("data_centers")
     private List<String> dataCenters;
     @JsonProperty("is_deleted")

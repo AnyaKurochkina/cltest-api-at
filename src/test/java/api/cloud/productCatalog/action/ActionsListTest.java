@@ -1,16 +1,15 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
+import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.action.Action;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -18,25 +17,21 @@ import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.getAppProp;
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionsListTest extends Tests {
+public class ActionsListTest extends ActionBaseTest {
 
     @DisplayName("Получение списка действий. Список отсортирован по number и title без учета спец. символов")
     @TmsLink("642429")
     @Test
     public void getActionListTest() {
-        String actionName = "create_action_example_for_get_list_test_api";
-        Action.builder()
-                .name(actionName)
-                .build()
-                .createObject();
-        List<Action> list = getActionList();
+        createAction(createActionModel("create_action_example_for_get_list_test_api"));
+        List<Action> list = getActionList().getList();
         assertTrue(isActionListSorted(list), "Список не отсортирован.");
     }
 
@@ -44,9 +39,9 @@ public class ActionsListTest extends Tests {
     @TmsLink("679025")
     @Test
     public void getMeta() {
-        String nextPage = getMetaActionList().getNext();
+        String nextPage = getActionList().getMeta().getNext();
         String url = getAppProp("url.kong");
-        if (!(nextPage == null)) {
+        if (nextPage != null) {
             assertTrue(nextPage.startsWith(url), "Значение поля next несоответсвует ожидаемому");
         }
     }
@@ -56,11 +51,8 @@ public class ActionsListTest extends Tests {
     @Test
     public void getActionListByNameTest() {
         String actionName = "create_action_example_for_get_list_by_name_test_api";
-        Action.builder()
-                .name(actionName)
-                .build()
-                .createObject();
-        List<Action> list = getActionListByName(actionName);
+        createAction(createActionModel(actionName));
+        List<Action> list = getActionListWithQueryParam(new QueryBuilder().add("name", actionName));
         assertEquals(1, list.size());
         assertEquals(actionName, list.get(0).getName());
     }
@@ -70,18 +62,10 @@ public class ActionsListTest extends Tests {
     @Test
     public void getActionListByNamesTest() {
         String actionName = "create_action_example_for_get_list_by_names_1_test_api";
-        Action.builder()
-                .name(actionName)
-                .title("api_test")
-                .build()
-                .createObject();
+        createAction(createActionModel(actionName));
         String secondAction = "create_action_example_for_get_list_by_names_2_test_api";
-        Action.builder()
-                .name(secondAction)
-                .title("test")
-                .build()
-                .createObject();
-        List<Action> list = getActionListByNames(actionName, secondAction);
+        createAction(createActionModel(secondAction));
+        List<Action> list = getActionListWithQueryParam(new QueryBuilder().add("name__in", format("{},{}", actionName, secondAction)));
         assertEquals(2, list.size(), "Список не содержит значений");
         assertEquals(secondAction, list.get(1).getName());
         assertEquals(actionName, list.get(0).getName());
@@ -91,58 +75,42 @@ public class ActionsListTest extends Tests {
     @TmsLink("783463")
     @Test
     public void getActionListByTypeTest() {
-        String actionName = "create_action_example_for_get_list_by_type_test_api";
         String actionType = "delete";
-        Action.builder()
-                .name(actionName)
-                .type(actionType)
-                .build()
-                .createObject();
-        List<Action> list = getActionListByType(actionType);
-        for (Action item : list) {
-            assertEquals(actionType, item.getType());
-        }
+        Action actionModel = createActionModel("create_action_example_for_get_list_by_type_test_api");
+        actionModel.setType(actionType);
+        createAction(actionModel);
+        List<Action> list = getActionListWithQueryParam(new QueryBuilder().add("type", actionType));
+        list.forEach(item -> assertEquals(actionType, item.getType()));
     }
 
     @DisplayName("Получение списка действий по title используя multisearch")
     @TmsLink("783469")
     @Test
-    public void getActionListByTitleWithMutisearch() {
-        String actionName = "create_action_example_for_get_list_by_title_with_multisearch_test_api";
+    public void getActionListByTitleWithMultiSearch() {
+        Action actionModel = createActionModel("create_action_example_for_get_list_by_title_with_multi_search_test_api");
         String actionTitle = "action_title";
-        Action.builder()
-                .name(actionName)
-                .title(actionTitle)
-                .build()
-                .createObject();
-        List<Action> list = getActionListWithMultiSearch(actionTitle);
-        for (Action item : list) {
-            assertTrue(item.getTitle().contains(actionTitle));
-        }
+        actionModel.setTitle(actionTitle);
+        createAction(actionModel);
+        List<Action> list = getActionListWithQueryParam(new QueryBuilder().add("multisearch", actionTitle));
+        list.forEach(item -> assertTrue(item.getTitle().contains(actionTitle)));
     }
 
     @DisplayName("Поиск действия по имени, с использованием multiSearch")
     @TmsLink("642503")
     @Test
     public void searchActionByName() {
-        String actionName = "action_multisearch_test_api";
-        Action action = Action.builder()
-                .name(actionName)
-                .title(actionName)
-                .build()
-                .createObject();
-        String actionIdWithMultiSearch = getActionIdByNameWithMultiSearch(action.getName());
-        assertAll(
-                () -> assertNotNull(actionIdWithMultiSearch, String.format("Действие с именем: %s не найден", actionName)),
-                () -> assertEquals(action.getActionId(), actionIdWithMultiSearch, "Id действия не совпадают"));
+        Action action = createAction(createActionModel("action_multisearch_test_api"));
+        List<Action> list = getActionListWithQueryParam(new QueryBuilder().add("multisearch", action.getName()));
+        String id = list.get(0).getId();
+        assertEquals(id, action.getId(), "Id действия не совпадают");
     }
 
     @DisplayName("Получение списка действий с флагом for_items=true")
     @TmsLink("982796")
     @Test
     public void getActionListForItems() {
-        List<Action> productObjectList = getActionListByFilter("for_items", true);
-        productObjectList.forEach(x -> assertNotNull(x.getPriority()));
+        List<Action> productObjectList = getActionListWithQueryParam(new QueryBuilder().add("for_items", true));
+        productObjectList.forEach(x -> assertNotNull(x.getPrioritise()));
     }
 
     @DisplayName("Получение списка действий по type_provider_list")
@@ -153,7 +121,7 @@ public class ActionsListTest extends Tests {
                 .set("$.type__provider__list[0].event_type", "vm")
                 .set("$.type__provider__list[0].event_provider", "vsphere")
                 .build();
-        List<Action> actionList = getActionListByTypeProvider(obj );
+        List<Action> actionList = getActionListByTypeProvider(obj);
         checkEventProvider(actionList, "vm", "vsphere");
     }
 
@@ -161,14 +129,10 @@ public class ActionsListTest extends Tests {
     @TmsLink("1700564")
     @Test
     public void getActionListWithTagListTest() {
-        Action.builder()
-                .name("at_api_action_check_tag_list_versioning")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(Collections.singletonList("api_test"))
-                .build()
-                .createObject();
-        List<Action> actionList = getActionListByFilter("with_tag_list", true);
+        Action actionModel = createActionModel("at_api_action_check_tag_list_versioning");
+        actionModel.setTagList(Collections.singletonList("api_test"));
+        createAction(actionModel);
+        List<Action> actionList = getActionListWithQueryParam(new QueryBuilder().add("with_tag_list", true));
         actionList.forEach(x -> assertNotNull(x.getTagList()));
     }
 
@@ -178,38 +142,29 @@ public class ActionsListTest extends Tests {
     public void getActionListFilteredByTagsTest() {
         String tag1 = "api_test";
         String tag2 = "complete";
-        Action.builder()
-                .name("at_api_action_check_tag_list_filtered_by_tags")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(Arrays.asList(tag1, tag2))
-                .build()
-                .createObject();
-        Action.builder()
-                .name("action_for_list_filtered_by_tags")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(Arrays.asList(tag1, tag2))
-                .build()
-                .createObject();
-        List<Action> actionList = getActionListByFilters("with_tag_list=true", "tags_complete_match=true",
-                String.format("tags=%s,%s", tag1, tag2));
+        Action actionModel = createActionModel("at_api_action_check_tag_list_filtered_by_tags");
+        actionModel.setTagList(Arrays.asList(tag1, tag2));
+        createAction(actionModel);
+
+        Action actionModel2 = createActionModel("action_for_list_filtered_by_tags");
+        actionModel2.setTagList(Arrays.asList(tag1, tag2));
+        createAction(actionModel2);
+        List<Action> actionList = getActionListWithQueryParam(new QueryBuilder().add("with_tag_list", true).add("tags_complete_match", true)
+                .add("tags", format("{},{}", tag1, tag2)));
+
         assertEquals(2, actionList.size());
-        actionList.forEach(x-> assertEquals(x.getTagList(), Arrays.asList(tag1, tag2)));
+        actionList.forEach(x -> assertEquals(x.getTagList(), Arrays.asList(tag1, tag2)));
     }
 
     @DisplayName("Получение списка действий отфильтрованном по Тегам с не полным совпадением")
     @TmsLink("1700662")
     @Test
     public void getActionListFilteredByTagsAndCompleteMatchFalseTest() {
-        Action.builder()
-                .name(RandomStringUtils.randomAlphabetic(10).toLowerCase()+ "action_at_ui")
-                .title("AT API Product")
-                .version("1.0.0")
-                .tagList(Arrays.asList("api_test", "api_test_action"))
-                .build()
-                .createObject();
-        List<Action> actionList = getActionListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
+        Action actionModel = createActionModel(StringUtils.getRandomStringApi(9));
+        actionModel.setTagList(Arrays.asList("api_test", "api_test_action"));
+        createAction(actionModel);
+        List<Action> actionList = getActionListWithQueryParam(new QueryBuilder().add("with_tag_list", true).add("tags_complete_match", false)
+                .add("tags", "api_test"));
         actionList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }
 }

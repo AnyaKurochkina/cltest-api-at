@@ -50,7 +50,6 @@ public class GraphExportTest extends Tests {
                 .name(graphName)
                 .title(graphName)
                 .build()
-                .init()
                 .toJson();
         Graph graph = createGraph(jsonObject).assertStatus(201).extractAs(Graph.class);
         String body = exportGraphById(graph.getGraphId()).toString();

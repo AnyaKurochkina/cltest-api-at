@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.product;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -12,8 +13,14 @@ import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ProductSteps;
 
+import java.util.stream.Stream;
+
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductSteps.*;
 
@@ -74,15 +81,23 @@ public class ProductNegativeTest extends Tests {
 
     @DisplayName("Негативный тест на создание продукта с недопустимыми символами в имени")
     @TmsLink("643423")
-    @Test
-    public void createProductWithInvalidCharacters() {
-        Product.builder().name("NameWithUppercase").build().negativeCreateRequest(400);
-        Product.builder().name("nameWithUppercaseInMiddle").build().negativeCreateRequest(400);
-        Product.builder().name("имя").build().negativeCreateRequest(400);
-        Product.builder().name("Имя").build().negativeCreateRequest(400);
-        Product.builder().name("a&b&c").build().negativeCreateRequest(400);
-        Product.builder().name("").build().negativeCreateRequest(400);
-        Product.builder().name(" ").build().negativeCreateRequest(400);
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void createProductWithInvalidCharacters(String name, String message) {
+        AssertResponse.run(() -> createProduct(name)).status(400)
+                .responseContains(format(message, name));
+    }
+
+    static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase", "Cannot instantiate (Product) named ({})"),
+                Arguments.of("nameWithUppercaseInMiddle", "Cannot instantiate (Product) named ({})"),
+                Arguments.of("Имя", "Cannot instantiate (Product) named ({})"),
+                Arguments.of("имя", "Cannot instantiate (Product) named ({})"),
+                Arguments.of("a&b&c", "Cannot instantiate (Product) named ({})"),
+                Arguments.of("", "Это поле не может быть пустым."),
+                Arguments.of(" ", "Это поле не может быть пустым.")
+        );
     }
 
     @DisplayName("Негативный тест на удаление продукта без токена")
@@ -143,7 +158,6 @@ public class ProductNegativeTest extends Tests {
                 .version("1.0.0")
                 .number(-1)
                 .build()
-                .init()
                 .toJson();
         String message = getCreateProductResponse(product).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals("\"number\": Убедитесь, что это значение больше либо равно 0.", message);
@@ -159,7 +173,6 @@ public class ProductNegativeTest extends Tests {
                 .version("1.0.0")
                 .onRequest(OnRequest.TEST)
                 .build()
-                .init()
                 .toJson();
         String errMessage = getCreateProductResponse(product).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
         assertEquals(String.format("\"on_request\": Значения %s нет среди допустимых вариантов.", OnRequest.TEST.getValue()), errMessage);
