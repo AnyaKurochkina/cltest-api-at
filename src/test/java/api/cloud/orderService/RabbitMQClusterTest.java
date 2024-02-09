@@ -129,6 +129,7 @@ public class RabbitMQClusterTest extends Tests {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser(ADP,RIS_CODE,"vhostUser");
             rabbit.addVhost(Collections.singletonList("vhostAccess"));
+            rabbit.editVhostsAccess(RabbitMQClusterAstra.Permission.builder().vhostWrite("vhostAccess").build());
             rabbit.editVhostAccess("vhostUser", Arrays.asList("READ", "WRITE", "CONFIGURE"), "vhostAccess");
             rabbit.deleteVhostAccess("vhostUser", "vhostAccess");
         }

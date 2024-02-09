@@ -87,7 +87,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.on_support", getSupport())
                 .set("$.order.attrs.on_backup", envType().contains("prod"))
-                .set("$.order.attrs.replication", envType().contains("prod"))
+                .set("$.order.attrs.replication", false)
                 .set("$.order.label", getLabel())
                 .build();
     }
@@ -171,7 +171,7 @@ public class PostgresSQLCluster extends AbstractPostgreSQL {
     @Step("Настроить кластер для интеграции с Debezium")
     public void configureDebezium() {
         if (isNotDebezium("cluster")) {
-            JSONObject data = new JSONObject().put("check_agree", true).put("user_password", "hcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXz");
+            JSONObject data = new JSONObject().put("check_agree", true).put("user_password", "hcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXzhcvZ5k5oVRhV3WwXzVlrZsHU-Dcb9hWXz");
             OrderServiceSteps.runAction(ActionParameters.builder().name("postgresql_cluster_configure_debezium").product(this).data(data).build());
         }
     }
