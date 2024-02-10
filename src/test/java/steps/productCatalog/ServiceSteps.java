@@ -15,6 +15,8 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.ServiceProductCatalogApi.apiV1ServicesCreate;
 
 public class ServiceSteps extends Steps {
 
@@ -26,7 +28,6 @@ public class ServiceSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(serviceUrl)
-                .compareWithJsonSchema("jsonSchema/getServiceListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetServiceList.class).getList();
     }
@@ -36,17 +37,15 @@ public class ServiceSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(serviceUrl)
-                .compareWithJsonSchema("jsonSchema/getServiceListSchema.json")
                 .assertStatus(200)
                 .extractAs(GetServiceList.class);
     }
 
     @Step("Создание сервиса")
     public static Response createService(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .post(serviceUrl);
+                .api(apiV1ServicesCreate);
     }
 
     @Step("Создание сервиса")

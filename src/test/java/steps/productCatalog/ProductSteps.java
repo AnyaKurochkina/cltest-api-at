@@ -19,6 +19,9 @@ import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
 import static steps.productCatalog.ProductCatalogSteps.delNoDigOrLet;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsOrderRestrictionsCreate;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsRead;
 
 public class ProductSteps extends Steps {
     private static final String productUrl = "/api/v1/products/";
@@ -64,7 +67,7 @@ public class ProductSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.CLOUD_ADMIN)
                 .get(productUrl + "?{}", filter)
-                .extractAllPages(GetProductList.class).getList();
+                .extractAs(GetProductList.class).getList();
     }
 
     @Step("Получение списка продуктов по фильтрам")
@@ -163,9 +166,8 @@ public class ProductSteps extends Steps {
 
     @Step("Получение продукта по Id")
     public static Product getProductById(String objectId) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(productUrl + objectId + "/")
+        return getProductCatalogAdmin()
+                .api(apiV1ProductsRead, objectId)
                 .extractAs(Product.class);
     }
 
@@ -190,10 +192,9 @@ public class ProductSteps extends Steps {
 
     @Step("Создание order_restrictions продукта по Id")
     public static Response createProductOrderRestrictionById(String objectId, JSONObject jsonObject) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(jsonObject)
-                .post(productUrl + objectId + "/order_restrictions/");
+                .api(apiV1ProductsOrderRestrictionsCreate, objectId);
     }
 
     @Step("Удаление order_restrictions продукта по Id")

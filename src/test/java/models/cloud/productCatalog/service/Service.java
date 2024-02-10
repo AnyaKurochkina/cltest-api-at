@@ -3,10 +3,9 @@ package models.cloud.productCatalog.service;
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import models.cloud.productCatalog.orgDirection.OrgDirection;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
@@ -22,7 +21,7 @@ import static steps.productCatalog.ServiceSteps.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Setter
-public class Service extends Entity implements IProductCatalog {
+public class Service extends AbstractEntity implements IProductCatalog {
 
     @JsonProperty("turn_off_inventory")
     private Boolean turnOffInventory;
@@ -101,8 +100,7 @@ public class Service extends Entity implements IProductCatalog {
     @JsonProperty("direction_name")
     private String directionName;
 
-    @Override
-    public Entity init() {
+    public JSONObject toJson() {
         if (directionId == null) {
             OrgDirection orgDirection = OrgDirection.builder()
                     .name("direction_for_services_api_test")
@@ -111,11 +109,6 @@ public class Service extends Entity implements IProductCatalog {
                     .createObject();
             directionId = orgDirection.getId();
         }
-        return this;
-    }
-
-    @Override
-    public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/services/createServices.json")
                 .set("$.name", name)
                 .set("$.graph_id", graphId)
@@ -137,23 +130,25 @@ public class Service extends Entity implements IProductCatalog {
                 .build();
     }
 
-    @Override
-    protected void create() {
+    public Service createObject() {
         if (isServiceExists(name)) {
             deleteServiceByName(name);
         }
-        Service service = createService(toJson()).assertStatus(201)
-                .extractAs(Service.class);
-        StringUtils.copyAvailableFields(service, this);
-        Assertions.assertNotNull(id, "Сервис с именем: " + name + ", не создался");
+        return createService(toJson())
+                .extractAs(Service.class)
+                .deleteMode(Mode.AFTER_TEST);
     }
 
     @Override
-    protected void delete() {
+    public void delete() {
         if (isPublished) {
             partialUpdateServiceByName(name, new JSONObject().put("is_published", false));
         }
         deleteServiceById(id);
         Assertions.assertFalse(isServiceExists(name));
+    }
+
+    protected int getPriority() {
+        return 0;
     }
 }

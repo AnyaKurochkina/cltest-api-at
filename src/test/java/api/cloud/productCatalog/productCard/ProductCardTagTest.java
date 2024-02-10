@@ -16,7 +16,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ProductCardSteps.*;
 
 @Tag("product_catalog")
@@ -33,8 +34,8 @@ public class ProductCardTagTest extends Tests {
         ProductCard productCard = createProductCard();
         ProductCard productCard1 = createProductCard();
         addTagListToProductCard(tagList, productCard.getName(), productCard1.getName());
-        assertEquals(tagList, getProductCard(productCard.getId()).getTagList());
-        assertEquals(tagList, getProductCard(productCard1.getId()).getTagList());
+        AssertUtils.assertEqualsList(tagList, getProductCard(productCard.getId()).getTagList());
+        AssertUtils.assertEqualsList(tagList, getProductCard(productCard1.getId()).getTagList());
         removeTagListToProductCard(tagList, productCard.getName(), productCard1.getName());
         assertTrue(getProductCard(productCard.getId()).getTagList().isEmpty());
         assertTrue(getProductCard(productCard1.getId()).getTagList().isEmpty());

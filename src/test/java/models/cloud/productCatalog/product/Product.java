@@ -5,17 +5,18 @@ import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ContextRestrictionsItem;
-import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
 import static steps.productCatalog.ProductSteps.*;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsCreate;
 
 @Log4j2
 @Builder
@@ -25,7 +26,7 @@ import static steps.productCatalog.ProductSteps.*;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false, exclude = {"productId", "createDt", "updateDt", "versionCreateDt"})
 @ToString
-public class Product extends Entity {
+public class Product extends AbstractEntity {
 
     @JsonProperty("is_open")
     private Boolean isOpen;
@@ -109,16 +110,6 @@ public class Product extends Entity {
     @JsonProperty("skip_restriction_service")
     private Boolean skipRestrictionService;
 
-    @Override
-    public Entity init() {
-        if (graphId == null) {
-            Graph graph = Graph.builder().name("graph_for_product_api_test").build().createObject();
-            graphId = graph.getGraphId();
-        }
-        return this;
-    }
-
-    @Override
     public JSONObject toJson() {
         String categoryV2 = null;
         String onRequest = null;
@@ -127,6 +118,9 @@ public class Product extends Entity {
         }
         if (this.onRequest != null) {
             onRequest = this.onRequest.getValue();
+        }
+        if (graphId == null) {
+            graphId = createGraph(StringUtils.getRandomStringApi(8)).getGraphId();
         }
         return JsonHelper.getJsonTemplate("productCatalog/products/createProduct.json")
                 .set("$.name", name)
@@ -158,22 +152,25 @@ public class Product extends Entity {
     }
 
     @Override
-    protected void create() {
-        if (isProductExists(name)) {
-            deleteProductByName(name);
-        }
-        Product createProduct = createProduct(toJson());
-        StringUtils.copyAvailableFields(createProduct, this);
-        Assertions.assertNotNull(productId, "Продукт с именем: " + name + ", не создался");
-    }
-
-    @Override
-    protected void delete() {
+    public void delete() {
         Product product = getProductById(productId);
         if (product.isOpen) {
             partialUpdateProduct(productId, new JSONObject().put("is_open", false));
         }
         deleteProductById(productId);
         assertFalse(isProductExists(name));
+    }
+
+    public Product createObject() {
+        return getProductCatalogAdmin()
+                .body(this.toJson())
+                .api(apiV1ProductsCreate)
+                .extractAs(Product.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
+    }
+
+    @Override
+    public int getPriority() {
+        return 0;
     }
 }

@@ -10,6 +10,8 @@ import ui.cloud.tests.productCatalog.ProductCatalogUITest;
 
 import java.util.Collections;
 
+import static steps.productCatalog.ActionSteps.createAction;
+
 @DisabledIfEnv("prod")
 public class ActionBaseTest extends ProductCatalogUITest {
 
@@ -17,7 +19,7 @@ public class ActionBaseTest extends ProductCatalogUITest {
 
     @Step("Создание действия '{name}'")
     protected Action createActionByApi(String name) {
-        return Action.builder()
+        return createAction(Action.builder()
                 .name(name)
                 .title(TITLE)
                 .number(0)
@@ -25,7 +27,6 @@ public class ActionBaseTest extends ProductCatalogUITest {
                         .event_type(EventType.VM.getValue())
                         .event_provider(EventProvider.VSPHERE.getValue())
                         .build()))
-                .build()
-                .createObject();
+                .build());
     }
 }

@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.forbiddenAction;
 
 import api.Tests;
+import core.helper.StringUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -37,14 +38,11 @@ public class ForbiddenActionTest extends Tests {
     @TmsLink("1277044")
     @Test
     public void createForbiddenActionWithParentToSelf() {
-        Action action = Action.builder()
-                .name("action_for_forbidden_action_api_test")
-                .title("api_test")
-                .build()
-                .createObject();
+        Action action = createAction("action_for_forbidden_action_api_test");
+
         JSONObject json = ForbiddenAction.builder()
                 .title("create_forbidden_action_with_parent_to_self_test_api")
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .direction("parent_to_self")
                 .build()
                 .init()
@@ -57,10 +55,10 @@ public class ForbiddenActionTest extends Tests {
     @TmsLink("6864")
     @Test
     public void createForbiddenActionWithDirectionParentToChildTest() {
-        Action action = createAction();
+        Action action = createAction(StringUtils.getRandomStringApi(7));
         JSONObject json = ForbiddenAction.builder()
                 .title("create_forbidden_action_with_parent_to_child_test_api")
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .direction("parent_to_child")
                 .build()
                 .init()
@@ -73,10 +71,10 @@ public class ForbiddenActionTest extends Tests {
     @TmsLink("6865")
     @Test
     public void createForbiddenActionWithDirectionChildToParentTest() {
-        Action action = createAction();
+        Action action = createAction(StringUtils.getRandomStringApi(7));
         JSONObject json = ForbiddenAction.builder()
                 .title("create_forbidden_action_with_child_to_parent_test_api")
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .direction("child_to_parent")
                 .build()
                 .init()
@@ -94,9 +92,9 @@ public class ForbiddenActionTest extends Tests {
                 .build()
                 .createObject();
         String direction = "child_to_parent";
-        Action action1 = createAction();
+        Action action1 = createAction(StringUtils.getRandomStringApi(7));
         ForbiddenAction copiedForbiddenAction = copyForbiddenActionById(forbiddenAction.getId(), new JSONObject()
-                .put("action_id", action1.getActionId())
+                .put("action_id", action1.getId())
                 .put("direction", direction));
         assertTrue(isForbiddenActionExists(copiedForbiddenAction.getName()));
         assertEquals(action1.getName() + "__" + direction, copiedForbiddenAction.getName());

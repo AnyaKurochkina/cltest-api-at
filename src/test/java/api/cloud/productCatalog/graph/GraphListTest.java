@@ -36,11 +36,10 @@ public class GraphListTest extends Tests {
     public void getGraphListByTitleWithMutisearch() {
         String graphName = "create_graph_example_for_get_list_by_title_with_multisearch_test_api";
         String graphTitle = "graph_title";
-        Graph.builder()
+        createGraph(Graph.builder()
                 .name(graphName)
                 .title(graphTitle)
-                .build()
-                .createObject();
+                .build());
         List<Graph> list = getGraphListWithMultiSearch(graphTitle);
         list.forEach(x -> assertTrue(x.getTitle().contains(graphTitle)));
     }
@@ -70,11 +69,10 @@ public class GraphListTest extends Tests {
     public void getGraphVersionListById() {
         String graphName = "create_graph_example_for_get_version_list_by_id_test_api";
         String graphTitle = "graph_title";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(graphName)
                 .title(graphTitle)
-                .build()
-                .createObject();
+                .build());
         String graphId = graph.getGraphId();
         partialUpdateGraph(graphId, new JSONObject().put("title", "title_update"));
         partialUpdateGraph(graphId, new JSONObject().put("title", "title_update2"));
@@ -111,12 +109,7 @@ public class GraphListTest extends Tests {
     @Test
     public void getGraphsById() {
         String graphName = "get_graph_list_by_id_filter_test_api";
-        String graphTitle = "get_graph_list_by_id_filter_test_api";
-        Graph graph = Graph.builder()
-                .name(graphName)
-                .title(graphTitle)
-                .build()
-                .createObject();
+        Graph graph = createGraph(graphName);
         List<Graph> graphList = getGraphListById(graph.getGraphId()).extractAs(GetGraphList.class).getList();
         assertEquals(1, graphList.size());
         Graph listItem = graphList.get(0);
@@ -127,16 +120,8 @@ public class GraphListTest extends Tests {
     @TmsLink("1044122")
     @Test
     public void getGraphsByIds() {
-        Graph firstGraph = Graph.builder()
-                .name("first_graph_list_by_ids_filter_test_api")
-                .title("first_graph_list_by_ids_filter_test_api")
-                .build()
-                .createObject();
-        Graph secondGraph = Graph.builder()
-                .name("second_graph_list_by_ids_filter_test_api")
-                .title("second_graph_list_by_ids_filter_test_api")
-                .build()
-                .createObject();
+        Graph firstGraph = createGraph("first_graph_list_by_ids_filter_test_api");
+        Graph secondGraph = createGraph("second_graph_list_by_ids_filter_test_api");
         List<Graph> graphList = getGraphListByIds(firstGraph.getGraphId(), secondGraph.getGraphId());
         assertEquals(2, graphList.size());
     }
@@ -145,11 +130,7 @@ public class GraphListTest extends Tests {
     @TmsLink("1044123")
     @Test
     public void getGraphsByContainsIds() {
-        Graph graph = Graph.builder()
-                .name("graph_list_by_id_contains_filter_test_api")
-                .title("graph_list_by_id_contains_filter_test_api")
-                .build()
-                .createObject();
+        Graph graph = createGraph("graph_list_by_id_contains_filter_test_api");
         List<Graph> graphList = getGraphListByContainsId(graph.getGraphId());
         assertEquals(1, graphList.size());
         Graph listItem = graphList.get(0);
@@ -160,13 +141,12 @@ public class GraphListTest extends Tests {
     @TmsLink("1701865")
     @Test
     public void getGraphListWithTagListTest() {
-        Graph.builder()
+        createGraph(Graph.builder()
                 .name("at_api_graph_check_tag_list_versioning")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(Collections.singletonList("api_test"))
-                .build()
-                .createObject();
+                .build());
         List<Graph> graphList = getGraphListByFilter("with_tag_list", true);
         graphList.forEach(x -> assertNotNull(x.getTagList()));
     }
@@ -177,20 +157,18 @@ public class GraphListTest extends Tests {
     public void getGraphListFilteredByTagsTest() {
         String tag1 = "api_test";
         String tag2 = "complete";
-        Graph.builder()
+        createGraph(Graph.builder()
                 .name("at_api_graph_check_tag_list_filtered_by_tags")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(Arrays.asList(tag1, tag2))
-                .build()
-                .createObject();
-        Graph.builder()
+                .build());
+        createGraph(Graph.builder()
                 .name("graph_for_list_filtered_by_tags")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(Arrays.asList(tag1, tag2))
-                .build()
-                .createObject();
+                .build());
         List<Graph> graphList = getGraphListByFilters("with_tag_list=true", "tags_complete_match=true",
                 String.format("tags=%s,%s", tag1, tag2));
         assertEquals(2, graphList.size());
@@ -201,13 +179,12 @@ public class GraphListTest extends Tests {
     @TmsLink("1701879")
     @Test
     public void getGraphListFilteredByTagsAndCompleteMatchFalseTest() {
-        Graph.builder()
+        createGraph(Graph.builder()
                 .name("at_api_action_check_tag_list_filtered_by_tags")
                 .title("AT API Product")
                 .version("1.0.0")
                 .tagList(Arrays.asList("api_test", "api_test_action"))
-                .build()
-                .createObject();
+                .build());
         List<Graph> graphList = getGraphListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
         graphList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }

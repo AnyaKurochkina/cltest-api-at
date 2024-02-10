@@ -43,14 +43,14 @@ public class BulkAddActionTest extends Tests {
         JSONObject json = JsonHelper.getJsonTemplate("stateService/createAction.json")
                 .set("$.order_ids", Collections.singletonList(uuid))
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .set("$.create_dt", currentTimeInFormat())
                 .build();
         ActionStateService expectedActionService = createBulkAddAction(project.getId(), json)
                 .assertStatus(201)
                 .jsonPath()
                 .getObject("[0]", ActionStateService.class);
-        ActionStateService actualActionService = getActionListByFilter("action_id", action.getActionId()).get(0);
+        ActionStateService actualActionService = getActionListByFilter("action_id", action.getId()).get(0);
         assertEquals(expectedActionService, actualActionService);
     }
 
@@ -67,7 +67,7 @@ public class BulkAddActionTest extends Tests {
                 .set("$.order_ids", Collections.singletonList(uuid))
                 .set("$.subtype", subtype)
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .build();
         String error = createBulkAddAction(project.getId(), json)
                 .assertStatus(400)

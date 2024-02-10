@@ -1,9 +1,10 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
+import core.helper.StringUtils;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
@@ -39,27 +40,25 @@ public class GraphItemTest extends Tests {
         GraphItem graphItem = getGraphItemFromJsonTemplate();
         graphItem.setSourceType("template");
         graphItem.setSourceId(String.valueOf(template.getId()));
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
     @Test
     @DisplayName("Создание ноды графа типа subgraph")
     public void createGraphWithNodeSubgraphSourceTypeTest() {
-        Graph subGraph = createGraph();
+        Graph subGraph = createGraph(StringUtils.getRandomStringApi(6));
         GraphItem graphItem = getGraphItemFromJsonTemplate();
         graphItem.setSourceType("subgraph");
         graphItem.setSourceId(subGraph.getGraphId());
         graphItem.setName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
@@ -71,11 +70,10 @@ public class GraphItemTest extends Tests {
         graphItem.setSourceType("jinja2");
         graphItem.setSourceId(jinja.getId());
         graphItem.setName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
@@ -87,11 +85,10 @@ public class GraphItemTest extends Tests {
         graphItem.setSourceType("python");
         graphItem.setSourceId(pythonTemplate.getId());
         graphItem.setName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
@@ -109,9 +106,8 @@ public class GraphItemTest extends Tests {
                 .graph(Collections.singletonList(graphItem))
                 .build()
                 .toJson();
-        String message = createGraph(graph).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(format("\"graph\": [ErrorDetail(string='\"source_type\": Значения {} нет среди допустимых вариантов.', code='invalid')]", sourceType),
-                message);
+        AssertResponse.run(() -> createGraph(graph)).status(400)
+                .responseContains(format("\\\"graph\\\": [ErrorDetail(string='\\\"source_type\\\": Значения {} нет среди допустимых вариантов.', code='invalid')]", sourceType));
     }
 
     @Test
@@ -127,8 +123,7 @@ public class GraphItemTest extends Tests {
                 .graph(Collections.singletonList(graphItem))
                 .build()
                 .toJson();
-        String message = createGraph(graph).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(format("\"graph\": [ErrorDetail(string='\"non_field_errors\": Значение “{}” не является верным UUID-ом.', code='invalid')]", template.getId()),
-                message);
+        AssertResponse.run(() -> createGraph(graph)).status(400)
+                .responseContains(format("\\\"graph\\\": [ErrorDetail(string='\\\"non_field_errors\\\": Значение “{}” не является верным UUID-ом.', code='invalid')]", template.getId()));
     }
 }

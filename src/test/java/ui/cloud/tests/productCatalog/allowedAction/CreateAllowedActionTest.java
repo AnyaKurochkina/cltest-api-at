@@ -30,7 +30,7 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
 
     @Step("Создание разрешенного действия без заполнения обязательных полей")
     private void createWithoutRequiredParameters() {
-        allowedAction.setActionId(createAction().getActionId());
+        allowedAction.setActionId(createAction().getId());
         new ControlPanelIndexPage()
                 .goToAllowedActionsListPage()
                 .openAddNewAllowedActionDialog()
@@ -39,7 +39,7 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
 
     @Step("Создание разрешенного действия с неуникальным кодом")
     private void createWithNonUniqueName() {
-        allowedAction.setActionId(action.getActionId());
+        allowedAction.setActionId(action.getId());
         new ControlPanelIndexPage().goToAllowedActionsListPage()
                 .openAddNewAllowedActionDialog()
                 .checkNonUniqueNameValidation(allowedAction);
@@ -51,7 +51,7 @@ public class CreateAllowedActionTest extends AllowedActionBaseTest {
                 .event_type(EventType.BM.getValue())
                 .event_provider(EventProvider.HCP.getValue())
                 .build()));
-        allowedAction.setActionId(createAction().getActionId());
+        allowedAction.setActionId(createAction().getId());
         new ControlPanelIndexPage().goToAllowedActionsListPage()
                 .openAddNewAllowedActionDialog()
                 .setAttributes(allowedAction);

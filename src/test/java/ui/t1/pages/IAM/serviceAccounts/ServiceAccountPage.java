@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class ServiceAccountPage {
 
     List<String> headers = Arrays.asList("Роли", "Дата создания", "Создатель", "Идентификатор");
-    Tab staticKeysTab = Tab.byText("Статические ключи Объектного хранилища S3");
+    Tab staticKeysTab = Tab.byText("Статические ключи Объектного хранилища S3 AZ1");
     Tab apiKeysTab = Tab.byText("API-ключ");
     Button create = Button.byText("Создать");
     Button delete = Button.byXpath("//span[text() = 'API-ключ']/following::button[@label = 'Удалить']");
@@ -35,8 +35,8 @@ public class ServiceAccountPage {
     public ServiceAccountPage checkHeadersAndTabs() {
         List<String> roles = new Table("Роли").getNotEmptyHeaders();
         assertEquals(headers, roles);
-        assertTrue(apiKeysTab.getElement().isDisplayed());
-        assertTrue(staticKeysTab.getElement().isDisplayed());
+        assertTrue(apiKeysTab.getElement().isDisplayed(), "Вкладка 'API-ключ' не отображается");
+        assertTrue(staticKeysTab.getElement().isDisplayed(), "Вкладка 'Статические ключи Объектного хранилища S3 AZ1' не отображается");
         return this;
     }
 

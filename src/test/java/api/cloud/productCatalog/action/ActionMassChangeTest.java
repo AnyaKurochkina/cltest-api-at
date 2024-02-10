@@ -1,14 +1,11 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import io.restassured.path.json.JsonPath;
 import models.cloud.productCatalog.action.Action;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -17,26 +14,25 @@ import java.util.UUID;
 
 import static core.helper.StringUtils.format;
 import static core.helper.StringUtils.getRandomStringApi;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.ActionSteps.*;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
-public class ActionMassChangeTest extends Tests {
+public class ActionMassChangeTest extends ActionBaseTest {
 
     @DisplayName("Массовое изменение параметра is_for_items у действий")
     @TmsLink("SOUL-8338")
     @Test
     public void massChangeActionTest() {
-        Action action1 = createAction("action1_mass_change_test_api");
-        Action action2 = createAction("action2_mass_change_test_api");
-        Action action3 = createAction("action3_mass_change_test_api");
-        Action action4 = createAction("action4_mass_change_test_api");
-        Action action5 = createAction("action5_mass_change_test_api");
-        List<String> actionIdList = Arrays.asList(action1.getActionId(), action2.getActionId(), action3.getActionId(),
-                action4.getActionId(), action5.getActionId());
+        Action action1 = createAction(createActionModel("action1_mass_change_test_api"));
+        Action action2 = createAction(createActionModel("action2_mass_change_test_api"));
+        Action action3 = createAction(createActionModel("action3_mass_change_test_api"));
+        Action action4 = createAction(createActionModel("action4_mass_change_test_api"));
+        Action action5 = createAction(createActionModel("action5_mass_change_test_api"));
+        List<String> actionIdList = Arrays.asList(action1.getId(), action2.getId(), action3.getId(),
+                action4.getId(), action5.getId());
         massChangeActionParam(actionIdList, false);
         actionIdList.forEach(x -> assertFalse(getActionById(x).getIsForItems()));
         massChangeActionParam(actionIdList, true);
@@ -49,12 +45,9 @@ public class ActionMassChangeTest extends Tests {
     public void massChangeNotExistActionTest() {
         Action action1 = createAction(getRandomStringApi(6));
         String notExistActionUUID = UUID.randomUUID().toString();
-        List<String> actionIdList = Arrays.asList(action1.getActionId(), notExistActionUUID);
+        List<String> actionIdList = Arrays.asList(action1.getId(), notExistActionUUID);
 
-        String response = uncheckedMassChangeActionParam(actionIdList, true).assertStatus(400).toString();
-        String updatedResponse = response.replace("is_for_items:True", "is_for_items_true");
-        String errorMessage = JsonPath.from(updatedResponse).get("is_for_items_true[1].error");
-
-        assertEquals(format("Object Action with id={} does not exists", notExistActionUUID), errorMessage);
+        AssertResponse.run(() -> massChangeActionParam(actionIdList, true)).status(400)
+                .responseContains(format("Object Action with id={} does not exists", notExistActionUUID));
     }
 }

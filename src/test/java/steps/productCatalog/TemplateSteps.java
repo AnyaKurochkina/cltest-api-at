@@ -16,6 +16,8 @@ import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.TemplateProductCatalogApi.apiV1TemplatesCreate;
 
 public class TemplateSteps extends Steps {
 
@@ -24,10 +26,9 @@ public class TemplateSteps extends Steps {
 
     @Step("Создание шаблона")
     public static Response createTemplate(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .post(templateUrl);
+                .api(apiV1TemplatesCreate);
     }
 
     @Step("Копирование направления по Id")
