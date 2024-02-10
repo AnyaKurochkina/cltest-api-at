@@ -72,6 +72,10 @@ public class Dialog implements TypifiedElement {
         checkBox.setChecked(checked);
     }
 
+    public void setDropdown(Select dropdown, String value) {
+        dropdown.set(value);
+    }
+
     public void setRadio(Radio radio) {
         radio.checked();
     }
