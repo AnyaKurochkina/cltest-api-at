@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import core.utils.Waiting;
@@ -206,6 +207,8 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Выполнение action {action.name} у заказа {action.orderId}")
     public static void runAction(ActionParameters action) {
+        Assertions.assertNotEquals("locked", getStatusOrder(action.getOrderId(), action.getProjectId()),
+                StringUtils.format("Статус заказа 'Заблокирован'. Действие '{}' не может быть выполнено", action.getName()));
         waitStatus(Duration.ofMinutes(10), action.getOrderId(), action.getProjectId());
         updateItemIdByOrderIdAndActionTitle(action);
         AtomicReference<Float> costPreBilling = new AtomicReference<>();
