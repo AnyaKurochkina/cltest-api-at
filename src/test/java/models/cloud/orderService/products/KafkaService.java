@@ -77,7 +77,7 @@ public class KafkaService extends IProduct {
 
     public void deleteAclRole(String cert, KafkaRoles role) {
         JSONObject object = new JSONObject().put("client_cn", cert).put("client_role", role.getRole());
-        OrderServiceSteps.runAction(ActionParameters.builder().name("taas_delete_aclstaas_delete_acls").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("taas_delete_acls").product(this)
                 .data(new JSONObject().put("selected", new JSONArray().put(object.put("rawData", new JSONObject(object.toMap()))))).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_ROLE, cert, role.getRole())), "ACL не создался");
     }
