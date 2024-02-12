@@ -6,12 +6,14 @@ import core.exception.CalculateException;
 import core.exception.CreateEntityException;
 import core.helper.Configure;
 import core.helper.JsonTemplate;
+import core.helper.Report;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -49,6 +51,7 @@ import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.orderServiceURL;
@@ -411,6 +414,19 @@ public abstract class IProduct extends Entity {
                 .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(urlAttrs)
                 .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
+    }
+
+    @Step("Проверка выполнения условий по ssh")
+    public void runOnAllNodesBySsh(Consumer<SshClient> predicate) {
+        TypeRef<List<String>> typeReference = new TypeRef<List<String>>() {
+        };
+        List<String> ipList = OrderServiceSteps.getObjectClass(this, "product_data.ip", typeReference);
+        for (String ip : ipList) {
+            Report.checkStep("Проверка выполнения условия по ssh на vm " + ip, () -> {
+                SshClient client = SshClient.builder().host(ip).env(envType()).build();
+                predicate.accept(client);
+            });
+        }
     }
 
     @SneakyThrows

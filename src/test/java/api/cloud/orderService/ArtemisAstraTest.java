@@ -1,19 +1,21 @@
 package api.cloud.orderService;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.orderService.products.Artemis;
+import models.cloud.subModels.Flavor;
 import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import api.Tests;
 
 import java.util.Collections;
 
@@ -32,7 +34,7 @@ public class ArtemisAstraTest extends Tests {
         }
     }
 
-    @TmsLinks({@TmsLink("982647"),@TmsLink("982652")})
+    @TmsLinks({@TmsLink("982647"), @TmsLink("982652")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Создать/удалить сервис {0}")
@@ -119,7 +121,20 @@ public class ArtemisAstraTest extends Tests {
     @ParameterizedTest(name = "[{1}] Вертикальное масштабирование {0}")
     void verticalScaling(Artemis product, Integer num) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
-            artemis.verticalScaling();
+            Flavor flavor = artemis.getMaxFlavor();
+            artemis.verticalScaling(flavor);
+            if (artemis.isDev()) {
+                artemis.runOnAllNodesBySsh(client -> {
+                    Integer memory = (Integer.parseInt(artemis.executeSsh(client, "free  | grep \"Mem\" | awk '{print $2}'")) / 1048576) + 1;
+                    Integer cpu = Integer.parseInt(artemis.executeSsh(client, "cat /proc/cpuinfo | grep processor | wc -l"));
+                    String memConfig = artemis.executeSsh(client, "sudo cat /app/etc/systemd/artemis.service.conf | grep \"Xmx\"");
+
+                    Assertions.assertAll("Проверка изменений по SSH на vm " + client.getHost(),
+                            () -> Assertions.assertEquals(flavor.getMemory(), memory, "Размер ОЗУ не изменился"),
+                            () -> Assertions.assertEquals(flavor.getCpus(), cpu, "Размер CPU не изменился"),
+                            () -> Assertions.assertEquals(memConfig, "-Xmx" + flavor.getMemory() / 4 + "G", "Размер не mem / 4"));
+                });
+            }
         }
     }
 
@@ -154,7 +169,7 @@ public class ArtemisAstraTest extends Tests {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
 //            artemis.stopHard();
 //            try {
-                artemis.resize(artemis.getMaxFlavorLinuxVm());
+            artemis.resize(artemis.getMaxFlavorLinuxVm());
 //            } finally {
 //                artemis.start();
 //            }
@@ -162,7 +177,7 @@ public class ArtemisAstraTest extends Tests {
     }
 
     @Disabled
-    @TmsLinks({@TmsLink("982654"),@TmsLink("982656")})
+    @TmsLinks({@TmsLink("982654"), @TmsLink("982656")})
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Включить/Выключить принудительно {0}")
