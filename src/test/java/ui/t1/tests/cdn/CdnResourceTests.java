@@ -120,7 +120,7 @@ public class CdnResourceTests extends AbstractT1Test {
     @Order(6)
     @DisplayName("CDN.Экранирование источников. Подключение")
     @TmsLinks(@TmsLink("SOUL-5388"))
-    public void CHANGE_THIS_NAME() {
+    public void shieldingSourcesConnectionTest() {
         String name = cdnResource.get().getName();
         new IndexPage().goToCdn()
                 .switchToResourceTab()
@@ -135,7 +135,7 @@ public class CdnResourceTests extends AbstractT1Test {
     @Order(7)
     @DisplayName("CDN.Экранирование источников. Редактирование")
     @TmsLinks(@TmsLink("SOUL-5391"))
-    public void CHANGE_THIS_NAME2() {
+    public void shieldingSourcesEditTest() {
         String name = cdnResource.get().getName();
         String newLocation = "Singapore / Singapore-EC / SG1-EC";
         new IndexPage().goToCdn()
@@ -152,7 +152,7 @@ public class CdnResourceTests extends AbstractT1Test {
     @Order(8)
     @DisplayName("CDN.Экранирование источников. Выключение")
     @TmsLinks(@TmsLink("SOUL-5393"))
-    public void CHANGE_THIS_NAME3() {
+    public void shieldingSourcesOffTest() {
         String name = cdnResource.get().getName();
         new IndexPage().goToCdn()
                 .switchToResourceTab()
