@@ -74,8 +74,10 @@ public class ObjectPoolService {
                 objectPoolEntity.release();
             if (e instanceof IProduct)
                 ((IProduct) e).addLinkProduct();
-            throw new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
+            final CreateEntityException createEntityException = new CreateEntityException(String.format("Объект: %s, необходимый для выполнения теста был создан с ошибкой:\n%s",
                     objectPoolEntity.getClazz().getSimpleName(), objectPoolEntity.getError()));
+            createEntityException.addSuppressed(objectPoolEntity.getError());
+            throw createEntityException;
         }
         if (objectPoolEntity.getStatus() == ObjectStatus.NOT_CREATED) {
             try {

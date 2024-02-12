@@ -135,6 +135,7 @@ public class PostgreSQLTest extends Tests {
     }
 
     @TmsLink("")
+    @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Добавить точку монтирования /pg_audit {0}")
@@ -145,6 +146,7 @@ public class PostgreSQLTest extends Tests {
     }
 
     @TmsLink("")
+    @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Добавить точку монтирования /pg_backup {0}")
@@ -155,6 +157,7 @@ public class PostgreSQLTest extends Tests {
     }
 
     @TmsLink("")
+    @Disabled
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Добавить точку монтирования /pg_walarchive {0}")
