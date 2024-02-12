@@ -134,7 +134,7 @@ public class UiRedisAstraTest extends UiProductTest {
     @DisplayName("UI RedisAstra. Сбросить пароль пользователя")
     void resetPasswordUser() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel, "Сбросить пароль пользователя"));
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel, "Сбросить пароль"));
     }
 
     @Test
@@ -189,6 +189,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(13)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Установить Ключ-Астром")
@@ -198,6 +199,7 @@ public class UiRedisAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(14)
     @TmsLink("")
     @DisplayName("UI RedisAstra. Удалить Ключ-Астром")
