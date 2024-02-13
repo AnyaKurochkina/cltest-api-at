@@ -16,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.ItemVisualTemplateProductCatalogApi.apiV1ItemVisualTemplatesDelete;
 
 public class VisualTemplateSteps extends Steps {
 
@@ -24,7 +26,6 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Получение списка шаблонов отображения")
     public static List<ItemVisualTemplate> getVisualTemplateList() {
-        //todo сравнение с jsonshema
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(visualTemplateUrl)
@@ -42,9 +43,8 @@ public class VisualTemplateSteps extends Steps {
 
     @Step("Удаление шаблона отображения по Id")
     public static Response deleteVisualTemplateById(String id) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(visualTemplateUrl + id + "/");
+        return getProductCatalogAdmin()
+                .api(apiV1ItemVisualTemplatesDelete, id);
     }
 
     @Step("Получение списка шаблонов отображения отсортированного по дате создания")

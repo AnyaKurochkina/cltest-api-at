@@ -1,7 +1,8 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
 import core.enums.Role;
+import core.helper.StringUtils;
+import core.helper.http.QueryBuilder;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -18,40 +19,37 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static core.helper.StringUtils.format;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static steps.keyCloak.KeyCloakSteps.getUserInfo;
 import static steps.productCatalog.ActionSteps.*;
-import static steps.productCatalog.ProductCatalogSteps.*;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionAuditTest extends Tests {
+public class ActionAuditTest extends ActionBaseTest {
     private final static String ENTITY_TYPE = "actions";
 
     @DisplayName("Получение списка audit для определенного действия")
     @TmsLink("SOUL-8312")
     @Test
     public void getActionAuditListTest() {
-        Action action = createAction("get_audit_list_test_api");
-        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
+        Action action = createAction(createActionModel("get_audit_list_test_api"));
+        List<ProductAudit> objectAuditList = getActionAuditList(action.getId());
         assertEquals(1, objectAuditList.size());
         ProductAudit productAudit = objectAuditList.get(0);
-        assertEquals(action.getActionId(), productAudit.getObjId());
+        assertEquals(action.getId(), productAudit.getObjId());
     }
 
     @DisplayName("Получение деталей audit")
     @TmsLink("SOUL-8313")
     @Test
     public void getAuditDetailsTest() {
-        Action action = createAction(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
-        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
+        Action action = createAction(createActionModel(StringUtils.getRandomStringApi(8)));
+        List<ProductAudit> objectAuditList = getActionAuditList(action.getId());
         ProductAudit productAudit = objectAuditList.get(0);
-        assertEquals(action.getActionId(), productAudit.getObjId());
-        Response response = getObjectAudit(ENTITY_TYPE, productAudit.getAuditId());
+        assertEquals(action.getId(), productAudit.getObjId());
+        Response response = getActionAuditDetails(productAudit.getAuditId());
         Action createdAction = response.jsonPath().getObject("new_value", Action.class);
         JSONObject old_value = response.jsonPath().getObject("old_value", JSONObject.class);
         assertEquals(action.getName(), createdAction.getName());
@@ -64,9 +62,9 @@ public class ActionAuditTest extends Tests {
     public void getAuditDetailsChangedActionTest() {
         Action action = createAction(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
         String updatedName = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-        partialUpdateAction(action.getActionId(), new JSONObject().put("name", updatedName));
-        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
-        Response response = getObjectAudit(ENTITY_TYPE, objectAuditList.get(0).getAuditId());
+        partialUpdateAction(action.getId(), new JSONObject().put("name", updatedName));
+        List<ProductAudit> objectAuditList = getActionAuditList(action.getId());
+        Response response = getActionAuditDetails(objectAuditList.get(0).getAuditId());
         String newValueName = response.jsonPath().getString("new_value.name");
         String oldValueName = response.jsonPath().getString("old_value.name");
         assertEquals(action.getName(), oldValueName);
@@ -77,10 +75,10 @@ public class ActionAuditTest extends Tests {
     @TmsLink("SOUL-8314")
     @Test
     public void getAuditListWithObjKeyTest() {
-        Action testAction = createAction();
-        testAction.deleteObject();
+        Action testAction = createAction(StringUtils.getRandomStringApi(6));
+        deleteActionById(testAction.getId());
         createAction(testAction.toJson());
-        List<ProductAudit> auditListForObjKeys = getAuditListByObjKeys(ENTITY_TYPE, testAction.getName());
+        List<ProductAudit> auditListForObjKeys = getAuditListForActionKeys(testAction.getName());
         auditListForObjKeys.forEach(x -> assertEquals(x.getObjKeys().get("name"), testAction.getName()));
         deleteActionByName(testAction.getName());
     }
@@ -89,40 +87,41 @@ public class ActionAuditTest extends Tests {
     @TmsLink("SOUL-8457")
     @Test
     public void getAuditUserInfoWhoDidChangesTest() {
-        Action action = createAction();
-        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
+        Action action = createAction(createActionModel(StringUtils.getRandomStringApi(8)));
+        List<ProductAudit> objectAuditList = getActionAuditList(action.getId());
         UserInfo userInfo = getUserInfo(Role.PRODUCT_CATALOG_ADMIN);
         ProductAudit productAudit = objectAuditList.get(0);
-        assertEquals(userInfo.getEmail(), productAudit.getUserEmail());
-        assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName());
-        assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName());
+        assertAll(
+                () -> assertEquals(userInfo.getEmail(), productAudit.getUserEmail()),
+                () -> assertEquals(userInfo.getGivenName(), productAudit.getUserFirstName()),
+                () -> assertEquals(userInfo.getFamilyName(), productAudit.getUserLastName()));
     }
 
     @DisplayName("Получение списка audit по фильтру user__icontains")
     @TmsLink("SOUL-8458")
     @Test
     public void getObjectAuditWithFilterByUserEmailTest() {
-        String name = RandomStringUtils.randomAlphabetic(6).toLowerCase();
-        Action action = createAction();
+        String name = StringUtils.getRandomStringApi(7);
+        Action action = createAction(StringUtils.getRandomStringApi(7));
 
-        partialUpdateActionWithAnotherRole(action.getActionId(), new JSONObject().put("name", name), Role.CLOUD_ADMIN);
-        List<ProductAudit> objectAuditList = getObjectAuditList(ENTITY_TYPE, action.getActionId());
+        partialUpdateActionWithAnotherRole(action.getId(), new JSONObject().put("name", name), Role.CLOUD_ADMIN);
+        List<ProductAudit> objectAuditList = getActionAuditList(action.getId());
         assertEquals(2, objectAuditList.size());
 
         UserInfo userProductCatalogAdmin = getUserInfo(Role.PRODUCT_CATALOG_ADMIN);
         UserInfo userCloudAdmin = getUserInfo(Role.CLOUD_ADMIN);
 
-        List<ProductAudit> objectAuditListWithFilteredByFirstName = getObjectAuditListWithFilter(ENTITY_TYPE, action.getActionId(), format("user__icontains={}", userProductCatalogAdmin.getGivenName()));
+        List<ProductAudit> objectAuditListWithFilteredByFirstName = getActionAuditListWithQuery(action.getId(), new QueryBuilder().add("user__icontains", userProductCatalogAdmin.getGivenName()));
         assertEquals(1, objectAuditListWithFilteredByFirstName.size());
         ProductAudit productAudit = objectAuditListWithFilteredByFirstName.get(0);
         assertEquals(productAudit.getUserFirstName(), userProductCatalogAdmin.getGivenName());
 
-        List<ProductAudit> objectAuditListWithFilteredByEmail = getObjectAuditListWithFilter(ENTITY_TYPE, action.getActionId(), format("user__icontains={}", userCloudAdmin.getEmail()));
+        List<ProductAudit> objectAuditListWithFilteredByEmail = getActionAuditListWithQuery(action.getId(), new QueryBuilder().add("user__icontains", userCloudAdmin.getEmail()));
         assertEquals(1, objectAuditListWithFilteredByEmail.size());
         ProductAudit productAuditEmail = objectAuditListWithFilteredByEmail.get(0);
         assertEquals(productAuditEmail.getUserEmail(), userCloudAdmin.getEmail());
 
-        List<ProductAudit> objectAuditListWithFilteredByLastName = getObjectAuditListWithFilter(ENTITY_TYPE, action.getActionId(), format("user__icontains={}", userCloudAdmin.getFamilyName()));
+        List<ProductAudit> objectAuditListWithFilteredByLastName = getActionAuditListWithQuery(action.getId(), new QueryBuilder().add("user__icontains", userCloudAdmin.getFamilyName()));
         assertEquals(1, objectAuditListWithFilteredByLastName.size());
         ProductAudit productAuditLastName = objectAuditListWithFilteredByLastName.get(0);
         assertEquals(productAuditLastName.getUserLastName(), userCloudAdmin.getFamilyName());

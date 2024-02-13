@@ -54,7 +54,6 @@ public class GraphByNameTest extends Tests {
                 .name(graphName)
                 .title(graphName)
                 .build()
-                .init()
                 .toJson();
         createGraph(jsonObject).assertStatus(201);
         deleteGraphByName(graphName);
@@ -79,12 +78,11 @@ public class GraphByNameTest extends Tests {
     @Test
     public void copyGraphAndCheckTagListV2Test() {
         String graphName = "clone_graph_v2_test_api";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(graphName)
                 .title(graphName)
                 .tagList(Arrays.asList("api_test", "test"))
-                .build()
-                .createObject();
+                .build());
         Graph cloneGraph = copyGraphByName(graphName);
         deleteGraphById(cloneGraph.getGraphId());
         assertEquals(graph.getTagList(), cloneGraph.getTagList());

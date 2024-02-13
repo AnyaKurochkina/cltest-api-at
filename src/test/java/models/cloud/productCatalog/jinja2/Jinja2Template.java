@@ -3,20 +3,20 @@ package models.cloud.productCatalog.jinja2;
 import api.cloud.productCatalog.IProductCatalog;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import core.helper.JsonHelper;
-import core.helper.StringUtils;
 import io.qameta.allure.Step;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
-import models.Entity;
+import models.AbstractEntity;
 import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
 import static core.helper.StringUtils.getRandomStringApi;
-import static steps.productCatalog.Jinja2Steps.*;
+import static steps.productCatalog.Jinja2Steps.deleteJinjaById;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
 import static steps.productCatalog.TemplateSteps.createTemplateByName;
+import static tests.routes.Jinja2ProductCatalogApi.apiV1Jinja2TemplatesCreate;
 
 @Log4j2
 @Builder
@@ -26,7 +26,7 @@ import static steps.productCatalog.TemplateSteps.createTemplateByName;
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @ToString
-public class Jinja2Template extends Entity implements IProductCatalog {
+public class Jinja2Template extends AbstractEntity implements IProductCatalog {
 
     @JsonProperty("jinja2_template")
     private String jinja2Template;
@@ -55,19 +55,13 @@ public class Jinja2Template extends Entity implements IProductCatalog {
     @JsonProperty("template_version_pattern")
     private String templateVersionPattern;
 
-    @Override
-    public Entity init() {
+    public JSONObject toJson() {
         if (templateId == null) {
             Template template = createTemplateByName(getRandomStringApi(6));
             templateId = template.getId();
             templateVersion = "";
             templateVersionPattern = "";
         }
-        return this;
-    }
-
-    @Override
-    public JSONObject toJson() {
         return JsonHelper.getJsonTemplate("productCatalog/jinja2/createJinja.json")
                 .set("$.name", name)
                 .set("$.title", title)
@@ -87,21 +81,22 @@ public class Jinja2Template extends Entity implements IProductCatalog {
                 .build();
     }
 
-    @Override
     @Step("Создание шаблона Jinja2")
-    protected void create() {
-        if (isJinja2Exists(name)) {
-            deleteJinjaByName(name);
-        }
-        Jinja2Template jinja2 = createJinja(toJson());
-        StringUtils.copyAvailableFields(jinja2, this);
-        Assertions.assertNotNull(id, "Jinja с именем: " + name + ", не создался");
+    public Jinja2Template createObject() {
+        return getProductCatalogAdmin()
+                .body(this.toJson())
+                .api(apiV1Jinja2TemplatesCreate)
+                .extractAs(Jinja2Template.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Override
-    @Step("Удаление jinja2")
-    protected void delete() {
+    public void delete() {
         deleteJinjaById(id);
-        Assertions.assertFalse(isJinja2Exists(name));
+    }
+
+    @Override
+    protected int getPriority() {
+        return 4;
     }
 }

@@ -5,6 +5,8 @@ import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Http;
+import core.helper.http.Path;
+import core.helper.http.QueryBuilder;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
@@ -28,6 +30,7 @@ import static core.helper.Configure.productCatalogURL;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static steps.keyCloak.KeyCloakSteps.getNewUserToken;
+import static tests.routes.ProductProductCatalogApi.apiV1ProductsCategories;
 
 @Data
 @AllArgsConstructor
@@ -38,6 +41,33 @@ public class ProductCatalogSteps {
 
     public ProductCatalogSteps(String resourcePath) {
         this.resourcePath = resourcePath;
+    }
+
+    public static Http getProductCatalogAdmin() {
+        return new Http(productCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN);
+    }
+
+    public static Http getProductCatalogViewer() {
+        return new Http(productCatalogURL)
+                .setRole(Role.PRODUCT_CATALOG_VIEWER);
+    }
+
+    public static Http getProductCatalogWithOutToken() {
+        return new Http(productCatalogURL).setWithoutToken();
+    }
+
+    @Step("Получение объекта по Id без токена")
+    public static Response requestWithOutToken(Path path, String objectId) {
+        return getProductCatalogWithOutToken()
+                .api(path, objectId);
+    }
+
+    @Step("Получение объекта по Id без токена")
+    public static Response requestWithBodyWithOutToken(Path path, String objectId, JSONObject jsonObject) {
+        return getProductCatalogWithOutToken()
+                .body(jsonObject)
+                .api(path, objectId);
     }
 
     @Step("Импорт нескольких {entityName}")
@@ -93,21 +123,30 @@ public class ProductCatalogSteps {
                 .post("/api/v1/check_item_restrictions/");
     }
 
-    @Step("Получение списка audit для {entityName} с id {id}")
-    public static List<ProductAudit> getObjectAuditList(String entityName, String id) {
+    @Step("Получение списка audit для {entityName} с id {id} и фитром {filter}")
+    public static List<ProductAudit> getObjectAuditListWithFilter(String entityName, String id, String filter) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .get("/api/v1/{}/{}/audit/?{}", entityName, id, filter)
+                .assertStatus(200)
+                .jsonPath()
+                .getList("list", ProductAudit.class);
+    }
+
+    @Step("Получение списка audit для {entityName} с id {id}")
+    public static List<ProductAudit> getObjectAuditList(String entityName, String id) {
+        return getProductCatalogAdmin()
                 .get("/api/v1/{}/{}/audit/", entityName, id)
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
     }
 
-    @Step("Получение списка audit для {entityName} с id {id} и фитром {filter}")
-    public static List<ProductAudit> getObjectAuditListWithFilter(String entityName, String id, String filter) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/{}/{}/audit/?{}", entityName, id, filter)
+    @Step("Получение списка аудита действия для obj_keys")
+    public static List<ProductAudit> getAuditListForObjKeys(String entityName, String keyValue) {
+        return getProductCatalogAdmin()
+                .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
+                .post("/api/v1/{}/audit_by_object_keys/", entityName)
                 .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
@@ -127,17 +166,6 @@ public class ProductCatalogSteps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get("/api/v1/{}/audit_object_keys/", entityName)
                 .assertStatus(200);
-    }
-
-    @Step("Получение списка аудита {entityName} для obj_keys")
-    public static List<ProductAudit> getAuditListByObjKeys(String entityName, String keyValue) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
-                .post("/api/v1/{}/audit_by_object_keys/", entityName)
-                .assertStatus(200)
-                .jsonPath()
-                .getList("list", ProductAudit.class);
     }
 
     @Step("Получение версии продуктового каталога")
@@ -266,35 +294,43 @@ public class ProductCatalogSteps {
                 .get(resourcePath + "?name=" + name);
     }
 
+    @Step("Получение списка объекта по фильтру = {query}")
+    public static Response getObjectListWithQueryParam(Http http, Path path, QueryBuilder query) {
+        return http
+                .api(path, query);
+    }
+
+    @Step("Получение объекта продуктового каталога с публичным токеном")
+    public static Response getObjectWithPublicToken(Http http, Path path, String objectId) {
+        return http
+                .api(path, objectId);
+    }
+
     @Step("Создание объекта продуктового каталога с публичным токеном")
-    public Response createProductObjectWithPublicToken(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+    public static Response createObjectWithPublicToken(Http http, Path path, JSONObject body) {
+        return http
                 .body(body)
-                .post(resourcePath);
+                .api(path);
     }
 
     @Step("Обновление объекта продуктового каталога с публичным токеном")
-    public Response partialUpdateObjectWithPublicToken(String id, JSONObject object) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+    public static Response partialUpdateObjectWithPublicToken(Http http, Path path, String id, JSONObject object) {
+        return http
                 .body(object)
-                .patch(resourcePath + id + "/");
+                .api(path, id);
     }
 
     @Step("Удаление объекта продуктового каталога с публичным токеном")
-    public Response deleteObjectWithPublicToken(String id) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_VIEWER)
-                .delete(resourcePath + id + "/");
+    public static Response deleteObjectWithPublicToken(Http http, Path path, String id) {
+        return http
+                .api(path, id);
     }
 
     @Step("Обновление всего объекта продуктового каталога по Id с публичным токеном")
-    public Response putObjectByIdWithPublicToken(String objectId, JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_VIEWER)
+    public static Response putObjectByIdWithPublicToken(Http http, Path path, String objectId, JSONObject body) {
+        return http
                 .body(body)
-                .put(resourcePath + objectId + "/");
+                .api(path, objectId);
     }
 
     @Step("Проверка сортировки списка")
@@ -334,10 +370,8 @@ public class ProductCatalogSteps {
 
     @Step("Получение доступных категорий")
     public List<String> getAvailableCategories() {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/products/categories/")
-                .assertStatus(200)
+        return getProductCatalogAdmin()
+                .api(apiV1ProductsCategories)
                 .jsonPath().getList("");
     }
 }

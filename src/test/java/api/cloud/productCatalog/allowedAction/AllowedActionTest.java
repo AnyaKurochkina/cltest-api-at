@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.allowedAction;
 
 import api.Tests;
+import core.helper.StringUtils;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -75,7 +76,7 @@ public class AllowedActionTest extends Tests {
         JSONObject jsonObject = AllowedAction.builder()
                 .title("new_update_allowed_action_test_api")
                 .build()
-                .init().toJson();
+                .toJson();
         String updatedName = getActionById(jsonObject.get("action").toString()).getName() + "__parent_to_child";
         AllowedAction updatedAction = updateAllowedAction(action.getId(), jsonObject);
         assertEquals(updatedTitle, updatedAction.getTitle());
@@ -102,8 +103,8 @@ public class AllowedActionTest extends Tests {
                 .title("copy_by_id_allowed_action_test_api")
                 .build()
                 .createObject();
-        Action action1 = createAction();
-        AllowedAction copiedAllowedAction = copyAllowedActionById(action.getId(), new JSONObject().put("action_id", action1.getActionId()));
+        Action action1 = createAction(StringUtils.getRandomStringApi(7));
+        AllowedAction copiedAllowedAction = copyAllowedActionById(action.getId(), new JSONObject().put("action_id", action1.getId()));
         assertTrue(isAllowedActionExists(copiedAllowedAction.getName()));
         assertEquals(action1.getName() + "__parent_to_child", copiedAllowedAction.getName());
     }

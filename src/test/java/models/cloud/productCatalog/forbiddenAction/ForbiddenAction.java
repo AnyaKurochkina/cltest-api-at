@@ -11,13 +11,13 @@ import lombok.extern.log4j.Log4j2;
 import models.Entity;
 import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.action.Action;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
+import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.ForbiddenActionSteps.*;
 
 @Log4j2
@@ -56,10 +56,8 @@ public class ForbiddenAction extends Entity {
     @Override
     public Entity init() {
         if (actionId == null) {
-            Action action = Action.builder().name(RandomStringUtils.randomAlphabetic(10).toLowerCase())
-                    .build()
-                    .createObject();
-            actionId = action.getActionId();
+            Action action = createAction(StringUtils.getRandomStringApi(7));
+            actionId = action.getId();
         }
         return this;
     }

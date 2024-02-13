@@ -30,7 +30,7 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
 
     @Step("Создание запрещенного действия без заполнения обязательных полей")
     private void createWithoutRequiredParameters() {
-        forbiddenAction.setActionId(createAction().getActionId());
+        forbiddenAction.setActionId(createAction().getId());
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
                 .addNewForbbidenAction()
                 .checkRequiredParams(forbiddenAction);
@@ -38,7 +38,7 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
 
     @Step("Создание запрещенного действия с неуникальным кодом")
     private void createWithNonUniqueName() {
-        forbiddenAction.setActionId(action.getActionId());
+        forbiddenAction.setActionId(action.getId());
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
                 .addNewForbbidenAction()
                 .checkNonUniqueNameValidation(forbiddenAction);
@@ -50,7 +50,7 @@ public class CreateForbiddenActionTest extends ForbiddenActionBaseTest {
                 .event_type(EventType.BM.getValue())
                 .event_provider(EventProvider.HCP.getValue())
                 .build()));
-        forbiddenAction.setActionId(createAction().getActionId());
+        forbiddenAction.setActionId(createAction().getId());
         new ControlPanelIndexPage().goToForbiddenActionsListPage()
                 .addNewForbbidenAction()
                 .setAttributes(forbiddenAction);

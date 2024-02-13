@@ -144,8 +144,8 @@ public class Http {
         return request();
     }
 
+    @SneakyThrows
     public Response api(Path api, Object... args) {
-
         this.host = api.url;
         this.method = api.method.toString();
         this.path = api.path;
@@ -157,8 +157,15 @@ public class Http {
             i++;
         }
         for (Object o : args) {
-            if (o instanceof QueryBuilder)
+            if (o instanceof QueryBuilder) {
                 queryParams = ((QueryBuilder) o).toMap();
+            }
+            if (o instanceof Attachment) {
+                setContentType("multipart/form-data; boundary=" + boundary);
+                this.field = ((Attachment) o).getField();
+                this.bytes = ((Attachment) o).getBytes();
+                this.fileName = ((Attachment) o).getFileName();
+            }
         }
         Response request = request();
         request.assertStatus(api.status);

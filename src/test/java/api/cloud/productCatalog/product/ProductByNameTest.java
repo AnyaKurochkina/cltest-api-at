@@ -63,7 +63,6 @@ public class ProductByNameTest extends Tests {
                 .name(product)
                 .title(product)
                 .build()
-                .init()
                 .toJson();
         createProduct(jsonObject);
         deleteProductByName(product);
