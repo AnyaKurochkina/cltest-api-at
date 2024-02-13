@@ -20,6 +20,16 @@ import steps.portalBack.PortalBackSteps;
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("vault"), @Tag("prod")})
 public class VaultTest extends Tests {
 
+    private Vault.AppRole getCachedAppRole(Vault vault) {
+        return Vault.AppRole.builder()
+                .aclCidr("10.10.20.1/16")
+                .approleName(vault.fullAppRoleName("cached-app-role"))
+                .policy("portal-ro")
+                .description("desc")
+                .secretIdTtl(0)
+                .build();
+    }
+
     @TmsLink("1431949")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -52,6 +62,58 @@ public class VaultTest extends Tests {
                     OrderServiceSteps.getDomainByProject(vault.getProjectId()), "vlt");
             vault.addRule(accessGroup, "user-ro", "portal-ro", "user-rw");
             vault.changeRule(accessGroup, "user-ro");
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Создать AppRole {0}")
+    void addAppRole(Vault product, Integer num) {
+        try (Vault vault = product.createObjectExclusiveAccess()) {
+            vault.addAppRole(getCachedAppRole(vault));
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Перевыпустить ключ {0}")
+    void generateSecretIdAppRole(Vault product, Integer num) {
+        try (Vault vault = product.createObjectExclusiveAccess()) {
+            vault.addAppRole(getCachedAppRole(vault));
+            vault.generateSecretIdAppRole(getCachedAppRole(vault));
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Удалить AppRole {0}")
+    void deleteAppRole(Vault product, Integer num) {
+        try (Vault vault = product.createObjectExclusiveAccess()) {
+            vault.addAppRole(getCachedAppRole(vault));
+            vault.deleteAppRole(getCachedAppRole(vault));
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Изменить AppRole {0}")
+    void updateAppRole(Vault product, Integer num) {
+        try (Vault vault = product.createObjectExclusiveAccess()) {
+            Vault.AppRole appRole = Vault.AppRole.builder()
+                    .aclCidr("10.10.20.1/16")
+                    .approleName(vault.fullAppRoleName("update-app-role"))
+                    .policy("portal-ro")
+                    .description("desc")
+                    .secretIdTtl(0)
+                    .build();
+
+            vault.addAppRole(appRole);
+            appRole.setDescription("updated desc");
+            vault.updateAppRole(appRole);
         }
     }
 

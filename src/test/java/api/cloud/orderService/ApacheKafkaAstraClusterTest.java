@@ -65,7 +65,7 @@ public class ApacheKafkaAstraClusterTest extends Tests {
     @ParameterizedTest(name = "[{1}] Создание ACL на транзакцию Kafka {0}")
     void createAclTransaction(ApacheKafkaCluster product, Integer num) {
         try (ApacheKafkaCluster kafka = product.createObjectExclusiveAccess()) {
-            kafka.createAclTransaction("*");
+            kafka.createAclTransaction("test");
         }
     }
 
