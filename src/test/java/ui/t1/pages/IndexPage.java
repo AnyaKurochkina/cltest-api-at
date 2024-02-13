@@ -68,7 +68,7 @@ public class IndexPage {
 
     public IndexPage() {
         //Ожидание загрузки /tenant
-        Waiting.sleep(2000);
+        Waiting.sleep(3000);
     }
 
     @Step("Переход на главную страницу")
