@@ -143,7 +143,7 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение списка аудита действия для obj_keys")
-    public static List<ProductAudit> getAuditListForObjKeys(String entityName, String keyValue) {
+    public static List<ProductAudit> getAuditListByObjKeys(String entityName, String keyValue) {
         return getProductCatalogAdmin()
                 .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
                 .post("/api/v1/{}/audit_by_object_keys/", entityName)

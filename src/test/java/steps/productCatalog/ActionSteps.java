@@ -63,7 +63,7 @@ public class ActionSteps extends ProductCatalogSteps {
     }
 
     @Step("Получение списка аудита действия для obj_keys")
-    public static List<ProductAudit> getAuditListForActionKeys(String keyValue) {
+    public static List<ProductAudit> getAuditListByActionKeys(String keyValue) {
         return getProductCatalogAdmin()
                 .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
                 .api(apiV1ActionsAuditByObjectKeys)

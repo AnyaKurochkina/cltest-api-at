@@ -54,7 +54,7 @@ class UiTarantoolDataGridAstraCheckUntilOrderTest extends Tests {
         //Проверка Детали заказа
         orderPage.getSegmentSelect().set(product.getSegment());
         orderPage.getPlatformSelect().set(product.getPlatform());
-        orderPage.getFlavorSelectCluster().set(NewOrderPage.getFlavor(product.getMinFlavor()));
+        orderPage.getClusterConfigSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
         String accessGroup = product.accessGroup();
         orderPage.getGroupSelect().set(accessGroup);
