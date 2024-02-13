@@ -15,7 +15,7 @@ public class ShieldingOfSourcesTab {
     @Step("Подключение и проверка алерта")
     public ShieldingOfSourcesTab activateShieldingWithLocation(String location) {
         activationButton.click();
-        activationModal.setDropdown(Select.byName("shielding_pop"), location);
+        activationModal.setSelectValue(Select.byName("shielding_pop"), location);
         activationModal.clickButton("Сохранить");
         Alert.green("Экранирующий сервер подключен");
         return this;
@@ -30,7 +30,7 @@ public class ShieldingOfSourcesTab {
     @Step("Редактирование локации")
     public ShieldingOfSourcesTab changeLocation(String location) {
         editButton.click();
-        activationModal.setDropdown(Select.byName("shielding_pop"), location);
+        activationModal.setSelectValue(Select.byName("shielding_pop"), location);
         activationModal.clickButton("Сохранить");
         Alert.green("Экранирующий сервер подключен");
         return this;
