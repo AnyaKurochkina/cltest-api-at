@@ -130,7 +130,7 @@ public class ProductCatalogSteps {
     }
 
     @Step("Получение списка аудита {entityName} для obj_keys")
-    public static List<ProductAudit> getAuditListForObjKeys(String entityName, String keyValue) {
+    public static List<ProductAudit> getAuditListByObjKeys(String entityName, String keyValue) {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))

@@ -80,7 +80,7 @@ public class ActionAuditTest extends Tests {
         Action testAction = createAction();
         testAction.deleteObject();
         createAction(testAction.toJson());
-        List<ProductAudit> auditListForObjKeys = getAuditListForObjKeys(ENTITY_TYPE, testAction.getName());
+        List<ProductAudit> auditListForObjKeys = getAuditListByObjKeys(ENTITY_TYPE, testAction.getName());
         auditListForObjKeys.forEach(x -> assertEquals(x.getObjKeys().get("name"), testAction.getName()));
         deleteActionByName(testAction.getName());
     }
