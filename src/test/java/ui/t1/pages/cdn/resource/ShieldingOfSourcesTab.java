@@ -1,7 +1,5 @@
 package ui.t1.pages.cdn.resource;
 
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import ui.elements.*;
 
@@ -10,7 +8,7 @@ public class ShieldingOfSourcesTab {
     private final Button activationButton = Button.byText("Подключить");
     private final Dialog activationModal = Dialog.byTitle("Настройка экранирования");
     private final Button editButton = Button.byText("Редактировать");
-    private final SelenideElement offToggle = Selenide.$x("//label[@role='switch']");
+    private final Switch offToggle = Switch.byText("Выключить");
 
     @Step("Подключение и проверка алерта")
     public ShieldingOfSourcesTab activateShieldingWithLocation(String location) {
@@ -38,7 +36,7 @@ public class ShieldingOfSourcesTab {
 
     @Step("Выключение услуги")
     public ShieldingOfSourcesTab offShielding() {
-        offToggle.click();
+        offToggle.setEnabled(false);
         return this;
     }
 
