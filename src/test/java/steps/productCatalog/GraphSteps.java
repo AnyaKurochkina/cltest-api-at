@@ -124,6 +124,14 @@ public class GraphSteps extends Steps {
         return createGraph(graph);
     }
 
+    public static Graph createGraph(String name, String title) {
+        Graph graph = Graph.builder()
+                .name(name)
+                .title(title)
+                .build();
+        return createGraph(graph);
+    }
+
     public static Graph createGraph() {
         Graph graph = Graph.builder()
                 .name(StringUtils.getRandomStringApi(7))
