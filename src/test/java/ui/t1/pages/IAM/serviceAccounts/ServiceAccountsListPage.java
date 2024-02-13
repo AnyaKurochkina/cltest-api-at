@@ -78,7 +78,7 @@ public class ServiceAccountsListPage {
     @Step("Проверка данных аккаунта")
     public ServiceAccountsListPage checkAccountData(ServiceAccount account) {
         GlobalUser user = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
-        Table.Row row = serviceAccountsTable.getRowByColumnValue("Название", account.getTitle());
+        Table.Row row = serviceAccountsTable.update().getRowByColumnValue("Название", account.getTitle());
         String actualTitle = row.getValueByColumn("Название");
         List<String> actualRoles = Arrays.asList(row.getValueByColumn("Роли").split(",\n"));
         List<String> expectedRoles = account.getRoles();

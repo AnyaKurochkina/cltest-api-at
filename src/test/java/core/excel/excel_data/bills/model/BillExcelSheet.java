@@ -23,7 +23,8 @@ public class BillExcelSheet extends AbstractExcelSheet<BillExcelItem> {
         @Override
         public Map<Integer, ExcelField<BillExcelItem>> getHeaderFieldsMappings() {
             return createFieldsMappings(new HashSet<>(Arrays.asList(
-                    new ExcelFieldWithMapping<>(FieldInfoMapping.PROJECT, FieldInfoMapping.SERVICE, BillExcelItem::getProject),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.PROJECT, FieldInfoMapping.ORDER, BillExcelItem::getProject),
+                    new ExcelFieldWithMapping<>(FieldInfoMapping.ORDER, FieldInfoMapping.SERVICE, BillExcelItem::getOrder),
                     new ExcelFieldWithMapping<>(FieldInfoMapping.SERVICE, FieldInfoMapping.TARIFF_CLASS_OF_SERVICE, BillExcelItem::getService),
                     new ExcelFieldWithMapping<>(FieldInfoMapping.TARIFF_CLASS_OF_SERVICE, FieldInfoMapping.START_DATE, BillExcelItem::getTariffClassOfService),
                     new ExcelFieldWithMapping<>(FieldInfoMapping.START_DATE, FieldInfoMapping.END_DATE, BillExcelItem::getStartDate),
