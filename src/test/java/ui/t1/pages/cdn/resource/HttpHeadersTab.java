@@ -38,7 +38,7 @@ public class HttpHeadersTab {
     }
 
     @Step("[Проверка] Модальное окно редактирвоания отображается")
-    public HttpHeadersTab checkEditDialogIsAppear() {
+    public HttpHeadersTab checkEditModalIsAppear() {
         Dialog editDialog = Dialog.byTitle("Редактировать HTTP-заголовки и методы");
         editDialog.getDialog().shouldBe(Condition.visible.because("Модальное окно редактирования должно отображаться"));
         return this;

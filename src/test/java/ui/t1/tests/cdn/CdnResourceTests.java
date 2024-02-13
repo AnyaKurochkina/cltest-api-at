@@ -31,6 +31,8 @@ import java.util.stream.Stream;
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CdnResourceTests extends AbstractT1Test {
 
+    private final static String DEFAULT_LOCATION = "Russia / Moscow-EC / M9 | M9P";
+
     private final EntitySupplier<Resource> cdnResource = lazy(() -> {
         Resource resource = new Resource(getProjectId(), "mirror.yandex.ru",
                 Collections.singletonList(RandomStringUtils.randomAlphabetic(8).toLowerCase() + ".ya.ru"))
@@ -111,7 +113,56 @@ public class CdnResourceTests extends AbstractT1Test {
                 .switchToHttpHeadersTab()
                 .checkTitles()
                 .clickEditButton()
-                .checkEditDialogIsAppear();
+                .checkEditModalIsAppear();
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("CDN.Экранирование источников. Подключение")
+    @TmsLinks(@TmsLink("SOUL-5388"))
+    public void shieldingSourcesConnectionTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToShieldingOfSources()
+                .activateShieldingWithLocation(DEFAULT_LOCATION)
+                .checkShieldingIsActivatedWithLocation(DEFAULT_LOCATION);
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("CDN.Экранирование источников. Редактирование")
+    @TmsLinks(@TmsLink("SOUL-5391"))
+    public void shieldingSourcesEditTest() {
+        String name = cdnResource.get().getName();
+        String newLocation = "Singapore / Singapore-EC / SG1-EC";
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToShieldingOfSources()
+                .activateShieldingWithLocation(DEFAULT_LOCATION)
+                .changeLocation(newLocation)
+                .checkShieldingIsActivatedWithLocation(newLocation);
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("CDN.Экранирование источников. Выключение")
+    @TmsLinks(@TmsLink("SOUL-5393"))
+    public void shieldingSourcesOffTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToShieldingOfSources()
+                .activateShieldingWithLocation(DEFAULT_LOCATION)
+                .checkShieldingIsActivatedWithLocation(DEFAULT_LOCATION)
+                .offShielding()
+                .checkThatShieldingIsOff();
     }
 
     @Test
