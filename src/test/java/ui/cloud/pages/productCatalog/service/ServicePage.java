@@ -10,6 +10,7 @@ import models.cloud.productCatalog.service.Service;
 import org.junit.jupiter.api.Assertions;
 import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
+import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityPage;
 import ui.cloud.tests.productCatalog.TestUtils;
@@ -426,5 +427,11 @@ public class ServicePage extends EntityPage {
         new ControlPanelIndexPage().goToServicesListPagePC().openServicePage(service.getName());
         titleInput.getInput().shouldHave(Condition.exactValue(service.getTitle()));
         return this;
+    }
+
+    @Step("Переход на вкладку 'История изменений'")
+    public AuditPage goToServiceAuditTab() {
+        goToTab("История изменений");
+        return new AuditPage();
     }
 }

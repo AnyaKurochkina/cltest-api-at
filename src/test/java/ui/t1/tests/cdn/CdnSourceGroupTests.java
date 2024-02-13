@@ -5,7 +5,9 @@ import core.helper.Report;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
+import io.qameta.allure.TmsLinks;
 import models.AbstractEntity;
+import models.t1.cdn.Resource;
 import models.t1.cdn.SourceGroup;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
@@ -16,6 +18,8 @@ import ui.t1.pages.IndexPage;
 import ui.t1.tests.AbstractT1Test;
 import ui.t1.tests.WithAuthorization;
 import ui.t1.tests.engine.EntitySupplier;
+
+import java.util.Collections;
 
 @Epic("CDN")
 @Feature("Действия с группами источников")
@@ -28,14 +32,26 @@ import ui.t1.tests.engine.EntitySupplier;
 public class CdnSourceGroupTests extends AbstractT1Test {
 
     private final EntitySupplier<SourceGroup> cdnSourceGroup = lazy(() -> {
-        SourceGroup sourceGroup = new SourceGroup(getProjectId(), "t1.ru",
-                RandomStringUtils.randomAlphabetic(4).toLowerCase() + ".autotest-source-group.com")
-                .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+        SourceGroup sourceGroup = SourceGroup.builder()
+                .projectId(getProjectId())
+                .domainName("t1.ru")
+                .name(RandomStringUtils.randomAlphabetic(4).toLowerCase() + ".autotest-source-group.com")
+                .build().deleteMode(AbstractEntity.Mode.AFTER_CLASS);
         new IndexPage().goToCdn()
                 .switchToSourceGroupTab()
                 .create(sourceGroup);
         Alert.green("Группа источников успешно добавлена");
         return sourceGroup;
+    });
+
+    private final EntitySupplier<Resource> cdnResource = lazy(() -> {
+        Resource resource = new Resource(getProjectId(), "mirror.yandex.ru",
+                Collections.singletonList(RandomStringUtils.randomAlphabetic(8).toLowerCase() + ".ya.ru"))
+                .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .create(resource);
+        return resource;
     });
 
     @Test
@@ -64,6 +80,24 @@ public class CdnSourceGroupTests extends AbstractT1Test {
 
     @Test
     @Order(3)
+    @DisplayName("CDN. Невозможность добавить группу источников без \"Основного\" приоритета")
+    @TmsLink("SOUL-5379")
+    public void createSourceGroupAsReservedTest() {
+        SourceGroup sourceGroup = SourceGroup.builder()
+                .projectId(getProjectId())
+                .domainName("t1.ru")
+                .name(RandomStringUtils.randomAlphabetic(4).toLowerCase() + ".autotest-source-group.com")
+                .isReserved(true)
+                .build().deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+
+        new IndexPage().goToCdn()
+                .switchToSourceGroupTab()
+                .create(sourceGroup);
+        Alert.red("You cannot specify all origin sources as reserve (backup). Add non-reserve origins.");
+    }
+
+    @Test
+    @Order(4)
     @DisplayName("CDN. Невозможность добавить группу источников с существующим в таблице названием")
     @TmsLink("SOUL-5378")
     public void createSourceGroupWithSameNameTest() {
@@ -74,6 +108,18 @@ public class CdnSourceGroupTests extends AbstractT1Test {
         Report.checkStep("Отображается нотификация с текстом - Origin Group name should be unique", () -> {
             Alert.red("Origin Group name should be unique");
         });
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("CDN. Невозможность удалить группу источников, которая используется в ресурсе")
+    @TmsLinks(@TmsLink("SOUL-5380"))
+    public void usedSourceGroupUnableToDeleteTest() {
+        String hostName = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToSourceGroupTab()
+                .delete(hostName);
+        Alert.red("There are resources using such group");
     }
 
     @Test

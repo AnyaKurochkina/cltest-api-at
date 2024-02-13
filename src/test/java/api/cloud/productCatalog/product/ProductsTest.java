@@ -204,7 +204,7 @@ public class ProductsTest extends Tests {
                 .version("1.0.0")
                 .info(info)
                 .build()
-                .init().toJson();
+                .toJson();
         createProductWithPublicToken(createProduct).assertStatus(403);
         partialUpdateProductWithPublicToken(productId, new JSONObject().put("description", "UpdateDescription"))
                 .assertStatus(403);
@@ -327,7 +327,7 @@ public class ProductsTest extends Tests {
                 .title("updated_product")
                 .version("1.0.1")
                 .info(info)
-                .build().init().toJson();
+                .build().toJson();
         Product updatedProduct = updateProduct(product.getProductId(), json);
         assertEquals(name, updatedProduct.getName());
     }

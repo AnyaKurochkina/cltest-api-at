@@ -10,6 +10,7 @@ import models.cloud.productCatalog.graph.UpdateType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import steps.productCatalog.GraphSteps;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
@@ -31,7 +32,7 @@ public class DeleteModifierTest extends GraphBaseTest {
                 .updateType(UpdateType.REPLACE)
                 .build();
 
-        Graph.builder()
+        GraphSteps.createGraph(Graph.builder()
                 .name(NAME)
                 .title(TITLE)
                 .version("1.0.0")
@@ -39,8 +40,7 @@ public class DeleteModifierTest extends GraphBaseTest {
                 .description(DESCRIPTION)
                 .author(AUTHOR)
                 .modifications(Collections.singletonList(modifier))
-                .build()
-                .createObject();
+                .build());
     }
 
     @Test

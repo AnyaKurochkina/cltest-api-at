@@ -17,7 +17,7 @@ public class EditJinja2TemplateTest extends Jinja2TemplateBaseTest {
     @Test
     @TmsLink("713212")
     @DisplayName("Редактирование шаблона Jinja2")
-    public void editForbiddenAction() {
+    public void editJinja2Template() {
         jinja2Template.setDescription("New description");
         jinja2Template.setJinja2Template("{%- set result = '' -%}\n" +
                 "{%- set result = user_info+'\\n'+' project_info' -%}    \n" +

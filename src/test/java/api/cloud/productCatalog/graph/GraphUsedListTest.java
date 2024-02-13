@@ -20,7 +20,7 @@ import steps.productCatalog.ProductCatalogSteps;
 import static core.helper.StringUtils.getRandomStringApi;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static steps.productCatalog.ActionSteps.getActionById;
+import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.ProductSteps.getProductById;
 import static steps.productCatalog.ProductSteps.partialUpdateProduct;
@@ -36,10 +36,7 @@ public class GraphUsedListTest extends Tests {
     @TmsLink("642681")
     @Test
     public void getUsedGraphList() {
-        Graph usedGraphApi = Graph.builder()
-                .name("used_graph_api")
-                .build()
-                .createObject();
+        Graph usedGraphApi = createGraph("used_graph_test_api");
         String usedGraphId = usedGraphApi.getGraphId();
 
         Product createProductResponse = Product.builder()
@@ -56,16 +53,15 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Action createActionResponse = Action.builder()
+        Action createActionResponse = createAction(Action.builder()
                 .name("action_for_used_graph_test_api")
                 .graphId(usedGraphId)
-                .build()
-                .createObject();
+                .build());
 
         JsonPath jsonPath = getObjectArrayUsedGraph(usedGraphId);
         assertAll(
                 () -> assertEquals(createProductResponse.getProductId(), jsonPath.getString("id[0]")),
-                () -> assertEquals(createActionResponse.getActionId(), jsonPath.getString("id[1]")),
+                () -> assertEquals(createActionResponse.getId(), jsonPath.getString("id[1]")),
                 () -> assertEquals(createServiceResponse.getId(), jsonPath.getString("id[2]"))
         );
     }
@@ -74,10 +70,7 @@ public class GraphUsedListTest extends Tests {
     @TmsLink("1114670")
     @Test
     public void getObjTypeUsedGraphList() {
-        Graph usedGraphApi = Graph.builder()
-                .name("type_used_graph_api")
-                .build()
-                .createObject();
+        Graph usedGraphApi = createGraph("type_used_graph_test_api");
         String usedGraphId = usedGraphApi.getGraphId();
 
         Product.builder()
@@ -94,11 +87,10 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Action.builder()
+        createAction(Action.builder()
                 .name("action_for_type_used_graph_test_api")
                 .graphId(usedGraphId)
-                .build()
-                .createObject();
+                .build());
         Response response = getObjectTypeUsedGraph(usedGraphId, "product");
         assertEquals("Product", response.jsonPath().getString("type[0]"));
         Response getActionResp = getObjectTypeUsedGraph(usedGraphId, "action");
@@ -115,10 +107,7 @@ public class GraphUsedListTest extends Tests {
     @TmsLink("1117823")
     @Test
     public void getLastObjUsedGraphList() {
-        Graph usedGraphApi = Graph.builder()
-                .name("last_object_used_graph_api")
-                .build()
-                .createObject();
+        Graph usedGraphApi = createGraph("last_object_used_graph_api");
         String usedGraphId = usedGraphApi.getGraphId();
 
         Product.builder()
@@ -149,17 +138,15 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Action.builder()
-                .name("action_for_last_object_used_graph_test_api")
+        createAction(Action.builder()
+                .name("action2_for_last_object_used_graph_test_api")
                 .graphId(usedGraphId)
-                .build()
-                .createObject();
+                .build());
 
-        Action lastAction = Action.builder()
+        Action lastAction = createAction(Action.builder()
                 .name("last_action_for_last_object_used_graph_test_api")
                 .graphId(usedGraphId)
-                .build()
-                .createObject();
+                .build());
 
         Response response = getLastObjectUsedGraph(usedGraphId);
         assertEquals(lastAction.getName(), response.jsonPath().getString("name[1]"));
@@ -171,10 +158,7 @@ public class GraphUsedListTest extends Tests {
     @TmsLink("1117927")
     @Test
     public void getLastVersionUsedGraphList() {
-        Graph usedGraphApi = Graph.builder()
-                .name("last_version_used_graph_api")
-                .build()
-                .createObject();
+        Graph usedGraphApi = createGraph("last_version_used_graph_api");
         String usedGraphId = usedGraphApi.getGraphId();
 
         Product product = Product.builder()
@@ -187,7 +171,7 @@ public class GraphUsedListTest extends Tests {
         String productVersion = getProductById(product.getProductId()).getVersion();
 
         Service service = Service.builder()
-                .name("service_for_last_object_used_graph_test_api")
+                .name("service2_for_last_object_used_graph_test_api")
                 .title("service_title")
                 .isPublished(false)
                 .graphId(usedGraphId)
@@ -199,17 +183,16 @@ public class GraphUsedListTest extends Tests {
                 .put("service_info", "updated_service_for_last_version_used_graph_test_api"));
         String serviceVersion = getServiceById(service.getId()).getVersion();
 
-        Action action = Action.builder()
+        Action action = createAction(Action.builder()
                 .name("action_for_last_object_used_graph_test_api")
                 .graphId(usedGraphId)
-                .build()
-                .createObject();
+                .build());
 
         ProductCatalogSteps actionSteps = new ProductCatalogSteps("/api/v1/actions/",
                 "productCatalog/actions/createAction.json");
-        actionSteps.partialUpdateObject(action.getActionId(), new JSONObject()
+        actionSteps.partialUpdateObject(action.getId(), new JSONObject()
                 .put("priority", 1));
-        String actionVersion = getActionById(action.getActionId()).getVersion();
+        String actionVersion = getActionById(action.getId()).getVersion();
 
         Response response = getLastVersionUsedGraph(usedGraphId);
         assertEquals(actionVersion, response.jsonPath().getString("version[1]"));
@@ -221,10 +204,7 @@ public class GraphUsedListTest extends Tests {
     @TmsLink("SOUL-8280")
     @Test
     public void getUsedGraphListAfterProductDeletedTest() {
-        Graph usedGraphApi = Graph.builder()
-                .name("used_graph_with_deleted_object_api")
-                .build()
-                .createObject();
+        Graph usedGraphApi = createGraph("used_graph_with_deleted_object_api");
         String usedGraphId = usedGraphApi.getGraphId();
 
         Product createProductResponse = Product.builder()
@@ -241,16 +221,15 @@ public class GraphUsedListTest extends Tests {
                 .build()
                 .createObject();
 
-        Action createActionResponse = Action.builder()
+        Action createActionResponse = createAction(Action.builder()
                 .name(getRandomStringApi(6))
                 .graphId(usedGraphId)
-                .build()
-                .createObject();
+                .build().toJson()).extractAs(Action.class);
 
         assertEquals(3, getObjectArrayUsedGraph(usedGraphId).getList("").size());
-        createActionResponse.deleteObject();
-        createProductResponse.deleteObject();
-        createServiceResponse.deleteObject();
+        deleteActionById(createActionResponse.getId());
+        createProductResponse.delete();
+        createServiceResponse.delete();
 
         assertEquals(0, getObjectArrayUsedGraph(usedGraphId).getList("").size());
     }

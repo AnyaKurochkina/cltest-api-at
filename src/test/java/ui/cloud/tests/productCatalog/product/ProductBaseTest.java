@@ -8,6 +8,7 @@ import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.OnRequest;
 import models.cloud.productCatalog.product.Product;
 import org.junit.jupiter.api.BeforeEach;
+import steps.productCatalog.GraphSteps;
 import steps.productCatalog.ProductCatalogSteps;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 import ui.cloud.tests.productCatalog.ProductCatalogUITest;
@@ -34,14 +35,13 @@ public class ProductBaseTest extends ProductCatalogUITest {
     }
 
     private void createProduct(String name) {
-        graph = Graph.builder()
+        graph = GraphSteps.createGraph(Graph.builder()
                 .name(GRAPH_NAME)
                 .title(GRAPH_TITLE)
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .author("AT UI")
-                .build()
-                .createObject();
+                .build());
 
         Icon icon = Icon.builder()
                 .name(name)

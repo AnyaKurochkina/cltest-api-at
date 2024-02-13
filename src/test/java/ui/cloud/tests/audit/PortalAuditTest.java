@@ -41,8 +41,8 @@ public class PortalAuditTest extends Tests {
     private final GlobalUser cloudAdmin = GlobalUser.builder().role(Role.CLOUD_ADMIN).build().createObject();
     private final GlobalUser pcAdmin = GlobalUser.builder().role(Role.PRODUCT_CATALOG_ADMIN).build().createObject();
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    private final String okCode = "200";
-    private final String okStatus = "ок";
+    private final String createdCode = "201";
+    private final String createdStatus = "создан";
     private final String copyType = "copy";
     private final Project project = Project.builder().projectEnvironmentPrefix(ProjectEnvironmentPrefix.byType("DEV"))
             .build().createObject();
@@ -53,15 +53,14 @@ public class PortalAuditTest extends Tests {
     @BeforeEach
     public void setUp() {
         graphName = UUID.randomUUID().toString();
-        graph = Graph.builder()
+        graph = createGraph(Graph.builder()
                 .name(graphName)
                 .title("AT UI Graph")
                 .version("1.0.0")
                 .type(GraphType.CREATING.getValue())
                 .description("for audit test")
                 .author("AT UI")
-                .build()
-                .createObject();
+                .build());
 
         copyGraphByIdInContext(graph.getGraphId(), project.getId());
         graphCopy = getGraphByNameFilter(graph.getName() + "-clone");
@@ -79,14 +78,14 @@ public class PortalAuditTest extends Tests {
         page.getBeginDateInput().getInput().shouldBe(Condition.disabled);
         page.getEndDateInput().getInput().shouldBe(Condition.disabled);
         page.checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), copyType,
-                projectsObject, okCode, okStatus);
+                projectsObject, createdCode, createdStatus);
         page.selectPeriod(AuditPeriod.LAST_6_HOURS)
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), copyType,
-                        projectsObject, okCode, okStatus)
+                        projectsObject, createdCode, createdStatus)
                 .setFilterByDate(LocalDateTime.now().minusDays(1).format(formatter),
                         LocalDateTime.now().format(formatter))
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), copyType,
-                        projectsObject, okCode, okStatus);
+                        projectsObject, createdCode, createdStatus);
     }
 
     @Test
@@ -105,15 +104,15 @@ public class PortalAuditTest extends Tests {
         new IndexPage().goToPortalAuditPage()
                 .setOperationTypeFilterAndApply(copyType)
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), copyType,
-                        projectsObject, okCode, okStatus)
+                        projectsObject, createdCode, createdStatus)
                 .setUserFilter("test_user")
                 .applyAdditionalFilters()
                 .checkRecordsNotFoundV2()
                 .setUserFilter(pcAdmin.getEmail())
-                .setStatusCodeFilter(okCode)
+                .setStatusCodeFilter(createdCode)
                 .applyAdditionalFilters()
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), copyType,
-                        projectsObject, okCode, okStatus);
+                        projectsObject, createdCode, createdStatus);
     }
 
     @Test
@@ -123,10 +122,10 @@ public class PortalAuditTest extends Tests {
         new IndexPage().goToPortalAuditPage()
                 .setOperationTypeFilterAndApply(copyType)
                 .setUserFilter(pcAdmin.getEmail())
-                .setStatusCodeFilter(okCode)
+                .setStatusCodeFilter(createdCode)
                 .applyAdditionalFilters()
                 .checkFirstRecord(LocalDateTime.now().format(formatter), pcAdmin.getUsername(), copyType, projectsObject,
-                        okCode, okStatus)
+                        createdCode, createdStatus)
                 .showRequestAndResponse()
                 .checkRecordDetailsByResponse(project.getId(), projectsObject, noValue, graphCopy.getGraphId())
                 .checkCopyToClipboard(graphCopy.getTitle(), project.getId())
@@ -145,9 +144,9 @@ public class PortalAuditTest extends Tests {
         new AuditPage()
                 .setOperationTypeFilterAndApply(copyType)
                 .setUserFilter(pcAdmin.getEmail())
-                .setStatusCodeFilter(okCode)
+                .setStatusCodeFilter(createdCode)
                 .applyAdditionalFilters()
                 .checkAuditContains(LocalDateTime.now().format(formatter), pcAdmin.getEmail(), copyType,
-                        projectsObject, okCode, okStatus);
+                        projectsObject, createdCode, createdStatus);
     }
 }

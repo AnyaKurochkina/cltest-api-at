@@ -38,14 +38,20 @@ public class JinjaImportTest extends Tests {
         if (isJinja2Exists(jinjaName2)) {
             deleteJinjaByName(jinjaName2);
         }
-        Jinja2Template jinja = createJinja(jinjaName);
-        Jinja2Template jinja2 = createJinja(jinjaName2);
+        Jinja2Template jinja = createJinja(Jinja2Template.builder()
+                .name(jinjaName)
+                .build()
+                .toJson());
+        Jinja2Template jinja2 = createJinja(Jinja2Template.builder()
+                .name(jinjaName2)
+                .build()
+                .toJson());
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/multiJinja.json";
         String filePath2 = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/multiJinja2.json";
         DataFileHelper.write(filePath, exportJinjaById(jinja.getId()).toString());
         DataFileHelper.write(filePath2, exportJinjaById(jinja2.getId()).toString());
-        jinja.deleteObject();
-        jinja2.deleteObject();
+        deleteJinjaById(jinja.getId());
+        deleteJinjaById(jinja2.getId());
         importObjects("jinja2_templates", filePath, filePath2);
         DataFileHelper.delete(filePath);
         DataFileHelper.delete(filePath2);
@@ -76,13 +82,12 @@ public class JinjaImportTest extends Tests {
     @Test
     public void checkCurrentVersionWhenAlreadyExistJinjaImportTest() {
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/jinja2/checkCurrentVersion.json";
-        Jinja2Template jinja2Template = Jinja2Template.builder()
+        Jinja2Template jinja2Template = createJinja(Jinja2Template.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
                 .version("1.0.1")
-                .build()
-                .createObject();
+                .build().toJson());
         DataFileHelper.write(filePath, exportJinjaById(jinja2Template.getId()).toString());
-        jinja2Template.deleteObject();
+        deleteJinjaById(jinja2Template.getId());
         Jinja2Template createdJinja = Jinja2Template.builder()
                 .name(jinja2Template.getName())
                 .version("1.0.0")

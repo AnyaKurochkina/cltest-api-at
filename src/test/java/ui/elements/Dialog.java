@@ -72,6 +72,10 @@ public class Dialog implements TypifiedElement {
         checkBox.setChecked(checked);
     }
 
+    public void setRadio(Radio radio) {
+        radio.checked();
+    }
+
     public void clickButton(String text) {
         dialog.$x("descendant::button[.='" + text + "']").shouldBe(Condition.enabled).click();
         Waiting.sleep(200);

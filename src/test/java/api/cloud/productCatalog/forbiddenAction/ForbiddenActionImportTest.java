@@ -3,6 +3,7 @@ package api.cloud.productCatalog.forbiddenAction;
 import api.Tests;
 import core.helper.Configure;
 import core.helper.DataFileHelper;
+import core.helper.StringUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -35,7 +36,7 @@ public class ForbiddenActionImportTest extends Tests {
     public void importForbiddenActionTest() {
         JSONObject jsonObject = ForbiddenAction.builder()
                 .title("import_forbidden_action_test_api")
-                .actionId(createAction().getActionId())
+                .actionId(createAction(StringUtils.getRandomStringApi(7)).getId())
                 .build()
                 .toJson();
         ForbiddenAction forbiddenAction = createForbiddenAction(jsonObject).assertStatus(201).extractAs(ForbiddenAction.class);
@@ -60,7 +61,7 @@ public class ForbiddenActionImportTest extends Tests {
         DataFileHelper.write(PATHNAME2, exportForbiddenActionById(String.valueOf(forbiddenAction.getId())).toString());
         JSONObject json = ForbiddenAction.builder()
                 .name(forbiddenActionName)
-                .actionId(action.getActionId())
+                .actionId(action.getId())
                 .build()
                 .init()
                 .toJson();

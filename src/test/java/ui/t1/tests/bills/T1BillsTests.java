@@ -4,6 +4,7 @@ import core.enums.Role;
 import core.excel.excel_data.bills.BillExcelReader;
 import core.excel.excel_data.bills.model.BillExcel;
 import core.excel.excel_data.bills.model.BillExcelItem;
+import core.helper.Configure;
 import core.utils.DownloadingFilesUtil;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -38,7 +39,9 @@ public class T1BillsTests extends AbstractT1Test {
     private static final DateTimeFormatter LITERAL_MONTH_FORMATTER = DateTimeFormatter.ofPattern("dd-MMM-yyyy", new Locale("ru"));
     private final DatePeriod expectedCustomPeriod = new DatePeriod(LocalDate.of(2023, Month.MARCH, 1), LocalDate.of(2023, Month.APRIL, 1));
     private final DatePeriod expectedOctoberPeriod = new DatePeriod(LocalDate.of(2023, Month.OCTOBER, 1), LocalDate.of(2023, Month.OCTOBER, 31));
-    private final Organization organization = Organization.builder().type("not_default").build().createObject();
+    private final Organization organization = Configure.ENV.equals("t1prod")
+            ? Organization.builder().type("not_default").build().createObject()
+            : Organization.builder().type("default").build().createObject();
 
     @EnabledIfEnv({"t1ift", "t1prod"})
     @Test

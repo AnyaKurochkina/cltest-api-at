@@ -2,6 +2,7 @@ package api.cloud.stateService;
 
 import api.Tests;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -109,28 +110,28 @@ public class StateServiceTest extends Tests {
     public void createBulkTest() {
         Project project = Project.builder().isForOrders(true).build().createObject();
         String uuid = UUID.randomUUID().toString();
-        Action action = createAction();
-        Graph graph = createGraph();
+        Action action = createAction(StringUtils.getRandomStringApi(7));
+        Graph graph = createGraph(StringUtils.getRandomStringApi(7));
         JSONObject json = JsonHelper.getJsonTemplate("stateService/createAction.json")
                 .set("$.order_ids", Collections.singletonList(uuid))
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .set("$.create_dt", currentTimeInFormat())
                 .build();
         String expectedFolder = json.getJSONObject("data").get("folder").toString();
         JSONObject json2 = JsonHelper.getJsonTemplate("stateService/createBulkAddEvent.json")
                 .set("$.order_id", uuid)
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .set("$.events[0].item_id", uuid)
                 .set("$.events[0].graph_id", graph.getGraphId())
-                .set("$.events[0].action_id", action.getActionId())
+                .set("$.events[0].action_id", action.getId())
                 .set("$.events[1].item_id", uuid)
                 .set("$.events[1].graph_id", graph.getGraphId())
-                .set("$.events[1].action_id", action.getActionId())
+                .set("$.events[1].action_id", action.getId())
                 .set("$.events[2].item_id", uuid)
                 .set("$.events[2].graph_id", graph.getGraphId())
-                .set("$.events[2].action_id", action.getActionId())
+                .set("$.events[2].action_id", action.getId())
                 .build();
         createBulkAddAction(project.getId(), json);
         createBulkAddEvent(project.getId(), json2);
@@ -140,7 +141,7 @@ public class StateServiceTest extends Tests {
         JSONObject newAction = JsonHelper.getJsonTemplate("stateService/createAction.json")
                 .set("$.order_ids", Collections.singletonList(uuid))
                 .set("$.graph_id", graph.getGraphId())
-                .set("$.action_id", action.getActionId())
+                .set("$.action_id", action.getId())
                 .set("$.data.folder", newFolder)
                 .set("$.create_dt", currentTimeInFormat())
                 .build();

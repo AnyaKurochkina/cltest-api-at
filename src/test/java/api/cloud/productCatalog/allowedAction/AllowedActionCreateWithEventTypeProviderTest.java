@@ -1,11 +1,11 @@
 package api.cloud.productCatalog.allowedAction;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.feedService.action.EventTypeProvider;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.allowedAction.AllowedAction;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
@@ -51,10 +51,8 @@ public class AllowedActionCreateWithEventTypeProviderTest extends Tests {
         JSONObject json = AllowedAction.builder()
                 .eventTypeProvider(expectedEventTypeProviderList)
                 .build()
-                .init()
                 .toJson();
-        String message = createAllowedAction(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals(String.format("Validation error (event_type_provider): String 1: Wrong value (%s) of event_type", eventTypeProvider.getEvent_type()),
-                message);
+        AssertResponse.run(() -> createAllowedAction(json)).status(400)
+                .responseContains(String.format("Validation error (event_type_provider): String 1: Wrong value (%s) of event_type", eventTypeProvider.getEvent_type()));
     }
 }

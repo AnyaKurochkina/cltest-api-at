@@ -14,10 +14,11 @@ import org.junit.jupiter.api.Test;
 import java.util.List;
 
 import static core.helper.StringUtils.getRandomStringApi;
+import static org.apache.commons.lang3.RandomStringUtils.randomAlphanumeric;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.AllowedActionSteps.createAllowedAction;
 import static steps.productCatalog.AllowedActionSteps.deleteAllowedActionByName;
-import static steps.productCatalog.ProductCatalogSteps.getAuditListForObjKeys;
+import static steps.productCatalog.ProductCatalogSteps.getAuditListByObjKeys;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -30,10 +31,13 @@ public class AllowedActionAuditTest extends Tests {
     @TmsLink("SOUL-8455")
     @Test
     public void getAuditListWithObjKeyAllowedActionTest() {
-        AllowedAction testAction = createAllowedAction(getRandomStringApi(6));
-        testAction.deleteObject();
+        AllowedAction testAction = createAllowedAction(AllowedAction.builder()
+                .title(getRandomStringApi(6))
+                .description("AT_" + randomAlphanumeric(10))
+                .build().toJson()).extractAs(AllowedAction.class);
+        testAction.delete();
         createAllowedAction(testAction.toJson());
-        List<ProductAudit> auditListForObjKeys = getAuditListForObjKeys(ENTITY_TYPE, testAction.getName());
+        List<ProductAudit> auditListForObjKeys = getAuditListByObjKeys(ENTITY_TYPE, testAction.getName());
         auditListForObjKeys.forEach(x -> assertEquals(x.getObjKeys().get("name"), testAction.getName()));
         deleteAllowedActionByName(testAction.getName());
     }

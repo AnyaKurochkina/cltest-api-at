@@ -1,15 +1,16 @@
 package steps.productCatalog;
 
 import core.enums.Role;
+import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
 import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.graph.GetGraphList;
 import models.cloud.productCatalog.graph.Graph;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import steps.Steps;
 
@@ -18,6 +19,9 @@ import java.util.List;
 
 import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
+import static tests.routes.GraphProductCatalogApi.apiV1GraphsCreate;
+import static tests.routes.GraphProductCatalogApi.apiV1GraphsRead;
 
 public class GraphSteps extends Steps {
 
@@ -108,39 +112,46 @@ public class GraphSteps extends Steps {
 
     @Step("Создание графа")
     public static Response createGraph(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .post(graphUrl);
+                .api(apiV1GraphsCreate);
     }
 
-    @Step("Создание графа c именем {name}")
     public static Graph createGraph(String name) {
-        return Graph.builder()
+        Graph graph = Graph.builder()
                 .name(name)
-                .build()
-                .createObject();
+                .build();
+        return createGraph(graph);
     }
 
-    @Step("Создание графа")
     public static Graph createGraph(String name, String title) {
-        return Graph.builder()
+        Graph graph = Graph.builder()
                 .name(name)
                 .title(title)
-                .build()
-                .createObject();
+                .build();
+        return createGraph(graph);
     }
 
-    @Step("Создание графа")
     public static Graph createGraph() {
-        return Graph.builder()
-                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
-                .build()
-                .createObject();
+        Graph graph = Graph.builder()
+                .name(StringUtils.getRandomStringApi(7))
+                .build();
+        return createGraph(graph);
     }
 
-    public static Graph getGraphById(String objectId) {
-        return getGraphByIdResponse(objectId)
+    @Step("Создание графа c именем {graph.name}")
+    public static Graph createGraph(Graph graph) {
+        return getProductCatalogAdmin()
+                .body(graph.toJson())
+                .api(apiV1GraphsCreate)
+                .extractAs(Graph.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
+    }
+
+    @Step("Получение графа по Id {graphId}")
+    public static Graph getGraphById(String graphId) {
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsRead, graphId)
                 .assertStatus(200)
                 .extractAs(Graph.class);
     }
@@ -316,8 +327,9 @@ public class GraphSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(graphUrl + objectId + "/copy/")
-                .assertStatus(200)
-                .extractAs(Graph.class);
+                .assertStatus(201)
+                .extractAs(Graph.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Копирование графа по имени {name}")
@@ -325,7 +337,7 @@ public class GraphSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(graphUrl2 + name + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(Graph.class);
     }
 
@@ -334,7 +346,7 @@ public class GraphSteps extends Steps {
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post("/api/v1/projects/{}/graphs/{}", projectId, objectId + "/copy/")
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Получение графа по Id и контексту")
@@ -436,7 +448,7 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(graphUrl + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов графов")
@@ -446,7 +458,7 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(graphUrl + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 
     @Step("Получение списка графов по фильтру")

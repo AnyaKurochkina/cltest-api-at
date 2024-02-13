@@ -78,7 +78,7 @@ public class ProductCardSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("add_tags", tagsList))
                 .post(CARD_URL + "add_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(201);
     }
 
     @Step("Удаление списка Тегов product cards")
@@ -88,7 +88,7 @@ public class ProductCardSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(new JSONObject().put("remove_tags", tagsList))
                 .post(CARD_URL + "remove_tag_list/?name__in=" + names)
-                .assertStatus(200);
+                .assertStatus(204);
     }
 
     @Step("Частичное обновление product cards")
@@ -121,7 +121,7 @@ public class ProductCardSteps extends Steps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .post(CARD_URL + id + "/copy/")
-                .assertStatus(200)
+                .assertStatus(201)
                 .extractAs(ProductCard.class);
     }
 
@@ -168,6 +168,14 @@ public class ProductCardSteps extends Steps {
                 .objType(objType)
                 .objId(objId)
                 .versionArr(convertStringVersionToIntArrayVersion(version))
+                .build();
+    }
+
+    @Step("Создание CardItem c типом {objType}")
+    public static CardItems createCardItem(String objType, String objId) {
+        return CardItems.builder()
+                .objType(objType)
+                .objId(objId)
                 .build();
     }
 

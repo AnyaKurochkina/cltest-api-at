@@ -1,19 +1,24 @@
 package api.cloud.productCatalog.template;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.ErrorMessage;
 import models.cloud.productCatalog.template.Template;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import steps.productCatalog.ProductCatalogSteps;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.stream.Stream;
+
+import static core.helper.StringUtils.format;
 import static steps.productCatalog.TemplateSteps.*;
 
 @Epic("Продуктовый каталог")
@@ -61,8 +66,8 @@ public class TemplateNegativeTest extends Tests {
                 .type("sdf")
                 .build()
                 .toJson();
-        String errorMessage = createTemplate(template).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("Template cannot be created with this type", errorMessage);
+        AssertResponse.run(() -> createTemplate(template)).status(400)
+                .responseContains("Template cannot be created with this type");
     }
 
     @DisplayName("Негативный тест на частичное обновление шаблона по Id без токена")
@@ -99,44 +104,29 @@ public class TemplateNegativeTest extends Tests {
                 .name(templateName)
                 .run("")
                 .build()
-                .init()
                 .toJson();
-        String errorMessage = createTemplate(json).assertStatus(400).extractAs(ErrorMessage.class).getMessage();
-        assertEquals("\"run\": Это поле не может быть пустым.", errorMessage);
+        AssertResponse.run(() -> createTemplate(json)).status(400)
+                .responseContains("\"run\": Это поле не может быть пустым.");
     }
 
     @DisplayName("Негативный тест на создание шаблона с недопустимыми символами в имени")
     @TmsLink("643607")
-    @Test
-    public void createTemplateWithInvalidCharacters() {
-        Template.builder()
-                .name("NameWithUppercase")
-                .build()
-                .negativeCreateRequest(400);
-        Template.builder()
-                .name("nameWithUppercaseInMiddle")
-                .build()
-                .negativeCreateRequest(400);
-        Template.builder()
-                .name("имя")
-                .build()
-                .negativeCreateRequest(400);
-        Template.builder()
-                .name("Имя")
-                .build()
-                .negativeCreateRequest(400);
-        Template.builder()
-                .name("a&b&c")
-                .build()
-                .negativeCreateRequest(400);
-        Template.builder()
-                .name("")
-                .build()
-                .negativeCreateRequest(400);
-        Template.builder()
-                .name(" ")
-                .build()
-                .negativeCreateRequest(400);
+    @ParameterizedTest
+    @MethodSource("testData")
+    public void createTemplateWithInvalidCharacters(String name, String message) {
+        AssertResponse.run(() -> createTemplateByName(name)).status(400)
+                .responseContains(format(message, name));
+    }
+
+    static Stream<Arguments> testData() {
+        return Stream.of(
+                Arguments.of("NameWithUppercase", "Cannot instantiate (Template) named ({})"),
+                Arguments.of("nameWithUppercaseInMiddle", "Cannot instantiate (Template) named ({})"),
+                Arguments.of("Имя", "Cannot instantiate (Template) named ({})"),
+                Arguments.of("a&b&c", "Cannot instantiate (Template) named ({})"),
+                Arguments.of("", "Это поле не может быть пустым."),
+                Arguments.of(" ", "Это поле не может быть пустым.")
+        );
     }
 
     @DisplayName("Негативный тест на удаление шаблона без токена")

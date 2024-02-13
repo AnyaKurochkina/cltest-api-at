@@ -21,6 +21,7 @@ import static core.helper.Configure.getAppProp;
 import static models.cloud.productCatalog.graph.GraphItem.getGraphItemFromJsonTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.Jinja2Steps.*;
 import static steps.productCatalog.ProductCatalogSteps.isSorted;
 
@@ -58,11 +59,10 @@ public class JinjaListTest extends Tests {
         graphItem.setSourceType("jinja2");
         graphItem.setSourceId(jinja.getId());
         graphItem.setName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         UsedJinja2ObjectList usedJinjaObject = getObjectListUsedJinja2Template(jinja.getId()).get(0);
         assertEquals(graph.getGraphId(), usedJinjaObject.getId());
     }
@@ -76,11 +76,10 @@ public class JinjaListTest extends Tests {
         graphItem.setSourceType("jinja2");
         graphItem.setSourceId(jinja.getId());
         graphItem.setName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api")
                 .graph(Collections.singletonList(graphItem))
-                .build()
-                .createObject();
+                .build());
         UsedJinja2ObjectList usedJinjaObject = getObjectListUsedJinja2TemplateByName(jinja.getName()).get(0);
         assertEquals(graph.getName(), usedJinjaObject.getName());
     }

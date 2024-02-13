@@ -146,11 +146,10 @@ public class GraphImportTest extends Tests {
         String graphName = "graph_import_with_new_tag_list_test_api";
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/importGraphWithNewTags.json";
         List<String> addTagList = Collections.singletonList("new_tag");
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(graphName)
                 .tagList(Arrays.asList("import_test", "test_import"))
-                .build()
-                .createObject();
+                .build());
         DataFileHelper.write(filePath, exportObjectByIdWithTags("graphs", graph.getGraphId()).toString());
         String updatedJsonForImport = JsonHelper.getJsonTemplate("/productCatalog/graphs/importGraphWithNewTags.json")
                 .set("Graph.tag_name_list", addTagList)
@@ -186,18 +185,13 @@ public class GraphImportTest extends Tests {
     @Test
     public void checkCurrentVersionWhenAlreadyExistGraphImportTest() {
         String filePath = Configure.RESOURCE_PATH + "/json/productCatalog/graphs/checkCurrentVersion.json";
-        Graph graph = Graph.builder()
+        Graph graph = createGraph(Graph.builder()
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase())
                 .version("1.0.1")
-                .build()
-                .createObject();
+                .build().toJson()).extractAs(Graph.class);
         DataFileHelper.write(filePath, exportGraphById(graph.getGraphId()).toString());
-        graph.deleteObject();
-        Graph createdGraph = Graph.builder()
-                .name(graph.getName())
-                .version("1.0.0")
-                .build()
-                .createObject();
+        deleteGraphById(graph.getGraphId());
+        Graph createdGraph = createGraph(graph.getName());
         partialUpdateGraph(createdGraph.getGraphId(), new JSONObject()
                 .put("damage_order_on_error", true)
                 .put("version", "1.1.1"));
