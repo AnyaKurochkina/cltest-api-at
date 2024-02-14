@@ -99,7 +99,7 @@ public class DefectologTest extends AbstractDefectologTest {
     @DisplayName("Проверка группы LINK-DUPLICATED-ATTRS-VALUES")
     void linkDuplicatedAttrsValues() {
         assertDefectPageContainsInventories("LINK-DUPLICATED-ATTRS-VALUES", inventories);
-        Report.checkStep("Проверка отсутствия дефекта при удаленном объекте", () -> {
+        Report.checkStep("Отсутствие дефекта при удаленном объекте", () -> {
             TagServiceSteps.inventoriesDeleteBatchV2(ctx, Collections.singletonList(inventories.get(1).getId()));
             Waiting.sleep(60000);
             inventoryTagsV2(ctx, inventories.get(0).getId(), null,

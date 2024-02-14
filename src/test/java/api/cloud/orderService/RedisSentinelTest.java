@@ -102,7 +102,6 @@ public class RedisSentinelTest extends Tests {
         final String cmdGetValue = StringUtils.format("redis-cli --user {} --pass {} -h {} get testkey",
                 redis.getAppUser(), redis.getAppUserPassword(), replica.getHost());
         Assertions.assertTrue(redis.executeSsh(replica, cmdGetValue).endsWith("123"), "Неверный ответ от replica node");
-
     }
 
     @Step("[Проверка] Sentinel config")
