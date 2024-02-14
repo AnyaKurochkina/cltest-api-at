@@ -39,8 +39,8 @@ public class ClickHouseClusterTest extends Tests {
     @EnabledIfEnv({"prod", "blue"})
     @ParameterizedTest(name = "[{1}] Заказ на быстрых дисках {0}")
     void checkDiskVm(ClickHouseCluster product, Integer num) {
-        Assumptions.assumeTrue("LT".contains(product.getEnv()), "Тест только для среды LT");
         try (ClickHouseCluster cluster = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue("LT".contains(product.getEnv()), "Тест только для среды LT");
             cluster.checkVmDisk(new HashMap<String, String>() {{
                 put("zookeeper", "nvme");
                 put("clickhouse", "nvme");

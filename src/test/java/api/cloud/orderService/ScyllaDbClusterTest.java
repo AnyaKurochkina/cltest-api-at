@@ -37,9 +37,9 @@ public class ScyllaDbClusterTest extends Tests {
     @EnabledIfEnv({"prod", "blue"})
     @ParameterizedTest(name = "[{1}] Заказ на быстрых дисках {0}")
     void checkDiskVm(ScyllaDbCluster product, Integer num) {
-        List<String> envs = Arrays.asList("LT", "PROD");
-        Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
         try (ScyllaDbCluster scyllaDb = product.createObjectExclusiveAccess()) {
+            List<String> envs = Arrays.asList("LT", "PROD");
+            Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
             scyllaDb.checkVmDisk(new HashMap<String, String>() {{
                 put("*", "nvme");
             }});

@@ -13,7 +13,6 @@ import org.openqa.selenium.NotFoundException;
 import steps.stateService.StateServiceSteps;
 import ui.cloud.pages.CompareType;
 import ui.t1.pages.IndexPage;
-import ui.t1.pages.cloudEngine.Column;
 import ui.t1.pages.cloudEngine.compute.*;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
 import ui.t1.pages.cloudEngine.vpc.PublicIpList;
@@ -32,19 +31,20 @@ public class OtherTest extends AbstractComputeTest {
     @DisplayName("Cloud Compute. Создание ВМ c двумя доп дисками (auto_delete = on и off) boot_disk_auto_delete = on")
     void createVm2() {
         String name = getRandomName();
+        String extDiskNameFirst = name + "_first";
+        String extDiskNameSecond = name + "_second";
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setBootSize(5)
-                .addDisk(name, 2, hddTypeFirst, true)
-                .addDisk(name, 3, hddTypeSecond, false)
+                .addDisk(extDiskNameFirst, 2, hddTypeFirst)
+                .addDisk(extDiskNameSecond, 3, hddTypeSecond)
                 .setName(name)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderId = vmPage.getOrderId();
 
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(getProjectId());
@@ -56,7 +56,8 @@ public class OtherTest extends AbstractComputeTest {
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 4 item's (nic & volume)");
 
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS,
+                () -> vmPage.delete(false, vmPage.getSystemDiskName(), extDiskNameFirst));
 
         final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(getProjectId());
         Assertions.assertTrue(items2.stream().noneMatch(e -> e.getOrderId().equals(orderId)), "Существуют item's с orderId=" + orderId);
@@ -71,7 +72,7 @@ public class OtherTest extends AbstractComputeTest {
                 }).collect(Collectors.toList());
 
         Assertions.assertEquals(1, list.size(), "Должен быть один item с новым orderId, size=3 и parent=null");
-        new InstanceEntity(getProjectId(), list.get(0).getOrderId()).deleteMode(AbstractEntity.Mode.AFTER_TEST);
+        new InstanceEntity(getProjectId(), list.get(0).getOrderId(), true).deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Test
@@ -83,16 +84,18 @@ public class OtherTest extends AbstractComputeTest {
         String orderIdIp = ipPage.getOrderId();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setName(getRandomName())
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setBootSize(2)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .setPublicIp(ip)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(false);
         String orderIdVm = vmPage.getOrderId();
 
         String instanceId = StateServiceSteps.getItems(getProjectId()).stream()
@@ -129,13 +132,15 @@ public class OtherTest extends AbstractComputeTest {
     void createSnapshotFromDetachDisk() {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setName(getRandomName())
+                .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
+                .seNetwork(defaultNetwork)
+                .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(vm.getName()).setSize(4L).clickOrder();
 
@@ -204,16 +209,15 @@ public class OtherTest extends AbstractComputeTest {
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .setBootSize(7)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
-        Disk disk = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
+        Disk disk = vmPage.selectDisk(vmPage.getSystemDiskName());
         String orderIdDisk = disk.getOrderId();
         disk.createSnapshot(vm.getName());
         new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
@@ -248,15 +252,14 @@ public class OtherTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .setBootSize(8)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
-        Disk diskPage = vmPage.selectDisk(new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME));
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Disk diskPage = vmPage.selectDisk(vmPage.getSystemDiskName());
         diskPage.createSnapshot(vm.getName());
         Snapshot snapshot = new IndexPage().goToSnapshots().selectSnapshot(vm.getName()).markForDeletion(new SnapshotEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         snapshot.createDisk(vm.getName());
@@ -353,11 +356,10 @@ public class OtherTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
 
         DiskCreate disk = new IndexPage().goToDisks().addDisk().setAvailabilityZone(availabilityZone).setName(vm.getName()).setSize(4L).clickOrder();
         Disk diskPage = new DiskList().selectDisk(disk.getName()).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);

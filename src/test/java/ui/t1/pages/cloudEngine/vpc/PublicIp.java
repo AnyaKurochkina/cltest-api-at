@@ -2,14 +2,14 @@ package ui.t1.pages.cloudEngine.vpc;
 
 import io.qameta.allure.Step;
 import ui.elements.Dialog;
-import ui.t1.pages.cloudEngine.compute.Disk;
 import ui.t1.pages.IProductT1Page;
+import ui.t1.pages.cloudEngine.compute.Disk;
 
 public class PublicIp extends IProductT1Page<PublicIp> {
 
     @Step("Подключить IP к ВМ {vmName}")
     public void attachComputeIp(String vmName) {
-        runActionWithParameters(BLOCK_PARAMETERS, "Подключить к серверу", "Подтвердить", () ->
+        runActionWithParameters(BLOCK_PARAMETERS, "Подключить к сетевому интерфейсу", "Подтвердить", () ->
                         Dialog.byTitle("Доступные серверы")
                                 .setSelectValue("Сетевой интерфейс", vmName));
     }

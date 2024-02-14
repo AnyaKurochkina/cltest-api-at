@@ -54,33 +54,33 @@ public class VirtualMachineTest extends AbstractComputeTest {
         vmPage.setSshKey(sshKey);
         button.should(activeCnd);
         vmPage.setDescription(new Generex("[a-zA-Z0-9-_]{3,10}").random())
-                .setDeleteOnTermination(false)
                 .setFlavor(Select.RANDOM_VALUE)
                 .setFlavorName(flavorName);
-        new IndexPage().goToVirtualMachine();
     }
 
     @Test
     @TmsLinks({@TmsLink("1249417"), @TmsLink("1248526")})
     @DisplayName("Создание/Удаление ВМ c одним доп диском (auto_delete = on) boot_disk_auto_delete = off")
     void createVmWithoutBootDiskAutoDelete() {
-        String name = getRandomName();
+        String vmName = getRandomName();
+        String extDiskName = getRandomName();
         VmCreate vm = new IndexPage().goToVirtualMachine().addVm()
                 .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(false)
                 .setBootSize(6)
-                .addDisk(name, 2, hddTypeFirst, true)
-                .setName(name)
+                .addDisk(extDiskName, 2, hddTypeFirst)
+                .setName(vmName)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
 
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(false),
+                AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderId = vmPage.getOrderId();
+        new IndexPage().goToDisks().selectDisk(extDiskName).markForDeletion(new VolumeEntity(), AbstractEntity.Mode.AFTER_TEST);
 
         final List<StateServiceSteps.ShortItem> items = StateServiceSteps.getItems(getProjectId());
         Assertions.assertEquals(3, items.stream().filter(e -> e.getOrderId().equals(orderId))
@@ -91,7 +91,7 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .filter(i -> i.getType().equals("nic") || i.getType().equals("volume"))
                 .count(), "Должно быть 3 item's (nic & volume)");
 
-        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, vmPage::delete);
+        new IndexPage().goToVirtualMachine().selectCompute(vm.getName()).runActionWithCheckCost(CompareType.LESS, () -> vmPage.delete(false, extDiskName));
 
         final List<StateServiceSteps.ShortItem> items2 = StateServiceSteps.getItems(getProjectId());
         Assertions.assertTrue(items2.stream().noneMatch(e -> e.getOrderId().equals(orderId)), "Существуют item's с orderId=" + orderId);
@@ -116,12 +116,11 @@ public class VirtualMachineTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
-        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
+        Vm vmPage = new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
         String orderIdVm = vmPage.getOrderId();
 
         String ip = new IndexPage().goToPublicIps().addIp(region);

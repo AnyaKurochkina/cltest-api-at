@@ -1,5 +1,7 @@
 package models.cloud.orderService.products;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import core.helper.JsonHelper;
 import io.qameta.allure.Step;
 import lombok.*;
@@ -49,10 +51,10 @@ public class RabbitMQClusterAstra extends IProduct {
         productName = "RabbitMQ Cluster Astra";
         role = "manager";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
@@ -79,8 +81,8 @@ public class RabbitMQClusterAstra extends IProduct {
                 .set("$.order.attrs.ad_logon_grants[0].groups[0]", accessGroup)
                 .set("$.order.attrs.ad_logon_grants[0].role", isDev() ? "superuser" : "user")
                 .set("$.order.attrs.flavor", new JSONObject(flavor.toString()))
-                .set("$.order.attrs.web_console_grants[0].groups[0]", accessGroup)
-                .set("$.order.attrs.web_console_grants[0].role", role)
+                .set("$.order.attrs.web_manager_groups[0]", accessGroup)
+                .set("$.order.attrs.web_administrator_groups[0]", accessGroup, !isDev())
                 .set("$.order.project_name", project.id)
                 .set("$.order.attrs.os_version", osVersion)
                 .set("$.order.attrs.on_support", getSupport())
@@ -98,7 +100,7 @@ public class RabbitMQClusterAstra extends IProduct {
         Assertions.assertNotNull(fullUserName(user), "У продукта отсутствует пользователь " + user);
     }
 
-    private String fullUserName(String user){
+    private String fullUserName(String user) {
         return OrderServiceSteps.getObjectClass(this, String.format(RABBITMQ_USER, user), String.class);
     }
 
@@ -126,11 +128,33 @@ public class RabbitMQClusterAstra extends IProduct {
         Assertions.assertNotEquals(0, dateBeforeUpdate.compareTo(dateAfterUpdate), String.format("Предыдущая дата: %s обновления сертификата равна новой дате обновления сертификата: %s", dateBeforeUpdate, dateAfterUpdate));
     }
 
+    @Data
+    @Builder
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    public static class Permission {
+        private String userName;
+        @Singular("vhostRead")
+        private List<String> vhostRead;
+        @Singular("vhostWrite")
+        private List<String> vhostWrite;
+        @Singular("vhostConfigure")
+        private List<String> vhostConfigure;
+    }
+
+    public void editVhostsAccess(Permission... permissions) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_edit_vhosts_access_release").product(this)
+                .data(new JSONObject().put("input_permissions", permissions)).build());
+        for (Permission permission : permissions)
+            for (String vhost : permission.getVhostConfigure())
+                Assertions.assertTrue(OrderServiceSteps.getObjectClass(this, String.format(RABBIT_CLUSTER_VHOST_ACCESS, vhost), Boolean.class),
+                        "Отсутствует vhost access " + vhost);
+    }
+
     public void addVhost(List<String> collect) {
         List<Vhost> vhosts = new ArrayList<>();
         for (String name : collect)
             vhosts.add(new Vhost(name));
-        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_create_vhosts_release").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("rabbitmq_edit_vhosts_access_release").product(this)
                 .data(new JSONObject().put("rabbitmq_vhosts", serializeList(vhosts))).build());
         for (String name : collect)
             Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this,

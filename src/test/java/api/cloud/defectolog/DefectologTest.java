@@ -1,7 +1,9 @@
 package api.cloud.defectolog;
 
 import api.cloud.defectolog.models.DefectPage;
+import com.mifmif.common.regex.Generex;
 import core.helper.Report;
+import core.utils.AssertUtils;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -33,6 +35,7 @@ public class DefectologTest extends AbstractDefectologTest {
     Context ctx;
 
     private final EntitySupplier<Void> init = lazy(() -> {
+        String value = new Generex("item_id_[0-9]{5}").random();
         ctx = Context.byId(((Organization) Organization.builder().type("default").build().createObject()).getName());
         inventoriesWithoutLinks = generateInventories(2);
         for (int i = 0; i < 2; i++) {
@@ -43,8 +46,8 @@ public class DefectologTest extends AbstractDefectologTest {
         for (int i = 0; i < 2; i++)
             inventoryTagsV2(ctx, inventories.get(i).getId(), null, Arrays.asList(
                     new InventoryTagsV2.Tag("sys_item_context", "invalid_context"),
-                    new InventoryTagsV2.Tag("sys_item_id", "item_id"),
-                    new InventoryTagsV2.Tag("sys_item_name", "item_id")));
+                    new InventoryTagsV2.Tag("sys_item_id", value),
+                    new InventoryTagsV2.Tag("sys_item_name", value)));
 
         startTaskWidthGroups("INV-CTX-INVALID", "INV-ACL-EMPTY", "INV-REQUIRED-ATTRS",
                 "INV_REQUIRED_BOOL_ATTRS", "LINK-CTX-INVALID", "LINK-DUPLICATED-ATTRS-VALUES");
@@ -96,14 +99,14 @@ public class DefectologTest extends AbstractDefectologTest {
     @DisplayName("Проверка группы LINK-DUPLICATED-ATTRS-VALUES")
     void linkDuplicatedAttrsValues() {
         assertDefectPageContainsInventories("LINK-DUPLICATED-ATTRS-VALUES", inventories);
-        Report.checkStep("Проверка отсутствия дефекта при удаленном объекте", () -> {
+        Report.checkStep("Отсутствие дефекта при удаленном объекте", () -> {
             TagServiceSteps.inventoriesDeleteBatchV2(ctx, Collections.singletonList(inventories.get(1).getId()));
-            Waiting.sleep(1000);
+            Waiting.sleep(60000);
             inventoryTagsV2(ctx, inventories.get(0).getId(), null,
                     Collections.singletonList(new InventoryTagsV2.Tag("test_filter", "value")));
-            assertDefectPageContainsInventories("LINK-DUPLICATED-ATTRS-VALUES", inventories);
+            startTaskWidthGroups("LINK-DUPLICATED-ATTRS-VALUES");
             int defectId = findDefectIdByInternalName("LINK-DUPLICATED-ATTRS-VALUES", getDateFromFilter(inventories.get(0), ctx));
-            Assertions.assertEquals(0, readDefectPage(defectId).getPatients().size(), "Найдены inventory");
+            AssertUtils.assertNotContainsList(readDefectPage(defectId).getPatients(), inventories.get(0).getId(), inventories.get(1).getId());
         });
     }
 

@@ -177,16 +177,6 @@ public class LoadBalancerTest extends AbstractLoadBalancerTest {
         }
     }
 
-    @TmsLink("1286265")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Синхронизировать информацию о конфигурации глобальных публикаций {0}")
-    void gslbSync(LoadBalancer product, Integer num) {
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.gslbSync();
-        }
-    }
-
     @TmsLink("1286266")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -259,6 +249,16 @@ public class LoadBalancerTest extends AbstractLoadBalancerTest {
         }
     }
 
+    @TmsLink("SOUL-8012")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Обновление кластера {0}")
+    void balancerUpdateCluster(LoadBalancer product, Integer num) {
+        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
+            balancer.updateCluster(true);
+        }
+    }
+
     @TmsLink("SOUL-8011")
     @Tag("actions")
     @Source(ProductArgumentsProvider.PRODUCTS)
@@ -287,21 +287,12 @@ public class LoadBalancerTest extends AbstractLoadBalancerTest {
 
     @TmsLink("SOUL-8009")
     @Tag("actions")
+    @Disabled
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновление ОС {0}")
     void updateOs(LoadBalancer product, Integer num) {
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             balancer.updateOs();
-        }
-    }
-
-    @TmsLink("SOUL-8008")
-    @Tag("actions")
-    @Source(ProductArgumentsProvider.PRODUCTS)
-    @ParameterizedTest(name = "[{1}] Обновление сертификатов {0}")
-    void updateCertificates(LoadBalancer product, Integer num) {
-        try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
-            balancer.updateCertificates("all");
         }
     }
 

@@ -46,10 +46,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
         if (productName == null)
             productName = "PostgreSQL (Astra Linux)";
         if (adminPassword == null)
-            adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHq";
+            adminPassword = "KZnFpbEUd6xkJHocD6ORlDZBgDLobgN80I.wNUBjHqKZnFpbEUKZnFpbEUd6xkJHocD6OR";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (postgresqlVersion == null)
             postgresqlVersion = getRandomProductVersionByPathEnum("postgresql_version.enum");
         if (segment == null)
@@ -58,6 +56,8 @@ public class PostgreSQL extends AbstractPostgreSQL {
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
             setPlatform(OrderServiceSteps.getPlatform(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
         if (flavor == null)

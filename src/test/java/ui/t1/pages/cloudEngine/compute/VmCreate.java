@@ -23,7 +23,6 @@ public class VmCreate {
     private String userImage;
     private Long bootSize;
     private String bootType;
-    private Boolean deleteOnTermination;
     private String flavorName;
     private String flavor;
     private String network;
@@ -64,12 +63,11 @@ public class VmCreate {
         return this;
     }
 
-    public VmCreate addDisk(String name, int size, String type, boolean deleteOnTermination) {
+    public VmCreate addDisk(String name, int size, String type) {
         new Button($x("//button[contains(@class, 'array-item-add')]")).click();
         Input.byLabel("Имя диска", -1).setValue(name);
         Input.byLabel("Размер диска, Гб", -1).setValue(size);
         Select.byLabel("Тип", -1).setContains(type);
-        CheckBox.byLabel("Удалять вместе с сервером", -1).setChecked(deleteOnTermination);
         return this;
     }
 
@@ -102,12 +100,6 @@ public class VmCreate {
 
     public VmCreate setRegion(String region) {
         this.region = Select.byLabel("Регион").set(region);
-        return this;
-    }
-
-    public VmCreate setDeleteOnTermination(boolean deleteOnTermination) {
-        this.deleteOnTermination = deleteOnTermination;
-        CheckBox.byXpath("//input[contains(@id, 'delete_on_termination')]").setChecked(deleteOnTermination);
         return this;
     }
 
@@ -170,6 +162,7 @@ public class VmCreate {
 
     public VmCreate clickOrder() {
         OrderUtils.clickOrder();
+        TypifiedElement.refreshPage();
         OrderUtils.waitCreate(() -> Waiting.find(() -> new VmList.VmTable()
                 .getRowByColumnValue(Column.NAME, name)
                 .getValueByColumn(Column.STATUS)

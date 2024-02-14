@@ -32,10 +32,10 @@ public class Ubuntu extends IProduct {
         jsonTemplate = "/orders/ubuntu_general_application.json";
         productName = "Ubuntu Linux";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)
