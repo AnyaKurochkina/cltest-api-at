@@ -151,16 +151,6 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
             } finally {
                 Http.removeFixedRole();
             }
-
-//            String status = Http.builder().setRole(Role.CLOUD_ADMIN).api(getV1ProjectsProjectNameOrdersId, projectId, id)
-//                    .jsonPath().getString("status");
-//            if (status.equals("changing") || status.equals("pending"))
-//                Waiting.sleep(20000);
-//            if (status.equals("success")) {
-//                OrderServiceSteps.switchProtect(id, projectId, false);
-//                Http.builder().setRole(Role.CLOUD_ADMIN).api(deleteV1ProjectsProjectNameOrdersId, projectId, id);
-//                Waiting.sleep(30000);
-//            }
         }
     }
 

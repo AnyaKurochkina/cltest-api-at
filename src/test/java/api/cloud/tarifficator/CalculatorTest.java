@@ -59,8 +59,8 @@ public class CalculatorTest extends Tests {
             AccountSteps.transferMoney(accountFrom, accountTo, "1000.00", "Перевод в рамках тестирования");
             try {
                 Float cost = CostSteps.getPreBillingTotalCost(product);
-//                while (cost < 0.01f)
-//                    cost += cost;
+                while (cost < 0.01f)
+                    cost += cost;
                 Waiting.sleep(60000);
                 OrderServiceSteps.changeProjectForOrder(product, projectTarget);
                 Float spent = null;

@@ -114,7 +114,6 @@ public class ForkJoinPoolHierarchicalTestExecutorService implements Hierarchical
     }
 
     public void invokeAllRef(List<? extends TestTask> tasks2) {
-        log.debug("Запуск тестов @MarkDeleted {}шт", tasks2.size());
         invokeAll(tasks2);
     }
 

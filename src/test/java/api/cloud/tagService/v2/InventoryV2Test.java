@@ -95,7 +95,6 @@ public class InventoryV2Test extends AbstractTagServiceTest {
         Assertions.assertEquals(inventory.getId(), filterResult.getList().get(0).getInventory(), "Неверный inventory");
     }
 
-
     @Test
     @TmsLink("1664955")
     @DisplayName("Inventory V2. GET inventory-tags")
