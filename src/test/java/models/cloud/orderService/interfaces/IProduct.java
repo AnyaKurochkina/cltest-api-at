@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.Role;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.exception.NotFoundElementException;
 import core.helper.Configure;
 import core.helper.JsonTemplate;
 import core.helper.Report;
@@ -52,6 +53,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.orderServiceURL;
@@ -417,17 +419,31 @@ public abstract class IProduct extends Entity {
                 .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
     }
 
-    @Step("Проверка выполнения условий по ssh")
-    public void runOnAllNodesBySsh(Consumer<SshClient> predicate) {
+    @Step("Проверка выполнения условий по ssh на всех nodes")
+    public void runOnAllNodesBySsh(Consumer<SshClient> consumer) {
         TypeRef<List<String>> typeReference = new TypeRef<List<String>>() {
         };
-        List<String> ipList = OrderServiceSteps.getObjectClass(this, "product_data.ip", typeReference);
-        for (String ip : ipList) {
-            Report.checkStep("Проверка выполнения условия по ssh на vm " + ip, () -> {
-                SshClient client = SshClient.builder().host(ip).env(envType()).build();
-                predicate.accept(client);
+        runOnAllNodesBySsh(consumer, OrderServiceSteps.getObjectClass(this, "product_data.hostname", typeReference));
+    }
+
+    @Step("Проверка выполнения условий по ssh")
+    public void runOnAllNodesBySsh(Consumer<SshClient> consumer, List<String> hosts) {
+        for (String host : hosts) {
+            Report.checkStep("Проверка выполнения условия по ssh на vm " + host, () -> {
+                SshClient client = SshClient.builder().host(host).env(envType()).build();
+                consumer.accept(client);
             });
         }
+    }
+
+    @Step("Поиск node подходящей под условие")
+    public SshClient findNodeBySsh(Predicate<SshClient> predicate, List<String> hosts) {
+        for (String host : hosts) {
+            SshClient client = SshClient.builder().host(host).env(envType()).build();
+            if (predicate.test(client))
+                return client;
+        }
+        throw new NotFoundElementException("Не найдена node соответствующая условию");
     }
 
     @SneakyThrows

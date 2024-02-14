@@ -140,11 +140,11 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         @Override
         public void delete() {
             List<String> diskList = new ArrayList<>();
-            Http.setFixedRole(Role.ORDER_SERVICE_ADMIN);
+            Http.setFixedRole(Role.CLOUD_ADMIN);
             try {
                 if (deleteOnTerminationSystemDisk)
                     diskList.add(OrderServiceSteps.getObjectClass(projectId, id, "data.find{it.type=='volume' && it.data.config.system==true}.item_id", String.class));
-                OrderServiceSteps.runAction(ActionParameters.builder().name("compute_instance_delete").orderId(id)
+                OrderServiceSteps.runAction(ActionParameters.builder().name("compute_instance_delete").orderId(id).checkPrebilling(false)
                         .data(new JSONObject().put("allow_delete_volumes", deleteOnTerminationSystemDisk)
                                 .put("delete_floating_ip", false).put("volumes", diskList))
                         .projectId(projectId).build());

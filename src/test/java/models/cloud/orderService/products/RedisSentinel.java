@@ -165,4 +165,9 @@ public class RedisSentinel extends IProduct {
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                 this, String.format(USERNAME_PATH, user)), String.format("Пользователь %s найден", user));
     }
+
+    @Step("Redis. Обновить ОС")
+    public void updateOsStandalone() {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("update_os_redis_sentinel").product(this).build());
+    }
 }
