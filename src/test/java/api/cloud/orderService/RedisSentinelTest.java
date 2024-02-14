@@ -13,15 +13,12 @@ import io.restassured.common.mapper.TypeRef;
 import lombok.SneakyThrows;
 import models.cloud.orderService.products.RedisSentinel;
 import org.junit.MarkDelete;
-import org.junit.Mock;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
@@ -30,12 +27,7 @@ import java.util.List;
 @Epic("Продукты")
 @Feature("Redis Sentinel")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("redis_sentinel"), @Tag("prod")})
-@Execution(ExecutionMode.SAME_THREAD)
 public class RedisSentinelTest extends Tests {
-
-    @Mock
-    public static RedisSentinel redisSentinel = RedisSentinel.builder().appUser("odmen").appUserPassword("xFzYQ8khdsTXvHuI0Ht2tW1beKYi6ss6MbKsJypmEtxGOB2cFuWJb9x").platform("OpenStack").env("DEV").segment("dev-srv-app").build()
-            .buildFromLink("https://console.cloud.vtb.ru/db/orders/bdd0903d-1826-4a68-b5ed-88a04653170b/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     @TmsLink("")
     @Source(ProductArgumentsProvider.PRODUCTS)
