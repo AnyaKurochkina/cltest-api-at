@@ -34,11 +34,11 @@ public class NginxAstraPage extends IProductPage {
 
     public void checkConfiguration() {
         checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(BLOCK_VM, "Проверить конфигурацию");
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -58,13 +58,13 @@ public class NginxAstraPage extends IProductPage {
         new NginxAstraPage.VirtualMachineTable().checkPowerStatus(NginxAstraPage.VirtualMachineTable.POWER_STATUS_ON);
     }
 
-    public SelenideElement getRoleNode() {
+    public SelenideElement getVMElement() {
         return new Table("Роли узла").getRow(0).get();
     }
 
     public void changeConfiguration() {
         checkPowerStatus(AstraLinuxPage.VirtualMachineTable.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         Flavor maxFlavor = product.getMaxFlavorLinuxVm();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () ->
         {
@@ -73,7 +73,7 @@ public class NginxAstraPage extends IProductPage {
         });
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");

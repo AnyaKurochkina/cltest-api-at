@@ -9,7 +9,6 @@ import lombok.Getter;
 import models.cloud.productCatalog.graph.Graph;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityListPage;
-import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -55,10 +54,9 @@ public class GraphsListPage extends EntityListPage {
     }
 
     @Step("Проверка, что граф '{graph.name}' найден при поиске по значению '{value}'")
-    public GraphsListPage findGraphByValue(String value, Graph graph) {
-        searchInput.setValue(value);
-        TestUtils.wait(1000);
-        new Table(nameColumn).isColumnValueEquals(nameColumn, graph.getName());
+    public GraphsListPage checkGraphFoundByValue(String value, Graph graph) {
+        search(value);
+        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, graph.getName()), "Граф найден");
         return this;
     }
 

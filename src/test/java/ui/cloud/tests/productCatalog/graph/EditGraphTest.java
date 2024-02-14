@@ -17,6 +17,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static steps.productCatalog.TagSteps.createTag;
 import static steps.productCatalog.TagSteps.deleteTagByName;
+import static ui.cloud.pages.productCatalog.graph.GraphPage.SAVE_GRAPH_ALERT_TEXT;
 
 @Feature("Редактирование графа")
 public class EditGraphTest extends GraphBaseTest {
@@ -115,9 +116,9 @@ public class EditGraphTest extends GraphBaseTest {
         tagList.add(name);
         GraphPage page = new ControlPanelIndexPage().goToGraphsPage().findAndOpenGraphPage(graph.getName());
         page.addExistingTag(name);
-        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        page.saveWithoutPatchVersion(SAVE_GRAPH_ALERT_TEXT);
         page.deleteTag(name);
-        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        page.saveWithoutPatchVersion(SAVE_GRAPH_ALERT_TEXT);
         assertTrue(new Table("Наименование").isEmpty());
     }
 
@@ -129,9 +130,21 @@ public class EditGraphTest extends GraphBaseTest {
         tagList.add(name);
         GraphPage page = new ControlPanelIndexPage().goToGraphsPage().findAndOpenGraphPage(graph.getName());
         page.addNewTag(name);
-        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        page.saveWithoutPatchVersion(SAVE_GRAPH_ALERT_TEXT);
         page.deleteTag(name);
-        page.saveWithoutPatchVersion(page.getSaveGraphAlertText());
+        page.saveWithoutPatchVersion(SAVE_GRAPH_ALERT_TEXT);
         assertTrue(new Table("Наименование").isEmpty());
+    }
+
+    @Test
+    @TmsLink("SOUL-8355")
+    @DisplayName("Поднятие версии графа")
+    public void increaseGraphVersion() {
+        new ControlPanelIndexPage()
+                .goToGraphsPage()
+                .findAndOpenGraphPage(NAME)
+                .checkGraphVersion("1.0.0")
+                .increaseVersionAndSave("1.0.1", SAVE_GRAPH_ALERT_TEXT);
+        new GraphPage().checkGraphVersion("1.0.1");
     }
 }

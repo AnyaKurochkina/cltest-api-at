@@ -49,7 +49,7 @@ public class GraphModifiersPage extends GraphPage {
         pathInput.setValue(modifier.getPath());
         modifierData.setValue(modifier.getModifierData());
         formSaveButton.click();
-        Alert.green(saveGraphAlertText);
+        Alert.green(SAVE_GRAPH_ALERT_TEXT);
         return this;
     }
 
@@ -78,7 +78,7 @@ public class GraphModifiersPage extends GraphPage {
         pathInput.setValue(modifier.getPath());
         modifierData.setValue(modifier.getModifierData());
         formSaveButton.click();
-        Alert.green(saveGraphAlertText);
+        Alert.green(SAVE_GRAPH_ALERT_TEXT);
         return this;
     }
 

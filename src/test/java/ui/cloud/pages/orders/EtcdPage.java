@@ -94,14 +94,14 @@ public class EtcdPage extends IProductPage {
 
     public void changeConfiguration() {
         btnGeneralInfo.click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_VM, "Изменить конфигурацию", "Подтвердить", () -> {
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
         });
         btnGeneralInfo.click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
     }
@@ -110,7 +110,7 @@ public class EtcdPage extends IProductPage {
         runActionWithoutParameters(getActionsMenuButton(name), "Создать сертификаты для пользователя etcd");
     }
 
-    public SelenideElement getRoleNode() {
+    public SelenideElement getVMElement() {
         return new Table("Роли узла").getRow(0).get();
     }
 

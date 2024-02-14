@@ -43,6 +43,8 @@ public class EntityListPage {
     private final Select recordsPerPageSelect = Select.byXpath("//div[div[contains(text(),'строк на странице ')]]");
     private final Select recordsPerPageSelectV2 = Select.byXpath("//div[text()='Записей на странице:']");
     private final Button groupOperationsButton = Button.byText("Групповые операции");
+    private final MultiSelect tagsSelect = MultiSelect.byLabel("Теги");
+    private final RadioGroup tagsMatchingType = RadioGroup.byFieldsetLabel("Совпадение тегов");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -200,6 +202,18 @@ public class EntityListPage {
         new FileImportDialog(path).importFileAndSubmit();
         Alert.green("Импорт выполнен успешно");
         closeButton.click();
+        return this;
+    }
+
+    @Step("Задание фильтра по тегам")
+    public EntityListPage setTagsFilter(String... values) {
+        tagsSelect.set(values);
+        return this;
+    }
+
+    @Step("Применение фильтров")
+    public EntityListPage applyFilters() {
+        applyFiltersButton.click();
         return this;
     }
 }

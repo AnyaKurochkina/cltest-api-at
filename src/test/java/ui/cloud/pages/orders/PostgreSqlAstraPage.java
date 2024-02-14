@@ -323,46 +323,46 @@ public class PostgreSqlAstraPage extends AbstractAstraPage {
         }
     }
 
-    public SelenideElement getRoleNode() {
+    public SelenideElement getVMElement() {
         return new Table("Роли узла").getRow(0).get();
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")
     public void addGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").set(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Изменить состав групп у роли {role} на {groups}")
     public void updateGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             Select groupsElement = Select.byLabel("Группы").clear();
             groups.forEach(groupsElement::set);
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
     @Step("Удалить группу доступа с ролью {role}")
     public void deleteGroup(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().node(getRoleNode()).build());
+        getVMElement().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().node(getVMElement()).build());
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         Assertions.assertThrows(NotFoundException.class, () -> new RoleTable().getRoleRow(role));
     }
 
@@ -376,7 +376,7 @@ public class PostgreSqlAstraPage extends AbstractAstraPage {
         @Override
         protected void open() {
             btnGeneralInfo.click();
-            getRoleNode().scrollIntoView(scrollCenter).click();
+            getVMElement().scrollIntoView(scrollCenter).click();
         }
 
         private SelenideElement getRoleMenuElement(String name) {

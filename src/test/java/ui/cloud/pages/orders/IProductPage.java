@@ -288,21 +288,21 @@ public abstract class IProductPage {
         groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
     }
 
-    public SelenideElement getRoleNode() {
+    public SelenideElement getVMElement() {
         return new Table("Роли узла").getRow(0).get();
     }
 
     @Step("Добавить новые группы {group} с ролью {role} в ноде")
     public void addGroupInNode(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").setContains(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
         });
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
@@ -311,14 +311,14 @@ public abstract class IProductPage {
     @Step("Изменить состав групп у роли {role} на {groups} в ноде")
     public void updateGroupInNode(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             Select groupsElement = Select.byLabel("Группы").clear();
             groups.forEach(groupsElement::set);
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new IProductPage.RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
@@ -334,11 +334,11 @@ public abstract class IProductPage {
     @Step("Удалить группу доступа с ролью {role}  в ноде")
     public void deleteGroupInNode(String role, String nameGroup) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithoutParameters(new IProductPage.RoleTable().getRoleMenuElement(role), "Удалить группу доступа");
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getTableByHeader("Роли").isColumnValueContains("",
                 role));
     }
