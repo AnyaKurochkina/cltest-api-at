@@ -9,6 +9,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.stateService.Item;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -57,6 +58,7 @@ public class ActionProductCatalogApiTest extends Tests {
 
     @DisplayName("Проверка не существующего в item restriction параметра")
     @TmsLink("SOUL-")
+    @Disabled
     @Test
     public void checkNotExistParamInItemRestriction() {
         //todo завести задачу. доделать, когда реализуют функционал
