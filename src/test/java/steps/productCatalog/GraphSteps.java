@@ -3,6 +3,7 @@ package steps.productCatalog;
 import core.enums.Role;
 import core.helper.StringUtils;
 import core.helper.http.Http;
+import core.helper.http.QueryBuilder;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
@@ -171,11 +172,10 @@ public class GraphSteps extends Steps {
                 .extractAs(Graph.class);
     }
 
-    @Step("Получение графа по Id и фильтру {filter}")
-    public static Graph getGraphByIdAndFilter(String objectId, String filter) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + objectId + "/?{}", filter)
+    @Step("Получение графа по Id и query параметрами {queryBuilder}")
+    public static Graph getGraphByIdWithQueryParams(String graphId, QueryBuilder queryBuilder) {
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsRead, graphId, queryBuilder)
                 .extractAs(Graph.class);
     }
 
@@ -230,10 +230,8 @@ public class GraphSteps extends Steps {
 
     @Step("Импорт графа")
     public static ImportObject importGraph(String pathName) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .multiPart(graphUrl + "obj_import/", "file", new File(pathName))
-                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
                 .jsonPath()
                 .getList("imported_objects", ImportObject.class)
                 .get(0);

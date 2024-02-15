@@ -14,7 +14,6 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -23,12 +22,10 @@ import static org.junit.jupiter.api.Assertions.*;
 import static steps.keyCloak.KeyCloakSteps.getUserInfo;
 import static steps.productCatalog.ActionSteps.*;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
 public class ActionAuditTest extends ActionBaseTest {
-    private final static String ENTITY_TYPE = "actions";
 
     @DisplayName("Получение списка audit для определенного действия")
     @TmsLink("SOUL-8312")

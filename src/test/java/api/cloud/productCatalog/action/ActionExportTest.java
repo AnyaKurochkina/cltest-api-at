@@ -1,6 +1,5 @@
 package api.cloud.productCatalog.action;
 
-import api.Tests;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -14,7 +13,6 @@ import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -27,11 +25,10 @@ import static steps.productCatalog.ActionSteps.*;
 import static steps.productCatalog.GraphSteps.createGraph;
 import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
 @DisabledIfEnv("prod")
-public class ActionExportTest extends Tests {
+public class ActionExportTest extends ActionBaseTest {
     private static Action simpleAction;
     private static Action simpleAction2;
 
