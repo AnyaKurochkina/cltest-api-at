@@ -250,7 +250,7 @@ public class ReferencesStep extends Steps {
     public static List<Pages> getPrivatePagesListByDirectoryName(String directoryName) {
         String jsonArray = new Http(referencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(API_V_1_PRIVATE_DIRECTORIES + directoryName + "/pages")
+                .get(API_V_1_PRIVATE_DIRECTORIES + directoryName + "/pages/")
                 .assertStatus(200)
                 .toString();
         Type type = new TypeToken<List<Pages>>() {
