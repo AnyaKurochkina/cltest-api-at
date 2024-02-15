@@ -14,6 +14,7 @@ import models.cloud.tagService.v2.FilterResultV2Page;
 import org.apache.kafka.common.errors.ResourceNotFoundException;
 import org.json.JSONObject;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -21,7 +22,8 @@ import java.util.UUID;
 
 import static tests.routes.TagServiceAPI.*;
 
-@Builder @Data
+@Builder
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
 @ToString(callSuper = true, onlyExplicitlyIncluded = true)
 @NoArgsConstructor
@@ -29,17 +31,20 @@ import static tests.routes.TagServiceAPI.*;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Inventory extends Entity {
     public static String DEFAULT_TYPE = "test_type";
-    @EqualsAndHashCode.Include @ToString.Include
+    @EqualsAndHashCode.Include
+    @ToString.Include
     String id;
     String objectType;
     String contextPath;
     @JsonIgnore
     Context context;
 
+    LocalDateTime createdAt, updatedAt;
+
     @Override
     public Entity init() {
         Objects.requireNonNull(context, "Не задан контекст");
-        if(Objects.isNull(contextPath))
+        if (Objects.isNull(contextPath))
             contextPath = context.getContextPath();
         id = Optional.ofNullable(id).orElse(UUID.randomUUID().toString());
         objectType = Optional.ofNullable(objectType).orElse(DEFAULT_TYPE);
