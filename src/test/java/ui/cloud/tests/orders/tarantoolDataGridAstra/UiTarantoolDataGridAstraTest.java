@@ -51,7 +51,7 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
             TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getFlavorSelectCluster().set("tdg:rps-2000:storage-6GB");
+            orderPage.getClusterConfigSelect().set("tdg:rps-2000:storage-6GB");
             orderPage.getVersionSelect().set("2.6.8.0");
             orderPage.getGroupSelect().set(accessGroup);
             orderPage.getGroupSelectTarantool().set(accessGroup);

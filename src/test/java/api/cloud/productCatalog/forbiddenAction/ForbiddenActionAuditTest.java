@@ -17,7 +17,7 @@ import static core.helper.StringUtils.getRandomStringApi;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ForbiddenActionSteps.createForbiddenAction;
 import static steps.productCatalog.ForbiddenActionSteps.deleteForbiddenActionByName;
-import static steps.productCatalog.ProductCatalogSteps.getAuditListForObjKeys;
+import static steps.productCatalog.ProductCatalogSteps.getAuditListByObjKeys;
 
 @Tag("product_catalog")
 @Epic("Продуктовый каталог")
@@ -33,7 +33,7 @@ public class ForbiddenActionAuditTest extends Tests {
         ForbiddenAction testAction = createForbiddenAction(getRandomStringApi(6));
         testAction.deleteObject();
         createForbiddenAction(testAction.toJson());
-        List<ProductAudit> auditListForObjKeys = getAuditListForObjKeys(ENTITY_TYPE, testAction.getName());
+        List<ProductAudit> auditListForObjKeys = getAuditListByObjKeys(ENTITY_TYPE, testAction.getName());
         auditListForObjKeys.forEach(x -> assertEquals(x.getObjKeys().get("name"), testAction.getName()));
         deleteForbiddenActionByName(testAction.getName());
     }

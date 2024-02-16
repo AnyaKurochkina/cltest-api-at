@@ -18,6 +18,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.api.extension.ExtendWith;
+import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 import steps.resourceManager.ResourceManagerSteps;
 import steps.vpc.SecurityGroupResponse;
@@ -33,9 +34,7 @@ import ui.t1.pages.cloudEngine.vpc.PublicIpList;
 import ui.t1.tests.AbstractT1Test;
 import ui.t1.tests.WithAuthorization;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static tests.routes.OrderServiceApi.deleteV1ProjectsProjectNameOrdersId;
@@ -110,18 +109,53 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @AllArgsConstructor
-    public abstract static class ComputeEntity extends AbstractEntity {
+    public abstract static class BaseIdEntity extends AbstractEntity {
         String projectId;
         String id;
 
-        public ComputeEntity(String id) {
+        public BaseIdEntity(String id) {
             this.projectId = StringUtils.findByRegex("context=([^&]*)", WebDriverRunner.getWebDriver().getCurrentUrl());
             this.id = id;
         }
     }
 
     public static class InstanceEntity extends ComputeEntity {
+        boolean deleteOnTerminationSystemDisk;
+
+        public InstanceEntity(String projectId, String id, boolean deleteOnTerminationSystemDisk) {
+            super(projectId, id);
+            this.deleteOnTerminationSystemDisk = deleteOnTerminationSystemDisk;
+        }
+
+        public InstanceEntity(boolean deleteOnTerminationSystemDisk) {
+            super();
+            this.deleteOnTerminationSystemDisk = deleteOnTerminationSystemDisk;
+        }
+
         public InstanceEntity(String projectId, String id) {
+            super(projectId, id);
+            this.deleteOnTerminationSystemDisk = true;
+        }
+
+        @Override
+        public void delete() {
+            List<String> diskList = new ArrayList<>();
+            Http.setFixedRole(Role.CLOUD_ADMIN);
+            try {
+                if (deleteOnTerminationSystemDisk)
+                    diskList.add(OrderServiceSteps.getObjectClass(projectId, id, "data.find{it.type=='volume' && it.data.config.system==true}.item_id", String.class));
+                OrderServiceSteps.runAction(ActionParameters.builder().name("compute_instance_delete").orderId(id).checkPrebilling(false)
+                        .data(new JSONObject().put("allow_delete_volumes", deleteOnTerminationSystemDisk)
+                                .put("delete_floating_ip", false).put("volumes", diskList))
+                        .projectId(projectId).build());
+            } finally {
+                Http.removeFixedRole();
+            }
+        }
+    }
+
+    public static class ComputeEntity extends BaseIdEntity {
+        public ComputeEntity(String projectId, String id) {
             super(projectId, id);
         }
 
@@ -130,13 +164,14 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
             return 1;
         }
 
-        public InstanceEntity() {
+        public ComputeEntity() {
             super(StringUtils.findByRegex("orders/([^/]*)/", WebDriverRunner.getWebDriver().getCurrentUrl()));
         }
 
         @Override
         public void delete() {
-            String status = Http.builder().setRole(Role.CLOUD_ADMIN).api(getV1ProjectsProjectNameOrdersId, projectId, id).jsonPath().getString("status");
+            String status = Http.builder().setRole(Role.CLOUD_ADMIN).api(getV1ProjectsProjectNameOrdersId, projectId, id)
+                    .jsonPath().getString("status");
             if (status.equals("changing") || status.equals("pending"))
                 Waiting.sleep(20000);
             if (status.equals("success")) {
@@ -148,11 +183,10 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @NoArgsConstructor
-    public static class VolumeEntity extends InstanceEntity {
+    public static class VolumeEntity extends ComputeEntity {
         public VolumeEntity(String projectId, String id) {
             super(projectId, id);
         }
-
         @Override
         protected int getPriority() {
             return 2;
@@ -160,7 +194,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @NoArgsConstructor
-    public static class PlacementEntity extends InstanceEntity {
+    public static class PlacementEntity extends ComputeEntity {
         public PlacementEntity(String projectId, String id) {
             super(projectId, id);
         }
@@ -172,20 +206,20 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @NoArgsConstructor
-    public static class SnapshotEntity extends InstanceEntity {
+    public static class SnapshotEntity extends ComputeEntity {
         public SnapshotEntity(String projectId, String id) {
             super(projectId, id);
         }
     }
 
     @NoArgsConstructor
-    public static class ImageEntity extends InstanceEntity {
+    public static class ImageEntity extends ComputeEntity {
         public ImageEntity(String projectId, String id) {
             super(projectId, id);
         }
     }
 
-    public static class NetworkEntity extends ComputeEntity {
+    public static class NetworkEntity extends BaseIdEntity {
         public NetworkEntity() {
             super(StringUtils.findByRegex("networks/([^?]*)", WebDriverRunner.getWebDriver().getCurrentUrl()));
         }
@@ -217,7 +251,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @NoArgsConstructor
-    public static class PublicIpEntity extends InstanceEntity {
+    public static class PublicIpEntity extends ComputeEntity {
         public PublicIpEntity(String projectId, String id) {
             super(projectId, id);
         }
@@ -229,7 +263,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
     }
 
     @NoArgsConstructor
-    public static class VipEntity extends InstanceEntity {
+    public static class VipEntity extends ComputeEntity {
         public VipEntity(String projectId, String id) {
             super(projectId, id);
         }
@@ -247,13 +281,12 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
         new VmList().selectCompute(v.getName())
-                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+                .markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return v;
     });
 
@@ -268,7 +301,7 @@ public abstract class AbstractComputeTest extends AbstractT1Test {
         BackupCreate backupCreate = new IndexPage().goToBackups().addBackup().setAvailabilityZone(availabilityZone).setSourceType("Сервер")
                 .setObjectForBackup(vm.getName()).clickOrder();
         new BackupsList().selectBackup(backupCreate.getObjectForBackup())
-                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+                .markForDeletion(new ComputeEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return backupCreate;
     });
 }

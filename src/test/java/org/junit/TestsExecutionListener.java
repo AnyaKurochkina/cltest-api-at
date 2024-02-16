@@ -148,6 +148,7 @@ public class TestsExecutionListener implements TestExecutionListener {
         fooWriter.close();
         System.out.println("##teamcity[publishArtifacts 'logs => logs']");
         System.out.println("##teamcity[publishArtifacts 'target/swagger-coverage-output => swagger-coverage-output.zip']");
+        System.out.println("##teamcity[publishArtifacts 'target/allure-results => allure-results.zip']");
     }
 
     @SneakyThrows

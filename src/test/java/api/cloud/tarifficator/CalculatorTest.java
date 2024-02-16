@@ -1,5 +1,6 @@
 package api.cloud.tarifficator;
 
+import api.Tests;
 import core.utils.Waiting;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -22,7 +23,6 @@ import steps.authorizer.AuthorizerSteps;
 import steps.calculator.CalculatorSteps;
 import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.CostSteps;
-import api.Tests;
 
 import java.util.Objects;
 

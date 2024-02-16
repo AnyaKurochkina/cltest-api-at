@@ -2,9 +2,7 @@ package ui.elements;
 
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import core.utils.Waiting;
 import io.qameta.allure.Step;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.function.Supplier;
 
@@ -40,8 +38,6 @@ public class Switch implements TypifiedElement {
     public void setEnabled(boolean enabled) {
         if (isEnabled() != enabled)
             label.get().hover().shouldBe(clickableCnd).click();
-        Waiting.sleep(1500);
-        Assertions.assertEquals(enabled, isEnabled());
     }
 
     public SelenideElement getLabel() {

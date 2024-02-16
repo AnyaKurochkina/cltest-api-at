@@ -28,7 +28,6 @@ import static steps.productCatalog.ActionSteps.*;
 @Feature("Действия")
 @DisabledIfEnv("prod")
 public class ActionAuditTest extends ActionBaseTest {
-    private final static String ENTITY_TYPE = "actions";
 
     @DisplayName("Получение списка audit для определенного действия")
     @TmsLink("SOUL-8312")
@@ -78,7 +77,7 @@ public class ActionAuditTest extends ActionBaseTest {
         Action testAction = createAction(StringUtils.getRandomStringApi(6));
         deleteActionById(testAction.getId());
         createAction(testAction.toJson());
-        List<ProductAudit> auditListForObjKeys = getAuditListForActionKeys(testAction.getName());
+        List<ProductAudit> auditListForObjKeys = getAuditListByActionKeys(testAction.getName());
         auditListForObjKeys.forEach(x -> assertEquals(x.getObjKeys().get("name"), testAction.getName()));
         deleteActionByName(testAction.getName());
     }

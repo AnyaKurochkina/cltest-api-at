@@ -35,7 +35,7 @@ public class IncrementalCopy extends IProductT1Page<IncrementalCopy> {
         runActionWithParameters(BLOCK_PARAMETERS, action, "Подтвердить", () ->
         {
             Dialog.byTitle(action);
-            new VmCreate().setName(name).setDeleteOnTermination(true).addSecurityGroups(securityGroup).setSshKey(sshKey);
+            new VmCreate().setName(name).addSecurityGroups(securityGroup).setSshKey(sshKey);
         }, ActionParameters.builder().checkLastAction(false).build());
         goToBackupContainer();
         checkLastAction(action);

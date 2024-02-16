@@ -38,14 +38,14 @@ public class ElasticsearchOpensearchCluster extends IProduct {
         if (productName == null)
             productName = "Elasticsearch Opensearch cluster (Astra)";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (elasticsearchVersion == null)
             elasticsearchVersion = getRandomProductVersionByPathEnum("elasticsearch_version.enum");
         if (kibanaPassword == null)
             kibanaPassword = "RnXLM4Ms3XQi";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

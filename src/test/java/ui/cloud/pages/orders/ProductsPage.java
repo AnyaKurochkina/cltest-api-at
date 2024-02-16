@@ -42,7 +42,7 @@ public class ProductsPage {
     public ProductsPage expandProductsList() {
         try {
             Waiting.find(() -> expandButtons.first().exists(), Duration.ofSeconds(10));
-        } catch (Exception ignored) {
+        } catch (AssertionError ignored) {
         }
         for (SelenideElement button : expandButtons) {
             button.hover().shouldBe(clickableCnd).click();

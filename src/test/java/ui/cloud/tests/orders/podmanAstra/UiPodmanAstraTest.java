@@ -156,6 +156,7 @@ public class UiPodmanAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(9)
     @TmsLink("")
     @DisplayName("UI PodmanAstra. Установить Ключ-Астром")
@@ -165,6 +166,7 @@ public class UiPodmanAstraTest extends UiProductTest {
     }
 
     @Test
+    @Disabled("Проверяется у Astra Linux")
     @Order(10)
     @TmsLink("")
     @DisplayName("UI PodmanAstra. Удалить Ключ-Астром")

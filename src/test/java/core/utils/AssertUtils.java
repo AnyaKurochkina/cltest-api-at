@@ -42,14 +42,16 @@ public class AssertUtils {
         assertEquals(mapper.readTree(j1.toString()), mapper.readTree(j2.toString()));
     }
 
-    public static void assertContainsList(List<?> list, Object object) {
-        if (!list.contains(object))
-            throw new NotFoundElementException("Элемент {} не найден в списке \n{}", object, Arrays.toString(list.toArray()));
+    public static void assertContainsList(List<?> list, Object... objects) {
+        for (Object object : objects)
+            if (!list.contains(object))
+                throw new NotFoundElementException("Элемент {} не найден в списке \n{}", object, Arrays.toString(list.toArray()));
     }
 
-    public static void assertNotContainsList(List<?> list, Object object) {
-        if (list.contains(object))
-            throw new NotFoundElementException("Элемент {} найден в списке \n{}", object, Arrays.toString(list.toArray()));
+    public static void assertNotContainsList(List<?> list, Object... objects) {
+        for (Object object : objects)
+            if (list.contains(object))
+                throw new NotFoundElementException("Элемент {} найден в списке \n{}", object, Arrays.toString(list.toArray()));
     }
 
     public static void assertContains(String text, String... strings) {

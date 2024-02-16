@@ -79,7 +79,7 @@ public class RedisAstraPage extends AbstractAstraPage {
     }
 
     public void resetPassword(String name, String nameAction) {
-        runActionWithParameters(getActionsMenuButton(name, 2), "Сбросить пароль (удалить)", "Подтвердить", () ->
+        runActionWithParameters(getActionsMenuButton(name, 2), "Сбросить пароль", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle(nameAction);
             generatePassButton.shouldBe(Condition.enabled).click();

@@ -58,12 +58,12 @@ public class Artemis extends IProduct {
         if (productName == null)
             productName = "VTB Artemis";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (artemisVersion == null)
             artemisVersion = getRandomProductVersionByPathEnum("artemis_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
@@ -143,8 +143,7 @@ public class Artemis extends IProduct {
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(SERVICE_PATH, name)));
     }
 
-    public void verticalScaling() {
-        final Flavor maxFlavor = getMaxFlavor();
+    public void verticalScaling(Flavor maxFlavor) {
         JSONObject data = JsonHelper.getJsonTemplate("/orders/artemis_vertical_scaling.json")
                 .set("$.current_flavor", flavor.getName())
                 .set("$.state_service_flavor_name", flavor.getName())

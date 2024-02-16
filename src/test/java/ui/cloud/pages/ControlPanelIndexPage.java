@@ -6,6 +6,7 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.cloud.pages.productCatalog.AuditPage;
 import ui.cloud.pages.productCatalog.ContextSettingsPage;
+import ui.cloud.pages.productCatalog.MeccanoAuditPage;
 import ui.cloud.pages.productCatalog.actions.ActionsListPage;
 import ui.cloud.pages.productCatalog.allowedAction.AllowedActionsListPage;
 import ui.cloud.pages.productCatalog.forbiddenAction.ForbiddenActionsListPage;
@@ -41,6 +42,7 @@ public class ControlPanelIndexPage {
     private final SelenideElement utilsMenuItem = $x("//div[text()='Утилиты']");
     private final SelenideElement accountSettingsMenuItem = $x("//div[text()='Настройки аккаунта']");
     private final SelenideElement tagsMenuItem = $x("//div[text()='Теги']");
+    private final SelenideElement meccanoAuditMenuItem = $x("//div[text()='История изменений']");
 
     @Step("Переход на страницу Конструктор.Графы")
     public GraphsListPage goToGraphsPage() {
@@ -122,5 +124,11 @@ public class ControlPanelIndexPage {
     public TagsListPage goToTagsPage() {
         tagsMenuItem.click();
         return new TagsListPage();
+    }
+
+    @Step("Переход на страницу Конструктор. История изменений")
+    public MeccanoAuditPage goToMeccanoAuditPage() {
+        meccanoAuditMenuItem.click();
+        return new MeccanoAuditPage();
     }
 }

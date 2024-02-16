@@ -4,14 +4,17 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import core.enums.Role;
 import core.exception.CalculateException;
 import core.exception.CreateEntityException;
+import core.exception.NotFoundElementException;
 import core.helper.Configure;
 import core.helper.JsonTemplate;
+import core.helper.Report;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.utils.Waiting;
 import core.utils.ssh.SshClient;
 import io.qameta.allure.Step;
 import io.restassured.RestAssured;
+import io.restassured.common.mapper.TypeRef;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
@@ -49,6 +52,8 @@ import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.util.*;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.orderServiceURL;
@@ -175,6 +180,7 @@ public abstract class IProduct extends Entity {
         return Objects.requireNonNull(str)
                 .replace("${context::projectInfo.project_environment.environment_type}", envType().toUpperCase())
                 .replace("${context::formData.platform}", getPlatform())
+                .replace("${context::formData.os_vendor.ifNil(astra)}", "astra")
                 .replace("${context::projectInfo.organization}", ((Organization) Organization.builder().build().createObject()).getName())
                 .replace("${context::formData.default_nic.net_segment}", getSegment());
     }
@@ -299,7 +305,7 @@ public abstract class IProduct extends Entity {
             close();
             throw new CreateEntityException(String.format("Текущий статус продукта %s не соответствует исходному %s", getStatus(), ProductStatus.CREATED));
         }
-        String status = OrderServiceSteps.getStatus(getOrderId(), getProjectId());
+        String status = OrderServiceSteps.getStatusOrder(getOrderId(), getProjectId());
         if (status.equals("changing") || status.equals("pending")) {
             close();
             throw new CreateEntityException(String.format("Статус продукта %s не соответствует исходному", status));
@@ -407,10 +413,37 @@ public abstract class IProduct extends Entity {
     protected String getRandomOsVersion() {
         Product productResponse = getProductByCloudAdmin(getProductId());
         Graph graphResponse = getGraphByIdAndEnv(productResponse.getGraphId(), envType());
-        String urlAttrs = JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
-                .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')");
+        String urlAttrs = replaceGraphParams(JsonPath.from(new ObjectMapper().writeValueAsString(graphResponse.getUiSchema().get("os_version")))
+                .getString("'ui:options'.attrs.collect{k,v -> k+'='+v }.join('&')"));
         return Objects.requireNonNull(ReferencesStep.getJsonPathList(urlAttrs)
                 .getString("collect{it.data.os.version}.shuffled()[0]"), "Версия ОС не найдена");
+    }
+
+    @Step("Проверка выполнения условий по ssh на всех nodes")
+    public void runOnAllNodesBySsh(Consumer<SshClient> consumer) {
+        TypeRef<List<String>> typeReference = new TypeRef<List<String>>() {
+        };
+        runOnAllNodesBySsh(consumer, OrderServiceSteps.getObjectClass(this, "product_data.hostname", typeReference));
+    }
+
+    @Step("Проверка выполнения условий по ssh")
+    public void runOnAllNodesBySsh(Consumer<SshClient> consumer, List<String> hosts) {
+        for (String host : hosts) {
+            Report.checkStep("Проверка выполнения условия по ssh на vm " + host, () -> {
+                SshClient client = SshClient.builder().host(host).env(envType()).build();
+                consumer.accept(client);
+            });
+        }
+    }
+
+    @Step("Поиск node подходящей под условие")
+    public SshClient findNodeBySsh(Predicate<SshClient> predicate, List<String> hosts) {
+        for (String host : hosts) {
+            SshClient client = SshClient.builder().host(host).env(envType()).build();
+            if (predicate.test(client))
+                return client;
+        }
+        throw new NotFoundElementException("Не найдена node соответствующая условию");
     }
 
     @SneakyThrows

@@ -1,4 +1,4 @@
-package api.cloud.tagService.v2;
+package api.cloud.tagService.v2.filter;
 
 import api.cloud.tagService.AbstractTagServiceTest;
 import core.utils.AssertUtils;
@@ -27,7 +27,7 @@ import static models.cloud.tagService.TagServiceSteps.inventoryTagsV2;
 public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
 
     @Test
-    @TmsLink("1623699")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = exact")
     void findInventoriesByLookupExact() {
         List<Tag> tList = generateTags(2);
@@ -44,13 +44,13 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "value", "exact")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Найден неверный inventory");
     }
 
     @Test
-    @TmsLink("1623700")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = iexact")
     void findInventoriesByLookupIExact() {
         List<Tag> tList = generateTags(2);
@@ -67,12 +67,12 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "value", "iexact")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
     }
 
     @Test
-    @TmsLink("1623702")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = icontains")
     void findInventoriesByLookupIContains() {
         List<Tag> tList = generateTags(2);
@@ -89,12 +89,12 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "value", "icontains")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
     }
 
     @Test
-    @TmsLink("1623704")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = startswith")
     void findInventoriesByLookupStartswith () {
         List<Tag> tList = generateTags(2);
@@ -111,13 +111,13 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "val", "startswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Найден неверный inventory");
     }
 
     @Test
-    @TmsLink("1623705")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = istartswith")
     void findInventoriesByLookupIStartswith () {
         List<Tag> tList = generateTags(2);
@@ -134,12 +134,12 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "val", "istartswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
     }
 
     @Test
-    @TmsLink("1623710")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = endswith")
     void findInventoriesByLookupEndswith () {
         List<Tag> tList = generateTags(2);
@@ -156,13 +156,13 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "lue", "endswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Найден неверный inventory");
     }
 
     @Test
-    @TmsLink("1623715")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = iendswith")
     void findInventoriesByLookupIEndswith () {
         List<Tag> tList = generateTags(2);
@@ -179,12 +179,12 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "lue", "iendswith")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
     }
 
     @Test
-    @TmsLink("1623719")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = regex")
     void findInventoriesByLookupRegex() {
         List<Tag> tList = generateTags(2);
@@ -201,13 +201,13 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "[a-z]$", "regex")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(1, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
         Assertions.assertEquals(iList.get(1).getId(), filterResult.getList().get(0).getInventory(), "Найден неверный inventory");
     }
 
     @Test
-    @TmsLink("1623720")
+    @TmsLink("")
     @DisplayName("Inventory. Фильтр V2. lookup = iregex")
     void findInventoriesByLookupIRegex() {
         List<Tag> tList = generateTags(2);
@@ -224,7 +224,7 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                         .addFilter(new Filter.Tag.TagFilter(tList.get(1).getKey(), "[a-z]$", "iregex")))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
     }
 
@@ -250,7 +250,7 @@ public class InventoryFilterByLookupV2Test extends AbstractTagServiceTest {
                                 new Filter.Tag.TagFilter(tList.get(1).getKey(), "t", "startswith"))))
                 .contextPathIsnull(false)
                 .build();
-        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(filter);
         Assertions.assertEquals(2, filterResult.getMeta().getTotalCount(), "Неверное кол-во отфильтрованных inventories");
         AssertUtils.assertEqualsList(Arrays.asList(iList.get(0).getId(), iList.get(2).getId()),
                 filterResult.stream().map(FilterResultV2::getInventory).collect(Collectors.toList()));

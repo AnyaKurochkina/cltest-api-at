@@ -8,6 +8,7 @@ import io.qameta.allure.Step;
 import models.t1.cdn.Resource;
 import ui.elements.DataTable;
 import ui.elements.Dialog;
+import ui.t1.pages.cdn.resource.ResourcePage;
 
 import java.time.Duration;
 
@@ -40,7 +41,7 @@ public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
     @Step("Переход на страницу ресурса с именем {resourceName}")
     public ResourcePage goToResourcePage(String resourceName) {
         new DataTable("Источники").getRowByColumnValue("Название", resourceName).getElementByColumnIndex(5).click();
-        return new ResourcePage(resourceName);
+        return new ResourcePage();
     }
 
     @Step("Ожидание смены статуса ресурсной записи на Активный")

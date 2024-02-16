@@ -5,12 +5,13 @@ import core.helper.Configure;
 import core.helper.StringUtils;
 import core.utils.Waiting;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Assumptions;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
 import java.time.Duration;
 import java.util.Objects;
 
@@ -21,6 +22,7 @@ public class SshClient {
     private int port = 22;
     @Builder.Default
     private int timeout = 10000;
+    @Getter
     private String host;
     private String user;
     private String password;

@@ -11,7 +11,7 @@ import java.util.UUID;
 public class TarantoolDataGridAstraOrderPage extends NewOrderPage {
 
     private final String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
-    protected Select flavorSelectCluster = Select.byLabel("Конфигурация кластера");
+    protected Select clusterConfigSelect = Select.byLabel("Конфигурация кластера");
     protected Select versionSelect = Select.byLabel("Версия TDG");
     protected Input appTarantool = Input.byLabel("Размер, Гб",1);
     protected Input appNginx = Input.byLabel("Размер, Гб",2);

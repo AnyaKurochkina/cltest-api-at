@@ -32,10 +32,10 @@ public class PodmanAstra extends IProduct {
         if(productName == null)
             productName = "Podman (Astra)";
         initProduct();
-        if(osVersion == null)
-            osVersion = getRandomOsVersion();
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)

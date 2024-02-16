@@ -8,6 +8,7 @@ import io.qameta.allure.TmsLinks;
 import models.AbstractEntity;
 import models.t1.cdn.Resource;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import ui.elements.Alert;
@@ -30,6 +31,8 @@ import java.util.stream.Stream;
 @Tag("morozov_ilya")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class CdnResourceTests extends AbstractT1Test {
+
+    private final static String DEFAULT_LOCATION = "Russia / Moscow-EC / M9 | M9P";
 
     private final EntitySupplier<Resource> cdnResource = lazy(() -> {
         Resource resource = new Resource(getProjectId(), "mirror.yandex.ru",
@@ -65,6 +68,7 @@ public class CdnResourceTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .goToResourcePage(name)
+                .switchToResourceGeneralTab(name)
                 .editResourceHostNames(domains)
                 .checkDomainsColumnHasNames(domains);
     }
@@ -78,6 +82,7 @@ public class CdnResourceTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .goToResourcePage(name)
+                .switchToResourceGeneralTab(name)
                 .fullResetCache();
         Alert.green("Кэш очищен");
     }
@@ -91,8 +96,75 @@ public class CdnResourceTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .goToResourcePage(name)
+                .switchToResourceGeneralTab(name)
                 .partialResetCache();
         Alert.green("Кэш очищен");
+    }
+
+    @Test
+    @Order(5)
+    @DisplayName("CDN. HTTP -заголовки и методы")
+    @TmsLinks(@TmsLink("SOUL-5386"))
+    public void httpsHeadersTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToHttpHeadersTab()
+                .checkTitles()
+                .clickEditButton()
+                .checkEditModalIsAppear();
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("CDN.Экранирование источников. Подключение")
+    @TmsLinks(@TmsLink("SOUL-5388"))
+    public void shieldingSourcesConnectionTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToShieldingOfSources()
+                .activateShieldingWithLocation(DEFAULT_LOCATION)
+                .checkShieldingIsActivatedWithLocation(DEFAULT_LOCATION);
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("CDN.Экранирование источников. Редактирование")
+    @TmsLinks(@TmsLink("SOUL-5391"))
+    @DisabledIfEnv("t1prod")
+    public void shieldingSourcesEditTest() {
+        String name = cdnResource.get().getName();
+        String newLocation = "Singapore / Singapore-EC / SG1-EC";
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToShieldingOfSources()
+                .activateShieldingWithLocation(DEFAULT_LOCATION)
+                .changeLocation(newLocation)
+                .checkShieldingIsActivatedWithLocation(newLocation);
+    }
+
+    @Test
+    @Order(8)
+    @DisplayName("CDN.Экранирование источников. Выключение")
+    @TmsLinks(@TmsLink("SOUL-5393"))
+    public void shieldingSourcesOffTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToShieldingOfSources()
+                .activateShieldingWithLocation(DEFAULT_LOCATION)
+                .checkShieldingIsActivatedWithLocation(DEFAULT_LOCATION)
+                .offShielding()
+                .checkThatShieldingIsOff();
     }
 
     @Test

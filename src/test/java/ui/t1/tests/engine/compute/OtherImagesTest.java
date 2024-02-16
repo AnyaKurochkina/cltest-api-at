@@ -149,11 +149,10 @@ public class OtherImagesTest extends AbstractComputeTest {
                 .seNetwork(defaultNetwork)
                 .setSubnet(defaultSubNetwork)
                 .setName(getRandomName())
-                .setDeleteOnTermination(true)
                 .addSecurityGroups(securityGroup)
                 .setSshKey(sshKey)
                 .clickOrder();
         new IndexPage().goToVirtualMachine().selectCompute(vm.getName())
-                .markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).delete();
+                .markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_TEST).checkCreate(true).delete();
     }
 }

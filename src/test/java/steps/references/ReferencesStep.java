@@ -5,11 +5,14 @@ import com.google.gson.reflect.TypeToken;
 import core.enums.Role;
 import core.helper.JsonHelper;
 import core.helper.http.Http;
+import core.helper.http.QueryBuilder;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
 import io.restassured.path.json.JsonPath;
+import models.AbstractEntity;
 import models.cloud.authorizer.Project;
 import models.cloud.orderService.interfaces.IProduct;
+import models.cloud.productCatalog.ProductAudit;
 import models.cloud.references.Directories;
 import models.cloud.references.PageFilter;
 import models.cloud.references.Pages;
@@ -26,6 +29,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static core.helper.Configure.referencesURL;
+import static tests.routes.ReferencesApi.*;
 
 public class ReferencesStep extends Steps {
     private static final String DIRECTORIES_JSON_TEMPLATE = "references/createDirectory.json";
@@ -204,9 +208,9 @@ public class ReferencesStep extends Steps {
         return new Http(referencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
-                .post(API_V_1_PRIVATE_DIRECTORIES)
-                .assertStatus(201)
-                .extractAs(Directories.class);
+                .api(apiV1PrivateDirectoriesCreate)
+                .extractAs(Directories.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Создание directory для приватных ролей c недопустимыми символами")
@@ -241,8 +245,16 @@ public class ReferencesStep extends Steps {
         return new Http(referencesURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
-                .patch(API_V_1_PRIVATE_DIRECTORIES + name + "/")
-                .assertStatus(200)
+                .api(apiV1PrivateDirectoriesPartialUpdate, name)
+                .extractAs(Directories.class);
+    }
+
+    @Step("Частичное изменение directory по имени для приватных ролей")
+    public static Directories partialUpdatePrivateDirectoryByName(String name, JSONObject jsonObject, Role role) {
+        return new Http(referencesURL)
+                .setRole(role)
+                .body(jsonObject)
+                .api(apiV1PrivateDirectoriesPartialUpdate, name)
                 .extractAs(Directories.class);
     }
 
@@ -545,5 +557,40 @@ public class ReferencesStep extends Steps {
             }
         }
         return false;
+    }
+
+    @Step("Получение списка audit для директории с name {name}")
+    public static List<ProductAudit> getDirectoryAuditList(String name) {
+        return new Http(referencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .api(apiV1DirectoriesAudit, name)
+                .jsonPath()
+                .getList("", ProductAudit.class);
+    }
+
+    @Step("Получение списка audit для справочника с id {id} и фильтром {queryBuilder}")
+    public static List<ProductAudit> getDirectoryAuditListWithQuery(String directoryName, QueryBuilder queryBuilder) {
+        return new Http(referencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .api(apiV1DirectoriesAudit, directoryName, queryBuilder)
+                .jsonPath()
+                .getList("", ProductAudit.class);
+    }
+
+    @Step("Получение списка audit details для справочника")
+    public static Response getDirectoryAuditDetails(String auditId) {
+        return new Http(referencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .api(apiV1DirectoriesAuditDetails, new QueryBuilder().add("audit_id", auditId));
+    }
+
+    @Step("Получение списка аудита справочника для obj_keys")
+    public static List<ProductAudit> getAuditListForDirectoryKeys(String keyValue) {
+        return new Http(referencesURL)
+                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+                .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
+                .api(apiV1PrivateDirectoriesAuditByObjectKeys)
+                .jsonPath()
+                .getList("", ProductAudit.class);
     }
 }

@@ -10,6 +10,8 @@ public class BillExcelItem {
     private int rowNum;
     //Проект
     private String project;
+    //Заказ
+    private String order;
     //Услуга
     private String service;
     //Тарифный класс по услуге

@@ -73,6 +73,6 @@ public class EngineTest extends AbstractComputeTest {
         new IndexPage().disconnectCloudEngine();
         checkElementsEngine(Condition.not(Condition.visible));
         TypifiedElement.refreshPage();
-        new IndexPage().goToCloudEngine().getBtnConnect().should(Condition.visible, Duration.ofMinutes(2));
+        new IndexPage().goToCloudEngine().getBtnConnect().getButton().should(Condition.visible, Duration.ofMinutes(2));
     }
 }

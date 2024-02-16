@@ -27,11 +27,14 @@ public class MeccanoAuditPage extends EntityPage {
     private final Input endDateInput = Input.byLabelV2("Окончание");
     private final Select beginTimeSelect = Select.byXpath("(//input[@placeholder='Время']/parent::div)[1]");
     private final Select endTimeSelect = Select.byXpath("(//input[@placeholder='Время']/parent::div)[2]");
-    private final Input objectTypeFilterInput = Input.byLabelV2("Тип объекта");
-    private final Input objectIdFilterInput = Input.byLabelV2("ID объекта");
+    private final Select objectTypeSelect = Select.byLabel("Тип объекта");
+    private final Input objectNameInput = Input.byLabelV2("Код объекта");
     private final Button applyFiltersButton = Button.byText("Применить");
     private final Input userFilterInput = Input.byLabelV2("Пользователь");
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    private final Button findButton = Button.byText("Найти");
+    private final SelenideElement setTypeAndCodeWarning = $x("//div[@role='alert']//div[text()='Необходимо выбрать тип и ввести код объекта']");
+    private final Input auditIdInput = Input.byLabelV2("Id изменений через запятую");
 
     public MeccanoAuditPage() {
         WebDriverRunner.getWebDriver().manage().window().maximize();
@@ -134,6 +137,30 @@ public class MeccanoAuditPage extends EntityPage {
         for (String value : newValues) {
             $x("//div[@class='editor modified']//span[text()='\"{}\"']", value).shouldBe(Condition.visible);
         }
+        return this;
+    }
+
+    @Step("Выбор типа объекта")
+    public MeccanoAuditPage setObjectType(String value) {
+        objectTypeSelect.set(value);
+        return this;
+    }
+
+    @Step("Задание кода объекта '{value}'")
+    public MeccanoAuditPage setObjectName(String value) {
+        objectNameInput.setValue(value);
+        return this;
+    }
+
+    @Step("Задание Id изменения '{value}'")
+    public MeccanoAuditPage setAuditId(String value) {
+        auditIdInput.setValue(value);
+        return this;
+    }
+
+    @Step("Поиск")
+    public MeccanoAuditPage find() {
+        findButton.click();
         return this;
     }
 }
