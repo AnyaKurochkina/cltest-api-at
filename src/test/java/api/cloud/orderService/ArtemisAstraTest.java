@@ -8,13 +8,14 @@ import io.qameta.allure.*;
 import lombok.SneakyThrows;
 import models.cloud.orderService.products.Artemis;
 import models.cloud.subModels.Flavor;
-import org.junit.*;
+import org.junit.DisabledIfEnv;
+import org.junit.MarkDelete;
+import org.junit.ProductArgumentsProvider;
+import org.junit.Source;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 
@@ -26,12 +27,7 @@ import java.util.Date;
 @Feature("Artemis Astra")
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("artemis_astra"), @Tag("prod")})
 @DisabledIfEnv("ift")
-@Execution(ExecutionMode.SAME_THREAD)
 public class ArtemisAstraTest extends Tests {
-
-    @Mock
-    public static Artemis loadBalancer = Artemis.builder().platform("OpenStack").env("DEV").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/c1dfe43f-8f3c-4d54-b280-6981c1fca2dc/main?context=proj-ln4zg69jek&type=project&org=vtb");
-
 
     @TmsLink("982658")
     @Source(ProductArgumentsProvider.PRODUCTS)
