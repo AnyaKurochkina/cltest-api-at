@@ -133,7 +133,10 @@ public class ArtemisAstraTest extends Tests {
                     Integer cpu = Integer.parseInt(artemis.executeSsh(client, "cat /proc/cpuinfo | grep processor | wc -l"));
                     String memConfig = artemis.executeSsh(client, "sudo cat /app/etc/systemd/artemis.service.conf | grep \"Xmx\"");
 
-                    Assertions.assertAll("Проверка изменений по SSH на vm " + client.getHost(), () -> Assertions.assertEquals(flavor.getMemory(), memory, "Размер ОЗУ не изменился"), () -> Assertions.assertEquals(flavor.getCpus(), cpu, "Размер CPU не изменился"), () -> Assertions.assertEquals(memConfig, "-Xmx" + flavor.getMemory() / 4 + "G", "Размер не mem / 4"));
+                    Assertions.assertAll("Проверка изменений по SSH на vm " + client.getHost(),
+                            () -> Assertions.assertEquals(flavor.getMemory(), memory, "Размер ОЗУ не изменился"),
+                            () -> Assertions.assertEquals(flavor.getCpus(), cpu, "Размер CPU не изменился"),
+                            () -> Assertions.assertEquals(memConfig, "-Xmx" + flavor.getMemory() / 4 + "G", "Размер не mem / 4"));
                 });
             }
         }
