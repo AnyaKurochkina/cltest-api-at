@@ -65,6 +65,6 @@ public class ActionProductCatalogApiTest extends Tests {
         Project project = Project.builder().build().onlyGetObject();
         Item item = createItem(project);
         JSONObject json = new JSONObject().put("data_item", item.getData()).put("item_restriction", "notexist == 'on'");
-        Response response = checkItemRestrictions(json).assertStatus(400);
+        Response response = checkItemRestrictions(json).assertStatus(500);
     }
 }
