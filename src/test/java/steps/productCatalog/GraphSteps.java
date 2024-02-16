@@ -22,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
 import static tests.routes.GraphProductCatalogApi.apiV1GraphsCreate;
 import static tests.routes.GraphProductCatalogApi.apiV1GraphsRead;
+import static tests.routes.GraphProductCatalogApiV2.apiV2GraphsInputVars;
 
 public class GraphSteps extends Steps {
 
@@ -478,6 +479,14 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(graphUrl + "?" + filters)
                 .assertStatus(200)
+                .extractAs(GetGraphList.class)
+                .getList();
+    }
+
+    @Step("Получение списков Input Output графа")
+    public static List<Graph> getGraphInputOutputs(String graphName) {
+        return getProductCatalogAdmin()
+                .api(apiV2GraphsInputVars, graphName)
                 .extractAs(GetGraphList.class)
                 .getList();
     }
