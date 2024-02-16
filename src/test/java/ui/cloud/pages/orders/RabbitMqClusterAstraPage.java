@@ -342,10 +342,11 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     public void changeGroupWeb(String role, String group) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_GROUP_AD_WEB, "Редактировать группы доступа", "Подтвердить", () -> {
-            if (product.isTest() || product.isProd())
+            if (product.isTest() || product.isProd()) {
                 Select.byLabel(USER_AD).set(group);
-            if (product.isDev())
+            } else {
                 Select.byLabel(role).set(group);
+            }
             checkTextchangeGroupWeb.shouldBe(Condition.visible);
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
             if (product.isProd())

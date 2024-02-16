@@ -32,7 +32,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             Acl.builder().certificate("cert1").type(Acl.Type.BY_NAME).mask("name1").build(),
             Acl.builder().certificate("cert2").type(Acl.Type.BY_MASK).mask("mask").build());
 
-    private ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/f59d51f4-463f-46cc-9071-da3bc5317159/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private ApacheKafkaCluster product;// =ApacheKafkaCluster.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/application_integration/orders/e2eb9edf-4f33-4dad-b1a1-8afc5145fc14/main?context=proj-ahjjqmlgnm&type=project&org=vtb");
 
     @BeforeEach
     @Title("Авторизация на портале")
@@ -56,7 +56,7 @@ public class UiApacheKafkaClusterTest extends UiProductTest {
             orderPage.getOsVersionSelect().set(product.getOsVersion());
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
-            orderPage.getOsVersionSelect().set("2.13-2.4.1");
+            orderPage.getOsVersionKafka().set("2.13-2.4.1");
             orderPage.getConfigCluster().set("one_dc:kafka-4:zookeeper-3");
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
             orderPage.getGroupSelect().set(accessGroup);

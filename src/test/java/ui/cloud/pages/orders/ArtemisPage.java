@@ -3,6 +3,8 @@ package ui.cloud.pages.orders;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
+import core.utils.Env;
+import core.utils.EnviromentChecker;
 import io.qameta.allure.Step;
 import models.cloud.orderService.products.Artemis;
 import models.cloud.subModels.Flavor;
@@ -321,7 +323,10 @@ public class ArtemisPage extends IProductPage {
     @Step("Аварийное обновление сертификатов Artemis")
     public void emergencyUpdateCertificate() {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
-        runActionWithParameters(BLOCK_CLUSTER, "Аварийное обновление сертификатов", "Подтвердить", () -> {
+        String actionName = EnviromentChecker.standEnvIs(Env.IFT)
+                ? "Аварийное обновление сертификатов Artemis"
+                : "Аварийное обновление сертификатов";
+        runActionWithParameters(BLOCK_CLUSTER, actionName, "Подтвердить", () -> {
             checkTextUpdate.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
