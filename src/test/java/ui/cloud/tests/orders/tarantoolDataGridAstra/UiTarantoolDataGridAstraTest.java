@@ -46,6 +46,7 @@ public class UiTarantoolDataGridAstraTest extends UiProductTest {
             String accessGroup = product.accessGroup();
             new IndexPage()
                     .clickOrderMore()
+                    .expandProductsList()
                     .selectProduct(product.getProductName());
             TarantoolDataGridAstraOrderPage orderPage = new TarantoolDataGridAstraOrderPage();
             orderPage.getSegmentSelect().set(product.getSegment());

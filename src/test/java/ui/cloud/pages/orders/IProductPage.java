@@ -116,7 +116,7 @@ public abstract class IProductPage {
 
     @Step("Получение label")
     public String getLabel() {
-        return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible).getText();
+        return $x("//span[starts-with(text(),'AT-UI-')]").shouldBe(Condition.visible.because("Должно отображаться сообщение")).getText();
     }
 
     @Step("Проверка вкладки Мониторинг")
@@ -136,7 +136,7 @@ public abstract class IProductPage {
         int size = new Table(column).rowSize();
         for (int i = 0; i < size; i++) {
             SelenideElement element = new Table(column).getRowByIndex(i);
-            element.shouldBe(Condition.visible).scrollIntoView(scrollCenter).click();
+            element.shouldBe(Condition.visible.because("Должно отображаться сообщение")).scrollIntoView(scrollCenter).click();
             Assumptions.assumeTrue(Waiting.sleep(() -> monitoringOsTab.getElement().isDisplayed(), Duration.ofSeconds(5)),
                     "Мониторинг недоступен");
             monitoringOsTab.getElement().scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
@@ -383,7 +383,7 @@ public abstract class IProductPage {
 
     @Step("Получение стоимости заказа")
     public double getOrderCost() {
-        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible, Duration.ofMinutes(5)));
+        double cost = OrderUtils.getCostValue(currentOrderCost.shouldBe(Condition.visible.because("Должно отображаться сообщение"), Duration.ofMinutes(5)));
         log.debug("Стоимость заказа {}", cost);
         return cost;
     }

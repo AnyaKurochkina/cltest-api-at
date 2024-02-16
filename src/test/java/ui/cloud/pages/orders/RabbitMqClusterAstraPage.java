@@ -60,8 +60,8 @@ public class RabbitMqClusterAstraPage extends IProductPage {
     }
 
     private void signIn(String user, String password) {
-        usernameInput.shouldBe(Condition.visible).val(user);
-        passwordInput.shouldBe(Condition.visible).val(password);
+        usernameInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).val(user);
+        passwordInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).val(password);
         passwordInput.submit();
     }
 
@@ -91,7 +91,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url);
         signIn(Configure.getAppProp("dev.user2"), Configure.getAppProp("dev.password"));
-        Selenide.$x("//a[text()='Overview']").shouldBe(Condition.visible);
+        Selenide.$x("//a[text()='Overview']").shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 
 
@@ -179,7 +179,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
             Dialog dlg = Dialog.byTitle("Вертикальное масштабирование");
             dlg.setInputValue("Размер, Гб", "50");
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
-            checkTextVerticalScaling.shouldBe(Condition.visible);
+            checkTextVerticalScaling.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
             if (product.isProd())
                 CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
@@ -245,7 +245,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);
         btnObjectRight.click();
         runActionWithParameters(BLOCK_VIRTUAL_HOSTS, "Создать виртуальные хосты", "Отмена", () -> {
-            checkTextCreateVirtualHost.shouldBe(Condition.visible);
+            checkTextCreateVirtualHost.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
         });
 
     }
@@ -347,7 +347,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
             } else {
                 Select.byLabel(role).set(group);
             }
-            checkTextchangeGroupWeb.shouldBe(Condition.visible);
+            checkTextchangeGroupWeb.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
             if (product.isProd())
                 CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);

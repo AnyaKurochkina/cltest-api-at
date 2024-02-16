@@ -44,7 +44,6 @@ public class NewOrderPage {
     protected final Select groupAdministratorSelect = Select.byLabel("Administrator");
     protected final String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
-
     //раскрывающийся список
     public static SelenideElement getCalculationDetails() {
         return $x("(//div[text()='Детали заказа'])[2]");
@@ -76,11 +75,11 @@ public class NewOrderPage {
 
     @Step("Проверка отображения деталей заказа")
     public void checkOrderDetails() {
-        prebillingCostElement.shouldBe(Condition.visible);
+        prebillingCostElement.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
         if (getCalculationDetails().exists()) {
-            getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
+            getCalculationDetails().shouldBe(Condition.visible.because("Должно отображаться сообщение")).shouldBe(Condition.enabled).click();
         }
-        getProcessor().shouldBe(Condition.visible);
-        getOpMemory().shouldBe(Condition.visible);
+        getProcessor().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+        getOpMemory().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 }

@@ -69,8 +69,8 @@ public class ArtemisPage extends IProductPage {
 
     @Step("Аутентифика́ция")
     private void signIn(String user, String password) {
-        usernameInput.shouldBe(Condition.visible).val(user);
-        passwordInput.shouldBe(Condition.visible).val(password);
+        usernameInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).val(user);
+        passwordInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).val(password);
         passwordInput.submit();
     }
 

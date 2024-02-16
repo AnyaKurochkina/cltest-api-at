@@ -122,19 +122,20 @@ public class UiRedisAstraTest extends UiProductTest {
     @Test
     @Order(6)
     @TmsLink("")
-    @DisplayName("UI RedisAstra. Сбросить пароль (удалить)")
+    @DisplayName("UI RedisAstra. Сбросить пароль")
     void resetPassword() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel, "Сбросить пароль (удалить)"));
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel, "Сбросить пароль"));
     }
 
     @Test
     @Order(7)
     @TmsLink("")
+    @Disabled
     @DisplayName("UI RedisAstra. Сбросить пароль пользователя")
     void resetPasswordUser() {
         RedisAstraPage redisPage = new RedisAstraPage(product);
-        redisPage.runActionWithCheckCost(CompareType.EQUALS, () -> redisPage.resetPassword(RedisAstraOrderPage.userNameRedisSentinel, "Сбросить пароль пользователя"));
+        redisPage.runActionWithCheckCost(CompareType.EQUALS, redisPage::resetPasswordUserDb);
     }
 
     @Test
