@@ -66,6 +66,10 @@ public class IndexPage {
     private final Button linkPlacementPolicy = Button.byXpath("//a[.='Политики размещения']");
     private final Button linkCdn = Button.byXpath("//a[.='Cloud CDN']");
 
+    public IndexPage() {
+        //Ожидание загрузки /tenant
+        Waiting.sleep(3000);
+    }
 
     @Step("Переход на главную страницу")
     public static void go() {

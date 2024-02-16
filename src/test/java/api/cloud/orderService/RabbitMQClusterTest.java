@@ -129,6 +129,7 @@ public class RabbitMQClusterTest extends Tests {
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
             rabbit.rabbitmqCreateUser(ADP,RIS_CODE,"vhostUser");
             rabbit.addVhost(Collections.singletonList("vhostAccess"));
+            rabbit.editVhostsAccess(RabbitMQClusterAstra.Permission.builder().vhostWrite("vhostAccess").build());
             rabbit.editVhostAccess("vhostUser", Arrays.asList("READ", "WRITE", "CONFIGURE"), "vhostAccess");
             rabbit.deleteVhostAccess("vhostUser", "vhostAccess");
         }
@@ -192,8 +193,8 @@ public class RabbitMQClusterTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить операционную систему {0}")
     void updateOs(RabbitMQClusterAstra product, Integer num) {
-        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         try (RabbitMQClusterAstra rabbit = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
             rabbit.updateOs();
         }
     }

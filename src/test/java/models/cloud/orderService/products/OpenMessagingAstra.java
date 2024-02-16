@@ -16,6 +16,8 @@ import org.json.JSONObject;
 import steps.orderService.ActionParameters;
 import steps.orderService.OrderServiceSteps;
 
+import java.time.Duration;
+
 @ToString(callSuper = true, onlyExplicitlyIncluded = true, includeFieldNames = false)
 @EqualsAndHashCode(callSuper = true)
 @Log4j2
@@ -23,8 +25,8 @@ import steps.orderService.OrderServiceSteps;
 @NoArgsConstructor
 @SuperBuilder
 public class OpenMessagingAstra extends IProduct {
-    String osVersion;
     Flavor flavor;
+    String osVersion;
 
     @Override
     public Entity init() {
@@ -33,10 +35,10 @@ public class OpenMessagingAstra extends IProduct {
         if (env.equalsIgnoreCase("LT"))
             productName = "OpenMessaging LT Astra";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (flavor == null)
             flavor = getMinFlavor();
         if (availabilityZone == null)
@@ -93,5 +95,19 @@ public class OpenMessagingAstra extends IProduct {
 
     public void updateCerts() {
         updateCerts("openmessaging_lt_update_certificates_release");
+    }
+
+    public void verticalScaling() {
+        final Flavor maxFlavor = getMaxFlavor();
+        JSONObject data = JsonHelper.getJsonTemplate("/orders/open_messaging_astra_vertical_scaling.json")
+                .set("$.current_flavor", flavor.getName())
+                .set("$.state_service_flavor_name", flavor.getName())
+                .set("$.state_service_ram", flavor.getMemory())
+                .set("$.state_service_cpu", flavor.getCpus())
+                .set("$.flavor", new JSONObject(maxFlavor.toString())).build();
+        OrderServiceSteps.runAction(ActionParameters.builder().name("openmessaging_vertical_scaling_release").product(this)
+                .data(data).timeout(Duration.ofHours(1)).build());
+        flavor = maxFlavor;
+        save();
     }
 }

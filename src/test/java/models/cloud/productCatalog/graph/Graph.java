@@ -130,7 +130,7 @@ public class Graph extends AbstractEntity implements IProductCatalog {
     private void deleteIfExist(String name) {
         if (isGraphExists(name)) {
             String id = getGraphByNameFilter(name).getGraphId();
-            List<GetUsedListResponse> list = getObjectArrayUsedGraph(id).getList("", GetUsedListResponse.class);
+            List<GetUsedListResponse> list = getObjectArrayUsedGraph(id).jsonPath().getList("", GetUsedListResponse.class);
             for (GetUsedListResponse resp : list) {
                 String type = resp.getType();
                 switch (type) {

@@ -178,14 +178,14 @@ public abstract class AbstractPostgreSQL extends IProduct {
 
     //Сбросить пароль пользователя
     public void resetPassword(String action, String username) {
-        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        String password = "Wx1QA9SI4AzW6AWx1QAWI4AzW6AvJZ9SI4AvJZvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
                 .data(new JSONObject().put("user_name", username).put("user_password", password)).build());
     }
 
     //Сбросить пароль владельца
     public void resetDbOwnerPassword(String action, String username) {
-        String password = "Wx1QA9SI4AzW6AvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
+        String password = "Wx1QA9SI4AzW6AWx1QAWI4AzW6AvJZ9SI4AvJZvJZ3sxf7-jyQDazVkouHvcy6UeLI-Gt";
         OrderServiceSteps.runAction(ActionParameters.builder().name(action).product(this)
                 .data(new JSONObject().put("user_name", username).put("user_password", password)).build());
         this.adminPassword = password;

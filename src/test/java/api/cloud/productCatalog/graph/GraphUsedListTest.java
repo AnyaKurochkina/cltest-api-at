@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
+import core.helper.http.QueryBuilder;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -21,7 +22,8 @@ import static core.helper.StringUtils.getRandomStringApi;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ActionSteps.*;
-import static steps.productCatalog.GraphSteps.*;
+import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.GraphSteps.getObjectArrayUsedGraph;
 import static steps.productCatalog.ProductSteps.getProductById;
 import static steps.productCatalog.ProductSteps.partialUpdateProduct;
 import static steps.productCatalog.ServiceSteps.getServiceById;
@@ -58,7 +60,7 @@ public class GraphUsedListTest extends Tests {
                 .graphId(usedGraphId)
                 .build());
 
-        JsonPath jsonPath = getObjectArrayUsedGraph(usedGraphId);
+        JsonPath jsonPath = getObjectArrayUsedGraph(usedGraphId).jsonPath();
         assertAll(
                 () -> assertEquals(createProductResponse.getProductId(), jsonPath.getString("id[0]")),
                 () -> assertEquals(createActionResponse.getId(), jsonPath.getString("id[1]")),
@@ -91,13 +93,16 @@ public class GraphUsedListTest extends Tests {
                 .name("action_for_type_used_graph_test_api")
                 .graphId(usedGraphId)
                 .build());
-        Response response = getObjectTypeUsedGraph(usedGraphId, "product");
+        Response response = getObjectArrayUsedGraph(usedGraphId, new QueryBuilder().add("obj_type", "product"));
         assertEquals("Product", response.jsonPath().getString("type[0]"));
-        Response getActionResp = getObjectTypeUsedGraph(usedGraphId, "action");
+        Response getActionResp = getObjectArrayUsedGraph(usedGraphId, new QueryBuilder().add("obj_type", "action"));
         assertEquals("Action", getActionResp.jsonPath().getString("type[0]"));
-        Response getServiceResp = getObjectTypeUsedGraph(usedGraphId, "service");
+        Response getServiceResp = getObjectArrayUsedGraph(usedGraphId, new QueryBuilder().add("obj_type", "service"));
         assertEquals("Service", getServiceResp.jsonPath().getString("type[0]"));
-        Response getAllTypeResp = getObjectTypeUsedGraph(usedGraphId, "service", "product", "action");
+        Response getAllTypeResp = getObjectArrayUsedGraph(usedGraphId, new QueryBuilder()
+                .add("obj_type", "service")
+                .add("obj_type", "product")
+                .add("obj_type", "action"));
         assertEquals("Service", getAllTypeResp.jsonPath().getString("type[0]"));
         assertEquals("Product", getAllTypeResp.jsonPath().getString("type[1]"));
         assertEquals("Action", getAllTypeResp.jsonPath().getString("type[2]"));
@@ -148,7 +153,7 @@ public class GraphUsedListTest extends Tests {
                 .graphId(usedGraphId)
                 .build());
 
-        Response response = getLastObjectUsedGraph(usedGraphId);
+        Response response = getObjectArrayUsedGraph(usedGraphId, new QueryBuilder().add("last_object", true));
         assertEquals(lastAction.getName(), response.jsonPath().getString("name[1]"));
         assertEquals(lastService.getName(), response.jsonPath().getString("name[2]"));
         assertEquals(lastProduct.getName(), response.jsonPath().getString("name[0]"));
@@ -194,7 +199,7 @@ public class GraphUsedListTest extends Tests {
                 .put("priority", 1));
         String actionVersion = getActionById(action.getId()).getVersion();
 
-        Response response = getLastVersionUsedGraph(usedGraphId);
+        Response response = getObjectArrayUsedGraph(usedGraphId, new QueryBuilder().add("last_version", true));
         assertEquals(actionVersion, response.jsonPath().getString("version[1]"));
         assertEquals(serviceVersion, response.jsonPath().getString("version[2]"));
         assertEquals(productVersion, response.jsonPath().getString("version[0]"));
@@ -226,11 +231,11 @@ public class GraphUsedListTest extends Tests {
                 .graphId(usedGraphId)
                 .build().toJson()).extractAs(Action.class);
 
-        assertEquals(3, getObjectArrayUsedGraph(usedGraphId).getList("").size());
+        assertEquals(3, getObjectArrayUsedGraph(usedGraphId).jsonPath().getList("").size());
         deleteActionById(createActionResponse.getId());
         createProductResponse.delete();
         createServiceResponse.delete();
 
-        assertEquals(0, getObjectArrayUsedGraph(usedGraphId).getList("").size());
+        assertEquals(0, getObjectArrayUsedGraph(usedGraphId).jsonPath().getList("").size());
     }
 }

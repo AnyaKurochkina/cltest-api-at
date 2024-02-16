@@ -82,8 +82,8 @@ public class DeleteAllOrders extends Tests {
             put(getV1ProjectsProjectNameComputeSnapshots, AbstractComputeTest.SnapshotEntity.class);
             put(getV1ProjectsProjectNameComputePublicIps, AbstractComputeTest.PublicIpEntity.class);
             put(getV1ProjectsProjectNameComputeVips, AbstractComputeTest.VipEntity.class);
-            put(getV1ProjectsProjectNameComputeSnats, AbstractComputeTest.InstanceEntity.class);
-            put(getV1ProjectsProjectNameComputeBackups, AbstractComputeTest.InstanceEntity.class);
+            put(getV1ProjectsProjectNameComputeSnats, AbstractComputeTest.ComputeEntity.class);
+            put(getV1ProjectsProjectNameComputeBackups, AbstractComputeTest.ComputeEntity.class);
             put(getV1ProjectsProjectNamePlacementPolicies, AbstractComputeTest.PlacementEntity.class);
         }};
         Map<Path, Class<? extends AbstractEntity>> vpcEntities = new HashMap<Path, Class<? extends AbstractEntity>>() {{

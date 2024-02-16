@@ -31,10 +31,10 @@ public class GenericMonitoring extends IProduct {
         jsonTemplate = "/orders/astra_general_application.json";
         productName = "Generic Monitoring";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)

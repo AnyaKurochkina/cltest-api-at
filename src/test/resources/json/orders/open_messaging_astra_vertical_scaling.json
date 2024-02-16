@@ -1,0 +1,13 @@
+{
+  "flavor": {
+    "cpus": 4,
+    "name": "c4m16",
+    "uuid": "cbdbf550-bf10-4526-8115-59b564d151c4",
+    "memory": 16
+  },
+  "read_it": true,
+  "current_flavor": "c2m8",
+  "state_service_ram": 8,
+  "state_service_cpu": 2,
+  "state_service_flavor_name": "c2m8"
+}

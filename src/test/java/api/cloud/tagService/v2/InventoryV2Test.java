@@ -1,6 +1,7 @@
 package api.cloud.tagService.v2;
 
 import api.cloud.tagService.AbstractTagServiceTest;
+import core.enums.Role;
 import core.helper.http.AssertResponse;
 import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
@@ -10,6 +11,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.tagService.*;
 import models.cloud.tagService.v1.FilterResultV1;
 import models.cloud.tagService.v1.InventoryTagsV1;
+import models.cloud.tagService.v2.FilterResultV2Page;
 import models.cloud.tagService.v2.InventoryTagListV2Page;
 import models.cloud.tagService.v2.InventoryV2Page;
 import models.cloud.tagService.v2.PutInventoryRequest;
@@ -17,6 +19,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.authorizer.AuthorizerSteps;
+import steps.keyCloak.KeyCloakSteps;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -52,6 +55,44 @@ public class InventoryV2Test extends AbstractTagServiceTest {
         InventoryV2Page inventoriesWithDeleted = TagServiceSteps.inventoriesListV2(context, new QueryBuilder().add("with_deleted", true));
         Assertions.assertTrue(inventoriesWithoutDeleted.getMeta().getTotalCount() <
                 inventoriesWithDeleted.getMeta().getTotalCount(), "Неверное кол-во inventories");
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Создание с dataSources")
+    void createWidthDataSources() {
+        Inventory.builder().context(context).dataSources(Collections.singletonList("state_service")).build().createObjectPrivateAccess();
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Создание с securityPrincipals")
+    void createWidthSecurityPrincipals() {
+        Inventory inventory = Inventory.builder().context(context)
+                .securityPrincipals(Collections.singletonList("cloud_day2_roles:test-admin1")).build().createObjectPrivateAccess();
+        Inventory inventoryIncorrect = Inventory.builder().context(context)
+                .securityPrincipals(Collections.singletonList("cloud_day2_roles:incorrect")).build().createObjectPrivateAccess();
+        checkImpersonateFilterTest(inventory, inventoryIncorrect);
+    }
+
+    @Test
+    @TmsLink("")
+    @DisplayName("Inventory V2. Создание с managers")
+    void createWidthSecurityManagers() {
+        Inventory inventory = Inventory.builder().context(context)
+                .managers(Collections.singletonList("qa-admin1")).build().createObjectPrivateAccess();
+        Inventory inventoryIncorrect = Inventory.builder()
+                .context(context).managers(Collections.singletonList("incorrect")).build().createObjectPrivateAccess();
+        checkImpersonateFilterTest(inventory, inventoryIncorrect);
+    }
+
+    private void checkImpersonateFilterTest(Inventory inventory, Inventory inventoryIncorrect) {
+        Filter filter = Filter.builder().allowEmptyTagFilter(true).impersonate(KeyCloakSteps.getUserInfo(Role.CLOUD_ADMIN))
+                .inventoryPks(Arrays.asList(inventory.getId(), inventoryIncorrect.getId())).build();
+        FilterResultV2Page filterResult = TagServiceSteps.inventoryFilterV2(context, filter);
+
+        Assertions.assertEquals(1, filterResult.getList().size(), "Неверное кол-во inventories");
+        Assertions.assertEquals(inventory.getId(), filterResult.getList().get(0).getInventory(), "Неверный inventory");
     }
 
     @Test

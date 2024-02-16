@@ -1,16 +1,11 @@
 package api.cloud.productCatalog.action;
 
-import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.action.Action;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -18,10 +13,8 @@ import java.util.Arrays;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ActionSteps.*;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
 public class ActionByNameTest extends ActionBaseTest {
 
     @DisplayName("Получение действия по имени")
@@ -81,19 +74,6 @@ public class ActionByNameTest extends ActionBaseTest {
         Action action = createAction(actionModel);
         Action cloneAction = copyActionByName(actionName);
         assertEquals(action.getTagList(), cloneAction.getTagList());
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("Загрузка action в GitLab по имени")
-    @TmsLink("1358565")
-    public void dumpToGitlabActionByNameTest() {
-        String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
-        Action action = createAction(actionName);
-        String tag = "action_" + actionName + "_" + action.getVersion();
-        Response response = dumpActionToGitByName(actionName);
-        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        assertEquals(tag, response.jsonPath().get("tag"));
     }
 
     @DisplayName("Экспорт действия по имени")

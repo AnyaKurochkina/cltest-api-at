@@ -8,10 +8,8 @@ import models.cloud.subModels.loadBalancer.Backend;
 import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Gslb;
 import models.cloud.subModels.loadBalancer.RouteSni;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 
-@Execution(ExecutionMode.SAME_THREAD)
+//@Execution(ExecutionMode.SAME_THREAD)
 public class AbstractLoadBalancerTest extends Tests {
 //    @Mock
 //    public static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("DEV").segment("dev-srv-app").build()
@@ -23,7 +21,7 @@ public class AbstractLoadBalancerTest extends Tests {
     protected final static String SIMPLE_HTTP_BACKEND_NAME = "simple_http_backend";
     protected final static String SIMPLE_HTTP_FRONTEND_NAME = "simple_http_frontend";
     protected final static String SIMPLE_ROUTE_NAME = "simple-route-at";
-    protected final static String SIMPLE_GSLB_NAME = "simple_gslb_" + UNIQUE_POSTFIX;
+    protected final static String SIMPLE_GSLB_NAME = "simple-gslb-" + UNIQUE_POSTFIX;
 
     @Step("Создание простого TCP Frontend")
     protected static Frontend createSimpleTcpFrontend(LoadBalancer balancer) {
@@ -71,7 +69,9 @@ public class AbstractLoadBalancerTest extends Tests {
 
     @Step("Создание простого Route")
     protected static RouteSni.Route createSimpleRoute(LoadBalancer balancer) {
-        RouteSni.Route route = new RouteSni.Route(SIMPLE_TCP_BACKEND_NAME, SIMPLE_ROUTE_NAME);
+        Backend backend = Backend.simpleTcpBackendWidthTcpCheck().backendName(SIMPLE_ROUTE_NAME).build();
+        balancer.addBackendUseCache(backend);
+        RouteSni.Route route = new RouteSni.Route(backend.getBackendName(), SIMPLE_ROUTE_NAME);
         Gslb gslb = createSimpleTcpGslb(balancer);
         balancer.addRouteUseCache(gslb.getGlobalname(), route);
         return route;

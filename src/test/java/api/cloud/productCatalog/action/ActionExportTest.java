@@ -10,7 +10,6 @@ import models.cloud.productCatalog.ExportEntity;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,6 @@ import static steps.productCatalog.ProductCatalogSteps.exportObjectByIdWithTags;
 
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
 public class ActionExportTest extends ActionBaseTest {
     private static Action simpleAction;
     private static Action simpleAction2;

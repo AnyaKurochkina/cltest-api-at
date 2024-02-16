@@ -32,8 +32,8 @@ public class OpenMessagingAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновление установки LT {0}")
     void expandMountPoint(OpenMessagingAstra product, Integer num) {
-        Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
             astra.upgradeSetup();
         }
     }
@@ -43,8 +43,8 @@ public class OpenMessagingAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновить операционную систему LT {0}")
     void updateOS(OpenMessagingAstra product, Integer num) {
-        Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
             astra.updateOS();
         }
     }
@@ -54,9 +54,19 @@ public class OpenMessagingAstraTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Обновление сертификатов LT {0}")
     void updateCerts(OpenMessagingAstra product, Integer num) {
-        Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
         try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue(product.getEnv().equalsIgnoreCase("LT"), "Тест включен только для LT среды");
             astra.updateCerts();
+        }
+    }
+
+    @TmsLink("")
+    @Tag("actions")
+    @Source(ProductArgumentsProvider.PRODUCTS)
+    @ParameterizedTest(name = "[{1}] Вертикальное масштабирование {0}")
+    void verticalScaling(OpenMessagingAstra product, Integer num) {
+        try (OpenMessagingAstra astra = product.createObjectExclusiveAccess()) {
+            astra.verticalScaling();
         }
     }
 
