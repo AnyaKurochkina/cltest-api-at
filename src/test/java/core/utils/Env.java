@@ -1,7 +1,6 @@
 package core.utils;
 
 public enum Env {
-
     IFT,
     BLUE,
     PROD,

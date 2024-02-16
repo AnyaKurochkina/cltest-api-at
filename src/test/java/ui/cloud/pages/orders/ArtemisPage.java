@@ -128,7 +128,11 @@ public class ArtemisPage extends IProductPage {
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновление информации о кластере", "Подтвердить", () -> {
             updateInformationCluster.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
-            CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.BLUE))
+                CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.PROD)) {
+                CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+            }
         });
         checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -138,7 +142,12 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Обновление сертификатов", "Подтвердить", () -> {
             reissueCertificate.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
-            checkText.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+            if (EnviromentChecker.standEnvIs(Env.BLUE))
+                CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.PROD) && product.isProd()) {
+                CheckBox.byLabel("Я прочитал предупреждение и понимаю все риски выполнения данного действия").setChecked(true);
+                CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
+            }
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -148,7 +157,8 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Отправить конфигурацию кластера на email", "Подтвердить", () -> {
             sendMessageWarning.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
-            CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.BLUE))
+                CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -158,7 +168,8 @@ public class ArtemisPage extends IProductPage {
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
         runActionWithParameters(BLOCK_CLUSTER, "Перезапуск кластера", "Подтвердить", () -> {
             resetCluster.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
-            CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.BLUE))
+                CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
@@ -184,7 +195,8 @@ public class ArtemisPage extends IProductPage {
         runActionWithParameters(BLOCK_CLUSTER, "Включение\\\\отключение протоколов", "Подтвердить", () -> {
             CheckBox.byLabel("AMQP").setChecked(true);
             onOfProtokol.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
-            //CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.BLUE))
+                CheckBox.byLabel("Я прочитал предупреждение ниже и понимаю, что я делаю").setChecked(true);
         });
     }
 
@@ -328,7 +340,12 @@ public class ArtemisPage extends IProductPage {
                 : "Аварийное обновление сертификатов";
         runActionWithParameters(BLOCK_CLUSTER, actionName, "Подтвердить", () -> {
             checkTextUpdate.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
-            CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.BLUE))
+                CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+            if (EnviromentChecker.standEnvIs(Env.PROD) && product.isProd()) {
+                CheckBox.byLabel("Я прочитал предупреждение и понимаю, что я делаю").setChecked(true);
+                CheckBox.byLabel("У меня есть согласованное ЗНИ").setChecked(true);
+            }
         });
         new ArtemisPage.VirtualMachineTable(HEADER_NODE_ROLES).checkPowerStatus(ArtemisPage.VirtualMachineTable.POWER_STATUS_ON);
     }
