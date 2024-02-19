@@ -1,6 +1,7 @@
 package api.cloud.productCatalog;
 
 import api.Tests;
+import core.helper.http.AssertResponse;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -9,11 +10,11 @@ import models.cloud.authorizer.Project;
 import models.cloud.stateService.Item;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import static core.helper.StringUtils.format;
 import static org.junit.jupiter.api.Assertions.*;
 import static steps.productCatalog.ProductCatalogSteps.*;
 import static steps.stateService.StateServiceSteps.createItem;
@@ -57,14 +58,14 @@ public class ActionProductCatalogApiTest extends Tests {
     }
 
     @DisplayName("Проверка не существующего в item restriction параметра")
-    @TmsLink("SOUL-")
-    @Disabled
+    @TmsLink("SOUL-9230")
     @Test
     public void checkNotExistParamInItemRestriction() {
-        //todo завести задачу. доделать, когда реализуют функционал
+        String param = "notexist";
         Project project = Project.builder().build().onlyGetObject();
         Item item = createItem(project);
-        JSONObject json = new JSONObject().put("data_item", item.getData()).put("item_restriction", "notexist == 'on'");
-        Response response = checkItemRestrictions(json).assertStatus(500);
+        JSONObject json = new JSONObject().put("data_item", item.getData()).put("item_restriction", format("{} == 'on'", param));
+        AssertResponse.run(() -> checkItemRestrictions(json)).status(400)
+                .responseContains(format("invalid expression vars: name '{}' is not defined", param));
     }
 }
