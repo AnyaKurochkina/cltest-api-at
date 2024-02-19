@@ -250,7 +250,7 @@ public class ArtemisAstraTest extends Tests {
     }
 
     @SneakyThrows
-    void asserDate(String expectedDate, String actualDate, String message) {
+    void assertDate(String expectedDate, String actualDate, String message) {
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
         Date expectedDateTime = formatter.parse(expectedDate);
         Date actualDateTime = formatter.parse(actualDate);
@@ -268,13 +268,13 @@ public class ArtemisAstraTest extends Tests {
     void assertCertificateStartDateMatches(Artemis artemis, SshClient client) {
         String startDateOrderService = OrderServiceSteps.getObjectClass(artemis, "data.find{it.type=='cluster'}.data.config.cert_start_date", String.class);
         String startDate = artemis.executeSsh(client, StringUtils.format("date --date=\"$(sudo openssl x509 -startdate -noout -in '/app/itc/certs/{}.corp.dev.vtb-vtb-artemis.pem' | cut -d= -f 2)\" -Is -u", client.getHost()));
-        asserDate(startDateOrderService, startDate, "Дата начала сертификата не совпадает");
+        assertDate(startDateOrderService, startDate, "Дата начала сертификата не совпадает");
     }
 
     @Step("[Проверка] Обновление даты окончания сертификата")
     void assertCertificateEndDateMatches(Artemis artemis, SshClient client) {
         String endDateOrderService = OrderServiceSteps.getObjectClass(artemis, "data.find{it.type=='cluster'}.data.config.cert_end_date", String.class);
         String endDate = artemis.executeSsh(client, StringUtils.format("date --date=\"$(sudo openssl x509 -enddate -noout -in '/app/itc/certs/{}.corp.dev.vtb-vtb-artemis.pem' | cut -d= -f 2)\" -Is -u", client.getHost()));
-        asserDate(endDateOrderService, endDate, "Дата окончания сертификата не совпадает");
+        assertDate(endDateOrderService, endDate, "Дата окончания сертификата не совпадает");
     }
 }
