@@ -30,6 +30,7 @@ import static core.helper.Configure.productCatalogURL;
 import static io.restassured.RestAssured.given;
 import static io.restassured.module.jsv.JsonSchemaValidator.matchesJsonSchemaInClasspath;
 import static steps.keyCloak.KeyCloakSteps.getNewUserToken;
+import static tests.routes.ProductCatalogApi.apiV1CheckItemRestrictionsCreate;
 import static tests.routes.ProductProductCatalogApi.apiV1ProductsCategories;
 
 @Data
@@ -120,17 +121,7 @@ public class ProductCatalogSteps {
         return new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(jsonObject)
-                .post("/api/v1/check_item_restrictions/");
-    }
-
-    @Step("Получение списка audit для {entityName} с id {id} и фитром {filter}")
-    public static List<ProductAudit> getObjectAuditListWithFilter(String entityName, String id, String filter) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get("/api/v1/{}/{}/audit/?{}", entityName, id, filter)
-                .assertStatus(200)
-                .jsonPath()
-                .getList("list", ProductAudit.class);
+                .api(apiV1CheckItemRestrictionsCreate);
     }
 
     @Step("Получение списка audit для {entityName} с id {id}")
