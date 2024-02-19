@@ -28,7 +28,6 @@ import static steps.productCatalog.ActionSteps.*;
 @Feature("Действия")
 @DisabledIfEnv("prod")
 public class ActionAuditTest extends ActionBaseTest {
-    private final static String ENTITY_TYPE = "actions";
 
     @DisplayName("Получение списка audit для определенного действия")
     @TmsLink("SOUL-8312")

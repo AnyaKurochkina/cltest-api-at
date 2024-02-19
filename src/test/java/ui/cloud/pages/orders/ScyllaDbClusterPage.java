@@ -87,6 +87,11 @@ public class ScyllaDbClusterPage extends IProductPage {
         checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_OFF);
     }
 
+    public void updateOs() {
+        runActionWithoutParameters(BLOCK_APP, "Обновить ОС");
+        new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);
+    }
+
 
     public void createDb(String name) {
         new ScyllaDbClusterPage.VirtualMachineTable().checkPowerStatus(ScyllaDbClusterPage.VirtualMachineTable.POWER_STATUS_ON);

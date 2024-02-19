@@ -16,6 +16,6 @@ public class ScyllaDbClusterOrderPage extends NewOrderPage {
 
     public void checkOrderDetails() {
         super.checkOrderDetails();
-        getHardDrives().shouldBe(Condition.visible);
+        getHardDrives().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 }

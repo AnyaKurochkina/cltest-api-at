@@ -35,12 +35,25 @@ public class TagServiceSteps {
         return Http.builder()
                 .setRole(Role.TAG_SERVICE_ADMIN)
                 .body(serialize(filter))
-                .api(v2InventoriesFilterCreate, context.getType(), context.getId(), query)
+                .api(v2InventoriesContextFilterCreate, context.getType(), context.getId(), query)
                 .extractAllPages(FilterResultV2Page.class);
     }
 
     public static FilterResultV2Page inventoryFilterV2(Context context, Filter filter) {
         return inventoryFilterV2(context, filter, new QueryBuilder());
+    }
+
+    public static FilterResultV2Page inventoryFilterV2(Filter filter, QueryBuilder query) {
+        query.add("page", 1);
+        return Http.builder()
+                .setRole(Role.TAG_SERVICE_ADMIN)
+                .body(serialize(filter))
+                .api(v2InventoriesFilterCreate, query)
+                .extractAllPages(FilterResultV2Page.class);
+    }
+
+    public static FilterResultV2Page inventoryFilterV2(Filter filter) {
+        return inventoryFilterV2(filter, new QueryBuilder());
     }
 
     public static void inventoryTagsV2(Context context, String inventoryId, String dataSource, List<InventoryTagsV2.Tag> tags) {

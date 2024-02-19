@@ -42,7 +42,6 @@ public class ActionSteps extends ProductCatalogSteps {
     public static List<ProductAudit> getActionAuditList(String id) {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsAudit, id)
-                .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
     }
@@ -51,7 +50,6 @@ public class ActionSteps extends ProductCatalogSteps {
     public static List<ProductAudit> getActionAuditListWithQuery(String id, QueryBuilder queryBuilder) {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsAudit, id, queryBuilder)
-                .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
     }
@@ -67,7 +65,6 @@ public class ActionSteps extends ProductCatalogSteps {
         return getProductCatalogAdmin()
                 .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
                 .api(apiV1ActionsAuditByObjectKeys)
-                .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
     }

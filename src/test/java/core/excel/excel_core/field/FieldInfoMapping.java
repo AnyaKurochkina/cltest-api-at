@@ -8,6 +8,7 @@ import lombok.Getter;
 public enum FieldInfoMapping {
     //Счета
     PROJECT("Проект"),
+    ORDER("Заказ"),
     SERVICE("Услуга"),
     TARIFF_CLASS_OF_SERVICE("Тарифный класс по услуге"),
     START_DATE("Дата начала"),

@@ -44,7 +44,7 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     public static Path apiV1ActionsObjImport;
 
     //Actions Objects export
-    @Route(method = Method.POST, path = "/api/v1/actions/objects_export/", status = 201)
+    @Route(method = Method.POST, path = "/api/v1/actions/objects_export/", status = 200)
     public static Path apiV1ActionsObjectsExport;
 
     //Actions Remove tag list

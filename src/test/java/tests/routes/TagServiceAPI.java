@@ -111,6 +111,9 @@ public class TagServiceAPI implements Api {
     public static Path v2InventoriesBatch;
 
     @Route(method = Method.POST, path = "/v2/{context_type}/{context_id}/inventories/filter/", status = 200)
+    public static Path v2InventoriesContextFilterCreate;
+
+    @Route(method = Method.POST, path = "/v2/inventories/filter/", status = 200)
     public static Path v2InventoriesFilterCreate;
 
     @Route(method = Method.PUT, path = "/v2/admin/inventories/batch/", status = 200)

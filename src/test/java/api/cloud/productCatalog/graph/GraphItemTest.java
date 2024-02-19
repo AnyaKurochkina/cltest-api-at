@@ -5,6 +5,7 @@ import core.helper.StringUtils;
 import core.helper.http.AssertResponse;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
@@ -34,6 +35,7 @@ import static steps.productCatalog.TemplateSteps.createTemplateByName;
 public class GraphItemTest extends Tests {
 
     @Test
+    @TmsLink("SOUL-7700")
     @DisplayName("Создание ноды графа типа template")
     public void createGraphWithNodeTemplateSourceTypeTest() {
         Template template = createTemplateByName("template_graph_node_api_test");
@@ -44,10 +46,12 @@ public class GraphItemTest extends Tests {
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
                 .build());
+        graphItem.setSourceVersionCalculated("1.0.0");
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
     @Test
+    @TmsLink("SOUL-7701")
     @DisplayName("Создание ноды графа типа subgraph")
     public void createGraphWithNodeSubgraphSourceTypeTest() {
         Graph subGraph = createGraph(StringUtils.getRandomStringApi(6));
@@ -59,10 +63,12 @@ public class GraphItemTest extends Tests {
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
                 .build());
+        graphItem.setSourceVersionCalculated("1.0.0");
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
     @Test
+    @TmsLink("SOUL-7702")
     @DisplayName("Создание ноды графа типа jinja2")
     public void createGraphWithNodeJinjaSourceTypeTest() {
         Jinja2Template jinja = createJinja(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api");
@@ -74,10 +80,12 @@ public class GraphItemTest extends Tests {
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
                 .build());
+        graphItem.setSourceVersionCalculated("1.0.0");
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
     @Test
+    @TmsLink("SOUL-9171")
     @DisplayName("Создание ноды графа типа python")
     public void createGraphWithNodePythonSourceTypeTest() {
         PythonTemplate pythonTemplate = createPythonTemplateByName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "_test_api");
@@ -89,10 +97,12 @@ public class GraphItemTest extends Tests {
                 .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
                 .graph(Collections.singletonList(graphItem))
                 .build());
+        graphItem.setSourceVersionCalculated("1.0.0");
         assertEquals(graphItem, graph.getGraph().get(0));
     }
 
     @Test
+    @TmsLink("SOUL-7703")
     @DisplayName("Создание ноды графа не существующего типа")
     public void createGraphWithNotExistSourceTypeTest() {
         String sourceType = "not_exist";
@@ -111,6 +121,7 @@ public class GraphItemTest extends Tests {
     }
 
     @Test
+    @TmsLink("SOUL-7704")
     @DisplayName("Создание ноды графа c невалидным source_id")
     public void createGraphWithInvalidSourceIdTest() {
         Template template = createTemplateByName(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api");

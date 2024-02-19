@@ -78,7 +78,7 @@ public class WildFlyAstraPage extends AbstractAstraPage {
         String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url + "management", "", Configure.getAppProp("dev.user"), Configure.getAppProp("dev.password"));
         Selenide.open(url);
-        $x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible);
+        $x("(//a[text()='Deployments'])[2]").shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 
     public void delete() {

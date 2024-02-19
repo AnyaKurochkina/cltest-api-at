@@ -79,7 +79,7 @@ public class ServiceAccountsTests extends Tests {
                 .editServiceAccount(account.getTitle(), updatedAccount)
                 .checkAccountData(updatedAccount)
                 .isServiceAccountExist(updatedAccount.getTitle()), format("Сервисный аккаунт {} не найден", account.getTitle()));
-        updatedAccount.deleteObject();
+        account.deleteObject();
     }
 
     @Test
