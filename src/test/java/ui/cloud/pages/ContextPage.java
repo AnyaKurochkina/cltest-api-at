@@ -30,8 +30,7 @@ public class ContextPage {
     @Step("Выбор контекста '{value}'")
     public ContextPage setContext(String value) {
         Tab.byText("Все").switchTo();
-        $x("(//div[@role='dialog']//table/tbody//tr//p[@color][text()='{}'])[1]", value).hover()
-                .shouldBe(Condition.enabled).click();
+        $x("(//div[@role='dialog']//div[text()='{}'])[1]", value).hover().shouldBe(Condition.enabled).click();
         return this;
     }
 
