@@ -28,6 +28,23 @@ public class CdnResourceClient extends AbstractCdnClient {
         deleteResource(projectId, resourceId);
     }
 
+    @Step("Активация пресета LIVE STEAMING у ресурсас с id: {1}, в проекте: {0} по одному из доменных имён: {1}")
+    public static void enableLiveStreamingByName(String projectId, String domainName) {
+        String resourceId = getResources(projectId).stream()
+                .filter(resource -> Objects.equals(resource.getCname(), domainName))
+                .findFirst()
+                .orElseThrow(() -> new AssertionError(
+                        String.format("Не найден ни один ресурс с именем %s:", domainName)))
+                .getId();
+
+        enableLiveStreaming(projectId, resourceId);
+    }
+
+    @Step("Активация пресета LIVE STEAMING у ресурса с id: {1}, в проекте: {0}")
+    private static void enableLiveStreaming(String projectId, String resourceId) {
+        getRequestSpec().api(CdnResourceApi.enableLiveStreaming, projectId, resourceId);
+    }
+
     @Step("Удаление ресурса в проекте: {0}, и с id: {1}")
     private static void deleteResource(String projectId, String resourceId) {
         getRequestSpec().api(CdnResourceApi.deleteResourceById, projectId, resourceId);

@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
 
     private final SelenideElement loader = Selenide.$x("//*[text()='Идет обработка данных']");
+    private final DataTable resourcesTable = new DataTable("Источники");
 
     @Override
     @Step("Создание ресурса CDN")
@@ -56,8 +57,39 @@ public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
     }
 
     @Step("Ожидание исчезновения лоадера")
-    private void waitUntilLoaderDisappear() {
+    public void waitUntilLoaderDisappear() {
         loader.shouldBe(Condition.visible.because("Лоадер должен появиться"));
         loader.shouldNotBe(Condition.visible.because("Лоадер должен исчезнуть"));
+    }
+
+    @Step("Включение пресета LIVE STREAMING")
+    public ResourcesTab enableLiveStreaming(String resourceName) {
+        chooseActionFromMenu(resourceName, "Включить пресет \"LIVE STREAMING");
+        return this;
+    }
+
+    @Step("Выключение пресета LIVE STREAMING")
+    public ResourcesTab disableLiveStreaming(String resourceName) {
+        chooseActionFromMenu(resourceName, "Выключить пресет \"LIVE STREAMING");
+        return this;
+    }
+
+    @Step("[Проверка] Пресет LIVE STREAMING включен, у ресурса с именем: {0}")
+    public ResourcesTab checkLiveStreamingIsEnabled(String resourceName) {
+        resourcesTable.searchAllPages(t -> resourcesTable.isColumnValueContains("Название", resourceName))
+                .getRowByColumnValueContains("Название", resourceName)
+                .get()
+                .shouldHave(Condition.matchText(".*live streaming.*").because("Когда пресет LIVE STREAMING  включен, должна отображаться плашка live streaming на против имени ресурса в списке ресурсов"));
+        return this;
+    }
+
+    @Step("[Проверка] Пресет LIVE STREAMING выключен, у ресурса с именем: {0}")
+    public ResourcesTab checkLiveStreamingIsDisabled(String resourceName) {
+        DataTable table = new DataTable("Источники");
+        table.searchAllPages(t -> table.isColumnValueContains("Название", resourceName))
+                .getRowByColumnValueContains("Название", resourceName)
+                .get()
+                .shouldNotHave((Condition.matchText(".*live streaming.*").because("Когда пресет LIVE STREAMING  включен, должна отображаться плашка live streaming на против имени ресурса в списке ресурсов")));
+        return this;
     }
 }
