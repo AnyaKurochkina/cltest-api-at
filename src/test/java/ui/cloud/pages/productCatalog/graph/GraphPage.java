@@ -267,7 +267,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, product.getName()).get().$x(".//*[name()='svg' and @class]")
                 .click();
-        switchTo().window(1);
         return new ProductPage();
     }
 
@@ -276,7 +275,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, action.getName()).get()
                 .$x(".//*[name()='svg' and @class]").click();
-        switchTo().window(1);
         return new ActionPage();
     }
 
@@ -285,7 +283,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, service.getName()).get()
                 .$x(".//*[name()='svg' and @class]").click();
-        switchTo().window(1);
         return new ServicePage();
     }
 
@@ -294,7 +291,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, graph.getName()).get()
                 .$x(".//*[name()='svg' and @class]").click();
-        switchTo().window(1);
         return new GraphPage();
     }
 

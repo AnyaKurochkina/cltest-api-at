@@ -18,7 +18,7 @@ public class Jinja2TemplatesListTest extends Jinja2TemplateBaseTest {
     @Test
     @TmsLink("767065")
     @DisplayName("Просмотр списка шаблонов Jinja2, сортировка, пагинация")
-    public void viewAllowedActionsList() {
+    public void viewJinja2TemplatesList() {
         new ControlPanelIndexPage()
                 .goToJinja2TemplatesListPage();
         assertHeaders(new Table(nameColumn),
@@ -30,7 +30,7 @@ public class Jinja2TemplatesListTest extends Jinja2TemplateBaseTest {
     @Test
     @TmsLink("1601364")
     @DisplayName("Поиск в списке шаблонов Jinja2")
-    public void searchAllowedActions() {
+    public void searchJinja2Templates() {
         new ControlPanelIndexPage().goToJinja2TemplatesListPage()
                 .findJinja2TemplateByValue(NAME, jinja2Template)
                 .findJinja2TemplateByValue(TITLE, jinja2Template)

@@ -132,10 +132,9 @@ public class ActionPage extends EntityPage {
         return new ActionPage();
     }
 
-    @Step("Проверка текущей версии")
+    @Step("Проверка отображаемой версии")
     public ActionPage checkVersion(String version) {
-        String currentVersion = currentVersionInput.getText();
-        assertEquals(version, currentVersion);
+        Waiting.find(() -> versionSelect.getValue().equals(version), Duration.ofSeconds(5));
         return this;
     }
 

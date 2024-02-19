@@ -54,8 +54,8 @@ public class GraphsListTest extends GraphBaseTest {
     }
 
     @Test
-    @TmsLink("Test")
-    @DisplayName("Частичное и полное совпадение тегов")
+    @TmsLink("SOUL-7589")
+    @DisplayName("Поиск по частичному и полному совпадению тегов")
     public void searchGraphsByTags() {
         String tag1 = "qa_at_tag_1";
         String tag2 = "qa_at_tag_2";
