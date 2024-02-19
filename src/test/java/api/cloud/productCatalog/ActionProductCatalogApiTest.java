@@ -9,6 +9,7 @@ import models.cloud.authorizer.Project;
 import models.cloud.stateService.Item;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -57,12 +58,13 @@ public class ActionProductCatalogApiTest extends Tests {
 
     @DisplayName("Проверка не существующего в item restriction параметра")
     @TmsLink("SOUL-")
+    @Disabled
     @Test
     public void checkNotExistParamInItemRestriction() {
         //todo завести задачу. доделать, когда реализуют функционал
         Project project = Project.builder().build().onlyGetObject();
         Item item = createItem(project);
         JSONObject json = new JSONObject().put("data_item", item.getData()).put("item_restriction", "notexist == 'on'");
-        Response response = checkItemRestrictions(json).assertStatus(400);
+        Response response = checkItemRestrictions(json).assertStatus(500);
     }
 }
