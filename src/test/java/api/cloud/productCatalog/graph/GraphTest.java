@@ -394,4 +394,16 @@ public class GraphTest extends GraphBaseTest {
         partialUpdateGraph(graph.getGraphId(), new JSONObject().put("default_item", new JSONObject().put("test", "api")));
         assertEquals(expectedVersion, getGraphById(graph.getGraphId()).getVersion());
     }
+
+    @DisplayName("Создание графа с типом precheck")
+    @TmsLink("SOUL-9213")
+    @Test
+    public void createGraphWithPreCheckTypeTest() {
+        String expectedType = "precheck";
+        Graph graphModel = createGraphModel("create_graph_with_pre_check_type_test_api");
+        graphModel.setType("precheck");
+
+        Graph graph = createGraph(graphModel);
+        assertEquals(expectedType, getGraphById(graph.getGraphId()).getType(), "Тип графа не соответствует ожидаемому");
+    }
 }
