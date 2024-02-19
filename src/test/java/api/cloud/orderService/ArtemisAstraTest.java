@@ -219,12 +219,8 @@ public class ArtemisAstraTest extends Tests {
     void updateCertsArtemis(Artemis product, Integer num) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.updateCertsArtemis();
-            if (artemis.isDev()) {
-                artemis.runOnAllNodesBySsh(client -> Assertions.assertAll("Проверка изменений по SSH на vm " + client.getHost(),
-                        () -> assertCertificateNameMatches(artemis, client),
-                        () -> assertCertificateStartDateMatches(artemis, client),
-                        () -> assertCertificateEndDateMatches(artemis, client)));
-            }
+            if (artemis.isDev())
+                checkUpdateCertificates(artemis);
         }
     }
 
@@ -235,6 +231,8 @@ public class ArtemisAstraTest extends Tests {
     void updateExpiredCertsArtemis(Artemis product, Integer num) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.updateExpiredCertsArtemis();
+            if (artemis.isDev())
+                checkUpdateCertificates(artemis);
         }
     }
 
@@ -247,6 +245,14 @@ public class ArtemisAstraTest extends Tests {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.deleteObject();
         }
+    }
+
+    @Step("[Проверка] Обновление сертификатов")
+    private void checkUpdateCertificates(Artemis artemis) {
+        artemis.runOnAllNodesBySsh(client -> Assertions.assertAll("Проверка изменений по SSH на vm " + client.getHost(),
+                () -> assertCertificateNameMatches(artemis, client),
+                () -> assertCertificateStartDateMatches(artemis, client),
+                () -> assertCertificateEndDateMatches(artemis, client)));
     }
 
     @SneakyThrows
