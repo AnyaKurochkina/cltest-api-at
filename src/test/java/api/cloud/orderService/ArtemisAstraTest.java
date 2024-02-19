@@ -1,10 +1,11 @@
 package api.cloud.orderService;
 
 import api.Tests;
-import io.qameta.allure.Epic;
-import io.qameta.allure.Feature;
-import io.qameta.allure.TmsLink;
-import io.qameta.allure.TmsLinks;
+import core.helper.StringUtils;
+import core.utils.AssertUtils;
+import core.utils.ssh.SshClient;
+import io.qameta.allure.*;
+import lombok.SneakyThrows;
 import models.cloud.orderService.products.Artemis;
 import models.cloud.subModels.Flavor;
 import org.junit.DisabledIfEnv;
@@ -16,8 +17,11 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
+import steps.orderService.OrderServiceSteps;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 
 @Epic("Продукты")
 @Feature("Artemis Astra")
@@ -215,6 +219,12 @@ public class ArtemisAstraTest extends Tests {
     void updateCertsArtemis(Artemis product, Integer num) {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.updateCertsArtemis();
+            if (artemis.isDev()) {
+                artemis.runOnAllNodesBySsh(client -> Assertions.assertAll("Проверка изменений по SSH на vm " + client.getHost(),
+                        () -> assertCertificateNameMatches(artemis, client),
+                        () -> assertCertificateStartDateMatches(artemis, client),
+                        () -> assertCertificateEndDateMatches(artemis, client)));
+            }
         }
     }
 
@@ -237,5 +247,34 @@ public class ArtemisAstraTest extends Tests {
         try (Artemis artemis = product.createObjectExclusiveAccess()) {
             artemis.deleteObject();
         }
+    }
+
+    @SneakyThrows
+    void assertDate(String expectedDate, String actualDate, String message) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssXXX");
+        Date expectedDateTime = formatter.parse(expectedDate);
+        Date actualDateTime = formatter.parse(actualDate);
+        AssertUtils.AssertDate(expectedDateTime, actualDateTime, 5, message);
+    }
+
+    @Step("[Проверка] Обновление имени сертификата")
+    void assertCertificateNameMatches(Artemis artemis, SshClient client) {
+        String cnOrderService = OrderServiceSteps.getObjectClass(artemis, "data.find{it.type=='cluster'}.data.config.cert_cn", String.class);
+        String cn = artemis.executeSsh(client, StringUtils.format("sudo openssl x509 -noout -subject -in '/app/itc/certs/{}.corp.dev.vtb-vtb-artemis.pem' | awk --field-separator '=' '{print $(NF)}' | xargs", client.getHost()));
+        Assertions.assertEquals(cnOrderService, cn, "Имя сертификата не совпадает");
+    }
+
+    @Step("[Проверка] Обновление даты начала сертификата")
+    void assertCertificateStartDateMatches(Artemis artemis, SshClient client) {
+        String startDateOrderService = OrderServiceSteps.getObjectClass(artemis, "data.find{it.type=='cluster'}.data.config.cert_start_date", String.class);
+        String startDate = artemis.executeSsh(client, StringUtils.format("date --date=\"$(sudo openssl x509 -startdate -noout -in '/app/itc/certs/{}.corp.dev.vtb-vtb-artemis.pem' | cut -d= -f 2)\" -Is -u", client.getHost()));
+        assertDate(startDateOrderService, startDate, "Дата начала сертификата не совпадает");
+    }
+
+    @Step("[Проверка] Обновление даты окончания сертификата")
+    void assertCertificateEndDateMatches(Artemis artemis, SshClient client) {
+        String endDateOrderService = OrderServiceSteps.getObjectClass(artemis, "data.find{it.type=='cluster'}.data.config.cert_end_date", String.class);
+        String endDate = artemis.executeSsh(client, StringUtils.format("date --date=\"$(sudo openssl x509 -enddate -noout -in '/app/itc/certs/{}.corp.dev.vtb-vtb-artemis.pem' | cut -d= -f 2)\" -Is -u", client.getHost()));
+        assertDate(endDateOrderService, endDate, "Дата окончания сертификата не совпадает");
     }
 }
