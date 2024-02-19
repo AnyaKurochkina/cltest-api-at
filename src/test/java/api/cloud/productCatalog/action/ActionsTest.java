@@ -3,7 +3,6 @@ package api.cloud.productCatalog.action;
 import core.helper.StringUtils;
 import core.helper.http.AssertResponse;
 import core.helper.http.QueryBuilder;
-import core.helper.http.Response;
 import core.utils.AssertUtils;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -15,7 +14,6 @@ import models.cloud.productCatalog.icon.IconStorage;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -350,36 +348,6 @@ public class ActionsTest extends ActionBaseTest {
         Action createdAction = createAction(action);
         Map<String, String> extraData = createdAction.getExtraData();
         assertEquals(extraData.get(key), value);
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("Загрузка action в GitLab")
-    @TmsLink("975375")
-    public void dumpToGitlabAction() {
-        String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_export_to_git_api";
-        Action action = createAction(createActionModel(actionName));
-        String tag = "action_" + actionName + "_" + action.getVersion();
-        Response response = dumpActionToGit(action.getId());
-        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        assertEquals(tag, response.jsonPath().get("tag"));
-    }
-
-    @Test
-    @Disabled
-    @DisplayName("Выгрузка action из GitLab")
-    @TmsLink("1028840")
-    public void loadFromGitlabAction() {
-        String actionName = RandomStringUtils.randomAlphabetic(10).toLowerCase() + "_import_from_git_api";
-        Action action = createAction(createActionModel(actionName));
-        Response response = dumpActionToGit(action.getId());
-        assertEquals("Committed to bitbucket", response.jsonPath().get("message"));
-        deleteActionById(action.getId());
-        String path = "action_" + actionName + "_" + action.getVersion();
-        loadActionFromGit(new JSONObject().put("path", path));
-        assertTrue(isActionExists(actionName));
-        deleteActionByName(actionName);
-        assertFalse(isActionExists(actionName));
     }
 
     @Test
