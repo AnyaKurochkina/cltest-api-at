@@ -1,7 +1,7 @@
 {
   "model_name": "AllowedAction",
   "AllowedAction": {
-    "id": 991,
+    "id": 1269,
     "context_restrictions": [],
     "event_type_provider": [
       {
@@ -9,19 +9,19 @@
         "event_provider": "s3"
       }
     ],
-    "name": "fgopya_api_test__parent_to_child",
+    "name": "mxuwhf_api_test__parent_to_child",
     "title": "import_allowed_action_test_api",
     "description": "api_at_test",
     "item_restriction": "",
     "object_info": "",
-    "action_id": "746d9063-eb75-4b49-ba6b-495519301d9a",
-    "action": "746d9063-eb75-4b49-ba6b-495519301d9a"
+    "action_id": "727eda66-b611-4947-8404-bb132eefe05e",
+    "action": "727eda66-b611-4947-8404-bb132eefe05e"
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
-        "graph_id": "c5ec7eda-d5b4-45a9-981f-5b71930f5345",
+        "graph_id": "b875e398-e999-47ff-8c39-39d80256a5a8",
         "multiple": false,
         "priority": 0,
         "extra_data": {},
@@ -50,7 +50,7 @@
             "event_provider": "s3"
           }
         ],
-        "name": "fgopya_api_test",
+        "name": "mxuwhf_api_test",
         "title": "AT API Action",
         "description": "desc",
         "number": 50,
@@ -89,7 +89,7 @@
             "printed_output": {},
             "lock_order_on_error": false,
             "damage_order_on_error": false,
-            "name": "xjqxkm_api_test",
+            "name": "urmcuv_api_test",
             "title": "AT API Graph",
             "description": "for at tests",
             "type": "action",
@@ -113,30 +113,30 @@
   },
   "exported_objects": {
     "Graph": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"xjqxkm_api_test\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"urmcuv_api_test\", \"version\": \"1.0.0\"}": [
         {
           "graph_version": "LAST",
           "last_version_str": "1.0.0",
           "model_name": "Action",
-          "name": "fgopya_api_test",
+          "name": "mxuwhf_api_test",
           "version": "1.0.0"
         }
       ]
     },
     "Action": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"fgopya_api_test\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"mxuwhf_api_test\", \"version\": \"1.0.0\"}": [
         {
           "action_version": "LAST",
           "model_name": "AllowedAction",
-          "name": "fgopya_api_test__parent_to_child"
+          "name": "mxuwhf_api_test__parent_to_child"
         }
       ]
     },
     "AllowedAction": {
-      "{\"name\": \"fgopya_api_test__parent_to_child\"}": []
+      "{\"name\": \"mxuwhf_api_test__parent_to_child\"}": []
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2024-02-07 19:14:32",
+  "dump_date": "2024-02-15 14:39:34",
   "is_pinned_versions": false
 }

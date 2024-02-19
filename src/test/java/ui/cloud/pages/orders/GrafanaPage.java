@@ -96,13 +96,13 @@ public class GrafanaPage extends IProductPage {
         String url = new Table(HEADER_CONSOLE).getValueByColumnInFirstRow(HEADER_CONSOLE).$x(".//a").getAttribute("href");
         Selenide.open(url);
         signIn("admin", "admin");
-        Selenide.$x("//span[text()='Skip']").shouldBe(Condition.visible).click();
-        Selenide.$x("//h1[text()='Welcome to Grafana']").shouldBe(Condition.visible);
+        Selenide.$x("//span[text()='Skip']").shouldBe(Condition.visible.because("Должно отображаться сообщение")).click();
+        Selenide.$x("//h1[text()='Welcome to Grafana']").shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 
     private void signIn(String user, String password) {
-        usernameInput.shouldBe(Condition.visible).val(user);
-        passwordInput.shouldBe(Condition.visible).val(password);
+        usernameInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).val(user);
+        passwordInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).val(password);
         passwordInput.submit();
     }
 

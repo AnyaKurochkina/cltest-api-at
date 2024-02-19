@@ -60,7 +60,7 @@ public class JinjaNegativeTest extends Tests {
     @TmsLink("660125")
     @Test
     public void createJinjaWithNonUniqueName() {
-        String jinjaName = "update_with_out_jinja_test_api";
+        String jinjaName = "create_jinja_with_not_unique_name_test_api";
         createJinja(jinjaName);
         String errorMessage = createJinja(Role.PRODUCT_CATALOG_ADMIN, Jinja2Template.builder()
                 .name(jinjaName)

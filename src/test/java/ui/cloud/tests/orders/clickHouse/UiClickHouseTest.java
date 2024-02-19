@@ -29,11 +29,11 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Tags({@Tag("ui"), @Tag("ui_clickHouse")})
 public class UiClickHouseTest extends UiProductTest {
 
-    private ClickHouse product; // = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/3f96d603-1454-47fb-90f3-94d3073a1037/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private ClickHouse product;// = ClickHouse.builder().build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/2fab9e99-b1af-4269-b64b-f7cb5725d281/main?context=proj-ln4zg69jek&type=project&org=vtb");
 
     private final String nameAD = "at_ad_user";
     private final String userPasswordFullRight = "x7fc1GyjdMhUXXxgpGCube6jHWmn";
-    private final String nameLocalAD = "at_local_user";
+    private final String nameLocalAD = "userad";
 
     @BeforeEach
     @Title("Авторизация на портале")

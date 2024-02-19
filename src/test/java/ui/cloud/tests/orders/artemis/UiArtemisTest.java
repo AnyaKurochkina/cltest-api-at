@@ -25,7 +25,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 @Feature("Artemis")
 @Tags({@Tag("ui"), @Tag("ui_artemis")})
 public class UiArtemisTest extends UiProductTest {
-    private Artemis product;// = Artemis.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/e7fae79d-238f-4f28-95af-c3d2a6c726ff/main?context=proj-ln4zg69jek&type=project&org=vtb");
+    private Artemis product;// = Artemis.builder().platform("OpenStack").segment("dev-srv-app").build().buildFromLink("https://prod-portal-front.cloud.vtb.ru/all/orders/263c42d5-42f3-4d89-8d2a-2f00b480b6c1/main?context=proj-ahjjqmlgnm&type=project&org=vtb");
     private final String nameUser = "atUser";
     private final String nameHost = "atHostName";
 
@@ -52,7 +52,6 @@ public class UiArtemisTest extends UiProductTest {
             orderPage.getSegmentSelect().set(product.getSegment());
             orderPage.getPlatformSelect().set(product.getPlatform());
             orderPage.getFlavorSelect().set(NewOrderPage.getFlavor(product.getMinFlavor()));
-            //orderPage.getGroupSelect().set(accessGroup);
             prebillingCost = OrderUtils.getCostValue(orderPage.getPrebillingCostElement());
             OrderUtils.clickOrder();
             new OrdersPage()

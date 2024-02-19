@@ -22,9 +22,9 @@ public class MoonOrderPage extends NewOrderPage {
 
     public void checkOrderDetails() {
         if (getCalculationDetails().exists()) {
-            getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
+            getCalculationDetails().shouldBe(Condition.visible.because("Должно отображаться сообщение")).shouldBe(Condition.enabled).click();
         }
-        getProcessor().shouldBe(Condition.visible);
-        getOpMemory().shouldBe(Condition.visible);
+        getProcessor().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+        getOpMemory().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 }
