@@ -81,4 +81,9 @@ public class DataTable extends Table {
         }
         throw new NotFoundElementException("Не найдена страница с подходящим условием");
     }
+
+    public DataTable update() {
+        init($x(getXpath()));
+        return this;
+    }
 }

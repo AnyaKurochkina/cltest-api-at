@@ -76,7 +76,8 @@ public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
 
     @Step("[Проверка] Пресет LIVE STREAMING включен, у ресурса с именем: {0}")
     public ResourcesTab checkLiveStreamingIsEnabled(String resourceName) {
-        resourcesTable.searchAllPages(t -> resourcesTable.isColumnValueContains("Название", resourceName))
+        resourcesTable.update()
+                .searchAllPages(t -> resourcesTable.isColumnValueContains("Название", resourceName))
                 .getRowByColumnValueContains("Название", resourceName)
                 .get()
                 .shouldHave(Condition.matchText(".*live streaming.*").because("Когда пресет LIVE STREAMING  включен, должна отображаться плашка live streaming на против имени ресурса в списке ресурсов"));
@@ -85,8 +86,8 @@ public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
 
     @Step("[Проверка] Пресет LIVE STREAMING выключен, у ресурса с именем: {0}")
     public ResourcesTab checkLiveStreamingIsDisabled(String resourceName) {
-        DataTable table = new DataTable("Источники");
-        table.searchAllPages(t -> table.isColumnValueContains("Название", resourceName))
+        resourcesTable.update()
+                .searchAllPages(t -> resourcesTable.isColumnValueContains("Название", resourceName))
                 .getRowByColumnValueContains("Название", resourceName)
                 .get()
                 .shouldNotHave((Condition.matchText(".*live streaming.*").because("Когда пресет LIVE STREAMING  включен, должна отображаться плашка live streaming на против имени ресурса в списке ресурсов")));

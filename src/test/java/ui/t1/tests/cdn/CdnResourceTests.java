@@ -185,7 +185,7 @@ public class CdnResourceTests extends AbstractT1Test {
                 .switchToResourceTab()
                 .checkCdnEntityExistByName(name)
                 .enableLiveStreaming(name)
-                .checkLiveStreamingIsDisabled(name);
+                .checkLiveStreamingIsEnabled(name);
     }
 
     @Test
