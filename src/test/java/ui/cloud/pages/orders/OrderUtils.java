@@ -60,7 +60,7 @@ public class OrderUtils {
     }
 
     public static Double getCostValue(SelenideElement element) {
-        element.shouldBe(Condition.visible);
+        element.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
         final String text = TypifiedElement.findNotEmptyText(element, Duration.ofSeconds(5));
         log.debug("Стоимость '{}'", text);
         String cost = StringUtils.findByRegex("(-?[\\d\\s]+,\\d{2})", text);

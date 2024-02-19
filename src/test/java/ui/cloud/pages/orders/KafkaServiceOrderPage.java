@@ -24,6 +24,6 @@ public class KafkaServiceOrderPage extends NewOrderPage {
     }
 
     public void checkOrderDetails() {
-        getTopicService().shouldBe(Condition.visible);
+        getTopicService().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 }

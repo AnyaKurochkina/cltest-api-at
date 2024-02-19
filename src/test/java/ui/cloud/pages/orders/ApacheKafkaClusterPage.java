@@ -103,7 +103,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         runActionWithParameters(BLOCK_CLUSTER, "Вертикальное масштабирование", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю свое действие").setChecked(true);
             DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor)); //,ActionParameters.builder().timeOut(Duration.ofMinutes(20)).build()
-        });
+        }, ActionParameters.builder().timeout(Duration.ofMinutes(25)).build());
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -116,7 +116,7 @@ public class ApacheKafkaClusterPage extends IProductPage {
         Flavor maxFlavor = product.getMaxFlavor();
         runActionWithParameters(BLOCK_CLUSTER, "Горизонтальное масштабирование", "Подтвердить", () -> {
             CheckBox.byLabel("Я прочитал предупреждение выше и подтверждаю, что понимаю что делаю").setChecked(true);
-            Selenide.$x("//span[text()='Увеличение количества брокеров в составе кластера и перевыпуск кластерного сертификата.']").shouldBe(Condition.visible);
+            Selenide.$x("//span[text()='Увеличение количества брокеров в составе кластера и перевыпуск кластерного сертификата.']").shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             Selenide.$x("//span[text()='Операция выполняется без недоступности сервиса, если текущее состояние кластера и параметры топиков позволяют обеспечить отказоустойчивость.']").shouldBe(Condition.visible);
             Select.byLabel("Количество").set("4");
         });

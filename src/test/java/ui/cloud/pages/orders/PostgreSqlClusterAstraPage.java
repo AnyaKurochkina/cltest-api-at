@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
+import java.time.Duration;
 import java.util.List;
 
 import static api.Tests.activeCnd;
@@ -140,7 +141,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию нод СУБД", "Подтвердить", () -> {
             DropDown.byLabel("Конфигурация Core/RAM").select(NewOrderPage.getFlavor(maxFlavor));
             CheckBox.byLabel("Я прочитал предупреждение ниже и подтверждаю свое действие").setChecked(true);
-        });
+        }, ActionParameters.builder().timeout(Duration.ofHours(2)).build());
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();

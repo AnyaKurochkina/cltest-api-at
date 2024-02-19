@@ -26,21 +26,23 @@ public class NewOrderPage {
     private final SelenideElement processor = $x("//div[contains(text(),'Процессор')]");
     private final SelenideElement windowsOS = $x("//div[contains(text(),'ОС Windows')]");
     private final SelenideElement linuxOS = $x("//div[contains(text(),'ОС linux')]");
-    protected Input countInput = Input.byLabel("Количество");
-    protected Input labelInput = Input.byLabel("Метка");
-    protected Select segmentSelect = Select.byLabel("Сетевой сегмент");
-    protected Select platformSelect = Select.byLabel("Платформа");
-    protected Select osVersionSelect = Select.byLabel("Версия ОС");
-    protected Select versionWildfly = Select.byLabel("Версия Wildfly");
-    protected Select versionJava = Select.byLabel("Версия java");
-    protected Select domain = Select.byLabel("Домен");
-    protected Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
-    protected Select roleSelect = Select.byLabel("Роль");
-    protected Select groupSelect = Select.byLabel("Группы");
-    protected Select group2Select = Select.byLabel("Группы",2);
-    protected Select groupManagerSelect = Select.byLabel("Manager");
-    protected Select groupAdministratorSelect = Select.byLabel("Administrator");
-    protected String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
+    protected final Input countInput = Input.byLabel("Количество");
+    protected final Input labelInput = Input.byLabel("Метка");
+    protected final Input nameVm = Input.byLabel("Имя ВМ");
+    protected final Select segmentSelect = Select.byLabel("Сетевой сегмент");
+    protected final Select platformSelect = Select.byLabel("Платформа");
+    protected final Select osVersionSelect = Select.byLabel("Версия ОС");
+    protected final Select versionKafka = Select.byLabel("Версия Apache Kafka");
+    protected final Select versionWildfly = Select.byLabel("Версия Wildfly");
+    protected final Select versionJava = Select.byLabel("Версия java");
+    protected final Select domain = Select.byLabel("Домен");
+    protected final Select flavorSelect = Select.byLabel("Конфигурация Core/RAM");
+    protected final Select roleSelect = Select.byLabel("Роль");
+    protected final Select groupSelect = Select.byLabel("Группы");
+    protected final Select group2Select = Select.byLabel("Группы", 2);
+    protected final Select groupManagerSelect = Select.byLabel("Manager");
+    protected final Select groupAdministratorSelect = Select.byLabel("Administrator");
+    protected final String labelValue = "AT-UI-" + UUID.randomUUID().toString().substring(24);
 
     //раскрывающийся список
     public static SelenideElement getCalculationDetails() {
@@ -73,11 +75,11 @@ public class NewOrderPage {
 
     @Step("Проверка отображения деталей заказа")
     public void checkOrderDetails() {
-        prebillingCostElement.shouldBe(Condition.visible);
+        prebillingCostElement.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
         if (getCalculationDetails().exists()) {
-            getCalculationDetails().shouldBe(Condition.visible).shouldBe(Condition.enabled).click();
+            getCalculationDetails().shouldBe(Condition.visible.because("Должно отображаться сообщение")).shouldBe(Condition.enabled).click();
         }
-        getProcessor().shouldBe(Condition.visible);
-        getOpMemory().shouldBe(Condition.visible);
+        getProcessor().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+        getOpMemory().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 }
