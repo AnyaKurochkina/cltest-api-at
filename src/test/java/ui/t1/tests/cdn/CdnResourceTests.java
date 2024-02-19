@@ -7,13 +7,17 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.AbstractEntity;
 import models.t1.cdn.Resource;
+import models.t1.cdn.SourceGroup;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import steps.t1.cdn.CdnResourceClient;
 import ui.elements.Alert;
+import ui.elements.TypifiedElement;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
+import ui.t1.pages.cdn.ResourcesTab;
 import ui.t1.tests.AbstractT1Test;
 import ui.t1.tests.WithAuthorization;
 import ui.t1.tests.engine.EntitySupplier;
@@ -37,6 +41,12 @@ public class CdnResourceTests extends AbstractT1Test {
     private final EntitySupplier<Resource> cdnResource = lazy(() -> {
         Resource resource = new Resource(getProjectId(), "mirror.yandex.ru",
                 Collections.singletonList(RandomStringUtils.randomAlphabetic(8).toLowerCase() + ".ya.ru"))
+                .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+        SourceGroup.builder()
+                .projectId(getProjectId())
+                .domainName(resource.getDomainName())
+                .name(resource.getName())
+                .build()
                 .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
         new IndexPage().goToCdn()
                 .switchToResourceTab()
@@ -165,6 +175,35 @@ public class CdnResourceTests extends AbstractT1Test {
                 .checkShieldingIsActivatedWithLocation(DEFAULT_LOCATION)
                 .offShielding()
                 .checkThatShieldingIsOff();
+    }
+
+    @Test
+    @Order(9)
+    @DisplayName("CDN.Пресет \"LIVE STREAMING\". Включение.")
+    @TmsLinks(@TmsLink("SOUL-5390"))
+    public void enableLiveStreamingTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .enableLiveStreaming(name)
+                .checkLiveStreamingIsEnabled(name);
+    }
+
+    @Test
+    @Order(10)
+    @DisplayName("CDN.Пресет \"LIVE STREAMING\". Выключение.")
+    @TmsLinks(@TmsLink("SOUL-5390"))
+    public void disableLiveStreamingTest() {
+        String name = cdnResource.get().getName();
+        ResourcesTab resourcesTab = new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name);
+
+        CdnResourceClient.enableLiveStreamingByName(getProjectId(), name);
+        TypifiedElement.refreshPage();
+        resourcesTab.disableLiveStreaming(name)
+                .checkLiveStreamingIsDisabled(name);
     }
 
     @Test

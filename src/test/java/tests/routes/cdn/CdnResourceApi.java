@@ -13,6 +13,9 @@ public class CdnResourceApi implements Api {
     @Route(method = Method.DELETE, path = "/v1/projects/{project_name}/resources/{id}", status = 204)
     public static Path deleteResourceById;
 
+    @Route(method = Method.POST, path = "/v1/projects/{project_name}/resources/{id}/enable_streaming", status = 200)
+    public static Path enableLiveStreaming;
+
     @Override
     public String url() {
         return cdnProxy + "/api";
