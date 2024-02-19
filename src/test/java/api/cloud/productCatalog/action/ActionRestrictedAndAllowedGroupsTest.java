@@ -7,7 +7,6 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.authorizer.GlobalUser;
 import models.cloud.productCatalog.action.Action;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +19,6 @@ import static tests.routes.ActionProductCatalogApi.apiV1ActionsRead;
 
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
 public class ActionRestrictedAndAllowedGroupsTest extends ActionBaseTest {
 
     @DisplayName("Создание действия с ограничением restricted group на уровне realm")

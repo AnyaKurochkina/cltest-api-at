@@ -106,7 +106,7 @@ public class TemplateNegativeTest extends Tests {
                 .build()
                 .toJson();
         AssertResponse.run(() -> createTemplate(json)).status(400)
-                .responseContains("\"run\": Это поле не может быть пустым.");
+                .responseContains("\\\"run\\\": Это поле не может быть пустым.");
     }
 
     @DisplayName("Негативный тест на создание шаблона с недопустимыми символами в имени")

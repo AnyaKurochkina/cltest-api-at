@@ -55,8 +55,6 @@ public class LoadBalancer extends IProduct {
         jsonTemplate = "/orders/load_balancer.json";
         productName = "Load Balancer";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (password == null)
             password = "AuxDG%Yg%wtfCqL3!kopIPvX%ud1HY@J";
         if (segment == null)
@@ -67,6 +65,8 @@ public class LoadBalancer extends IProduct {
             setPlatform(OrderServiceSteps.getPlatform(this));
         if (domain == null)
             setDomain(OrderServiceSteps.getDomain(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (zone == null)
             setZone(ReferencesStep.getJsonPathList(String
                             .format("tags__contains=%s,available&directory__name=gslb_servers", segment))
@@ -107,10 +107,6 @@ public class LoadBalancer extends IProduct {
 
     public void sync() {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_sync_info").product(this).build());
-    }
-
-    public void gslbSync() {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_gslb_release_sync_info").product(this).build());
     }
 
     public void revertConfig(Backend backend) {
@@ -200,14 +196,6 @@ public class LoadBalancer extends IProduct {
             AssertUtils.assertContainsList(routeAliases, alias);
     }
 
-    public void deleteBackend(Backend backend) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_backend").product(this)
-                .data(new JSONObject().put("backend_name", backend.getBackendName())).build());
-        Assertions.assertFalse(isExistBackend(backend.getBackendName()), "Backend не удален");
-        if (isDev())
-            Assertions.assertFalse(isStateContains(backend.getBackendName()));
-    }
-
     public void deleteBackends(Backend... backends) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_delete_backends").product(this)
                 .data(new JSONObject().put("selected", serializeList(backends))).build());
@@ -272,7 +260,7 @@ public class LoadBalancer extends IProduct {
     }
 
     public void editRouteSni(RouteSni.Route route, String backendName) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_edit_route_sni").product(this)
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_edit_sni_route").product(this)
                 .data(new JSONObject().put("backend_name", backendName).put("sni_route", routeByName(route.getName()).getRouteName())).build());
         Assertions.assertEquals(backendName, routeByName(route.getName()).getBackendName(), "BackendName не изменен");
     }
@@ -339,13 +327,8 @@ public class LoadBalancer extends IProduct {
                 .data(new JSONObject().put("accept", true)).build());
     }
 
-    public void updateCertificates(String method) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_certificates").timeout(Duration.ofMinutes(50)).product(this)
-                .data(new JSONObject().put("method", method)).build());
-    }
-
     public void resizeClusterVms(Flavor flavor) {
-        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofMinutes(70))
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_resize_cluster_vms").product(this).timeout(Duration.ofHours(2))
                 .data(new JSONObject().put("flavor", new JSONObject(flavor.toString())).put("accept", true)).build());
         int cpusAfter = (Integer) OrderServiceSteps.getProductsField(this, CPUS);
         int memoryAfter = (Integer) OrderServiceSteps.getProductsField(this, MEMORY);
@@ -361,5 +344,10 @@ public class LoadBalancer extends IProduct {
     public void complexCreate(ComplexCreate complex) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_complex_create").product(this)
                 .data(serialize(complex)).build());
+    }
+
+    public void updateCluster(boolean requiredUpdateCerts) {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("balancer_release_update_cluster").timeout(Duration.ofHours(2)).product(this)
+                .data(new JSONObject().put("required_update_certs", requiredUpdateCerts).put("accept", true)).build());
     }
 }

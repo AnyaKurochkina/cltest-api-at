@@ -1,10 +1,11 @@
 package api.cloud.productCatalog.graph;
 
-import api.Tests;
 import core.helper.StringUtils;
 import core.helper.http.AssertResponse;
+import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
+import models.AbstractEntity;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.productCatalog.graph.GraphItem;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
@@ -14,24 +15,25 @@ import org.apache.commons.lang3.RandomStringUtils;
 import org.json.JSONObject;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static core.helper.StringUtils.format;
 import static models.cloud.productCatalog.graph.GraphItem.getGraphItemFromJsonTemplate;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static steps.productCatalog.GraphSteps.createGraph;
+import static steps.productCatalog.GraphSteps.*;
 import static steps.productCatalog.Jinja2Steps.createJinja;
 import static steps.productCatalog.PythonTemplateSteps.createPythonTemplateByName;
 import static steps.productCatalog.TemplateSteps.createTemplateByName;
+import static steps.productCatalog.TemplateSteps.partialUpdateTemplate;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Графы")
 @DisabledIfEnv("prod")
-public class GraphItemTest extends Tests {
+public class GraphItemTest extends GraphBaseTest {
 
     @Test
     @DisplayName("Создание ноды графа типа template")
@@ -125,5 +127,45 @@ public class GraphItemTest extends Tests {
                 .toJson();
         AssertResponse.run(() -> createGraph(graph)).status(400)
                 .responseContains(format("\\\"graph\\\": [ErrorDetail(string='\\\"non_field_errors\\\": Значение “{}” не является верным UUID-ом.', code='invalid')]", template.getId()));
+    }
+
+    @Test
+    @DisplayName("Проверка source_version_calculated подграфов и шаблонов")
+    public void checkSourceVersionCalculatedInSubGraphAndTemplateTest() {
+        Template template = createTemplateByName("template_for_source_version_calculated_test_api");
+        GraphItem templateItem = getGraphItemFromJsonTemplate();
+        templateItem.setSourceType("template");
+        templateItem.setSourceId(String.valueOf(template.getId()));
+        templateItem.setName(template.getName());
+
+        Graph subGraph = createGraph(Graph.builder()
+                .name(StringUtils.getRandomStringApi(6))
+                .build().toJson()).extractAs(Graph.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+
+        GraphItem subGraphItem = getGraphItemFromJsonTemplate();
+        subGraphItem.setSourceType("subgraph");
+        subGraphItem.setSourceId(subGraph.getGraphId());
+        subGraphItem.setName("subgraph_for_source_version_calculated_test_api");
+
+        Graph graph = createGraph(Graph.builder()
+                .name(RandomStringUtils.randomAlphabetic(6).toLowerCase() + "test_api")
+                .graph(Arrays.asList(templateItem, subGraphItem))
+                .build());
+
+        List<GraphItem> getGraphById = getGraphById(graph.getGraphId()).getGraph();
+        List<GraphItem> getGraphByIdWithQuery = getGraphByIdWithQueryParams(graph.getGraphId(), new QueryBuilder().add("env", "dev")
+                .add("env_name", "DEV").add("json_name", "orchestrator_json")).getGraph();
+        getGraphById.forEach(x -> assertEquals("1.0.0", x.getSourceVersionCalculated()));
+        getGraphByIdWithQuery.forEach(x -> assertEquals("1.0.0", x.getSourceVersionCalculated()));
+
+        partialUpdateGraph(subGraph.getGraphId(), new JSONObject().put("lock_order_on_error", true));
+        partialUpdateTemplate(template.getId(), new JSONObject().put("priority", 5));
+
+        getGraphById = getGraphById(graph.getGraphId()).getGraph();
+        getGraphByIdWithQuery = getGraphByIdWithQueryParams(graph.getGraphId(), new QueryBuilder().add("env", "dev")
+                .add("env_name", "DEV").add("json_name", "orchestrator_json")).getGraph();
+        getGraphById.forEach(x -> assertEquals("1.0.1", x.getSourceVersionCalculated()));
+        getGraphByIdWithQuery.forEach(x -> assertEquals("1.0.1", x.getSourceVersionCalculated()));
     }
 }

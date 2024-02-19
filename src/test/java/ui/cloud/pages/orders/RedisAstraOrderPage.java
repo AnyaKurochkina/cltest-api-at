@@ -14,7 +14,7 @@ public class RedisAstraOrderPage extends NewOrderPage {
     private final Input userInput = Input.byLabel("Пользователь");
     private final Switch createDefaultUserSwitch = Switch.byText("Создать пользователя default");
     private final Select redisVersion = Select.byLabel("Версия Redis");
-    public static String userNameRedisSentinel = "sentinel";
+    public static String userNameRedisSentinel = "qa_sentinel";
     private final Select flavorSelectRedisSentinel = Select.byLabel("Конфигурация мастера и реплики (Core/RAM)");
 
     public RedisAstraOrderPage() {
@@ -24,6 +24,6 @@ public class RedisAstraOrderPage extends NewOrderPage {
 
     public void checkOrderDetails() {
         super.checkOrderDetails();
-        getHardDrives().shouldBe(Condition.visible);
+        getHardDrives().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 }

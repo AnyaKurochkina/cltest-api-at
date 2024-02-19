@@ -37,7 +37,6 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
                 .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
                 .setImage(image)
-                .setDeleteOnTermination(true)
                 .setName(getRandomName())
                 .setBootSize(4)
                 .addSecurityGroups(securityGroup)
@@ -48,7 +47,7 @@ public class VirtualMachineActionsTest extends AbstractComputeTest {
         Alert.green("Данные успешно скопированы");
         imageName = new JSONObject(StringUtils.getClipBoardText()).getJSONObject("image").getString("name");
         vm.clickOrder();
-        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
+        new VmList().selectCompute(vm.getName()).markForDeletion(new InstanceEntity(true), AbstractEntity.Mode.AFTER_CLASS).checkCreate(true);
         return vm;
     });
 

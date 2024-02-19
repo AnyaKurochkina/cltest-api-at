@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Tags;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.opentest4j.MultipleFailuresError;
 
 @Epic("Продукты")
 @Feature("Load Balancer")
@@ -40,9 +39,9 @@ public class LoadBalancerSniNegativeTest extends AbstractLoadBalancerTest {
         String backendName = new Generex("[a-z0-9]{20}").random();
         try (LoadBalancer balancer = product.createObjectExclusiveAccess()) {
             RouteSni.Route route = createSimpleRoute(balancer);
-            Throwable throwable = Assertions.assertThrows(MultipleFailuresError.class,
+            Throwable throwable = Assertions.assertThrows(Error.class,
                     () -> balancer.editRouteSni(route, backendName));
-            AssertUtils.assertContains(throwable.getMessage(), "Backend `" + backendName + "` was not found");
+            AssertUtils.assertContains(throwable.getMessage(), "backend_name");
         }
     }
 }

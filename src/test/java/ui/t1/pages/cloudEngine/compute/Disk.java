@@ -4,7 +4,10 @@ import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.tests.ActionParameters;
-import ui.elements.*;
+import ui.elements.Dialog;
+import ui.elements.Input;
+import ui.elements.Select;
+import ui.elements.Table;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
 
@@ -16,8 +19,7 @@ public class Disk extends IProductT1Page<Disk> {
     public void attachComputeVolume(String vmName, boolean deleteOnTermination) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить к серверу", "Подтвердить", () ->
                 Dialog.byTitle("Подключить к серверу")
-                        .setSelectValue("Доступные серверы", vmName + ":")
-                        .setCheckBox(CheckBox.byLabel("Удалять вместе с сервером"), deleteOnTermination));
+                        .setSelectValue("Доступные серверы", vmName + ":"));
     }
 
     @Step("Расширить диск на {size}ГБ")

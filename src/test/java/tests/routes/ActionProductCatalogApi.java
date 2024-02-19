@@ -31,10 +31,6 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     @Route(method = Method.GET, path = "/api/v1/actions/exists/", status = 200)
     public static Path apiV1ActionsExists;
 
-    //Actions Load from bitbucket
-    @Route(method = Method.POST, path = "/api/v1/actions/load_from_bitbucket/", status = 201)
-    public static Path apiV1ActionsLoadFromBitbucket;
-
     //Actions Mass change
     @Route(method = Method.POST, path = "/api/v1/actions/mass_change/", status = 200)
     public static Path apiV1ActionsMassChange;
@@ -44,7 +40,7 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     public static Path apiV1ActionsObjImport;
 
     //Actions Objects export
-    @Route(method = Method.POST, path = "/api/v1/actions/objects_export/", status = 201)
+    @Route(method = Method.POST, path = "/api/v1/actions/objects_export/", status = 200)
     public static Path apiV1ActionsObjectsExport;
 
     //Actions Remove tag list
@@ -74,10 +70,6 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     //Actions Copy
     @Route(method = Method.POST, path = "/api/v1/actions/{id}/copy/", status = 201)
     public static Path apiV1ActionsCopy;
-
-    //Actions Dump to bitbucket
-    @Route(method = Method.POST, path = "/api/v1/actions/{id}/dump_to_bitbucket/", status = 201)
-    public static Path apiV1ActionsDumpToBitbucket;
 
     //Actions Obj export
     @Route(method = Method.GET, path = "/api/v1/actions/{id}/obj_export/", status = 200)
@@ -119,10 +111,6 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     @Route(method = Method.GET, path = "/api/v2/actions/exists/", status = 200)
     public static Path apiV2ActionsExists;
 
-    //Actions Load from bitbucket
-    @Route(method = Method.POST, path = "/api/v2/actions/load_from_bitbucket/", status = 201)
-    public static Path apiV2ActionsLoadFromBitbucket;
-
     //Actions Mass change
     @Route(method = Method.POST, path = "/api/v2/actions/mass_change/", status = 201)
     public static Path apiV2ActionsMassChange;
@@ -158,10 +146,6 @@ public class ActionProductCatalogApi extends ProductCatalogApi {
     //Actions Copy
     @Route(method = Method.POST, path = "/api/v2/actions/{name}/copy/", status = 201)
     public static Path apiV2ActionsCopy;
-
-    //Actions Dump to bitbucket
-    @Route(method = Method.POST, path = "/api/v2/actions/{name}/dump_to_bitbucket/", status = 201)
-    public static Path apiV2ActionsDumpToBitbucket;
 
     //Actions Obj export
     @Route(method = Method.GET, path = "/api/v2/actions/{name}/obj_export/", status = 200)

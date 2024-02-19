@@ -52,8 +52,8 @@ public class ClickHouseTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{1}] Сбросить пароль владельца {0}")
     void resetPasswordOwner(ClickHouse product, Integer num) {
-        Assumptions.assumeTrue("dev".equalsIgnoreCase(product.envType()), "Тест включен только для dev среды");
         try (ClickHouse clickHouse = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeTrue("dev".equalsIgnoreCase(product.envType()), "Тест включен только для dev среды");
             clickHouse.resetPasswordOwner();
         }
     }

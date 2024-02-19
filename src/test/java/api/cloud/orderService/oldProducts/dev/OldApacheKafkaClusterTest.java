@@ -1,12 +1,12 @@
 package api.cloud.orderService.oldProducts.dev;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.orderService.products.ApacheKafkaCluster;
 import org.junit.jupiter.api.*;
-import api.Tests;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -14,7 +14,6 @@ import java.util.Collections;
 import static core.enums.KafkaRoles.PRODUCER;
 import static models.cloud.orderService.interfaces.ProductStatus.STARTED;
 import static models.cloud.orderService.interfaces.ProductStatus.STOPPED;
-import static org.junit.jupiter.api.Assertions.fail;
 
 @Epic("Старые продукты DEV")
 @Feature("ApacheKafkaCluster OLD")
@@ -146,9 +145,9 @@ public class OldApacheKafkaClusterTest extends Tests {
         if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
         }
-        kafka.createAclTransaction("*");
+        kafka.createAclTransaction("test");
 
-        kafka.deleteAclTransaction("*");
+        kafka.deleteAclTransaction("test");
     }
 
     @Order(9)
@@ -159,9 +158,9 @@ public class OldApacheKafkaClusterTest extends Tests {
         if (kafka.productStatusIs(STOPPED)) {
             kafka.start();
         }
-        kafka.createAclTransaction("*");
+        kafka.createAclTransaction("test");
 
-        kafka.deleteAclTransaction("*");
+        kafka.deleteAclTransaction("test");
     }
 
     @Disabled

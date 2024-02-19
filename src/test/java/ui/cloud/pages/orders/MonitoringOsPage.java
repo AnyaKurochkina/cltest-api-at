@@ -40,9 +40,9 @@ public class MonitoringOsPage {
     public MonitoringOsPage(IProduct product) {
         if (product instanceof Windows)
             graphNames.remove("SWAP Util (%)");
-        btnResetFilter.shouldBe(Condition.visible);
-        period.getElement().shouldBe(Condition.visible);
-        btnApply.shouldBe(Condition.visible);
+        btnResetFilter.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+        period.getElement().shouldBe(Condition.visible.because("Должно отображаться сообщение"));
+        btnApply.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 
     @Step("Проверка вкладки мониторинга")
@@ -59,7 +59,7 @@ public class MonitoringOsPage {
             filter = SECOND_FILTER;
         period.set(filter);
         btnApply.click();
-        $x("//span[.='{}']", filter.toLowerCase()).shouldBe(Condition.visible);
+        $x("//span[.='{}']", filter.toLowerCase()).shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 
     @Getter
@@ -70,7 +70,7 @@ public class MonitoringOsPage {
 
         public Graph(String name) {
             this.name = name;
-            this.graph = $x("(//div[.='{}']/following-sibling::*//*[name()='svg'])[1]", name).shouldBe(Condition.visible);
+            this.graph = $x("(//div[.='{}']/following-sibling::*//*[name()='svg'])[1]", name).shouldBe(Condition.visible.because("Должно отображаться сообщение"));
             updateState();
         }
 
@@ -84,7 +84,7 @@ public class MonitoringOsPage {
         public void updateState() {
             graph.scrollIntoView(TypifiedElement.scrollCenter);
             actions().moveToElement(graph.getWrappedElement(), -(graph.getRect().getWidth() / 4), 0).perform();
-            state = $x("//ul[@class='recharts-tooltip-item-list']").shouldBe(Condition.visible).getText();
+            state = $x("//ul[@class='recharts-tooltip-item-list']").shouldBe(Condition.visible.because("Должно отображаться сообщение")).getText();
         }
     }
 }

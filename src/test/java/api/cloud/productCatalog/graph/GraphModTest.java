@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.graph;
 
 import api.Tests;
+import core.helper.http.QueryBuilder;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -96,7 +97,7 @@ public class GraphModTest extends Tests {
                     put("title", expectedTitle);
                 }})
                 .build());
-        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=dev");
+        Graph createdGraph = getGraphByIdWithQueryParams(graph.getGraphId(), new QueryBuilder().add("env", "dev"));
         assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
     }
 
@@ -123,7 +124,7 @@ public class GraphModTest extends Tests {
                     put("title", expectedTitle);
                 }})
                 .build());
-        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env_name=dso");
+        Graph createdGraph = getGraphByIdWithQueryParams(graph.getGraphId(), new QueryBuilder().add("env_name", "dso"));
         assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
     }
 
@@ -163,7 +164,7 @@ public class GraphModTest extends Tests {
                     put("title", expectedTitle);
                 }})
                 .build());
-        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=test&env_name=migr");
+        Graph createdGraph = getGraphByIdWithQueryParams(graph.getGraphId(), new QueryBuilder().add("env", "test").add("env_name", "migr"));
         assertEquals(expectedTitle, createdGraph.getJsonSchema().get("title"));
         assertEquals(uiData, createdGraph.getUiSchema().get("title"));
     }
@@ -204,7 +205,7 @@ public class GraphModTest extends Tests {
                     put("title", expectedTitle);
                 }})
                 .build());
-        Graph createdGraph = getGraphByIdAndFilter(graph.getGraphId(), "env=test&env_name=lt");
+        Graph createdGraph = getGraphByIdWithQueryParams(graph.getGraphId(), new QueryBuilder().add("env", "test").add("env_name", "lt"));
         assertEquals(jsonData, createdGraph.getJsonSchema().get("title"));
         assertEquals(uiData, createdGraph.getUiSchema().get("title"));
     }

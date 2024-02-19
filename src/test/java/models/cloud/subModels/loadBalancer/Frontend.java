@@ -44,7 +44,7 @@ public class Frontend {
         return Frontend.builder()
                 .mode("tcp")
                 .defaultBackendNameTcp(backendName)
-                .frontendName(new Generex("at-frontend-[a-z]{4}").toString())
+                .frontendName(new Generex("at-frontend-[a-z]{4}").random())
                 .frontendPort(12000 + new Random().nextInt(1001))
                 .keepAliveTcp(false);
     }
@@ -53,7 +53,7 @@ public class Frontend {
         return Frontend.builder()
                 .mode("http")
                 .defaultBackendNameHttp(backendName)
-                .frontendName(new Generex("at-frontend-[a-z]{4}").toString())
+                .frontendName(new Generex("at-frontend-[a-z]{4}").random())
                 .frontendPort(12000 + new Random().nextInt(1001))
                 .keepAliveTcp(false)
                 .keepAliveHttp(true)

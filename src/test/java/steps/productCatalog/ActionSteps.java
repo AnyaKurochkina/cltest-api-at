@@ -28,9 +28,6 @@ import static tests.routes.ActionProductCatalogApi.*;
 
 public class ActionSteps extends ProductCatalogSteps {
 
-    private static final String ACTION_URL = "/api/v1/actions/";
-    private static final String ACTION_URL_V_2 = "/api/v2/actions/";
-
     @Step("Получение списка действий продуктового каталога")
     public static GetActionList getActionList() {
         return getProductCatalogAdmin()
@@ -42,7 +39,6 @@ public class ActionSteps extends ProductCatalogSteps {
     public static List<ProductAudit> getActionAuditList(String id) {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsAudit, id)
-                .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
     }
@@ -51,7 +47,6 @@ public class ActionSteps extends ProductCatalogSteps {
     public static List<ProductAudit> getActionAuditListWithQuery(String id, QueryBuilder queryBuilder) {
         return getProductCatalogAdmin()
                 .api(apiV1ActionsAudit, id, queryBuilder)
-                .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
     }
@@ -67,7 +62,6 @@ public class ActionSteps extends ProductCatalogSteps {
         return getProductCatalogAdmin()
                 .body(new JSONObject().put("obj_keys", new JSONObject().put("name", keyValue)))
                 .api(apiV1ActionsAuditByObjectKeys)
-                .assertStatus(200)
                 .jsonPath()
                 .getList("list", ProductAudit.class);
     }
@@ -209,20 +203,19 @@ public class ActionSteps extends ProductCatalogSteps {
                 .api(apiV1ActionsPartialUpdate, id);
     }
 
-    @Step("Частичное обновление действия")
+    @Step("Частичное обновление действия под ролью {role}")
     public static void partialUpdateActionWithAnotherRole(String id, JSONObject object, Role role) {
         new Http(productCatalogURL)
                 .setRole(role)
                 .body(object)
-                .patch(ACTION_URL + id + "/");
+                .api(apiV1ActionsPartialUpdate, id);
     }
 
     @Step("Частичное обновление действия по имени {name}")
     public static void partialUpdateActionByName(String name, JSONObject object) {
         getProductCatalogAdmin()
                 .body(object)
-                .patch(ACTION_URL_V_2 + name + "/")
-                .assertStatus(200);
+                .api(apiV2ActionsPartialUpdate, name);
     }
 
     @Step("Получение действия по фильтру = {query}")
@@ -243,37 +236,11 @@ public class ActionSteps extends ProductCatalogSteps {
 
     }
 
-    @Step("Загрузка действия в Gitlab")
-    public static Response dumpActionToGit(String id) {
-        return getProductCatalogAdmin()
-                .api(apiV1ActionsDumpToBitbucket, id)
-                .assertStatus(201);
-    }
-
-    @Step("Загрузка действия в Gitlab по имени {name}")
-    public static Response dumpActionToGitByName(String name) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(ACTION_URL_V_2 + name + "/dump_to_bitbucket/")
-                .compareWithJsonSchema("jsonSchema/gitlab/dumpToGitLabSchema.json")
-                .assertStatus(201);
-    }
-
-    @Step("Выгрузка действия из Gitlab")
-    public static void loadActionFromGit(JSONObject body) {
-        getProductCatalogAdmin()
-                .body(body)
-                .api(apiV1ActionsLoadFromBitbucket)
-                .assertStatus(200);
-    }
-
     @Step("Получение списка действий по списку type_provider")
     public static List<Action> getActionListByTypeProvider(JSONObject body) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .body(body)
-                .get(ACTION_URL)
-                .assertStatus(200)
+                .api(apiV1ActionsList)
                 .extractAs(GetActionList.class)
                 .getList();
     }
@@ -299,23 +266,19 @@ public class ActionSteps extends ProductCatalogSteps {
 
     @Step("Экспорт действия по Id")
     public static Response exportActionById(String objectId) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(ACTION_URL + objectId + "/obj_export/?as_file=true")
-                .assertStatus(200);
+        return getProductCatalogAdmin()
+                .api(apiV1ActionsObjExport, objectId, new QueryBuilder().add("as_file", true));
     }
 
     @Step("Экспорт действия по имени {name}")
     public static void exportActionByName(String name) {
-        new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(ACTION_URL_V_2 + name + "/obj_export/")
-                .assertStatus(200);
+        getProductCatalogAdmin()
+                .api(apiV2ActionsObjExport, name);
     }
 
     @Step("Экспорт нескольких действий")
-    public static Response exportActions(JSONObject json) {
-        return getProductCatalogAdmin()
+    public static void exportActions(JSONObject json) {
+        getProductCatalogAdmin()
                 .body(json)
                 .api(apiV1ActionsObjectsExport);
     }

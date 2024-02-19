@@ -61,13 +61,13 @@ public class ApacheKafkaCluster extends IProduct {
             productName = "Apache Kafka Cluster Astra";
         }
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (kafkaVersion == null)
 //            kafkaVersion = getRandomProductVersionByPathEnum("kafka_version.enum");
             kafkaVersion = "2.13-2.4.1";
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
@@ -206,7 +206,7 @@ public class ApacheKafkaCluster extends IProduct {
 
     public void createAclTransaction(String transactionRegex) {
         OrderServiceSteps.runAction(ActionParameters.builder().name("kafka_create_transaction_acls").product(this)
-                .data(new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"all_ids\",\"transaction_id\":\"" + transactionRegex + "\"}]}")).build());
+                .data(new JSONObject("{\"acls\":[{\"client_cn\":\"cnClient\",\"transaction_id_type\":\"by_mask\",\"transaction_id\":\"" + transactionRegex + "\"}]}")).build());
         save();
         Assertions.assertTrue((Boolean) OrderServiceSteps.getProductsField(this, String.format(KAFKA_CLUSTER_ACL_TRANSACTIONS, transactionRegex)), "ACL транзакция не создалась");
     }

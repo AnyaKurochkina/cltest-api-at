@@ -188,4 +188,12 @@ public class GraphListTest extends Tests {
         List<Graph> graphList = getGraphListByFilters("with_tag_list=true", "tags_complete_match=false", "tags=api_test");
         graphList.forEach(x -> assertTrue(x.getTagList().stream().anyMatch(y -> y.equals("api_test"))));
     }
+
+    @DisplayName("Вывод inputs и outputs при использовании графа как подграфа")
+    @TmsLink("")
+    @Test
+    public void getGraphInputOutputListTest() {
+        Graph graph = createGraph("get_graph_input_output_list_test_api");
+        getGraphInputOutputs(graph.getName());
+    }
 }

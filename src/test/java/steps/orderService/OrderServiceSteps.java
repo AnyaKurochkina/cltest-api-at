@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import core.enums.Role;
 import core.helper.Configure;
 import core.helper.JsonHelper;
+import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.helper.http.Response;
 import core.utils.Waiting;
@@ -42,7 +43,7 @@ public class OrderServiceSteps extends Steps {
 
     public static void checkOrderStatus(String exp_status, IProduct product) {
         String orderStatus = "";
-        int counter = 100;
+        int counter = 140;
 
         log.info("Проверка статуса заказа");
         while ((orderStatus.equals("pending") || orderStatus.isEmpty() || orderStatus.equals("changing")) && counter > 0) {
@@ -72,14 +73,23 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
-    public static String getStatus(String orderId, String projectId) {
+    public static String getStatusOrder(String orderId, String projectId) {
         return new Http(orderServiceURL)
-//                .disableAttachmentLog()
+                .disableAttachmentLog()
                 .setProjectId(projectId, ORDER_SERVICE_ADMIN)
                 .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
                 .jsonPath()
                 .getString("status");
+    }
+
+    public static String getStatusAction(String orderId, String actionId, String projectId) {
+        return new Http(orderServiceURL)
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}/actions/history/{}", projectId, orderId, actionId)
+                .assertStatus(200)
+                .jsonPath()
+                .get("status");
     }
 
     /**
@@ -197,6 +207,8 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Выполнение action {action.name} у заказа {action.orderId}")
     public static void runAction(ActionParameters action) {
+        Assertions.assertNotEquals("locked", getStatusOrder(action.getOrderId(), action.getProjectId()),
+                StringUtils.format("Статус заказа 'Заблокирован'. Действие '{}' не может быть выполнено", action.getName()));
         waitStatus(Duration.ofMinutes(10), action.getOrderId(), action.getProjectId());
         updateItemIdByOrderIdAndActionTitle(action);
         AtomicReference<Float> costPreBilling = new AtomicReference<>();
@@ -214,7 +226,9 @@ public class OrderServiceSteps extends Steps {
                 () -> {
                     actionId.set(sendAction(action).assertStatus(200).jsonPath().get("action_id"));
                     waitStatus(action.getTimeout(), action.getOrderId(), action.getProjectId());
+                    waitStatusAction(Duration.ofMinutes(1), action.getOrderId(), actionId.get(), action.getProjectId());
                     checkActionStatusMethod(action.getOrderId(), action.getProjectId(), actionId.get());
+
                     if (Objects.nonNull(action.getStatus()))
                         action.getProduct().setStatus(action.getStatus());
                 });
@@ -238,13 +252,7 @@ public class OrderServiceSteps extends Steps {
 
     @Step("Ожидание успешного выполнения action")
     private static void checkActionStatusMethod(String orderId, String projectId, String actionId) {
-        String actionStatus = new Http(orderServiceURL)
-                .disableAttachmentLog()
-                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
-                .get("/v1/projects/{}/orders/{}/actions/history/{}", projectId, orderId, actionId)
-                .assertStatus(200)
-                .jsonPath()
-                .get("status");
+        String actionStatus = getStatusAction(orderId, actionId, projectId);
 
         if (actionStatus.equalsIgnoreCase("warning")) {
             String messages = getActionHistoryOutput(orderId, projectId, actionId);
@@ -258,15 +266,28 @@ public class OrderServiceSteps extends Steps {
         }
     }
 
+    @Step("Ожидание финального статуса по orderId = {orderId}")
     private static void waitStatus(Duration timeout, String orderId, String projectId) {
         Instant startTime = Instant.now();
         String status;
         do {
             Waiting.sleep(20000);
-            status = getStatus(orderId, projectId);
+            status = getStatusOrder(orderId, projectId);
         } while ((status.equals("pending") || status.equals("changing")|| status.equals("removing") || status.isEmpty())
                 && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
-        log.info("Ожидание заказа. Финальный статус {}", status);
+        log.info("Финальный статус {}", status);
+    }
+
+    @Step("Ожидание warning по orderId = {orderId}")
+    private static void waitStatusAction(Duration timeout, String orderId, String actionId, String projectId) {
+        Instant startTime = Instant.now();
+        String status;
+        do {
+            Waiting.sleep(20000);
+            status = getStatusAction(orderId, actionId, projectId);
+        } while ((status.equals("pending") || status.isEmpty())
+                && Duration.between(startTime, Instant.now()).compareTo(timeout) < 0);
+        log.info("Финальный статус {}", status);
     }
 
     @Step("Получение warning по orderId = {orderId}")
@@ -467,21 +488,32 @@ public class OrderServiceSteps extends Steps {
     }
 
     private static JsonPath getObjectClass(IProduct product){
+        return getObjectClass(Objects.requireNonNull(product).getProjectId(), product.getOrderId());
+    }
+
+    @Step("Получение объекта класса по пути {path}")
+    private static JsonPath getObjectClass(String projectId, String orderId) {
         return new Http(orderServiceURL)
-                .setProjectId(product.getProjectId(), ORDER_SERVICE_ADMIN)
-                .get("/v1/projects/{}/orders/{}", Objects.requireNonNull(product).getProjectId(), product.getOrderId())
+                .setProjectId(projectId, ORDER_SERVICE_ADMIN)
+                .get("/v1/projects/{}/orders/{}", projectId, orderId)
                 .assertStatus(200)
                 .jsonPath();
     }
 
-    @Step("Получение объекта класса по пути {path}")
     public static <T> T getObjectClass(IProduct product, String path, TypeRef<T> valueTypeRef) {
         return getObjectClass(product).getObject(path, valueTypeRef);
     }
 
-    @Step("Получение поля по пути {path}")
     public static <T> T getObjectClass(IProduct product, String path, Class<T> clazz) {
         return getObjectClass(product).getObject(path, clazz);
+    }
+
+    public static <T> T getObjectClass(String projectId, String orderId, String path, TypeRef<T> valueTypeRef) {
+        return getObjectClass(projectId, orderId).getObject(path, valueTypeRef);
+    }
+
+    public static <T> T getObjectClass(String projectId, String orderId, String path, Class<T> clazz) {
+        return getObjectClass(projectId, orderId).getObject(path, clazz);
     }
 
     @Step("Получение сетевого сегмента для продукта {product}")
@@ -542,7 +574,7 @@ public class OrderServiceSteps extends Steps {
         if (Configure.ENV.equalsIgnoreCase("IFT")) {
             orders = new Http(orderServiceURL)
                     .setRole(Role.CLOUD_ADMIN)
-                    .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending", project.id)
+                    .get("/v1/projects/{}/orders?include=total_count&page=1&per_page=100&f[status][]=success&f[status][]=locked&f[status][]=changing&f[status][]=damaged&f[status][]=failure&f[status][]=pending&f[status][]=error", project.id)
                     .assertStatus(200)
                     .jsonPath()
                     .get("list.findAll{!(it.status == 'success' && it.deletable == true)}.id");

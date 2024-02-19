@@ -4,7 +4,7 @@
     "title": "PRODUCT CATALOG REST API",
     "version": "v1"
   },
-  "host": "ift2-product-catalog.oslb-dev01.corp.dev.vtb",
+  "host": "product-catalog.d5-soul.oslb-dev02.corp.dev.vtb",
   "schemes": [
     "https"
   ],
@@ -4221,8 +4221,8 @@
     },
     "/api/v1/graphs/exists/": {
       "get": {
-        "operationId": "api_v1_graphs_exists",
-        "summary": "Graphs Exists",
+        "operationId": "api_v1_graphs_exists_read",
+        "summary": "Graphs Exists Read",
         "description": "",
         "parameters": [
           {
@@ -4637,8 +4637,8 @@
     },
     "/api/v1/graphs/{id}/audit/": {
       "get": {
-        "operationId": "api_v1_graphs_audit",
-        "summary": "Graphs Audit",
+        "operationId": "api_v1_graphs_audit_read",
+        "summary": "Graphs Audit Read",
         "description": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u043f\u0438\u0441\u043e\u043a \u0430\u0443\u0434\u0438\u0442\u043e\u0432 (\u0437\u0430\u0433\u043e\u043b\u043e\u0432\u043a\u0438) \u0434\u043b\u044f \u043e\u0431\u044a\u0435\u043a\u0442\u0430",
         "parameters": [
           {
@@ -4966,8 +4966,8 @@
     },
     "/api/v1/graphs/{id}/version_list/": {
       "get": {
-        "operationId": "api_v1_graphs_version_list",
-        "summary": "Graphs Version list",
+        "operationId": "api_v1_graphs_version_list_read",
+        "summary": "Graphs Version list Read",
         "description": "",
         "parameters": [],
         "responses": {
@@ -6621,8 +6621,8 @@
     },
     "/api/v1/item_visual_templates/item_visual_template/{event_type}/{event_provider}/": {
       "get": {
-        "operationId": "api_v1_item_visual_templates_item_visual_template",
-        "summary": "Item visual templates Item visual template",
+        "operationId": "api_v1_item_visual_templates_item_visual_template_read",
+        "summary": "Item visual templates Item visual template Read",
         "description": "",
         "parameters": [
           {
@@ -11060,8 +11060,8 @@
     },
     "/api/v1/products/categories/": {
       "get": {
-        "operationId": "api_v1_products_categories",
-        "summary": "Products Categories",
+        "operationId": "api_v1_products_categories_read",
+        "summary": "Products Categories Read",
         "description": "",
         "parameters": [
           {
@@ -16008,8 +16008,8 @@
     },
     "/api/v1/templates/{id}/version_list/": {
       "get": {
-        "operationId": "api_v1_templates_version_list",
-        "summary": "Templates Version list",
+        "operationId": "api_v1_templates_version_list_read",
+        "summary": "Templates Version list Read",
         "description": "",
         "parameters": [],
         "responses": {
@@ -20817,8 +20817,8 @@
     },
     "/api/v1/{context_type}/{context_id}/graphs/exists/": {
       "get": {
-        "operationId": "api_v1_graphs_exists",
-        "summary": "Graphs Exists",
+        "operationId": "api_v1_graphs_exists_read",
+        "summary": "Graphs Exists Read",
         "description": "",
         "parameters": [
           {
@@ -21310,8 +21310,8 @@
     },
     "/api/v1/{context_type}/{context_id}/graphs/{id}/audit/": {
       "get": {
-        "operationId": "api_v1_graphs_audit",
-        "summary": "Graphs Audit",
+        "operationId": "api_v1_graphs_audit_read",
+        "summary": "Graphs Audit Read",
         "description": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u0441\u043f\u0438\u0441\u043e\u043a \u0430\u0443\u0434\u0438\u0442\u043e\u0432 (\u0437\u0430\u0433\u043e\u043b\u043e\u0432\u043a\u0438) \u0434\u043b\u044f \u043e\u0431\u044a\u0435\u043a\u0442\u0430",
         "parameters": [
           {
@@ -21711,8 +21711,8 @@
     },
     "/api/v1/{context_type}/{context_id}/graphs/{id}/version_list/": {
       "get": {
-        "operationId": "api_v1_graphs_version_list",
-        "summary": "Graphs Version list",
+        "operationId": "api_v1_graphs_version_list_read",
+        "summary": "Graphs Version list Read",
         "description": "",
         "parameters": [],
         "responses": {
@@ -23603,8 +23603,8 @@
     },
     "/api/v1/{context_type}/{context_id}/item_visual_templates/item_visual_template/{event_type}/{event_provider}/": {
       "get": {
-        "operationId": "api_v1_item_visual_templates_item_visual_template",
-        "summary": "Item visual templates Item visual template",
+        "operationId": "api_v1_item_visual_templates_item_visual_template_read",
+        "summary": "Item visual templates Item visual template Read",
         "description": "",
         "parameters": [
           {
@@ -28804,8 +28804,8 @@
     },
     "/api/v1/{context_type}/{context_id}/products/categories/": {
       "get": {
-        "operationId": "api_v1_products_categories",
-        "summary": "Products Categories",
+        "operationId": "api_v1_products_categories_read",
+        "summary": "Products Categories Read",
         "description": "",
         "parameters": [
           {
@@ -34654,8 +34654,8 @@
     },
     "/api/v1/{context_type}/{context_id}/templates/{id}/version_list/": {
       "get": {
-        "operationId": "api_v1_templates_version_list",
-        "summary": "Templates Version list",
+        "operationId": "api_v1_templates_version_list_read",
+        "summary": "Templates Version list Read",
         "description": "",
         "parameters": [],
         "responses": {
@@ -39401,6 +39401,41 @@
             "description": "",
             "schema": {
               "$ref": "#/definitions/GitDump"
+            }
+          }
+        },
+        "tags": [
+          "graph"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/api/v2/graphs/{name}/input_vars/": {
+      "get": {
+        "operationId": "api_v2_graphs_input_vars_read",
+        "summary": "Graphs Input vars Read",
+        "description": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043f\u0435\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0435 \u0438\u0437 \u043f\u043e\u043b\u044f Input, \u043a\u043e\u0442\u043e\u0440\u044b\u0445 \u043d\u0435\u0442 \u0432 output \u0438 static_data",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "description": "\u0412\u0435\u0440\u0441\u0438\u044f \u0433\u0440\u0430\u0444\u0430",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GraphMain"
             }
           }
         },
@@ -55944,6 +55979,53 @@
             "description": "",
             "schema": {
               "$ref": "#/definitions/GitDump"
+            }
+          }
+        },
+        "tags": [
+          "graph"
+        ]
+      },
+      "parameters": [
+        {
+          "name": "context_id",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "context_type",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        },
+        {
+          "name": "name",
+          "in": "path",
+          "required": true,
+          "type": "string"
+        }
+      ]
+    },
+    "/api/v2/{context_type}/{context_id}/graphs/{name}/input_vars/": {
+      "get": {
+        "operationId": "api_v2_graphs_input_vars_read",
+        "summary": "Graphs Input vars Read",
+        "description": "\u0412\u043e\u0437\u0432\u0440\u0430\u0449\u0430\u0435\u0442 \u043f\u0435\u0440\u0435\u043c\u0435\u043d\u043d\u044b\u0435 \u0438\u0437 \u043f\u043e\u043b\u044f Input, \u043a\u043e\u0442\u043e\u0440\u044b\u0445 \u043d\u0435\u0442 \u0432 output \u0438 static_data",
+        "parameters": [
+          {
+            "name": "version",
+            "in": "query",
+            "description": "\u0412\u0435\u0440\u0441\u0438\u044f \u0433\u0440\u0430\u0444\u0430",
+            "required": false,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "schema": {
+              "$ref": "#/definitions/GraphMain"
             }
           }
         },

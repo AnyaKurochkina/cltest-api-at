@@ -1,7 +1,7 @@
 {
   "model_name": "ForbiddenAction",
   "ForbiddenAction": {
-    "id": 1030,
+    "id": 1319,
     "context_restrictions": [],
     "event_type_provider": [
       {
@@ -9,20 +9,20 @@
         "event_provider": "s3"
       }
     ],
-    "name": "xjctcs_api_test__parent_to_child",
+    "name": "pzxqpr_api_test__parent_to_child",
     "title": "import_forbidden_action_test_api",
     "description": "Description",
     "item_restriction": "string",
     "object_info": "",
     "direction": "parent_to_child",
-    "action_id": "286eaf99-d463-45e2-913e-43cb4b4501bf",
-    "action": "286eaf99-d463-45e2-913e-43cb4b4501bf"
+    "action_id": "4e624430-b6b1-42b1-be88-cdfe7e878e64",
+    "action": "4e624430-b6b1-42b1-be88-cdfe7e878e64"
   },
   "rel_foreign_models": {
     "action": {
       "model_name": "Action",
       "Action": {
-        "graph_id": "4aae300a-7000-484d-a6ce-1215909beb12",
+        "graph_id": "b11ee716-5539-4403-b7ee-2d0dbc630092",
         "multiple": false,
         "priority": 0,
         "extra_data": {},
@@ -51,7 +51,7 @@
             "event_provider": "s3"
           }
         ],
-        "name": "xjctcs_api_test",
+        "name": "pzxqpr_api_test",
         "title": "AT API Action",
         "description": "desc",
         "number": 50,
@@ -90,7 +90,7 @@
             "printed_output": {},
             "lock_order_on_error": false,
             "damage_order_on_error": false,
-            "name": "mkuvfp_api_test",
+            "name": "lvvjgl_api_test",
             "title": "AT API Graph",
             "description": "for at tests",
             "type": "action",
@@ -114,30 +114,30 @@
   },
   "exported_objects": {
     "Graph": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"mkuvfp_api_test\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"lvvjgl_api_test\", \"version\": \"1.0.0\"}": [
         {
           "graph_version": "LAST",
           "last_version_str": "1.0.0",
           "model_name": "Action",
-          "name": "xjctcs_api_test",
+          "name": "pzxqpr_api_test",
           "version": "1.0.0"
         }
       ]
     },
     "Action": {
-      "{\"last_version_str\": \"1.0.0\", \"name\": \"xjctcs_api_test\", \"version\": \"1.0.0\"}": [
+      "{\"last_version_str\": \"1.0.0\", \"name\": \"pzxqpr_api_test\", \"version\": \"1.0.0\"}": [
         {
           "action_version": "LAST",
           "model_name": "ForbiddenAction",
-          "name": "xjctcs_api_test__parent_to_child"
+          "name": "pzxqpr_api_test__parent_to_child"
         }
       ]
     },
     "ForbiddenAction": {
-      "{\"name\": \"xjctcs_api_test__parent_to_child\"}": []
+      "{\"name\": \"pzxqpr_api_test__parent_to_child\"}": []
     }
   },
   "dump_version": 5.0,
-  "dump_date": "2024-02-07 19:14:32",
+  "dump_date": "2024-02-15 14:39:57",
   "is_pinned_versions": false
 }

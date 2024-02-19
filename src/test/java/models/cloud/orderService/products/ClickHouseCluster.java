@@ -49,8 +49,6 @@ public class ClickHouseCluster extends IProduct {
         jsonTemplate = "/orders/clickhouse_cluster.json";
         productName = "ClickHouse Cluster";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (chCustomerAdmin == null)
             chCustomerAdmin = "portal_admin";
         if (chCustomerAdminPassword == null)
@@ -63,6 +61,8 @@ public class ClickHouseCluster extends IProduct {
             chVersion = getRandomProductVersionByPathEnum("ch_version.default.split()");
         if(segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if(platform == null)

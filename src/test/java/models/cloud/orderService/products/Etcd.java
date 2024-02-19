@@ -37,10 +37,10 @@ public class Etcd extends IProduct {
         jsonTemplate = "/orders/etcd.json";
         productName = "Etcd";
         initProduct();
-        if (osVersion == null)
-            osVersion = getRandomOsVersion();
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
@@ -84,7 +84,7 @@ public class Etcd extends IProduct {
                 .set("$.order.project_name", project.id)
                 .set("$.order.label", getLabel())
                 .set("$.order.attrs.on_support", getSupport())
-                .add("$.order.attrs.etcd_extra_mounts", backupMountPoint)
+                .add("$.order.attrs.etcd_extra_mounts", isDev() ? backupMountPoint : null)
 //                .set("$.order.attrs.tarantool_version", getTarantoolVersion())
 //                .set("$.order.attrs.layout", getIdGeoDistribution("rps-2000"))
                 .build();

@@ -1,6 +1,7 @@
 package api.cloud.productCatalog.graph;
 
 import core.helper.StringUtils;
+import core.helper.http.QueryBuilder;
 import core.helper.http.Response;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -70,7 +71,7 @@ public class GraphTest extends GraphBaseTest {
     @Test
     public void getGraphByIdAndVersionFieldsTest() {
         Graph graph = createGraph("graph_get_by_id_and_version_fields_test_api");
-        Graph getGraph = getGraphByIdAndFilter(graph.getGraphId(), "with_version_fields=true");
+        Graph getGraph = getGraphByIdWithQueryParams(graph.getGraphId(), new QueryBuilder().add("with_version_fields", true));
         assertFalse(getGraph.getVersionFields().isEmpty());
     }
 

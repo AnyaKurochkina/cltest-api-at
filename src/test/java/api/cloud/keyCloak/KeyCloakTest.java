@@ -19,7 +19,7 @@ import steps.keyCloak.KeyCloakSteps;
 public class KeyCloakTest extends Tests {
 
     @Test
-    @TmsLink("376589")
+    @TmsLink("SOUL-6526")
     @DisplayName("Получение токена")
     void getUserToken() {
         KeyCloakSteps.getUserToken(Role.ORDER_SERVICE_ADMIN);

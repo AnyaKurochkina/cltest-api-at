@@ -45,9 +45,6 @@ public class RedisSentinel extends IProduct {
         if (appUser == null)
             appUser = "appuser";
         initProduct();
-        if (osVersion == null) {
-            osVersion = getRandomOsVersion();
-        }
         if (appUserPassword == null) {
             appUserPassword = "8AEv023pMDHVw1w4zZZE23HjPAKmVDvdtpK8Qddme94VJBHKhgy";
         }
@@ -55,6 +52,8 @@ public class RedisSentinel extends IProduct {
             redisVersion = getRandomProductVersionByPathEnum("redis_version.enum");
         if (segment == null)
             setSegment(OrderServiceSteps.getNetSegment(this));
+        if (osVersion == null)
+            osVersion = getRandomOsVersion();
         if (availabilityZone == null)
             setAvailabilityZone(OrderServiceSteps.getAvailabilityZone(this));
         if (platform == null)
@@ -165,5 +164,10 @@ public class RedisSentinel extends IProduct {
                 .data(new JSONObject().put("user_name", user)).build());
         Assertions.assertFalse((Boolean) OrderServiceSteps.getProductsField(
                 this, String.format(USERNAME_PATH, user)), String.format("Пользователь %s найден", user));
+    }
+
+    @Step("Redis. Обновить ОС")
+    public void updateOsStandalone() {
+        OrderServiceSteps.runAction(ActionParameters.builder().name("update_os_redis_sentinel").product(this).build());
     }
 }

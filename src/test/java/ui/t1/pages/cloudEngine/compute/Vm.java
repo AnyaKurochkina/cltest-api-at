@@ -26,7 +26,12 @@ public class Vm extends IProductT1Page<Vm> {
         return new Disk();
     }
 
-    @Step("Подключить {ip}")
+    @Step("Виртуальная машина. Получение имени системного диска")
+    public String getSystemDiskName() {
+        return new Disk.DiskInfo().getRowByColumnValue(Column.SYSTEM, "Да").getValueByColumn(Column.NAME);
+    }
+
+    @Step("Виртуальная машина. Подключить {ip}")
     public void attachIp(String ip) {
         runActionWithParameters(BLOCK_PARAMETERS, "Подключить публичный IP", "Подтвердить", () -> {
             Waiting.sleep(2000);
@@ -36,25 +41,25 @@ public class Vm extends IProductT1Page<Vm> {
         });
     }
 
-    @Step("Остановить ВМ")
+    @Step("Виртуальная машина. Остановить ВМ")
     public void stop() {
         runActionWithoutParameters(BLOCK_PARAMETERS, "Остановить");
         checkPowerStatus(VirtualMachine.POWER_STATUS_OFF);
     }
 
-    @Step("Запустить ВМ")
+    @Step("Виртуальная машина. Запустить ВМ")
     public void start() {
         runActionWithoutParameters(BLOCK_PARAMETERS, "Запустить");
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
     }
 
-    @Step("Изменить конфигурацию ВМ")
+    @Step("Виртуальная машина. Изменить конфигурацию ВМ")
     public void resize(String flavorName) {
         runActionWithParameters(BLOCK_PARAMETERS, "Изменить конфигурацию", "Подтвердить",
                 () -> new VmCreate().setFlavorName(flavorName));
     }
 
-    @Step("Проверка подключения к консоли")
+    @Step("Виртуальная машина. Проверка подключения к консоли")
     public void checkConsole() {
         Button console = Button.byText("Консоль");
         console.click();
@@ -75,6 +80,28 @@ public class Vm extends IProductT1Page<Vm> {
 
     public NetworkInterfaceList.Menu getNetworkMenu() {
         return new NetworkInterfaceList().getMenuNetworkInterface(new NetworkInfo().getRow(0).get().$("button"));
+    }
+
+    public void delete(boolean deleteOnTerminationIp, String... disks) {
+        switchProtectOrder(false);
+        runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Удалить", () ->
+        {
+            Dialog dlgActions = Dialog.byTitle("Удаление");
+            dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
+            if (disks.length > 0) {
+                CheckBox.byLabel("Выбрать диски для удаления").setChecked(true);
+                for (String disk : disks)
+                    Select.byLabel("Удаление дисков").set(disk);
+            }
+            if (deleteOnTerminationIp)
+                CheckBox.byLabel("Удалить публичные IP-адреса").setChecked(true);
+        });
+        Waiting.find(() -> new TopInfo().getPowerStatus().equals(Disk.TopInfo.POWER_STATUS_DELETED), Duration.ofSeconds(60));
+    }
+
+    @Override
+    public void delete() {
+        delete(false, getSystemDiskName());
     }
 
     public String getLocalIp() {

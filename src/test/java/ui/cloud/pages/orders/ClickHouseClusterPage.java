@@ -96,12 +96,12 @@ public class ClickHouseClusterPage extends IProductPage {
         Selenide.open(url);
         inputWindow.setValue("show databases");
         signIn(getNameAD(), getUserPasswordFullRight());
-        successfulСheck.shouldBe(Condition.visible);
+        successfulСheck.shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 
     private void signIn(String user, String password) {
-        usernameInput.shouldBe(Condition.visible).setValue(user);
-        passwordInput.shouldBe(Condition.visible).setValue(password);
+        usernameInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).setValue(user);
+        passwordInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).setValue(password);
         start.click();
     }
 

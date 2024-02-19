@@ -6,9 +6,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import models.cloud.feedService.action.EventTypeProvider;
 import models.cloud.productCatalog.action.Action;
-import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collections;
@@ -18,10 +16,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ActionSteps.createAction;
 import static steps.productCatalog.ActionSteps.getActionById;
 
-@Tag("product_catalog")
 @Epic("Продуктовый каталог")
 @Feature("Действия")
-@DisabledIfEnv("prod")
 public class ActionCreateWithEventTypeProviderTest extends ActionBaseTest {
 
     @DisplayName("Создание action c event_type_provider из списка справочника")

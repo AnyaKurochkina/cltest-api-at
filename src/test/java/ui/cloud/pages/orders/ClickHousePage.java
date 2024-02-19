@@ -20,7 +20,7 @@ import static ui.elements.TypifiedElement.scrollCenter;
 public class ClickHousePage extends IProductPage {
     private static final String BLOCK_APP = "Приложение";
     private static final String BLOCK_VM = "Виртуальная машина";
-    private static final String HEADER_DB_OWNER = "at_user";
+    private static final String HEADER_DB_OWNER = "at_ad_user";
     private static final String HEADER_DB_USERS = "ch_customer";
     private static final String HEADER_LIMIT_CONNECT = "Предел подключений";
     private static final String HEADER_DISK_SIZE = "Размер, ГБ";
@@ -245,8 +245,8 @@ public class ClickHousePage extends IProductPage {
     }
 
     private void signIn(String user, String password) {
-        usernameInput.shouldBe(Condition.visible).setValue(user);
-        passwordInput.shouldBe(Condition.visible).setValue(password);
+        usernameInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).setValue(user);
+        passwordInput.shouldBe(Condition.visible.because("Должно отображаться сообщение")).setValue(password);
         Selenide.$x("//button[@id='run']").click();
     }
 
@@ -263,7 +263,7 @@ public class ClickHousePage extends IProductPage {
         Selenide.open(url);
         Selenide.$x("//textarea[@id='query']").setValue("show databases");
         signIn(getNameAD(), getUserPasswordFullRight());
-        Selenide.$x("//span[contains(text(), '✔')]").shouldBe(Condition.visible);
+        Selenide.$x("//span[contains(text(), '✔')]").shouldBe(Condition.visible.because("Должно отображаться сообщение"));
     }
 
     public class VirtualMachineTable extends VirtualMachine {

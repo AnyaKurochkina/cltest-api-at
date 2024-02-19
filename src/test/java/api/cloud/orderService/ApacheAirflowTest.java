@@ -30,25 +30,20 @@ import static core.utils.AssertUtils.assertContains;
 public class ApacheAirflowTest extends Tests {
 
     private static void createPostgres(ApacheAirflow product) {
-        AbstractPostgreSQL postgreSQL;
-
         AbstractPostgreSQL abstractPostgreSQL = PostgreSQL.builder().env(product.getEnv()).build();
-        if ("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
-            abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
         abstractPostgreSQL.setSkip(product.isSkip());
-        postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess();
-        if (postgreSQL.deletedEntity()) {
-            postgreSQL.close();
-            return;
+        if (!product.isSkip()) {
+            if ("LT".equalsIgnoreCase(product.getEnv()) || product.isProd())
+                abstractPostgreSQL = PostgresSQLCluster.builder().env(product.getEnv()).build();
         }
-        try {
+        try (AbstractPostgreSQL postgreSQL = abstractPostgreSQL.createObjectExclusiveAccess()) {
+            if (postgreSQL.deletedEntity())
+                return;
             String dbName = "airflow";
             postgreSQL.createDb(dbName);
             product.setPgAdminPassword(postgreSQL.getAdminPassword());
             product.setDbServer(postgreSQL.pgcHost());
             product.setDbUser(new DbUser(dbName, dbName + "_admin"));
-        } finally {
-            postgreSQL.close();
         }
     }
 
@@ -129,9 +124,9 @@ public class ApacheAirflowTest extends Tests {
     @Source(ProductArgumentsProvider.PRODUCTS)
     @ParameterizedTest(name = "[{2}] Обновить ОС {0}")
     void updateOs(ApacheAirflow product, AbstractPostgreSQL ignore, Integer num) {
-        Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
         createPostgres(product);
         try (ApacheAirflow apacheAirflow = product.createObjectExclusiveAccess()) {
+            Assumptions.assumeFalse(product.isProd(), "Тест отключен для PROD среды");
             apacheAirflow.updateOs();
         }
     }
@@ -147,5 +142,4 @@ public class ApacheAirflowTest extends Tests {
             airflow.deleteObject();
         }
     }
-
 }

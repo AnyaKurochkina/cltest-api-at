@@ -10,11 +10,13 @@ import org.openqa.selenium.NotFoundException;
 import ui.cloud.tests.ActionParameters;
 import ui.elements.*;
 
+import java.time.Duration;
 import java.util.List;
 
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
+import static ui.cloud.pages.orders.RedisAstraOrderPage.userNameRedisSentinel;
 import static ui.elements.TypifiedElement.scrollCenter;
 
 public class RedisAstraPage extends AbstractAstraPage {
@@ -162,7 +164,7 @@ public class RedisAstraPage extends AbstractAstraPage {
         runActionWithParameters(BLOCK_APP, "Изменить конфигурацию", "Подтвердить", () -> {
             CheckBox.byLabel("Я соглашаюсь с перезагрузкой и прерыванием сервиса").setChecked(true);
             Select.byLabel("Конфигурация Core/RAM").set(NewOrderPage.getFlavor(maxFlavor));
-        });
+        }, ActionParameters.builder().timeout(Duration.ofHours(2)).build());
         btnGeneralInfo.click();
         Table table = new Table("Роли узла");
         table.getRowByIndex(0).click();
@@ -263,9 +265,9 @@ public class RedisAstraPage extends AbstractAstraPage {
                 "Неверный размер диска");
     }
 
-    public void resetPasswordUserDb(String nameUserDB) {
+    public void resetPasswordUserDb() {
         btnUsers.shouldBe(activeCnd).hover().shouldBe(clickableCnd).click();
-        runActionWithParameters(nameUserDB, "Сбросить пароль", "Подтвердить", () -> {
+        runActionWithParameters(userNameRedisSentinel, "Сбросить пароль", "Подтвердить", () -> {
             Dialog dlg = Dialog.byTitle("Сбросить пароль");
             generatePassButton.shouldBe(Condition.enabled).click();
             Alert.green("Значение скопировано");

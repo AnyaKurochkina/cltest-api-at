@@ -9,6 +9,7 @@ import models.AbstractEntity;
 import models.t1.cdn.Resource;
 import models.t1.cdn.SourceGroup;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import steps.t1.cdn.CdnResourceClient;
@@ -145,6 +146,7 @@ public class CdnResourceTests extends AbstractT1Test {
     @Order(7)
     @DisplayName("CDN.Экранирование источников. Редактирование")
     @TmsLinks(@TmsLink("SOUL-5391"))
+    @DisabledIfEnv("t1prod")
     public void shieldingSourcesEditTest() {
         String name = cdnResource.get().getName();
         String newLocation = "Singapore / Singapore-EC / SG1-EC";

@@ -1,14 +1,14 @@
 package steps.productCatalog;
 
 import core.enums.Role;
+import core.helper.Page;
 import core.helper.StringUtils;
 import core.helper.http.Http;
+import core.helper.http.QueryBuilder;
 import core.helper.http.Response;
 import io.qameta.allure.Step;
-import io.restassured.path.json.JsonPath;
 import models.AbstractEntity;
 import models.cloud.productCatalog.ImportObject;
-import models.cloud.productCatalog.Meta;
 import models.cloud.productCatalog.graph.GetGraphList;
 import models.cloud.productCatalog.graph.Graph;
 import org.json.JSONObject;
@@ -20,69 +20,37 @@ import java.util.List;
 import static core.helper.Configure.productCatalogURL;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static steps.productCatalog.ProductCatalogSteps.getProductCatalogAdmin;
-import static tests.routes.GraphProductCatalogApi.apiV1GraphsCreate;
-import static tests.routes.GraphProductCatalogApi.apiV1GraphsRead;
+import static tests.routes.GraphProductCatalogApi.*;
+import static tests.routes.GraphProductCatalogApiV2.*;
 
 public class GraphSteps extends Steps {
 
     private static final String graphUrl = "/api/v1/graphs/";
-    private static final String graphUrl2 = "/api/v2/graphs/";
 
     @Step("Получение списка Графов продуктового каталога")
     public static List<Graph> getGraphList() {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl)
-                .compareWithJsonSchema("jsonSchema/getGraphListSchema.json")
-                .assertStatus(200)
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsList)
                 .extractAs(GetGraphList.class).getList();
     }
 
     @Step("Получение Meta данных списка графов продуктового каталога")
-    public static Meta getMetaGraphList() {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl)
-                .compareWithJsonSchema("jsonSchema/getGraphListSchema.json")
-                .assertStatus(200)
+    public static Page.Meta getMetaGraphList() {
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsList)
                 .extractAs(GetGraphList.class).getMeta();
     }
 
     @Step("Получение массива объектов использующих граф")
-    public static JsonPath getObjectArrayUsedGraph(String id) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + id + "/used/")
-                .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
-                .assertStatus(200).jsonPath();
+    public static Response getObjectArrayUsedGraph(String id) {
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsUsedRead, id);
     }
 
-    @Step("Получение массива объектов определенного типа использующих граф")
-    public static Response getObjectTypeUsedGraph(String id, String... objType) {
-        String types = String.join(",", objType);
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + id + "/used/?obj_type=" + types)
-                .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
-                .assertStatus(200);
-    }
-
-    @Step("Получение списка последних созданных объектов использующих граф")
-    public static Response getLastObjectUsedGraph(String id) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + id + "/used/?last_object=true")
-                .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
-                .assertStatus(200);
-    }
-
-    @Step("Получение списка последних версий объектов использующих граф")
-    public static Response getLastVersionUsedGraph(String id) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + id + "/used/?last_version=true")
-                .compareWithJsonSchema("jsonSchema/usedGraphListSchema.json")
-                .assertStatus(200);
+    @Step("Получение массива объектов использующих граф c query параметром {query}")
+    public static Response getObjectArrayUsedGraph(String id, QueryBuilder query) {
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsUsedRead, id, query);
     }
 
     @Step("Частичное обновление графа")
@@ -94,8 +62,8 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Частичное обновление графа в контексте")
-    public static Response partialUpdateGraphInContext(String id, JSONObject object, String projectId) {
-        return new Http(productCatalogURL)
+    public static void partialUpdateGraphInContext(String id, JSONObject object, String projectId) {
+        new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .body(object)
                 .patch("/api/v1/projects/{}/graphs/{}/", projectId, id);
@@ -103,12 +71,10 @@ public class GraphSteps extends Steps {
 
     @Step("Частичное обновление графа по имени {name}")
     public static void partialUpdateGraphByName(String name, JSONObject object) {
-        new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        getProductCatalogAdmin()
                 .body(object)
-                .patch(graphUrl2 + name + "/");
+                .api(apiV2GraphsPartialUpdate, name);
     }
-
 
     @Step("Создание графа")
     public static Response createGraph(JSONObject body) {
@@ -165,17 +131,15 @@ public class GraphSteps extends Steps {
 
     @Step("Получение графа по имени {name}")
     public static Graph getGraphByName(String name) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl2 + name + "/")
+        return getProductCatalogAdmin()
+                .api(apiV2GraphsRead, name)
                 .extractAs(Graph.class);
     }
 
-    @Step("Получение графа по Id и фильтру {filter}")
-    public static Graph getGraphByIdAndFilter(String objectId, String filter) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + objectId + "/?{}", filter)
+    @Step("Получение графа по Id и query параметрами {queryBuilder}")
+    public static Graph getGraphByIdWithQueryParams(String graphId, QueryBuilder queryBuilder) {
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsRead, graphId, queryBuilder)
                 .extractAs(Graph.class);
     }
 
@@ -191,26 +155,21 @@ public class GraphSteps extends Steps {
 
     @Step("Проверка существования графа по имени {name}")
     public static boolean isGraphExists(String name) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .get(graphUrl + "exists/?name=" + name)
-                .assertStatus(200).jsonPath().get("exists");
+        return getProductCatalogAdmin()
+                .api(apiV1GraphsExists, new QueryBuilder().add("name", name))
+                .jsonPath().get("exists");
     }
 
-    @Step("Удаление графа по Id")
-    public static void deleteGraphById(String objectId) {
-        new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(graphUrl + objectId + "/")
-                .assertStatus(204);
+    @Step("Удаление графа по Id {graphId}")
+    public static void deleteGraphById(String graphId) {
+        getProductCatalogAdmin()
+                .api(apiV1GraphsDelete, graphId);
     }
 
     @Step("Удаление графа по имени {name}")
     public static void deleteGraphByName(String name) {
-        new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .delete(graphUrl2 + name + "/")
-                .assertStatus(204);
+        getProductCatalogAdmin()
+                .api(apiV2GraphsDelete, name);
     }
 
     @Step("Удаление графа по Id в контексте")
@@ -230,10 +189,8 @@ public class GraphSteps extends Steps {
 
     @Step("Импорт графа")
     public static ImportObject importGraph(String pathName) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
+        return getProductCatalogAdmin()
                 .multiPart(graphUrl + "obj_import/", "file", new File(pathName))
-                .compareWithJsonSchema("jsonSchema/importResponseSchema.json")
                 .jsonPath()
                 .getList("imported_objects", ImportObject.class)
                 .get(0);
@@ -334,11 +291,10 @@ public class GraphSteps extends Steps {
 
     @Step("Копирование графа по имени {name}")
     public static Graph copyGraphByName(String name) {
-        return new Http(productCatalogURL)
-                .setRole(Role.PRODUCT_CATALOG_ADMIN)
-                .post(graphUrl2 + name + "/copy/")
-                .assertStatus(201)
-                .extractAs(Graph.class);
+        return getProductCatalogAdmin()
+                .api(apiV2GraphsCopy, name)
+                .extractAs(Graph.class)
+                .deleteMode(AbstractEntity.Mode.AFTER_TEST);
     }
 
     @Step("Копирование графа по Id в контексте")
@@ -478,6 +434,14 @@ public class GraphSteps extends Steps {
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)
                 .get(graphUrl + "?" + filters)
                 .assertStatus(200)
+                .extractAs(GetGraphList.class)
+                .getList();
+    }
+
+    @Step("Получение списков Input Output графа")
+    public static List<Graph> getGraphInputOutputs(String graphName) {
+        return getProductCatalogAdmin()
+                .api(apiV2GraphsInputVars, graphName)
                 .extractAs(GetGraphList.class)
                 .getList();
     }

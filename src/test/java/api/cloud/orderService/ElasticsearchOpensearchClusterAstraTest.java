@@ -39,9 +39,9 @@ public class ElasticsearchOpensearchClusterAstraTest extends Tests {
     @EnabledIfEnv({"prod", "blue"})
     @ParameterizedTest(name = "[{1}] Заказ на быстрых дисках {0}")
     void checkDiskVm(ElasticsearchOpensearchCluster product, Integer num) {
-        List<String> envs = Arrays.asList("LT", "DEV", "PROD");
-        Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
         try (ElasticsearchOpensearchCluster elastic = product.createObjectExclusiveAccess()) {
+            List<String> envs = Arrays.asList("LT", "DEV", "PROD");
+            Assumptions.assumeTrue(envs.contains(product.getEnv()), "Тест только для сред " + Arrays.toString(envs.toArray()));
             String type = (elastic.getEnv().equals("LT") || elastic.getEnv().equals("PROD")) ? "nvme" : "ssd";
             elastic.checkVmDisk(new HashMap<String, String>() {{
                 put("master", type);
