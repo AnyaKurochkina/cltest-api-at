@@ -58,7 +58,7 @@ public class VirtualIpCreate {
     }
 
     public VirtualIpCreate setInternet(Boolean internet) {
-        Switch.byText("Разрешить доступ в Интернет").setEnabled(internet);
+        Switch.byText("Разрешить доступ из Интернет").setEnabled(internet);
         this.internet = internet;
         return this;
     }
