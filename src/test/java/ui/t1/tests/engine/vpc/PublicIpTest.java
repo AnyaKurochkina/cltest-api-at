@@ -102,7 +102,7 @@ public class PublicIpTest extends AbstractComputeTest {
     @Test
     @TmsLink("1249440")
     @Order(100)
-    @DisplayName("Cloud VPC. Публичные IP-адреса. Освободить")
+    @DisplayName("Cloud VPC. Публичные IP-адреса. Удалить")
     void deleteIp() {
         String ip = openIp();
         PublicIp ipPage = new PublicIp();
