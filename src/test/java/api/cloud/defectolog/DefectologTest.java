@@ -109,6 +109,7 @@ public class DefectologTest extends AbstractDefectologTest {
             startTaskWidthGroups("LINK-DUPLICATED-ATTRS-VALUES");
             int defectId = findDefectIdByInternalName("LINK-DUPLICATED-ATTRS-VALUES", getDateFromFilter(inventories.get(0), ctx));
             List<Defect.DefectPages> defectPages = DefectologSteps.defectsRead(defectId).getDefectPages();
+            // либо страница одна и не содержит inventories, либо страниц не создается
             if (!defectPages.isEmpty())
                 AssertUtils.assertNotContainsList(DefectologSteps.defectPagesRead(defectPages.get(0).getId()).getPatients(),
                         inventories.get(0).getId(), inventories.get(1).getId());
