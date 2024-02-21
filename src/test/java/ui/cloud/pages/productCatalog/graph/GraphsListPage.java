@@ -56,7 +56,7 @@ public class GraphsListPage extends EntityListPage {
     @Step("Проверка, что граф '{graph.name}' найден при поиске по значению '{value}'")
     public GraphsListPage checkGraphFoundByValue(String value, Graph graph) {
         search(value);
-        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, graph.getName()), "Граф найден");
+        new Table(nameColumn).asserts().checkColumnValueEquals(nameColumn, graph.getName());
         return this;
     }
 

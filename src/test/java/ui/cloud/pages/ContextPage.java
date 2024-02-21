@@ -8,6 +8,7 @@ import ui.elements.Tab;
 import static api.Tests.activeCnd;
 import static api.Tests.clickableCnd;
 import static core.helper.StringUtils.$x;
+import static core.helper.StringUtils.format;
 
 public class ContextPage {
 
@@ -30,7 +31,8 @@ public class ContextPage {
     @Step("Выбор контекста '{value}'")
     public ContextPage setContext(String value) {
         Tab.byText("Все").switchTo();
-        $x("(//div[@role='dialog']//div[text()='{}'])[1]", value).hover().shouldBe(Condition.enabled).click();
+        $x("(//div[@role='dialog']//div[text()='{}'])[1]", value).hover()
+                .shouldBe(Condition.enabled.because(format("Отображается элемент орг. структуры '{}'", value))).click();
         return this;
     }
 

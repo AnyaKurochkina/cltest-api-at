@@ -282,22 +282,30 @@ public class Table implements TypifiedElement {
 
     public class Asserts {
 
-        @Step("[Проверка] Колонка: {0}, содержит значение: {1}")
+        @Step("[Проверка] Колонка: {0} содержит значение: {1}")
         public void checkColumnContainsValue(String column, String value) {
             String errorMessage;
             errorMessage = column.isEmpty()
-                    ? String.format("Колонка, должна содержать значение: %s", value)
-                    : String.format("Колонка с именем: %s, должна содержать значение: %s", column, value);
+                    ? String.format("Колонка должна содержать значение: %s", value)
+                    : String.format("Колонка с именем: %s должна содержать значение: %s", column, value);
             Assertions.assertTrue(isColumnValueContains(column, value), errorMessage);
         }
 
-        @Step("[Проверка] Колонка: {0}, не содержит значение: {1}")
+        @Step("[Проверка] Колонка: {0} не содержит значение: {1}")
         public void checkColumnNotContainsValue(String column, String value) {
             String errorMessage;
             errorMessage = column.isEmpty()
-                    ? String.format("Колонка, не должна содержать значение: %s", value)
-                    : String.format("Колонка с именем: %s, не должна содержать значение: %s", column, value);
+                    ? String.format("Колонка не должна содержать значение: %s", value)
+                    : String.format("Колонка с именем: %s не должна содержать значение: %s", column, value);
             Assertions.assertFalse(isColumnValueContains(column, value), errorMessage);
+        }
+
+        @Step("[Проверка] Колонка '{0}' содержит значение, равное '{1}'")
+        public void checkColumnValueEquals(String column, String value) {
+            String errorMessage = column.isEmpty()
+                    ? String.format("Колонка должна содержать значение '%s'", value)
+                    : String.format("Колонка с именем '%s' должна содержать значение, равное '%s'", column, value);
+            Assertions.assertTrue(isColumnValueEquals(column, value), errorMessage);
         }
     }
 }

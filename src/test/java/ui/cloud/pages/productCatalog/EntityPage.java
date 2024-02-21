@@ -166,7 +166,7 @@ public class EntityPage {
 
     @Step("Поднятие версии и сохранение")
     public EntityPage increaseVersionAndSave(String nextVersion, String alertText) {
-        increaseVersionIcon.click();
+        increaseVersionIcon.shouldBe(Condition.enabled.because("Отображается иконка поднятия версии")).click();
         new SaveDialog().checkNextVersionAndSave(nextVersion, alertText);
         return this;
     }
