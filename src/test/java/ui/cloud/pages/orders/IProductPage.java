@@ -255,7 +255,7 @@ public abstract class IProductPage {
     public void checkErrorByStatus(OrderStatus status) {
         if (status.equals(OrderStatus.ERROR)) {
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s",
-                    product, status, StateServiceSteps.getErrorFromStateService(product.getOrderId())));
+                    product, status, StateServiceSteps.getErrorFromStateService(product.getProjectId(), product.getOrderId())));
         } else if (status.equals(OrderStatus.BLOCKED)) {
             Assertions.fail("Продукт в статусе заблокирован");
         } else log.info("Статус действия {}", status);
