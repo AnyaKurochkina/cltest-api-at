@@ -121,12 +121,12 @@ public class GraphNodesPage extends GraphPage {
             sourceTypeSelect.set(TEMPLATE.getDisplayName());
             sourceSelect.setContains(template.getName());
             Waiting.sleep(2000);
+            additionalTab.click();
+            runOnRollbackSwitch.setEnabled(node.getRunOnRollback());
         }
-        additionalTab.click();
         countInput.setValue(String.valueOf(node.getCount()));
         conditionInput.setValue(node.getCondition());
         onPrebillingSwitch.setEnabled(node.getOnPrebilling());
-        runOnRollbackSwitch.setEnabled(node.getRunOnRollback());
         holdSwitch.setEnabled(node.getHold());
         isSequentialSwitch.setEnabled(node.getIsSequential());
         damageOrderOnErrorSwitch.setEnabled(node.getDamageOrderOnError());
@@ -273,7 +273,8 @@ public class GraphNodesPage extends GraphPage {
         countInput.getInput().shouldHave(Condition.exactValue(node.getCount()));
         conditionInput.getInput().shouldHave(Condition.exactValue(node.getCondition()));
         assertEquals(node.getOnPrebilling(), onPrebillingSwitch.isEnabled());
-        assertEquals(node.getRunOnRollback(), runOnRollbackSwitch.isEnabled());
+        if (node.getSourceType().equals(TEMPLATE.getValue()))
+            assertEquals(node.getRunOnRollback(), runOnRollbackSwitch.isEnabled());
         assertEquals(node.getHold(), holdSwitch.isEnabled());
         assertEquals(node.getIsSequential(), isSequentialSwitch.isEnabled());
         assertEquals(node.getDamageOrderOnError(), damageOrderOnErrorSwitch.isEnabled());

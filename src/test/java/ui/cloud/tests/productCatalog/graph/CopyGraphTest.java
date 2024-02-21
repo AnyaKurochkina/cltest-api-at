@@ -15,7 +15,7 @@ public class CopyGraphTest extends GraphBaseTest {
     public void copyGraph() {
         String copyName = NAME + "-clone";
         new ControlPanelIndexPage().goToGraphsPage()
-                .findGraphByValue(NAME, graph)
+                .checkGraphFoundByValue(NAME, graph)
                 .copyGraph(NAME);
         graph.setName(copyName);
         new ControlPanelIndexPage()

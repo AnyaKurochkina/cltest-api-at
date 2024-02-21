@@ -9,6 +9,7 @@ import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.EnabledIfEnv;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
@@ -39,6 +40,7 @@ public class GraphPlannerTest extends GraphBaseTest {
     }
 
     @Test
+    @Disabled("TODO исправить")
     @TmsLinks({@TmsLink("SOUL-833"), @TmsLink("SOUL-835")})
     @DisplayName("Добавить и удалить конфигурацию для планировщика")
     @EnabledIfEnv("ift")

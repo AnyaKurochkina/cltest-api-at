@@ -43,7 +43,6 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     private final SelenideElement cpu = $x("(//h5)[1]");
     private final SelenideElement ram = $x("(//h5)[2]");
     private final SelenideElement max_connections = $x("//div[.='max_connections']//following::p[1]");
-    private final SelenideElement currentProduct = $x("(//span/preceding-sibling::a[text()='Интеграция приложений' or text()='Базовые вычисления' or text()='Контейнеры' or text()='Базы данных' or text()='Инструменты DevOps' or text()='Логирование' or text()='Объектное хранилище' or text()='Веб-приложения' or text()='Управление секретами' or text()='Сетевые службы']/parent::div/following-sibling::div/a)[1]");
     private final SelenideElement default_transaction_isolation = $x("//div[.='default_transaction_isolation']//following::p[1]");
     private final String accessGroup = product.accessGroup();
 
@@ -341,21 +340,21 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         }
     }
 
-    public SelenideElement getRoleNode() {
+    public SelenideElement getVMElement() {
         return new Table("Роли узла").getRow(0).get();
     }
 
     @Step("Добавить новые группы {group} с ролью {role}")
     public void addGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithParameters("Роли", "Добавить группу доступа", "Подтвердить", () -> {
             Select.byLabel("Роль").setContains(role);
             groups.forEach(group -> Select.byLabel("Группы").set(group));
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         btnGeneralInfo.click(); // для задержки иначе не отрабатывает 305 строка
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
@@ -364,14 +363,14 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     @Step("Изменить состав групп у роли {role} на {groups}")
     public void updateGroup(String role, List<String> groups) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         runActionWithParameters(new RoleTable().getRoleMenuElement(role), "Изменить состав группы", "Подтвердить", () -> {
             Select groupsElement = Select.byLabel("Группы").clear();
             groups.forEach(groupsElement::set);
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         groups.forEach(group -> Assertions.assertTrue(new RoleTable().getGroupsRole(role).contains(group), "Не найдена группа " + group));
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
     }
@@ -379,11 +378,11 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
     @Step("Удалить группу доступа с ролью {role}")
     public void deleteGroup(String role) {
         checkPowerStatus(VirtualMachine.POWER_STATUS_ON);
-        getRoleNode().scrollIntoView(scrollCenter).click();
-        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().waitChangeStatus(false).node(getRoleNode()).build());
+        getVMElement().scrollIntoView(scrollCenter).click();
+        runActionWithoutParameters(new RoleTable().getRoleMenuElement(role), "Удалить группу доступа", ActionParameters.builder().waitChangeStatus(false).node(getVMElement()).build());
         btnGeneralInfo.click();
         mainItemPage.scrollIntoView(scrollCenter).shouldBe(clickableCnd).click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         Assertions.assertFalse(getActionsMenuButton(accessGroup).exists(), "Ошибка удаления админ группы");
     }
 
@@ -396,7 +395,7 @@ public class PostgreSqlClusterAstraPage extends IProductPage {
         @Override
         protected void open() {
             btnGeneralInfo.click();
-            getRoleNode().scrollIntoView(scrollCenter).click();
+            getVMElement().scrollIntoView(scrollCenter).click();
         }
 
         private SelenideElement getRoleMenuElement(String name) {

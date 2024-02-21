@@ -37,7 +37,7 @@ public class OpenMessagingAstraPage extends IProductPage {
             dlgActions.setInputValue("Идентификатор", dlgActions.getDialog().find("b").innerText());
         });
     }
-    public SelenideElement getRoleNode() {
+    public SelenideElement getVMElement() {
         return new Table("Роли узла").getRow(0).get();
     }
 

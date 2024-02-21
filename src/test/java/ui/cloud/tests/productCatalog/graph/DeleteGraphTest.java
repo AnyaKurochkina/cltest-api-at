@@ -33,7 +33,7 @@ public class DeleteGraphTest extends GraphBaseTest {
     @DisplayName("Удаление графа из списка")
     public void deleteGraphFromList() {
         new ControlPanelIndexPage().goToGraphsPage()
-                .findGraphByValue(NAME, graph)
+                .checkGraphFoundByValue(NAME, graph)
                 .deleteGraph(NAME)
                 .checkGraphNotFound(NAME);
     }
@@ -70,7 +70,7 @@ public class DeleteGraphTest extends GraphBaseTest {
                 .build()
                 .createObject();
         new ControlPanelIndexPage().goToGraphsPage()
-                .findGraphByValue(NAME, graph)
+                .checkGraphFoundByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
                 .checkDeleteUsedGraphUnavailable();
     }
@@ -99,7 +99,7 @@ public class DeleteGraphTest extends GraphBaseTest {
         partialUpdateGraph(superGraph.getGraphId(), graphJSON);
         superGraph.setVersion("1.0.1");
         new ControlPanelIndexPage().goToGraphsPage()
-                .findGraphByValue(NAME, graph)
+                .checkGraphFoundByValue(NAME, graph)
                 .checkDeleteUsedGraphUnavailable(graph)
                 .checkDeleteUsedGraphUnavailable();
     }

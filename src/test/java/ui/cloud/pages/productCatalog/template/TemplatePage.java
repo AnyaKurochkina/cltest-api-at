@@ -39,7 +39,7 @@ public class TemplatePage extends EntityPage {
     private final SelenideElement templateNameValidationHint =
             $x("//div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final SelenideElement nonuniqueNameValidationHint =
-            nameInput.getInput().$x("following::div[text()='Шаблон с таким именем уже существует']");
+            nameInput.getInput().$x("following::div[text()='Шаблон узлов с таким именем уже существует']");
     private final String requiredFieldText = "Поле обязательно для заполнения";
     private final SelenideElement nameRequiredFieldHint =
             nameInput.getInput().$x("ancestor::div[2]//div[text()='" + requiredFieldText + "']");

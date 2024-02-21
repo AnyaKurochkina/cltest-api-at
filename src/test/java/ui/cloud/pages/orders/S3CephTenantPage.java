@@ -47,7 +47,7 @@ public class S3CephTenantPage extends IProductPage {
     protected void checkPowerStatus(String expectedStatus) {
     }
 
-    public SelenideElement getRoleNode() {
+    public SelenideElement getVMElement() {
         return new Table("Версионирование").getRow(0).get();
     }
 
@@ -65,8 +65,8 @@ public class S3CephTenantPage extends IProductPage {
 
     public void deleteBucket() {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
-        runActionWithoutParameters(BLOCK_PARAM, "Удалить бакет", ActionParameters.builder().node(getRoleNode()).build());
+        getVMElement().click();
+        runActionWithoutParameters(BLOCK_PARAM, "Удалить бакет", ActionParameters.builder().node(getVMElement()).build());
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getBtnGeneralInfo().click();
         Assertions.assertFalse(new Table(HEADER_NAME).isColumnValueEquals(HEADER_NAME, "de-plux-bucket"), "Ошибка удаления");
@@ -74,13 +74,13 @@ public class S3CephTenantPage extends IProductPage {
 
     public void changeSettingsBucket(String size) {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
+        getVMElement().click();
         runActionWithParameters(BLOCK_PARAM, "Изменить настройки бакета", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить настройки бакета");
             dlgActions.setInputValue("Макс. объем, ГБ", size);
             CheckBox.byLabel("Версионирование").setChecked(true);
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
         getBtnGeneralInfo().click();
         Assertions.assertTrue(new Table(HEADER_NAME).isColumnValueEquals(BLOCK_VERSION, "true"), "Ошибка изменения");
@@ -88,7 +88,7 @@ public class S3CephTenantPage extends IProductPage {
 
     public void addRuLifeCycle(String name, String size) {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
+        getVMElement().click();
         btnRule.click();
         runActionWithParameters(getActionsMenuButton("", 3), "Добавить правило жизненного цикла", "Подтвердить", () ->
         {
@@ -97,32 +97,32 @@ public class S3CephTenantPage extends IProductPage {
             dlgActions.setSelectValue("тип", "Expiration");
             RadioGroup.byLabel("Условие срабатывания").select("Кол-во дней");
             dlgActions.setInputValue("Кол-во дней", size);
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         generalInfoTab.switchTo();
-        getRoleNode().click();
+        getVMElement().click();
         btnRule.click();
         Assertions.assertTrue(new Table(HEADER_NAME_RULE).isColumnValueEquals(HEADER_NAME_RULE, name), "Ошибка добавления правила ");
     }
 
     public void changeRuLifeCycle(String prefix, String size) {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
+        getVMElement().click();
         btnRule.click();
         runActionWithParameters(getActionsMenuButton("", 4), "Изменить правило жизненного цикла", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить правило жизненного цикла");
             dlgActions.setInputValue("Кол-во дней", size);
 
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         generalInfoTab.switchTo();
-        getRoleNode().click();
+        getVMElement().click();
         btnRule.click();
         Assertions.assertTrue(new Table(HEADER_PREFIX).isColumnValueEquals("Кол-во дней", size), "Ошибка изменения правила ");
     }
 
     public void addCorsRule(String rule, String minute, String maxAge) {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
+        getVMElement().click();
         btnRuleCorse.click();
         runActionWithParameters(getActionsMenuButton("", 3), "Добавить cors", "Подтвердить", () ->
         {
@@ -130,47 +130,47 @@ public class S3CephTenantPage extends IProductPage {
             Input.byXpath("descendant::div/input").setValue("ruleCorse");
             CheckBox.byLabel("GET").setChecked(true);
             RadioGroup.byLabel("Access Control Max Age").select(minute);
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         generalInfoTab.switchTo();
-        getRoleNode().click();
+        getVMElement().click();
         btnRuleCorse.click();
         Assertions.assertTrue(new Table(HEADER_METHOD).isColumnValueEquals(HEADER_MAX_AGE, maxAge), "Ошибка изменения правила ");
     }
 
     public void changeCorsRule(String sec, String maxAge) {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
+        getVMElement().click();
         btnRuleCorse.click();
         runActionWithParameters(getActionsMenuButton("", 4), "Изменить правило CORS", "Подтвердить", () ->
         {
             Dialog dlgActions = Dialog.byTitle("Изменить правило CORS");
             CheckBox.byLabel("PUT").setChecked(true);
             RadioGroup.byLabel("Access Control Max Age").select(sec);
-        }, ActionParameters.builder().node(getRoleNode()).build());
+        }, ActionParameters.builder().node(getVMElement()).build());
         generalInfoTab.switchTo();
-        getRoleNode().click();
+        getVMElement().click();
         btnRuleCorse.click();
         Assertions.assertTrue(new Table(HEADER_METHOD).isColumnValueEquals(HEADER_MAX_AGE, maxAge), "Ошибка изменения правила ");
     }
 
     public void deleteCorsRule() {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
+        getVMElement().click();
         btnRuleCorse.click();
-        runActionWithoutParameters(getActionsMenuButton("", 4), "Удалить правило CORS", ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(getActionsMenuButton("", 4), "Удалить правило CORS", ActionParameters.builder().node(getVMElement()).build());
         generalInfoTab.switchTo();
-        getRoleNode().click();
+        getVMElement().click();
         btnRuleCorse.click();
         Assertions.assertTrue(new Table(HEADER_METHOD).isEmpty(), "Ошибка изменения правила ");
     }
 
     public void deleteRuLifeCycle() {
         new S3CephTenantPage.TopInfo().checkOrderStatus(OrderStatus.SUCCESS.getStatus());
-        getRoleNode().click();
+        getVMElement().click();
         btnRule.click();
-        runActionWithoutParameters(nameRuleLifeCycle, "Удалить правило жизненного цикла", ActionParameters.builder().node(getRoleNode()).build());
+        runActionWithoutParameters(nameRuleLifeCycle, "Удалить правило жизненного цикла", ActionParameters.builder().node(getVMElement()).build());
         generalInfoTab.switchTo();
-        getRoleNode().click();
+        getVMElement().click();
         btnRule.click();
         Assertions.assertFalse(new Table(HEADER_NAME_RULE).isColumnValueContains(HEADER_NAME_RULE, nameRuleLifeCycle), "Ошибка удаления правила ");
     }
@@ -249,7 +249,7 @@ public class S3CephTenantPage extends IProductPage {
         @Override
         protected void open() {
             generalInfoTab.switchTo();
-            getRoleNode().scrollIntoView(scrollCenter).click();
+            getVMElement().scrollIntoView(scrollCenter).click();
         }
 
         private SelenideElement getRoleMenuElement(String name) {

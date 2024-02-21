@@ -47,6 +47,7 @@ public class EntityPage {
             .$x("following::div[text()='Формат файла не поддерживается. Поддерживаемые форматы: png, jpeg, svg']");
     private final SelenideElement iconTooLargeHint = iconInput.getInput()
             .$x("following::div[text()='Размер не должен превышать 100 КБ']");
+    private final SelenideElement increaseVersionIcon = $x("//div[.='Выберите версию']/following::*[name()='svg'][2]");
 
     @Step("Сохранение объекта без изменения версии")
     public EntityPage saveWithoutPatchVersion(String alertText) {
@@ -161,5 +162,12 @@ public class EntityPage {
         new Table("Наименование").getRowByColumnValue("Наименование", name).get().$x(".//button")
                 .click();
         new Dialog("Удалить запись").clickButton("Удалить");
+    }
+
+    @Step("Поднятие версии и сохранение")
+    public EntityPage increaseVersionAndSave(String nextVersion, String alertText) {
+        increaseVersionIcon.shouldBe(Condition.enabled.because("Отображается иконка поднятия версии")).click();
+        new SaveDialog().checkNextVersionAndSave(nextVersion, alertText);
+        return this;
     }
 }

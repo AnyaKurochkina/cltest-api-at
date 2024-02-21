@@ -186,7 +186,7 @@ public class RabbitMqClusterAstraPage extends IProductPage {
 
         });
         btnGeneralInfo.click();
-        getRoleNode().scrollIntoView(scrollCenter).click();
+        getVMElement().scrollIntoView(scrollCenter).click();
         Assertions.assertEquals(String.valueOf(maxFlavor.getCpus()), cpu.getText(), "Размер CPU не изменился");
         Assertions.assertEquals(String.valueOf(maxFlavor.getMemory()), ram.getText(), "Размер RAM не изменился");
         new VirtualMachineTable("Роли узла").checkPowerStatus(VirtualMachineTable.POWER_STATUS_ON);

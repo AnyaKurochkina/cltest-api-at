@@ -9,7 +9,6 @@ import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.jinja2.Jinja2Template;
 import models.cloud.productCatalog.template.Template;
-import org.openqa.selenium.Keys;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityPage;
@@ -35,7 +34,7 @@ public class Jinja2TemplatePage extends EntityPage {
     private final SelenideElement nameRequiredFieldHint =
             nameInput.getInput().$x("./following::*[text()='Необходимо ввести код шаблона']");
     private final SelenideElement nonUniqueNameValidationHint =
-            nameInput.getInput().$x("./following::*[text()='Jinja2 шаблон с таким именем уже существует']");
+            nameInput.getInput().$x("./following::*[text()='Шаблон Jinja2 с таким именем уже существует']");
     private final SelenideElement titleRequiredFieldHint =
             titleInput.getInput().$x("./following::*[text()='Необходимо ввести наименование шаблона']");
     private final SelenideElement templateRequiredFieldHint =
@@ -104,11 +103,7 @@ public class Jinja2TemplatePage extends EntityPage {
         mainTab.switchTo();
         titleInput.setValue(jinja2Template.getTitle());
         nameInput.setValue(jinja2Template.getName());
-        Waiting.findWithAction(() -> nonUniqueNameValidationHint.isDisplayed(),
-                () -> {
-                    nameInput.getInput().sendKeys(Keys.SPACE);
-                    nameInput.getInput().sendKeys(Keys.BACK_SPACE);
-                }, Duration.ofSeconds(5));
+        Waiting.find(() -> nonUniqueNameValidationHint.isDisplayed(), Duration.ofSeconds(5));
         nonUniqueNameValidationHint.shouldBe(Condition.visible);
         createButton.getButton().shouldBe(Condition.disabled);
         cancelButton.click();

@@ -26,7 +26,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @Getter
 public class GraphPage extends EntityPage {
-    protected final String saveGraphAlertText = "Граф успешно сохранен";
+
+    public final static String SAVE_GRAPH_ALERT_TEXT = "Граф успешно сохранен";
     protected final Tab generalInfoTab = Tab.byText("Общая информация");
     private final Tab orderParamsTab = Tab.byText("Параметры заказа");
     private final Tab objectInfoTab = Tab.byText("Информация о графе");
@@ -86,21 +87,21 @@ public class GraphPage extends EntityPage {
     @Step("Сохранение графа со следующей патч-версией")
     public GraphPage saveGraphWithPatchVersion() {
         saveButton.click();
-        new SaveDialog().saveWithNextPatchVersion(saveGraphAlertText);
+        new SaveDialog().saveWithNextPatchVersion(SAVE_GRAPH_ALERT_TEXT);
         return new GraphPage();
     }
 
     @Step("Проверка, что следующая предлагаемая версия равна '{nextVersion}', и сохранение")
     public GraphPage checkNextVersionAndSave(String nextVersion) {
         saveButton.click();
-        new SaveDialog().checkNextVersionAndSave(nextVersion, saveGraphAlertText);
+        new SaveDialog().checkNextVersionAndSave(nextVersion, SAVE_GRAPH_ALERT_TEXT);
         return new GraphPage();
     }
 
     @Step("Сохранение графа с указанием новой версии '{newVersion}'")
     public GraphPage saveGraphWithManualVersion(String newVersion) {
         saveButton.click();
-        new SaveDialog().saveWithVersion(newVersion, saveGraphAlertText);
+        new SaveDialog().saveWithVersion(newVersion, SAVE_GRAPH_ALERT_TEXT);
         return new GraphPage();
     }
 
@@ -266,7 +267,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, product.getName()).get().$x(".//*[name()='svg' and @class]")
                 .click();
-        switchTo().window(1);
         return new ProductPage();
     }
 
@@ -275,7 +275,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, action.getName()).get()
                 .$x(".//*[name()='svg' and @class]").click();
-        switchTo().window(1);
         return new ActionPage();
     }
 
@@ -284,7 +283,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, service.getName()).get()
                 .$x(".//*[name()='svg' and @class]").click();
-        switchTo().window(1);
         return new ServicePage();
     }
 
@@ -293,7 +291,6 @@ public class GraphPage extends EntityPage {
         goToUsageTab();
         new Table(nameColumn).getRowByColumnValue(nameColumn, graph.getName()).get()
                 .$x(".//*[name()='svg' and @class]").click();
-        switchTo().window(1);
         return new GraphPage();
     }
 

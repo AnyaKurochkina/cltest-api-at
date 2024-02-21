@@ -28,7 +28,7 @@ public class OrderTemplatesListPage extends EntityListPage {
     private final SelenideElement nameRequiredFieldHint =
             nameInput.getInput().$x("./following::div[text()='Необходимо ввести код шаблона']");
     private final SelenideElement nonUniqueNameValidationHint =
-            nameInput.getInput().$x("./following::div[text()='Шаблон с таким кодом уже существует']");
+            nameInput.getInput().$x("./following::div[text()='Шаблон отображения с таким именем уже существует']");
     private final SelenideElement nameValidationHint =
             nameInput.getInput().$x("./following::div[text()='Поле может содержать только символы: \"a-z\", \"0-9\", \"_\", \"-\", \":\", \".\"']");
     private final Select typeDropDown = Select.byLabel("Тип");
