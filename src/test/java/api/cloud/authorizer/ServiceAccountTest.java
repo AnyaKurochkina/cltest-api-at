@@ -11,8 +11,6 @@ import models.cloud.authorizer.ProjectEnvironmentPrefix;
 import models.cloud.authorizer.ServiceAccount;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.keyCloak.KeyCloakSteps;
 
 import static core.helper.Configure.resourceManagerURL;
@@ -21,7 +19,6 @@ import static core.helper.Configure.resourceManagerURL;
 @Feature("Сервисные аккаунты")
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 public class ServiceAccountTest extends Tests {
 
     @Test

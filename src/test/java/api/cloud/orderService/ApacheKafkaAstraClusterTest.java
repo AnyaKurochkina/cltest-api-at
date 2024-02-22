@@ -15,8 +15,6 @@ import org.junit.MarkDelete;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 
 import java.util.Collections;
@@ -30,7 +28,6 @@ import static core.enums.KafkaRoles.PRODUCER;
 
 @Epic("Продукты")
 @Feature("ApacheKafkaCluster Astra")
-@Execution(ExecutionMode.CONCURRENT)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 @Tags({@Tag("regress"), @Tag("orders"), @Tag("apachekafkacluster_astra"), @Tag("prod")})
 @DisabledIfEnv("ift")

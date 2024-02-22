@@ -9,7 +9,6 @@ import models.cloud.subModels.loadBalancer.Frontend;
 import models.cloud.subModels.loadBalancer.Gslb;
 import models.cloud.subModels.loadBalancer.RouteSni;
 
-//@Execution(ExecutionMode.SAME_THREAD)
 public class AbstractLoadBalancerTest extends Tests {
 //    @Mock
 //    public static LoadBalancer loadBalancer = LoadBalancer.builder().platform("OpenStack").env("DEV").segment("dev-srv-app").build()

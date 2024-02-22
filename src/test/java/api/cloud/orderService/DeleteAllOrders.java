@@ -12,8 +12,6 @@ import models.cloud.authorizer.Folder;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.calculator.CalcCostSteps;
 import steps.orderService.OrderServiceSteps;
@@ -27,8 +25,6 @@ import static tests.routes.VpcApi.getNetworksApiV1ProjectsProjectNameNetworksGet
 import static tests.routes.VpcApi.getSecurityGroupsApiV1ProjectsProjectNameSecurityGroupsGet;
 
 @DisplayName("Тестовый набор по удалению всех заказов из проекта")
-@Execution(ExecutionMode.CONCURRENT)
-@Order(1)
 @Tag("deleteorders")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class DeleteAllOrders extends Tests {

@@ -1,5 +1,6 @@
 package api.cloud.accountManager;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -8,16 +9,12 @@ import models.cloud.authorizer.Folder;
 import models.cloud.authorizer.Organization;
 import org.junit.DisabledIfEnv;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.accountManager.AccountSteps;
-import api.Tests;
 
 @Epic("Финансы")
 @Feature("Счета")
 @Tags({@Tag("regress"), @Tag("accounts"), @Tag("smoke"), @Tag("prod"), @Tag("health_check")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 public class AccountTest extends Tests {
 
     @Order(1)
