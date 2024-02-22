@@ -197,6 +197,7 @@ public class ObjectPoolService {
         }
         Configure.isTestItCreateAutotest = isTestItCreateAutotest;
         log.debug("##### deleteAllResources end #####");
+        System.out.println("##teamcity[publishArtifacts 'target/allure-results => allure-results.zip']");
     }
 
     public static void deleteAllVm(List<ObjectPoolEntity> entityList) {

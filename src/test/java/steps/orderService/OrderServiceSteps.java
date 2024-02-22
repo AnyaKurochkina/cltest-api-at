@@ -61,7 +61,7 @@ public class OrderServiceSteps extends Steps {
         if (!orderStatus.equals(exp_status.toLowerCase())) {
             String error = "null";
             try {
-                error = StateServiceSteps.getErrorFromStateService(product.getOrderId());
+                error = StateServiceSteps.getErrorFromStateService(product.getProjectId(), product.getOrderId());
             } catch (Throwable e) {
                 log.error("Ошибка в GetErrorFromStateService " + e);
             }
@@ -259,7 +259,7 @@ public class OrderServiceSteps extends Steps {
             Assertions.fail(String.format("Результат выполнения action продукта: warning. \nИтоговый статус: %s . \nОшибка: %s", actionStatus, messages));
         }
         if (!actionStatus.equalsIgnoreCase("success")) {
-            String error = StateServiceSteps.getErrorFromStateService(orderId);
+            String error = StateServiceSteps.getErrorFromStateService(projectId, orderId);
             if (Objects.isNull(error) || error.equals("[]"))
                 error = "Действие не выполнено по таймауту";
             Assertions.fail(String.format("Ошибка выполнения action продукта: %s. \nИтоговый статус: %s . \nОшибка: %s", orderId, actionStatus, error));

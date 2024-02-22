@@ -2,13 +2,12 @@ package steps.stateService;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import core.enums.Role;
-import core.helper.Configure;
 import core.helper.JsonHelper;
 import core.helper.StringUtils;
 import core.helper.http.Http;
 import core.helper.http.Response;
+import io.qameta.allure.Allure;
 import io.qameta.allure.Step;
-import io.restassured.path.json.exception.JsonPathException;
 import lombok.Data;
 import lombok.extern.log4j.Log4j2;
 import models.cloud.authorizer.Project;
@@ -16,11 +15,9 @@ import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.graph.Graph;
 import models.cloud.stateService.*;
 import org.json.JSONObject;
-import ru.testit.annotations.LinkType;
-import ru.testit.junit5.StepsAspects;
-import ru.testit.services.LinkItem;
 import steps.Steps;
 
+import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.*;
@@ -72,21 +69,20 @@ public class StateServiceSteps extends Steps {
         return getItemById(uuid);
     }
 
-    public static String getErrorFromStateService(String orderId) {
-        String traceback = null;
+    public static String getErrorFromStateService(String projectId, String orderId) {
+        String text = null;
         try {
-            traceback = new Http(Configure.getAppProp("url.stateService"))
-                    .setWithoutToken()
-                    .get("/api/v1/actions/?order_id={}", orderId)
+            text = new Http(stateServiceURL)
+                    .setRole(Role.CLOUD_ADMIN)
+                    .get("/api/v1/projects/{}/actions/?order_id={}&status=error", projectId, orderId)
+                    .assertStatus(200)
                     .jsonPath().getString("list.findAll{it.status.contains('error')}.data.traceback");
-        } catch (JsonPathException e) {
-            log.error(e.toString());
+        } catch (Throwable e) {
+            log.error("Ошибка при получении ошибки заказа", e);
         }
-        if (StepsAspects.getCurrentStep().get() != null) {
-            StepsAspects.getCurrentStep().get().addLinkItem(
-                    new LinkItem("State service log", String.format("%s/api/v1/actions/?order_id=%s", Configure.getAppProp("url.stateService"), orderId), "", LinkType.REPOSITORY));
-        }
-        return traceback;
+        if (text != null)
+            Allure.getLifecycle().addAttachment("StateService", "text/html", "log", text.getBytes(StandardCharsets.UTF_8));
+        return text;
     }
 
     @Step("Получение списка id из списка items")
@@ -420,7 +416,7 @@ public class StateServiceSteps extends Steps {
     @Step("Получение длительности узлов по actionId {actionId}")
     public static void getNodesDuration(String[] actionId) {
         HashMap<String, ArrayList<Integer>> map = new HashMap<>();
-        for (String act: actionId) {
+        for (String act : actionId) {
             List<ActionStateService> actionsList = getActionListByFilter("action_id", act);
             for (ActionStateService action : actionsList) {
                 if (action.getStatus().contains("completed") && action.getSubtype().equals("run_node")) {
@@ -429,22 +425,22 @@ public class StateServiceSteps extends Steps {
                             .findFirst().get();
                     Integer millis = Math.toIntExact(Duration.
                             between(ZonedDateTime.parse(actionStarted.getCreateDt()), ZonedDateTime.parse(action.getCreateDt())).toMillis());
-                    if (!map.containsKey(action.getStatus().split(":")[0])){
+                    if (!map.containsKey(action.getStatus().split(":")[0])) {
                         ArrayList<Integer> list = new ArrayList<>();
                         list.add(millis);
                         map.put(action.getStatus().split(":")[0], list);
-                    }else {
+                    } else {
                         map.get(action.getStatus().split(":")[0]).add(millis);
                     }
                 }
             }
         }
         ArrayList<String> outList = new ArrayList();
-        map.forEach((k, v) ->{
+        map.forEach((k, v) -> {
             outList.add(k + "," + v.stream().mapToInt(Integer::intValue).min().orElse(0) + "," + v.stream().mapToInt(Integer::intValue).average().orElse(0) + "," + v.stream().mapToInt(Integer::intValue).max().orElse(0));
         });
         Collections.sort(outList);
-        for (String k: outList) {
+        for (String k : outList) {
             System.out.println(k + "\r");
         }
 

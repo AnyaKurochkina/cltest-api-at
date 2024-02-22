@@ -1,6 +1,8 @@
 package api.cloud.defectolog;
 
+import api.cloud.defectolog.models.Defect;
 import api.cloud.defectolog.models.DefectPage;
+import api.cloud.defectolog.steps.DefectologSteps;
 import com.mifmif.common.regex.Generex;
 import core.helper.Report;
 import core.utils.AssertUtils;
@@ -106,7 +108,11 @@ public class DefectologTest extends AbstractDefectologTest {
                     Collections.singletonList(new InventoryTagsV2.Tag("test_filter", "value")));
             startTaskWidthGroups("LINK-DUPLICATED-ATTRS-VALUES");
             int defectId = findDefectIdByInternalName("LINK-DUPLICATED-ATTRS-VALUES", getDateFromFilter(inventories.get(0), ctx));
-            AssertUtils.assertNotContainsList(readDefectPage(defectId).getPatients(), inventories.get(0).getId(), inventories.get(1).getId());
+            List<Defect.DefectPages> defectPages = DefectologSteps.defectsRead(defectId).getDefectPages();
+            // либо страница одна и не содержит inventories, либо страниц не создается
+            if (!defectPages.isEmpty())
+                AssertUtils.assertNotContainsList(DefectologSteps.defectPagesRead(defectPages.get(0).getId()).getPatients(),
+                        inventories.get(0).getId(), inventories.get(1).getId());
         });
     }
 
