@@ -207,6 +207,18 @@ public class CdnResourceTests extends AbstractT1Test {
     }
 
     @Test
+    @Order(11)
+    @DisplayName("CDN. Получение списка ресурсов")
+    @TmsLink("SOUL-5368")
+    public void checkCounterTest() {
+        cdnResource.get();
+        String expectedCountOfSourceGroups = String.valueOf(CdnResourceClient.getResources(getProjectId()).size());
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCounter(expectedCountOfSourceGroups);
+    }
+
+    @Test
     @Order(100)
     @DisplayName("CDN. Удаление ресурса")
     @TmsLinks(@TmsLink("SOUL-5369"))

@@ -12,6 +12,7 @@ import models.t1.cdn.SourceGroup;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import steps.t1.cdn.CdnOriginGroupsClient;
 import ui.elements.Alert;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
@@ -120,6 +121,18 @@ public class CdnSourceGroupTests extends AbstractT1Test {
                 .switchToSourceGroupTab()
                 .delete(hostName);
         Alert.red("There are resources using such group");
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("CDN. Получение списка групп источников")
+    @TmsLink("SOUL-5370")
+    public void checkCounterTest() {
+        cdnSourceGroup.get();
+        String expectedCountOfSourceGroups = String.valueOf(CdnOriginGroupsClient.getSourceGroups(getProjectId()).size());
+        new IndexPage().goToCdn()
+                .switchToSourceGroupTab()
+                .checkCounter(expectedCountOfSourceGroups);
     }
 
     @Test
