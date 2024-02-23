@@ -36,7 +36,7 @@ public class BillExcelReader extends AbstractExcelReader<BillExcelItem> {
     @Step("Чтение excel файла 'Счета'")
     public BillExcel readWithOrganization() {
         return BillExcel.builder()
-                .organization(getContentRows().get(0).getService())
+                .organization(getContentRows().get(0).getOrder())
                 .rows(read())
                 .build();
     }

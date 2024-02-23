@@ -31,7 +31,8 @@ public class SourceGroup extends AbstractEntity {
     private Object hasRelatedResources;
     private String projectId;
     private String domainName;
-    private Boolean isReserved;
+    @Builder.Default
+    private Boolean isReserved = false;
 
     @Override
     public void delete() {
