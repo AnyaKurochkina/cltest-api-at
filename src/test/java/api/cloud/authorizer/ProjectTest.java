@@ -1,17 +1,16 @@
 package api.cloud.authorizer;
 
-import org.junit.MarkDelete;
-import io.qameta.allure.*;
-import models.cloud.authorizer.Project;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import api.Tests;
+import io.qameta.allure.Epic;
+import io.qameta.allure.Feature;
+import io.qameta.allure.TmsLink;
+import models.cloud.authorizer.Project;
+import org.junit.MarkDelete;
+import org.junit.jupiter.api.*;
 
 @Epic("Организационная структура")
 @Feature("Проекты")
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke")})
-@Execution(ExecutionMode.SAME_THREAD)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class ProjectTest extends Tests {
 

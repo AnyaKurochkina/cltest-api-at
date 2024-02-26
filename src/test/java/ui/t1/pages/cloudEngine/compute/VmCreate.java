@@ -1,6 +1,7 @@
 package ui.t1.pages.cloudEngine.compute;
 
 import core.utils.Waiting;
+import io.qameta.allure.Step;
 import lombok.Getter;
 import ui.cloud.pages.orders.OrderUtils;
 import ui.elements.*;
@@ -94,7 +95,7 @@ public class VmCreate {
 
     public VmCreate setAvailabilityZone(String availabilityZone) {
         this.availabilityZone = Select.byLabel("Зона доступности").set(availabilityZone);
-        Waiting.sleep(1000);
+        waitProgressbarInvisible();
         return this;
     }
 
@@ -144,18 +145,26 @@ public class VmCreate {
 
     public VmCreate setSwitchPublicIp(boolean checked){
         Switch.byText("Подключить публичный IP адрес").setEnabled(checked);
+        waitProgressbarInvisible();
         return this;
     }
 
     public VmCreate setPublicIp(String publicIp) {
         setSwitchPublicIp(true);
-        Waiting.sleep(1000);
         this.publicIp = Select.byLabel("Публичный IP адрес").set(publicIp);
+        return this;
+    }
+
+    public VmCreate setCreateIp() {
+        setSwitchPublicIp(true);
+        CheckBox.byLabel("Создать публичный IP адрес").setChecked(true);
+        waitProgressbarInvisible();
         return this;
     }
 
     public VmCreate setPlacementPolicy(String placement) {
         Switch.byText("Добавить политику размещения").setEnabled(true);
+        waitProgressbarInvisible();
         this.placement = Select.byLabel("Политика размещения").setStart(placement);
         return this;
     }
@@ -168,5 +177,10 @@ public class VmCreate {
                 .getValueByColumn(Column.STATUS)
                 .contains("Включено"), createTimeout, "Машина не развернулась"));
         return this;
+    }
+
+    @Step("Ожидание индикаторов загрузки")
+    private void waitProgressbarInvisible() {
+        Waiting.sleep(() -> !$x("//div[@role='alert' and @aria-live='assertive']").exists(), Duration.ofSeconds(10));
     }
 }
