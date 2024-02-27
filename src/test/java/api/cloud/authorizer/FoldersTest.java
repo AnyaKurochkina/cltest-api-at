@@ -1,5 +1,6 @@
 package api.cloud.authorizer;
 
+import api.Tests;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
@@ -7,15 +8,11 @@ import models.cloud.authorizer.Folder;
 import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
-import api.Tests;
 
 @Epic("Организационная структура")
 @Feature("Папки")
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 public class FoldersTest extends Tests {
 
     @Test

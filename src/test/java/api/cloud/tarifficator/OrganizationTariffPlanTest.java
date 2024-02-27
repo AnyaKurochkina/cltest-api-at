@@ -20,8 +20,6 @@ import org.junit.DisabledIfEnv;
 import org.junit.ProductArgumentsProvider;
 import org.junit.Source;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import steps.orderService.OrderServiceSteps;
 import steps.tarifficator.TariffPlanSteps;
@@ -35,7 +33,6 @@ import static org.junit.jupiter.api.Assertions.*;
 @Epic("Управление")
 @Feature("Тарифные планы организации")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @Tags({@Tag("regress"), @Tag("tariff")})
 @DisabledIfEnv("prod")
 public class OrganizationTariffPlanTest extends Tests {

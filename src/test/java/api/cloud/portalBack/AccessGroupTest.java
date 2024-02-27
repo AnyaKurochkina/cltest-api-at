@@ -1,5 +1,6 @@
 package api.cloud.portalBack;
 
+import api.Tests;
 import com.mifmif.common.regex.Generex;
 import io.qameta.allure.Epic;
 import io.qameta.allure.Feature;
@@ -10,17 +11,13 @@ import models.cloud.portalBack.AccessGroup;
 import org.junit.DisabledIfEnv;
 import org.junit.MarkDelete;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.parallel.Execution;
-import org.junit.jupiter.api.parallel.ExecutionMode;
 import steps.portalBack.AccessGroupSteps;
 import steps.portalBack.PortalBackSteps;
-import api.Tests;
 
 @Epic("Управление")
 @Feature("Группы доступа")
 @Tags({@Tag("regress"), @Tag("orgstructure"), @Tag("smoke"), @Tag("prod")})
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-@Execution(ExecutionMode.SAME_THREAD)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AccessGroupTest extends Tests {
     String name = new Generex("[a-z]{5,15}").random();
