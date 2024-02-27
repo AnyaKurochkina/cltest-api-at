@@ -82,6 +82,7 @@ public class Vm extends IProductT1Page<Vm> {
         return new NetworkInterfaceList().getMenuNetworkInterface(new NetworkInfo().getRow(0).get().$("button"));
     }
 
+    @Step("Удаление сервера с параметрами [Width IP={deleteOnTerminationIp}, Width disks={disks}]")
     public void delete(boolean deleteOnTerminationIp, String... disks) {
         switchProtectOrder(false);
         runActionWithParameters(BLOCK_PARAMETERS, "Удалить", "Удалить", () ->

@@ -1,10 +1,10 @@
 package ui.t1.pages.cloudEngine.compute;
 
 import com.codeborne.selenide.Condition;
-import core.utils.ssh.SshClient;
+import io.qameta.allure.Step;
+import ui.elements.Table;
 import ui.t1.pages.IProductT1Page;
 import ui.t1.pages.cloudEngine.Column;
-import ui.elements.Table;
 import ui.t1.pages.cloudEngine.vpc.PublicIp;
 
 public class NetworkInterface extends IProductT1Page<NetworkInterface> {
@@ -22,9 +22,8 @@ public class NetworkInterface extends IProductT1Page<NetworkInterface> {
         return getTableByHeader("Публичные IP").getRowByColumnValue(Column.NAME, ip);
     }
 
-    public NetworkInterface sshExecute(String cmd){
-        SshClient.builder().host(getTableByHeader("Публичные IP").getFirstValueByColumn(Column.NAME)).privateKey(SshKeyList.PRIVATE_KEY).build().execute(cmd);
-        return this;
+    @Step("Получение публичного IP у сервера")
+    public String getPublicIp() {
+        return getTableByHeader("Публичные IP").getFirstValueByColumn(Column.NAME);
     }
-
 }

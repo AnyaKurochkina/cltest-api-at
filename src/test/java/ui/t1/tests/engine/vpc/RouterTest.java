@@ -11,6 +11,7 @@ import io.qameta.allure.TmsLink;
 import models.AbstractEntity;
 import org.junit.jupiter.api.*;
 import ui.cloud.pages.CompareType;
+import ui.elements.Breadcrumb;
 import ui.elements.Menu;
 import ui.elements.TypifiedElement;
 import ui.t1.pages.IndexPage;
@@ -19,7 +20,10 @@ import ui.t1.pages.cloudEngine.compute.SshKeyList;
 import ui.t1.pages.cloudEngine.compute.Vm;
 import ui.t1.pages.cloudEngine.compute.VmCreate;
 import ui.t1.pages.cloudEngine.compute.VmList;
-import ui.t1.pages.cloudEngine.vpc.*;
+import ui.t1.pages.cloudEngine.vpc.NetworkList;
+import ui.t1.pages.cloudEngine.vpc.Router;
+import ui.t1.pages.cloudEngine.vpc.RouterCreate;
+import ui.t1.pages.cloudEngine.vpc.RouterList;
 import ui.t1.tests.engine.AbstractComputeTest;
 import ui.t1.tests.engine.EntitySupplier;
 
@@ -98,13 +102,10 @@ public class RouterTest extends AbstractComputeTest {
 
     @Test
     @Order(4)
-    @TmsLink("")
-    @DisplayName("Cloud VPC. Подключение к интернету")
+    @TmsLink("SOUL-9277")
+    @DisplayName("Cloud VPC. Маршрутизатор. Подключение к интернету")
     void connectNetwork() {
         randomRouter.get();
-        String ip = new IndexPage().goToPublicIps().addIp(region);
-        new PublicIpList().selectIp(ip).markForDeletion(new PublicIpEntity(), AbstractEntity.Mode.AFTER_TEST).checkCreate(true);
-
         VmCreate vmWidthIp = new IndexPage().goToVirtualMachine().addVm()
                 .setRegion(region)
                 .setAvailabilityZone(availabilityZone)
@@ -113,7 +114,7 @@ public class RouterTest extends AbstractComputeTest {
                 .setImage(image)
                 .setName(getRandomName())
                 .addSecurityGroups(securityGroup)
-                .setPublicIp(ip)
+                .setCreateIp()
                 .setSshKey(sshKey)
                 .clickOrder();
         Vm vmPage = new VmList().selectCompute(vmWidthIp.getName())
@@ -121,13 +122,16 @@ public class RouterTest extends AbstractComputeTest {
                 .checkCreate(true);
         String localIpVmTest = vmPage.getLocalIp();
 
-        SshClient.SshClientBuilder ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER);
-        String checkConnectCmd = ssh.privateKey(SshKeyList.PRIVATE_KEY).build()
-                .execute("timeout 2 telnet {} 22", localIpVmTest);
+        String ip = vmPage.selectNetworkInterface().getPublicIp();
+        new PublicIpEntity(getProjectId(), ip).deleteMode(AbstractEntity.Mode.AFTER_TEST);
+
+        SshClient ssh = SshClient.builder().host(ip).user(SshKeyList.SSH_USER).privateKey(SshKeyList.PRIVATE_KEY).build();
+        String checkConnectCmd = ssh.execute("timeout 2 telnet {} 22", localIpVmTest);
         AssertUtils.assertContains(checkConnectCmd, "OpenSSH");
         if (Configure.ENV.equalsIgnoreCase("t1prod"))
-            AssertUtils.assertContains(ssh.privateKey(SshKeyList.PRIVATE_KEY).build().execute(CONNECT_INTERNET_COMMAND),
-                    CONNECT_INTERNET_COMMAND_RESPONSE);
+            AssertUtils.assertContains(ssh.execute(CONNECT_INTERNET_COMMAND), CONNECT_INTERNET_COMMAND_RESPONSE);
+        Breadcrumb.click("Сервер");
+        vmPage.delete(true, vmPage.getSystemDiskName());
     }
 
     @Test
