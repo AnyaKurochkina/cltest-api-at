@@ -8,7 +8,7 @@ public class ImageCompressingTab {
     private final Button activationButton = Button.byText("Подключить");
     private final Button offButton = Button.byText("Отключить");
 
-    @Step("Подключение и проверка алерта")
+    @Step("Клик по кнопке Подключение")
     public ImageCompressingTab activateImageCompressing() {
         activationButton.click();
         return this;
