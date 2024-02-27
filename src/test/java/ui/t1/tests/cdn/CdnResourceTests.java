@@ -39,15 +39,40 @@ public class CdnResourceTests extends AbstractT1Test {
     private final static String DEFAULT_LOCATION = "Russia / Moscow-EC / M9 | M9P";
 
     private final EntitySupplier<Resource> cdnResource = lazy(() -> {
-        Resource resource = new Resource(getProjectId(), "mirror.yandex.ru",
-                Collections.singletonList(RandomStringUtils.randomAlphabetic(8).toLowerCase() + ".ya.ru"))
-                .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+        Resource resource = Resource.builder()
+                .projectId(getProjectId())
+                .domainName("mirror.yandex.ru")
+                .hostnames(Collections.singletonList(RandomStringUtils.randomAlphabetic(8).toLowerCase() + ".ya.ru"))
+                .build().deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+
         SourceGroup.builder()
                 .projectId(getProjectId())
                 .domainName(resource.getDomainName())
                 .name(resource.getName())
                 .build()
                 .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .create(resource);
+        return resource;
+    });
+
+    private final EntitySupplier<Resource> cdnResourceWithLetsEncrypt = lazy(() -> {
+        Resource resource = Resource.builder()
+                .letsEncrypt(true)
+                .projectId(getProjectId())
+                .domainName("mirror.yandex.ru")
+                .hostnames(Collections.singletonList(RandomStringUtils.randomAlphabetic(8).toLowerCase() + ".ya.ru"))
+                .build().deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+
+        SourceGroup.builder()
+                .projectId(getProjectId())
+                .domainName(resource.getDomainName())
+                .name(resource.getName())
+                .build()
+                .deleteMode(AbstractEntity.Mode.AFTER_CLASS);
+
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .create(resource);
@@ -216,6 +241,50 @@ public class CdnResourceTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToResourceTab()
                 .checkCounter(expectedCountOfSourceGroups);
+    }
+
+    @Test
+    @Order(12)
+    @DisplayName("CDN.Выпуск сертификата Let’s Encrypt")
+    @TmsLinks(@TmsLink("SOUL-5396"))
+    public void createResourceWithLetsEncryptCertTest() {
+        String name = cdnResourceWithLetsEncrypt.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToResourceGeneralTab(name)
+                .checkLetsEncryptCertIsAppear();
+    }
+
+    @Test
+    @Order(13)
+    @DisplayName("CDN. Сжатие изображений. Включение")
+    @TmsLinks(@TmsLink("SOUL-9231"))
+    public void imageCompressingEnableTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToImageCompressing()
+                .activateImageCompressing();
+        Alert.green("Опция сжатия изображения подключена");
+    }
+
+    @Test
+    @Order(14)
+    @DisplayName("CDN. Сжатие изображений. Отключение")
+    @TmsLinks(@TmsLink("SOUL-9234"))
+    public void imageCompressingDisableTest() {
+        String name = cdnResource.get().getName();
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCdnEntityExistByName(name)
+                .goToResourcePage(name)
+                .switchToImageCompressing()
+                .offImageCompressing();
+        Alert.green("Опция сжатия изображения отключена");
     }
 
     @Test

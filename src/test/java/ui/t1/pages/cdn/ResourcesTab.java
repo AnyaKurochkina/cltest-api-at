@@ -8,6 +8,7 @@ import io.qameta.allure.Step;
 import models.t1.cdn.Resource;
 import ui.elements.DataTable;
 import ui.elements.Dialog;
+import ui.elements.Radio;
 import ui.t1.pages.cdn.resource.ResourcePage;
 
 import java.time.Duration;
@@ -24,6 +25,9 @@ public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
     public void create(Resource resource) {
         addButton.click();
         Dialog addResourceDialog = Dialog.byTitle("Добавить ресурс");
+        if (resource.getLetsEncrypt()) {
+            addResourceDialog.setRadio(Radio.byValue("lets_encrypt"));
+        }
         addResourceDialog.setInputByName("domainName", resource.getDomainName());
         addResourceDialog.setInputByName("hostnames-0", resource.getHostnames().get(0));
         addResourceDialog.clickButton("Создать");
