@@ -9,9 +9,6 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.DiffPage;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 public class ViewProductTest extends ProductBaseTest {
 
     @Test

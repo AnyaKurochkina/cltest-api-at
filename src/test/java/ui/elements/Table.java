@@ -236,11 +236,18 @@ public class Table implements TypifiedElement {
                 Assertions.assertTrue(lastValue.contains(value), errorMessage);
             }
 
-            @Step("[Проверка] Колонка с именем: %s: {0}, содержит значение: {1}")
-            public void checkValueInColumnWithName(String columnName, String value) {
+            @Step("[Проверка] Колонка с именем '{0}' содержит значение '{1}'")
+            public void checkColumnValueContains(String columnName, String value) {
                 String valueByColumnName = getValueByColumn(columnName);
                 String errorMessage = String.format("В колонке с именем: %s, значение: %s, должно содержать: %s", columnName, valueByColumnName, value);
                 Assertions.assertTrue(valueByColumnName.contains(value), errorMessage);
+            }
+
+            @Step("[Проверка] Колонка с именем '{0}' содержит значение, равное '{1}'")
+            public void checkColumnValueEquals(String columnName, String value) {
+                String valueByColumnName = getValueByColumn(columnName);
+                String errorMessage = String.format("В колонке с именем: %s, значение: %s, должно равняться: %s", columnName, valueByColumnName, value);
+                Assertions.assertTrue(valueByColumnName.equals(value), errorMessage);
             }
         }
     }

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @Getter
 public class ActionsListPage extends EntityListPage {
-    private static final String NAME_COLUMN = "Код действия";
+    public static final String ACTION_NAME_COLUMN = "Код действия";
     private final SearchSelect typeSelect = SearchSelect.byLabel("Тип");
     private final SearchSelect providerSelect = SearchSelect.byLabel("Провайдер");
 
@@ -43,38 +43,38 @@ public class ActionsListPage extends EntityListPage {
      */
     @Step("Проверка отображения действия '{name}' в списке")
     public boolean isActionDisplayed(String name) {
-        Table table = new Table(NAME_COLUMN);
-        if (table.isColumnValueEquals(NAME_COLUMN, name)) return true;
+        Table table = new Table(ACTION_NAME_COLUMN);
+        if (table.isColumnValueEquals(ACTION_NAME_COLUMN, name)) return true;
         while (nextPageButtonV2.getButton().isEnabled()) {
             nextPageV2();
-            if (table.isColumnValueEquals(NAME_COLUMN, name)) return true;
+            if (table.isColumnValueEquals(ACTION_NAME_COLUMN, name)) return true;
         }
         return false;
     }
 
     @Step("Копирование действия {name}")
     public ActionPage copyAction(String name) {
-        copy(NAME_COLUMN, name);
+        copy(ACTION_NAME_COLUMN, name);
         Alert.green("Копирование выполнено успешно");
         return new ActionPage();
     }
 
     @Step("Удаление действия {name}")
     public DeleteDialog deleteAction(String name) {
-        delete(NAME_COLUMN, name);
+        delete(ACTION_NAME_COLUMN, name);
         return new DeleteDialog();
     }
 
     @Step("Открытие страницы действия {name}")
     public ActionPage openActionPage(String name) {
-        new Table(NAME_COLUMN).getRowByColumnValue(NAME_COLUMN, name).get().click();
+        new Table(ACTION_NAME_COLUMN).getRowByColumnValue(ACTION_NAME_COLUMN, name).get().click();
         Waiting.sleep(2000);
         return new ActionPage();
     }
 
     @Step("Открытие формы действия по строке {number}")
     public ActionPage openActionFormByRowNumber(int number) {
-        new Table(NAME_COLUMN).getRow(number).get().click();
+        new Table(ACTION_NAME_COLUMN).getRow(number).get().click();
         Waiting.sleep(2000);
         return new ActionPage();
     }
@@ -99,7 +99,7 @@ public class ActionsListPage extends EntityListPage {
 
     @Step("Проверяем, что строка отличается визуально")
     public ActionsListPage checkActionIsHighlighted(int rowNumber) {
-        Table actionList = new Table(NAME_COLUMN);
+        Table actionList = new Table(ACTION_NAME_COLUMN);
         Assertions.assertTrue(actionList.getRow(rowNumber).get().$x("td")
                 .getCssValue("color").contains("176, 181, 189"));
         return this;
@@ -107,8 +107,8 @@ public class ActionsListPage extends EntityListPage {
 
     @Step("Проверка заголовков списка действий")
     public ActionsListPage checkHeaders() {
-        AssertUtils.assertHeaders(new Table(NAME_COLUMN),
-                "Наименование", NAME_COLUMN, "Дата создания", "Дата изменения", "Тип", "Провайдер", "Теги",
+        AssertUtils.assertHeaders(new Table(ACTION_NAME_COLUMN),
+                "Наименование", ACTION_NAME_COLUMN, "Дата создания", "Дата изменения", "Тип", "Провайдер", "Теги",
                 "Открыто/Закрыто", "", "");
         return this;
     }
@@ -116,7 +116,7 @@ public class ActionsListPage extends EntityListPage {
     @Step("Проверка сортировки списка действий")
     public ActionsListPage checkSorting() {
         checkSortingByStringField("Наименование");
-        checkSortingByStringField(NAME_COLUMN);
+        checkSortingByStringField(ACTION_NAME_COLUMN);
         checkSortingByDateField("Дата создания");
         checkSortingByDateField("Дата изменения");
         return this;
@@ -126,23 +126,23 @@ public class ActionsListPage extends EntityListPage {
     public ActionsListPage findActionByValue(String value, Action action) {
         searchInput.setValue(value);
         Waiting.sleep(1000);
-        assertTrue(new Table(NAME_COLUMN).isColumnValueEquals(NAME_COLUMN, action.getName()));
+        assertTrue(new Table(ACTION_NAME_COLUMN).isColumnValueEquals(ACTION_NAME_COLUMN, action.getName()));
         return this;
     }
 
     @Step("Проверка, что действия не найдены при поиске по '{value}'")
     public ActionsListPage checkActionNotFound(String value) {
         search(value);
-        assertTrue(new Table(NAME_COLUMN).isEmpty());
+        assertTrue(new Table(ACTION_NAME_COLUMN).isEmpty());
         return this;
     }
 
     @Step("Поиск и открытие страницы действия '{name}'")
     public ActionPage findAndOpenActionPage(String name) {
         search(name);
-        DataTable table = new DataTable(NAME_COLUMN);
-        new DataTable(NAME_COLUMN).searchAllPages(t -> table.isColumnValueContains(NAME_COLUMN, name))
-                .getRowByColumnValueContains(NAME_COLUMN, name).get().click();
+        DataTable table = new DataTable(ACTION_NAME_COLUMN);
+        new DataTable(ACTION_NAME_COLUMN).searchAllPages(t -> table.isColumnValueContains(ACTION_NAME_COLUMN, name))
+                .getRowByColumnValueContains(ACTION_NAME_COLUMN, name).get().click();
         Waiting.sleep(1000);
         return new ActionPage();
     }

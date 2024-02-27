@@ -408,7 +408,7 @@ public class GraphSteps extends Steps {
     }
 
     @Step("Удаление списка Тегов графов")
-    public static void removeTagListToGraph(List<String> tagsList, String... name) {
+    public static void removeTagListFromGraph(List<String> tagsList, String... name) {
         String names = String.join(",", name);
         new Http(productCatalogURL)
                 .setRole(Role.PRODUCT_CATALOG_ADMIN)

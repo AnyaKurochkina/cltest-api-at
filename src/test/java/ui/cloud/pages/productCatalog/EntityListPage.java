@@ -7,6 +7,7 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import org.junit.jupiter.api.Assertions;
+import ui.cloud.pages.productCatalog.tag.EditTagsDialog;
 import ui.elements.*;
 
 import java.time.Duration;
@@ -43,8 +44,11 @@ public class EntityListPage {
     private final Select recordsPerPageSelect = Select.byXpath("//div[div[contains(text(),'строк на странице ')]]");
     private final Select recordsPerPageSelectV2 = Select.byXpath("//div[text()='Записей на странице:']");
     private final Button groupOperationsButton = Button.byText("Групповые операции");
-    private final MultiSelect tagsSelect = MultiSelect.byLabel("Теги");
+    private final Button cancelGroupOperationsButton = Button.byText("Отменить");
+    private final Button editTagsButton = Button.byText("Редактировать теги");
+    private final MultiSelect tagsFilterSelect = MultiSelect.byLabel("Теги");
     private final RadioGroup tagsMatchingType = RadioGroup.byFieldsetLabel("Совпадение тегов");
+    private final CheckBox selectAllCheckBox = CheckBox.byXpath("//thead//input[@type='checkbox']");
 
     @Step("Проверка строковой сортировки по столбцу '{header}'")
     public static void checkSortingByStringField(String header) {
@@ -191,9 +195,10 @@ public class EntityListPage {
     }
 
     @Step("Задание в строке поиска значения '{value}'")
-    public void search(String value) {
+    public EntityListPage search(String value) {
         searchInput.setValue(value);
         Waiting.sleep(1000);
+        return this;
     }
 
     @Step("Импорт объекта из файла '{path}'")
@@ -207,13 +212,44 @@ public class EntityListPage {
 
     @Step("Задание фильтра по тегам")
     public EntityListPage setTagsFilter(String... values) {
-        tagsSelect.set(values);
+        tagsFilterSelect.set(values);
         return this;
     }
 
     @Step("Применение фильтров")
     public EntityListPage applyFilters() {
         applyFiltersButton.click();
+        return this;
+    }
+
+    @Step("Переход в режим групповых операций")
+    public EntityListPage switchToGroupOperations() {
+        groupOperationsButton.click();
+        cancelGroupOperationsButton.getButton().shouldBe(Condition.enabled
+                .because("Отображается кнопка выхода из режима групповых операций"));
+        return this;
+    }
+
+    @Step("Выбор всех строк на странице")
+    public EntityListPage selectAllRows() {
+        selectAllCheckBox.setChecked(true);
+        return this;
+    }
+
+    @Step("Открытие диалога редактирования тегов")
+    public EditTagsDialog editTags() {
+        editTagsButton.click();
+        return new EditTagsDialog();
+    }
+
+    @Step("Проверка тегов в списке для объекта '{objectName}'")
+    public EntityListPage checkTags(String column, String objectName, String tagName) {
+        Table.Row row = new Table("Теги").getRowByColumnValue(column, objectName);
+        if (tagName.isEmpty())
+            row.asserts().checkColumnValueEquals("Теги", "");
+        else {
+            row.asserts().checkColumnValueContains("Теги", tagName);
+        }
         return this;
     }
 }

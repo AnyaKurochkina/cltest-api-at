@@ -13,7 +13,6 @@ import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.tests.productCatalog.graph.GraphBaseTest;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 
 import static models.cloud.productCatalog.graph.SourceType.TEMPLATE;

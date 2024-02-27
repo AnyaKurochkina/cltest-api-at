@@ -3,22 +3,17 @@ package ui.cloud.tests.productCatalog.service;
 import com.codeborne.selenide.Condition;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
-import models.cloud.productCatalog.service.Service;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
-import ui.cloud.pages.IndexPage;
 import ui.cloud.pages.productCatalog.service.ServicePage;
-import ui.cloud.pages.services.ServicesListPage;
 
 import java.io.File;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static steps.productCatalog.ServiceSteps.*;
+import static steps.productCatalog.ServiceSteps.partialUpdateServiceById;
+import static steps.productCatalog.ServiceSteps.partialUpdateServiceByName;
 import static ui.cloud.pages.productCatalog.EntityPage.CALCULATED_VERSION_TITLE;
-import static ui.elements.TypifiedElement.refreshPage;
 
 @Feature("Редактирование сервиса")
 public class EditServiceTest extends ServiceBaseTest {

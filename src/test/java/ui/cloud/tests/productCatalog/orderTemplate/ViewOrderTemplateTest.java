@@ -9,9 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-
 @Feature("Просмотр страницы шаблона отображения")
 public class ViewOrderTemplateTest extends OrderTemplateBaseTest {
 
