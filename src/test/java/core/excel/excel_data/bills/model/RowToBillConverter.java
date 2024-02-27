@@ -20,6 +20,7 @@ public class RowToBillConverter extends AbstractRowToObjectConverter<BillExcelIt
     public BillExcelItem convert(Row row) {
         return BillExcelItem.builder().rowNum(rowNum++)
                 .project(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.PROJECT)))
+                .order(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.ORDER)))
                 .service(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.SERVICE)))
                 .tariffClassOfService(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.TARIFF_CLASS_OF_SERVICE)))
                 .startDate(ExcelReaderUtil.readStringCell(row, getCellNum(FieldInfoMapping.START_DATE)))

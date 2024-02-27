@@ -34,6 +34,8 @@ public class Resource extends AbstractEntity {
     private Boolean redirectHttpToHttps;
     private String projectId;
     private String domainName;
+    @Builder.Default
+    private Boolean letsEncrypt = false;
 
     public Resource(String projectId, String domainName, List<String> hostnames) {
         this.projectId = projectId;

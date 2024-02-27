@@ -19,6 +19,7 @@ public class ResourceGeneralTab {
     private final Dialog cacheDialog = Dialog.byTitle("Очистить кэш");
     private final Button saveButton = Button.byText("Сохранить");
     private final Table contentTable = new Table(Selenide.$x("//span[text()='Контент']/following-sibling::div/div/table"));
+    private final Table additionalTable = new Table(Selenide.$x("//span[text()='Дополнительно']/following-sibling::div/div/table"));
     private final Dialog editDialog = Dialog.byTitle("Редактировать ресурс");
 
     public ResourceGeneralTab(String resourceName) {
@@ -59,6 +60,13 @@ public class ResourceGeneralTab {
         cacheDialog.setRadio(Radio.byValue("Выборочная"));
         cacheDialog.setTextarea(TextArea.byLabel("Пути к файлам"), "/foo.css");
         cacheDialog.clickButton("Очистить");
+        return this;
+    }
+
+    @Step("[Проверка] Сертификат Let's Encrypt включен, у ресурса с именем: {0}")
+    public ResourceGeneralTab checkLetsEncryptCertIsAppear() {
+        additionalTable.update().getRowByColumnIndex(0, "Тип сертификата")
+                .asserts().checkLastValueOfRowContains("Let's Encrypt");
         return this;
     }
 }
