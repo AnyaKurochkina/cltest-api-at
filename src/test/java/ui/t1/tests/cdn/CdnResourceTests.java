@@ -233,6 +233,18 @@ public class CdnResourceTests extends AbstractT1Test {
 
     @Test
     @Order(11)
+    @DisplayName("CDN. Получение списка ресурсов")
+    @TmsLink("SOUL-5368")
+    public void checkCounterTest() {
+        cdnResource.get();
+        String expectedCountOfSourceGroups = String.valueOf(CdnResourceClient.getResources(getProjectId()).size());
+        new IndexPage().goToCdn()
+                .switchToResourceTab()
+                .checkCounter(expectedCountOfSourceGroups);
+    }
+
+    @Test
+    @Order(12)
     @DisplayName("CDN.Выпуск сертификата Let’s Encrypt")
     @TmsLinks(@TmsLink("SOUL-5396"))
     public void createResourceWithLetsEncryptCertTest() {
@@ -246,7 +258,7 @@ public class CdnResourceTests extends AbstractT1Test {
     }
 
     @Test
-    @Order(12)
+    @Order(13)
     @DisplayName("CDN. Сжатие изображений. Включение")
     @TmsLinks(@TmsLink("SOUL-9231"))
     public void imageCompressingEnableTest() {
@@ -261,7 +273,7 @@ public class CdnResourceTests extends AbstractT1Test {
     }
 
     @Test
-    @Order(13)
+    @Order(14)
     @DisplayName("CDN. Сжатие изображений. Отключение")
     @TmsLinks(@TmsLink("SOUL-9234"))
     public void imageCompressingDisableTest() {

@@ -9,7 +9,7 @@ import java.util.List;
 public class CdnOriginGroupsClient extends AbstractCdnClient {
 
     @Step("Получения списка групп источника")
-    public static List<SourceGroup> getListSourceGroup(String projectId) {
+    public static List<SourceGroup> getSourceGroups(String projectId) {
         return getRequestSpec().api(CdnOriginGroupsApi.getSourceGroups, projectId)
                 .jsonPath()
                 .getList("list", SourceGroup.class);
@@ -17,7 +17,7 @@ public class CdnOriginGroupsClient extends AbstractCdnClient {
 
     @Step("Удаление группы источника по имени: {1}")
     public static void deleteSourceGroupByName(String projectId, String name) {
-        String id = getListSourceGroup(projectId).stream()
+        String id = getSourceGroups(projectId).stream()
                 .filter(x -> x.getName().contains(name))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError(String.format("Не найдено ни одной группы источника с именем: %s", name)))

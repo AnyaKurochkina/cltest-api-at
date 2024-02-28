@@ -9,6 +9,7 @@ import models.t1.cdn.Certificate;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import steps.t1.cdn.CdnCertificateClient;
 import ui.elements.Alert;
 import ui.extesions.ConfigExtension;
 import ui.t1.pages.IndexPage;
@@ -47,6 +48,18 @@ public class CdnCertificatesTests extends AbstractT1Test {
         new IndexPage().goToCdn()
                 .switchToCertificateTab()
                 .checkCdnEntityExistByName(name);
+    }
+
+    @Test
+    @Order(2)
+    @DisplayName("CDN. Получение списка пользовательских сертификатов")
+    @TmsLink("SOUL-5374")
+    public void checkCounterTest() {
+        cdnCertificate.get();
+        String expectedCountOfSourceGroups = String.valueOf(CdnCertificateClient.getCertificates(getProjectId()).size());
+        new IndexPage().goToCdn()
+                .switchToCertificateTab()
+                .checkCounter(expectedCountOfSourceGroups);
     }
 
     @Test

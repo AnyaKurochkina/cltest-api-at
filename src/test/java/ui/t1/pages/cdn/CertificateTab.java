@@ -37,4 +37,9 @@ public class CertificateTab extends AbstractCdnTab<CertificateTab, Certificate> 
         Alert.green("Сертификат успешно удален");
         return this;
     }
+
+    @Override
+    public String getMainTableName() {
+        return "Пользовательские сертификаты";
+    }
 }

@@ -43,6 +43,11 @@ public class ResourcesTab extends AbstractCdnTab<ResourcesTab, Resource> {
         return this;
     }
 
+    @Override
+    public String getMainTableName() {
+        return "Ресурсы";
+    }
+
     @Step("Переход на страницу ресурса с именем {resourceName}")
     public ResourcePage goToResourcePage(String resourceName) {
         new DataTable("Источники").getRowByColumnValue("Название", resourceName).getElementByColumnIndex(5).click();

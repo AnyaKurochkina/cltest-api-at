@@ -10,7 +10,7 @@ import java.util.Objects;
 public class CdnCertificateClient extends AbstractCdnClient {
 
     @Step("Получение всех сертификатов для проекта с id: {0}")
-    public static List<CertificateListItem> getCertificate(String projectId) {
+    public static List<CertificateListItem> getCertificates(String projectId) {
         return getRequestSpec().api(CdnCertificateApi.getCertificates, projectId)
                 .jsonPath()
                 .getList("list", CertificateListItem.class);
@@ -18,7 +18,7 @@ public class CdnCertificateClient extends AbstractCdnClient {
 
     @Step("Удаление сертификата в проекте: {0}, по имени: {1}")
     public static void deleteCertificateByName(String projectId, String certificateName) {
-        String certificateId = getCertificate(projectId).stream()
+        String certificateId = getCertificates(projectId).stream()
                 .filter(certificate -> Objects.equals(certificate.getName(), certificateName))
                 .findFirst()
                 .orElseThrow(() -> new AssertionError(

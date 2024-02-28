@@ -4,6 +4,8 @@ import io.qameta.allure.Step;
 import models.t1.cdn.SourceGroup;
 import ui.elements.*;
 
+import java.util.Objects;
+
 public class SourceGroupsTab extends AbstractCdnTab<SourceGroupsTab, SourceGroup> {
 
     private final Button saveButton = Button.byText("Сохранить");
@@ -16,7 +18,7 @@ public class SourceGroupsTab extends AbstractCdnTab<SourceGroupsTab, SourceGroup
         Dialog addSourceGroupDialog = Dialog.byTitle("Добавить группу источников");
         addSourceGroupDialog.setInputByName("name", sourceGroup.getName());
         addSourceGroupDialog.setInputValueV2("Доменное имя источника", sourceGroup.getDomainName());
-        if (sourceGroup.getIsReserved()) {
+        if (Objects.requireNonNull(sourceGroup.getIsReserved(), "Параметр не задан")) {
             addSourceGroupDialog.setRadio(Radio.byValue("Резервный"));
         }
         addSourceGroupDialog.clickButtonByType("submit");
@@ -44,5 +46,10 @@ public class SourceGroupsTab extends AbstractCdnTab<SourceGroupsTab, SourceGroup
         chooseActionFromMenu(name, "Удалить");
         Dialog.byTitle("Удаление группы источников").clickButton("Удалить");
         return this;
+    }
+
+    @Override
+    public String getMainTableName() {
+        return "Группы источников";
     }
 }
