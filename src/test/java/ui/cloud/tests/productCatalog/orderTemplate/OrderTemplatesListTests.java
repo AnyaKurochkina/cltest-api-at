@@ -3,6 +3,7 @@ package ui.cloud.tests.productCatalog.orderTemplate;
 import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
+import models.cloud.productCatalog.tag.Tag;
 import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -65,7 +66,7 @@ public class OrderTemplatesListTests extends OrderTemplateBaseTest {
     @DisplayName("Добавить и удалить тег из списка шаблонов отображения")
     public void addAndDeleteTagFromList() {
         String tag1 = "qa_at_" + randomAlphanumeric(6).toLowerCase();
-        createTag(tag1);
+        Tag.builder().name(tag1).build().createObjectPrivateAccess();
         ItemVisualTemplate orderTemplate2 = VisualTemplateSteps.createVisualTemplate(orderTemplate.getName() + "_2");
         new ControlPanelIndexPage()
                 .goToOrderTemplatesPage()
@@ -82,6 +83,5 @@ public class OrderTemplatesListTests extends OrderTemplateBaseTest {
                 .closeDialog()
                 .checkTags(ORDER_TEMPLATE_NAME_COLUMN, orderTemplate.getName(), "")
                 .checkTags(ORDER_TEMPLATE_NAME_COLUMN, orderTemplate2.getName(), "");
-        deleteTagByName(tag1);
     }
 }

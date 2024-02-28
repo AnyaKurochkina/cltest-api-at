@@ -5,6 +5,7 @@ import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.product.Categories;
 import models.cloud.productCatalog.product.Product;
+import models.cloud.productCatalog.tag.Tag;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import steps.productCatalog.ProductSteps;
@@ -82,7 +83,7 @@ public class ProductsListTest extends ProductBaseTest {
     @DisplayName("Добавить и удалить тег из списка продуктов")
     public void addAndDeleteTagFromList() {
         String tag1 = "qa_at_" + randomAlphanumeric(6).toLowerCase();
-        createTag(tag1);
+        Tag.builder().name(tag1).build().createObjectPrivateAccess();
         Product product2 = ProductSteps.createProduct(product.getName() + "_2", TITLE);
         new ControlPanelIndexPage()
                 .goToProductsListPage()
@@ -99,6 +100,5 @@ public class ProductsListTest extends ProductBaseTest {
                 .closeDialog()
                 .checkTags(PRODUCT_NAME_COLUMN, product.getName(), "")
                 .checkTags(PRODUCT_NAME_COLUMN, product2.getName(), "");
-        deleteTagByName(tag1);
     }
 }

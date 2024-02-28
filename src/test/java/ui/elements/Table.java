@@ -314,5 +314,13 @@ public class Table implements TypifiedElement {
                     : String.format("Колонка с именем '%s' должна содержать значение, равное '%s'", column, value);
             Assertions.assertTrue(isColumnValueEquals(column, value), errorMessage);
         }
+
+        @Step("[Проверка] Колонка '{0}' не содержит значение, равное '{1}'")
+        public void checkColumnValueNotEquals(String column, String value) {
+            String errorMessage = column.isEmpty()
+                    ? String.format("Колонка не должна содержать значение, равное '%s'", value)
+                    : String.format("Колонка с именем '%s' не должна содержать значение, равное '%s'", column, value);
+            Assertions.assertFalse(isColumnValueEquals(column, value), errorMessage);
+        }
     }
 }

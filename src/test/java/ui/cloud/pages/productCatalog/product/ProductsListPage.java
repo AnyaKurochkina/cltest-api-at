@@ -1,5 +1,6 @@
 package ui.cloud.pages.productCatalog.product;
 
+import com.codeborne.selenide.Condition;
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
@@ -56,15 +57,14 @@ public class ProductsListPage extends EntityListPage {
     @Step("Поиск и открытие страницы продукта '{name}'")
     public ProductPage findAndOpenProductPage(String name) {
         search(name);
-        new Table(PRODUCT_NAME_COLUMN).getRowByColumnValue(PRODUCT_NAME_COLUMN, name).get().click();
-        TestUtils.wait(1000);
+        openProductPage(name);
         return new ProductPage();
     }
 
     @Step("Открытие страницы продукта '{name}'")
     public ProductPage openProductPage(String name) {
-        new Table(PRODUCT_NAME_COLUMN).getRowByColumnValue(PRODUCT_NAME_COLUMN, name).get().click();
-        TestUtils.wait(500);
+        new Table(PRODUCT_NAME_COLUMN).getRowByColumnValue(PRODUCT_NAME_COLUMN, name).get()
+                .shouldBe(Condition.visible.because("Должна отображаться строка с продуктом")).click();
         return new ProductPage();
     }
 

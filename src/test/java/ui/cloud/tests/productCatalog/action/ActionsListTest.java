@@ -5,6 +5,7 @@ import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.action.Action;
 import models.cloud.productCatalog.enums.EventProvider;
 import models.cloud.productCatalog.enums.EventType;
+import models.cloud.productCatalog.tag.Tag;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
@@ -60,10 +61,10 @@ public class ActionsListTest extends ActionBaseTest {
         page.getSearchInput().clear();
         page.getClearFiltersButton().click();
         page.getTypeSelect().set(action.getEventTypeProvider().get(0).getEvent_type());
-        assertTrue(page.isActionDisplayed(action.getName()));
+        page.checkActionIsDisplayed(action.getName());
         page.getProviderSelect().set(action.getEventTypeProvider().get(0).getEvent_provider());
         page.getApplyFiltersButton().click();
-        assertTrue(page.isActionDisplayed(action.getName()));
+        page.checkActionIsDisplayed(action.getName());
         page.getProviderSelect().set(EventProvider.OPENSTACK.getValue());
         page.getApplyFiltersButton().click();
         page.checkActionNotFound(action.getName());
@@ -75,7 +76,7 @@ public class ActionsListTest extends ActionBaseTest {
     public void addAndDeleteTagFromList() {
         Action action = createActionByApi(randomAlphanumeric(8).toLowerCase());
         String tag1 = "qa_at_" + randomAlphanumeric(6).toLowerCase();
-        createTag(tag1);
+        Tag.builder().name(tag1).build().createObjectPrivateAccess();
         Action action2 = createActionByApi(action.getName() + "_2");
         new ControlPanelIndexPage()
                 .goToActionsListPage()
@@ -92,6 +93,5 @@ public class ActionsListTest extends ActionBaseTest {
                 .closeDialog()
                 .checkTags(ACTION_NAME_COLUMN, action.getName(), "")
                 .checkTags(ACTION_NAME_COLUMN, action2.getName(), "");
-        deleteTagByName(tag1);
     }
 }

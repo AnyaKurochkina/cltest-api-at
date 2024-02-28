@@ -214,19 +214,20 @@ public class OrderTemplatesListPage extends EntityListPage {
 
     @Step("Проверка, что шаблон '{template.name}' отображается в списке")
     public OrderTemplatesListPage checkTemplateIsDisplayed(ItemVisualTemplate template) {
-        assertTrue(new Table(ORDER_TEMPLATE_NAME_COLUMN).isColumnValueEquals(ORDER_TEMPLATE_NAME_COLUMN, template.getName()));
+        new Table(ORDER_TEMPLATE_NAME_COLUMN).asserts().checkColumnValueEquals(ORDER_TEMPLATE_NAME_COLUMN, template.getName());
         return this;
     }
 
     @Step("Проверка, что шаблон '{template.name}' не отображается в списке")
     public OrderTemplatesListPage checkTemplateIsNotDisplayed(ItemVisualTemplate template) {
-        Assertions.assertFalse(new Table(ORDER_TEMPLATE_NAME_COLUMN).isColumnValueEquals(ORDER_TEMPLATE_NAME_COLUMN, template.getName()));
+        new Table(ORDER_TEMPLATE_NAME_COLUMN).asserts().checkColumnValueNotEquals(ORDER_TEMPLATE_NAME_COLUMN, template.getName());
         return this;
     }
 
     @Step("Открытие страницы шаблона '{name}'")
     public OrderTemplatePage openTemplatePage(String name) {
-        new Table(ORDER_TEMPLATE_NAME_COLUMN).getRowByColumnValue(ORDER_TEMPLATE_NAME_COLUMN, name).get().click();
+        new Table(ORDER_TEMPLATE_NAME_COLUMN).getRowByColumnValue(ORDER_TEMPLATE_NAME_COLUMN, name).get()
+                .shouldBe(Condition.visible.because("Должна отображаться строка с шаблоном отображения")).click();
         return new OrderTemplatePage();
     }
 }

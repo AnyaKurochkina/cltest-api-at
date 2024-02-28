@@ -21,14 +21,14 @@ public class EditTagsDialog extends Dialog {
 
     public EditTagsDialog() {
         super("Редактировать теги");
-        this.getDialog().shouldBe(Condition.visible.because("Отображается диалог редактирования тегов"));
+        this.getDialog().shouldBe(Condition.visible.because("Должен отображаться диалог редактирования тегов"));
     }
 
     @Step("Добавление тега '{name}'")
     public EditTagsDialog addTag(String name) {
         addButton.click();
         tagSelect.set(name);
-        saveTagIcon.shouldBe(Condition.enabled.because("Отображается иконка сохранения тега")).click();
+        saveTagIcon.shouldBe(Condition.visible.because("Должна отображаться иконка сохранения тега")).click();
         return this;
     }
 
@@ -42,7 +42,7 @@ public class EditTagsDialog extends Dialog {
     public EditTagsDialog removeTag(String name) {
         Table tagsTable = new Table($x("//div[@role='dialog']//table"));
         tagsTable.getRowByColumnValue("Наименование", name).get()
-                .$x(".//*[name()='svg']").shouldBe(Condition.enabled.because("Отображается иконка удаления тега"))
+                .$x(".//*[name()='svg']").shouldBe(Condition.visible.because("Должна отображаться иконка удаления тега"))
                 .click();
         new DeleteDialog().submitAndDelete();
         return this;

@@ -7,9 +7,11 @@ import core.utils.Waiting;
 import io.qameta.allure.Step;
 import lombok.Getter;
 import models.cloud.productCatalog.action.Action;
+import models.cloud.productCatalog.visualTeamplate.ItemVisualTemplate;
 import org.junit.jupiter.api.Assertions;
 import ui.cloud.pages.productCatalog.DeleteDialog;
 import ui.cloud.pages.productCatalog.EntityListPage;
+import ui.cloud.pages.productCatalog.orderTemplate.OrderTemplatesListPage;
 import ui.cloud.tests.productCatalog.TestUtils;
 import ui.elements.*;
 
@@ -35,21 +37,16 @@ public class ActionsListPage extends EntityListPage {
         return new ActionPage();
     }
 
-    /**
-     * Метод для проверки существования действия по колонке "Код действия"
-     *
-     * @param name значение для поиска в колонке "Код действия"
-     * @return true если действие существует, false если действие не существует.
-     */
-    @Step("Проверка отображения действия '{name}' в списке")
-    public boolean isActionDisplayed(String name) {
-        Table table = new Table(ACTION_NAME_COLUMN);
-        if (table.isColumnValueEquals(ACTION_NAME_COLUMN, name)) return true;
-        while (nextPageButtonV2.getButton().isEnabled()) {
-            nextPageV2();
-            if (table.isColumnValueEquals(ACTION_NAME_COLUMN, name)) return true;
-        }
-        return false;
+    @Step("[Проверка] Действие '{name}' отображается в списке")
+    public ActionsListPage checkActionIsDisplayed(String name) {
+        new Table(ACTION_NAME_COLUMN).asserts().checkColumnValueEquals(ACTION_NAME_COLUMN, name);
+        return this;
+    }
+
+    @Step("[Проверка] Действие '{name}' не отображается в списке")
+    public ActionsListPage checkActionIsNotDisplayed(String name) {
+        new Table(ACTION_NAME_COLUMN).asserts().checkColumnValueNotEquals(ACTION_NAME_COLUMN, name);
+        return this;
     }
 
     @Step("Копирование действия {name}")

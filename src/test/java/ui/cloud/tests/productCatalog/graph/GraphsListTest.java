@@ -5,6 +5,7 @@ import io.qameta.allure.Feature;
 import io.qameta.allure.TmsLink;
 import io.qameta.allure.TmsLinks;
 import models.cloud.productCatalog.graph.Graph;
+import models.cloud.productCatalog.tag.Tag;
 import org.json.JSONObject;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -85,7 +86,7 @@ public class GraphsListTest extends GraphBaseTest {
     @DisplayName("Добавить и удалить тег из списка графов")
     public void addAndDeleteTagFromList() {
         String tag1 = "qa_at_" + randomAlphanumeric(6).toLowerCase();
-        createTag(tag1);
+        Tag.builder().name(tag1).build().createObjectPrivateAccess();
         Graph graph2 = GraphSteps.createGraph(graph.getName() + "_2", graph.getTitle());
         new ControlPanelIndexPage()
                 .goToGraphsPage()
@@ -102,6 +103,5 @@ public class GraphsListTest extends GraphBaseTest {
                 .closeDialog()
                 .checkTags(GRAPH_NAME_COLUMN, graph.getName(), "")
                 .checkTags(GRAPH_NAME_COLUMN, graph2.getName(), "");
-        deleteTagByName(tag1);
     }
 }

@@ -86,10 +86,10 @@ public class ActionTest extends ActionBaseTest {
                 .title(name)
                 .number(0)
                 .build());
-        assertTrue(new ControlPanelIndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .copyAction(name)
                 .backToActionsList()
-                .isActionDisplayed(cloneName));
+                .checkActionIsDisplayed(cloneName);
         deleteActionByName(cloneName);
     }
 

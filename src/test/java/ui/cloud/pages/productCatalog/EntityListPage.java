@@ -225,8 +225,8 @@ public class EntityListPage {
     @Step("Переход в режим групповых операций")
     public EntityListPage switchToGroupOperations() {
         groupOperationsButton.click();
-        cancelGroupOperationsButton.getButton().shouldBe(Condition.enabled
-                .because("Отображается кнопка выхода из режима групповых операций"));
+        cancelGroupOperationsButton.getButton().shouldBe(Condition.visible
+                .because("Должна отображаться кнопка выхода из режима групповых операций"));
         return this;
     }
 

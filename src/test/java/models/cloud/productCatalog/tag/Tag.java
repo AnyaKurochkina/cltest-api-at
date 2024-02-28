@@ -44,11 +44,6 @@ public class Tag extends Entity implements IProductCatalog {
     @Override
     @Step("Создание Тега")
     protected void create() {
-        if (isTagExists(name)) {
-            Tag template = getTagByName(name);
-            Response response = getTagUsedObjectsByName(name);
-            deleteTagByName(name);
-        }
         Tag tag = createTag(name);
         StringUtils.copyAvailableFields(tag, this);
         Assertions.assertNotNull(id, "Тег с именем: " + name + ", не создался");
