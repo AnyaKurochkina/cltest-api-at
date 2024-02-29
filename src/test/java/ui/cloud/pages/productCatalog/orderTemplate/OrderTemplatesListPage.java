@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class OrderTemplatesListPage extends EntityListPage {
 
-    private final String nameColumn = "Код шаблона";
+    public static final String ORDER_TEMPLATE_NAME_COLUMN = "Код шаблона";
     private final Input titleInput = Input.byName("title");
     private final Input nameInput = Input.byName("name");
     private final Input descriptionInput = Input.byName("description");
@@ -39,8 +39,8 @@ public class OrderTemplatesListPage extends EntityListPage {
 
     @Step("Проверка заголовков списка шаблонов отображения")
     public OrderTemplatesListPage checkHeaders() {
-        AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Описание", "Тип", "Провайдер", "Состояние",
+        AssertUtils.assertHeaders(new Table(ORDER_TEMPLATE_NAME_COLUMN),
+                "Наименование", ORDER_TEMPLATE_NAME_COLUMN, "Дата создания", "Дата изменения", "Описание", "Тип", "Провайдер", "Состояние",
                 "Теги", "", "");
         return this;
     }
@@ -53,7 +53,7 @@ public class OrderTemplatesListPage extends EntityListPage {
 
     @Step("Проверка сортировки по коду шаблона")
     public OrderTemplatesListPage checkSortingByName() {
-        EntityListPage.checkSortingByStringField(nameColumn);
+        EntityListPage.checkSortingByStringField(ORDER_TEMPLATE_NAME_COLUMN);
         return this;
     }
 
@@ -68,7 +68,7 @@ public class OrderTemplatesListPage extends EntityListPage {
         String onStateColor = "#4caf50";
         String offStateColor = "#e0e0e0";
         String header = "Состояние";
-        Table table = new Table(nameColumn);
+        Table table = new Table(ORDER_TEMPLATE_NAME_COLUMN);
         SelenideElement columnHeader = StringUtils.$x("//div[text()='{}']/parent::div", header);
         SelenideElement arrowIcon = StringUtils.$x("//div[text()='{}']/following-sibling::*[name()='svg']", header);
         columnHeader.click();
@@ -138,7 +138,7 @@ public class OrderTemplatesListPage extends EntityListPage {
     @Step("Удаление шаблона '{name}'")
     public OrderTemplatesListPage deleteTemplate(String name) {
         search(name);
-        EntityListPage.delete(nameColumn, name);
+        EntityListPage.delete(ORDER_TEMPLATE_NAME_COLUMN, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
@@ -146,21 +146,21 @@ public class OrderTemplatesListPage extends EntityListPage {
     @Step("Проверка, что шаблоны не найдены при поиске по '{value}'")
     public OrderTemplatesListPage checkTemplateNotFound(String value) {
         search(value);
-        assertTrue(new Table(nameColumn).isEmpty());
+        assertTrue(new Table(ORDER_TEMPLATE_NAME_COLUMN).isEmpty());
         return this;
     }
 
     @Step("Поиск и открытие страницы шаблона '{name}'")
     public OrderTemplatePage findAndOpenTemplatePage(String name) {
         search(name);
-        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
+        new Table(ORDER_TEMPLATE_NAME_COLUMN).getRowByColumnValue(ORDER_TEMPLATE_NAME_COLUMN, name).get().click();
         TestUtils.wait(600);
         return new OrderTemplatePage();
     }
 
     @Step("Копирование шаблона '{name}'")
     public OrderTemplatePage copyTemplate(String name) {
-        new EntityListPage().copy(nameColumn, name);
+        new EntityListPage().copy(ORDER_TEMPLATE_NAME_COLUMN, name);
         Alert.green("Шаблон скопирован");
         TestUtils.wait(500);
         return new OrderTemplatePage();
@@ -169,7 +169,7 @@ public class OrderTemplatesListPage extends EntityListPage {
     @Step("Проверка, что шаблон '{template.name}' найден при поиске по значению '{value}'")
     public OrderTemplatesListPage findTemplateByValue(String value, ItemVisualTemplate template) {
         search(value);
-        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
+        assertTrue(new Table(ORDER_TEMPLATE_NAME_COLUMN).isColumnValueEquals(ORDER_TEMPLATE_NAME_COLUMN, template.getName()));
         return this;
     }
 
@@ -214,19 +214,20 @@ public class OrderTemplatesListPage extends EntityListPage {
 
     @Step("Проверка, что шаблон '{template.name}' отображается в списке")
     public OrderTemplatesListPage checkTemplateIsDisplayed(ItemVisualTemplate template) {
-        assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
+        new Table(ORDER_TEMPLATE_NAME_COLUMN).asserts().checkColumnValueEquals(ORDER_TEMPLATE_NAME_COLUMN, template.getName());
         return this;
     }
 
     @Step("Проверка, что шаблон '{template.name}' не отображается в списке")
     public OrderTemplatesListPage checkTemplateIsNotDisplayed(ItemVisualTemplate template) {
-        Assertions.assertFalse(new Table(nameColumn).isColumnValueEquals(nameColumn, template.getName()));
+        new Table(ORDER_TEMPLATE_NAME_COLUMN).asserts().checkColumnValueNotEquals(ORDER_TEMPLATE_NAME_COLUMN, template.getName());
         return this;
     }
 
     @Step("Открытие страницы шаблона '{name}'")
     public OrderTemplatePage openTemplatePage(String name) {
-        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
+        new Table(ORDER_TEMPLATE_NAME_COLUMN).getRowByColumnValue(ORDER_TEMPLATE_NAME_COLUMN, name).get()
+                .shouldBe(Condition.visible.because("Должна отображаться строка с шаблоном отображения")).click();
         return new OrderTemplatePage();
     }
 }

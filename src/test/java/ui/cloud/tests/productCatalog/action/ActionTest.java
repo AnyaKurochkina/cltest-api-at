@@ -24,8 +24,6 @@ import ui.cloud.pages.productCatalog.enums.action.ItemStatus;
 import ui.cloud.pages.productCatalog.enums.action.OrderStatus;
 import ui.cloud.pages.productCatalog.enums.graph.GraphType;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -88,10 +86,10 @@ public class ActionTest extends ActionBaseTest {
                 .title(name)
                 .number(0)
                 .build());
-        assertTrue(new ControlPanelIndexPage().goToActionsListPage()
+        new ControlPanelIndexPage().goToActionsListPage()
                 .copyAction(name)
                 .backToActionsList()
-                .isActionDisplayed(cloneName));
+                .checkActionIsDisplayed(cloneName);
         deleteActionByName(cloneName);
     }
 

@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @Getter
 public class GraphsListPage extends EntityListPage {
 
-    private static final String nameColumn = "Код графа";
+    public static final String GRAPH_NAME_COLUMN = "Код графа";
     private final SelenideElement graphsPageTitle = $x("//div[text() = 'Графы'][@type]");
     private final SelenideElement inputTitleField = $x("//*[@name ='title']");
     private final Input nameInput = Input.byName("name");
@@ -47,7 +47,7 @@ public class GraphsListPage extends EntityListPage {
 
     @Step("Копирование графа '{name}'")
     public GraphsListPage copyGraph(String name) {
-        copy(nameColumn, name);
+        copy(GRAPH_NAME_COLUMN, name);
         Alert.green("Копирование выполнено успешно");
         backButton.click();
         return this;
@@ -56,7 +56,7 @@ public class GraphsListPage extends EntityListPage {
     @Step("Проверка, что граф '{graph.name}' найден при поиске по значению '{value}'")
     public GraphsListPage checkGraphFoundByValue(String value, Graph graph) {
         search(value);
-        new Table(nameColumn).asserts().checkColumnValueEquals(nameColumn, graph.getName());
+        new Table(GRAPH_NAME_COLUMN).asserts().checkColumnValueEquals(GRAPH_NAME_COLUMN, graph.getName());
         return this;
     }
 
@@ -67,20 +67,20 @@ public class GraphsListPage extends EntityListPage {
         }
         searchInput.setValue(graphName);
         Waiting.sleep(1000);
-        assertTrue(new Table(nameColumn).isEmpty());
+        assertTrue(new Table(GRAPH_NAME_COLUMN).isEmpty());
         return this;
     }
 
     @Step("Удаление графа '{name}'")
     public GraphsListPage deleteGraph(String name) {
-        delete(nameColumn, name);
+        delete(GRAPH_NAME_COLUMN, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
         return this;
     }
 
     @Step("Проверка недоступности удаления используемого графа")
     public GraphPage checkDeleteUsedGraphUnavailable(Graph graph) {
-        delete(nameColumn, graph.getName());
+        delete(GRAPH_NAME_COLUMN, graph.getName());
         new DeleteDialog().submitAndCheckNotDeletable("Нельзя удалить граф, который используется другими" +
                 " объектами. Отвяжите граф от объектов и повторите попытку");
         usageLinkButton.click();
@@ -90,8 +90,8 @@ public class GraphsListPage extends EntityListPage {
 
     @Step("Проверка заголовков списка графов")
     public GraphsListPage checkGraphsListHeaders() {
-        AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Описание", "Теги", "", "");
+        AssertUtils.assertHeaders(new Table(GRAPH_NAME_COLUMN),
+                "Наименование", GRAPH_NAME_COLUMN, "Дата создания", "Дата изменения", "Описание", "Теги", "", "");
         return this;
     }
 
@@ -120,18 +120,18 @@ public class GraphsListPage extends EntityListPage {
     @Step("Поиск и открытие страницы графа '{name}'")
     public GraphPage findAndOpenGraphPage(String name) {
         search(name);
-        DataTable table = new DataTable(nameColumn);
-        new DataTable(nameColumn).searchAllPages(t -> table.isColumnValueContains(nameColumn, name))
-                .getRowByColumnValueContains(nameColumn, name).get().click();
+        DataTable table = new DataTable(GRAPH_NAME_COLUMN);
+        new DataTable(GRAPH_NAME_COLUMN).searchAllPages(t -> table.isColumnValueContains(GRAPH_NAME_COLUMN, name))
+                .getRowByColumnValueContains(GRAPH_NAME_COLUMN, name).get().click();
         Waiting.sleep(1000);
         return new GraphPage();
     }
 
     @Step("Открытие страницы графа '{name}'")
     public GraphPage openGraphPage(String name) {
-        DataTable table = new DataTable(nameColumn);
-        new DataTable(nameColumn).searchAllPages(t -> table.isColumnValueContains(nameColumn, name))
-                .getRowByColumnValueContains(nameColumn, name).get().click();
+        DataTable table = new DataTable(GRAPH_NAME_COLUMN);
+        new DataTable(GRAPH_NAME_COLUMN).searchAllPages(t -> table.isColumnValueContains(GRAPH_NAME_COLUMN, name))
+                .getRowByColumnValueContains(GRAPH_NAME_COLUMN, name).get().click();
         return new GraphPage();
     }
 
@@ -195,6 +195,6 @@ public class GraphsListPage extends EntityListPage {
 
     @Step("Проверка, что подсвечен граф '{name}'")
     public void checkGraphIsHighlighted(String name) {
-        checkRowIsHighlighted(nameColumn, name);
+        checkRowIsHighlighted(GRAPH_NAME_COLUMN, name);
     }
 }

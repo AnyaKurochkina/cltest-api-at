@@ -236,11 +236,18 @@ public class Table implements TypifiedElement {
                 Assertions.assertTrue(lastValue.contains(value), errorMessage);
             }
 
-            @Step("[Проверка] Колонка с именем: %s: {0}, содержит значение: {1}")
-            public void checkValueInColumnWithName(String columnName, String value) {
+            @Step("[Проверка] Колонка с именем '{0}' содержит значение '{1}'")
+            public void checkColumnValueContains(String columnName, String value) {
                 String valueByColumnName = getValueByColumn(columnName);
                 String errorMessage = String.format("В колонке с именем: %s, значение: %s, должно содержать: %s", columnName, valueByColumnName, value);
                 Assertions.assertTrue(valueByColumnName.contains(value), errorMessage);
+            }
+
+            @Step("[Проверка] Колонка с именем '{0}' содержит значение, равное '{1}'")
+            public void checkColumnValueEquals(String columnName, String value) {
+                String valueByColumnName = getValueByColumn(columnName);
+                String errorMessage = String.format("В колонке с именем: %s, значение: %s, должно равняться: %s", columnName, valueByColumnName, value);
+                Assertions.assertTrue(valueByColumnName.equals(value), errorMessage);
             }
         }
     }
@@ -306,6 +313,14 @@ public class Table implements TypifiedElement {
                     ? String.format("Колонка должна содержать значение '%s'", value)
                     : String.format("Колонка с именем '%s' должна содержать значение, равное '%s'", column, value);
             Assertions.assertTrue(isColumnValueEquals(column, value), errorMessage);
+        }
+
+        @Step("[Проверка] Колонка '{0}' не содержит значение, равное '{1}'")
+        public void checkColumnValueNotEquals(String column, String value) {
+            String errorMessage = column.isEmpty()
+                    ? String.format("Колонка не должна содержать значение, равное '%s'", value)
+                    : String.format("Колонка с именем '%s' не должна содержать значение, равное '%s'", column, value);
+            Assertions.assertFalse(isColumnValueEquals(column, value), errorMessage);
         }
     }
 }

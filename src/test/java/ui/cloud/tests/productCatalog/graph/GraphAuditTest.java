@@ -11,14 +11,12 @@ import org.junit.jupiter.api.Test;
 import ui.cloud.pages.ControlPanelIndexPage;
 import ui.cloud.pages.productCatalog.MeccanoAuditPage;
 import ui.cloud.pages.productCatalog.graph.GraphPage;
-import ui.elements.Button;
 import ui.elements.Table;
 import ui.t1.tests.audit.AuditPeriod;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
-import java.util.Collections;
 
 @Feature("Просмотр истории изменений")
 public class GraphAuditTest extends GraphBaseTest {

@@ -37,7 +37,7 @@ public class GraphTagTest extends Tests {
         addTagListToGraph(tagList, graph1.getName(), graph2.getName());
         assertEquals(tagList, getGraphById(graph1.getGraphId()).getTagList());
         assertEquals(tagList, getGraphById(graph2.getGraphId()).getTagList());
-        removeTagListToGraph(tagList, graph1.getName(), graph2.getName());
+        removeTagListFromGraph(tagList, graph1.getName(), graph2.getName());
         assertTrue(getGraphById(graph1.getGraphId()).getTagList().isEmpty());
         assertTrue(getGraphById(graph2.getGraphId()).getTagList().isEmpty());
     }

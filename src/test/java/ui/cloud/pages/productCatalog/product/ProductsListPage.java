@@ -1,5 +1,6 @@
 package ui.cloud.pages.productCatalog.product;
 
+import com.codeborne.selenide.Condition;
 import core.helper.StringUtils;
 import core.utils.AssertUtils;
 import core.utils.Waiting;
@@ -16,14 +17,14 @@ import ui.elements.Table;
 
 public class ProductsListPage extends EntityListPage {
 
-    private static final String nameColumn = "Код продукта";
+    public static final String PRODUCT_NAME_COLUMN = "Код продукта";
     private final Select categorySelect = Select.byLabel("Категория");
     private final Select statusSelect = Select.byLabel("Статус");
 
     @Step("Проверка заголовков списка продуктов")
     public ProductsListPage checkHeaders() {
-        AssertUtils.assertHeaders(new Table(nameColumn),
-                "Наименование", nameColumn, "Дата создания", "Дата изменения", "Категория", "Статус", "Теги", "", "");
+        AssertUtils.assertHeaders(new Table(PRODUCT_NAME_COLUMN),
+                "Наименование", PRODUCT_NAME_COLUMN, "Дата создания", "Дата изменения", "Категория", "Статус", "Теги", "", "");
         return this;
     }
 
@@ -56,37 +57,36 @@ public class ProductsListPage extends EntityListPage {
     @Step("Поиск и открытие страницы продукта '{name}'")
     public ProductPage findAndOpenProductPage(String name) {
         search(name);
-        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
-        TestUtils.wait(1000);
+        openProductPage(name);
         return new ProductPage();
     }
 
     @Step("Открытие страницы продукта '{name}'")
     public ProductPage openProductPage(String name) {
-        new Table(nameColumn).getRowByColumnValue(nameColumn, name).get().click();
-        TestUtils.wait(500);
+        new Table(PRODUCT_NAME_COLUMN).getRowByColumnValue(PRODUCT_NAME_COLUMN, name).get()
+                .shouldBe(Condition.visible.because("Должна отображаться строка с продуктом")).click();
         return new ProductPage();
     }
 
     @Step("Удаление продукта '{name}'")
     public ProductsListPage delete(String name) {
         search(name);
-        delete(nameColumn, name);
+        delete(PRODUCT_NAME_COLUMN, name);
         new DeleteDialog().submitAndDelete("Удаление выполнено успешно");
-        Assertions.assertTrue(new Table(nameColumn).isEmpty());
+        Assertions.assertTrue(new Table(PRODUCT_NAME_COLUMN).isEmpty());
         return this;
     }
 
     @Step("Проверка, что продукт '{product.name}' найден при поиске по значению '{value}'")
     public ProductsListPage findProductByValue(String value, Product product) {
         search(value);
-        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, product.getName()));
+        Assertions.assertTrue(new Table(PRODUCT_NAME_COLUMN).isColumnValueEquals(PRODUCT_NAME_COLUMN, product.getName()));
         return this;
     }
 
     @Step("Копирование продукта '{product.name}'")
     public ProductsListPage copy(Product product) {
-        copy(nameColumn, product.getName());
+        copy(PRODUCT_NAME_COLUMN, product.getName());
         Alert.green("Копирование выполнено успешно");
         return this;
     }
@@ -94,7 +94,7 @@ public class ProductsListPage extends EntityListPage {
     @Step("Проверка сортировки списка продуктов")
     public ProductsListPage checkSorting() {
         checkSortingByStringField("Наименование");
-        checkSortingByStringField(nameColumn);
+        checkSortingByStringField(PRODUCT_NAME_COLUMN);
         checkSortingByDateField("Дата создания");
         return this;
     }
@@ -120,13 +120,13 @@ public class ProductsListPage extends EntityListPage {
 
     @Step("Проверка, что продукт '{product.name}' отображается в списке")
     public ProductsListPage checkProductIsDisplayed(Product product) {
-        Assertions.assertTrue(new Table(nameColumn).isColumnValueEquals(nameColumn, product.getName()));
+        Assertions.assertTrue(new Table(PRODUCT_NAME_COLUMN).isColumnValueEquals(PRODUCT_NAME_COLUMN, product.getName()));
         return this;
     }
 
     @Step("Проверка, что продукт '{product.name}' не отображается в списке")
     public ProductsListPage checkProductIsNotDisplayed(Product product) {
-        Assertions.assertFalse(new Table(nameColumn).isColumnValueEquals(nameColumn, product.getName()));
+        Assertions.assertFalse(new Table(PRODUCT_NAME_COLUMN).isColumnValueEquals(PRODUCT_NAME_COLUMN, product.getName()));
         return this;
     }
 
@@ -168,6 +168,6 @@ public class ProductsListPage extends EntityListPage {
 
     @Step("Проверка, что подсвечен продукт '{name}'")
     public void checkProductIsHighlighted(String name) {
-        checkRowIsHighlighted(nameColumn, name);
+        checkRowIsHighlighted(PRODUCT_NAME_COLUMN, name);
     }
 }
